@@ -1,0 +1,31 @@
+{
+  "name": "frontend-monorepo-template",
+  "private": true,
+  "scripts": {
+    "dev": "dotenv -c -- turbo dev",
+    "build": "dotenv -c -- turbo build",
+    "lint": "dotenv -c -- turbo lint",
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,md,json}\""
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "pnpm": {
+    "peerDependencyRules": {
+      "ignoreMissing": [
+        "@babel/*",
+        "expo-modules-*",
+        "typescript"
+      ]
+    }
+  },
+  "devDependencies": {
+    "prettier": "3.2.4",
+    "prettier-plugin-organize-imports": "3.2.4",
+    "prettier-plugin-tailwindcss": "0.5.11",
+    "turbo": "1.11.3"
+  },
+  "dependencies": {
+    "dotenv-cli": "7.3.0"
+  }
+}

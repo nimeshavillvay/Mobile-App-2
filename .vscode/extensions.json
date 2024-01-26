@@ -1,0 +1,11 @@
+{
+  "recommendations": [
+    "streetsidesoftware.code-spell-checker",
+    "tobermory.es6-string-html",
+    "dbaeumer.vscode-eslint",
+    "wix.vscode-import-cost",
+    "esbenp.prettier-vscode",
+    "yoavbls.pretty-ts-errors",
+    "bradlc.vscode-tailwindcss"
+  ]
+}

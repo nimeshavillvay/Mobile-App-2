@@ -1,0 +1,22 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "globalDependencies": ["**/.env.*local"],
+  "globalEnv": [
+    "NEXT_PUBLIC_API_URL",
+    "EXPO_USE_METRO_WORKSPACE_ROOT",
+    "EXPO_PUBLIC_API_URL"
+  ],
+  "pipeline": {
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": [".next/**", "!.next/cache/**", "node_modules/.cache/metro/**"]
+    },
+    "lint": {
+      "dependsOn": ["^lint"]
+    }
+  }
+}
