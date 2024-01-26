@@ -4,4 +4,5 @@
     "strict": true,
     "moduleResolution": "Bundler",
   },
+  "include": ["reset.d.ts"],
 }

@@ -1,5 +1,5 @@
 {
-  "name": "wurth-lac-web",
+  "name": "lac-web",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,16 +9,30 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@hookform/resolvers": "3.3.4",
+    "@radix-ui/react-label": "2.0.2",
+    "@radix-ui/react-separator": "1.0.3",
+    "@radix-ui/react-tabs": "1.0.4",
+    "@radix-ui/react-visually-hidden": "1.0.3",
     "@repo/shared-logic": "workspace:^",
     "@tanstack/react-query": "5.17.19",
     "@tanstack/react-query-devtools": "5.17.21",
+    "clsx": "2.1.0",
+    "embla-carousel-autoplay": "8.0.0-rc21",
+    "embla-carousel-react": "8.0.0-rc21",
     "ky": "1.2.0",
     "next": "14.1.0",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "react-hook-form": "7.49.3",
+    "sharp": "0.32.6",
+    "tailwind-merge": "2.2.1",
+    "zod": "3.22.4"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:^",
+    "@tailwindcss/forms": "0.5.7",
+    "@total-typescript/ts-reset": "0.5.1",
     "@types/node": "20.11.7",
     "@types/react": "18.2.48",
     "@types/react-dom": "18.2.18",
