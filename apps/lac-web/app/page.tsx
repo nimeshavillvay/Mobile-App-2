@@ -2,10 +2,10 @@ import Separator from "@/_components/separator";
 import VisuallyHidden from "@/_components/visually-hidden";
 import { api } from "@/_lib/api";
 import type { CarouselBanner, FeaturedProduct } from "@/_lib/types";
+import { getMediaUrl } from "@/_utils/helpers";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
-import { getMediaUrl } from "./_utils/helpers";
 import banner1Government from "./banner-1-government.jpg";
 import banner2CatalogsLiterature from "./banner-2-catalogs-literature.jpg";
 import banner3Machinery from "./banner-3-machinery.jpg";
@@ -118,7 +118,7 @@ const HomePage = async () => {
         special={featuredProducts.featured_product_list.special}
       />
 
-      <section>
+      <section className="max-w-desktop mx-auto">
         <h3>Featured Brand</h3>
 
         <Image
@@ -132,23 +132,41 @@ const HomePage = async () => {
         <div className="grid grid-cols-4 gap-2">
           {featuredBrand[1].groups.map((group) => (
             <div key={group.groupId}>
-              <Image
-                src={getMediaUrl(group.group_img)}
-                alt={`An image of the group ${group.item_group_name}`}
-                width={226}
-                height={226}
-                className="border border-black object-contain"
-              />
+              <Link
+                href={`/product-item/${group.groupId}/${group.itemSkuList[0]?.txt_wurth_lac_item}`}
+              >
+                <VisuallyHidden>{group.item_group_name}</VisuallyHidden>
+
+                <Image
+                  src={getMediaUrl(group.group_img)}
+                  alt={`An image of the group ${group.item_group_name}`}
+                  width={226}
+                  height={226}
+                  className="border border-black object-contain"
+                />
+              </Link>
 
               <div>{group.brandName}</div>
 
               <div>{group.item_group_name}</div>
+
+              <div>
+                {group.itemSkuList.length}{" "}
+                {group.itemSkuList.length > 1 ? "variations" : "variation"}
+              </div>
+
+              <Link
+                href={`/product-item/${group.groupId}/${group.itemSkuList[0]?.txt_wurth_lac_item}`}
+                className="bg-brand-primary rounded p-2 uppercase text-white"
+              >
+                View item
+              </Link>
             </div>
           ))}
         </div>
       </section>
 
-      <section className="grid grid-cols-3 gap-[30px]">
+      <section className="max-w-desktop mx-auto grid grid-cols-3 gap-[30px]">
         {BANNERS.map((banner) => (
           <Link
             href={banner.href}
@@ -178,10 +196,10 @@ const HomePage = async () => {
 
       <Separator
         orientation="horizontal"
-        className="my-[55px] h-px w-full bg-black"
+        className="max-w-desktop mx-auto my-[55px] h-px w-full bg-black"
       />
 
-      <section className="grid grid-cols-3 gap-1">
+      <section className="max-w-desktop mx-auto grid grid-cols-3 gap-1">
         <div>
           <EmailSignup />
 

@@ -21,7 +21,7 @@ const RootLayout = ({ children }: { children: ReactNode }) => {
         <Providers>
           <Header />
 
-          <main className="max-w-desktop mx-auto">{children}</main>
+          <main>{children}</main>
 
           <footer></footer>
         </Providers>

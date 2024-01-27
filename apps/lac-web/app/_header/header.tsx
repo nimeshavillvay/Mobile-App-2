@@ -1,9 +1,17 @@
 "use client";
 
 import Separator from "@/_components/separator";
+import useAccountList from "@/_hooks/account/use-account-list.hook";
+import useAccountNo from "@/_hooks/account/use-account-no.hook";
+import useAccountSelectorDialog from "@/_hooks/account/use-account-selector-dialog.hook";
+import useAddressId from "@/_hooks/account/use-address-id.hook";
 import { cn } from "@/_utils/helpers";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect } from "react";
+import AccountSelectorDialog from "./account-selector-dialog";
+import Login from "./login";
+import UserDropdown from "./user-dropdown";
 
 const NAV_LINKS = [
   {
@@ -18,6 +26,16 @@ const NAV_LINKS = [
 
 const Header = () => {
   const pathname = usePathname();
+  const accountListQuery = useAccountList();
+  const [accountNo] = useAccountNo();
+  const [addressId] = useAddressId();
+  const setOpen = useAccountSelectorDialog((state) => state.setOpen);
+
+  useEffect(() => {
+    if (accountListQuery.data && (!accountNo || !addressId)) {
+      setOpen(true);
+    }
+  }, [accountListQuery.data, accountNo, addressId, setOpen]);
 
   return (
     <header>
@@ -56,15 +74,27 @@ const Header = () => {
           </nav>
 
           <div className="flex flex-row items-center gap-2">
-            <Link href="/register" className="hover:text-brand-primary">
-              Register
-            </Link>
+            {accountListQuery.data ? (
+              <>
+                <UserDropdown />
 
-            <span>or</span>
+                <button className="bg-brand-primary text-white">
+                  Quick Order
+                </button>
+              </>
+            ) : (
+              <>
+                <Link href="/register" className="hover:text-brand-primary">
+                  Register
+                </Link>
 
-            <button className="hover:text-brand-primary">Apply</button>
+                <span>or</span>
 
-            <button className="bg-brand-primary text-white">Sign in</button>
+                <button className="hover:text-brand-primary">Apply</button>
+
+                <Login />
+              </>
+            )}
 
             <button className="hover:text-brand-primary">En</button>
           </div>
@@ -89,6 +119,8 @@ const Header = () => {
           </Link>
         ))}
       </div>
+
+      <AccountSelectorDialog />
     </header>
   );
 };

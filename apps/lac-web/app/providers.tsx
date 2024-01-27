@@ -5,6 +5,7 @@ import { ApiProvider } from "@repo/shared-logic/providers";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { useState, type ReactNode } from "react";
+import { CookiesProvider } from "react-cookie";
 
 type ProvidersProps = {
   children: ReactNode;
@@ -23,13 +24,15 @@ const Providers = ({ children }: ProvidersProps) => {
   );
 
   return (
-    <ApiProvider kyInstance={api}>
-      <QueryClientProvider client={queryClient}>
-        {children}
+    <CookiesProvider>
+      <ApiProvider kyInstance={api}>
+        <QueryClientProvider client={queryClient}>
+          {children}
 
-        <ReactQueryDevtools />
-      </QueryClientProvider>
-    </ApiProvider>
+          <ReactQueryDevtools />
+        </QueryClientProvider>
+      </ApiProvider>
+    </CookiesProvider>
   );
 };
 

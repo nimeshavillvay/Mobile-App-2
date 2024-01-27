@@ -5,6 +5,7 @@ import { getMediaUrl } from "@/_utils/helpers";
 import * as Tabs from "@radix-ui/react-tabs";
 import useEmblaCarousel from "embla-carousel-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
 
 type FeaturedProductsProps = {
@@ -16,10 +17,10 @@ type FeaturedProductsProps = {
 type ProductsType = keyof FeaturedProductsProps;
 
 const productTypes: ProductsType[] = [
-  "bestSellers",
-  "featured",
-  "latest",
   "special",
+  "featured",
+  "bestSellers",
+  "latest",
 ];
 
 const FeaturedProducts = ({
@@ -48,7 +49,7 @@ const FeaturedProducts = ({
   }
 
   return (
-    <section>
+    <section className="max-w-desktop mx-auto">
       <Tabs.Root
         value={selectedType}
         onValueChange={(value) => setSelectedType(value as ProductsType)}
@@ -80,14 +81,27 @@ const FeaturedProducts = ({
                   >
                     {page.map((product) => (
                       <div key={product.sku}>
-                        <Image
-                          src={getMediaUrl(product.product_img)}
-                          alt={`An image of ${product.productTitle}`}
-                          width={171}
-                          height={171}
-                        />
+                        <Link
+                          href={`/product-item/${product.groupId}/${product.sku}`}
+                          className="block"
+                        >
+                          <Image
+                            src={getMediaUrl(product.product_img)}
+                            alt={`An image of ${product.productTitle}`}
+                            width={171}
+                            height={171}
+                          />
 
-                        <h3>{product.productTitle}</h3>
+                          <div>{product.brandName}</div>
+
+                          <h3>{product.productTitle}</h3>
+
+                          <div>{product.sku}</div>
+
+                          <button className="bg-brand-primary w-full rounded p-2 text-white">
+                            Login to buy
+                          </button>
+                        </Link>
                       </div>
                     ))}
                   </div>

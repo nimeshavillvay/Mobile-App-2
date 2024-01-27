@@ -14,7 +14,7 @@ const Carousel = ({ banners }: CarouselProps) => {
   const [emblaRef] = useEmblaCarousel({ loop: true }, [Autoplay()]);
 
   return (
-    <div className="overflow-hidden" ref={emblaRef}>
+    <div className="max-w-desktop mx-auto overflow-hidden" ref={emblaRef}>
       <div className="flex">
         {banners.map((banner, index) => (
           <div key={banner.id} className="shrink-0 grow-0 basis-full">
