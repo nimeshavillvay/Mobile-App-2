@@ -7,7 +7,7 @@ export const metadata: Metadata = {
 const PurchasedItemsPage = () => {
   return (
     <>
-      <h1>Purchased Items</h1>
+      <h2>Purchased Items</h2>
     </>
   );
 };

@@ -7,7 +7,7 @@ export const metadata: Metadata = {
 const MyFavoritesPage = () => {
   return (
     <>
-      <h1>My Favorites</h1>
+      <h2>My Favorites</h2>
     </>
   );
 };

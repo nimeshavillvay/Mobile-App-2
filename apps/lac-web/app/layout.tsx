@@ -1,10 +1,9 @@
 import { type Metadata } from "next";
-import dynamic from "next/dynamic";
+import NextTopLoader from "nextjs-toploader";
 import { type ReactNode } from "react";
+import Header from "./_header";
 import "./globals.css";
 import Providers from "./providers";
-
-const Header = dynamic(() => import("./_header"));
 
 export const metadata: Metadata = {
   title: {
@@ -18,6 +17,8 @@ const RootLayout = ({ children }: { children: ReactNode }) => {
   return (
     <html lang="en">
       <body>
+        <NextTopLoader showSpinner={false} color="#cc0000" />
+
         <Providers>
           <Header />
 

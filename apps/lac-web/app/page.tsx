@@ -3,16 +3,14 @@ import VisuallyHidden from "@/_components/visually-hidden";
 import { api } from "@/_lib/api";
 import type { CarouselBanner, FeaturedProduct } from "@/_lib/types";
 import { getMediaUrl } from "@/_utils/helpers";
-import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 import banner1Government from "./banner-1-government.jpg";
 import banner2CatalogsLiterature from "./banner-2-catalogs-literature.jpg";
 import banner3Machinery from "./banner-3-machinery.jpg";
 import Carousel from "./carousel";
-
-const FeaturedProducts = dynamic(() => import("./featured-products"));
-const EmailSignup = dynamic(() => import("./email-signup"));
+import EmailSignup from "./email-signup";
+import FeaturedProducts from "./featured-products";
 
 const BANNERS = [
   {

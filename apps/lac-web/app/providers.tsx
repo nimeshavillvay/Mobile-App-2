@@ -4,6 +4,7 @@ import { api } from "@/_lib/api";
 import { ApiProvider } from "@repo/shared-logic/providers";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { ReactQueryStreamedHydration } from "@tanstack/react-query-next-experimental";
 import { useState, type ReactNode } from "react";
 import { CookiesProvider } from "react-cookie";
 
@@ -27,7 +28,7 @@ const Providers = ({ children }: ProvidersProps) => {
     <CookiesProvider>
       <ApiProvider kyInstance={api}>
         <QueryClientProvider client={queryClient}>
-          {children}
+          <ReactQueryStreamedHydration>{children}</ReactQueryStreamedHydration>
 
           <ReactQueryDevtools />
         </QueryClientProvider>

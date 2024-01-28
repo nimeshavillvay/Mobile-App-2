@@ -1,6 +1,7 @@
 import useAccountList from "@/_hooks/account/use-account-list.hook";
 import useAddressId from "@/_hooks/account/use-address-id.hook";
 import useFavouriteCount from "@/_hooks/account/use-favourite-count.hook";
+import useLogout from "@/_hooks/account/use-logout.hook";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import Link from "next/link";
 import { FaRegUser } from "react-icons/fa";
@@ -11,6 +12,7 @@ const UserDropdown = () => {
   const accountListQuery = useAccountList();
   const favouriteCountQuery = useFavouriteCount();
   const [addressId] = useAddressId();
+  const logout = useLogout();
 
   return (
     <DropdownMenu.Root>
@@ -64,7 +66,9 @@ const UserDropdown = () => {
           </DropdownMenu.Item>
 
           <DropdownMenu.Item asChild>
-            <button className="text-left">Logout </button>
+            <button className="text-left" onClick={logout}>
+              Logout
+            </button>
           </DropdownMenu.Item>
         </DropdownMenu.Content>
       </DropdownMenu.Portal>

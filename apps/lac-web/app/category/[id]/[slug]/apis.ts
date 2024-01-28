@@ -2,7 +2,7 @@ import { api } from "@/_lib/api";
 import { notFound } from "next/navigation";
 import "server-only";
 
-export const getCategory = async (id: string) => {
+export const getCategory = async (id: string, slug: string) => {
   const response = await api
     .get(`pim/webservice/rest/productlandingcategory/${id}`, {
       next: { revalidate: 3600 },
@@ -14,16 +14,23 @@ export const getCategory = async (id: string) => {
             type: string;
             catTitle: string;
             slug: string;
-            description: null;
+            description: string | null;
             cat_top_images: unknown[];
-            subCatgores: unknown[];
+            subCatgores: {
+              SubCatId: number;
+              SubCatTitle: string;
+              slug: string;
+              Image: string;
+            }[];
           };
         }
       | []
     >();
 
-  // If the category is not found, an empty array is returned
-  if (Array.isArray(response)) {
+  // Redirect to not found for the following
+  // 1. If the category is not found (an empty array is returned)
+  // 2. Slug does not match
+  if (Array.isArray(response) || response.main.slug !== slug) {
     return notFound();
   }
 

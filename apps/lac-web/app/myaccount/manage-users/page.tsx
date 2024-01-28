@@ -7,7 +7,7 @@ export const metadata: Metadata = {
 const UserManagementPage = () => {
   return (
     <>
-      <h1>User Management</h1>
+      <h2>User Management</h2>
     </>
   );
 };

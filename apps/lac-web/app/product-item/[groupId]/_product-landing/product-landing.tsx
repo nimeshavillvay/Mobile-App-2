@@ -1,4 +1,5 @@
 import Breadcrumbs from "@/_components/breadcrumbs";
+import { getBreadcrumbs } from "@/_lib/shared-api";
 import { getMediaUrl } from "@/_utils/helpers";
 import Image from "next/image";
 import { getProduct } from "../apis";
@@ -10,13 +11,21 @@ type ProductLandingProps = {
 
 const ProductLanding = async ({ groupId, sku }: ProductLandingProps) => {
   const product = await getProduct(groupId, sku);
+  const breadcrumbs = await getBreadcrumbs(groupId, "product");
 
   return (
     <>
       <Breadcrumbs
-        id={groupId}
-        type="product"
-        currentPageTitle={product.page_title}
+        links={[
+          ...breadcrumbs.map((breadcrumb) => ({
+            href: `/category/${breadcrumb.oo_id}/${breadcrumb.slug}`,
+            label: breadcrumb.cat_name,
+          })),
+          {
+            href: `/product-item/${groupId}${sku ? `/${sku}` : ""}`,
+            label: product.page_title,
+          },
+        ]}
       />
 
       <div className="max-w-desktop mx-auto">

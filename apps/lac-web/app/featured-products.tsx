@@ -30,7 +30,7 @@ const FeaturedProducts = ({
   special,
 }: FeaturedProductsProps) => {
   const [emblaRef] = useEmblaCarousel({ loop: true });
-  const [selectedType, setSelectedType] = useState<ProductsType>("bestSellers");
+  const [selectedType, setSelectedType] = useState<ProductsType>("special");
 
   let productsList: FeaturedProduct[] = [];
   if (selectedType === "bestSellers") {

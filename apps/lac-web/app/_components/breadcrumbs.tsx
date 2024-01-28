@@ -1,42 +1,13 @@
 import VisuallyHidden from "@/_components/visually-hidden";
-import { api } from "@/_lib/api";
 import { cn } from "@/_utils/helpers";
 import Link from "next/link";
 import { MdOutlineHome } from "react-icons/md";
 
-type BreadcrumbsProps =
-  | {
-      id: string;
-      type: "product";
-      currentPageTitle: string;
-    }
-  | {
-      id: string;
-      type: "category";
-    };
+type BreadcrumbsProps = {
+  links: { href: string; label: string }[];
+};
 
-const Breadcrumbs = async (props: BreadcrumbsProps) => {
-  const { id, type } = props;
-  const currentPageTitle =
-    props.type === "product" ? props.currentPageTitle : null;
-
-  const breadcrumbs = await api
-    .get("pim/webservice/rest/breadcrumbs", {
-      searchParams: new URLSearchParams({
-        [type === "product" ? "group_id" : "catId"]: id,
-      }),
-      next: {
-        revalidate: 3600,
-      },
-    })
-    .json<
-      {
-        oo_id: number;
-        cat_name: string;
-        slug: string;
-      }[]
-    >();
-
+const Breadcrumbs = ({ links }: BreadcrumbsProps) => {
   return (
     <nav className="bg-brand-light-gray">
       <ul className="max-w-desktop mx-auto flex flex-row items-center">
@@ -47,21 +18,19 @@ const Breadcrumbs = async (props: BreadcrumbsProps) => {
           </Link>
         </li>
 
-        {breadcrumbs.map((breadcrumb, index) => (
-          <li
-            key={breadcrumb.oo_id}
-            className={cn(
-              (index !== breadcrumbs.length - 1 || !!currentPageTitle) &&
-                "flex flex-row items-center after:mx-2 after:content-['/']",
-            )}
-          >
-            <Link href={`/category/${breadcrumb.oo_id}`}>
-              {breadcrumb.cat_name}
+        {links.map((link, index) => (
+          <li key={link.href}>
+            <Link
+              href={link.href}
+              className={cn(
+                "flex flex-row items-center",
+                index !== links.length - 1 && "after:mx-2 after:content-['/']",
+              )}
+            >
+              {link.label}
             </Link>
           </li>
         ))}
-
-        {props.type === "product" && <li>{currentPageTitle}</li>}
       </ul>
     </nav>
   );

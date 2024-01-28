@@ -7,7 +7,7 @@ export const metadata: Metadata = {
 const OrderHistoryPage = () => {
   return (
     <>
-      <h1>Order History</h1>
+      <h2>Order History</h2>
     </>
   );
 };

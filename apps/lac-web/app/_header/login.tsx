@@ -1,4 +1,5 @@
 import VisuallyHidden from "@/_components/visually-hidden";
+import useAccountSelectorDialog from "@/_hooks/account/use-account-selector-dialog.hook";
 import useCookies from "@/_hooks/storage/use-cookies.hook";
 import { api } from "@/_lib/api";
 import { encryptString } from "@/_utils/helpers";
@@ -30,6 +31,9 @@ const Login = () => {
     resolver: zodResolver(loginSchema),
   });
   const [, setCookies] = useCookies();
+  const setAccountSelectorOpen = useAccountSelectorDialog(
+    (state) => state.setOpen,
+  );
 
   const loginMutation = useMutation({
     mutationFn: async (body: { userName: string; password: string }) => {
@@ -70,6 +74,7 @@ const Login = () => {
       setCookies("token", data.token);
 
       setDialogOpen(false);
+      setAccountSelectorOpen(true);
     },
   });
 
