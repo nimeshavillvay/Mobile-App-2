@@ -7,8 +7,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { Suspense } from "react";
 import Filters from "./_filters";
-import ProductsList from "./_products-list";
 import { getCategory } from "./apis";
+import { PAGE_SIZES } from "./constants";
+import ProductsList from "./products-list";
+import ProductsListSelectors from "./products-list-selectors";
 
 type CategoryPageProps = {
   params: {
@@ -77,9 +79,21 @@ const CategoryPage = async ({ params: { id, slug } }: CategoryPageProps) => {
       <div className="max-w-desktop mx-auto flex flex-row gap-8">
         <Filters id={id} />
 
-        <div className="flex-1">
-          <ErrorBoundary fallback={<>Error fetching products</>}>
-            <Suspense fallback={<>Loading products...</>}>
+        <div className="grid flex-1 grid-cols-4 gap-4">
+          <ErrorBoundary
+            fallback={<div className="col-span-4">Error fetching products</div>}
+          >
+            <Suspense
+              fallback={
+                <>
+                  <ProductsListSelectors />
+
+                  {[...Array(parseInt(PAGE_SIZES[0]))].map((item, index) => (
+                    <div key={index}>Placeholder Product</div>
+                  ))}
+                </>
+              }
+            >
               <ProductsList id={id} />
             </Suspense>
           </ErrorBoundary>

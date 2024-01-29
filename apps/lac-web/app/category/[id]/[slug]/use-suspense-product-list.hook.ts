@@ -1,14 +1,27 @@
 import { api } from "@/_lib/api";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
-const useSuspenseProductList = (catId: string) => {
+const useSuspenseProductList = (
+  catId: string,
+  { page, pageSize, sort }: { page: string; pageSize: string; sort: string },
+) => {
   return useSuspenseQuery({
-    queryKey: ["category", catId, "products"],
+    queryKey: [
+      "category",
+      catId,
+      "products",
+      {
+        page,
+        pageSize,
+        sort,
+      },
+    ],
     queryFn: () =>
       api
         .get(`pim/webservice/rest/productlandinggrouplist/${catId}`, {
           searchParams: new URLSearchParams({
-            perpage: "20",
+            page,
+            perpage: pageSize,
           }),
         })
         .json<{
