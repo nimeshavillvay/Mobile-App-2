@@ -145,7 +145,8 @@ const ProductsListSelectors = ({
       {!isLoading ? (
         <>
           <div>
-            {(pageNo - 1) * pageSize + 1} - {pageNo * pageSize} of {total}
+            {(pageNo - 1) * pageSize + 1} - {Math.min(pageNo * pageSize, total)}{" "}
+            of {total}
           </div>
 
           <div className="flex flex-row">
