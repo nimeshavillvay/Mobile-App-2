@@ -4,6 +4,8 @@ import VisuallyHidden from "@/_components/visually-hidden";
 import { cn } from "@/_utils/helpers";
 import * as Label from "@radix-ui/react-label";
 import * as Select from "@radix-ui/react-select";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import { useId, type ReactNode } from "react";
 import {
   MdCheck,
@@ -13,7 +15,7 @@ import {
   MdOutlineKeyboardDoubleArrowLeft,
   MdOutlineKeyboardDoubleArrowRight,
 } from "react-icons/md";
-import { PAGE_SIZES, SORTING_TYPES } from "./constants";
+import { PAGE_SIZES, QUERY_KEYS, SORTING_TYPES } from "./constants";
 
 type PaginationButtonType = "first" | "previous" | number | "next" | "last";
 type ProductsListSelectorsProps = {
@@ -21,9 +23,7 @@ type ProductsListSelectorsProps = {
   pageSize?: number;
   total?: number;
   sorting?: (typeof SORTING_TYPES)[number]["value"];
-  onSortingChange?: (value: string) => void;
-  onPerPageChange?: (value: string) => void;
-  onPageNoChange?: (value: number) => void;
+  searchParams?: { [key: string]: string | string[] | undefined };
 };
 
 const ProductsListSelectors = ({
@@ -31,13 +31,13 @@ const ProductsListSelectors = ({
   pageSize = 0,
   total = 0,
   sorting = SORTING_TYPES[0].value,
-  onSortingChange,
-  onPerPageChange,
-  onPageNoChange,
+  searchParams,
 }: ProductsListSelectorsProps) => {
   const id = useId();
   const sortId = `sort-${id}`;
   const pageSizeId = `per-page-${id}`;
+  const pathname = usePathname();
+  const router = useRouter();
 
   const isLoading = !pageNo || !pageSize || !total;
 
@@ -47,6 +47,43 @@ const ProductsListSelectors = ({
   const selectedSorting = SORTING_TYPES.find(
     (sortingType) => sortingType.value === sorting,
   );
+
+  const newSearchParams = new URLSearchParams();
+  // Check other values
+  if (searchParams) {
+    const keys = Object.keys(searchParams);
+    keys.forEach((key) => {
+      const value = searchParams[key]?.toString();
+
+      if (value) {
+        newSearchParams.set(key, value);
+      }
+    });
+  }
+
+  const searchParamChange = (
+    key: (typeof QUERY_KEYS)[keyof typeof QUERY_KEYS],
+    value: string,
+  ) => {
+    newSearchParams.set(key, value);
+
+    router.push(`${pathname}?${newSearchParams.toString()}`);
+  };
+
+  const onSortingChange = (value: string) => {
+    searchParamChange(QUERY_KEYS.SORT, value);
+  };
+
+  const onPerPageChange = (value: string) => {
+    console.log("> onPerPageChange: ", value, " ", newSearchParams.toString());
+    searchParamChange(QUERY_KEYS.PAGE_SIZE, value);
+  };
+
+  const getPaginationLink = (value: number) => {
+    const paginationSearchParams = new URLSearchParams(newSearchParams);
+    paginationSearchParams.set(QUERY_KEYS.PAGE, value.toString());
+    return `${pathname}?${paginationSearchParams.toString()}`;
+  };
 
   const paginationButtons: {
     value: PaginationButtonType;
@@ -185,16 +222,10 @@ const ProductsListSelectors = ({
 
           <div className="flex h-6 flex-row items-center gap-1">
             {paginationButtons.map((button) => (
-              <button
+              <Link
                 key={button.value}
-                onClick={() => onPageNoChange?.(button.num)}
+                href={getPaginationLink(button.num)}
                 className={cn(button.active && "text-brand-primary")}
-                disabled={
-                  ((button.value === "first" || button.value === "previous") &&
-                    pageNo === 1) ||
-                  ((button.value === "next" || button.value === "last") &&
-                    pageNo === totalPages)
-                }
               >
                 {button.value === "first" && (
                   <>
@@ -225,7 +256,7 @@ const ProductsListSelectors = ({
                     <MdOutlineKeyboardDoubleArrowRight />
                   </>
                 )}
-              </button>
+              </Link>
             ))}
           </div>
         </>

@@ -9,3 +9,8 @@ export const SORTING_TYPES = [
     label: "Z to A",
   },
 ] as const;
+export const QUERY_KEYS = {
+  PAGE: "page",
+  PAGE_SIZE: "page-size",
+  SORT: "sort",
+} as const;
