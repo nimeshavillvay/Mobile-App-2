@@ -21,3 +21,32 @@ export const getBreadcrumbs = async (
       }[]
     >();
 };
+
+export const getCategories = async () => {
+  return await api
+    .get("pim/webservice/rest/getcategorylist", { next: { revalidate: 3600 } })
+    .json<
+      {
+        id: number;
+        name: string;
+        slug: string;
+        shortcode: string;
+        item_count: number;
+        img: null | string;
+        subcategory: {
+          subid: number;
+          name: string;
+          slug: string;
+          shortcode: null;
+          item_count: number;
+          subsubcategory?: {
+            subsubid: number;
+            subsubname: string;
+            slug: string;
+            subsubshortcode: null;
+            item_count: number;
+          }[];
+        }[];
+      }[]
+    >();
+};
