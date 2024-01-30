@@ -1,3 +1,5 @@
+"use client";
+
 import useAccountList from "@/_hooks/account/use-account-list.hook";
 import useAccountNo from "@/_hooks/account/use-account-no.hook";
 import useAccountSelectorDialog from "@/_hooks/account/use-account-selector-dialog.hook";

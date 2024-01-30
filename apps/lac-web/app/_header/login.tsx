@@ -1,3 +1,5 @@
+"use client";
+
 import VisuallyHidden from "@/_components/visually-hidden";
 import useAccountSelectorDialog from "@/_hooks/account/use-account-selector-dialog.hook";
 import useCookies from "@/_hooks/storage/use-cookies.hook";
