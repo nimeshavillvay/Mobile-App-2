@@ -1,5 +1,6 @@
 import Separator from "@/_components/separator";
-import { getCategories } from "@/_lib/shared-api";
+import { api } from "@/_lib/api";
+import type { Category } from "@/_lib/types";
 import Link from "next/link";
 import AccountSelectorDialog from "./account-selector-dialog";
 import CategoriesDropdown from "./categories-dropdown";
@@ -7,7 +8,9 @@ import NavBar from "./nav-bar";
 import UserActions from "./user-actions";
 
 const Header = async () => {
-  const categories = await getCategories();
+  const categories = await api
+    .get("pim/webservice/rest/getcategorylist", { next: { revalidate: 3600 } })
+    .json<Category[]>();
 
   return (
     <header>

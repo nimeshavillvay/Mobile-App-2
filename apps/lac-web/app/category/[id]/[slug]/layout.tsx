@@ -1,5 +1,5 @@
 import Breadcrumbs from "@/_components/breadcrumbs";
-import { getBreadcrumbs, getCategories } from "@/_lib/shared-api";
+import { getBreadcrumbs } from "@/_lib/shared-api";
 import { getMediaUrl } from "@/_utils/helpers";
 import type { Metadata } from "next";
 import Image from "next/image";
@@ -86,25 +86,3 @@ const CategoryLayout = async ({
 };
 
 export default CategoryLayout;
-
-export const generateStaticParams = async () => {
-  const categories = await getCategories();
-
-  const params: { id: string; slug: string }[] = [];
-  categories.forEach((category) => {
-    params.push({ id: category.id.toString(), slug: category.slug });
-
-    category.subcategory.map((subCategory) => {
-      params.push({ id: subCategory.subid.toString(), slug: subCategory.slug });
-
-      subCategory.subsubcategory?.map((subSubCategories) =>
-        params.push({
-          id: subSubCategories.subsubid.toString(),
-          slug: subSubCategories.slug,
-        }),
-      );
-    });
-  });
-
-  return params;
-};

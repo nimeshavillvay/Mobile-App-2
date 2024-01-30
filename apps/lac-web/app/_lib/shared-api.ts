@@ -1,4 +1,3 @@
-import type { Category } from "@/_lib/types";
 import { api } from "./api";
 
 export const getBreadcrumbs = async (
@@ -21,10 +20,4 @@ export const getBreadcrumbs = async (
         slug: string;
       }[]
     >();
-};
-
-export const getCategories = async () => {
-  return await api
-    .get("pim/webservice/rest/getcategorylist", { next: { revalidate: 3600 } })
-    .json<Category[]>();
 };
