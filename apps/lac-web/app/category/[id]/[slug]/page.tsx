@@ -1,8 +1,15 @@
-import { api } from "@/_lib/api";
+import Breadcrumbs from "@/_components/breadcrumbs";
+import ErrorBoundary from "@/_components/error-boundary";
+import { getBreadcrumbs } from "@/_lib/shared-api";
 import { getMediaUrl } from "@/_utils/helpers";
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { PAGE_SIZES, QUERY_KEYS, SORTING_TYPES } from "./constants";
+import { Suspense } from "react";
+import Filters from "./_filters";
+import { getCategory } from "./apis";
+import { PAGE_SIZES } from "./constants";
+import ProductsList from "./products-list";
 import ProductsListSelectors from "./products-list-selectors";
 
 type CategoryPageProps = {
@@ -10,112 +17,88 @@ type CategoryPageProps = {
     id: string;
     slug: string;
   };
-  searchParams: { [key: string]: string | string[] | undefined };
 };
 
-const CategoryPage = async ({
-  params: { id },
-  searchParams,
-}: CategoryPageProps) => {
-  const page = searchParams[QUERY_KEYS.PAGE]?.toString() ?? "1";
-  const pageSize =
-    searchParams[QUERY_KEYS.PAGE_SIZE]?.toString() ?? PAGE_SIZES[0];
-  const sorting =
-    (searchParams[
-      QUERY_KEYS.SORT
-    ]?.toString() as (typeof SORTING_TYPES)[number]["value"]) ??
-    SORTING_TYPES[0].value;
+export const generateMetadata = async ({
+  params: { id, slug },
+}: CategoryPageProps): Promise<Metadata> => {
+  const category = await getCategory(id, slug);
 
-  const productsList = await api
-    .get(`pim/webservice/rest/productlandinggrouplist/${id}`, {
-      searchParams: new URLSearchParams({
-        page,
-        perpage: pageSize,
-        sort: sorting,
-      }),
-      next: {
-        revalidate: 3600,
-      },
-    })
-    .json<{
-      group_list: {
-        groupId: number;
-        item_group_name: string;
-        slug: string;
-        brandName: string;
-        group_img: string;
-        itemSkuList: {
-          is_product_exclude: boolean;
-          txt_wurth_lac_item: string;
-          item_name: string;
-          img: string;
-          is_favourite: null;
-          "SKU-attribute": string;
-        }[];
-        variationsCount: number;
-      }[];
-      pagination: [
-        {
-          db_count: number;
-          offset: number;
-          perPage: string;
-        },
-      ];
-    }>();
+  return {
+    title: category.main.catTitle,
+  };
+};
+
+const CategoryPage = async ({ params: { id, slug } }: CategoryPageProps) => {
+  const category = await getCategory(id, slug);
+  const breadcrumbs = await getBreadcrumbs(id, "category");
 
   return (
     <>
-      <ProductsListSelectors
-        pageNo={parseInt(page)}
-        pageSize={parseInt(pageSize)}
-        total={productsList.pagination[0].db_count}
-        sorting={sorting}
-        searchParams={searchParams}
+      <Breadcrumbs
+        links={breadcrumbs.map((breadcrumb) => ({
+          href: `/category/${breadcrumb.oo_id}/${breadcrumb.slug}`,
+          label: breadcrumb.cat_name,
+        }))}
       />
 
-      {productsList.group_list.map((product, index) => (
-        <div
-          key={product.groupId}
-          className="flex flex-col items-center text-center"
-        >
-          <Link
-            href={`/product-item/${product.groupId}`}
-            className="group block"
-          >
-            <Image
-              src={getMediaUrl(product.group_img)}
-              alt={`A picture of ${product.item_group_name}`}
-              width={171}
-              height={171}
-              priority={index < 4}
-            />
+      <h1 className="max-w-desktop mx-auto">{category.main.catTitle}</h1>
 
-            <div
-              className="group-hover:text-brand-primary"
-              dangerouslySetInnerHTML={{ __html: product.brandName }}
-            />
+      {!!category.main.description && (
+        <p className="max-w-desktop mx-auto">{category.main.description}</p>
+      )}
 
-            <div>{product.item_group_name}</div>
-          </Link>
+      {category.main.subCatgores.length > 0 && (
+        <section className="max-w-desktop mx-auto">
+          <h2 className="text-brand-primary">Categories</h2>
 
-          {!!product.itemSkuList[0] && (
-            <div>( {product.itemSkuList[0].txt_wurth_lac_item} )</div>
-          )}
+          <div className="grid grid-cols-4 gap-2">
+            {category.main.subCatgores.map((subCategory, index) => (
+              <Link
+                key={subCategory.SubCatId}
+                href={`/category/${subCategory.SubCatId}/${subCategory.slug}`}
+              >
+                <Image
+                  src={getMediaUrl(subCategory.Image)}
+                  alt={`A picture of ${subCategory.SubCatTitle}`}
+                  width={238}
+                  height={172}
+                  className="mx-auto object-contain"
+                  priority={index < 4}
+                />
 
-          <div>
-            {product.variationsCount > 1
-              ? `${product.variationsCount} variations`
-              : "1 variation"}
+                <div className="bg-brand-primary text-center text-white">
+                  {subCategory.SubCatTitle}
+                </div>
+              </Link>
+            ))}
           </div>
+        </section>
+      )}
 
-          <Link
-            href={`/product-item/${product.groupId}`}
-            className="bg-brand-primary rounded p-2 uppercase text-white"
+      <div className="max-w-desktop mx-auto flex flex-row gap-8">
+        <Filters id={id} />
+
+        <div className="grid flex-1 grid-cols-4 gap-4">
+          <ErrorBoundary
+            fallback={<div className="col-span-4">Error fetching products</div>}
           >
-            View item
-          </Link>
+            <Suspense
+              fallback={
+                <>
+                  <ProductsListSelectors />
+
+                  {[...Array(parseInt(PAGE_SIZES[0]))].map((item, index) => (
+                    <div key={index}>Placeholder Product</div>
+                  ))}
+                </>
+              }
+            >
+              <ProductsList id={id} />
+            </Suspense>
+          </ErrorBoundary>
         </div>
-      ))}
+      </div>
     </>
   );
 };
