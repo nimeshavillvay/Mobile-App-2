@@ -79,6 +79,7 @@ export const getProduct = async (groupId: string, sku?: string) => {
             txt_upc2: null;
             txt_seo_meta_description: null;
             txt_keywords: string;
+            override_price?: string;
             item_brand_code: string;
             item_brand_name: string;
             item_brand_logo: string;

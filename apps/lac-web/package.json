@@ -28,6 +28,7 @@
     "@tanstack/react-query-next-experimental": "5.17.19",
     "clsx": "2.1.0",
     "dayjs": "1.11.10",
+    "embla-carousel": "8.0.0-rc21",
     "embla-carousel-autoplay": "8.0.0-rc21",
     "embla-carousel-react": "8.0.0-rc21",
     "jsencrypt": "3.3.2",
