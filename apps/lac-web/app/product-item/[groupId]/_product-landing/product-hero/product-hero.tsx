@@ -30,7 +30,7 @@ const ProductHero = async ({ groupId, sku }: ProductHeroProps) => {
               alt={`The logo of ${product.selected_item.item_brand_name}`}
               width={63}
               height={63}
-              className="object-contain"
+              className="h-[63px] w-[63px] object-contain"
             />
           )}
 

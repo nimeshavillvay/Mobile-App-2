@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 
 const RootLayout = ({ children }: { children: ReactNode }) => {
   return (
-    <html lang="en">
+    <html lang="en" className="scroll-smooth">
       <body>
         <NextTopLoader showSpinner={false} color="#cc0000" />
 
