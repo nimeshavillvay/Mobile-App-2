@@ -77,6 +77,15 @@ const AccessoriesAndRelatedProducts = async ({
       }[];
     }>();
 
+  // No Accessories or Related Products
+  if (!products.data.length) {
+    return (
+      <div className="text-brand-very-dark-gray">
+        Accessories and Related Products are not available
+      </div>
+    );
+  }
+
   return (
     <table>
       <thead>
