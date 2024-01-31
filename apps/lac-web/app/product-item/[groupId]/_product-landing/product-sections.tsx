@@ -81,7 +81,7 @@ export const Section = ({
 }) => {
   const setVisibleSection = useSetAtom(visibleSectionAtom);
   const { ref } = useInView({
-    threshold: 0.6,
+    threshold: [0.4, 0.6],
     onChange: (inView) => {
       if (inView) {
         setVisibleSection(sectionType);
