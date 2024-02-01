@@ -1,7 +1,12 @@
 import Breadcrumbs from "@/_components/breadcrumbs";
 import Separator from "@/_components/separator";
+import { api } from "@/_lib/api";
 import { getBreadcrumbs } from "@/_lib/shared-api";
-import { MdOutlineWarningAmber } from "react-icons/md";
+import { getMediaUrl } from "@/_utils/helpers";
+import {
+  MdOutlineSimCardDownload,
+  MdOutlineWarningAmber,
+} from "react-icons/md";
 import { getProduct } from "../apis";
 import AccessoriesAndRelatedProducts from "./accessories-and-related-products/accessories-and-related-products";
 import ProductHero from "./product-hero";
@@ -15,7 +20,24 @@ type ProductLandingProps = {
 
 const ProductLanding = async ({ groupId, sku }: ProductLandingProps) => {
   const product = await getProduct(groupId, sku);
-  const breadcrumbs = await getBreadcrumbs(groupId, "product");
+  const [breadcrumbs, attachments] = await Promise.all([
+    getBreadcrumbs(groupId, "product"),
+    api
+      .get(`pim/webservice/rest/landingattachment/${groupId}`, {
+        searchParams: sku ? new URLSearchParams({ sku }) : undefined,
+        next: { revalidate: 3600 },
+      })
+      .json<{
+        group_assets_images: unknown[];
+        group_assets_doc: {
+          file_name: string;
+          file_path: string;
+        }[];
+        group_assets_video: unknown[];
+        group_assets_downloads: unknown[];
+        cross_sell: unknown[];
+      }>(),
+  ]);
 
   return (
     <>
@@ -100,14 +122,37 @@ const ProductLanding = async ({ groupId, sku }: ProductLandingProps) => {
         </ProductSections.Section>
 
         <ProductSections.Section sectionType="documents" heading="Documents">
-          Documents
+          {attachments.group_assets_doc.length ? (
+            <div className="grid grid-cols-4 gap-[30px]">
+              {attachments.group_assets_doc.map((doc) => (
+                <a
+                  key={doc.file_path}
+                  href={getMediaUrl(doc.file_path)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  download
+                  className="flex flex-row items-center gap-[10px] rounded-[5px] bg-[rgba(0,173,239,0.15)] p-2"
+                >
+                  <MdOutlineSimCardDownload className="text-brand-secondary text-3xl" />
+
+                  <span>{doc.file_name}</span>
+                </a>
+              ))}
+            </div>
+          ) : (
+            <div className="text-brand-very-dark-gray">
+              Documents are not available
+            </div>
+          )}
         </ProductSections.Section>
 
         <ProductSections.Section
           sectionType="faq"
           heading="Questions and Answers"
         >
-          FAQs
+          <div className="text-brand-very-dark-gray">
+            Questions and Answers are not available
+          </div>
         </ProductSections.Section>
       </ProductSections.Root>
     </>

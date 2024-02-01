@@ -1,7 +1,9 @@
 "use client";
 
+import FullscreenLoading from "@/_components/fullscreen-loading";
 import VisuallyHidden from "@/_components/visually-hidden";
 import useAccountSelectorDialog from "@/_hooks/account/use-account-selector-dialog.hook";
+import useLoginDialog from "@/_hooks/account/use-login-dialog.hook";
 import useCookies from "@/_hooks/storage/use-cookies.hook";
 import { api } from "@/_lib/api";
 import { encryptString } from "@/_utils/helpers";
@@ -12,7 +14,7 @@ import * as Form from "@radix-ui/react-form";
 import * as Label from "@radix-ui/react-label";
 import { useMutation } from "@tanstack/react-query";
 import Link from "next/link";
-import { useId, useState } from "react";
+import { useId } from "react";
 import { useForm } from "react-hook-form";
 import { FaCheck } from "react-icons/fa";
 import { MdOutlineClose } from "react-icons/md";
@@ -25,10 +27,11 @@ const loginSchema = z.object({
 type LoginSchema = z.infer<typeof loginSchema>;
 type LoginFieldName = keyof LoginSchema;
 
-const Login = () => {
+const LoginDialog = () => {
   const id = useId();
   const staySignedInId = `signIn-${id}`;
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const open = useLoginDialog((state) => state.open);
+  const setOpen = useLoginDialog((state) => state.setOpen);
   const { register, handleSubmit } = useForm<LoginSchema>({
     resolver: zodResolver(loginSchema),
   });
@@ -75,7 +78,7 @@ const Login = () => {
     onSuccess: (data) => {
       setCookies("token", data.token);
 
-      setDialogOpen(false);
+      setOpen(false);
       setAccountSelectorOpen(true);
     },
   });
@@ -88,12 +91,12 @@ const Login = () => {
     loginMutation.mutate({ userName: data.email, password: base64Key });
   };
 
-  return (
-    <Dialog.Root open={dialogOpen} onOpenChange={setDialogOpen}>
-      <Dialog.Trigger asChild>
-        <button className="bg-brand-primary text-white">Sign in</button>
-      </Dialog.Trigger>
+  if (loginMutation.isPending) {
+    return <FullscreenLoading />;
+  }
 
+  return (
+    <Dialog.Root open={open} onOpenChange={setOpen}>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black/60" />
 
@@ -181,4 +184,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default LoginDialog;

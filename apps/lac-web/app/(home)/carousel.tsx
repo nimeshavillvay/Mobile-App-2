@@ -1,10 +1,10 @@
 "use client";
 
-import type { CarouselBanner } from "@/_lib/types";
 import { getMediaUrl } from "@/_utils/helpers";
 import Autoplay from "embla-carousel-autoplay";
 import useEmblaCarousel from "embla-carousel-react";
 import Image from "next/image";
+import type { CarouselBanner } from "./types";
 
 type CarouselProps = {
   banners: CarouselBanner[];

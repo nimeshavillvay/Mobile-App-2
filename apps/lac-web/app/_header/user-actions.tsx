@@ -3,18 +3,19 @@
 import useAccountList from "@/_hooks/account/use-account-list.hook";
 import useAddressId from "@/_hooks/account/use-address-id.hook";
 import useFavouriteCount from "@/_hooks/account/use-favourite-count.hook";
+import useLoginDialog from "@/_hooks/account/use-login-dialog.hook";
 import useLogout from "@/_hooks/account/use-logout.hook";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import Link from "next/link";
 import { FaRegUser } from "react-icons/fa";
 import { IoMdHeartEmpty } from "react-icons/io";
 import { MdArrowDropDown } from "react-icons/md";
-import Login from "./login";
 
 const UserActions = () => {
   const accountListQuery = useAccountList();
   const favouriteCountQuery = useFavouriteCount();
   const [addressId] = useAddressId();
+  const setLoginDialogOpen = useLoginDialog((state) => state.setOpen);
   const logout = useLogout();
 
   if (!accountListQuery.data) {
@@ -28,7 +29,12 @@ const UserActions = () => {
 
         <button className="hover:text-brand-primary">Apply</button>
 
-        <Login />
+        <button
+          className="bg-brand-primary text-white"
+          onClick={() => setLoginDialogOpen(true)}
+        >
+          Sign in
+        </button>
 
         <button className="hover:text-brand-primary">En</button>
       </div>

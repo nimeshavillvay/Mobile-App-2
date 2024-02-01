@@ -1,14 +1,18 @@
 "use client";
 
+import FullscreenLoading from "@/_components/fullscreen-loading";
 import useAccountList from "@/_hooks/account/use-account-list.hook";
 import useAccountNo from "@/_hooks/account/use-account-no.hook";
 import useAccountSelectorDialog from "@/_hooks/account/use-account-selector-dialog.hook";
 import useAddressId from "@/_hooks/account/use-address-id.hook";
+import useCookies from "@/_hooks/storage/use-cookies.hook";
+import { api } from "@/_lib/api";
 import * as Checkbox from "@radix-ui/react-checkbox";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as Label from "@radix-ui/react-label";
 import * as RadioGroup from "@radix-ui/react-radio-group";
-import { useId } from "react";
+import { useMutation } from "@tanstack/react-query";
+import { useEffect, useId, useState } from "react";
 import { FaCheck } from "react-icons/fa";
 
 const AccountSelectorDialog = () => {
@@ -18,9 +22,40 @@ const AccountSelectorDialog = () => {
   const open = useAccountSelectorDialog((state) => state.open);
   const setOpen = useAccountSelectorDialog((state) => state.setOpen);
 
+  const [cookies, setCookies] = useCookies();
   const accountListQuery = useAccountList();
-  const [accountNo, setAccountNo] = useAccountNo();
-  const [addressId, setAddressId] = useAddressId();
+  const [localAccountNo, setLocalAccountNo] = useAccountNo();
+  const [localAddressId, setLocalAddressId] = useAddressId();
+  const [accountNo, setAccountNo] = useState(localAccountNo);
+  const [addressId, setAddressId] = useState(localAddressId);
+
+  const accountSelectMutation = useMutation({
+    mutationFn: ({
+      accountNo,
+      shipTo,
+    }: {
+      accountNo: string;
+      shipTo: string;
+    }) =>
+      api
+        .post("am/account-select", {
+          headers: {
+            "Content-Type": "application/json",
+            authorization: `Bearer ${cookies.token}`,
+          },
+          body: JSON.stringify({ accountNo, "ship-to": shipTo }),
+        })
+        .json<{
+          permission: string;
+          token: string;
+        }>(),
+    onSuccess: (data, { accountNo, shipTo }) => {
+      setCookies("account-token", data.token);
+      setLocalAccountNo(accountNo);
+      setLocalAddressId(shipTo);
+      setOpen(false);
+    },
+  });
 
   const onAccountNoChange = (accountNo: string) => {
     const account = accountListQuery.data?.accounts.find(
@@ -41,6 +76,16 @@ const AccountSelectorDialog = () => {
       }
     }
   };
+
+  useEffect(() => {
+    // Used to sync the state with localstorage when the dialog opens
+    setAccountNo(localAccountNo);
+    setAddressId(localAddressId);
+  }, [localAccountNo, localAddressId]);
+
+  if ((accountListQuery.isLoading || accountSelectMutation.isPending) && open) {
+    return <FullscreenLoading />;
+  }
 
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
@@ -137,7 +182,10 @@ const AccountSelectorDialog = () => {
 
           <button
             className="bg-brand-primary p-2 uppercase text-white"
-            onClick={() => setOpen(false)}
+            onClick={() =>
+              accountSelectMutation.mutate({ accountNo, shipTo: addressId })
+            }
+            disabled={!accountNo || !addressId}
           >
             Continue
           </button>

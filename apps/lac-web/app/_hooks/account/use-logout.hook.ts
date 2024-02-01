@@ -15,11 +15,15 @@ const useLogout = () => {
 
   return () => {
     removeCookie("token");
+    removeCookie("account-token");
     removeAccountNo();
     removeAddressID();
 
     queryClient.removeQueries({
       queryKey: ["user"],
+    });
+    queryClient.removeQueries({
+      queryKey: ["cart"],
     });
 
     if (pathname !== "/") {

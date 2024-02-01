@@ -2,9 +2,10 @@ import Separator from "@/_components/separator";
 import { api } from "@/_lib/api";
 import type { Category } from "@/_lib/types";
 import Link from "next/link";
-import AccountSelectorDialog from "./account-selector-dialog";
 import CategoriesDropdown from "./categories-dropdown";
 import NavBar from "./nav-bar";
+import Search from "./search";
+import ShoppingCart from "./shopping-cart";
 import UserActions from "./user-actions";
 
 const Header = async () => {
@@ -52,7 +53,15 @@ const Header = async () => {
         </div>
       </div>
 
-      <div className="max-w-desktop mx-auto">Search Bar</div>
+      <div className="max-w-desktop mx-auto flex flex-row items-center gap-4">
+        <Link href="/" aria-label="Home page">
+          Wurth logo
+        </Link>
+
+        <Search />
+
+        <ShoppingCart />
+      </div>
 
       <div className="bg-brand-primary">
         <div className="max-w-desktop mx-auto flex flex-row items-center gap-2">
@@ -61,8 +70,6 @@ const Header = async () => {
           <NavBar />
         </div>
       </div>
-
-      <AccountSelectorDialog />
     </header>
   );
 };

@@ -1,12 +1,14 @@
 "use client";
 
-import type { FeaturedProduct } from "@/_lib/types";
+import useAccountList from "@/_hooks/account/use-account-list.hook";
+import useLoginDialog from "@/_hooks/account/use-login-dialog.hook";
 import { getMediaUrl } from "@/_utils/helpers";
 import * as Tabs from "@radix-ui/react-tabs";
 import useEmblaCarousel from "embla-carousel-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import type { FeaturedProduct } from "./types";
 
 type FeaturedProductsProps = {
   bestSellers: FeaturedProduct[];
@@ -31,6 +33,8 @@ const FeaturedProducts = ({
 }: FeaturedProductsProps) => {
   const [emblaRef] = useEmblaCarousel({ loop: true });
   const [selectedType, setSelectedType] = useState<ProductsType>("special");
+  const accountListQuery = useAccountList();
+  const setOpenLoginDialog = useLoginDialog((state) => state.setOpen);
 
   let productsList: FeaturedProduct[] = [];
   if (selectedType === "bestSellers") {
@@ -97,11 +101,23 @@ const FeaturedProducts = ({
                           <h3>{product.productTitle}</h3>
 
                           <div>{product.sku}</div>
+                        </Link>
 
-                          <button className="bg-brand-primary w-full rounded p-2 text-white">
+                        {accountListQuery.data ? (
+                          <>
+                            <div>
+                              ${product.override_price} /{" "}
+                              {product.txt_uom_label}
+                            </div>
+                          </>
+                        ) : (
+                          <button
+                            onClick={() => setOpenLoginDialog(true)}
+                            className="bg-brand-primary w-full rounded p-2 text-white"
+                          >
                             Login to buy
                           </button>
-                        </Link>
+                        )}
                       </div>
                     ))}
                   </div>

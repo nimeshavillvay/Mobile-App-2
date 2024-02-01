@@ -21,3 +21,7 @@ export const encryptString = (value: string) => {
 
   return RSAEncrypt.encrypt(value);
 };
+
+export const formatNumberToPrice = (value: number) => {
+  return value.toLocaleString(undefined, { minimumFractionDigits: 2 });
+};

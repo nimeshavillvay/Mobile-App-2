@@ -1,7 +1,6 @@
 import Separator from "@/_components/separator";
 import VisuallyHidden from "@/_components/visually-hidden";
 import { api } from "@/_lib/api";
-import type { CarouselBanner, FeaturedProduct } from "@/_lib/types";
 import { getMediaUrl } from "@/_utils/helpers";
 import Image from "next/image";
 import Link from "next/link";
@@ -11,6 +10,7 @@ import banner3Machinery from "./banner-3-machinery.jpg";
 import Carousel from "./carousel";
 import EmailSignup from "./email-signup";
 import FeaturedProducts from "./featured-products";
+import type { CarouselBanner, FeaturedProduct } from "./types";
 
 const BANNERS = [
   {
@@ -166,17 +166,14 @@ const HomePage = async () => {
 
       <section className="max-w-desktop mx-auto grid grid-cols-3 gap-[30px]">
         {BANNERS.map((banner) => (
-          <Link
-            href={banner.href}
-            key={banner.href}
-            className="relative h-[353px]"
-          >
+          <Link href={banner.href} key={banner.href} className="relative">
             <Image
               src={banner.background}
               placeholder="blur"
-              fill
+              width={353}
+              height={353}
               alt={`The background for ${banner.title}`}
-              className="object-cover"
+              className="h-[353px] w-[353px] object-cover"
             />
 
             <div className="absolute bottom-0 right-0 max-w-[328px] bg-black/50 text-white backdrop-blur">
