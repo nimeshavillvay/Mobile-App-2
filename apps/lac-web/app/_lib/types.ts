@@ -20,3 +20,25 @@ export type Category = {
     }[];
   }[];
 };
+
+export type Address = {
+  "address-id": string;
+  name: string;
+  "street-address": string;
+  locality: string;
+  region: string;
+  "postal-code": string;
+  county: string;
+  "country-name": string;
+  plant?: string;
+  route_info?: {
+    route: string;
+    routeName: string;
+    monday: boolean;
+    tuesday: boolean;
+    wednesday: boolean;
+    thursday: boolean;
+    friday: boolean;
+  };
+  "phone-no"?: string;
+};
