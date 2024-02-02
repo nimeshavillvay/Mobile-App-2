@@ -1,3 +1,4 @@
+import "server-only";
 import { api } from "./api";
 
 export const getBreadcrumbs = async (

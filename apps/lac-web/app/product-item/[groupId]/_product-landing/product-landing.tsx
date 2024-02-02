@@ -1,7 +1,7 @@
 import Breadcrumbs from "@/_components/breadcrumbs";
 import Separator from "@/_components/separator";
 import { api } from "@/_lib/api";
-import { getBreadcrumbs } from "@/_lib/shared-api";
+import { getBreadcrumbs } from "@/_lib/shared-server-apis";
 import { getMediaUrl } from "@/_utils/helpers";
 import {
   MdOutlineSimCardDownload,

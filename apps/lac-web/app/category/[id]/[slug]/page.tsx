@@ -1,6 +1,6 @@
 import Breadcrumbs from "@/_components/breadcrumbs";
 import ErrorBoundary from "@/_components/error-boundary";
-import { getBreadcrumbs } from "@/_lib/shared-api";
+import { getBreadcrumbs } from "@/_lib/shared-server-apis";
 import { getMediaUrl } from "@/_utils/helpers";
 import type { Metadata } from "next";
 import Image from "next/image";

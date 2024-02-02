@@ -6,7 +6,7 @@ import useAccountNo from "@/_hooks/account/use-account-no.hook";
 import useAccountSelectorDialog from "@/_hooks/account/use-account-selector-dialog.hook";
 import useAddressId from "@/_hooks/account/use-address-id.hook";
 import useCookies from "@/_hooks/storage/use-cookies.hook";
-import { api } from "@/_lib/api";
+import { selectAccount } from "@/_lib/shared-apis";
 import * as Checkbox from "@radix-ui/react-checkbox";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as Label from "@radix-ui/react-label";
@@ -36,19 +36,7 @@ const AccountSelectorDialog = () => {
     }: {
       accountNo: string;
       shipTo: string;
-    }) =>
-      api
-        .post("am/account-select", {
-          headers: {
-            "Content-Type": "application/json",
-            authorization: `Bearer ${cookies.token}`,
-          },
-          body: JSON.stringify({ accountNo, "ship-to": shipTo }),
-        })
-        .json<{
-          permission: string;
-          token: string;
-        }>(),
+    }) => selectAccount(cookies.token, accountNo, shipTo),
     onSuccess: (data, { accountNo, shipTo }) => {
       setCookies("account-token", data.token);
       setLocalAccountNo(accountNo);
