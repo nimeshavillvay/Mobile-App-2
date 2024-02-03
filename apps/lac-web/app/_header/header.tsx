@@ -1,6 +1,10 @@
+import wurthLogoFull from "@/_assets/images/wurth-logo-full.png";
 import Separator from "@/_components/separator";
+import VisuallyHidden from "@/_components/visually-hidden";
 import { api } from "@/_lib/api";
+import { DEFAULT_REVALIDATE } from "@/_lib/constants";
 import type { Category } from "@/_lib/types";
+import Image from "next/image";
 import Link from "next/link";
 import CategoriesDropdown from "./categories-dropdown";
 import NavBar from "./nav-bar";
@@ -10,20 +14,22 @@ import UserActions from "./user-actions";
 
 const Header = async () => {
   const categories = await api
-    .get("pim/webservice/rest/getcategorylist", { next: { revalidate: 3600 } })
+    .get("pim/webservice/rest/getcategorylist", {
+      next: { revalidate: DEFAULT_REVALIDATE },
+    })
     .json<Category[]>();
 
   return (
     <header>
       <div className="bg-brand-very-light-gray">
-        <div className="max-w-desktop mx-auto flex flex-row items-center justify-between">
-          <nav className="flex flex-row items-center gap-2">
-            <Link href="/" className="text-brand-primary">
+        <div className="max-w-desktop mx-auto flex h-9 flex-row items-center justify-between text-sm leading-4 text-black">
+          <nav className="flex flex-row items-center gap-4">
+            <Link href="/" className="text-brand-primary font-bold">
               Wurth Louis and Company
             </Link>
 
             <Separator
-              className="bg-brand-light-gray w-[2px] self-stretch"
+              className="bg-brand-light-gray h-5 w-px"
               orientation="vertical"
             />
 
@@ -37,7 +43,7 @@ const Header = async () => {
             </a>
 
             <Separator
-              className="bg-brand-light-gray w-[2px] self-stretch"
+              className="bg-brand-light-gray h-5 w-px"
               orientation="vertical"
             />
 
@@ -53,9 +59,18 @@ const Header = async () => {
         </div>
       </div>
 
-      <div className="max-w-desktop mx-auto flex flex-row items-center gap-4">
-        <Link href="/" aria-label="Home page">
-          Wurth logo
+      <div className="max-w-desktop mx-auto flex flex-row items-center gap-12 py-5">
+        <Link href="/">
+          <VisuallyHidden>Wurth</VisuallyHidden>
+
+          <Image
+            src={wurthLogoFull}
+            alt="Wurth logo"
+            width={192}
+            height={41}
+            className="h-[41px] w-[192px] object-contain"
+            priority
+          />
         </Link>
 
         <Search />
@@ -64,7 +79,7 @@ const Header = async () => {
       </div>
 
       <div className="bg-brand-primary">
-        <div className="max-w-desktop mx-auto flex flex-row items-center gap-2">
+        <div className="max-w-desktop mx-auto flex h-[50px] flex-row items-center gap-[15px]">
           <CategoriesDropdown categories={categories} />
 
           <NavBar />

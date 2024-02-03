@@ -4,7 +4,10 @@ import { NextResponse, type NextRequest } from "next/server";
 
 export const middleware = async (request: NextRequest) => {
   // Check validity of token before accessing private routes
-  if (request.nextUrl.pathname.startsWith("/myaccount")) {
+  if (
+    request.nextUrl.pathname.startsWith("/myaccount") ||
+    request.nextUrl.pathname.startsWith("/shopping-cart")
+  ) {
     const tokenCookie = request.cookies.get(TOKEN);
 
     // If there is no token

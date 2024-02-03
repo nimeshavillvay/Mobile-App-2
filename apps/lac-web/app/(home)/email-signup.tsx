@@ -24,13 +24,15 @@ const EmailSignup = () => {
   };
 
   return (
-    <div>
-      <h3>Email Exclusives</h3>
-      <p>Sign up to receive promotions and special offers.</p>
+    <div className="text-very-dark-gray">
+      <h3 className="text-[19px] font-medium leading-6">Email Exclusives</h3>
+      <p className="mb-3 mt-1 text-[15px] leading-5">
+        Sign up to receive promotions and special offers.
+      </p>
 
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-row items-center gap-2"
+        className="flex flex-row items-center gap-1"
       >
         <VisuallyHidden>
           <Label.Root htmlFor={emailId}>Email</Label.Root>
@@ -42,10 +44,10 @@ const EmailSignup = () => {
           type="email"
           required
           placeholder="Enter your Email to sign up"
-          className="flex-1"
+          className="placeholder:text-brand-dark-gray h-9 flex-1 rounded px-2 text-[15px] leading-5"
         />
 
-        <button className="bg-brand-primary p-2 uppercase text-white">
+        <button className="bg-brand-primary h-9 rounded px-2 py-[7px] text-base font-extrabold uppercase leading-[22px] text-white">
           Subscribe
         </button>
       </form>

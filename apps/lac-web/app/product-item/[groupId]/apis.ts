@@ -1,4 +1,5 @@
 import { api } from "@/_lib/api";
+import { DEFAULT_REVALIDATE } from "@/_lib/constants";
 import { notFound } from "next/navigation";
 import "server-only";
 
@@ -11,7 +12,7 @@ export const getProduct = async (groupId: string, sku?: string) => {
           })
         : undefined,
       next: {
-        revalidate: 3600,
+        revalidate: DEFAULT_REVALIDATE,
       },
     })
     .json<

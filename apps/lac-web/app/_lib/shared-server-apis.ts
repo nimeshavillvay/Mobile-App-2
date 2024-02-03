@@ -1,5 +1,6 @@
 import "server-only";
 import { api } from "./api";
+import { DEFAULT_REVALIDATE } from "./constants";
 
 export const getBreadcrumbs = async (
   id: string,
@@ -11,7 +12,7 @@ export const getBreadcrumbs = async (
         [type === "product" ? "group_id" : "catId"]: id,
       }),
       next: {
-        revalidate: 3600,
+        revalidate: DEFAULT_REVALIDATE,
       },
     })
     .json<

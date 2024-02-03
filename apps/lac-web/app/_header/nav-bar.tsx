@@ -1,9 +1,11 @@
 "use client";
 
+import Separator from "@/_components/separator";
 import useAccountList from "@/_hooks/account/use-account-list.hook";
 import { cn } from "@/_utils/helpers";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Fragment } from "react";
 
 const NAV_LINKS = [
   {
@@ -42,23 +44,33 @@ const NavBar = () => {
   const pathname = usePathname();
   const accountListQuery = useAccountList();
 
+  const visibleLinks = NAV_LINKS.filter(
+    (link) => !link.private || (!!accountListQuery.data && link.private),
+  );
+
   return (
-    <nav>
-      {NAV_LINKS.filter(
-        (link) => !link.private || (!!accountListQuery.data && link.private),
-      ).map((link) => (
-        <Link
-          href={link.href}
-          key={link.href}
-          className={cn(
-            "rounded p-2 font-bold",
-            pathname === link.href
-              ? "text-brand-primary bg-white"
-              : "hover:text-brand-primary text-white hover:bg-white",
+    <nav className="flex flex-row items-center gap-[9px]">
+      {visibleLinks.map((link, index) => (
+        <Fragment key={link.href}>
+          <Link
+            href={link.href}
+            className={cn(
+              "rounded-sm px-[10px] py-2 text-base font-medium leading-none",
+              pathname === link.href
+                ? "text-brand-primary bg-white"
+                : "hover:text-brand-primary text-white hover:bg-white",
+            )}
+          >
+            {link.label}
+          </Link>
+
+          {index !== visibleLinks.length - 1 && (
+            <Separator
+              orientation="vertical"
+              className="h-[23px] w-px bg-white"
+            />
           )}
-        >
-          {link.label}
-        </Link>
+        </Fragment>
       ))}
     </nav>
   );

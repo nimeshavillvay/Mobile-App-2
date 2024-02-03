@@ -1,14 +1,17 @@
 import Breadcrumbs from "@/_components/breadcrumbs";
 import Separator from "@/_components/separator";
 import { api } from "@/_lib/api";
+import { DEFAULT_REVALIDATE } from "@/_lib/constants";
 import { getBreadcrumbs } from "@/_lib/shared-server-apis";
 import { getMediaUrl } from "@/_utils/helpers";
+import { notFound } from "next/navigation";
 import {
   MdOutlineSimCardDownload,
   MdOutlineWarningAmber,
 } from "react-icons/md";
 import { getProduct } from "../apis";
 import AccessoriesAndRelatedProducts from "./accessories-and-related-products/accessories-and-related-products";
+import { getVariants } from "./apis";
 import ProductHero from "./product-hero";
 import * as ProductSections from "./product-sections";
 import ProductVariations from "./product-variations";
@@ -25,7 +28,7 @@ const ProductLanding = async ({ groupId, sku }: ProductLandingProps) => {
     api
       .get(`pim/webservice/rest/landingattachment/${groupId}`, {
         searchParams: sku ? new URLSearchParams({ sku }) : undefined,
-        next: { revalidate: 3600 },
+        next: { revalidate: DEFAULT_REVALIDATE },
       })
       .json<{
         group_assets_images: unknown[];
@@ -38,6 +41,16 @@ const ProductLanding = async ({ groupId, sku }: ProductLandingProps) => {
         cross_sell: unknown[];
       }>(),
   ]);
+
+  // Check if SKU exists
+  if (sku) {
+    const variants = await getVariants(groupId, sku);
+
+    // If none the SKUs match the one given in the pathname
+    if (!variants.items.some((variant) => variant.txt_wurth_lac_item === sku)) {
+      return notFound();
+    }
+  }
 
   return (
     <>

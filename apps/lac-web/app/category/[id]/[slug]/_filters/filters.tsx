@@ -1,4 +1,5 @@
 import { api } from "@/_lib/api";
+import { DEFAULT_REVALIDATE } from "@/_lib/constants";
 import FiltersSelector from "./filters-selector";
 
 type FiltersProps = {
@@ -9,7 +10,7 @@ const Filters = async ({ id }: FiltersProps) => {
   const headings = await api
     .get(`pim/webservice/rest/productlandingattributeheading/${id}`, {
       next: {
-        revalidate: 3600,
+        revalidate: DEFAULT_REVALIDATE,
       },
     })
     .json<{
@@ -26,7 +27,7 @@ const Filters = async ({ id }: FiltersProps) => {
           `pim/webservice/rest/productlandingattributevalues/${id}/${heading.attribute_name}`,
           {
             next: {
-              revalidate: 3600,
+              revalidate: DEFAULT_REVALIDATE,
             },
           },
         )

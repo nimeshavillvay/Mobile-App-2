@@ -1,11 +1,12 @@
 import { api } from "@/_lib/api";
+import { DEFAULT_REVALIDATE } from "@/_lib/constants";
 import { notFound } from "next/navigation";
 import "server-only";
 
 export const getCategory = async (id: string, slug: string) => {
   const response = await api
     .get(`pim/webservice/rest/productlandingcategory/${id}`, {
-      next: { revalidate: 3600 },
+      next: { revalidate: DEFAULT_REVALIDATE },
     })
     .json<
       | {

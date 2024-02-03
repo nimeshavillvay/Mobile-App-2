@@ -20,7 +20,7 @@ const UserActions = () => {
 
   if (!accountListQuery.data) {
     return (
-      <div className="flex flex-row items-center gap-2">
+      <div className="flex flex-row items-center gap-4">
         <Link href="/register" className="hover:text-brand-primary">
           Register
         </Link>
@@ -30,7 +30,7 @@ const UserActions = () => {
         <button className="hover:text-brand-primary">Apply</button>
 
         <button
-          className="bg-brand-primary text-white"
+          className="bg-brand-very-dark-gray px-5 py-[10px] font-bold text-white"
           onClick={() => setLoginDialogOpen(true)}
         >
           Sign in
@@ -42,25 +42,29 @@ const UserActions = () => {
   }
 
   return (
-    <div className="flex flex-row items-center gap-2">
+    <div className="flex flex-row items-center gap-4">
       <DropdownMenu.Root>
         <DropdownMenu.Trigger asChild>
           <button
             aria-label="User menu"
-            className="flex flex-row items-center gap-2"
+            className="text-brand-very-dark-gray group flex flex-row items-center gap-[5px] self-stretch text-sm leading-4"
           >
-            <FaRegUser />
+            <FaRegUser className="text-base leading-none" />
 
-            <div className="text-right">
+            <div className="ml-[6px] text-right">
               <div>
-                Hi! {accountListQuery.data?.["given-name"]} (#{addressId})
+                <span className="group-hover:text-brand-primary group-data-[state=open]:text-brand-primary text-black">
+                  Hi! {accountListQuery.data?.["given-name"]}{" "}
+                </span>
+                (#{addressId})
               </div>
 
               <div className="flex flex-row items-center">
-                <span>View Account & History</span>
-                <MdArrowDropDown />
+                View Account & History
               </div>
             </div>
+
+            <MdArrowDropDown className="self-end" />
           </button>
         </DropdownMenu.Trigger>
 
@@ -102,7 +106,9 @@ const UserActions = () => {
         </DropdownMenu.Portal>
       </DropdownMenu.Root>
 
-      <button className="bg-brand-primary text-white">Quick Order</button>
+      <button className="bg-brand-very-dark-gray px-5 py-[10px] font-bold text-white">
+        Quick Order
+      </button>
 
       <button className="hover:text-brand-primary">En</button>
     </div>

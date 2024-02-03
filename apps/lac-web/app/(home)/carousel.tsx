@@ -13,6 +13,11 @@ type CarouselProps = {
 const Carousel = ({ banners }: CarouselProps) => {
   const [emblaRef] = useEmblaCarousel({ loop: true }, [Autoplay()]);
 
+  if (!banners.length) {
+    // If there are no banners
+    return null;
+  }
+
   return (
     <div className="max-w-desktop mx-auto overflow-hidden" ref={emblaRef}>
       <div className="flex">

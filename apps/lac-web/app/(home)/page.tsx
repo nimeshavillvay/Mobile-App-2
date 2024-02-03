@@ -1,9 +1,18 @@
 import Separator from "@/_components/separator";
 import VisuallyHidden from "@/_components/visually-hidden";
 import { api } from "@/_lib/api";
+import { DEFAULT_REVALIDATE } from "@/_lib/constants";
 import { getMediaUrl } from "@/_utils/helpers";
 import Image from "next/image";
 import Link from "next/link";
+import {
+  FaFacebookF,
+  FaInstagram,
+  FaLinkedinIn,
+  FaTwitter,
+} from "react-icons/fa6";
+import { MdChevronRight } from "react-icons/md";
+import { TfiYoutube } from "react-icons/tfi";
 import banner1Government from "./banner-1-government.jpg";
 import banner2CatalogsLiterature from "./banner-2-catalogs-literature.jpg";
 import banner3Machinery from "./banner-3-machinery.jpg";
@@ -33,17 +42,50 @@ const BANNERS = [
   },
 ];
 
+const SOCIAL_LINK = [
+  {
+    name: "Facebook",
+    href: "https://www.facebook.com/WurthLAC?ref=bookmarks",
+    Icon: FaFacebookF,
+    color: "#3B5998",
+  },
+  {
+    name: "Twitter",
+    href: "https://twitter.com/wurthlouisandco",
+    Icon: FaTwitter,
+    color: "#55ACEE",
+  },
+  {
+    name: "LinkedIn",
+    href: "https://www.linkedin.com/company/3876774?trk=vsrp_companies_res_name&trkInfo=VSRPsearchId%3A359569061436460995522%2CVSRPtargetId%3A3876774%2CVSRPcmpt%3Aprimary",
+    Icon: FaLinkedinIn,
+    color: "#007AB9",
+  },
+  {
+    name: "YouTube",
+    href: "https://www.youtube.com/user/WurthLAC",
+    Icon: TfiYoutube,
+    color: "#C4302B",
+  },
+  {
+    name: "Instagram",
+    href: "https://www.instagram.com/wurthlac/",
+    Icon: FaInstagram,
+    color: "#000000",
+  },
+];
+
 const HomePage = async () => {
   const [carouselData, featuredProducts, featuredBrand, bottomBanners] =
     await Promise.all([
       api
         .get("pim/webservice/rest/carouselbanner", {
-          next: { revalidate: 3600 },
+          next: { revalidate: DEFAULT_REVALIDATE },
         })
         .json<CarouselBanner[]>(),
       api
         .get("pim/webservice/rest/getfeatureproducts", {
-          next: { revalidate: 3600 },
+          next: { revalidate: DEFAULT_REVALIDATE },
         })
         .json<{
           featured_product_list: {
@@ -55,7 +97,7 @@ const HomePage = async () => {
         }>(),
       api
         .get("pim/webservice/rest/getrandomgroups", {
-          next: { revalidate: 3600 },
+          next: { revalidate: DEFAULT_REVALIDATE },
         })
         .json<
           [
@@ -88,7 +130,7 @@ const HomePage = async () => {
         >(),
       api
         .get("pim/webservice/rest/topbottombanner", {
-          next: { revalidate: 3600 },
+          next: { revalidate: DEFAULT_REVALIDATE },
         })
         .json<
           {
@@ -164,25 +206,30 @@ const HomePage = async () => {
         </div>
       </section>
 
-      <section className="max-w-desktop mx-auto grid grid-cols-3 gap-[30px]">
+      <section className="max-w-desktop mx-auto mt-9 flex flex-row justify-between gap-[33px]">
         {BANNERS.map((banner) => (
           <Link href={banner.href} key={banner.href} className="relative">
             <Image
               src={banner.background}
               placeholder="blur"
-              width={353}
-              height={353}
+              width={352}
+              height={344}
               alt={`The background for ${banner.title}`}
-              className="h-[353px] w-[353px] object-cover"
+              className="h-[344px] w-[352px] object-cover"
             />
 
-            <div className="absolute bottom-0 right-0 max-w-[328px] bg-black/50 text-white backdrop-blur">
-              <div className="font-bold uppercase">{banner.title}</div>
+            <div className="absolute bottom-0 left-6 right-0 top-[164px] bg-black/40 p-5 text-white backdrop-blur-sm">
+              <div className="text-4xl font-extrabold uppercase leading-none">
+                {banner.title}
+              </div>
 
-              <div>{banner.description}</div>
+              <div className="mb-[18px] mt-[6px] text-lg leading-6">
+                {banner.description}
+              </div>
 
-              <div className="text-brand-secondary font-medium uppercase">
-                Learn more
+              <div className="text-brand-secondary flex flex-row items-center gap-2 text-base font-extrabold uppercase leading-[22px]">
+                <span>Learn more</span>
+                <MdChevronRight className="text-xs leading-none" />
               </div>
             </div>
           </Link>
@@ -191,15 +238,34 @@ const HomePage = async () => {
 
       <Separator
         orientation="horizontal"
-        className="max-w-desktop mx-auto my-[55px] h-px w-full bg-black"
+        className="max-w-desktop bg-brand-light-gray mx-auto my-[55px] h-px w-full"
       />
 
-      <section className="max-w-desktop mx-auto grid grid-cols-3 gap-1">
+      <section className="max-w-desktop mx-auto mb-[92px] flex flex-row justify-between gap-5">
         <div>
           <EmailSignup />
 
-          <div>
-            <h3>Keep In Touch Through Social Media</h3>
+          <div className="mt-5">
+            <h3 className="text-[19px] font-medium leading-6">
+              Keep In Touch Through Social Media
+            </h3>
+
+            <div className="mt-3 flex flex-row items-center gap-[22px]">
+              {SOCIAL_LINK.map(({ name, href, Icon, color }) => (
+                <a
+                  key={name}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="grid size-9 place-content-center rounded-full text-2xl leading-normal text-white"
+                  style={{ backgroundColor: color }}
+                >
+                  <VisuallyHidden>{name}</VisuallyHidden>
+
+                  <Icon />
+                </a>
+              ))}
+            </div>
           </div>
         </div>
 
@@ -218,8 +284,9 @@ const HomePage = async () => {
               src={getMediaUrl(banner.image_path)}
               alt={banner.alt_tag ?? ""}
               title={banner.alt_tag}
-              width={376}
-              height={200}
+              width={360}
+              height={191}
+              className="h-[191px] w-[360px] object-contain"
             />
           </Link>
         ))}

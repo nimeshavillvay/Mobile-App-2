@@ -3,6 +3,7 @@
 import type { Category } from "@/_lib/types";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import Link from "next/link";
+import { MdOutlineMenu } from "react-icons/md";
 
 type CategoriesDropdownProps = {
   categories: Category[];
@@ -12,8 +13,9 @@ const CategoriesDropdown = ({ categories }: CategoriesDropdownProps) => {
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
-        <button className="bg-black px-2 py-1 text-white">
-          Shop By Category
+        <button className="flex h-full flex-row items-center gap-[10px] bg-black px-7 align-middle text-lg font-medium leading-6 text-white">
+          <MdOutlineMenu className="text-2xl leading-none" />
+          <span>Shop By Category</span>
         </button>
       </DropdownMenu.Trigger>
 

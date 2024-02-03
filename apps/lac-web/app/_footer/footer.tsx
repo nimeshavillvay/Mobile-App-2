@@ -1,4 +1,6 @@
+import wurthLogoFull from "@/_assets/images/wurth-logo-full.png";
 import Separator from "@/_components/separator";
+import VisuallyHidden from "@/_components/visually-hidden";
 import Image from "next/image";
 import Link from "next/link";
 import fsc from "./fsc.png";
@@ -10,13 +12,26 @@ const Footer = () => {
   return (
     <footer>
       <div className="bg-brand-very-light-gray p-5">
-        <div className="max-w-desktop text-brand-very-dark-gray mx-auto flex flex-row justify-between gap-2 text-sm leading-6">
+        <div className="max-w-desktop mx-auto flex flex-row justify-between gap-2 text-sm leading-6 text-black">
           <div>
-            <Link href="/">Wurth Logo</Link>
+            <Link href="/">
+              <VisuallyHidden>Wurth</VisuallyHidden>
+
+              <Image
+                src={wurthLogoFull}
+                alt="Wurth logo"
+                width={126}
+                height={27}
+                className="h-[27px] w-[126px] object-contain"
+                priority
+              />
+            </Link>
           </div>
 
           <div className="flex flex-col items-start">
-            <h5 className="font-bold">Company Information</h5>
+            <h5 className="text-brand-very-dark-gray font-bold">
+              Company Information
+            </h5>
 
             <Link href="/about-us" className="hover:underline">
               About Us
@@ -32,7 +47,7 @@ const Footer = () => {
           </div>
 
           <div className="flex flex-col items-start">
-            <h5 className="font-bold">My Account</h5>
+            <h5 className="text-brand-very-dark-gray font-bold">My Account</h5>
 
             <button className="hover:underline">New Account Application</button>
 
@@ -53,7 +68,9 @@ const Footer = () => {
           </div>
 
           <div className="flex flex-col items-start">
-            <h5 className="font-bold">Help & Support</h5>
+            <h5 className="text-brand-very-dark-gray font-bold">
+              Help & Support
+            </h5>
 
             <Link href="/faqs" className="hover:underline">
               FAQs
@@ -77,7 +94,9 @@ const Footer = () => {
 
           <div>
             <div className="flex flex-col items-start">
-              <h5 className="font-bold">Credit and Accounts Receivable</h5>
+              <h5 className="text-brand-very-dark-gray font-bold">
+                Credit and Accounts Receivable
+              </h5>
 
               <span>
                 Phone:{" "}
@@ -103,7 +122,9 @@ const Footer = () => {
             </div>
 
             <div className="col-start-5 flex flex-col items-start">
-              <h5 className="font-bold">Contact Us</h5>
+              <h5 className="text-brand-very-dark-gray font-bold">
+                Contact Us
+              </h5>
 
               <span>
                 Corporate :{" "}
