@@ -1,6 +1,13 @@
 "use client";
 
-import * as FilterAccordion from "@/_components/filter-accordion";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/_components/ui/accordion";
+import { Checkbox } from "@/_components/ui/checkbox";
+import { Label } from "@/_components/ui/label";
 
 type FiltersSelectorProps = {
   sections: {
@@ -16,21 +23,28 @@ type FiltersSelectorProps = {
 
 const FiltersSelector = ({ sections }: FiltersSelectorProps) => {
   return (
-    <FilterAccordion.Root>
-      {sections.map((section) => (
-        <FilterAccordion.Item key={section.id} value={section.id}>
-          <FilterAccordion.Header>{section.heading}</FilterAccordion.Header>
+    <Accordion type="single" collapsible asChild>
+      <aside className="w-64">
+        {sections.map((section) => (
+          <AccordionItem key={section.id} value={section.id}>
+            <AccordionTrigger>{section.heading}</AccordionTrigger>
 
-          <FilterAccordion.Content
-            values={section.values.map((value) => ({
-              ...value,
-              attribute_name: section.id,
-            }))}
-            type="default"
-          />
-        </FilterAccordion.Item>
-      ))}
-    </FilterAccordion.Root>
+            <AccordionContent className="space-y-2">
+              {section.values.map((value) => (
+                <div
+                  key={value.id}
+                  className="flex flex-row items-center gap-1"
+                >
+                  <Checkbox id={value.id} disabled={!value.isActive} />
+
+                  <Label htmlFor={value.id}>{value.name}</Label>
+                </div>
+              ))}
+            </AccordionContent>
+          </AccordionItem>
+        ))}
+      </aside>
+    </Accordion>
   );
 };
 

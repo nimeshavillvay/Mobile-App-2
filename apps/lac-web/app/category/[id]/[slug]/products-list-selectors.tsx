@@ -1,11 +1,16 @@
 "use client";
 
 import Pagination from "@/_components/pagination";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/_components/ui/select";
 import { cn } from "@/_utils/helpers";
 import * as Label from "@radix-ui/react-label";
-import * as Select from "@radix-ui/react-select";
-import { useId, type ReactNode } from "react";
-import { MdCheck, MdOutlineArrowDropDown } from "react-icons/md";
+import { useId } from "react";
 import { PAGE_SIZES, SORTING_TYPES } from "./constants";
 
 type ProductsListSelectorsProps = {
@@ -54,11 +59,11 @@ const ProductsListSelectors = ({
           </div>
 
           <div className="flex flex-row">
-            <SelectLabel htmlFor={sortId}>Sort by :</SelectLabel>
+            <Label.Root htmlFor={sortId}>Sort by :</Label.Root>
 
-            <Select.Root value={sorting} onValueChange={onSortingChange}>
+            <Select value={sorting} onValueChange={onSortingChange}>
               <SelectTrigger id={sortId}>
-                {selectedSorting?.label}
+                <SelectValue>{selectedSorting?.label}</SelectValue>
               </SelectTrigger>
 
               <SelectContent>
@@ -68,14 +73,16 @@ const ProductsListSelectors = ({
                   </SelectItem>
                 ))}
               </SelectContent>
-            </Select.Root>
+            </Select>
           </div>
 
           <div className="flex flex-row">
-            <SelectLabel htmlFor={pageSizeId}>Per Page :</SelectLabel>
+            <Label.Root htmlFor={pageSizeId}>Per Page :</Label.Root>
 
-            <Select.Root value={perPage} onValueChange={onPerPageChange}>
-              <SelectTrigger id={pageSizeId}>{perPage}</SelectTrigger>
+            <Select value={perPage} onValueChange={onPerPageChange}>
+              <SelectTrigger id={pageSizeId}>
+                <SelectValue />
+              </SelectTrigger>
 
               <SelectContent>
                 {PAGE_SIZES.map((pageSize) => (
@@ -84,7 +91,7 @@ const ProductsListSelectors = ({
                   </SelectItem>
                 ))}
               </SelectContent>
-            </Select.Root>
+            </Select>
           </div>
 
           <Pagination
@@ -110,59 +117,3 @@ const ProductsListSelectors = ({
 };
 
 export default ProductsListSelectors;
-
-const SelectLabel = ({
-  htmlFor,
-  children,
-}: {
-  htmlFor: string;
-  children: ReactNode;
-}) => {
-  return <Label.Root htmlFor={htmlFor}>{children}</Label.Root>;
-};
-
-const SelectTrigger = ({
-  id,
-  children,
-}: {
-  id: string;
-  children: ReactNode;
-}) => {
-  return (
-    <Select.Trigger className="flex flex-row items-center" id={id}>
-      <Select.Value>{children}</Select.Value>
-
-      <Select.Icon>
-        <MdOutlineArrowDropDown />
-      </Select.Icon>
-    </Select.Trigger>
-  );
-};
-
-const SelectContent = ({ children }: { children: ReactNode }) => {
-  return (
-    <Select.Portal>
-      <Select.Content className="bg-white">
-        <Select.Viewport>{children}</Select.Viewport>
-      </Select.Content>
-    </Select.Portal>
-  );
-};
-
-const SelectItem = ({
-  value,
-  children,
-}: {
-  value: string;
-  children: ReactNode;
-}) => {
-  return (
-    <Select.Item value={value}>
-      <Select.ItemText>{children}</Select.ItemText>
-
-      <Select.ItemIndicator>
-        <MdCheck />
-      </Select.ItemIndicator>
-    </Select.Item>
-  );
-};

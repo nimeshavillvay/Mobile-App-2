@@ -4,5 +4,9 @@
   "cSpell.words": ["favourite", "wurth", "embla", "localstorage"],
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"
-  }
+  },
+  "tailwindCSS.experimental.classRegex": [
+    ["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
+    ["cx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"]
+  ]
 }

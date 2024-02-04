@@ -200,6 +200,7 @@ const HomePage = async () => {
               variations={group.itemSkuList.map((variation) => ({
                 sku: variation.txt_wurth_lac_item,
                 image: variation.img,
+                name: variation.item_name,
               }))}
             />
           ))}

@@ -1,9 +1,12 @@
-import * as Accordion from "@radix-ui/react-accordion";
-import * as Checkbox from "@radix-ui/react-checkbox";
-import * as Label from "@radix-ui/react-label";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/_components/ui/accordion";
+import { Checkbox } from "@/_components/ui/checkbox";
+import { Label } from "@/_components/ui/label";
 import dayjs from "dayjs";
-import { type ReactNode } from "react";
-import { FaCheck } from "react-icons/fa";
 import useMyAccountFilters from "./use-my-account-filters.hook";
 
 type FiltersProps = {
@@ -32,43 +35,41 @@ const Filters = ({ section }: FiltersProps) => {
   );
 
   return (
-    <Accordion.Root type="single">
-      <Accordion.Item value="brands">
+    <Accordion type="single" collapsible>
+      <AccordionItem value="brands">
         <AccordionTrigger>Brands</AccordionTrigger>
 
-        <AccordionContent filters={brandsFiltersQuery?.data?.data?.brands} />
-      </Accordion.Item>
+        <AccordionContent className="space-y-2">
+          <FilterList filters={brandsFiltersQuery?.data?.data?.brands} />
+        </AccordionContent>
+      </AccordionItem>
 
-      <Accordion.Item value="categories">
+      <AccordionItem value="categories">
         <AccordionTrigger>Category</AccordionTrigger>
 
-        <AccordionContent
-          filters={categoriesFiltersQuery?.data?.data?.categories}
-        />
-      </Accordion.Item>
+        <AccordionContent className="space-y-2">
+          <FilterList
+            filters={categoriesFiltersQuery?.data?.data?.categories}
+          />
+        </AccordionContent>
+      </AccordionItem>
 
-      <Accordion.Item value="subCategories">
+      <AccordionItem value="subCategories" className="last:border-b-0">
         <AccordionTrigger>Sub-Category</AccordionTrigger>
 
-        <AccordionContent
-          filters={subCategoriesFiltersQuery?.data?.data?.subCategories}
-        />
-      </Accordion.Item>
-    </Accordion.Root>
+        <AccordionContent className="space-y-2">
+          <FilterList
+            filters={subCategoriesFiltersQuery?.data?.data?.subCategories}
+          />
+        </AccordionContent>
+      </AccordionItem>
+    </Accordion>
   );
 };
 
 export default Filters;
 
-const AccordionTrigger = ({ children }: { children: ReactNode }) => {
-  return (
-    <Accordion.Header>
-      <Accordion.Trigger>{children}</Accordion.Trigger>
-    </Accordion.Header>
-  );
-};
-
-const AccordionContent = ({
+const FilterList = ({
   filters = [],
 }: {
   filters?: {
@@ -77,23 +78,14 @@ const AccordionContent = ({
   }[];
 }) => {
   return (
-    <Accordion.Content>
+    <>
       {filters.map((filter) => (
-        <div key={filter.id} className="flex flex-row items-center gap-2">
-          <Checkbox.Root
-            className="data-[state=checked]:bg-brand-secondary data-[state=checked]:border-brand-secondary grid h-[25px] w-[25px] place-items-center border border-black"
-            id={`filter-${filter.id}`}
-          >
-            <Checkbox.Indicator className="text-white">
-              <FaCheck />
-            </Checkbox.Indicator>
-          </Checkbox.Root>
+        <div key={filter.id} className="flex flex-row items-center gap-1">
+          <Checkbox id={`filter-${filter.id}`} />
 
-          <Label.Root htmlFor={`filter-${filter.id}`} className="capitalize">
-            {filter.name}
-          </Label.Root>
+          <Label htmlFor={`filter-${filter.id}`}>{filter.name}</Label>
         </div>
       ))}
-    </Accordion.Content>
+    </>
   );
 };

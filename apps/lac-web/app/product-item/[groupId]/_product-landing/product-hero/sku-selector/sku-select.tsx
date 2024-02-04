@@ -1,10 +1,15 @@
 "use client";
 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/_components/ui/select";
 import * as Label from "@radix-ui/react-label";
-import * as Select from "@radix-ui/react-select";
 import { useRouter } from "next/navigation";
 import { useEffect, useId } from "react";
-import { MdCheck, MdOutlineArrowDropDown } from "react-icons/md";
 
 type SKUSelectProps = {
   groupId: string;
@@ -36,40 +41,26 @@ const SKUSelect = ({ groupId, selectedSku, variants }: SKUSelectProps) => {
     <div className="flex flex-row items-center gap-2">
       <Label.Root htmlFor={skuSelectId}>Item # :</Label.Root>
 
-      <Select.Root value={selectedSku} onValueChange={onValueChange}>
-        <Select.Trigger
+      <Select value={selectedSku} onValueChange={onValueChange}>
+        <SelectTrigger
           id={skuSelectId}
           className="border-brand-dark-gray flex flex-row items-center gap-2 rounded-md border p-2"
         >
-          <Select.Value placeholder="Make a Selection">
+          <SelectValue placeholder="Make a Selection">
             {selectedValue
               ? formatLabel(selectedValue.name, selectedValue.sku)
               : ""}
-          </Select.Value>
+          </SelectValue>
+        </SelectTrigger>
 
-          <Select.Icon>
-            <MdOutlineArrowDropDown />
-          </Select.Icon>
-        </Select.Trigger>
-
-        <Select.Portal>
-          <Select.Content className="bg-white">
-            <Select.Viewport>
-              {variants.map((variant) => (
-                <Select.Item key={variant.sku} value={variant.sku}>
-                  <Select.ItemText>
-                    {formatLabel(variant.name, variant.sku)}
-                  </Select.ItemText>
-
-                  <Select.ItemIndicator>
-                    <MdCheck />
-                  </Select.ItemIndicator>
-                </Select.Item>
-              ))}
-            </Select.Viewport>
-          </Select.Content>
-        </Select.Portal>
-      </Select.Root>
+        <SelectContent className="bg-white">
+          {variants.map((variant) => (
+            <SelectItem key={variant.sku} value={variant.sku}>
+              {formatLabel(variant.name, variant.sku)}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
     </div>
   );
 };

@@ -1,8 +1,18 @@
 "use client";
 
-import * as FilterAccordion from "@/_components/filter-accordion";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/_components/ui/accordion";
+import { Checkbox } from "@/_components/ui/checkbox";
+import { Label } from "@/_components/ui/label";
 import VisuallyHidden from "@/_components/visually-hidden";
-import * as Accordion from "@radix-ui/react-accordion";
+import { cn, getMediaUrl } from "@/_utils/helpers";
+import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
+import { Check } from "lucide-react";
+import Image from "next/image";
 
 const COLORS_SECTION = "colors";
 
@@ -29,39 +39,83 @@ const LaminateFinderFilters = ({
   filterSections,
 }: LaminateFinderFiltersProps) => {
   return (
-    <FilterAccordion.Root defaultValue={COLORS_SECTION}>
-      <FilterAccordion.Item value={COLORS_SECTION}>
-        <FilterAccordion.Header>Color</FilterAccordion.Header>
+    <Accordion type="single" collapsible asChild defaultValue={COLORS_SECTION}>
+      <aside className="w-64">
+        <AccordionItem value={COLORS_SECTION}>
+          <AccordionTrigger>Color</AccordionTrigger>
 
-        <Accordion.Content asChild>
-          <div className="grid grid-cols-[repeat(16,_minmax(0,_1fr))] gap-px">
-            {colors.map((color) => (
-              <button
-                key={color.id}
-                className="size-[15px] rounded"
-                style={{ backgroundColor: color.colorCode }}
-              >
-                <VisuallyHidden>{color.colorCode}</VisuallyHidden>
-              </button>
-            ))}
-          </div>
-        </Accordion.Content>
-      </FilterAccordion.Item>
+          <AccordionContent>
+            <div className="grid grid-cols-[repeat(16,_minmax(0,_1fr))] gap-px">
+              {colors.map((color) => (
+                <button
+                  key={color.id}
+                  className="size-[15px] rounded"
+                  style={{ backgroundColor: color.colorCode }}
+                >
+                  <VisuallyHidden>{color.colorCode}</VisuallyHidden>
+                </button>
+              ))}
+            </div>
+          </AccordionContent>
+        </AccordionItem>
 
-      {filterSections.map((section) => (
-        <FilterAccordion.Item
-          key={section.attribute_name}
-          value={section.attribute_name}
-        >
-          <FilterAccordion.Header>{section.name}</FilterAccordion.Header>
+        {filterSections.map((section) => (
+          <AccordionItem
+            key={section.attribute_name}
+            value={section.attribute_name}
+          >
+            <AccordionTrigger>{section.name}</AccordionTrigger>
 
-          <FilterAccordion.Content
-            values={section.values}
-            type={section.type}
-          />
-        </FilterAccordion.Item>
-      ))}
-    </FilterAccordion.Root>
+            <AccordionContent
+              className={cn(
+                section.type === "icons"
+                  ? "grid grid-cols-2 place-content-stretch gap-2"
+                  : "space-y-2",
+              )}
+            >
+              {section.values.map((value) =>
+                section.type === "icons" ? (
+                  <CheckboxPrimitive.Root
+                    key={value.id}
+                    id={value.id}
+                    className="relative rounded border border-black p-2"
+                  >
+                    <CheckboxPrimitive.Indicator className="bg-brand-secondary absolute left-2 top-2 size-[15px] text-white">
+                      <Check />
+                    </CheckboxPrimitive.Indicator>
+
+                    {value.image ? (
+                      <Image
+                        src={getMediaUrl(value.image)}
+                        alt={`The logo of ${value.name}`}
+                        width={88}
+                        height={88}
+                        className="mx-auto size-[88px] object-contain"
+                      />
+                    ) : (
+                      <div className="mx-auto size-[88px]" />
+                    )}
+
+                    <Label htmlFor={value.id} className="cursor-pointer">
+                      {value.name}
+                    </Label>
+                  </CheckboxPrimitive.Root>
+                ) : (
+                  <div
+                    key={value.id}
+                    className="flex flex-row items-center gap-1"
+                  >
+                    <Checkbox id={value.id} />
+
+                    <Label htmlFor={value.id}>{value.name}</Label>
+                  </div>
+                ),
+              )}
+            </AccordionContent>
+          </AccordionItem>
+        ))}
+      </aside>
+    </Accordion>
   );
 };
 

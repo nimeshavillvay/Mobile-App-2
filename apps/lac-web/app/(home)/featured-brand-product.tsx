@@ -1,20 +1,27 @@
 "use client";
 
 import * as ProductCard from "@/_components/product-card";
-import * as Select from "@/_components/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/_components/ui/select";
 import { getMediaUrl } from "@/_utils/helpers";
 import Link from "next/link";
 import { useState, type ComponentProps } from "react";
 
 type FeaturedBrandProductProps = {
   details: ComponentProps<typeof ProductCard.Details>;
-  variations: { sku: string; image: string }[];
+  variations: { sku: string; image: string; name: string }[];
 };
 
 const FeaturedBrandProduct = ({
   details: {
     href,
     image: { src, ...image },
+    title,
     ...details
   },
   variations,
@@ -35,6 +42,7 @@ const FeaturedBrandProduct = ({
             : src,
           ...image,
         }}
+        title={selectedVariant?.name ?? title}
         {...details}
       />
 
@@ -44,19 +52,19 @@ const FeaturedBrandProduct = ({
             {selectedVariant?.sku}
           </div>
         ) : (
-          <Select.Root value={sku} onValueChange={selectedSku}>
-            <Select.Trigger placeholder="Make a selection" className="w-full">
-              {sku}
-            </Select.Trigger>
+          <Select value={sku} onValueChange={selectedSku}>
+            <SelectTrigger className="h-5 rounded-sm px-1.5 py-0">
+              <SelectValue placeholder="Make a selection" />
+            </SelectTrigger>
 
-            <Select.Content>
+            <SelectContent>
               {variations.map((variation) => (
-                <Select.Item key={variation.sku} value={variation.sku}>
+                <SelectItem key={variation.sku} value={variation.sku}>
                   {variation.sku}
-                </Select.Item>
+                </SelectItem>
               ))}
-            </Select.Content>
-          </Select.Root>
+            </SelectContent>
+          </Select>
         )}
 
         <div className="text-brand-dark-gray mb-5 mt-3 text-center text-[14px] leading-4">

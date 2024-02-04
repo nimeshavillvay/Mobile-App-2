@@ -1,68 +1,103 @@
 "use client";
 
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/_components/ui/accordion";
 import useLogout from "@/_hooks/account/use-logout.hook";
-import * as Accordion from "@radix-ui/react-accordion";
+import { cn } from "@/_utils/helpers";
+import { cva } from "class-variance-authority";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { type ReactNode } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import Filters from "./filters";
+
+const menuItem = cva(
+  "border-brand-light-gray block border-b py-2.5 text-[15px] font-bold leading-5 text-black first:border-t hover:underline",
+  {
+    variants: {
+      status: {
+        active: "text-brand-primary",
+        inactive: "hover:text-brand-primary",
+      },
+    },
+  },
+);
+
+const LINKS = [
+  {
+    href: "/myaccount/manage-users",
+    name: "Manage Users",
+  },
+  {
+    href: "/myaccount/personal-navigation",
+    name: "Personal Navigation",
+  },
+  {
+    href: "/myaccount/orderhistory",
+    name: "My Orders",
+  },
+];
 
 const SideMenu = () => {
   const pathname = usePathname();
+  const router = useRouter();
   const logout = useLogout();
 
   return (
-    <Accordion.Root type="single" value={pathname}>
-      <AccordionLink href="/myaccount/manage-users" label="Manage Users" />
+    <div>
+      {LINKS.map((link) => (
+        <Link
+          key={link.href}
+          href={link.href}
+          className={cn(
+            menuItem({
+              status: link.href === pathname ? "active" : "inactive",
+            }),
+          )}
+        >
+          {link.name}
+        </Link>
+      ))}
 
-      <AccordionLink
-        href="/myaccount/personal-navigation"
-        label="Personal Navigation"
-      />
-
-      <AccordionLink href="/myaccount/orderhistory" label="My Orders" />
-
-      <AccordionLink
-        href="/myaccount/purchaseditems"
-        label="My Purchased Items"
+      <Accordion
+        type="single"
+        value={pathname}
+        onValueChange={(value) => router.push(value)}
       >
-        <Filters section="purchased-items" />
-      </AccordionLink>
+        <AccordionItem
+          value="/myaccount/purchaseditems"
+          className="first:border-t-0"
+        >
+          <AccordionTrigger className="data-[state=open]:text-brand-primary text-black">
+            My Purchased Items
+          </AccordionTrigger>
 
-      <AccordionLink href="/myaccount/myfavorites" label="My Favorites">
-        <Filters section="favorites" />
-      </AccordionLink>
+          <AccordionContent className="pb-0">
+            <Filters section="purchased-items" />
+          </AccordionContent>
+        </AccordionItem>
 
-      <button onClick={logout}>Logout</button>
-    </Accordion.Root>
+        <AccordionItem value="/myaccount/myfavorites">
+          <AccordionTrigger className="data-[state=open]:text-brand-primary text-black">
+            My Favorites
+          </AccordionTrigger>
+
+          <AccordionContent className="pb-0">
+            <Filters section="favorites" />
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
+
+      <button
+        onClick={logout}
+        className={cn(menuItem({ status: "inactive" }), "w-full text-left")}
+      >
+        Logout
+      </button>
+    </div>
   );
 };
 
 export default SideMenu;
-
-const AccordionLink = ({
-  href,
-  label,
-  children,
-}: {
-  href: string;
-  label: string;
-  children?: ReactNode;
-}) => {
-  return (
-    <Accordion.Item value={href}>
-      <Accordion.Header>
-        <Accordion.Trigger asChild>
-          <Link
-            href={href}
-            className="data-[state=open]:text-brand-primary block"
-          >
-            {label}
-          </Link>
-        </Accordion.Trigger>
-      </Accordion.Header>
-
-      {!!children && <Accordion.Content>{children}</Accordion.Content>}
-    </Accordion.Item>
-  );
-};
