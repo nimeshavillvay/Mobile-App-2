@@ -30,7 +30,7 @@ const UserActions = () => {
         <button className="hover:text-brand-primary">Apply</button>
 
         <button
-          className="bg-brand-very-dark-gray px-5 py-[10px] font-bold text-white"
+          className="bg-brand-very-dark-gray px-5 py-2.5 font-bold text-white"
           onClick={() => setLoginDialogOpen(true)}
         >
           Sign in
@@ -51,7 +51,7 @@ const UserActions = () => {
           >
             <FaRegUser className="text-base leading-none" />
 
-            <div className="ml-[6px] text-right">
+            <div className="ml-1.5 text-right">
               <div>
                 <span className="group-hover:text-brand-primary group-data-[state=open]:text-brand-primary text-black">
                   Hi! {accountListQuery.data?.["given-name"]}{" "}
@@ -106,7 +106,7 @@ const UserActions = () => {
         </DropdownMenu.Portal>
       </DropdownMenu.Root>
 
-      <button className="bg-brand-very-dark-gray px-5 py-[10px] font-bold text-white">
+      <button className="bg-brand-very-dark-gray px-5 py-2.5 font-bold text-white">
         Quick Order
       </button>
 

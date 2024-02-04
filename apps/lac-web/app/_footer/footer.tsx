@@ -1,6 +1,6 @@
-import wurthLogoFull from "@/_assets/images/wurth-logo-full.png";
 import Separator from "@/_components/separator";
 import VisuallyHidden from "@/_components/visually-hidden";
+import WurthLogo from "@/_components/wurth-logo";
 import Image from "next/image";
 import Link from "next/link";
 import fsc from "./fsc.png";
@@ -17,14 +17,7 @@ const Footer = () => {
             <Link href="/">
               <VisuallyHidden>Wurth</VisuallyHidden>
 
-              <Image
-                src={wurthLogoFull}
-                alt="Wurth logo"
-                width={126}
-                height={27}
-                className="h-[27px] w-[126px] object-contain"
-                priority
-              />
+              <WurthLogo width={126} height={27} />
             </Link>
           </div>
 
@@ -191,7 +184,7 @@ const Footer = () => {
       </div>
 
       <div className="bg-brand-very-dark-gray">
-        <div className="max-w-desktop text-brand-light-gray mx-auto flex flex-row items-center justify-center gap-[10px] p-5 text-[13px] leading-4">
+        <div className="max-w-desktop text-brand-light-gray mx-auto flex flex-row items-center justify-center gap-2.5 p-5 text-[13px] leading-4">
           <span>
             ©{new Date().getFullYear()} Wurth Louis and Company. All rights
             reserved.

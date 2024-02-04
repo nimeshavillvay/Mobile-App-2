@@ -1,10 +1,9 @@
-import wurthLogoFull from "@/_assets/images/wurth-logo-full.png";
 import Separator from "@/_components/separator";
 import VisuallyHidden from "@/_components/visually-hidden";
+import WurthLogo from "@/_components/wurth-logo";
 import { api } from "@/_lib/api";
 import { DEFAULT_REVALIDATE } from "@/_lib/constants";
 import type { Category } from "@/_lib/types";
-import Image from "next/image";
 import Link from "next/link";
 import CategoriesDropdown from "./categories-dropdown";
 import NavBar from "./nav-bar";
@@ -63,14 +62,7 @@ const Header = async () => {
         <Link href="/">
           <VisuallyHidden>Wurth</VisuallyHidden>
 
-          <Image
-            src={wurthLogoFull}
-            alt="Wurth logo"
-            width={192}
-            height={41}
-            className="h-[41px] w-[192px] object-contain"
-            priority
-          />
+          <WurthLogo width={192} height={41} />
         </Link>
 
         <Search />

@@ -1,4 +1,5 @@
 import Separator from "@/_components/separator";
+import Title from "@/_components/title";
 import VisuallyHidden from "@/_components/visually-hidden";
 import { api } from "@/_lib/api";
 import { DEFAULT_REVALIDATE } from "@/_lib/constants";
@@ -18,6 +19,7 @@ import banner2CatalogsLiterature from "./banner-2-catalogs-literature.jpg";
 import banner3Machinery from "./banner-3-machinery.jpg";
 import Carousel from "./carousel";
 import EmailSignup from "./email-signup";
+import FeaturedBrandProduct from "./featured-brand-product";
 import FeaturedProducts from "./featured-products";
 import type { CarouselBanner, FeaturedProduct } from "./types";
 
@@ -159,49 +161,47 @@ const HomePage = async () => {
       />
 
       <section className="max-w-desktop mx-auto">
-        <h3>Featured Brand</h3>
+        <div className="flex flex-row items-center gap-2.5">
+          <Title>Featured Brand</Title>
 
-        <Image
-          src={getMediaUrl(featuredBrand[0].brand.logo)}
-          alt={`The logo of ${featuredBrand[0].brand.name}`}
-          width={130}
-          height={50}
-          className="height-[50px] w-[130px] border object-contain px-[10px] py-[3px]"
-        />
+          <Separator
+            orientation="horizontal"
+            className="bg-brand-gray h-px flex-1"
+          />
+        </div>
 
-        <div className="grid grid-cols-4 gap-2">
+        <div className="mb-[30px] mt-6 flex flex-row items-center gap-4 border border-black bg-black">
+          <Image
+            src={getMediaUrl(featuredBrand[0].brand.logo)}
+            alt={`The logo of ${featuredBrand[0].brand.name}`}
+            width={130}
+            height={50}
+            className="height-[50px] w-[130px] border bg-white object-contain px-2.5 py-[3px]"
+          />
+
+          <h3 className="text-2xl leading-none text-white">
+            {featuredBrand[0].brand.name}
+          </h3>
+        </div>
+
+        <div className="grid grid-cols-4 gap-8">
           {featuredBrand[1].groups.map((group) => (
-            <div key={group.groupId}>
-              <Link
-                href={`/product-item/${group.groupId}/${group.itemSkuList[0]?.txt_wurth_lac_item}`}
-              >
-                <VisuallyHidden>{group.item_group_name}</VisuallyHidden>
-
-                <Image
-                  src={getMediaUrl(group.group_img)}
-                  alt={`An image of the group ${group.item_group_name}`}
-                  width={226}
-                  height={226}
-                  className="border border-black object-contain"
-                />
-              </Link>
-
-              <div>{group.brandName}</div>
-
-              <div>{group.item_group_name}</div>
-
-              <div>
-                {group.itemSkuList.length}{" "}
-                {group.itemSkuList.length > 1 ? "variations" : "variation"}
-              </div>
-
-              <Link
-                href={`/product-item/${group.groupId}/${group.itemSkuList[0]?.txt_wurth_lac_item}`}
-                className="bg-brand-primary rounded p-2 uppercase text-white"
-              >
-                View item
-              </Link>
-            </div>
+            <FeaturedBrandProduct
+              key={group.groupId}
+              details={{
+                href: `/product-item/${group.groupId}`,
+                image: {
+                  src: getMediaUrl(group.group_img),
+                  alt: `An image of the group ${group.item_group_name}`,
+                },
+                brand: group.brandName,
+                title: group.item_group_name,
+              }}
+              variations={group.itemSkuList.map((variation) => ({
+                sku: variation.txt_wurth_lac_item,
+                image: variation.img,
+              }))}
+            />
           ))}
         </div>
       </section>
@@ -223,7 +223,7 @@ const HomePage = async () => {
                 {banner.title}
               </div>
 
-              <div className="mb-[18px] mt-[6px] text-lg leading-6">
+              <div className="mb-[18px] mt-1.5 text-lg leading-6">
                 {banner.description}
               </div>
 
@@ -283,7 +283,6 @@ const HomePage = async () => {
             <Image
               src={getMediaUrl(banner.image_path)}
               alt={banner.alt_tag ?? ""}
-              title={banner.alt_tag}
               width={360}
               height={191}
               className="h-[191px] w-[360px] object-contain"

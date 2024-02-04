@@ -1,12 +1,12 @@
 "use client";
 
+import * as ProductCard from "@/_components/product-card";
+import Title from "@/_components/title";
 import useAccountList from "@/_hooks/account/use-account-list.hook";
 import useLoginDialog from "@/_hooks/account/use-login-dialog.hook";
 import { getMediaUrl } from "@/_utils/helpers";
 import * as Tabs from "@radix-ui/react-tabs";
 import useEmblaCarousel from "embla-carousel-react";
-import Image from "next/image";
-import Link from "next/link";
 import { useState } from "react";
 import type { FeaturedProduct } from "./types";
 
@@ -53,20 +53,22 @@ const FeaturedProducts = ({
   }
 
   return (
-    <section className="max-w-desktop mx-auto">
+    <section className="max-w-desktop mx-auto mb-[72px] mt-[55px]">
       <Tabs.Root
         value={selectedType}
         onValueChange={(value) => setSelectedType(value as ProductsType)}
       >
-        <div className="flex flex-row justify-between">
-          <h2>Featured Products</h2>
+        <div className="mb-7 flex flex-row justify-between">
+          <Title className="border-brand-dark-gray flex-1 border-b pb-3.5">
+            Featured Products
+          </Title>
 
-          <Tabs.List className="flex flex-row gap-4">
+          <Tabs.List className="flex flex-row items-end">
             {productTypes.map((productType) => (
               <Tabs.Trigger
                 key={productType}
                 value={productType}
-                className="text-brand-very-dark-gray capitalize data-[state=active]:text-black"
+                className="text-brand-very-dark-gray border-brand-dark-gray px-7 py-3 text-base font-bold capitalize leading-5 data-[state=active]:border-x data-[state=active]:border-t data-[state=inactive]:border-b data-[state=active]:text-black"
               >
                 {productType.split(/(?=[A-Z])/).join(" ")}
               </Tabs.Trigger>
@@ -74,51 +76,50 @@ const FeaturedProducts = ({
           </Tabs.List>
         </div>
 
-        {productTypes.map((productType) => (
+        {productTypes.map((productType, rootIndex) => (
           <Tabs.Content key={productType} value={productType} className="grid">
             <div className="overflow-hidden" ref={emblaRef}>
               <div className="flex">
                 {productsListPages.map((page, index) => (
                   <div
                     key={index}
-                    className="grid shrink-0 grow-0 basis-full grid-cols-4"
+                    className="grid shrink-0 grow-0 basis-full grid-cols-4 gap-8"
                   >
                     {page.map((product) => (
-                      <div key={product.sku}>
-                        <Link
+                      <ProductCard.Container key={product.sku}>
+                        <ProductCard.Details
                           href={`/product-item/${product.groupId}/${product.sku}`}
-                          className="block"
-                        >
-                          <Image
-                            src={getMediaUrl(product.product_img)}
-                            alt={`An image of ${product.productTitle}`}
-                            width={171}
-                            height={171}
-                          />
+                          image={{
+                            src: getMediaUrl(product.product_img),
+                            alt: `An image of ${product.productTitle}`,
+                            priority: rootIndex === 0 && index === 0,
+                          }}
+                          brand={product.brandName}
+                          title={product.productTitle}
+                        />
 
-                          <div>{product.brandName}</div>
+                        <ProductCard.Actions>
+                          <div className="text-brand-dark-gray mb-2 text-center text-[14px] leading-5">
+                            {product.sku}
+                          </div>
 
-                          <h3>{product.productTitle}</h3>
-
-                          <div>{product.sku}</div>
-                        </Link>
-
-                        {accountListQuery.data ? (
-                          <>
-                            <div>
-                              ${product.override_price} /{" "}
-                              {product.txt_uom_label}
-                            </div>
-                          </>
-                        ) : (
-                          <button
-                            onClick={() => setOpenLoginDialog(true)}
-                            className="bg-brand-primary w-full rounded p-2 text-white"
-                          >
-                            Login to buy
-                          </button>
-                        )}
-                      </div>
+                          {accountListQuery.data ? (
+                            <>
+                              <div>
+                                ${product.override_price} /{" "}
+                                {product.txt_uom_label}
+                              </div>
+                            </>
+                          ) : (
+                            <button
+                              onClick={() => setOpenLoginDialog(true)}
+                              className="bg-brand-primary w-full rounded p-2 text-base text-white"
+                            >
+                              Login to buy
+                            </button>
+                          )}
+                        </ProductCard.Actions>
+                      </ProductCard.Container>
                     ))}
                   </div>
                 ))}

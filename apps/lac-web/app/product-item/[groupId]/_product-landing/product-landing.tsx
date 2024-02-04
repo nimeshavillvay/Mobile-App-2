@@ -144,7 +144,7 @@ const ProductLanding = async ({ groupId, sku }: ProductLandingProps) => {
                   target="_blank"
                   rel="noopener noreferrer"
                   download
-                  className="flex flex-row items-center gap-[10px] rounded-[5px] bg-[rgba(0,173,239,0.15)] p-2"
+                  className="flex flex-row items-center gap-2.5 rounded-[5px] bg-[rgba(0,173,239,0.15)] p-2"
                 >
                   <MdOutlineSimCardDownload className="text-brand-secondary text-3xl" />
 

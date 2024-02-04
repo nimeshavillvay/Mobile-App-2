@@ -26,7 +26,7 @@ const Search = () => {
   return (
     <Form.Root
       onSubmit={handleSubmit(onSubmit)}
-      className="border-brand-primary/50 ring-brand-primary/15 text-brand-dark-gray flex flex-1 flex-row items-center gap-[10px] rounded-[10px] border pr-[10px] text-2xl leading-none ring-[3px]"
+      className="border-brand-primary/50 ring-brand-primary/15 text-brand-dark-gray flex flex-1 flex-row items-center gap-2.5 rounded-[10px] border pr-2.5 text-2xl leading-none ring-[3px]"
     >
       <Form.Field name="search" className="flex-1">
         <VisuallyHidden>
@@ -39,7 +39,7 @@ const Search = () => {
             type="text"
             required
             placeholder="Search for product or scan a barcode..."
-            className="placeholder:text-brand-dark-gray w-full rounded-l-[10px] border-0 bg-transparent px-5 py-[6px] text-[15px] leading-6 text-black"
+            className="placeholder:text-brand-dark-gray w-full rounded-l-[10px] border-0 bg-transparent px-5 py-1.5 text-[15px] leading-6 text-black"
           />
         </Form.Control>
       </Form.Field>
