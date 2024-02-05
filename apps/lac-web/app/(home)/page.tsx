@@ -1,3 +1,4 @@
+import ProductCardWithSkuSwitcher from "@/_components/product-card-with-sku-switcher";
 import Separator from "@/_components/separator";
 import Title from "@/_components/title";
 import VisuallyHidden from "@/_components/visually-hidden";
@@ -19,7 +20,6 @@ import banner2CatalogsLiterature from "./banner-2-catalogs-literature.jpg";
 import banner3Machinery from "./banner-3-machinery.jpg";
 import Carousel from "./carousel";
 import EmailSignup from "./email-signup";
-import FeaturedBrandProduct from "./featured-brand-product";
 import FeaturedProducts from "./featured-products";
 import type { CarouselBanner, FeaturedProduct } from "./types";
 
@@ -186,7 +186,7 @@ const HomePage = async () => {
 
         <div className="grid grid-cols-4 gap-8">
           {featuredBrand[1].groups.map((group) => (
-            <FeaturedBrandProduct
+            <ProductCardWithSkuSwitcher
               key={group.groupId}
               details={{
                 href: `/product-item/${group.groupId}`,

@@ -1,6 +1,10 @@
 "use client";
 
-import * as ProductCard from "@/_components/product-card";
+import {
+  ProductCardActions,
+  ProductCardContainer,
+  ProductCardDetails,
+} from "@/_components/product-card";
 import {
   Select,
   SelectContent,
@@ -12,12 +16,12 @@ import { getMediaUrl } from "@/_utils/helpers";
 import Link from "next/link";
 import { useState, type ComponentProps } from "react";
 
-type FeaturedBrandProductProps = {
-  details: ComponentProps<typeof ProductCard.Details>;
+type ProductCardWithSkuSwitcherProps = {
+  details: ComponentProps<typeof ProductCardDetails>;
   variations: { sku: string; image: string; name: string }[];
 };
 
-const FeaturedBrandProduct = ({
+const ProductCardWithSkuSwitcher = ({
   details: {
     href,
     image: { src, ...image },
@@ -25,7 +29,7 @@ const FeaturedBrandProduct = ({
     ...details
   },
   variations,
-}: FeaturedBrandProductProps) => {
+}: ProductCardWithSkuSwitcherProps) => {
   const [sku, selectedSku] = useState(
     variations.length === 1 ? variations[0]?.sku : "",
   );
@@ -33,8 +37,8 @@ const FeaturedBrandProduct = ({
   const hrefWithSku = `${href}${sku ? `/${sku}` : ""}`;
 
   return (
-    <ProductCard.Container>
-      <ProductCard.Details
+    <ProductCardContainer>
+      <ProductCardDetails
         href={hrefWithSku}
         image={{
           src: selectedVariant?.image
@@ -46,7 +50,7 @@ const FeaturedBrandProduct = ({
         {...details}
       />
 
-      <ProductCard.Actions>
+      <ProductCardActions>
         {variations.length === 1 ? (
           <div className="text-brand-very-dark-gray text-center text-[14px] leading-5">
             {selectedVariant?.sku}
@@ -78,9 +82,9 @@ const FeaturedBrandProduct = ({
         >
           View item
         </Link>
-      </ProductCard.Actions>
-    </ProductCard.Container>
+      </ProductCardActions>
+    </ProductCardContainer>
   );
 };
 
-export default FeaturedBrandProduct;
+export default ProductCardWithSkuSwitcher;

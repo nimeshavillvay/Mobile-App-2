@@ -1,13 +1,12 @@
 "use client";
 
+import CheckboxList from "@/_components/checkbox-list";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/_components/ui/accordion";
-import { Checkbox } from "@/_components/ui/checkbox";
-import { Label } from "@/_components/ui/label";
 
 type FiltersSelectorProps = {
   sections: {
@@ -30,16 +29,7 @@ const FiltersSelector = ({ sections }: FiltersSelectorProps) => {
             <AccordionTrigger>{section.heading}</AccordionTrigger>
 
             <AccordionContent className="space-y-2">
-              {section.values.map((value) => (
-                <div
-                  key={value.id}
-                  className="flex flex-row items-center gap-1"
-                >
-                  <Checkbox id={value.id} disabled={!value.isActive} />
-
-                  <Label htmlFor={value.id}>{value.name}</Label>
-                </div>
-              ))}
+              <CheckboxList values={section.values} />
             </AccordionContent>
           </AccordionItem>
         ))}

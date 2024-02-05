@@ -1,11 +1,10 @@
+import CheckboxList from "@/_components/checkbox-list";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/_components/ui/accordion";
-import { Checkbox } from "@/_components/ui/checkbox";
-import { Label } from "@/_components/ui/label";
 import dayjs from "dayjs";
 import useMyAccountFilters from "./use-my-account-filters.hook";
 
@@ -78,14 +77,11 @@ const FilterList = ({
   }[];
 }) => {
   return (
-    <>
-      {filters.map((filter) => (
-        <div key={filter.id} className="flex flex-row items-center gap-1">
-          <Checkbox id={`filter-${filter.id}`} />
-
-          <Label htmlFor={`filter-${filter.id}`}>{filter.name}</Label>
-        </div>
-      ))}
-    </>
+    <CheckboxList
+      values={filters.map((filter) => ({
+        id: filter.id.toString(),
+        name: filter.name,
+      }))}
+    />
   );
 };

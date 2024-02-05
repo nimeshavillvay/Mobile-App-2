@@ -1,5 +1,12 @@
 import Breadcrumbs from "@/_components/breadcrumbs";
 import ErrorBoundary from "@/_components/error-boundary";
+import {
+  ProductCardActions,
+  ProductCardContainer,
+  ProductCardDetailsSkeleton,
+} from "@/_components/product-card";
+import Separator from "@/_components/separator";
+import { Skeleton } from "@/_components/ui/skeleton";
 import { getBreadcrumbs } from "@/_lib/shared-server-apis";
 import { getMediaUrl } from "@/_utils/helpers";
 import type { Metadata } from "next";
@@ -42,7 +49,16 @@ const CategoryPage = async ({ params: { id, slug } }: CategoryPageProps) => {
         }))}
       />
 
-      <h1 className="max-w-desktop mx-auto">{category.main.catTitle}</h1>
+      <div className="max-w-desktop mx-auto mb-[34px] mt-5 flex flex-row items-center gap-2.5">
+        <h1 className="text-brand-very-dark-gray text-[28px] font-medium leading-8">
+          {category.main.catTitle}
+        </h1>
+
+        <Separator
+          orientation="horizontal"
+          className="bg-brand-gray h-px flex-1"
+        />
+      </div>
 
       {!!category.main.description && (
         <p className="max-w-desktop mx-auto">{category.main.description}</p>
@@ -89,7 +105,17 @@ const CategoryPage = async ({ params: { id, slug } }: CategoryPageProps) => {
                   <ProductsListSelectors />
 
                   {[...Array(parseInt(PAGE_SIZES[0]))].map((item, index) => (
-                    <div key={index}>Placeholder Product</div>
+                    <ProductCardContainer key={index}>
+                      <ProductCardDetailsSkeleton />
+
+                      <ProductCardActions>
+                        <Skeleton className="h-5" />
+
+                        <Skeleton className="mx-auto mb-5 mt-3.5 h-3.5 w-2/3" />
+
+                        <Skeleton className="h-9" />
+                      </ProductCardActions>
+                    </ProductCardContainer>
                   ))}
                 </>
               }

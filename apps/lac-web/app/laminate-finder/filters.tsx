@@ -1,12 +1,12 @@
 "use client";
 
+import CheckboxList from "@/_components/checkbox-list";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/_components/ui/accordion";
-import { Checkbox } from "@/_components/ui/checkbox";
 import { Label } from "@/_components/ui/label";
 import VisuallyHidden from "@/_components/visually-hidden";
 import { cn, getMediaUrl } from "@/_utils/helpers";
@@ -73,8 +73,8 @@ const LaminateFinderFilters = ({
                   : "space-y-2",
               )}
             >
-              {section.values.map((value) =>
-                section.type === "icons" ? (
+              {section.type === "icons" ? (
+                section.values.map((value) => (
                   <CheckboxPrimitive.Root
                     key={value.id}
                     id={value.id}
@@ -100,16 +100,9 @@ const LaminateFinderFilters = ({
                       {value.name}
                     </Label>
                   </CheckboxPrimitive.Root>
-                ) : (
-                  <div
-                    key={value.id}
-                    className="flex flex-row items-center gap-1"
-                  >
-                    <Checkbox id={value.id} />
-
-                    <Label htmlFor={value.id}>{value.name}</Label>
-                  </div>
-                ),
+                ))
+              ) : (
+                <CheckboxList values={section.values} />
               )}
             </AccordionContent>
           </AccordionItem>

@@ -1,6 +1,10 @@
 "use client";
 
-import * as ProductCard from "@/_components/product-card";
+import {
+  ProductCardActions,
+  ProductCardContainer,
+  ProductCardDetails,
+} from "@/_components/product-card";
 import Title from "@/_components/title";
 import useAccountList from "@/_hooks/account/use-account-list.hook";
 import useLoginDialog from "@/_hooks/account/use-login-dialog.hook";
@@ -86,8 +90,8 @@ const FeaturedProducts = ({
                     className="grid shrink-0 grow-0 basis-full grid-cols-4 gap-8"
                   >
                     {page.map((product) => (
-                      <ProductCard.Container key={product.sku}>
-                        <ProductCard.Details
+                      <ProductCardContainer key={product.sku}>
+                        <ProductCardDetails
                           href={`/product-item/${product.groupId}/${product.sku}`}
                           image={{
                             src: getMediaUrl(product.product_img),
@@ -98,7 +102,7 @@ const FeaturedProducts = ({
                           title={product.productTitle}
                         />
 
-                        <ProductCard.Actions>
+                        <ProductCardActions>
                           <div className="text-brand-dark-gray mb-2 text-center text-[14px] leading-5">
                             {product.sku}
                           </div>
@@ -118,8 +122,8 @@ const FeaturedProducts = ({
                               Login to buy
                             </button>
                           )}
-                        </ProductCard.Actions>
-                      </ProductCard.Container>
+                        </ProductCardActions>
+                      </ProductCardContainer>
                     ))}
                   </div>
                 ))}

@@ -1,8 +1,7 @@
 "use client";
 
+import ProductCardWithSkuSwitcher from "@/_components/product-card-with-sku-switcher";
 import { getMediaUrl } from "@/_utils/helpers";
-import Image from "next/image";
-import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { PAGE_SIZES, SORTING_TYPES } from "./constants";
 import ProductsListSelectors from "./products-list-selectors";
@@ -67,48 +66,24 @@ const ProductsList = ({ id }: ProductsListProps) => {
         onPageNoChange={onPageNoChange}
       />
 
-      {productsListQuery.data.group_list.map((product, index) => (
-        <div
+      {productsListQuery.data.group_list.map((product) => (
+        <ProductCardWithSkuSwitcher
           key={product.groupId}
-          className="flex flex-col items-center text-center"
-        >
-          <Link
-            href={`/product-item/${product.groupId}`}
-            className="group block"
-          >
-            <Image
-              src={getMediaUrl(product.group_img)}
-              alt={`A picture of ${product.item_group_name}`}
-              width={171}
-              height={171}
-              priority={index < 4}
-            />
-
-            <div
-              className="group-hover:text-brand-primary"
-              dangerouslySetInnerHTML={{ __html: product.brandName }}
-            />
-
-            <div>{product.item_group_name}</div>
-          </Link>
-
-          {!!product.itemSkuList[0] && (
-            <div>( {product.itemSkuList[0].txt_wurth_lac_item} )</div>
-          )}
-
-          <div>
-            {product.variationsCount > 1
-              ? `${product.variationsCount} variations`
-              : "1 variation"}
-          </div>
-
-          <Link
-            href={`/product-item/${product.groupId}`}
-            className="bg-brand-primary rounded p-2 uppercase text-white"
-          >
-            View item
-          </Link>
-        </div>
+          details={{
+            href: `/product-item/${product.groupId}`,
+            image: {
+              src: getMediaUrl(product.group_img),
+              alt: `An image of the group ${product.item_group_name}`,
+            },
+            brand: product.brandName,
+            title: product.item_group_name,
+          }}
+          variations={product.itemSkuList.map((variation) => ({
+            sku: variation.txt_wurth_lac_item,
+            image: variation.img,
+            name: variation.item_name,
+          }))}
+        />
       ))}
     </>
   );
