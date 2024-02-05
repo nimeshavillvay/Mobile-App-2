@@ -1,8 +1,11 @@
 "use client";
 
 import VisuallyHidden from "@/_components/visually-hidden";
+import { QUERY_KEYS } from "@/_lib/constants";
 import { cn } from "@/_utils/helpers";
-import { type ComponentProps } from "react";
+import Link, { type LinkProps } from "next/link";
+import { usePathname, type ReadonlyURLSearchParams } from "next/navigation";
+import { type ReactNode } from "react";
 import {
   MdKeyboardArrowLeft,
   MdKeyboardArrowRight,
@@ -14,95 +17,118 @@ type PaginationProps = {
   pageSize: number;
   totalSize: number;
   currentPage: number;
-  onPageChange: (page: number) => void;
+  searchParams?: ReadonlyURLSearchParams;
 };
 
 const Pagination = ({
   pageSize,
   totalSize,
   currentPage,
-  onPageChange,
+  searchParams,
 }: PaginationProps) => {
   const noOfPages = Math.ceil(totalSize / pageSize);
 
-  const previousPages = [
-    currentPage - 4,
-    currentPage - 3,
+  const pathname = usePathname();
+  const getHref = (pageNo: number) => {
+    let verifiedPageNo = pageNo;
+
+    if (pageNo <= 0) {
+      verifiedPageNo = 1;
+    } else if (pageNo > noOfPages) {
+      verifiedPageNo = noOfPages;
+    }
+
+    const newSearchParams = new URLSearchParams(searchParams);
+    newSearchParams.set(QUERY_KEYS.PAGE, verifiedPageNo.toString());
+
+    return `${pathname}?${newSearchParams.toString()}`;
+  };
+
+  const pages = [
     currentPage - 2,
     currentPage - 1,
-  ].filter((page) => page >= 1);
-  const nextPages = [
+    currentPage,
     currentPage + 1,
     currentPage + 2,
-    currentPage + 3,
-    currentPage + 4,
-  ].filter((page) => page <= noOfPages);
+  ].filter((page) => page >= 1 && page <= noOfPages);
+
+  // Keep adding pages till the total number becomes 5
+  while (pages.length < 5) {
+    let noPreviousAdded = true;
+    let noNextAdded = true;
+
+    const firstPage = pages[0];
+    if (firstPage && firstPage > 1) {
+      pages.unshift(firstPage - 1);
+      noPreviousAdded = false;
+    }
+
+    const lastPage = pages[pages.length - 1];
+    if (lastPage && lastPage < noOfPages) {
+      pages.push(lastPage + 1);
+      noNextAdded = false;
+    }
+
+    // No pages were added
+    if (noPreviousAdded && noNextAdded) {
+      break;
+    }
+  }
 
   return (
-    <div className="flex h-6 flex-row items-center gap-1">
-      <PaginationButton
-        disabled={currentPage <= 1}
-        onClick={() => onPageChange(1)}
-      >
+    <div className="flex flex-row items-center gap-1">
+      <PaginationLink href={getHref(1)}>
         <VisuallyHidden>First page</VisuallyHidden>
         <MdOutlineKeyboardDoubleArrowLeft />
-      </PaginationButton>
+      </PaginationLink>
 
-      <PaginationButton
-        disabled={currentPage <= 1}
-        onClick={() => onPageChange(currentPage - 1)}
-      >
+      <PaginationLink href={getHref(currentPage - 1)}>
         <VisuallyHidden>Previous page</VisuallyHidden>
         <MdKeyboardArrowLeft />
-      </PaginationButton>
+      </PaginationLink>
 
-      {previousPages.map((page) => (
-        <PaginationButton key={page} onClick={() => onPageChange(page)}>
+      {pages.map((page) => (
+        <PaginationLink
+          key={page}
+          href={getHref(page)}
+          isCurrent={page === currentPage}
+        >
           {page}
-        </PaginationButton>
+        </PaginationLink>
       ))}
 
-      <PaginationButton isCurrent disabled>
-        {currentPage}
-      </PaginationButton>
-
-      {nextPages.map((page) => (
-        <PaginationButton key={page} onClick={() => onPageChange(page)}>
-          {page}
-        </PaginationButton>
-      ))}
-
-      <PaginationButton
-        disabled={currentPage >= noOfPages}
-        onClick={() => onPageChange(currentPage + 1)}
-      >
+      <PaginationLink href={getHref(currentPage + 1)}>
         <VisuallyHidden>Next page</VisuallyHidden>
         <MdKeyboardArrowRight />
-      </PaginationButton>
+      </PaginationLink>
 
-      <PaginationButton
-        disabled={currentPage >= noOfPages}
-        onClick={() => onPageChange(noOfPages)}
-      >
+      <PaginationLink href={getHref(noOfPages)}>
         <VisuallyHidden>Last page</VisuallyHidden>
         <MdOutlineKeyboardDoubleArrowRight />
-      </PaginationButton>
+      </PaginationLink>
     </div>
   );
 };
 
 export default Pagination;
 
-const PaginationButton = ({
+const PaginationLink = ({
   children,
   isCurrent,
   ...delegated
-}: Pick<ComponentProps<"button">, "children" | "onClick" | "disabled"> & {
+}: Omit<LinkProps, "className"> & {
+  children?: ReactNode;
   isCurrent?: boolean;
 }) => {
   return (
-    <button className={cn(isCurrent && "text-brand-primary")} {...delegated}>
+    <Link
+      className={cn(
+        "border-brand-dark-gray text-brand-very-dark-gray grid size-7 place-items-center rounded-sm border text-[14px] font-bold leading-[22px]",
+        isCurrent && "text-brand-primary border-brand-primary",
+      )}
+      {...delegated}
+    >
       {children}
-    </button>
+    </Link>
   );
 };

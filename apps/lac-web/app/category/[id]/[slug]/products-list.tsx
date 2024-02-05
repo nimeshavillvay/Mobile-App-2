@@ -1,17 +1,12 @@
 "use client";
 
 import ProductCardWithSkuSwitcher from "@/_components/product-card-with-sku-switcher";
+import { QUERY_KEYS } from "@/_lib/constants";
 import { getMediaUrl } from "@/_utils/helpers";
 import { useSearchParams } from "next/navigation";
 import { PAGE_SIZES, SORTING_TYPES } from "./constants";
 import ProductsListSelectors from "./products-list-selectors";
 import useSuspenseProductList from "./use-suspense-product-list.hook";
-
-const QUERY_KEYS = {
-  PAGE: "page",
-  PAGE_SIZE: "page-size",
-  SORT: "sort",
-} as const;
 
 type ProductsListProps = {
   id: string;
@@ -50,10 +45,6 @@ const ProductsList = ({ id }: ProductsListProps) => {
     searchParamChange(QUERY_KEYS.PAGE_SIZE, value);
   };
 
-  const onPageNoChange = (values: number) => {
-    searchParamChange(QUERY_KEYS.PAGE, values.toString());
-  };
-
   return (
     <>
       <ProductsListSelectors
@@ -63,7 +54,7 @@ const ProductsList = ({ id }: ProductsListProps) => {
         sorting={sorting}
         onSortingChange={onSortingChange}
         onPerPageChange={onPerPageChange}
-        onPageNoChange={onPageNoChange}
+        searchParams={searchParams}
       />
 
       {productsListQuery.data.group_list.map((product) => (

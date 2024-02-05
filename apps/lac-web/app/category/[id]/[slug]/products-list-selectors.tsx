@@ -1,6 +1,7 @@
 "use client";
 
 import Pagination from "@/_components/pagination";
+import { Label } from "@/_components/ui/label";
 import {
   Select,
   SelectContent,
@@ -8,8 +9,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/_components/ui/select";
-import { cn } from "@/_utils/helpers";
-import * as Label from "@radix-ui/react-label";
+import { Skeleton } from "@/_components/ui/skeleton";
+import { type ReadonlyURLSearchParams } from "next/navigation";
 import { useId } from "react";
 import { PAGE_SIZES, SORTING_TYPES } from "./constants";
 
@@ -20,7 +21,7 @@ type ProductsListSelectorsProps = {
   sorting?: (typeof SORTING_TYPES)[number]["value"];
   onSortingChange?: (value: string) => void;
   onPerPageChange?: (value: string) => void;
-  onPageNoChange?: (value: number) => void;
+  searchParams?: ReadonlyURLSearchParams;
 };
 
 const ProductsListSelectors = ({
@@ -30,7 +31,7 @@ const ProductsListSelectors = ({
   sorting = SORTING_TYPES[0].value,
   onSortingChange,
   onPerPageChange,
-  onPageNoChange,
+  searchParams,
 }: ProductsListSelectorsProps) => {
   const id = useId();
   const sortId = `sort-${id}`;
@@ -45,24 +46,27 @@ const ProductsListSelectors = ({
   );
 
   return (
-    <div
-      className={cn(
-        "col-span-4 flex flex-row justify-between",
-        isLoading && "animate-pulse",
-      )}
-    >
+    <div className="col-span-4 flex flex-row items-center justify-between">
       {!isLoading ? (
         <>
-          <div>
+          <div className="text-brand-very-dark-gray min-w-[115px] text-[15px] leading-5">
             {(pageNo - 1) * pageSize + 1} - {Math.min(pageNo * pageSize, total)}{" "}
             of {total}
           </div>
 
-          <div className="flex flex-row">
-            <Label.Root htmlFor={sortId}>Sort by :</Label.Root>
+          <div className="flex flex-row items-center gap-2">
+            <Label
+              htmlFor={sortId}
+              className="text-nowrap text-[15px] leading-5"
+            >
+              Sort by :
+            </Label>
 
             <Select value={sorting} onValueChange={onSortingChange}>
-              <SelectTrigger id={sortId}>
+              <SelectTrigger
+                id={sortId}
+                className="h-8 py-0 text-[15px] leading-5"
+              >
                 <SelectValue>{selectedSorting?.label}</SelectValue>
               </SelectTrigger>
 
@@ -76,11 +80,19 @@ const ProductsListSelectors = ({
             </Select>
           </div>
 
-          <div className="flex flex-row">
-            <Label.Root htmlFor={pageSizeId}>Per Page :</Label.Root>
+          <div className="flex flex-row items-center gap-2">
+            <Label
+              htmlFor={pageSizeId}
+              className="text-nowrap text-[15px] leading-5"
+            >
+              Per Page :
+            </Label>
 
             <Select value={perPage} onValueChange={onPerPageChange}>
-              <SelectTrigger id={pageSizeId}>
+              <SelectTrigger
+                id={pageSizeId}
+                className="h-8 py-0 text-[15px] leading-5"
+              >
                 <SelectValue />
               </SelectTrigger>
 
@@ -98,18 +110,30 @@ const ProductsListSelectors = ({
             pageSize={pageSize}
             totalSize={total}
             currentPage={pageNo}
-            onPageChange={(page) => onPageNoChange?.(page)}
+            searchParams={searchParams}
           />
         </>
       ) : (
         <>
-          <div className="h-6 w-[103px] bg-gray-300" />
+          <Skeleton className="mt-[5px] h-[15px] w-[115px]" />
 
-          <div className="h-6 w-[121px] bg-gray-300" />
+          <div className="flex flex-row items-center gap-2">
+            <Skeleton className="mt-[5px] h-[15px] w-[52px]" />
 
-          <div className="h-6 w-[109px] bg-gray-300" />
+            <Skeleton className="h-8 w-[82px]" />
+          </div>
 
-          <div className="h-6 w-[180px] bg-gray-300" />
+          <div className="flex flex-row items-center gap-2">
+            <Skeleton className="mt-[5px] h-[15px] w-[70px]" />
+
+            <Skeleton className="h-8 w-[62px]" />
+          </div>
+
+          <div className="flex flex-row items-center gap-1">
+            {[...Array(9)].map((item, index) => (
+              <Skeleton key={index} className="size-7 rounded-sm" />
+            ))}
+          </div>
         </>
       )}
     </div>

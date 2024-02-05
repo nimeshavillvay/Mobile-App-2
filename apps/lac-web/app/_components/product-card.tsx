@@ -52,7 +52,6 @@ export const ProductCardDetails = ({
         height={188}
         className="mx-auto aspect-[224/188] object-contain"
         priority={priority}
-        unoptimized
       />
 
       <div className="text-brand-very-dark-gray mb-1.5 mt-5 text-[15px] uppercase leading-5">
