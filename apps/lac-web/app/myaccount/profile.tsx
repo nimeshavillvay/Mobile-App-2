@@ -2,9 +2,9 @@
 
 import Separator from "@/_components/separator";
 import useAccountList from "@/_hooks/account/use-account-list.hook";
-import useAccountNo from "@/_hooks/account/use-account-no.hook";
 import useAccountSelectorDialog from "@/_hooks/account/use-account-selector-dialog.hook";
-import useAddressId from "@/_hooks/account/use-address-id.hook";
+import useCookies from "@/_hooks/storage/use-cookies.hook";
+import { ACCOUNT_NO_COOKIE, ADDRESS_ID_COOKIE } from "@/_lib/constants";
 import Image from "next/image";
 import Link from "next/link";
 import { FaArrowRight } from "react-icons/fa";
@@ -13,14 +13,13 @@ import defaultAvatar from "./default-avatar.png";
 
 const Profile = () => {
   const accountListQuery = useAccountList();
-  const [accountNo] = useAccountNo();
-  const [addressId] = useAddressId();
+  const [cookies] = useCookies();
   const setAccountSelectorOpen = useAccountSelectorDialog(
     (state) => state.setOpen,
   );
 
   const account = accountListQuery.data?.accounts.find(
-    (account) => account["account-no"] === accountNo,
+    (account) => account["account-no"] === cookies[ACCOUNT_NO_COOKIE],
   );
 
   return (
@@ -46,7 +45,7 @@ const Profile = () => {
           <div>{account?.name}</div>
 
           <div>
-            <span>{addressId}</span>
+            <span>{cookies[ADDRESS_ID_COOKIE]}</span>
 
             <button
               aria-label="Switch address"

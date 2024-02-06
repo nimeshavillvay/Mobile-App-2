@@ -1,4 +1,4 @@
-import { ACCOUNT_TOKEN, TOKEN } from "@/_lib/constants";
+import { ACCOUNT_TOKEN_COOKIE, TOKEN_COOKIE } from "@/_lib/constants";
 import { getAccountList } from "@/_lib/shared-apis";
 import { NextResponse, type NextRequest } from "next/server";
 
@@ -8,8 +8,8 @@ export const middleware = async (request: NextRequest) => {
     request.nextUrl.pathname.startsWith("/myaccount") ||
     request.nextUrl.pathname.startsWith("/shopping-cart")
   ) {
-    const tokenCookie = request.cookies.get(TOKEN);
-    const accountTokenCookie = request.cookies.get(ACCOUNT_TOKEN);
+    const tokenCookie = request.cookies.get(TOKEN_COOKIE);
+    const accountTokenCookie = request.cookies.get(ACCOUNT_TOKEN_COOKIE);
 
     // If there is no token
     if (!tokenCookie?.value) {

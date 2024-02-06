@@ -1,18 +1,18 @@
 import useCookies from "@/_hooks/storage/use-cookies.hook";
 import { api } from "@/_lib/api";
-import { ACCOUNT_TOKEN } from "@/_lib/constants";
+import { ACCOUNT_TOKEN_COOKIE } from "@/_lib/constants";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
 const useSuspenseCart = () => {
   const [cookies] = useCookies();
 
   return useSuspenseQuery({
-    queryKey: ["cart", cookies[ACCOUNT_TOKEN]],
+    queryKey: ["cart", cookies[ACCOUNT_TOKEN_COOKIE]],
     queryFn: () =>
       api
         .get("pim/webservice/ecommerce/cart", {
           headers: {
-            authorization: `Bearer ${cookies[ACCOUNT_TOKEN]}`,
+            authorization: `Bearer ${cookies[ACCOUNT_TOKEN_COOKIE]}`,
           },
         })
         .json<{

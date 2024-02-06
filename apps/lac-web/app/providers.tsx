@@ -1,10 +1,13 @@
 "use client";
 
-import useAccountNo from "@/_hooks/account/use-account-no.hook";
-import useAddressId from "@/_hooks/account/use-address-id.hook";
 import useLogout from "@/_hooks/account/use-logout.hook";
 import useCookies from "@/_hooks/storage/use-cookies.hook";
 import { api } from "@/_lib/api";
+import {
+  ACCOUNT_NO_COOKIE,
+  ADDRESS_ID_COOKIE,
+  TOKEN_COOKIE,
+} from "@/_lib/constants";
 import { ApiProvider } from "@repo/shared-logic/providers";
 import {
   QueryCache,
@@ -35,8 +38,6 @@ export default Providers;
 
 const ReactQueryProvider = ({ children }: { children: ReactNode }) => {
   const [cookies, setCookies] = useCookies();
-  const [accountNo] = useAccountNo();
-  const [addressId] = useAddressId();
 
   const logout = useLogout();
 
@@ -66,15 +67,15 @@ const ReactQueryProvider = ({ children }: { children: ReactNode }) => {
               // Temporarily disable check due to this error
               // https://github.com/sindresorhus/ky/issues/513
               // error?.response?.status === 401 &&
-              cookies.token &&
-              accountNo &&
-              addressId
+              cookies[TOKEN_COOKIE] &&
+              cookies[ACCOUNT_NO_COOKIE] &&
+              cookies[ADDRESS_ID_COOKIE]
             ) {
               try {
                 const { token } = await selectAccount(
-                  cookies.token,
-                  accountNo,
-                  addressId,
+                  cookies[TOKEN_COOKIE],
+                  cookies[ACCOUNT_NO_COOKIE],
+                  cookies[ADDRESS_ID_COOKIE],
                 );
                 setCookies("account-token", token);
               } catch {

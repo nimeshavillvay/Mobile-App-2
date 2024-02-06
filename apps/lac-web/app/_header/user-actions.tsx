@@ -1,10 +1,11 @@
 "use client";
 
 import useAccountList from "@/_hooks/account/use-account-list.hook";
-import useAddressId from "@/_hooks/account/use-address-id.hook";
 import useFavouriteCount from "@/_hooks/account/use-favourite-count.hook";
 import useLoginDialog from "@/_hooks/account/use-login-dialog.hook";
 import useLogout from "@/_hooks/account/use-logout.hook";
+import useCookies from "@/_hooks/storage/use-cookies.hook";
+import { ADDRESS_ID_COOKIE } from "@/_lib/constants";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import Link from "next/link";
 import { FaRegUser } from "react-icons/fa";
@@ -14,7 +15,7 @@ import { MdArrowDropDown } from "react-icons/md";
 const UserActions = () => {
   const accountListQuery = useAccountList();
   const favouriteCountQuery = useFavouriteCount();
-  const [addressId] = useAddressId();
+  const [cookies] = useCookies();
   const setLoginDialogOpen = useLoginDialog((state) => state.setOpen);
   const logout = useLogout();
 
@@ -56,7 +57,7 @@ const UserActions = () => {
                 <span className="group-hover:text-brand-primary group-data-[state=open]:text-brand-primary text-black">
                   Hi! {accountListQuery.data?.["given-name"]}{" "}
                 </span>
-                (#{addressId})
+                (#{cookies[ADDRESS_ID_COOKIE]})
               </div>
 
               <div className="flex flex-row items-center">

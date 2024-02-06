@@ -1,21 +1,23 @@
+import {
+  ACCOUNT_NO_COOKIE,
+  ACCOUNT_TOKEN_COOKIE,
+  ADDRESS_ID_COOKIE,
+  TOKEN_COOKIE,
+} from "@/_lib/constants";
 import { usePathname, useRouter } from "next/navigation";
 import useCookies from "../storage/use-cookies.hook";
-import useAccountNo from "./use-account-no.hook";
-import useAddressId from "./use-address-id.hook";
 
 const useLogout = () => {
   const pathname = usePathname();
   const router = useRouter();
 
   const [, , removeCookie] = useCookies();
-  const [, , { removeItem: removeAccountNo }] = useAccountNo();
-  const [, , { removeItem: removeAddressID }] = useAddressId();
 
   return () => {
-    removeCookie("token");
-    removeCookie("account-token");
-    removeAccountNo();
-    removeAddressID();
+    removeCookie(TOKEN_COOKIE);
+    removeCookie(ACCOUNT_TOKEN_COOKIE);
+    removeCookie(ACCOUNT_NO_COOKIE);
+    removeCookie(ADDRESS_ID_COOKIE);
 
     if (pathname !== "/") {
       router.replace("/");

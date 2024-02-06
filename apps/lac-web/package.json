@@ -49,7 +49,6 @@
     "server-only": "0.0.1",
     "sharp": "0.32.6",
     "tailwind-merge": "2.2.1",
-    "use-local-storage-state": "19.1.0",
     "zod": "3.22.4",
     "zustand": "4.5.0"
   },

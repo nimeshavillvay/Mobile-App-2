@@ -12,10 +12,13 @@ import {
 import { Label } from "@/_components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/_components/ui/radio-group";
 import useAccountList from "@/_hooks/account/use-account-list.hook";
-import useAccountNo from "@/_hooks/account/use-account-no.hook";
 import useAccountSelectorDialog from "@/_hooks/account/use-account-selector-dialog.hook";
-import useAddressId from "@/_hooks/account/use-address-id.hook";
 import useCookies from "@/_hooks/storage/use-cookies.hook";
+import {
+  ACCOUNT_NO_COOKIE,
+  ACCOUNT_TOKEN_COOKIE,
+  ADDRESS_ID_COOKIE,
+} from "@/_lib/constants";
 import { selectAccount } from "@/_lib/shared-apis";
 import * as Accordion from "@radix-ui/react-accordion";
 import { useMutation } from "@tanstack/react-query";
@@ -30,10 +33,8 @@ const AccountSelectorDialog = () => {
 
   const [cookies, setCookies] = useCookies();
   const accountListQuery = useAccountList();
-  const [localAccountNo, setLocalAccountNo] = useAccountNo();
-  const [localAddressId, setLocalAddressId] = useAddressId();
-  const [accountNo, setAccountNo] = useState(localAccountNo);
-  const [addressId, setAddressId] = useState(localAddressId);
+  const [accountNo, setAccountNo] = useState(cookies[ACCOUNT_NO_COOKIE]);
+  const [addressId, setAddressId] = useState(cookies[ADDRESS_ID_COOKIE]);
 
   const accountSelectMutation = useMutation({
     mutationFn: ({
@@ -44,9 +45,9 @@ const AccountSelectorDialog = () => {
       shipTo: string;
     }) => selectAccount(cookies.token, accountNo, shipTo),
     onSuccess: (data, { accountNo, shipTo }) => {
-      setCookies("account-token", data.token);
-      setLocalAccountNo(accountNo);
-      setLocalAddressId(shipTo);
+      setCookies(ACCOUNT_TOKEN_COOKIE, data.token);
+      setCookies(ACCOUNT_NO_COOKIE, accountNo);
+      setCookies(ADDRESS_ID_COOKIE, shipTo);
       setOpen(false);
     },
   });
@@ -73,9 +74,9 @@ const AccountSelectorDialog = () => {
 
   useEffect(() => {
     // Used to sync the state with localstorage when the dialog opens
-    setAccountNo(localAccountNo);
-    setAddressId(localAddressId);
-  }, [localAccountNo, localAddressId]);
+    setAccountNo(cookies[ACCOUNT_NO_COOKIE]);
+    setAddressId(cookies[ADDRESS_ID_COOKIE]);
+  }, [cookies]);
 
   useEffect(() => {
     // Open dialog if there is an auth token but no account token
