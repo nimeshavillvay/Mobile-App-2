@@ -52,7 +52,7 @@ const ProductCardWithSkuSwitcher = ({
 
       <ProductCardActions>
         {variations.length === 1 ? (
-          <div className="text-brand-very-dark-gray text-center text-[14px] leading-5">
+          <div className="text-brand-very-dark-gray text-center text-sm leading-5">
             {selectedVariant?.sku}
           </div>
         ) : (
@@ -71,7 +71,7 @@ const ProductCardWithSkuSwitcher = ({
           </Select>
         )}
 
-        <div className="text-brand-dark-gray mb-5 mt-3 text-center text-[14px] leading-4">
+        <div className="text-brand-dark-gray mb-5 mt-3 text-center text-sm leading-4">
           {variations.length}{" "}
           {variations.length === 1 ? "variation" : "variations"}
         </div>

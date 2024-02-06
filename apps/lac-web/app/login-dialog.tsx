@@ -1,6 +1,26 @@
 "use client";
 
 import FullscreenLoading from "@/_components/fullscreen-loading";
+import { Checkbox } from "@/_components/ui/checkbox";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/_components/ui/dialog";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/_components/ui/form";
+import { Input } from "@/_components/ui/input";
+import { Label } from "@/_components/ui/label";
 import VisuallyHidden from "@/_components/visually-hidden";
 import useAccountSelectorDialog from "@/_hooks/account/use-account-selector-dialog.hook";
 import useLoginDialog from "@/_hooks/account/use-login-dialog.hook";
@@ -8,16 +28,10 @@ import useCookies from "@/_hooks/storage/use-cookies.hook";
 import { api } from "@/_lib/api";
 import { encryptString } from "@/_utils/helpers";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as Checkbox from "@radix-ui/react-checkbox";
-import * as Dialog from "@radix-ui/react-dialog";
-import * as Form from "@radix-ui/react-form";
-import * as Label from "@radix-ui/react-label";
 import { useMutation } from "@tanstack/react-query";
 import Link from "next/link";
 import { useId } from "react";
 import { useForm } from "react-hook-form";
-import { FaCheck } from "react-icons/fa";
-import { MdOutlineClose } from "react-icons/md";
 import * as z from "zod";
 
 const loginSchema = z.object({
@@ -25,14 +39,13 @@ const loginSchema = z.object({
   password: z.string(),
 });
 type LoginSchema = z.infer<typeof loginSchema>;
-type LoginFieldName = keyof LoginSchema;
 
 const LoginDialog = () => {
   const id = useId();
   const staySignedInId = `signIn-${id}`;
   const open = useLoginDialog((state) => state.open);
   const setOpen = useLoginDialog((state) => state.setOpen);
-  const { register, handleSubmit } = useForm<LoginSchema>({
+  const form = useForm<LoginSchema>({
     resolver: zodResolver(loginSchema),
   });
   const [, setCookies] = useCookies();
@@ -96,91 +109,102 @@ const LoginDialog = () => {
   }
 
   return (
-    <Dialog.Root open={open} onOpenChange={setOpen}>
-      <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 bg-black/60" />
-
-        <Dialog.Content className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-white">
-          <Dialog.Title>Sign In</Dialog.Title>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogContent className="max-w-[360px]">
+        <DialogHeader>
+          <DialogTitle>Sign In</DialogTitle>
 
           <VisuallyHidden>
-            <Dialog.Description>
+            <DialogDescription>
               Sign into the site with your email and password
-            </Dialog.Description>
+            </DialogDescription>
           </VisuallyHidden>
+        </DialogHeader>
 
-          <Form.Root onSubmit={handleSubmit(onSubmit)}>
-            <Form.Field name={"email" satisfies LoginFieldName}>
-              <VisuallyHidden>
-                <Form.Label>Email</Form.Label>
-              </VisuallyHidden>
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-4 px-8 pb-7"
+          >
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <VisuallyHidden>
+                    <FormLabel>Email</FormLabel>
+                  </VisuallyHidden>
+                  <FormControl>
+                    <Input
+                      placeholder="Email Address"
+                      type="email"
+                      required
+                      {...field}
+                    />
+                  </FormControl>
+                  <VisuallyHidden>
+                    <FormDescription>Enter your email address</FormDescription>
+                  </VisuallyHidden>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-              <Form.Control asChild>
-                <input
-                  {...register("email")}
-                  type="email"
-                  required
-                  placeholder="Email Address"
-                />
-              </Form.Control>
-            </Form.Field>
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <VisuallyHidden>
+                    <FormLabel>Password</FormLabel>
+                  </VisuallyHidden>
+                  <FormControl>
+                    <Input
+                      placeholder="Password"
+                      type="password"
+                      required
+                      {...field}
+                    />
+                  </FormControl>
+                  <VisuallyHidden>
+                    <FormDescription>Enter your password</FormDescription>
+                  </VisuallyHidden>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-            <Form.Field name={"password" satisfies LoginFieldName}>
-              <VisuallyHidden>
-                <Form.Label>Email</Form.Label>
-              </VisuallyHidden>
+            <div className="flex flex-row items-center justify-between gap-2">
+              <div className="flex flex-row items-center gap-1">
+                <Checkbox id={staySignedInId} />
 
-              <Form.Control asChild>
-                <input
-                  {...register("password")}
-                  type="password"
-                  required
-                  placeholder="Password"
-                />
-              </Form.Control>
-            </Form.Field>
-
-            <div className="flex flex-row items-center justify-between">
-              <div className="flex flex-row items-center gap-2">
-                <Checkbox.Root
-                  className="data-[state=checked]:bg-brand-secondary data-[state=checked]:border-brand-secondary grid h-[25px] w-[25px] place-items-center border border-black"
-                  id={staySignedInId}
-                >
-                  <Checkbox.Indicator className="text-white">
-                    <FaCheck />
-                  </Checkbox.Indicator>
-                </Checkbox.Root>
-
-                <Label.Root htmlFor={staySignedInId}>Stay signed in</Label.Root>
+                <Label htmlFor={staySignedInId}>Stay signed in</Label>
               </div>
 
-              <Dialog.Close asChild>
-                <button>Forgot password?</button>
-              </Dialog.Close>
+              <button className="hover:text-brand-primary text-[15px] font-bold leading-5 text-black">
+                Forgot password?
+              </button>
             </div>
 
-            <Form.Submit asChild>
-              <button className="bg-brand-primary p-2 uppercase text-white">
-                Sign In
-              </button>
-            </Form.Submit>
-          </Form.Root>
-
-          <div>
-            Don&apos;t have an account?{" "}
-            <Dialog.Close asChild>
-              <Link href="/register">Register</Link>
-            </Dialog.Close>
-          </div>
-
-          <Dialog.Close asChild>
-            <button className="absolute right-2 top-2" aria-label="Close">
-              <MdOutlineClose />
+            <button
+              type="submit"
+              className="bg-brand-primary block h-9 w-full rounded-[3px] px-4 text-base font-normal uppercase text-white"
+            >
+              Sign in
             </button>
-          </Dialog.Close>
-        </Dialog.Content>
-      </Dialog.Portal>
-    </Dialog.Root>
+
+            <div className="text-brand-very-dark-gray text-center text-[15px] font-normal leading-5">
+              Don&apos;t have an account?{" "}
+              <DialogClose asChild>
+                <Link href="/register" className="font-bold text-black">
+                  Register
+                </Link>
+              </DialogClose>
+            </div>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
   );
 };
 

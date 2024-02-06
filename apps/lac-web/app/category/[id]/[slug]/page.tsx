@@ -61,14 +61,20 @@ const CategoryPage = async ({ params: { id, slug } }: CategoryPageProps) => {
       </div>
 
       {!!category.main.description && (
-        <p className="max-w-desktop mx-auto">{category.main.description}</p>
+        <div className="max-w-desktop mx-auto">
+          <p className="max-w-[540px] text-[15px] leading-5">
+            {category.main.description}
+          </p>
+        </div>
       )}
 
       {category.main.subCatgores.length > 0 && (
-        <section className="max-w-desktop mx-auto">
-          <h2 className="text-brand-primary">Categories</h2>
+        <section className="max-w-desktop mx-auto my-8">
+          <h2 className="text-brand-primary mb-2 text-xl font-bold leading-6">
+            Categories
+          </h2>
 
-          <div className="grid grid-cols-4 gap-2">
+          <div className="grid grid-cols-4 gap-8">
             {category.main.subCatgores.map((subCategory, index) => (
               <Link
                 key={subCategory.SubCatId}
@@ -79,11 +85,11 @@ const CategoryPage = async ({ params: { id, slug } }: CategoryPageProps) => {
                   alt={`A picture of ${subCategory.SubCatTitle}`}
                   width={238}
                   height={172}
-                  className="mx-auto object-contain"
+                  className="mx-auto aspect-[238/172] object-contain"
                   priority={index < 4}
                 />
 
-                <div className="bg-brand-primary text-center text-white">
+                <div className="bg-brand-primary px-2.5 py-[5px] text-center text-[15px] leading-5 text-white">
                   {subCategory.SubCatTitle}
                 </div>
               </Link>

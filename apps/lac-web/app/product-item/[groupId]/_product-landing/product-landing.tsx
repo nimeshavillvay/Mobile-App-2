@@ -23,7 +23,7 @@ type ProductLandingProps = {
 
 const ProductLanding = async ({ groupId, sku }: ProductLandingProps) => {
   const product = await getProduct(groupId, sku);
-  const [breadcrumbs, attachments] = await Promise.all([
+  const [breadcrumbs, attachments, variants] = await Promise.all([
     getBreadcrumbs(groupId, "product"),
     api
       .get(`pim/webservice/rest/landingattachment/${groupId}`, {
@@ -40,12 +40,11 @@ const ProductLanding = async ({ groupId, sku }: ProductLandingProps) => {
         group_assets_downloads: unknown[];
         cross_sell: unknown[];
       }>(),
+    getVariants(groupId, sku),
   ]);
 
   // Check if SKU exists
   if (sku) {
-    const variants = await getVariants(groupId, sku);
-
     // If none the SKUs match the one given in the pathname
     if (!variants.items.some((variant) => variant.txt_wurth_lac_item === sku)) {
       return notFound();
@@ -168,6 +167,21 @@ const ProductLanding = async ({ groupId, sku }: ProductLandingProps) => {
           </div>
         </ProductSections.Section>
       </ProductSections.Root>
+
+      {/* Render links to all variants for the crawler, but hide from the user */}
+      <nav className="hidden">
+        <ul>
+          {variants.items.map((variant) => (
+            <li key={`${groupId}-${variant.txt_wurth_lac_item}`}>
+              <a
+                href={`/product-item/${groupId}/${variant.txt_wurth_lac_item}`}
+              >
+                {variant.txt_description_name}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
     </>
   );
 };

@@ -1,19 +1,25 @@
 "use client";
 
 import FullscreenLoading from "@/_components/fullscreen-loading";
+import { Checkbox } from "@/_components/ui/checkbox";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/_components/ui/dialog";
+import { Label } from "@/_components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/_components/ui/radio-group";
 import useAccountList from "@/_hooks/account/use-account-list.hook";
 import useAccountNo from "@/_hooks/account/use-account-no.hook";
 import useAccountSelectorDialog from "@/_hooks/account/use-account-selector-dialog.hook";
 import useAddressId from "@/_hooks/account/use-address-id.hook";
 import useCookies from "@/_hooks/storage/use-cookies.hook";
 import { selectAccount } from "@/_lib/shared-apis";
-import * as Checkbox from "@radix-ui/react-checkbox";
-import * as Dialog from "@radix-ui/react-dialog";
-import * as Label from "@radix-ui/react-label";
-import * as RadioGroup from "@radix-ui/react-radio-group";
+import * as Accordion from "@radix-ui/react-accordion";
 import { useMutation } from "@tanstack/react-query";
 import { useEffect, useId, useState } from "react";
-import { FaCheck } from "react-icons/fa";
 
 const AccountSelectorDialog = () => {
   const id = useId();
@@ -71,105 +77,118 @@ const AccountSelectorDialog = () => {
     setAddressId(localAddressId);
   }, [localAccountNo, localAddressId]);
 
+  useEffect(() => {
+    // Open dialog if there is an auth token but no account token
+    if (cookies.token && !cookies["account-token"]) {
+      setOpen(true);
+    }
+  }, [cookies, setOpen]);
+
   if ((accountListQuery.isLoading || accountSelectMutation.isPending) && open) {
     return <FullscreenLoading />;
   }
 
   return (
-    <Dialog.Root open={open} onOpenChange={setOpen}>
-      <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 bg-black/60" />
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogContent
+        className="max-w-[360px]"
+        onEscapeKeyDown={(event) => event.preventDefault()}
+        onPointerDownOutside={(event) => event.preventDefault()}
+        onInteractOutside={(event) => event.preventDefault()}
+        hideClose
+      >
+        <DialogHeader>
+          <DialogTitle>Account & Shipping Address</DialogTitle>
+        </DialogHeader>
 
-        <Dialog.Content className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-white">
-          <Dialog.Title>Account & Shipping Address</Dialog.Title>
+        <div className="space-y-4 px-8 pb-7">
+          <DialogDescription>
+            Choose your account and shipping address
+          </DialogDescription>
 
-          <Dialog.Description className="flex flex-col">
-            <span>Choose your account and shipping address</span>
+          <DialogDescription>Access My Account</DialogDescription>
 
-            <span>Access My Account</span>
-          </Dialog.Description>
+          <RadioGroup
+            value={accountNo}
+            onValueChange={onAccountNoChange}
+            asChild
+          >
+            <Accordion.Root type="single" value={accountNo}>
+              {accountListQuery.data?.accounts.map((account) => (
+                <Accordion.Item
+                  key={account["account-no"]}
+                  value={account["account-no"]}
+                >
+                  <Accordion.Header>
+                    <Accordion.Trigger className="flex cursor-default flex-row items-start gap-1 py-3">
+                      <RadioGroupItem
+                        value={account["account-no"]}
+                        id={`account-${account["account-no"]}`}
+                      />
 
-          <RadioGroup.Root value={accountNo} onValueChange={onAccountNoChange}>
-            {accountListQuery.data?.accounts?.map((account) => (
-              <div key={account["account-no"]}>
-                <div className="flex flex-row">
-                  <RadioGroup.Item
-                    value={account["account-no"]}
-                    id={`account-${account["account-no"]}`}
-                    className="data-[state=checked]:border-brand-secondary data-[state=checked]:bg-brand-secondary h-[25px] w-[25px] rounded-full border border-black bg-white"
-                  >
-                    <RadioGroup.Indicator className="relative flex h-full w-full items-center justify-center after:block after:h-[11px] after:w-[11px] after:rounded-[50%] after:bg-white after:content-['']" />
-                  </RadioGroup.Item>
-
-                  <div>
-                    <Label.Root htmlFor={`account-${account["account-no"]}`}>
-                      {account.name} # {account["account-no"]}
-                    </Label.Root>
-
-                    {account.addresses.length > 1 && (
-                      <div>Multiple shipping addresses</div>
-                    )}
-                  </div>
-                </div>
-
-                {account.addresses.length > 1 && (
-                  <RadioGroup.RadioGroup
-                    value={addressId}
-                    onValueChange={setAddressId}
-                    className="pl-5"
-                  >
-                    {account.addresses.map((address) => (
-                      <div
-                        key={address["address-id"]}
-                        className="flex flex-row"
-                      >
-                        <RadioGroup.Item
-                          value={address["address-id"]}
-                          id={`address-${address["address-id"]}`}
-                          className="data-[state=checked]:border-brand-secondary data-[state=checked]:bg-brand-secondary h-[25px] w-[25px] rounded-full border border-black bg-white"
+                      <div className="flex flex-col items-start gap-2">
+                        <Label
+                          htmlFor={`account-${account["account-no"]}`}
+                          className="text-brand-very-dark-gray text-[15px] font-bold leading-5"
                         >
-                          <RadioGroup.Indicator className="relative flex h-full w-full items-center justify-center after:block after:h-[11px] after:w-[11px] after:rounded-[50%] after:bg-white after:content-['']" />
-                        </RadioGroup.Item>
+                          {account.name} # {account["account-no"]}
+                        </Label>
 
-                        <div>
-                          <Label.Root
-                            htmlFor={`address-${address["address-id"]}`}
-                          >
-                            # {address["address-id"]}
-                          </Label.Root>
-
-                          <div>{address.name},</div>
-                          <div>{address["street-address"]},</div>
-                          <div>
-                            {address.locality}, {address.region},{" "}
-                            {address["postal-code"]}, {address["country-name"]}
+                        {account.addresses.length > 1 && (
+                          <div className="text-brand-very-dark-gray text-[15px] leading-5">
+                            Multiple shipping addresses
                           </div>
-                        </div>
+                        )}
                       </div>
-                    ))}
-                  </RadioGroup.RadioGroup>
-                )}
-              </div>
-            ))}
-          </RadioGroup.Root>
+                    </Accordion.Trigger>
+                  </Accordion.Header>
 
-          <div className="flex flex-row items-center gap-2">
-            <Checkbox.Root
-              className="data-[state=checked]:bg-brand-secondary data-[state=checked]:border-brand-secondary grid h-[25px] w-[25px] place-items-center border border-black"
-              id={rememberId}
-            >
-              <Checkbox.Indicator className="text-white">
-                <FaCheck />
-              </Checkbox.Indicator>
-            </Checkbox.Root>
+                  {account.addresses.length > 1 && (
+                    <Accordion.Content className="data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down bg-brand-very-light-gray overflow-hidden text-sm transition-all">
+                      <RadioGroup
+                        value={addressId}
+                        onValueChange={setAddressId}
+                      >
+                        {account.addresses.map((address) => (
+                          <div
+                            key={address["address-id"]}
+                            className="grid grid-cols-[auto,1fr] gap-x-1 py-3 pl-5"
+                          >
+                            <div className="text-brand-very-dark-gray col-start-2 text-[15px] font-bold leading-5">
+                              # {address["address-id"]}
+                            </div>
 
-            <Label.Root htmlFor={rememberId} className="capitalize">
-              Remember my setting
-            </Label.Root>
+                            <RadioGroupItem
+                              value={address["address-id"]}
+                              id={`address-${address["address-id"]}`}
+                            />
+
+                            <Label
+                              htmlFor={`address-${address["address-id"]}`}
+                              className="text-[15px] leading-5"
+                            >
+                              {address.name}, {address.locality},{" "}
+                              {address.region}, {address["postal-code"]},{" "}
+                              {address["country-name"]}
+                            </Label>
+                          </div>
+                        ))}
+                      </RadioGroup>
+                    </Accordion.Content>
+                  )}
+                </Accordion.Item>
+              ))}
+            </Accordion.Root>
+          </RadioGroup>
+
+          <div className="flex flex-row items-center gap-1">
+            <Checkbox id={rememberId} />
+
+            <Label htmlFor={rememberId}>Remember My Setting</Label>
           </div>
 
           <button
-            className="bg-brand-primary p-2 uppercase text-white"
+            className="bg-brand-primary block h-9 w-full rounded-[3px] px-4 text-base font-normal uppercase text-white"
             onClick={() =>
               accountSelectMutation.mutate({ accountNo, shipTo: addressId })
             }
@@ -177,9 +196,9 @@ const AccountSelectorDialog = () => {
           >
             Continue
           </button>
-        </Dialog.Content>
-      </Dialog.Portal>
-    </Dialog.Root>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 };
 

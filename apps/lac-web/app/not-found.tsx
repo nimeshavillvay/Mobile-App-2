@@ -8,35 +8,40 @@ export const metadata: Metadata = {
 const NotFound = () => {
   return (
     <div className="grid size-full place-items-center">
-      <div className="my-20 text-center">
+      <div className="mb-32 mt-28 text-center">
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          width="72"
-          height="72"
+          width="96"
+          height="96"
           fill="none"
-          className="mx-auto"
+          viewBox="0 0 96 96"
+          className="mx-auto mb-[42px]"
         >
           <path
-            fill="#959595"
-            d="M61.785 3.375h-51.57a6.752 6.752 0 00-6.75 6.75v51.66a6.752 6.752 0 006.75 6.75h51.57a6.752 6.752 0 006.75-6.75v-51.57a6.747 6.747 0 00-6.75-6.84zm-51.57 2.25h51.57a4.501 4.501 0 014.5 4.5v6.75H5.625v-6.75a4.502 4.502 0 014.59-4.5zm51.57 60.75h-51.57a4.499 4.499 0 01-4.5-4.5v-42.75h60.75v42.75a4.505 4.505 0 01-1.381 3.248 4.505 4.505 0 01-3.3 1.252z"
+            fill="#BDBDBD"
+            d="M82.38 4.5H13.62c-4.97 0-9 4.031-9 9v68.88c0 4.969 4.03 9 9 9h68.76c4.968 0 9-4.031 9-9V13.62a8.997 8.997 0 00-2.595-6.442A8.997 8.997 0 0082.38 4.5zm-68.76 3h68.76a6.001 6.001 0 016 6v9H7.5v-9a6.003 6.003 0 016.12-6zm68.76 81H13.62c-3.315 0-6-2.685-6-6v-57h81v57a6.007 6.007 0 01-1.842 4.331A6.007 6.007 0 0182.38 88.5z"
           />
           <path
-            fill="#959595"
-            d="M60.75 11.25c0 3.001-4.5 3.001-4.5 0 0-3 4.5-3 4.5 0zm-9 0c0 3.001-4.5 3.001-4.5 0 0-3 4.5-3 4.5 0zm-9 0c0 3.001-4.5 3.001-4.5 0 0-3 4.5-3 4.5 0zM40.5 32.624h-9c-.622 0-1.125.504-1.125 1.125V49.5a1.126 1.126 0 001.125 1.126h9a1.127 1.127 0 001.125-1.126V33.75a1.126 1.126 0 00-1.125-1.125zm-1.125 15.75h-6.682v-13.5h6.614l.068 13.5zm-13.883-15.75c-.621 0-1.125.504-1.125 1.125v7.47h-6.614v-7.47a1.126 1.126 0 10-2.25 0v8.596c.01.616.509 1.114 1.124 1.125h7.74v6.03a1.126 1.126 0 102.25 0V33.75a1.126 1.126 0 00-1.125-1.126zm29.88 0c-.621 0-1.125.504-1.125 1.125v7.47h-6.615v-7.47a1.126 1.126 0 10-2.25 0v8.596c.012.616.51 1.114 1.125 1.125h7.74v6.03a1.126 1.126 0 102.25 0V33.75a1.126 1.126 0 00-1.125-1.126z"
+            fill="#BDBDBD"
+            d="M81 15c0 4.001-6 4.001-6 0s6-4.001 6 0zM69 15c0 4.001-6 4.001-6 0s6-4.001 6 0zM57 15c0 4.001-6 4.001-6 0s6-4.001 6 0zM54 43.5H42a1.5 1.5 0 00-1.5 1.5v21a1.502 1.502 0 001.5 1.5h12a1.502 1.502 0 001.5-1.5V45a1.501 1.501 0 00-1.5-1.5zm-1.5 21h-8.91v-18h8.82l.09 18zM33.99 43.5a1.5 1.5 0 00-1.5 1.5v9.96h-8.82V45a1.501 1.501 0 10-3 0v11.46a1.53 1.53 0 001.5 1.5h10.32V66a1.502 1.502 0 002.561 1.061c.282-.281.439-.664.439-1.061V45a1.502 1.502 0 00-1.5-1.5zM73.83 43.5a1.5 1.5 0 00-1.5 1.5v9.96h-8.82V45a1.501 1.501 0 10-3 0v11.46a1.53 1.53 0 001.5 1.5h10.32V66a1.502 1.502 0 001.5 1.5 1.502 1.502 0 001.5-1.5V45a1.502 1.502 0 00-1.5-1.5z"
           />
         </svg>
 
-        <h1 className="capitalize">Page not found</h1>
+        <h1 className="text-brand-very-dark-gray text-2xl font-bold capitalize leading-7">
+          Page not found
+        </h1>
 
-        <h2 className="uppercase">404 error</h2>
+        <h2 className="text-brand-gray text-sm uppercase leading-4">
+          404 error
+        </h2>
 
-        <p>
+        <p className="text-brand-very-dark-gray mx-auto mb-6 mt-9 max-w-96 text-base leading-5">
           The link you clicked may be broken or the page may have been removed.
         </p>
 
         <Link
           href="/"
-          className="bg-brand-secondary mx-auto p-2 uppercase text-white"
+          className="bg-brand-secondary mx-auto block max-w-fit rounded-sm p-2 px-3.5 py-2 text-[15px] font-extrabold uppercase leading-5 text-white"
         >
           Go to homepage
         </Link>

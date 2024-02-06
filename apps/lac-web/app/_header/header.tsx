@@ -77,6 +77,19 @@ const Header = async () => {
           <NavBar />
         </div>
       </div>
+
+      {/* Render links of the main categories for the crawler to index, but hidden from the user */}
+      <nav className="hidden">
+        <ul>
+          {categories.map((category) => (
+            <li key={category.id}>
+              <a href={`/category/${category.id}/${category.slug}`}>
+                {category.name}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
     </header>
   );
 };

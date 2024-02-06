@@ -103,7 +103,7 @@ const FeaturedProducts = ({
                         />
 
                         <ProductCardActions>
-                          <div className="text-brand-dark-gray mb-2 text-center text-[14px] leading-5">
+                          <div className="text-brand-dark-gray mb-2 text-center text-sm leading-5">
                             {product.sku}
                           </div>
 

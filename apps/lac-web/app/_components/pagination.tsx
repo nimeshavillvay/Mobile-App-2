@@ -116,16 +116,17 @@ const PaginationLink = ({
   children,
   isCurrent,
   ...delegated
-}: Omit<LinkProps, "className"> & {
+}: Omit<LinkProps, "className" | "scroll"> & {
   children?: ReactNode;
   isCurrent?: boolean;
 }) => {
   return (
     <Link
       className={cn(
-        "border-brand-dark-gray text-brand-very-dark-gray grid size-7 place-items-center rounded-sm border text-[14px] font-bold leading-[22px]",
+        "border-brand-dark-gray text-brand-very-dark-gray grid size-7 place-items-center rounded-sm border text-sm font-bold leading-[22px]",
         isCurrent && "text-brand-primary border-brand-primary",
       )}
+      scroll={false}
       {...delegated}
     >
       {children}
