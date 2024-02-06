@@ -162,7 +162,9 @@ const HomePage = async () => {
 
       <section className="max-w-desktop mx-auto">
         <div className="flex flex-row items-center gap-2.5">
-          <Title>Featured Brand</Title>
+          <Title asChild>
+            <h2>Featured Brand</h2>
+          </Title>
 
           <Separator
             orientation="horizontal"

@@ -1,4 +1,5 @@
 import { api } from "@/_lib/api";
+import { ACCOUNT_TOKEN } from "@/_lib/constants";
 import { useQuery } from "@tanstack/react-query";
 import useCookies from "../storage/use-cookies.hook";
 
@@ -6,13 +7,13 @@ const useSimulationCheckout = () => {
   const [cookies] = useCookies();
 
   return useQuery({
-    queryKey: ["cart", "simulation-checkout", cookies["account-token"]],
-    enabled: !!cookies["account-token"],
+    queryKey: ["cart", "simulation-checkout", cookies[ACCOUNT_TOKEN]],
+    enabled: !!cookies[ACCOUNT_TOKEN],
     queryFn: () =>
       api
         .get("pim/webservice/ecommerce/simulation-checkout", {
           headers: {
-            authorization: `Bearer ${cookies["account-token"]}`,
+            authorization: `Bearer ${cookies[ACCOUNT_TOKEN]}`,
           },
         })
         .json<{

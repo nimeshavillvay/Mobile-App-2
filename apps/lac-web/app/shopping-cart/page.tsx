@@ -1,4 +1,8 @@
+import Separator from "@/_components/separator";
+import Title from "@/_components/title";
 import type { Metadata } from "next";
+import { Suspense } from "react";
+import ShoppingCartList from "./shopping-cart-list";
 
 export const metadata: Metadata = {
   title: "Shopping Cart",
@@ -7,7 +11,18 @@ export const metadata: Metadata = {
 const ShoppingCartPage = () => {
   return (
     <>
-      <h1>Shopping Cart</h1>
+      <div className="max-w-desktop mx-auto flex flex-row items-center gap-2.5">
+        <Title>Shopping Cart</Title>
+
+        <Separator
+          orientation="horizontal"
+          className="bg-brand-gray h-px flex-1"
+        />
+      </div>
+
+      <Suspense fallback={<>Loading cart...</>}>
+        <ShoppingCartList />
+      </Suspense>
     </>
   );
 };

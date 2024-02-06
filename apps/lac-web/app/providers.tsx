@@ -46,11 +46,13 @@ const ReactQueryProvider = ({ children }: { children: ReactNode }) => {
         defaultOptions: {
           queries: {
             staleTime: 30000, // 30 seconds
-            retry: (failureCount, error) => {
+            retry: (failureCount) => {
               // Don't retry for certain error responses
-              if (error?.response?.status === 401) {
-                return false;
-              }
+              // Temporarily disable check due to this error
+              // https://github.com/sindresorhus/ky/issues/513
+              // if (error?.response?.status === 401) {
+              //   return false;
+              // }
 
               // Retry others just once
               return failureCount <= 1;
@@ -58,10 +60,12 @@ const ReactQueryProvider = ({ children }: { children: ReactNode }) => {
           },
         },
         queryCache: new QueryCache({
-          onError: async (error) => {
+          onError: async () => {
             // Refresh the account token
             if (
-              error?.response?.status === 401 &&
+              // Temporarily disable check due to this error
+              // https://github.com/sindresorhus/ky/issues/513
+              // error?.response?.status === 401 &&
               cookies.token &&
               accountNo &&
               addressId

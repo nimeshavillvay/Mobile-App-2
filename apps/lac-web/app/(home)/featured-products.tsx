@@ -63,8 +63,10 @@ const FeaturedProducts = ({
         onValueChange={(value) => setSelectedType(value as ProductsType)}
       >
         <div className="mb-7 flex flex-row justify-between">
-          <Title className="border-brand-dark-gray flex-1 border-b pb-3.5">
-            Featured Products
+          <Title asChild>
+            <h2 className="border-brand-dark-gray flex-1 border-b pb-3.5">
+              Featured Products
+            </h2>
           </Title>
 
           <Tabs.List className="flex flex-row items-end">

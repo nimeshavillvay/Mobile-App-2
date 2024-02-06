@@ -1,9 +1,25 @@
 import { cn } from "@/_utils/helpers";
-import { type ComponentProps } from "react";
+import { Slot } from "@radix-ui/react-slot";
+import {
+  ForwardedRef,
+  forwardRef,
+  type ComponentPropsWithoutRef,
+  type ElementRef,
+} from "react";
 
-const Title = ({ className, ...delegated }: ComponentProps<"h2">) => {
+const Title = forwardRef<
+  ElementRef<typeof Slot>,
+  ComponentPropsWithoutRef<typeof Slot> & { asChild?: boolean }
+>(({ className, asChild, ...delegated }, ref) => {
+  const Comp = asChild ? Slot : "h1";
+
   return (
-    <h2
+    <Comp
+      ref={
+        ref as typeof asChild extends true
+          ? ForwardedRef<HTMLElement>
+          : ForwardedRef<HTMLHeadingElement>
+      }
       className={cn(
         "text-brand-very-dark-gray text-[28px] font-medium leading-8",
         className,
@@ -11,6 +27,7 @@ const Title = ({ className, ...delegated }: ComponentProps<"h2">) => {
       {...delegated}
     />
   );
-};
+});
+Title.displayName = "Title";
 
 export default Title;
