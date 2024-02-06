@@ -7,7 +7,6 @@ export const getAccountList = async (token: string) => {
       headers: {
         authorization: `Bearer ${token}`,
       },
-      cache: "no-store",
     })
     .json<{
       accounts: {
@@ -40,4 +39,14 @@ export const selectAccount = async (
       permission: string;
       token: string;
     }>();
+};
+
+export const verifyAccountToken = async (token: string) => {
+  return await api
+    .get("am/token_check", {
+      headers: {
+        authorization: `Bearer ${token}`,
+      },
+    })
+    .json<"OK">();
 };

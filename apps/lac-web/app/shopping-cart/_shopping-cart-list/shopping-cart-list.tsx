@@ -22,8 +22,12 @@ const formSchema = z.object({
 });
 type FormSchema = z.infer<typeof formSchema>;
 
-const ShoppingCartList = () => {
-  const cartQuery = useSuspenseCart();
+type ShoppingCartTableProps = {
+  accountToken: string;
+};
+
+const ShoppingCartList = ({ accountToken }: ShoppingCartTableProps) => {
+  const cartQuery = useSuspenseCart(accountToken);
 
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
