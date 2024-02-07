@@ -37,7 +37,7 @@ const ShoppingCartContent = ({
   return (
     <div className="group flex flex-row items-center gap-2.5">
       <div className="relative">
-        <MdOutlineShoppingCart className="text-brand-very-dark-gray text-3xl leading-none" />
+        <MdOutlineShoppingCart className="text-brand-gray-500 text-3xl leading-none" />
 
         <div className="bg-brand-primary absolute -bottom-2 -right-2 min-w-5 rounded-full p-0.5 text-center text-[10px] font-bold leading-4 text-white">
           {count}
@@ -45,7 +45,7 @@ const ShoppingCartContent = ({
       </div>
 
       <div>
-        <div className="text-brand-dark-gray text-sm leading-4 group-hover:underline">
+        <div className="text-brand-gray-400 text-sm leading-4 group-hover:underline">
           Shopping Cart
         </div>
 

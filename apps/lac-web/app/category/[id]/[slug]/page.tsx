@@ -50,13 +50,13 @@ const CategoryPage = async ({ params: { id, slug } }: CategoryPageProps) => {
       />
 
       <div className="max-w-desktop mx-auto mb-[34px] mt-5 flex flex-row items-center gap-2.5">
-        <h1 className="text-brand-very-dark-gray text-[28px] font-medium leading-8">
+        <h1 className="text-brand-gray-500 text-[28px] font-medium leading-8">
           {category.main.catTitle}
         </h1>
 
         <Separator
           orientation="horizontal"
-          className="bg-brand-gray h-px flex-1"
+          className="bg-brand-gray-300 h-px flex-1"
         />
       </div>
 

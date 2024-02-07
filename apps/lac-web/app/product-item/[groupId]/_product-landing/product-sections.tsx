@@ -60,7 +60,7 @@ export const Headings = () => {
           className={cn(
             visibleSection === heading.id
               ? "text-brand-primary"
-              : "text-brand-dark-gray",
+              : "text-brand-gray-400",
           )}
         >
           {heading.label}

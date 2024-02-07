@@ -193,7 +193,7 @@ const LoginDialog = () => {
               Sign in
             </button>
 
-            <div className="text-brand-very-dark-gray text-center text-[15px] font-normal leading-5">
+            <div className="text-brand-gray-500 text-center text-[15px] font-normal leading-5">
               Don&apos;t have an account?{" "}
               <DialogClose asChild>
                 <Link href="/register" className="font-bold text-black">

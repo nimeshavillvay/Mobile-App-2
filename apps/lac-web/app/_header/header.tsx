@@ -20,7 +20,7 @@ const Header = async () => {
 
   return (
     <header>
-      <div className="bg-brand-very-light-gray">
+      <div className="bg-brand-gray-100">
         <div className="max-w-desktop mx-auto flex h-9 flex-row items-center justify-between text-sm leading-4 text-black">
           <nav className="flex flex-row items-center gap-4">
             <Link href="/" className="text-brand-primary font-bold">
@@ -28,7 +28,7 @@ const Header = async () => {
             </Link>
 
             <Separator
-              className="bg-brand-light-gray h-5 w-px"
+              className="bg-brand-gray-200 h-5 w-px"
               orientation="vertical"
             />
 
@@ -42,7 +42,7 @@ const Header = async () => {
             </a>
 
             <Separator
-              className="bg-brand-light-gray h-5 w-px"
+              className="bg-brand-gray-200 h-5 w-px"
               orientation="vertical"
             />
 

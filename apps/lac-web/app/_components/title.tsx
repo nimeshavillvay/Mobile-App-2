@@ -21,7 +21,7 @@ const Title = forwardRef<
           : ForwardedRef<HTMLHeadingElement>
       }
       className={cn(
-        "text-brand-very-dark-gray text-[28px] font-medium leading-8",
+        "text-brand-gray-500 text-[28px] font-medium leading-8",
         className,
       )}
       {...delegated}

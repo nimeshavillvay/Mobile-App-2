@@ -9,7 +9,7 @@ type BreadcrumbsProps = {
 
 const Breadcrumbs = ({ links }: BreadcrumbsProps) => {
   return (
-    <nav className="bg-brand-light-gray">
+    <nav className="bg-brand-gray-200">
       <ul
         className={cn(
           "max-w-desktop mx-auto flex flex-row items-center py-3 text-[15px] leading-5 text-[#333333]",

@@ -168,7 +168,7 @@ const HomePage = async () => {
 
           <Separator
             orientation="horizontal"
-            className="bg-brand-gray h-px flex-1"
+            className="bg-brand-gray-300 h-px flex-1"
           />
         </div>
 
@@ -241,7 +241,7 @@ const HomePage = async () => {
 
       <Separator
         orientation="horizontal"
-        className="max-w-desktop bg-brand-light-gray mx-auto my-[55px] h-px w-full"
+        className="max-w-desktop bg-brand-gray-200 mx-auto my-[55px] h-px w-full"
       />
 
       <section className="max-w-desktop mx-auto mb-[92px] flex flex-row justify-between gap-5">

@@ -44,7 +44,7 @@ const EmailSignup = () => {
           type="email"
           required
           placeholder="Enter your Email to sign up"
-          className="placeholder:text-brand-dark-gray h-9 flex-1 rounded px-2 text-[15px] leading-5"
+          className="placeholder:text-brand-gray-400 h-9 flex-1 rounded px-2 text-[15px] leading-5"
         />
 
         <button className="bg-brand-primary h-9 rounded px-2 py-[7px] text-base font-extrabold uppercase leading-[22px] text-white">

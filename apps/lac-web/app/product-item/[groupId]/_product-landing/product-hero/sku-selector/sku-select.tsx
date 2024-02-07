@@ -44,7 +44,7 @@ const SKUSelect = ({ groupId, selectedSku, variants }: SKUSelectProps) => {
       <Select value={selectedSku} onValueChange={onValueChange}>
         <SelectTrigger
           id={skuSelectId}
-          className="border-brand-dark-gray flex flex-row items-center gap-2 rounded-md border p-2"
+          className="border-brand-gray-400 flex flex-row items-center gap-2 rounded-md border p-2"
         >
           <SelectValue placeholder="Make a Selection">
             {selectedValue

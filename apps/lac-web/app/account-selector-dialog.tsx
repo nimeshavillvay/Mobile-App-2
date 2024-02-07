@@ -130,13 +130,13 @@ const AccountSelectorDialog = () => {
                       <div className="flex flex-col items-start gap-2">
                         <Label
                           htmlFor={`account-${account["account-no"]}`}
-                          className="text-brand-very-dark-gray text-[15px] font-bold leading-5"
+                          className="text-brand-gray-500 text-[15px] font-bold leading-5"
                         >
                           {account.name} # {account["account-no"]}
                         </Label>
 
                         {account.addresses.length > 1 && (
-                          <div className="text-brand-very-dark-gray text-[15px] leading-5">
+                          <div className="text-brand-gray-500 text-[15px] leading-5">
                             Multiple shipping addresses
                           </div>
                         )}
@@ -145,7 +145,7 @@ const AccountSelectorDialog = () => {
                   </Accordion.Header>
 
                   {account.addresses.length > 1 && (
-                    <Accordion.Content className="data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down bg-brand-very-light-gray overflow-hidden text-sm transition-all">
+                    <Accordion.Content className="data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down bg-brand-gray-100 overflow-hidden text-sm transition-all">
                       <RadioGroup
                         value={addressId}
                         onValueChange={setAddressId}
@@ -155,7 +155,7 @@ const AccountSelectorDialog = () => {
                             key={address["address-id"]}
                             className="grid grid-cols-[auto,1fr] gap-x-1 py-3 pl-5"
                           >
-                            <div className="text-brand-very-dark-gray col-start-2 text-[15px] font-bold leading-5">
+                            <div className="text-brand-gray-500 col-start-2 text-[15px] font-bold leading-5">
                               # {address["address-id"]}
                             </div>
 

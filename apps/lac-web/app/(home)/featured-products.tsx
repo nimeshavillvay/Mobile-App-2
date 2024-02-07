@@ -64,7 +64,7 @@ const FeaturedProducts = ({
       >
         <div className="mb-7 flex flex-row justify-between">
           <Title asChild>
-            <h2 className="border-brand-dark-gray flex-1 border-b pb-3.5">
+            <h2 className="border-brand-gray-400 flex-1 border-b pb-3.5">
               Featured Products
             </h2>
           </Title>
@@ -74,7 +74,7 @@ const FeaturedProducts = ({
               <Tabs.Trigger
                 key={productType}
                 value={productType}
-                className="text-brand-very-dark-gray border-brand-dark-gray px-7 py-3 text-base font-bold capitalize leading-5 data-[state=active]:border-x data-[state=active]:border-t data-[state=inactive]:border-b data-[state=active]:text-black"
+                className="text-brand-gray-500 border-brand-gray-400 px-7 py-3 text-base font-bold capitalize leading-5 data-[state=active]:border-x data-[state=active]:border-t data-[state=inactive]:border-b data-[state=active]:text-black"
               >
                 {productType.split(/(?=[A-Z])/).join(" ")}
               </Tabs.Trigger>
@@ -105,7 +105,7 @@ const FeaturedProducts = ({
                         />
 
                         <ProductCardActions>
-                          <div className="text-brand-dark-gray mb-2 text-center text-sm leading-5">
+                          <div className="text-brand-gray-400 mb-2 text-center text-sm leading-5">
                             {product.sku}
                           </div>
 

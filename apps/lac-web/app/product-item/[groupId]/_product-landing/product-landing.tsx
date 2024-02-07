@@ -106,7 +106,7 @@ const ProductLanding = async ({ groupId, sku }: ProductLandingProps) => {
 
             <Separator
               orientation="vertical"
-              className="bg-brand-light-gray w-px self-stretch"
+              className="bg-brand-gray-200 w-px self-stretch"
             />
 
             <div className="w-[350px]">
@@ -152,7 +152,7 @@ const ProductLanding = async ({ groupId, sku }: ProductLandingProps) => {
               ))}
             </div>
           ) : (
-            <div className="text-brand-very-dark-gray">
+            <div className="text-brand-gray-500">
               Documents are not available
             </div>
           )}
@@ -162,7 +162,7 @@ const ProductLanding = async ({ groupId, sku }: ProductLandingProps) => {
           sectionType="faq"
           heading="Questions and Answers"
         >
-          <div className="text-brand-very-dark-gray">
+          <div className="text-brand-gray-500">
             Questions and Answers are not available
           </div>
         </ProductSections.Section>

@@ -11,7 +11,7 @@ import vendorFreightRouting from "./vendor-freight-routing.jpg";
 const Footer = () => {
   return (
     <footer>
-      <div className="bg-brand-very-light-gray p-5">
+      <div className="bg-brand-gray-100 p-5">
         <div className="max-w-desktop mx-auto flex flex-row justify-between gap-2 text-sm leading-6 text-black">
           <div>
             <Link href="/">
@@ -22,7 +22,7 @@ const Footer = () => {
           </div>
 
           <div className="flex flex-col items-start">
-            <h5 className="text-brand-very-dark-gray font-bold">
+            <h5 className="text-brand-gray-500 font-bold">
               Company Information
             </h5>
 
@@ -40,7 +40,7 @@ const Footer = () => {
           </div>
 
           <div className="flex flex-col items-start">
-            <h5 className="text-brand-very-dark-gray font-bold">My Account</h5>
+            <h5 className="text-brand-gray-500 font-bold">My Account</h5>
 
             <button className="hover:underline">New Account Application</button>
 
@@ -61,9 +61,7 @@ const Footer = () => {
           </div>
 
           <div className="flex flex-col items-start">
-            <h5 className="text-brand-very-dark-gray font-bold">
-              Help & Support
-            </h5>
+            <h5 className="text-brand-gray-500 font-bold">Help & Support</h5>
 
             <Link href="/faqs" className="hover:underline">
               FAQs
@@ -87,7 +85,7 @@ const Footer = () => {
 
           <div>
             <div className="flex flex-col items-start">
-              <h5 className="text-brand-very-dark-gray font-bold">
+              <h5 className="text-brand-gray-500 font-bold">
                 Credit and Accounts Receivable
               </h5>
 
@@ -115,9 +113,7 @@ const Footer = () => {
             </div>
 
             <div className="col-start-5 flex flex-col items-start">
-              <h5 className="text-brand-very-dark-gray font-bold">
-                Contact Us
-              </h5>
+              <h5 className="text-brand-gray-500 font-bold">Contact Us</h5>
 
               <span>
                 Corporate :{" "}
@@ -183,8 +179,8 @@ const Footer = () => {
         </div>
       </div>
 
-      <div className="bg-brand-very-dark-gray">
-        <div className="max-w-desktop text-brand-light-gray mx-auto flex flex-row items-center justify-center gap-2.5 p-5 text-[13px] leading-4">
+      <div className="bg-brand-gray-500">
+        <div className="max-w-desktop text-brand-gray-200 mx-auto flex flex-row items-center justify-center gap-2.5 p-5 text-[13px] leading-4">
           <span>
             ©{new Date().getFullYear()} Wurth Louis and Company. All rights
             reserved.
@@ -196,7 +192,7 @@ const Footer = () => {
 
           <Separator
             orientation="vertical"
-            className="bg-brand-light-gray w-px self-stretch"
+            className="bg-brand-gray-200 w-px self-stretch"
           />
 
           <Link href="/rights-request" className="hover:underline">
@@ -205,7 +201,7 @@ const Footer = () => {
 
           <Separator
             orientation="vertical"
-            className="bg-brand-light-gray w-px self-stretch"
+            className="bg-brand-gray-200 w-px self-stretch"
           />
 
           <Link href="/terms-of-sale" className="hover:underline">

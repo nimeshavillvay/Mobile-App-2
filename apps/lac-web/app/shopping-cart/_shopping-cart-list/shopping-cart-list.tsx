@@ -11,6 +11,7 @@ import {
 } from "@/_components/ui/form";
 import { Input } from "@/_components/ui/input";
 import VisuallyHidden from "@/_components/visually-hidden";
+import useUpdateCartConfigMutation from "@/_hooks/cart/use-update-cart-config-mutation.hook";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -28,6 +29,7 @@ type ShoppingCartTableProps = {
 
 const ShoppingCartList = ({ accountToken }: ShoppingCartTableProps) => {
   const cartQuery = useSuspenseCart(accountToken);
+  const updateCartMutation = useUpdateCartConfigMutation();
 
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
@@ -38,7 +40,7 @@ const ShoppingCartList = ({ accountToken }: ShoppingCartTableProps) => {
   });
 
   const onSubmit = (values: FormSchema) => {
-    console.log("> values: ", values);
+    updateCartMutation.mutate({ configuration: values, step: "cart_meta" });
   };
 
   return (
@@ -57,7 +59,11 @@ const ShoppingCartList = ({ accountToken }: ShoppingCartTableProps) => {
                   PO# <span className="text-brand-primary">*</span>
                 </FormLabel>
                 <FormControl>
-                  <Input placeholder="Your PO#" {...field} />
+                  <Input
+                    placeholder="Your PO#"
+                    disabled={updateCartMutation.isPending}
+                    {...field}
+                  />
                 </FormControl>
 
                 <VisuallyHidden>
@@ -80,7 +86,11 @@ const ShoppingCartList = ({ accountToken }: ShoppingCartTableProps) => {
                 </FormLabel>
 
                 <FormControl>
-                  <Input placeholder="Your job name" {...field} />
+                  <Input
+                    placeholder="Your job name"
+                    disabled={updateCartMutation.isPending}
+                    {...field}
+                  />
                 </FormControl>
 
                 <VisuallyHidden>

@@ -48,7 +48,7 @@ const DialogContent = React.forwardRef<
       {children}
 
       {!hideClose && (
-        <DialogPrimitive.Close className="data-[state=open]:text-brand-dark-gray absolute right-2 top-2 grid size-6 place-items-center rounded-sm opacity-70 ring-offset-white transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-gray-950 focus:ring-offset-2 disabled:pointer-events-none ">
+        <DialogPrimitive.Close className="data-[state=open]:text-brand-gray-400 absolute right-2 top-2 grid size-6 place-items-center rounded-sm opacity-70 ring-offset-white transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-gray-950 focus:ring-offset-2 disabled:pointer-events-none ">
           <X className="size-3.5" />
           <span className="te sr-only">Close</span>
         </DialogPrimitive.Close>
@@ -64,7 +64,7 @@ const DialogHeader = ({
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn(
-      "bg-brand-light-gray flex flex-col space-y-1.5 p-5 text-center sm:text-left",
+      "bg-brand-gray-200 flex flex-col space-y-1.5 p-5 text-center sm:text-left",
       className,
     )}
     {...props}
@@ -93,7 +93,7 @@ const DialogTitle = React.forwardRef<
   <DialogPrimitive.Title
     ref={ref}
     className={cn(
-      "text-brand-very-dark-gray text-[19px] font-medium leading-6",
+      "text-brand-gray-500 text-[19px] font-medium leading-6",
       className,
     )}
     {...props}
@@ -108,7 +108,7 @@ const DialogDescription = React.forwardRef<
   <DialogPrimitive.Description
     ref={ref}
     className={cn(
-      "text-brand-very-dark-gray text-[15px] font-bold leading-5",
+      "text-brand-gray-500 text-[15px] font-bold leading-5",
       className,
     )}
     {...props}

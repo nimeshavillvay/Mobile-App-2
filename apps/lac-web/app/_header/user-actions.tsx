@@ -31,7 +31,7 @@ const UserActions = () => {
         <button className="hover:text-brand-primary">Apply</button>
 
         <button
-          className="bg-brand-very-dark-gray px-5 py-2.5 font-bold text-white"
+          className="bg-brand-gray-500 px-5 py-2.5 font-bold text-white"
           onClick={() => setLoginDialogOpen(true)}
         >
           Sign in
@@ -48,7 +48,7 @@ const UserActions = () => {
         <DropdownMenu.Trigger asChild>
           <button
             aria-label="User menu"
-            className="text-brand-very-dark-gray group flex flex-row items-center gap-[5px] self-stretch text-sm leading-4"
+            className="text-brand-gray-500 group flex flex-row items-center gap-[5px] self-stretch text-sm leading-4"
           >
             <FaRegUser className="text-base leading-none" />
 
@@ -107,7 +107,7 @@ const UserActions = () => {
         </DropdownMenu.Portal>
       </DropdownMenu.Root>
 
-      <button className="bg-brand-very-dark-gray px-5 py-2.5 font-bold text-white">
+      <button className="bg-brand-gray-500 px-5 py-2.5 font-bold text-white">
         Quick Order
       </button>
 

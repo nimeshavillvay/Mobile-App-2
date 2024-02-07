@@ -123,7 +123,7 @@ const PaginationLink = ({
   return (
     <Link
       className={cn(
-        "border-brand-dark-gray text-brand-very-dark-gray grid size-7 place-items-center rounded-sm border text-sm font-bold leading-[22px]",
+        "border-brand-gray-400 text-brand-gray-500 grid size-7 place-items-center rounded-sm border text-sm font-bold leading-[22px]",
         isCurrent && "text-brand-primary border-brand-primary",
       )}
       scroll={false}

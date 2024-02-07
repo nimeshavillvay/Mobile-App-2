@@ -80,7 +80,7 @@ const AccessoriesAndRelatedProducts = async ({
   // No Accessories or Related Products
   if (!products.data.length) {
     return (
-      <div className="text-brand-very-dark-gray">
+      <div className="text-brand-gray-500">
         Accessories and Related Products are not available
       </div>
     );

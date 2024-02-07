@@ -23,11 +23,13 @@ const config: Config = {
           secondary: "#00adef",
           tertiary: "#c3cf23",
           success: "#55a213",
-          "very-light-gray": "#f7f7f7",
-          "light-gray": "#dedede",
-          gray: "#bdbdbd",
-          "dark-gray": "#959595",
-          "very-dark-gray": "#605d5c",
+          gray: {
+            100: "#f7f7f7",
+            200: "#dedede",
+            300: "#bdbdbd",
+            400: "#959595",
+            500: "#605d5c",
+          },
         },
       },
       maxWidth: {

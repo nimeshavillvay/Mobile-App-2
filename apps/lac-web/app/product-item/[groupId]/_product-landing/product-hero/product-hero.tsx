@@ -38,7 +38,7 @@ const ProductHero = async ({ groupId, sku }: ProductHeroProps) => {
 
           {!!sku && (
             <>
-              <div className="text-brand-dark-gray">
+              <div className="text-brand-gray-400">
                 Manufacturer Part # :{" "}
                 {product.selected_item?.txt_wurth_lac_item}
               </div>
@@ -52,7 +52,7 @@ const ProductHero = async ({ groupId, sku }: ProductHeroProps) => {
 
                 <Separator
                   orientation="vertical"
-                  className="bg-brand-very-dark-gray h-6 w-px"
+                  className="bg-brand-gray-500 h-6 w-px"
                 />
 
                 <span>

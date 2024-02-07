@@ -14,7 +14,7 @@ import { usePathname, useRouter } from "next/navigation";
 import Filters from "./filters";
 
 const menuItem = cva(
-  "border-brand-light-gray block border-b py-2.5 text-[15px] font-bold leading-5 text-black first:border-t hover:underline",
+  "border-brand-gray-200 block border-b py-2.5 text-[15px] font-bold leading-5 text-black first:border-t hover:underline",
   {
     variants: {
       status: {

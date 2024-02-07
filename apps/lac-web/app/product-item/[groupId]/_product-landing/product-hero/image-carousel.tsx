@@ -71,7 +71,7 @@ const ImageCarousel = ({ productImages, productTitle }: ImageCarouselProps) => {
               "border",
               selectedIndex === index
                 ? "border-brand-primary"
-                : "border-brand-light-gray",
+                : "border-brand-gray-200",
             )}
           >
             <Image

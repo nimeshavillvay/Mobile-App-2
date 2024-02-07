@@ -54,7 +54,7 @@ export const ProductCardDetails = ({
         priority={priority}
       />
 
-      <div className="text-brand-very-dark-gray mb-1.5 mt-5 text-[15px] uppercase leading-5">
+      <div className="text-brand-gray-500 mb-1.5 mt-5 text-[15px] uppercase leading-5">
         {brand}
       </div>
 
