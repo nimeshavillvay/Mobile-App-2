@@ -1,9 +1,9 @@
 "use client";
 
+import { logout } from "@/_actions/account";
 import useAccountList from "@/_hooks/account/use-account-list.hook";
 import useFavouriteCount from "@/_hooks/account/use-favourite-count.hook";
 import useLoginDialog from "@/_hooks/account/use-login-dialog.hook";
-import useLogout from "@/_hooks/account/use-logout.hook";
 import useCookies from "@/_hooks/storage/use-cookies.hook";
 import { ADDRESS_ID_COOKIE } from "@/_lib/constants";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
@@ -17,7 +17,6 @@ const UserActions = () => {
   const favouriteCountQuery = useFavouriteCount();
   const [cookies] = useCookies();
   const setLoginDialogOpen = useLoginDialog((state) => state.setOpen);
-  const logout = useLogout();
 
   if (!accountListQuery.data) {
     return (
@@ -99,7 +98,7 @@ const UserActions = () => {
             </DropdownMenu.Item>
 
             <DropdownMenu.Item asChild>
-              <button className="text-left" onClick={logout}>
+              <button className="text-left" onClick={() => logout()}>
                 Logout
               </button>
             </DropdownMenu.Item>

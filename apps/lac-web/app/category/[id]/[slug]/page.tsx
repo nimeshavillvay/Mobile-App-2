@@ -7,15 +7,18 @@ import {
 } from "@/_components/product-card";
 import Separator from "@/_components/separator";
 import { Skeleton } from "@/_components/ui/skeleton";
+import { api } from "@/_lib/api";
+import { DEFAULT_REVALIDATE } from "@/_lib/constants";
 import { getBreadcrumbs } from "@/_lib/shared-server-apis";
 import { getMediaUrl } from "@/_utils/helpers";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { Suspense } from "react";
-import Filters from "./_filters";
 import { getCategory } from "./apis";
 import { PAGE_SIZES } from "./constants";
+import Filters from "./filters";
+import FiltersBase from "./filters-base";
 import ProductsList from "./products-list";
 import ProductsListSelectors from "./products-list-selectors";
 
@@ -38,7 +41,55 @@ export const generateMetadata = async ({
 
 const CategoryPage = async ({ params: { id, slug } }: CategoryPageProps) => {
   const category = await getCategory(id, slug);
-  const breadcrumbs = await getBreadcrumbs(id, "category");
+  const [breadcrumbs, filterHeadings] = await Promise.all([
+    getBreadcrumbs(id, "category"),
+    api
+      .get(`pim/webservice/rest/productlandingattributeheading/${id}`, {
+        next: {
+          revalidate: DEFAULT_REVALIDATE,
+        },
+      })
+      .json<{
+        attribute_heading: {
+          attribute_name: string;
+          name: string;
+        }[];
+      }>(),
+  ]);
+
+  const filterSections = await Promise.all(
+    filterHeadings.attribute_heading.map(async (heading) => {
+      const values = await api
+        .get(
+          `pim/webservice/rest/productlandingattributevalues/${id}/${heading.attribute_name}`,
+          {
+            next: {
+              revalidate: DEFAULT_REVALIDATE,
+            },
+          },
+        )
+        .json<{
+          attribute_values: {
+            isActive: boolean;
+            attribute_value: string;
+            name: string;
+            attribute_name: string;
+            id: string;
+            slug: string;
+          }[];
+        }>();
+
+      return {
+        id: heading.attribute_name,
+        heading: heading.name,
+        values: values.attribute_values.map((item) => ({
+          id: item.id,
+          name: item.name,
+          isActive: item.isActive,
+        })),
+      };
+    }),
+  );
 
   return (
     <>
@@ -98,8 +149,10 @@ const CategoryPage = async ({ params: { id, slug } }: CategoryPageProps) => {
         </section>
       )}
 
-      <div className="max-w-desktop mx-auto flex flex-row gap-8">
-        <Filters id={id} />
+      <div className="max-w-desktop mx-auto flex flex-row items-start gap-8">
+        <Suspense fallback={<FiltersBase sections={filterSections} />}>
+          <Filters sections={filterSections} />
+        </Suspense>
 
         <div className="grid flex-1 grid-cols-4 gap-4">
           <ErrorBoundary

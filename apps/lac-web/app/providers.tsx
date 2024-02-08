@@ -1,6 +1,6 @@
 "use client";
 
-import useLogout from "@/_hooks/account/use-logout.hook";
+import { logout } from "@/_actions/account";
 import useCookies from "@/_hooks/storage/use-cookies.hook";
 import { api } from "@/_lib/api";
 import {
@@ -38,8 +38,6 @@ export default Providers;
 
 const ReactQueryProvider = ({ children }: { children: ReactNode }) => {
   const [cookies, setCookies] = useCookies();
-
-  const logout = useLogout();
 
   const [queryClient] = useState(
     () =>
@@ -80,7 +78,7 @@ const ReactQueryProvider = ({ children }: { children: ReactNode }) => {
                 setCookies("account-token", token);
               } catch {
                 // Completely logout if refresh account token fails
-                logout();
+                await logout();
               }
             }
           },

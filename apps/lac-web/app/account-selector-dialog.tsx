@@ -121,25 +121,27 @@ const AccountSelectorDialog = () => {
                   value={account["account-no"]}
                 >
                   <Accordion.Header>
-                    <Accordion.Trigger className="flex cursor-default flex-row items-start gap-1 py-3">
-                      <RadioGroupItem
-                        value={account["account-no"]}
-                        id={`account-${account["account-no"]}`}
-                      />
+                    <Accordion.Trigger asChild>
+                      <div className="flex cursor-default flex-row items-start gap-1 py-3">
+                        <RadioGroupItem
+                          value={account["account-no"]}
+                          id={`account-${account["account-no"]}`}
+                        />
 
-                      <div className="flex flex-col items-start gap-2">
-                        <Label
-                          htmlFor={`account-${account["account-no"]}`}
-                          className="text-brand-gray-500 text-[15px] font-bold leading-5"
-                        >
-                          {account.name} # {account["account-no"]}
-                        </Label>
+                        <div className="flex flex-col items-start gap-2">
+                          <Label
+                            htmlFor={`account-${account["account-no"]}`}
+                            className="text-brand-gray-500 text-[15px] font-bold leading-5"
+                          >
+                            {account.name} # {account["account-no"]}
+                          </Label>
 
-                        {account.addresses.length > 1 && (
-                          <div className="text-brand-gray-500 text-[15px] leading-5">
-                            Multiple shipping addresses
-                          </div>
-                        )}
+                          {account.addresses.length > 1 && (
+                            <div className="text-brand-gray-500 text-[15px] leading-5">
+                              Multiple shipping addresses
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </Accordion.Trigger>
                   </Accordion.Header>

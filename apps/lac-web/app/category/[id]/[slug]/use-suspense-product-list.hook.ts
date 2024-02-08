@@ -3,7 +3,19 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 
 const useSuspenseProductList = (
   catId: string,
-  { page, pageSize, sort }: { page: string; pageSize: string; sort: string },
+  {
+    page,
+    pageSize,
+    sort,
+    filters,
+  }: {
+    page: string;
+    pageSize: string;
+    sort: string;
+    filters: {
+      [sectionId: string]: string[];
+    };
+  },
 ) => {
   return useSuspenseQuery({
     queryKey: [
@@ -14,6 +26,7 @@ const useSuspenseProductList = (
         page,
         pageSize,
         sort,
+        filters,
       },
     ],
     queryFn: () =>
@@ -22,6 +35,7 @@ const useSuspenseProductList = (
           searchParams: new URLSearchParams({
             page,
             perpage: pageSize,
+            ...filters,
           }),
         })
         .json<{

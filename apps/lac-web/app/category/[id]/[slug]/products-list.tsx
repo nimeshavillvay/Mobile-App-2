@@ -1,7 +1,7 @@
 "use client";
 
 import ProductCardWithSkuSwitcher from "@/_components/product-card-with-sku-switcher";
-import { QUERY_KEYS } from "@/_lib/constants";
+import { FILTERS_QUERY_PREFIX, QUERY_KEYS } from "@/_lib/constants";
 import { getMediaUrl } from "@/_utils/helpers";
 import { useSearchParams } from "next/navigation";
 import { PAGE_SIZES, SORTING_TYPES } from "./constants";
@@ -21,10 +21,20 @@ const ProductsList = ({ id }: ProductsListProps) => {
       QUERY_KEYS.SORT,
     ) as (typeof SORTING_TYPES)[number]["value"]) ?? SORTING_TYPES[0].value;
 
+  const filters: {
+    [sectionId: string]: string[];
+  } = {};
+  for (const key of searchParams.keys()) {
+    if (key.startsWith(FILTERS_QUERY_PREFIX)) {
+      filters[key.replace(FILTERS_QUERY_PREFIX, "")] = searchParams.getAll(key);
+    }
+  }
+
   const productsListQuery = useSuspenseProductList(id, {
     page,
     pageSize,
     sort: sorting,
+    filters,
   });
 
   const searchParamChange = (

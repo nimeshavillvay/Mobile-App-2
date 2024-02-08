@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import CheckboxList from "@/_components/checkbox-list";
 import {
   Accordion,
@@ -13,25 +14,25 @@ type FiltersProps = {
 };
 
 const Filters = ({ section }: FiltersProps) => {
-  const period =
-    section === "purchased-items"
-      ? {
-          from: dayjs().subtract(1, "year").format("YYYY-MM-DD"),
-          to: dayjs().format("YYYY-MM-DD"),
-        }
-      : undefined;
+  // const period =
+  //   section === "purchased-items"
+  //     ? {
+  //         from: dayjs().subtract(1, "year").format("YYYY-MM-DD"),
+  //         to: dayjs().format("YYYY-MM-DD"),
+  //       }
+  //     : undefined;
 
-  const brandsFiltersQuery = useMyAccountFilters(section, "brands", period);
-  const categoriesFiltersQuery = useMyAccountFilters(
-    section,
-    "categories",
-    period,
-  );
-  const subCategoriesFiltersQuery = useMyAccountFilters(
-    section,
-    "subCategories",
-    period,
-  );
+  // const brandsFiltersQuery = useMyAccountFilters(section, "brands", period);
+  // const categoriesFiltersQuery = useMyAccountFilters(
+  //   section,
+  //   "categories",
+  //   period,
+  // );
+  // const subCategoriesFiltersQuery = useMyAccountFilters(
+  //   section,
+  //   "subCategories",
+  //   period,
+  // );
 
   return (
     <Accordion type="single" collapsible>
@@ -39,7 +40,7 @@ const Filters = ({ section }: FiltersProps) => {
         <AccordionTrigger>Brands</AccordionTrigger>
 
         <AccordionContent className="space-y-2">
-          <FilterList filters={brandsFiltersQuery?.data?.data?.brands} />
+          {/* <FilterList filters={brandsFiltersQuery?.data?.data?.brands} /> */}
         </AccordionContent>
       </AccordionItem>
 
@@ -47,9 +48,9 @@ const Filters = ({ section }: FiltersProps) => {
         <AccordionTrigger>Category</AccordionTrigger>
 
         <AccordionContent className="space-y-2">
-          <FilterList
+          {/* <FilterList
             filters={categoriesFiltersQuery?.data?.data?.categories}
-          />
+          /> */}
         </AccordionContent>
       </AccordionItem>
 
@@ -57,9 +58,9 @@ const Filters = ({ section }: FiltersProps) => {
         <AccordionTrigger>Sub-Category</AccordionTrigger>
 
         <AccordionContent className="space-y-2">
-          <FilterList
+          {/* <FilterList
             filters={subCategoriesFiltersQuery?.data?.data?.subCategories}
-          />
+          /> */}
         </AccordionContent>
       </AccordionItem>
     </Accordion>
@@ -68,20 +69,20 @@ const Filters = ({ section }: FiltersProps) => {
 
 export default Filters;
 
-const FilterList = ({
-  filters = [],
-}: {
-  filters?: {
-    name: string;
-    id: number;
-  }[];
-}) => {
-  return (
-    <CheckboxList
-      values={filters.map((filter) => ({
-        id: filter.id.toString(),
-        name: filter.name,
-      }))}
-    />
-  );
-};
+// const FilterList = ({
+//   filters = [],
+// }: {
+//   filters?: {
+//     name: string;
+//     id: number;
+//   }[];
+// }) => {
+//   return (
+//     <CheckboxList
+//       values={filters.map((filter) => ({
+//         id: filter.id.toString(),
+//         name: filter.name,
+//       }))}
+//     />
+//   );
+// };

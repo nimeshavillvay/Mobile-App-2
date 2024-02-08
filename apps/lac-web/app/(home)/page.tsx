@@ -168,7 +168,7 @@ const HomePage = async () => {
 
           <Separator
             orientation="horizontal"
-            className="bg-brand-gray-300 h-px flex-1"
+            className="bg-brand-gray h-px flex-1"
           />
         </div>
 
@@ -218,7 +218,7 @@ const HomePage = async () => {
               width={352}
               height={344}
               alt={`The background for ${banner.title}`}
-              className="h-[344px] w-[352px] object-cover"
+              className="h-auto w-[352px] object-cover"
             />
 
             <div className="absolute bottom-0 left-6 right-0 top-[164px] bg-black/40 p-5 text-white backdrop-blur-sm">

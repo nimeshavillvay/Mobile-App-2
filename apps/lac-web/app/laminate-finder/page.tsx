@@ -2,7 +2,9 @@ import Breadcrumbs from "@/_components/breadcrumbs";
 import { api } from "@/_lib/api";
 import { DEFAULT_REVALIDATE } from "@/_lib/constants";
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import Filters from "./filters";
+import FiltersBase from "./filters-base";
 
 export const metadata: Metadata = {
   title: "Laminate Finder",
@@ -83,14 +85,27 @@ const LaminateFinderPage = async () => {
       <h1 className="max-w-desktop mx-auto">Laminate Finder</h1>
 
       <div className="max-w-desktop mx-auto flex flex-row gap-8">
-        <Filters
-          colors={colors.laminateColors.map((color) => ({
-            id: color.id,
-            colorCode: color.color_code,
-            disabled: color.is_color_disable,
-          }))}
-          filterSections={filterSections}
-        />
+        <Suspense
+          fallback={
+            <FiltersBase
+              colors={colors.laminateColors.map((color) => ({
+                id: color.id,
+                colorCode: color.color_code,
+                disabled: color.is_color_disable,
+              }))}
+              sections={filterSections}
+            />
+          }
+        >
+          <Filters
+            colors={colors.laminateColors.map((color) => ({
+              id: color.id,
+              colorCode: color.color_code,
+              disabled: color.is_color_disable,
+            }))}
+            sections={filterSections}
+          />
+        </Suspense>
 
         <div>content</div>
       </div>

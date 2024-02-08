@@ -1,12 +1,12 @@
 "use client";
 
+import { logout } from "@/_actions/account";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/_components/ui/accordion";
-import useLogout from "@/_hooks/account/use-logout.hook";
 import { cn } from "@/_utils/helpers";
 import { cva } from "class-variance-authority";
 import Link from "next/link";
@@ -43,7 +43,6 @@ const LINKS = [
 const SideMenu = () => {
   const pathname = usePathname();
   const router = useRouter();
-  const logout = useLogout();
 
   return (
     <div>
@@ -91,7 +90,7 @@ const SideMenu = () => {
       </Accordion>
 
       <button
-        onClick={logout}
+        onClick={() => logout()}
         className={cn(menuItem({ status: "inactive" }), "w-full text-left")}
       >
         Logout

@@ -47,6 +47,10 @@ const LoginDialog = () => {
   const setOpen = useLoginDialog((state) => state.setOpen);
   const form = useForm<LoginSchema>({
     resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
   });
   const [, setCookies] = useCookies();
   const setAccountSelectorOpen = useAccountSelectorDialog(

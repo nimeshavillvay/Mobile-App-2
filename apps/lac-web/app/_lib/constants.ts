@@ -10,3 +10,4 @@ export const QUERY_KEYS = {
   PAGE_SIZE: "page-size",
   SORT: "sort",
 } as const;
+export const FILTERS_QUERY_PREFIX = "filter-";
