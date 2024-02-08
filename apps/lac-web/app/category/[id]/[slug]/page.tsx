@@ -5,6 +5,7 @@ import {
   ProductCardContainer,
   ProductCardDetailsSkeleton,
 } from "@/_components/product-card";
+import SelectedFilters from "@/_components/selected-filters";
 import Separator from "@/_components/separator";
 import { Skeleton } from "@/_components/ui/skeleton";
 import { api } from "@/_lib/api";
@@ -148,6 +149,17 @@ const CategoryPage = async ({ params: { id, slug } }: CategoryPageProps) => {
           </div>
         </section>
       )}
+
+      <SelectedFilters
+        sections={filterSections.map((section) => ({
+          id: section.id,
+          name: section.heading,
+          values: section.values.map((value) => ({
+            id: value.id,
+            name: value.name,
+          })),
+        }))}
+      />
 
       <div className="max-w-desktop mx-auto flex flex-row items-start gap-8">
         <Suspense fallback={<FiltersBase sections={filterSections} />}>
