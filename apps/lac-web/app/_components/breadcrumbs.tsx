@@ -26,9 +26,11 @@ const Breadcrumbs = ({ links }: BreadcrumbsProps) => {
         {links.map((link) => (
           <li
             key={link.href}
-            className="flex flex-row items-center last:text-[#828282]"
+            className="flex min-w-0 flex-row items-center last:text-[#828282]"
           >
-            <Link href={link.href}>{link.label}</Link>
+            <Link href={link.href} className="truncate">
+              {link.label}
+            </Link>
           </li>
         ))}
       </ul>
