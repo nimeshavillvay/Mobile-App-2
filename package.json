@@ -4,6 +4,7 @@
   "scripts": {
     "dev": "dotenv -c -- turbo dev",
     "build": "dotenv -c -- turbo build",
+    "start": "dotenv -c -- turbo start",
     "lint": "dotenv -c -- turbo lint",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,md,json}\""
   },
