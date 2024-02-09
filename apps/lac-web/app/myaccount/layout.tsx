@@ -12,9 +12,9 @@ const MyAccountLayout = ({ children }: MyAccountLayoutProps) => {
     <>
       <Breadcrumbs links={[{ href: "/myaccount", label: "My Account" }]} />
 
-      <h1 className="max-w-desktop mx-auto">My Account</h1>
+      <h1>My Account</h1>
 
-      <div className="max-w-desktop mx-auto flex flex-row">
+      <div className="flex flex-row">
         <aside className="w-[280px]">
           <Profile />
 

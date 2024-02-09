@@ -44,7 +44,7 @@ const ShoppingCartList = ({ accountToken }: ShoppingCartTableProps) => {
   };
 
   return (
-    <div className="max-w-desktop mx-auto">
+    <div>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}

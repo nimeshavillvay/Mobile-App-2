@@ -101,7 +101,7 @@ const CategoryPage = async ({ params: { id, slug } }: CategoryPageProps) => {
         }))}
       />
 
-      <div className="max-w-desktop mx-auto mb-[34px] mt-5 flex flex-row items-center gap-2.5">
+      <div className="mb-[34px] mt-5 flex flex-row items-center gap-2.5">
         <h1 className="text-brand-gray-500 text-[28px] font-medium leading-8">
           {category.main.catTitle}
         </h1>
@@ -113,13 +113,13 @@ const CategoryPage = async ({ params: { id, slug } }: CategoryPageProps) => {
       </div>
 
       {!!category.main.description && (
-        <div className="max-w-desktop mx-auto">
+        <div>
           <p className="max-w-[540px]">{category.main.description}</p>
         </div>
       )}
 
       {category.main.subCatgores.length > 0 && (
-        <section className="max-w-desktop mx-auto my-8">
+        <section className="my-8">
           <h2 className="text-brand-primary mb-2 text-xl font-bold leading-6">
             Categories
           </h2>
@@ -159,7 +159,7 @@ const CategoryPage = async ({ params: { id, slug } }: CategoryPageProps) => {
         }))}
       />
 
-      <div className="max-w-desktop mx-auto flex flex-row items-start gap-8">
+      <div className="flex flex-row items-start gap-8">
         <Suspense fallback={<FiltersBase sections={filterSections} />}>
           <Filters sections={filterSections} />
         </Suspense>

@@ -33,7 +33,7 @@ const config: Config = {
         },
       },
       maxWidth: {
-        desktop: "1120px",
+        desktop: "var(--desktop-width)",
       },
       fontFamily: {
         arial: ["Arial", ...defaultTheme.fontFamily.serif],

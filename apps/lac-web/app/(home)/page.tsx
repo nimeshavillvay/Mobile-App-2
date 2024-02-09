@@ -160,7 +160,7 @@ const HomePage = async () => {
         special={featuredProducts.featured_product_list.special}
       />
 
-      <section className="max-w-desktop mx-auto">
+      <section>
         <div className="flex flex-row items-center gap-2.5">
           <Title asChild>
             <h2>Featured Brand</h2>
@@ -209,7 +209,7 @@ const HomePage = async () => {
         </div>
       </section>
 
-      <section className="max-w-desktop mx-auto mt-9 flex flex-row justify-between gap-[33px]">
+      <section className="mt-9 flex flex-row justify-between gap-[33px]">
         {BANNERS.map((banner) => (
           <Link href={banner.href} key={banner.href} className="relative">
             <Image
@@ -241,10 +241,10 @@ const HomePage = async () => {
 
       <Separator
         orientation="horizontal"
-        className="max-w-desktop bg-brand-gray-200 mx-auto my-[55px] h-px w-full"
+        className="bg-brand-gray-200 my-[55px] h-px w-full"
       />
 
-      <section className="max-w-desktop mx-auto mb-[92px] flex flex-row justify-between gap-5">
+      <section className="mb-[92px] flex flex-row justify-between gap-5">
         <div>
           <EmailSignup />
 

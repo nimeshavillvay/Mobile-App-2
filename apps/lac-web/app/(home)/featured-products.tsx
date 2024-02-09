@@ -56,7 +56,7 @@ const FeaturedProducts = ({
   }
 
   return (
-    <section className="max-w-desktop mx-auto mb-[72px] mt-[55px]">
+    <section className="mb-[72px] mt-[55px]">
       <Tabs.Root
         value={selectedType}
         onValueChange={(value) => setSelectedType(value as ProductsType)}

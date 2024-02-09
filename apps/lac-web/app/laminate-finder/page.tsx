@@ -82,9 +82,9 @@ const LaminateFinderPage = async () => {
         links={[{ href: "/laminate-finder", label: "Laminate Finder" }]}
       />
 
-      <h1 className="max-w-desktop mx-auto">Laminate Finder</h1>
+      <h1>Laminate Finder</h1>
 
-      <div className="max-w-desktop mx-auto flex flex-row gap-8">
+      <div className="flex flex-row gap-8">
         <Suspense
           fallback={
             <FiltersBase

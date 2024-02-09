@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 const ShoppingCartPage = () => {
   return (
     <>
-      <div className="max-w-desktop mx-auto flex flex-row items-center gap-2.5">
+      <div className="flex flex-row items-center gap-2.5">
         <Title>Shopping Cart</Title>
 
         <Separator

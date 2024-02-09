@@ -1,3 +1,31 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --desktop-width: 1120px;
+}
+
+@layer components {
+  /* https://www.joshwcomeau.com/css/full-bleed/ */
+  .full-bleed-wrapper {
+    display: grid;
+    grid-template-columns:
+      1fr
+      min(var(--desktop-width), 100%)
+      1fr;
+    column-gap: 0.5rem;
+
+    & > * {
+      grid-column: 2;
+    }
+  }
+}
+
+@layer utilities {
+  /* https://www.joshwcomeau.com/css/full-bleed/ */
+  .full-bleed {
+    width: 100%;
+    grid-column: 1 / 4;
+  }
+}
