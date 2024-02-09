@@ -39,7 +39,7 @@ const Search = () => {
             type="text"
             required
             placeholder="Search for product or scan a barcode..."
-            className="placeholder:text-brand-gray-400 w-full rounded-l-[10px] border-0 bg-transparent px-5 py-1.5 text-[15px] leading-6 text-black"
+            className="placeholder:text-brand-gray-400 w-full rounded-l-[10px] border-0 bg-transparent px-5 py-1.5 leading-6 text-black"
           />
         </Form.Control>
       </Form.Field>

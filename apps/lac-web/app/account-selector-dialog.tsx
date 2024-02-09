@@ -131,13 +131,13 @@ const AccountSelectorDialog = () => {
                         <div className="flex flex-col items-start gap-2">
                           <Label
                             htmlFor={`account-${account["account-no"]}`}
-                            className="text-brand-gray-500 text-[15px] font-bold leading-5"
+                            className="text-brand-gray-500 font-bold"
                           >
                             {account.name} # {account["account-no"]}
                           </Label>
 
                           {account.addresses.length > 1 && (
-                            <div className="text-brand-gray-500 text-[15px] leading-5">
+                            <div className="text-brand-gray-500">
                               Multiple shipping addresses
                             </div>
                           )}
@@ -157,7 +157,7 @@ const AccountSelectorDialog = () => {
                             key={address["address-id"]}
                             className="grid grid-cols-[auto,1fr] gap-x-1 py-3 pl-5"
                           >
-                            <div className="text-brand-gray-500 col-start-2 text-[15px] font-bold leading-5">
+                            <div className="text-brand-gray-500 col-start-2 font-bold">
                               # {address["address-id"]}
                             </div>
 
@@ -166,10 +166,7 @@ const AccountSelectorDialog = () => {
                               id={`address-${address["address-id"]}`}
                             />
 
-                            <Label
-                              htmlFor={`address-${address["address-id"]}`}
-                              className="text-[15px] leading-5"
-                            >
+                            <Label htmlFor={`address-${address["address-id"]}`}>
                               {address.name}, {address.locality},{" "}
                               {address.region}, {address["postal-code"]},{" "}
                               {address["country-name"]}

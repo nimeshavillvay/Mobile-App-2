@@ -8,7 +8,10 @@ import {
   AccordionTrigger,
 } from "@/_components/ui/accordion";
 import { FILTERS_QUERY_PREFIX } from "@/_lib/constants";
-import { toggleCheckboxInSearchparams } from "@/_utils/client-helpers";
+import {
+  toggleCheckboxInSearchparams,
+  updateSearchParams,
+} from "@/_utils/client-helpers";
 import { type CheckedState } from "@radix-ui/react-checkbox";
 import { type ReadonlyURLSearchParams } from "next/navigation";
 import type { FilterSection } from "./types";
@@ -44,6 +47,10 @@ const FiltersBase = ({ sections, searchParams }: FiltersBaseProps) => {
     };
   });
 
+  const hasSelectedFilters = consolidatedSections.some((section) =>
+    section.values.some((values) => values.checked),
+  );
+
   const onCheckedChange = (sectionId: string) => {
     return (valueId: string, checked: CheckedState) => {
       if (searchParams) {
@@ -56,9 +63,32 @@ const FiltersBase = ({ sections, searchParams }: FiltersBaseProps) => {
     };
   };
 
+  const handleReset = () => {
+    if (searchParams) {
+      const newSearchParams = new URLSearchParams(searchParams);
+
+      for (const key of searchParams.keys()) {
+        if (key.startsWith(FILTERS_QUERY_PREFIX)) {
+          newSearchParams.delete(key);
+        }
+      }
+
+      updateSearchParams(newSearchParams);
+    }
+  };
+
   return (
     <Accordion type="single" collapsible asChild>
       <aside className="w-64">
+        {hasSelectedFilters && (
+          <button
+            className="bg-brand-primary mb-3.5 min-w-0 shrink-0 text-nowrap rounded-[3px] px-5 py-1.5 text-base font-normal uppercase text-white"
+            onClick={handleReset}
+          >
+            Reset
+          </button>
+        )}
+
         {consolidatedSections.map((section) => (
           <AccordionItem key={section.id} value={section.id}>
             <AccordionTrigger>{section.heading}</AccordionTrigger>

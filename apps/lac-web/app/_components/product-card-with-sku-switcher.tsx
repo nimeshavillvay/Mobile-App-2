@@ -78,7 +78,7 @@ const ProductCardWithSkuSwitcher = ({
 
         <Link
           href={hrefWithSku}
-          className="bg-brand-primary block w-full rounded-sm py-2 text-center text-[15px] font-extrabold uppercase leading-5 text-white"
+          className="bg-brand-primary block w-full rounded-sm py-2 text-center font-extrabold uppercase text-white"
         >
           View item
         </Link>

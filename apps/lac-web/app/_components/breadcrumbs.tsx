@@ -12,7 +12,7 @@ const Breadcrumbs = ({ links }: BreadcrumbsProps) => {
     <nav className="bg-brand-gray-200">
       <ul
         className={cn(
-          "max-w-desktop mx-auto flex flex-row items-center py-3 text-[15px] leading-5 text-[#333333]",
+          "max-w-desktop mx-auto flex flex-row items-center py-3 text-[#333333]",
           "[&>li:not(:last-child)]:after:mx-1.5 [&>li:not(:last-child)]:after:content-['/']",
         )}
       >
@@ -26,9 +26,11 @@ const Breadcrumbs = ({ links }: BreadcrumbsProps) => {
         {links.map((link) => (
           <li
             key={link.href}
-            className="flex flex-row items-center last:text-[#828282]"
+            className="flex min-w-0 flex-row items-center last:text-[#828282]"
           >
-            <Link href={link.href}>{link.label}</Link>
+            <Link href={link.href} className="truncate">
+              {link.label}
+            </Link>
           </li>
         ))}
       </ul>

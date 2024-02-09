@@ -5,6 +5,7 @@ import {
   ProductCardContainer,
   ProductCardDetailsSkeleton,
 } from "@/_components/product-card";
+import SelectedFilters from "@/_components/selected-filters";
 import Separator from "@/_components/separator";
 import { Skeleton } from "@/_components/ui/skeleton";
 import { api } from "@/_lib/api";
@@ -113,9 +114,7 @@ const CategoryPage = async ({ params: { id, slug } }: CategoryPageProps) => {
 
       {!!category.main.description && (
         <div className="max-w-desktop mx-auto">
-          <p className="max-w-[540px] text-[15px] leading-5">
-            {category.main.description}
-          </p>
+          <p className="max-w-[540px]">{category.main.description}</p>
         </div>
       )}
 
@@ -140,7 +139,7 @@ const CategoryPage = async ({ params: { id, slug } }: CategoryPageProps) => {
                   priority={index < 4}
                 />
 
-                <div className="bg-brand-primary px-2.5 py-[5px] text-center text-[15px] leading-5 text-white">
+                <div className="bg-brand-primary px-2.5 py-[5px] text-center text-white">
                   {subCategory.SubCatTitle}
                 </div>
               </Link>
@@ -148,6 +147,17 @@ const CategoryPage = async ({ params: { id, slug } }: CategoryPageProps) => {
           </div>
         </section>
       )}
+
+      <SelectedFilters
+        sections={filterSections.map((section) => ({
+          id: section.id,
+          name: section.heading,
+          values: section.values.map((value) => ({
+            id: value.id,
+            name: value.name,
+          })),
+        }))}
+      />
 
       <div className="max-w-desktop mx-auto flex flex-row items-start gap-8">
         <Suspense fallback={<FiltersBase sections={filterSections} />}>

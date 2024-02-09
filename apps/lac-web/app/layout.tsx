@@ -23,7 +23,7 @@ export const metadata: Metadata = {
 const RootLayout = ({ children }: { children: ReactNode }) => {
   return (
     <html lang="en" className="h-full scroll-smooth">
-      <body className="font-arial flex h-full flex-col justify-between antialiased">
+      <body className="font-arial flex h-full flex-col justify-between text-[15px] leading-5 antialiased">
         <NextTopLoader showSpinner={false} color="#cc0000" />
 
         <Providers>

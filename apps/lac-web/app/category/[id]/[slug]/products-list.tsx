@@ -2,6 +2,7 @@
 
 import ProductCardWithSkuSwitcher from "@/_components/product-card-with-sku-switcher";
 import { FILTERS_QUERY_PREFIX, QUERY_KEYS } from "@/_lib/constants";
+import { updateSearchParams } from "@/_utils/client-helpers";
 import { getMediaUrl } from "@/_utils/helpers";
 import { useSearchParams } from "next/navigation";
 import { PAGE_SIZES, SORTING_TYPES } from "./constants";
@@ -44,7 +45,7 @@ const ProductsList = ({ id }: ProductsListProps) => {
     const newSearchParams = new URLSearchParams(searchParams);
     newSearchParams.set(key, value);
 
-    window.history.pushState(null, "", `?${newSearchParams.toString()}`);
+    updateSearchParams(newSearchParams);
   };
 
   const onSortingChange = (value: string) => {

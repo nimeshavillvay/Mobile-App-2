@@ -185,7 +185,7 @@ const LoginDialog = () => {
                 <Label htmlFor={staySignedInId}>Stay signed in</Label>
               </div>
 
-              <button className="hover:text-brand-primary text-[15px] font-bold leading-5 text-black">
+              <button className="hover:text-brand-primary font-bold text-black">
                 Forgot password?
               </button>
             </div>
@@ -197,7 +197,7 @@ const LoginDialog = () => {
               Sign in
             </button>
 
-            <div className="text-brand-gray-500 text-center text-[15px] font-normal leading-5">
+            <div className="text-brand-gray-500 text-center font-normal">
               Don&apos;t have an account?{" "}
               <DialogClose asChild>
                 <Link href="/register" className="font-bold text-black">

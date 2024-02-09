@@ -2,7 +2,7 @@
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
     "strict": true,
-    "moduleResolution": "Bundler",
+    "moduleResolution": "Bundler"
   },
-  "include": ["reset.d.ts"],
+  "include": ["reset.d.ts"]
 }

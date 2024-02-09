@@ -4,6 +4,14 @@ import "client-only";
 import { type ReadonlyURLSearchParams } from "next/navigation";
 
 /**
+ * Update the search parameters with changing the route or making a
+ * request to the server
+ */
+export const updateSearchParams = (searchParams: URLSearchParams) => {
+  window.history.pushState(null, "", `?${searchParams.toString()}`);
+};
+
+/**
  *  Used to toggle the filters in the URL search parameters
  */
 export const toggleCheckboxInSearchparams = (
