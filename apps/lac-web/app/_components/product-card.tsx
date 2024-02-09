@@ -1,17 +1,21 @@
+import { cn } from "@/_utils/helpers";
 import Image, { type ImageProps } from "next/image";
 import Link, { type LinkProps } from "next/link";
-import { type ReactNode } from "react";
+import { type ComponentProps, type ReactNode } from "react";
 import { Skeleton } from "./ui/skeleton";
 
 export const ProductCardContainer = ({
-  children,
-}: {
-  children?: ReactNode;
-}) => {
+  className,
+  ...delegated
+}: Pick<ComponentProps<"div">, "children" | "className">) => {
   return (
-    <div className="flex flex-col justify-between gap-3.5 border border-black/[0.13] px-4 py-5 shadow-[0_1px_6px_0px] shadow-black/10">
-      {children}
-    </div>
+    <div
+      className={cn(
+        "flex flex-col justify-between gap-3.5 border border-black/[0.13] px-4 py-5 shadow-[0_1px_6px_0px] shadow-black/10",
+        className,
+      )}
+      {...delegated}
+    />
   );
 };
 
