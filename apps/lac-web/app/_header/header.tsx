@@ -19,8 +19,8 @@ const Header = async () => {
     .json<Category[]>();
 
   return (
-    <header>
-      <div className="bg-brand-gray-100">
+    <header className="full-bleed-wrapper">
+      <div className="bg-brand-gray-100 full-bleed">
         <div className="max-w-desktop mx-auto flex h-9 flex-row items-center justify-between text-sm leading-4 text-black">
           <nav className="flex flex-row items-center gap-4">
             <Link href="/" className="text-brand-primary font-bold">
@@ -58,19 +58,21 @@ const Header = async () => {
         </div>
       </div>
 
-      <div className="max-w-desktop mx-auto flex flex-row items-center gap-12 py-5">
-        <Link href="/">
-          <VisuallyHidden>Wurth</VisuallyHidden>
+      <div className="py-5">
+        <div className="flex flex-row items-center gap-12">
+          <Link href="/">
+            <VisuallyHidden>Wurth</VisuallyHidden>
 
-          <WurthLogo width={192} height={41} />
-        </Link>
+            <WurthLogo width={192} height={41} />
+          </Link>
 
-        <Search />
+          <Search />
 
-        <ShoppingCart />
+          <ShoppingCart />
+        </div>
       </div>
 
-      <div className="bg-brand-primary">
+      <div className="bg-brand-primary full-bleed">
         <div className="max-w-desktop mx-auto flex h-[50px] flex-row items-center gap-[15px]">
           <CategoriesDropdown categories={categories} />
 

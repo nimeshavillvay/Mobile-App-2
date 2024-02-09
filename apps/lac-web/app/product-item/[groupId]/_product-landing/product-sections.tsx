@@ -19,7 +19,7 @@ const visibleSectionAtom = atom<SectionType>("variations");
 export const Root = ({ children }: { children: ReactNode }) => {
   return (
     <Provider>
-      <div className="max-w-desktop mx-auto">{children}</div>
+      <div>{children}</div>
     </Provider>
   );
 };

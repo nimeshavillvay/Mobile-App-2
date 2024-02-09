@@ -14,7 +14,7 @@ const ProductHero = async ({ groupId, sku }: ProductHeroProps) => {
   const product = await getProduct(groupId, sku);
 
   return (
-    <div className="max-w-desktop mx-auto">
+    <div>
       <h1>{product.page_title}</h1>
 
       <div className="flex flex-row gap-[30px]">

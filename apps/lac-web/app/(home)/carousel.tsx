@@ -1,9 +1,12 @@
 "use client";
 
-import { getMediaUrl } from "@/_utils/helpers";
+import VisuallyHidden from "@/_components/visually-hidden";
+import { cn, getMediaUrl } from "@/_utils/helpers";
+import { type EmblaCarouselType } from "embla-carousel";
 import Autoplay from "embla-carousel-autoplay";
 import useEmblaCarousel from "embla-carousel-react";
 import Image from "next/image";
+import { useCallback, useEffect, useState } from "react";
 import type { CarouselBanner } from "./types";
 
 type CarouselProps = {
@@ -11,7 +14,41 @@ type CarouselProps = {
 };
 
 const Carousel = ({ banners }: CarouselProps) => {
-  const [emblaRef] = useEmblaCarousel({ loop: true }, [Autoplay()]);
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [Autoplay()]);
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const scrollPrev = useCallback(() => {
+    if (emblaApi) {
+      emblaApi.scrollPrev();
+    }
+  }, [emblaApi]);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const scrollNext = useCallback(() => {
+    if (emblaApi) {
+      emblaApi.scrollNext();
+    }
+  }, [emblaApi]);
+  const scrollTo = useCallback(
+    (index: number) => {
+      if (emblaApi) {
+        emblaApi.scrollTo(index);
+      }
+    },
+    [emblaApi],
+  );
+
+  const onSelect = useCallback((emblaApi: EmblaCarouselType) => {
+    setSelectedIndex(emblaApi.selectedScrollSnap());
+  }, []);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+
+    onSelect(emblaApi);
+    emblaApi.on("reInit", onSelect);
+    emblaApi.on("select", onSelect);
+  }, [emblaApi, onSelect]);
 
   if (!banners.length) {
     // If there are no banners
@@ -19,7 +56,7 @@ const Carousel = ({ banners }: CarouselProps) => {
   }
 
   return (
-    <div className="max-w-desktop mx-auto overflow-hidden" ref={emblaRef}>
+    <div className="relative overflow-hidden" ref={emblaRef}>
       <div className="flex">
         {banners.map((banner, index) => (
           <div key={banner.id} className="shrink-0 grow-0 basis-full">
@@ -37,6 +74,21 @@ const Carousel = ({ banners }: CarouselProps) => {
               />
             </a>
           </div>
+        ))}
+      </div>
+
+      <div className="absolute inset-x-1/2 bottom-3 flex items-center justify-center gap-1">
+        {banners.map((banner, index) => (
+          <button
+            key={index}
+            onClick={() => scrollTo(index)}
+            className={cn(
+              "h-1 w-9 shrink-0",
+              selectedIndex === index ? "bg-black/50" : " bg-black/15",
+            )}
+          >
+            <VisuallyHidden>{banner.alt_tag}</VisuallyHidden>
+          </button>
         ))}
       </div>
     </div>

@@ -80,6 +80,8 @@ const ReactQueryProvider = ({ children }: { children: ReactNode }) => {
                 // Completely logout if refresh account token fails
                 await logout();
               }
+            } else {
+              await logout();
             }
           },
         }),

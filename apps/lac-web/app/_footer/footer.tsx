@@ -10,9 +10,9 @@ import vendorFreightRouting from "./vendor-freight-routing.jpg";
 
 const Footer = () => {
   return (
-    <footer>
-      <div className="bg-brand-gray-100 p-5">
-        <div className="max-w-desktop mx-auto flex flex-row justify-between gap-2 text-sm leading-6 text-black">
+    <footer className="full-bleed-wrapper bg-brand-gray-100">
+      <div className="p-5">
+        <div className="flex flex-row justify-between gap-2 text-sm leading-6 text-black">
           <div>
             <Link href="/">
               <VisuallyHidden>Wurth</VisuallyHidden>
@@ -179,8 +179,8 @@ const Footer = () => {
         </div>
       </div>
 
-      <div className="bg-brand-gray-500">
-        <div className="max-w-desktop text-brand-gray-200 mx-auto flex flex-row items-center justify-center gap-2.5 p-5 text-[13px] leading-4">
+      <div className="bg-brand-gray-500 full-bleed">
+        <div className="text-brand-gray-200 flex flex-row items-center justify-center gap-2.5 p-5 text-[13px] leading-4">
           <span>
             ©{new Date().getFullYear()} Wurth Louis and Company. All rights
             reserved.
