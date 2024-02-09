@@ -12,7 +12,7 @@ const CompanyInformationLayout = ({
     <>
       <Breadcrumbs links={[]} />
 
-      <div className="py-6">{children}</div>
+      <div className="py-8">{children}</div>
     </>
   );
 };

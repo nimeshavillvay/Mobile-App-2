@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 const AboutUsPage = () => {
   return (
     <>
-      <section className="max-w-desktop mx-auto">
+      <section className="max-w-desktop mx-auto min-h-[1024px]">
         {/* Navigation bar for company information pages */}
         <nav className="mb-6 flex text-lg font-bold uppercase">
           <Link
@@ -38,7 +38,7 @@ const AboutUsPage = () => {
         </nav>
 
         {/* Section banner */}
-        <div className="mb-6">
+        <div className="border-brand-gray-100 mb-8 border">
           <Image
             src={aboutBanner}
             alt="The banner for about us page"
@@ -51,7 +51,7 @@ const AboutUsPage = () => {
         <div className="relative mb-4 flex">
           <h1
             tabIndex={0}
-            className="text-brand-primary relative z-10 bg-white pr-2.5 text-2xl font-bold"
+            className="text-brand-primary relative z-10 bg-white pr-2.5 text-2xl font-medium"
           >
             About Us
           </h1>
@@ -126,7 +126,7 @@ const AboutUsPage = () => {
             <h2
               tabIndex={0}
               aria-level={2}
-              className="text-brand-primary relative pr-3 text-lg font-bold"
+              className="text-brand-primary relative pr-3 text-lg font-medium"
             >
               Our Mission Statement
             </h2>
@@ -143,7 +143,7 @@ const AboutUsPage = () => {
             <h2
               tabIndex={0}
               aria-level={2}
-              className="text-brand-primary relative pr-3 text-lg font-bold"
+              className="text-brand-primary relative pr-3 text-lg font-medium"
             >
               Corporate Executives
             </h2>
@@ -151,23 +151,55 @@ const AboutUsPage = () => {
             <span className="border-b-brand-primary relative z-0 mt-0.5 block w-full border-b"></span>
           </div>
 
-          <div className="flex flex-wrap">
-            <div className="w-64 flex-1">
-              <div>
+          <div className="grid grid-cols-2 gap-8 md:w-1/2">
+            <div className="relative">
+              <div className="border-brand-gray-200 relative flex flex-col rounded border">
                 <Image
                   src={chiefExecutiveOfficer}
                   alt="Photo of Thomas Stolmeier"
                   placeholder="blur"
+                  className="w-full rounded-t"
                 />
+
+                <div className="break-words p-4">
+                  <h4
+                    tabIndex={0}
+                    aria-level={3}
+                    className="mb-2 text-base font-medium"
+                  >
+                    Thomas Stolmeier
+                  </h4>
+
+                  <p tabIndex={0} className="text-sm italic">
+                    President and Chief Executive Officer Wurth Louis and
+                    Company
+                  </p>
+                </div>
               </div>
             </div>
 
-            <div className="w-64 flex-1">
-              <div>
+            <div className="relative">
+              <div className="border-brand-gray-200 relative flex flex-col rounded border">
                 <Image
                   src={chiefFinancialOfficer}
                   alt="Photo of Evangeline B. de Guzman"
+                  placeholder="blur"
+                  className="w-full rounded-t"
                 />
+
+                <div className="break-words p-4">
+                  <h4
+                    tabIndex={0}
+                    aria-level={3}
+                    className="mb-2 text-base font-medium"
+                  >
+                    Evangeline B. de Guzman
+                  </h4>
+
+                  <p tabIndex={0} className="text-sm italic">
+                    Chief Financial Officer Wurth Louis and Company
+                  </p>
+                </div>
               </div>
             </div>
           </div>
