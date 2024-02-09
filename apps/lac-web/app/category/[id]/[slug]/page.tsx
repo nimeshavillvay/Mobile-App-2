@@ -114,9 +114,7 @@ const CategoryPage = async ({ params: { id, slug } }: CategoryPageProps) => {
 
       {!!category.main.description && (
         <div className="max-w-desktop mx-auto">
-          <p className="max-w-[540px] text-[15px] leading-5">
-            {category.main.description}
-          </p>
+          <p className="max-w-[540px]">{category.main.description}</p>
         </div>
       )}
 
@@ -141,7 +139,7 @@ const CategoryPage = async ({ params: { id, slug } }: CategoryPageProps) => {
                   priority={index < 4}
                 />
 
-                <div className="bg-brand-primary px-2.5 py-[5px] text-center text-[15px] leading-5 text-white">
+                <div className="bg-brand-primary px-2.5 py-[5px] text-center text-white">
                   {subCategory.SubCatTitle}
                 </div>
               </Link>

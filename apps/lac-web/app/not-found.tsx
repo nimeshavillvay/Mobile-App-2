@@ -41,7 +41,7 @@ const NotFound = () => {
 
         <Link
           href="/"
-          className="bg-brand-secondary mx-auto block max-w-fit rounded-sm p-2 px-3.5 py-2 text-[15px] font-extrabold uppercase leading-5 text-white"
+          className="bg-brand-secondary mx-auto block max-w-fit rounded-sm p-2 px-3.5 py-2 font-extrabold uppercase text-white"
         >
           Go to homepage
         </Link>

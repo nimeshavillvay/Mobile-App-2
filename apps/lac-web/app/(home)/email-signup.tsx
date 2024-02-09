@@ -26,7 +26,7 @@ const EmailSignup = () => {
   return (
     <div className="text-very-dark-gray">
       <h3 className="text-[19px] font-medium leading-6">Email Exclusives</h3>
-      <p className="mb-3 mt-1 text-[15px] leading-5">
+      <p className="mb-3 mt-1">
         Sign up to receive promotions and special offers.
       </p>
 
@@ -44,7 +44,7 @@ const EmailSignup = () => {
           type="email"
           required
           placeholder="Enter your Email to sign up"
-          className="placeholder:text-brand-gray-400 h-9 flex-1 rounded px-2 text-[15px] leading-5"
+          className="placeholder:text-brand-gray-400 h-9 flex-1 rounded px-2"
         />
 
         <button className="bg-brand-primary h-9 rounded px-2 py-[7px] text-base font-extrabold uppercase leading-[22px] text-white">

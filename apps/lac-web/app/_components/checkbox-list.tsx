@@ -54,7 +54,7 @@ const CheckboxList = ({
           </CollapsibleContent>
 
           <CollapsibleTrigger asChild>
-            <button className="text-brand-primary text-[15px] leading-5 data-[state=open]:mt-2">
+            <button className="text-brand-primary data-[state=open]:mt-2">
               {isOpen ? "less" : "more..."}
             </button>
           </CollapsibleTrigger>

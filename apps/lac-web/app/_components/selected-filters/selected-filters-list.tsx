@@ -60,9 +60,7 @@ const SelectedFiltersList = ({ sections }: SelectedFiltersListProps) => {
   return (
     <div className="sticky top-0 z-10 bg-white py-3.5">
       <div className="max-w-desktop bg-brand-gray-200 mx-auto flex flex-row items-center justify-between gap-6 p-2">
-        <div className="text-brand-gray-500 text-[15px] leading-5">
-          Active Filters
-        </div>
+        <div className="text-brand-gray-500">Active Filters</div>
 
         <ul className="flex flex-1 flex-row flex-nowrap items-center gap-[2px] overflow-x-auto">
           {selectedSections.flatMap((section) =>

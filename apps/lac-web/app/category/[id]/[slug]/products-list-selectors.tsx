@@ -49,24 +49,18 @@ const ProductsListSelectors = ({
     <div className="col-span-4 flex flex-row items-center justify-between">
       {!isLoading ? (
         <>
-          <div className="text-brand-gray-500 min-w-[115px] text-[15px] leading-5">
+          <div className="text-brand-gray-500 min-w-[115px]">
             {(pageNo - 1) * pageSize + 1} - {Math.min(pageNo * pageSize, total)}{" "}
             of {total}
           </div>
 
           <div className="flex flex-row items-center gap-2">
-            <Label
-              htmlFor={sortId}
-              className="text-nowrap text-[15px] leading-5"
-            >
+            <Label htmlFor={sortId} className="text-nowrap">
               Sort by :
             </Label>
 
             <Select value={sorting} onValueChange={onSortingChange}>
-              <SelectTrigger
-                id={sortId}
-                className="h-8 py-0 text-[15px] leading-5"
-              >
+              <SelectTrigger id={sortId} className="h-8 py-0">
                 <SelectValue>{selectedSorting?.label}</SelectValue>
               </SelectTrigger>
 
@@ -81,18 +75,12 @@ const ProductsListSelectors = ({
           </div>
 
           <div className="flex flex-row items-center gap-2">
-            <Label
-              htmlFor={pageSizeId}
-              className="text-nowrap text-[15px] leading-5"
-            >
+            <Label htmlFor={pageSizeId} className="text-nowrap">
               Per Page :
             </Label>
 
             <Select value={perPage} onValueChange={onPerPageChange}>
-              <SelectTrigger
-                id={pageSizeId}
-                className="h-8 py-0 text-[15px] leading-5"
-              >
+              <SelectTrigger id={pageSizeId} className="h-8 py-0">
                 <SelectValue />
               </SelectTrigger>
 
