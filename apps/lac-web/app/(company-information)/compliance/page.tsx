@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { IoArrowForwardSharp } from "react-icons/io5";
 import compliance from "./compliance.jpg";
 
 export const metadata: Metadata = {
@@ -89,9 +90,23 @@ const CompliancePage = () => {
               target="_blank"
               rel="noopener noreferrer"
               href="https://www.wuerth.com/downloads/pdf/Compliance/EN-Compliance_Buch_2021.pdf"
-              className="text-black no-underline"
+              className="flex font-bold uppercase tracking-normal text-black no-underline"
             >
               Download Code of Compliance
+              <IoArrowForwardSharp className="self-center text-lg leading-none" />
+            </a>
+          </div>
+
+          <div className="mb-1.5">
+            <a
+              title="Reporting Hotline SpeakUp - Opens in new window"
+              target="_blank"
+              rel="noopener noreferrer"
+              href="https://www.bkms-system.net/wuerth"
+              className="flex font-bold uppercase tracking-normal text-black no-underline"
+            >
+              Reporting Hotline Speak Up
+              <IoArrowForwardSharp className="self-center text-lg leading-none" />
             </a>
           </div>
 
