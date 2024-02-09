@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 const CompliancePage = () => {
   return (
     <>
-      <section className="max-w-desktop mx-auto">
+      <section className="min-h-[1024px]">
         {/* Navigation bar for company information pages */}
         <nav className="mb-6 flex text-lg font-bold uppercase">
           <Link
