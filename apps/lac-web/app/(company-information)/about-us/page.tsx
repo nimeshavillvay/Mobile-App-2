@@ -1,3 +1,5 @@
+import Separator from "@/_components/separator";
+import Title from "@/_components/title";
 import type { Metadata } from "next";
 import Image from "next/image";
 import aboutBanner from "./about-banner.jpg";
@@ -22,20 +24,18 @@ const AboutUsPage = () => {
       </div>
 
       {/* Section heading with line */}
-      <div className="relative mb-4 flex">
-        <h1
-          tabIndex={0}
-          className="text-brand-primary relative z-10 bg-white pr-2.5 text-2xl font-medium"
-        >
-          About Us
-        </h1>
+      <div className="mb-4 flex flex-row items-center gap-2.5">
+        <Title className="text-brand-primary">About Us</Title>
 
-        <span className="border-b-brand-primary absolute bottom-3.5 z-0 block w-full border-b"></span>
+        <Separator
+          orientation="horizontal"
+          className="bg-brand-primary h-px flex-1"
+        />
       </div>
 
       {/* About us content */}
-      <div className="text-brand-gray-500 box-border text-base">
-        <p tabIndex={0} className="mb-4">
+      <div className="text-brand-gray-500 box-border space-y-4 text-base">
+        <p>
           Louis and Company, founded in 1975, is a leading provider of quality
           products to the woodworking industry. With a product portfolio that
           includes such leading brands as Blum, Formica, Rev-A-Shelf, Knape &
@@ -44,7 +44,7 @@ const AboutUsPage = () => {
           the products they use, need and want.
         </p>
 
-        <p tabIndex={0} className="mb-4">
+        <p>
           In 1997, the company&apos;s success attracted the attention of
           Professor Reinhold Würth of The Würth Group - a worldwide distribution
           organization serving the wood, automotive and metal industries. Würth
@@ -59,14 +59,14 @@ const AboutUsPage = () => {
           United States.
         </p>
 
-        <p tabIndex={0} className="mb-4">
+        <p>
           Wurth Louis and Company is much more than simply a wholesale
           distributor of woodworking supplies. Wurth Louis and Company
           continually strives to make your customer experience the utmost in
           convenience:
         </p>
 
-        <ul tabIndex={0} className="mb-4 block list-disc ps-8">
+        <ul className="block list-disc ps-8">
           <li>24/7 online ordering</li>
 
           <li>Questions answered by highly trained service representatives</li>
@@ -82,39 +82,29 @@ const AboutUsPage = () => {
           </li>
         </ul>
 
-        <p tabIndex={0} className="mb-4">
-          *on approved credit
-        </p>
+        <p>*on approved credit</p>
 
-        <p tabIndex={0} className="mb-4">
+        <p>
           Wurth Louis and Company continues to be a proven source for
           cabinetmakers, woodworkers and for architects and designers that
           specify our products.
         </p>
 
-        <div className="relative mb-4 mt-12 w-full md:w-1/2">
-          <h2
-            tabIndex={0}
-            aria-level={2}
-            className="text-brand-primary relative pr-3 text-lg font-medium"
-          >
+        <div className="relative w-full pt-8 md:w-1/2">
+          <h2 className="text-brand-primary relative pr-3 text-lg font-medium">
             Our Mission Statement
           </h2>
 
           <span className="border-b-brand-primary relative z-0 mt-0.5 block w-full border-b"></span>
         </div>
 
-        <p tabIndex={0} className="mb-4">
+        <p>
           People dedicated to providing excellent service and fine-quality
           products to the woodworking industry.
         </p>
 
-        <div className="relative mb-4 mt-12 w-full md:w-1/2">
-          <h2
-            tabIndex={0}
-            aria-level={2}
-            className="text-brand-primary relative pr-3 text-lg font-medium"
-          >
+        <div className="relative w-full pt-8 md:w-1/2">
+          <h2 className="text-brand-primary relative pr-3 text-lg font-medium">
             Corporate Executives
           </h2>
 
@@ -132,15 +122,9 @@ const AboutUsPage = () => {
               />
 
               <div className="break-words p-4">
-                <h4
-                  tabIndex={0}
-                  aria-level={3}
-                  className="mb-2 text-base font-medium"
-                >
-                  Thomas Stolmeier
-                </h4>
+                <h4 className="mb-2 text-base font-medium">Thomas Stolmeier</h4>
 
-                <p tabIndex={0} className="text-sm italic">
+                <p className="text-sm italic">
                   President and Chief Executive Officer Wurth Louis and Company
                 </p>
               </div>
@@ -157,15 +141,11 @@ const AboutUsPage = () => {
               />
 
               <div className="break-words p-4">
-                <h4
-                  tabIndex={0}
-                  aria-level={3}
-                  className="mb-2 text-base font-medium"
-                >
+                <h4 className="mb-2 text-base font-medium">
                   Evangeline B. de Guzman
                 </h4>
 
-                <p tabIndex={0} className="text-sm italic">
+                <p className="text-sm italic">
                   Chief Financial Officer Wurth Louis and Company
                 </p>
               </div>

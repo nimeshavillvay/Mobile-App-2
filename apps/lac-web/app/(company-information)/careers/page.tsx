@@ -1,3 +1,5 @@
+import Separator from "@/_components/separator";
+import Title from "@/_components/title";
 import type { Metadata } from "next";
 import Image from "next/image";
 import careersBanner from "./careers-banner.jpg";
@@ -20,20 +22,18 @@ const CareersPage = () => {
       </div>
 
       {/* Section heading with line */}
-      <div className="relative mb-4 flex">
-        <h1
-          tabIndex={0}
-          className="text-brand-primary relative z-10 bg-white pr-2.5 text-2xl font-medium"
-        >
-          Careers
-        </h1>
+      <div className="mb-4 flex flex-row items-center gap-2.5">
+        <Title className="text-brand-primary">Careers</Title>
 
-        <span className="border-b-brand-primary absolute bottom-3.5 z-0 block w-full border-b"></span>
+        <Separator
+          orientation="horizontal"
+          className="bg-brand-primary h-px flex-1"
+        />
       </div>
 
       {/* Careers content */}
-      <div className="text-brand-gray-500 box-border text-base">
-        <p tabIndex={0} className="mb-4">
+      <div className="text-brand-gray-500 box-border space-y-4 text-base">
+        <p>
           People are the indispensable element of Wurth Louis and Company - no
           matter what side of the business they are on. We are as passionate
           about our workforce as we are about our customers. If you&apos;re
@@ -41,12 +41,12 @@ const CareersPage = () => {
           opportunities, consider becoming a part of our team.
         </p>
 
-        <p tabIndex={0} className="mb-4">
+        <p>
           Review our open positions at our careers mini-site using the link
           below where you can upload your resume today!
         </p>
 
-        <p tabIndex={0} className="mb-4">
+        <p>
           <a
             target="_blank"
             rel="noopener noreferrer"
