@@ -1,7 +1,6 @@
 import Separator from "@/_components/separator";
 import Title from "@/_components/title";
 import type { Metadata } from "next";
-import { Suspense } from "react";
 import ShoppingCartList from "./_shopping-cart-list";
 
 export const metadata: Metadata = {
@@ -20,9 +19,7 @@ const ShoppingCartPage = () => {
         />
       </div>
 
-      <Suspense fallback={<>Loading cart...</>}>
-        <ShoppingCartList />
-      </Suspense>
+      <ShoppingCartList />
     </>
   );
 };

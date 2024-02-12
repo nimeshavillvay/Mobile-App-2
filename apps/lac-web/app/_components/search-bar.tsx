@@ -2,6 +2,7 @@
 
 import Separator from "@/_components/separator";
 import VisuallyHidden from "@/_components/visually-hidden";
+import { cn } from "@/_utils/helpers";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as Form from "@radix-ui/react-form";
 import { useForm } from "react-hook-form";
@@ -14,7 +15,11 @@ const searchSchema = z.object({
 });
 type SearchSchema = z.infer<typeof searchSchema>;
 
-const Search = () => {
+type SearchBarProps = {
+  className?: string;
+};
+
+const SearchBar = ({ className }: SearchBarProps) => {
   const { register, handleSubmit } = useForm<SearchSchema>({
     resolver: zodResolver(searchSchema),
   });
@@ -26,7 +31,10 @@ const Search = () => {
   return (
     <Form.Root
       onSubmit={handleSubmit(onSubmit)}
-      className="border-brand-primary/50 ring-brand-primary/15 text-brand-gray-400 flex flex-1 flex-row items-center gap-2.5 rounded-[10px] border pr-2.5 text-2xl leading-none ring-[3px]"
+      className={cn(
+        "border-brand-gray-400 text-brand-gray-400 flex flex-row items-center gap-2.5 rounded-[10px] border pr-2.5 text-2xl leading-none",
+        className,
+      )}
     >
       <Form.Field name="search" className="flex-1">
         <VisuallyHidden>
@@ -66,4 +74,4 @@ const Search = () => {
   );
 };
 
-export default Search;
+export default SearchBar;

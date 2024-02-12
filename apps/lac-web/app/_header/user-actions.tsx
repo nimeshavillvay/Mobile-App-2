@@ -32,6 +32,7 @@ const UserActions = () => {
         <button
           className="bg-brand-gray-500 px-5 py-2.5 font-bold text-white"
           onClick={() => setLoginDialogOpen(true)}
+          disabled={accountListQuery.isLoading}
         >
           Sign in
         </button>

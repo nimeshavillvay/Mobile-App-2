@@ -11,11 +11,11 @@ import {
 } from "@/_components/ui/form";
 import { Input } from "@/_components/ui/input";
 import VisuallyHidden from "@/_components/visually-hidden";
+import useCart from "@/_hooks/cart/use-cart.hook";
 import useUpdateCartConfigMutation from "@/_hooks/cart/use-update-cart-config-mutation.hook";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import useSuspenseCart from "./use-suspense-cart.hook";
 
 const formSchema = z.object({
   po: z.string().min(1, "Required"),
@@ -23,25 +23,25 @@ const formSchema = z.object({
 });
 type FormSchema = z.infer<typeof formSchema>;
 
-type ShoppingCartTableProps = {
-  accountToken: string;
-};
-
-const ShoppingCartList = ({ accountToken }: ShoppingCartTableProps) => {
-  const cartQuery = useSuspenseCart(accountToken);
+const ShoppingCartList = () => {
+  const cartQuery = useCart();
   const updateCartMutation = useUpdateCartConfigMutation();
 
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     values: {
-      po: cartQuery.data.configuration.po,
-      jobName: cartQuery.data.configuration.jobName,
+      po: cartQuery?.data?.configuration.po ?? "",
+      jobName: cartQuery?.data?.configuration.jobName ?? "",
     },
   });
 
   const onSubmit = (values: FormSchema) => {
     updateCartMutation.mutate({ configuration: values, step: "cart_meta" });
   };
+
+  if (cartQuery.isLoading) {
+    return <div>Loading cart...</div>;
+  }
 
   return (
     <div>

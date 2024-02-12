@@ -28,4 +28,13 @@
     width: 100%;
     grid-column: 1 / 4;
   }
+
+  /*
+    Hide arrows in number type inputs
+    https://github.com/tailwindlabs/tailwindcss/discussions/2173#discussioncomment-3573204
+  */
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    @apply appearance-none;
+  }
 }

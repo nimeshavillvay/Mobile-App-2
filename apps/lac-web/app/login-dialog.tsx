@@ -26,9 +26,9 @@ import useAccountSelectorDialog from "@/_hooks/account/use-account-selector-dial
 import useLoginDialog from "@/_hooks/account/use-login-dialog.hook";
 import useCookies from "@/_hooks/storage/use-cookies.hook";
 import { api } from "@/_lib/api";
-import { encryptString } from "@/_utils/helpers";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
+import { JSEncrypt } from "jsencrypt";
 import Link from "next/link";
 import { useId } from "react";
 import { useForm } from "react-hook-form";
@@ -213,3 +213,12 @@ const LoginDialog = () => {
 };
 
 export default LoginDialog;
+
+const encryptString = (value: string) => {
+  const RSAEncrypt = new JSEncrypt();
+  if (process.env.NEXT_PUBLIC_WURTH_LAC_LOGIN_PUBLIC_KEY) {
+    RSAEncrypt.setPublicKey(process.env.NEXT_PUBLIC_WURTH_LAC_LOGIN_PUBLIC_KEY);
+  }
+
+  return RSAEncrypt.encrypt(value);
+};

@@ -1,22 +1,15 @@
 "use client";
 
-import {
-  ProductCardActions,
-  ProductCardContainer,
-  ProductCardDetails,
-} from "@/_components/product-card";
 import Title from "@/_components/title";
 import VisuallyHidden from "@/_components/visually-hidden";
-import useAccountList from "@/_hooks/account/use-account-list.hook";
-import useLoginDialog from "@/_hooks/account/use-login-dialog.hook";
-import { cn, getMediaUrl } from "@/_utils/helpers";
+import { cn } from "@/_utils/helpers";
 import * as Tabs from "@radix-ui/react-tabs";
 import { type EmblaCarouselType } from "embla-carousel";
 import useEmblaCarousel from "embla-carousel-react";
 import { useCallback, useEffect, useState, type ComponentProps } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
-import { IoPricetagsOutline } from "react-icons/io5";
-import type { FeaturedProduct } from "./types";
+import type { FeaturedProduct } from "../types";
+import FeaturedProductCard from "./featured-product-card";
 
 type FeaturedProductsProps = {
   bestSellers: FeaturedProduct[];
@@ -137,7 +130,7 @@ const FeaturedProducts = ({
                       className="grid shrink-0 grow-0 basis-full grid-cols-4 gap-8"
                     >
                       {page.map((product) => (
-                        <FeaturedProduct
+                        <FeaturedProductCard
                           key={product.sku}
                           product={product}
                           priority={rootIndex === 0 && index === 0}
@@ -176,77 +169,6 @@ const FeaturedProducts = ({
 };
 
 export default FeaturedProducts;
-
-const FeaturedProduct = ({
-  product,
-  priority,
-}: {
-  product: FeaturedProduct;
-  /**
-   * Increase loading priority of image
-   */
-  priority: boolean;
-}) => {
-  const accountListQuery = useAccountList();
-  const setOpenLoginDialog = useLoginDialog((state) => state.setOpen);
-
-  let flag: "hidden" | "sale" | "new" = "hidden";
-  if (product.is_sale) {
-    flag = "sale";
-  } else if (product.is_new) {
-    flag = "new";
-  }
-
-  return (
-    <ProductCardContainer key={product.sku} className="relative">
-      <ProductCardDetails
-        href={`/product-item/${product.groupId}/${product.sku}`}
-        image={{
-          src: getMediaUrl(product.product_img),
-          alt: `An image of ${product.productTitle}`,
-          priority,
-        }}
-        brand={product.brandName}
-        title={product.productTitle}
-      />
-
-      <ProductCardActions>
-        <div className="text-brand-gray-400 mb-2 text-center text-sm leading-5">
-          {product.sku}
-        </div>
-
-        {accountListQuery.data ? (
-          <>
-            <div>
-              ${product.override_price} / {product.txt_uom_label}
-            </div>
-          </>
-        ) : (
-          <button
-            onClick={() => setOpenLoginDialog(true)}
-            className="bg-brand-primary w-full rounded p-2 text-base text-white"
-          >
-            Login to buy
-          </button>
-        )}
-      </ProductCardActions>
-
-      {flag !== "hidden" && (
-        <span
-          className={cn(
-            "absolute right-0 top-0 flex flex-row items-center gap-[5px] rounded-bl-[36px] p-3.5 text-[22px] font-extrabold uppercase leading-none",
-            flag === "sale" && "bg-brand-secondary text-white",
-            flag === "new" && "bg-brand-success text-white",
-          )}
-        >
-          {flag === "sale" && <IoPricetagsOutline className="-scale-x-100" />}
-
-          <span>{flag}</span>
-        </span>
-      )}
-    </ProductCardContainer>
-  );
-};
 
 const ScrollButton = (
   props: Pick<ComponentProps<"button">, "children" | "onClick">,
