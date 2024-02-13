@@ -5,7 +5,6 @@ import {
 } from "@/_components/product-card";
 import { Input } from "@/_components/ui/input";
 import { Skeleton } from "@/_components/ui/skeleton";
-import { useToast } from "@/_components/ui/use-toast";
 import VerifyProductDialog from "@/_components/verify-product-dialog";
 import VisuallyHidden from "@/_components/visually-hidden";
 import useAccountList from "@/_hooks/account/use-account-list.hook";
@@ -43,7 +42,6 @@ const FeaturedProductCard = ({
   const accountListQuery = useAccountList();
   const setOpenLoginDialog = useLoginDialog((state) => state.setOpen);
   const [open, setOpen] = useState(false);
-  const { toast } = useToast();
 
   let flag: "hidden" | "sale" | "new" = "hidden";
   if (product.is_sale) {
@@ -66,21 +64,11 @@ const FeaturedProductCard = ({
   const addToFavoritesMutation = useAddToFavoritesMutation();
 
   const onSubmit = (values: FormSchema) => {
-    const { dismiss } = toast({
-      description: "Adding item to cart",
-    });
     addToCartMutation.mutate(
       { sku: product.sku, quantity: values.quantity },
       {
         onSuccess: () => {
           setOpen(true);
-          toast({
-            description: "Added item to cart",
-            variant: "success",
-          });
-        },
-        onSettled: () => {
-          dismiss();
         },
       },
     );
