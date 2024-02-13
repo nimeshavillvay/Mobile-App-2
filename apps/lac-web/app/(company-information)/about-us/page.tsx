@@ -14,14 +14,13 @@ const AboutUsPage = () => {
   return (
     <>
       {/* Section banner */}
-      <div className="border-brand-gray-100 mb-8 border">
-        <Image
-          src={aboutBanner}
-          alt="The banner for about us page"
-          placeholder="blur"
-          className="h-auto w-full object-cover"
-        />
-      </div>
+      <Image
+        src={aboutBanner}
+        alt="The banner for about us page"
+        placeholder="blur"
+        className="border-brand-gray-100 mb-8 h-auto w-full border object-cover"
+        priority={true}
+      />
 
       {/* Section heading with line */}
       <div className="mb-4 flex flex-row items-center gap-2.5">
@@ -125,6 +124,7 @@ const AboutUsPage = () => {
                 alt="Photo of Thomas Stolmeier"
                 placeholder="blur"
                 className="w-full rounded-t"
+                priority={true}
               />
 
               <div className="break-words p-4">
@@ -144,6 +144,7 @@ const AboutUsPage = () => {
                 alt="Photo of Evangeline B. de Guzman"
                 placeholder="blur"
                 className="w-full rounded-t"
+                priority={true}
               />
 
               <div className="break-words p-4">

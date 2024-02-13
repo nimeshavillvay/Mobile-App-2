@@ -1,5 +1,6 @@
 import Separator from "@/_components/separator";
 import Title from "@/_components/title";
+import VisuallyHidden from "@/_components/visually-hidden";
 import type { Metadata } from "next";
 import Image from "next/image";
 import { IoArrowForwardSharp } from "react-icons/io5";
@@ -13,14 +14,13 @@ const CompliancePage = () => {
   return (
     <>
       {/* Section banner */}
-      <div className="border-brand-gray-100 mb-8 border">
-        <Image
-          src={compliance}
-          alt="The banner for compliance page"
-          placeholder="blur"
-          className="h-auto w-full object-cover"
-        />
-      </div>
+      <Image
+        src={compliance}
+        alt="The banner for compliance page"
+        placeholder="blur"
+        className="border-brand-gray-100 mb-8 h-auto w-full border object-cover"
+        priority={true}
+      />
 
       {/* Section heading with line */}
       <div className="mb-4 flex flex-row items-center gap-2.5">
@@ -142,7 +142,7 @@ const CompliancePage = () => {
             className="text-[#007bff] hover:underline"
           >
             https://www.bkms-system.net/wuerth
-            <span className="sr-only">(opens in a new window)</span>
+            <VisuallyHidden>(opens in a new window)</VisuallyHidden>
           </a>
         </p>
 
