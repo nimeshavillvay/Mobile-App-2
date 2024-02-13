@@ -2,11 +2,11 @@ import { api } from "@/_lib/api";
 import { useQuery } from "@tanstack/react-query";
 import useCookies from "../storage/use-cookies.hook";
 
-const useFavouriteCount = () => {
+const useFavoriteCount = () => {
   const [cookies] = useCookies();
 
   return useQuery({
-    queryKey: ["user", "favourite-count", cookies.token],
+    queryKey: ["user", "favorite-count", cookies.token],
     queryFn: () =>
       api
         .get("am/my-favourite/total-count", {
@@ -19,4 +19,4 @@ const useFavouriteCount = () => {
   });
 };
 
-export default useFavouriteCount;
+export default useFavoriteCount;

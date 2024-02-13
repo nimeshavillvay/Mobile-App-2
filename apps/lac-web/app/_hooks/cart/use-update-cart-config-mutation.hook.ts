@@ -21,7 +21,7 @@ const useUpdateCartConfigMutation = () => {
           headers: {
             authorization: `Bearer ${cookies[ACCOUNT_TOKEN_COOKIE]}`,
           },
-          body: JSON.stringify(params),
+          json: params,
         })
         .json<{ error_code: number; message: string; success: boolean }>();
     },

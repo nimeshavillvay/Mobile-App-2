@@ -1,6 +1,6 @@
 import { api } from "@/_lib/api";
 import { ACCOUNT_TOKEN_COOKIE } from "@/_lib/constants";
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import useCookies from "../storage/use-cookies.hook";
 
 const usePriceCheck = (sku: string, quantity: number) => {
@@ -12,10 +12,10 @@ const usePriceCheck = (sku: string, quantity: number) => {
     queryFn: () =>
       api
         .post("pim/webservice/ecommerce/price-check", {
-          body: JSON.stringify({ skuqty: [{ sku, quantity }] }),
           headers: {
             authorization: `Bearer ${cookies[ACCOUNT_TOKEN_COOKIE]}`,
           },
+          json: { skuqty: [{ sku, quantity }] },
         })
         .json<{
           "list-sku-price": [
@@ -37,6 +37,7 @@ const usePriceCheck = (sku: string, quantity: number) => {
             },
           ];
         }>(),
+    placeholderData: keepPreviousData,
   });
 };
 

@@ -64,7 +64,7 @@ const LoginDialog = () => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(body),
+          json: body,
         })
         .json<{
           status_code: string;

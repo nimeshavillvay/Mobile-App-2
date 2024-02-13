@@ -33,7 +33,7 @@ export const selectAccount = async (
         "Content-Type": "application/json",
         authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ accountNo, "ship-to": shipTo }),
+      json: { accountNo, "ship-to": shipTo },
     })
     .json<{
       permission: string;
@@ -61,7 +61,7 @@ export const checkAvailability = async (
       headers: {
         authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ skuidqty: [{ sku, quantity }] }),
+      json: { skuidqty: [{ sku, quantity }] },
     })
     .json<
       [
