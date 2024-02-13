@@ -15,12 +15,12 @@ import {
 } from "react-icons/fa6";
 import { MdChevronRight } from "react-icons/md";
 import { TfiYoutube } from "react-icons/tfi";
+import FeaturedProducts from "./_featured-products";
 import banner1Government from "./banner-1-government.jpg";
 import banner2CatalogsLiterature from "./banner-2-catalogs-literature.jpg";
 import banner3Machinery from "./banner-3-machinery.jpg";
 import Carousel from "./carousel";
 import EmailSignup from "./email-signup";
-import FeaturedProducts from "./featured-products";
 import type { CarouselBanner, FeaturedProduct } from "./types";
 
 const BANNERS = [

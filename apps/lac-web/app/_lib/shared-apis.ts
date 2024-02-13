@@ -33,7 +33,7 @@ export const selectAccount = async (
         "Content-Type": "application/json",
         authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ accountNo, "ship-to": shipTo }),
+      json: { accountNo, "ship-to": shipTo },
     })
     .json<{
       permission: string;
@@ -49,4 +49,40 @@ export const verifyAccountToken = async (token: string) => {
       },
     })
     .json<"OK">();
+};
+
+export const checkAvailability = async (
+  token: string,
+  sku: string,
+  quantity: number,
+) => {
+  return await api
+    .post("pim/webservice/ecommerce/availability-check", {
+      headers: {
+        authorization: `Bearer ${token}`,
+      },
+      json: { skuidqty: [{ sku, quantity }] },
+    })
+    .json<
+      [
+        {
+          options: [
+            {
+              backOrder: string;
+              index: string;
+              plant_1: string;
+              quantity_1: string;
+              shippingMethods_1: string;
+              type: string;
+              hash: string;
+            },
+          ];
+          price: number;
+          sku: string;
+          status: string;
+          willcallanywhere: unknown;
+          xplant: string;
+        },
+      ]
+    >();
 };

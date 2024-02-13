@@ -2,7 +2,7 @@
 
 import { logout } from "@/_actions/account";
 import useAccountList from "@/_hooks/account/use-account-list.hook";
-import useFavouriteCount from "@/_hooks/account/use-favourite-count.hook";
+import useFavoriteCount from "@/_hooks/account/use-favorite-count.hook";
 import useLoginDialog from "@/_hooks/account/use-login-dialog.hook";
 import useCookies from "@/_hooks/storage/use-cookies.hook";
 import { ADDRESS_ID_COOKIE } from "@/_lib/constants";
@@ -14,7 +14,7 @@ import { MdArrowDropDown } from "react-icons/md";
 
 const UserActions = () => {
   const accountListQuery = useAccountList();
-  const favouriteCountQuery = useFavouriteCount();
+  const favoriteCountQuery = useFavoriteCount();
   const [cookies] = useCookies();
   const setLoginDialogOpen = useLoginDialog((state) => state.setOpen);
 
@@ -32,6 +32,7 @@ const UserActions = () => {
         <button
           className="bg-brand-gray-500 px-5 py-2.5 font-bold text-white"
           onClick={() => setLoginDialogOpen(true)}
+          disabled={accountListQuery.isLoading}
         >
           Sign in
         </button>
@@ -88,7 +89,7 @@ const UserActions = () => {
                 <IoMdHeartEmpty className="text-brand-primary" />
 
                 <span className="text-brand-primary">
-                  {favouriteCountQuery?.data?.data ?? 0} items
+                  {favoriteCountQuery?.data?.data ?? 0} items
                 </span>
               </Link>
             </DropdownMenu.Item>

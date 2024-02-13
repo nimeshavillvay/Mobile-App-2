@@ -1,3 +1,4 @@
+import SearchBar from "@/_components/search-bar";
 import Separator from "@/_components/separator";
 import VisuallyHidden from "@/_components/visually-hidden";
 import WurthLogo from "@/_components/wurth-logo";
@@ -7,7 +8,6 @@ import type { Category } from "@/_lib/types";
 import Link from "next/link";
 import CategoriesDropdown from "./categories-dropdown";
 import NavBar from "./nav-bar";
-import Search from "./search";
 import ShoppingCart from "./shopping-cart";
 import UserActions from "./user-actions";
 
@@ -65,7 +65,7 @@ const Header = async () => {
           <WurthLogo width={192} height={41} />
         </Link>
 
-        <Search />
+        <SearchBar className="border-brand-primary/50 ring-brand-primary/15 flex-1 ring-[3px]" />
 
         <ShoppingCart />
       </div>

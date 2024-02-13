@@ -18,6 +18,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { ReactQueryStreamedHydration } from "@tanstack/react-query-next-experimental";
 import { useState, type ReactNode } from "react";
 import { CookiesProvider } from "react-cookie";
+import { Toaster } from "./_components/ui/toaster";
 import { selectAccount } from "./_lib/shared-apis";
 
 type ProvidersProps = {
@@ -28,7 +29,11 @@ const Providers = ({ children }: ProvidersProps) => {
   return (
     <CookiesProvider>
       <ApiProvider kyInstance={api}>
-        <ReactQueryProvider>{children}</ReactQueryProvider>
+        <ReactQueryProvider>
+          {children}
+
+          <Toaster />
+        </ReactQueryProvider>
       </ApiProvider>
     </CookiesProvider>
   );
@@ -44,7 +49,7 @@ const ReactQueryProvider = ({ children }: { children: ReactNode }) => {
       new QueryClient({
         defaultOptions: {
           queries: {
-            staleTime: 30000, // 30 seconds
+            staleTime: 600000, // 10 mins
             retry: (failureCount) => {
               // Don't retry for certain error responses
               // Temporarily disable check due to this error
