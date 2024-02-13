@@ -1,3 +1,4 @@
+import { useToast } from "@/_components/ui/use-toast";
 import { api } from "@/_lib/api";
 import { ACCOUNT_TOKEN_COOKIE } from "@/_lib/constants";
 import { checkAvailability } from "@/_lib/shared-apis";
@@ -7,6 +8,7 @@ import useCookies from "../storage/use-cookies.hook";
 const useAddToCartMutation = () => {
   const queryClient = useQueryClient();
   const [cookies] = useCookies();
+  const { toast } = useToast();
 
   return useMutation({
     mutationFn: async ({
@@ -37,6 +39,23 @@ const useAddToCartMutation = () => {
           },
         })
         .json<{ error_code: number; message: string; success: boolean }>();
+    },
+    onMutate: () => {
+      toast({
+        description: "Adding item to cart",
+      });
+    },
+    onSuccess: () => {
+      toast({
+        description: "Added item to cart",
+        variant: "success",
+      });
+    },
+    onError: () => {
+      toast({
+        description: "Failed to add item to cart",
+        variant: "destructive",
+      });
     },
     onSettled: () => {
       queryClient.invalidateQueries({
