@@ -95,7 +95,10 @@ const AboutUsPage = () => {
             Our Mission Statement
           </h2>
 
-          <span className="border-b-brand-primary relative z-0 mt-0.5 block w-full border-b"></span>
+          <Separator
+            orientation="horizontal"
+            className="bg-brand-primary mt-0.5 h-px flex-1"
+          />
         </div>
 
         <p>
@@ -108,7 +111,10 @@ const AboutUsPage = () => {
             Corporate Executives
           </h2>
 
-          <span className="border-b-brand-primary relative z-0 mt-0.5 block w-full border-b"></span>
+          <Separator
+            orientation="horizontal"
+            className="bg-brand-primary mt-0.5 h-px flex-1"
+          />
         </div>
 
         <div className="grid grid-cols-2 gap-8 md:w-1/2">

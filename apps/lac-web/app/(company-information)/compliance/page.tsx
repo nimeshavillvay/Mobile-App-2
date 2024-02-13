@@ -91,7 +91,10 @@ const CompliancePage = () => {
             Reporting Hotline Speak Up
           </h2>
 
-          <span className="border-b-brand-primary relative z-0 mt-0.5 block w-full border-b"></span>
+          <Separator
+            orientation="horizontal"
+            className="bg-brand-primary mt-0.5 h-px flex-1"
+          />
         </div>
 
         <p>
