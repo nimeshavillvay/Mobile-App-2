@@ -32,7 +32,7 @@ const CompliancePage = () => {
         />
       </div>
 
-      <div className="text-brand-gray-500 box-border space-y-4 text-base">
+      <div className="text-brand-gray-500 box-border space-y-4">
         <p>
           Mutual trust, reliability, honesty and straightforwardness, both
           inwards and outwards, are the fundamental principles deeply ingrained
