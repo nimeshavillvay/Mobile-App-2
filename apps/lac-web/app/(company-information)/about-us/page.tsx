@@ -33,7 +33,7 @@ const AboutUsPage = () => {
       </div>
 
       {/* About us content */}
-      <div className="text-brand-gray-500 box-border space-y-4 text-base">
+      <div className="text-brand-gray-500 box-border space-y-4">
         <p>
           Louis and Company, founded in 1975, is a leading provider of quality
           products to the woodworking industry. With a product portfolio that

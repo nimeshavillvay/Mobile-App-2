@@ -32,7 +32,7 @@ const CareersPage = () => {
       </div>
 
       {/* Careers content */}
-      <div className="text-brand-gray-500 box-border space-y-4 text-base">
+      <div className="text-brand-gray-500 box-border space-y-4">
         <p>
           People are the indispensable element of Wurth Louis and Company - no
           matter what side of the business they are on. We are as passionate
