@@ -1,7 +1,7 @@
 import { api } from "@/_lib/api";
 import { DEFAULT_REVALIDATE } from "@/_lib/constants";
 import "server-only";
-import type { Attribute, Variant } from "./type";
+import type { Attribute, Variant } from "./types";
 
 export const getVariants = async (groupId: string, sku?: string) => {
   return await api

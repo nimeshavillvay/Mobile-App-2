@@ -1,6 +1,6 @@
 "use client";
 
-import type { Attribute, Variant } from "../type";
+import type { Attribute, Variant } from "../types";
 
 type VariationsTableProps = {
   attributes: Attribute[];
