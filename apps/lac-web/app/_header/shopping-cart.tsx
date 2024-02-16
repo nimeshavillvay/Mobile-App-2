@@ -49,7 +49,7 @@ const ShoppingCartContent = ({
           Shopping Cart
         </div>
 
-        <div className="text-base font-extrabold leading-none text-black">
+        <div className="font-wurth text-base font-extrabold leading-none text-black">
           ${formatNumberToPrice(price)}
         </div>
       </div>

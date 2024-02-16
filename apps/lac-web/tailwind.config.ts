@@ -38,10 +38,6 @@ const config: Config = {
       fontFamily: {
         arial: ["Arial", ...defaultTheme.fontFamily.serif],
         wurth: ["var(--wurth-font)", ...defaultTheme.fontFamily.serif],
-        "wurth-cond": [
-          "var(--wurth-cond-font)",
-          ...defaultTheme.fontFamily.serif,
-        ],
       },
       keyframes: {
         "accordion-down": {
