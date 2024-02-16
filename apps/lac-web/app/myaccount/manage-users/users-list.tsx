@@ -1,12 +1,9 @@
 "use client";
 
-import useCookies from "@/_hooks/storage/use-cookies.hook";
 import useSuspenseUsersList from "./use-suspense-users-list.hook";
 
-const UsersList = () => {
-  const [cookies] = useCookies();
-
-  const usersListQuery = useSuspenseUsersList(cookies.token);
+const UsersList = ({ token }: { token: string }) => {
+  const usersListQuery = useSuspenseUsersList(token);
 
   console.log("Users List", usersListQuery);
 

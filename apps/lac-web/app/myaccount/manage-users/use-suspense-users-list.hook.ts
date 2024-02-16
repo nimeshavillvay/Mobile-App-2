@@ -1,10 +1,10 @@
 import { api } from "@/_lib/api";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import type { UserContact } from "./types";
+import type { ApproveContact, ManageContact } from "./types";
 
 const useSuspenseUsersList = (token: string) => {
   return useSuspenseQuery({
-    queryKey: ["manage-users", token],
+    queryKey: ["user", "manage-users", token],
     queryFn: () =>
       api
         .get("am/manage_users", {
@@ -14,11 +14,8 @@ const useSuspenseUsersList = (token: string) => {
           },
         })
         .json<{
-          approve_contacts: [];
-          manage_contact: {
-            contact_list: UserContact[];
-            your_profile: UserContact;
-          };
+          approve_contacts: ApproveContact[];
+          manage_contact: ManageContact;
         }>(),
   });
 };

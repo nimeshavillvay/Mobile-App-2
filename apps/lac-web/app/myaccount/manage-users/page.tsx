@@ -10,8 +10,9 @@ import {
   TableRow,
 } from "@/_components/ui/table";
 import VisuallyHidden from "@/_components/visually-hidden";
+import { ACCOUNT_TOKEN_COOKIE } from "@/_lib/constants";
 import type { Metadata } from "next";
-import { Suspense } from "react";
+import { cookies } from "next/headers";
 import { MdAccountBox } from "react-icons/md";
 import UsersList from "./users-list";
 
@@ -20,6 +21,12 @@ export const metadata: Metadata = {
 };
 
 const UserManagementPage = () => {
+  const accountTokenCookie = cookies().get(ACCOUNT_TOKEN_COOKIE);
+
+  if (!accountTokenCookie?.value) {
+    return null;
+  }
+
   return (
     <>
       <div>
@@ -72,9 +79,7 @@ const UserManagementPage = () => {
         </Table>
 
         <ErrorBoundary fallback={<div>Error: fetching users list</div>}>
-          <Suspense fallback={<div>Loading...</div>}>
-            <UsersList />
-          </Suspense>
+          <UsersList token={accountTokenCookie.value} />
         </ErrorBoundary>
       </div>
     </>
