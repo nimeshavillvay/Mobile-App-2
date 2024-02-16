@@ -1,4 +1,3 @@
-import Separator from "@/_components/separator";
 import { getMediaUrl } from "@/_utils/helpers";
 import Image from "next/image";
 import { getProduct } from "../../apis";
@@ -64,11 +63,6 @@ const ProductHero = async ({ groupId, sku }: ProductHeroProps) => {
 
           <div className="w-[322px]"></div>
         </div>
-
-        <Separator
-          orientation="horizontal"
-          className="bg-brand-gray-200 mb-3 mt-8 h-px w-full"
-        />
       </div>
     </AddItemFormProvider>
   );

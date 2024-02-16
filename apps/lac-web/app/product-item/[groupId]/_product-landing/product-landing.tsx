@@ -5,10 +5,7 @@ import { DEFAULT_REVALIDATE } from "@/_lib/constants";
 import { getBreadcrumbs } from "@/_lib/shared-server-apis";
 import { getMediaUrl } from "@/_utils/helpers";
 import { notFound } from "next/navigation";
-import {
-  MdOutlineSimCardDownload,
-  MdOutlineWarningAmber,
-} from "react-icons/md";
+import { MdOutlineSimCardDownload } from "react-icons/md";
 import { getProduct } from "../apis";
 import AccessoriesAndRelatedProducts from "./accessories-and-related-products/accessories-and-related-products";
 import { getVariants } from "./apis";
@@ -80,12 +77,13 @@ const ProductLanding = async ({ groupId, sku }: ProductLandingProps) => {
           heading="Product Details"
         >
           <div className="flex flex-row gap-[15px]">
-            <div className="flex-1">
-              <h3 className="text-brand-gray-500 mb-4 text-[19px] leading-6">
+            <div className="flex-1 space-y-4">
+              <h3 className="text-brand-gray-500 font-wurth text-[19px] font-normal leading-6">
                 Description
               </h3>
 
               <div
+                className="text-brand-gray-500"
                 dangerouslySetInnerHTML={{ __html: product.group_summary }}
               />
 
@@ -108,18 +106,24 @@ const ProductLanding = async ({ groupId, sku }: ProductLandingProps) => {
 
             <Separator
               orientation="vertical"
-              className="bg-brand-gray-200 w-px self-stretch"
+              className="bg-brand-gray-400 w-px self-stretch"
             />
 
             <div className="w-[350px]">
-              <h4>Technical Details</h4>
+              <h4 className="text-brand-gray-400 font-wurth mb-[18px] text-xl leading-6">
+                Technical Details
+              </h4>
 
-              <table>
+              <table className="text-sm leading-5">
                 <tbody>
                   {product.selected_object_attributes.map((attribute) => (
                     <tr key={attribute.attribute_name}>
-                      <td>{attribute.attribute_name.trim()}</td>
-                      <td>{attribute.attribute_value}</td>
+                      <td className="text-brand-gray-500 pr-8 font-bold">
+                        {attribute.attribute_name.trim()}
+                      </td>
+                      <td className="text-[#4A4A4A]">
+                        {attribute.attribute_value}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -193,11 +197,58 @@ export default ProductLanding;
 const Warning = ({ message }: { message: string }) => {
   return (
     <div className="flex flex-row gap-2">
-      <MdOutlineWarningAmber />
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        xmlnsXlink="http://www.w3.org/1999/xlink"
+        width="34"
+        height="26"
+        fill="none"
+        viewBox="0 0 34 26"
+      >
+        <path fill="url(#pattern0)" d="M0 0.775H34V25.75H0z" />
+        <defs>
+          <pattern
+            id="pattern0"
+            width="1"
+            height="1"
+            patternContentUnits="objectBoundingBox"
+          >
+            <use
+              transform="matrix(.03571 0 0 .04862 0 -.035)"
+              xlinkHref="#image0"
+            />
+          </pattern>
+          <image
+            id="image0"
+            width="28"
+            height="20"
+            xlinkHref="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAWCAYAAADTlvzyAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAApAAAAKQBooM8sQAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAIrSURBVEiJtZVNSJRRFIaf+fxpLJxGkKlQcWgzjBGoG9EEIcpFotAiUsE2bVyZtHDlbFoIzaxCWkoLEWxw6yYsBCdoo2i0EDQGkQqUBjTDUWveFp99n6Pzz8yBs7nvve/Duef+lFFY3AE8wI8C1+cVfiAOHAA3Sw0zgI+ATvM94Cgl8DmgoSHU22tBn5QK5gV+1dainR20tYWqqxHwE7hWbJgDeAdodhZJZk5OWlW+LTbwKaCeHrS0hLxe1NSE1tZQZ6cFfVgs2HUg5nKh7W00OGgBNDqK1teR04mA70BNNjMjB+BroCYUgvp6cLttweUCnw/GxwG4AbzMu5xz8QhQVxdKJMy+hUJ2hVNT5tjJCWptRUACuF8o7CrwraoKbWzYB2VuzgYuLNjjq6uoogIBUeBKIcA3gIJB21RCy8s2cHMzWRsbs7RQvrC7QKK5GR0fJ5vGYqapYaB4PFmLx5Hfj4C/QHuusMvA1/JytLKSbPg/3W5UV5daW1xEDgcCPgOVuQBfAQoEUhtKqKUFdXSk14eHra0NZIO1AX98PnR4mN5wehrNzKTX9/ZQQwMCjoBb6WCVwBfDMF+TTGZ9fai//2IPz+b8vFXlJ6AsFfAFoJGR9CZnT6lhoGg089yBAQv67DzsNnDU2Ij29zObSOb9i0Syz9vdRR4PAn5z+lk7MJ+3CNA+MQHd3dnanF+EwxAMAvABuAfwAPsHL3W2OYBLwGPAWdzaLsQBEP4H/1wXBHcwhjMAAAAASUVORK5CYII="
+          />
+        </defs>
+      </svg>
 
       <div>
-        <span className="font-bold">Warning: </span>
-        {message}
+        <div className="float-left mr-1 font-bold text-black">Warning:</div>
+
+        <div
+          className="text-brand-gray-500 [&>a]:text-[#007BFF] [&>a]:hover:text-[#0056B3] [&>a]:hover:underline"
+          dangerouslySetInnerHTML={{
+            __html: message.replace(
+              /(https?:\/\/)?(www\.)?[^\s]+\.[^\s]+/g,
+              (matched) => {
+                let withProtocol: string = matched;
+
+                if (!withProtocol.startsWith("http")) {
+                  withProtocol = "http://" + matched;
+                }
+
+                const newStr = `<a target="_blank" rel="noopener noreferrer" href="${withProtocol}">${matched}</a>`;
+
+                return newStr;
+              },
+            ),
+          }}
+        />
       </div>
     </div>
   );

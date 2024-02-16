@@ -58,7 +58,7 @@ export const Headings = () => {
           key={heading.id}
           href={`${pathname}#${heading.id}`}
           className={cn(
-            "text-lg leading-6",
+            "text-lg font-bold leading-6",
             visibleSection === heading.id
               ? "text-brand-primary underline underline-offset-2"
               : "text-brand-gray-400",
@@ -91,8 +91,12 @@ export const Section = ({
   });
 
   return (
-    <section id={sectionType} ref={ref} className="my-2.5 scroll-mt-[57px]">
-      <h2 className="text-brand-primary mb-6 text-[28px] font-medium leading-8">
+    <section
+      id={sectionType}
+      ref={ref}
+      className="scroll-mt-[57px] pb-16 pt-2.5"
+    >
+      <h2 className="text-brand-primary font-wurth mb-6 text-[28px] font-medium leading-8">
         {heading}
       </h2>
 
