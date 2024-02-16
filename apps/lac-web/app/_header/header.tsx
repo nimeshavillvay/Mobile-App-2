@@ -8,6 +8,7 @@ import type { Category } from "@/_lib/types";
 import Link from "next/link";
 import CategoriesDropdown from "./categories-dropdown";
 import NavBar from "./nav-bar";
+import ShippingDetails from "./shipping-details";
 import ShoppingCart from "./shopping-cart";
 import UserActions from "./user-actions";
 
@@ -77,6 +78,8 @@ const Header = async () => {
           <NavBar />
         </div>
       </div>
+
+      <ShippingDetails />
 
       {/* Render links of the main categories for the crawler to index, but hidden from the user */}
       <nav className="hidden">

@@ -1,16 +1,25 @@
 import { type Metadata } from "next";
-import dynamic from "next/dynamic";
+import localFont from "next/font/local";
 import NextTopLoader from "nextjs-toploader";
 import { type ReactNode } from "react";
 import Footer from "./_footer";
 import Header from "./_header";
+import { cn } from "./_utils/helpers";
+import AccountSelectorDialog from "./account-selector-dialog";
 import "./globals.css";
+import LoginDialog from "./login-dialog";
 import Providers from "./providers";
 
-const LoginDialog = dynamic(() => import("./login-dialog"));
-const AccountSelectorDialog = dynamic(
-  () => import("./account-selector-dialog"),
-);
+const wurth = localFont({
+  src: "./wuerth.woff2",
+  variable: "--wurth-font",
+  display: "swap",
+});
+const wurthCond = localFont({
+  src: "./wuerth-cond.woff2",
+  variable: "--wurth-cond-font",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: {
@@ -22,7 +31,10 @@ export const metadata: Metadata = {
 
 const RootLayout = ({ children }: { children: ReactNode }) => {
   return (
-    <html lang="en" className="h-full scroll-smooth">
+    <html
+      lang="en"
+      className={cn("h-full scroll-smooth", wurth.variable, wurthCond.variable)}
+    >
       <body className="font-arial flex h-full flex-col justify-between text-[15px] leading-5 antialiased">
         <NextTopLoader showSpinner={false} color="#cc0000" />
 
