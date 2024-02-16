@@ -42,7 +42,7 @@ type LoginSchema = z.infer<typeof loginSchema>;
 
 const LoginDialog = () => {
   const id = useId();
-  const staySignedInId = `signIn-${id}`;
+  const staySignedInId = `staySignedIn-${id}`;
   const open = useLoginDialog((state) => state.open);
   const setOpen = useLoginDialog((state) => state.setOpen);
   const form = useForm<LoginSchema>({

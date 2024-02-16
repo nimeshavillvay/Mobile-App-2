@@ -52,14 +52,15 @@ export const Headings = () => {
   ];
 
   return (
-    <div className="sticky top-0 flex flex-row gap-2 bg-white">
+    <div className="border-b-brand-gray-200 sticky top-0 flex flex-row gap-16 border-b bg-white py-4">
       {headings.map((heading) => (
         <Link
           key={heading.id}
           href={`${pathname}#${heading.id}`}
           className={cn(
+            "text-lg leading-6",
             visibleSection === heading.id
-              ? "text-brand-primary"
+              ? "text-brand-primary underline underline-offset-2"
               : "text-brand-gray-400",
           )}
         >
@@ -90,8 +91,10 @@ export const Section = ({
   });
 
   return (
-    <section id={sectionType} ref={ref}>
-      <h2 className="text-brand-primary">{heading}</h2>
+    <section id={sectionType} ref={ref} className="my-2.5 scroll-mt-[57px]">
+      <h2 className="text-brand-primary mb-6 text-[28px] font-medium leading-8">
+        {heading}
+      </h2>
 
       {children}
     </section>

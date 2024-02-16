@@ -81,7 +81,9 @@ const ProductLanding = async ({ groupId, sku }: ProductLandingProps) => {
         >
           <div className="flex flex-row gap-[15px]">
             <div className="flex-1">
-              <h3>Description</h3>
+              <h3 className="text-brand-gray-500 mb-4 text-[19px] leading-6">
+                Description
+              </h3>
 
               <div
                 dangerouslySetInnerHTML={{ __html: product.group_summary }}

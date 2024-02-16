@@ -1,6 +1,5 @@
 "use client";
 
-import { logout } from "@/_actions/account";
 import useCookies from "@/_hooks/storage/use-cookies.hook";
 import { api } from "@/_lib/api";
 import {
@@ -16,9 +15,10 @@ import {
 } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { ReactQueryStreamedHydration } from "@tanstack/react-query-next-experimental";
-import { useState, type ReactNode } from "react";
+import { useRef, useState, type ReactNode } from "react";
 import { CookiesProvider } from "react-cookie";
 import { Toaster } from "./_components/ui/toaster";
+import useLogout from "./_hooks/account/use-logout.hook";
 import { selectAccount } from "./_lib/shared-apis";
 
 type ProvidersProps = {
@@ -42,7 +42,9 @@ const Providers = ({ children }: ProvidersProps) => {
 export default Providers;
 
 const ReactQueryProvider = ({ children }: { children: ReactNode }) => {
+  const retryRef = useRef(false);
   const [cookies, setCookies] = useCookies();
+  const logout = useLogout();
 
   const [queryClient] = useState(
     () =>
@@ -66,27 +68,33 @@ const ReactQueryProvider = ({ children }: { children: ReactNode }) => {
         queryCache: new QueryCache({
           onError: async () => {
             // Refresh the account token
-            if (
-              // Temporarily disable check due to this error
-              // https://github.com/sindresorhus/ky/issues/513
-              // error?.response?.status === 401 &&
-              cookies[TOKEN_COOKIE] &&
-              cookies[ACCOUNT_NO_COOKIE] &&
-              cookies[ADDRESS_ID_COOKIE]
-            ) {
-              try {
-                const { token } = await selectAccount(
-                  cookies[TOKEN_COOKIE],
-                  cookies[ACCOUNT_NO_COOKIE],
-                  cookies[ADDRESS_ID_COOKIE],
-                );
-                setCookies("account-token", token);
-              } catch {
-                // Completely logout if refresh account token fails
-                await logout();
+            if (!retryRef.current) {
+              retryRef.current = true;
+
+              if (
+                // Temporarily disable check due to this error
+                // https://github.com/sindresorhus/ky/issues/513
+                // error?.response?.status === 401 &&
+                cookies[TOKEN_COOKIE] &&
+                cookies[ACCOUNT_NO_COOKIE] &&
+                cookies[ADDRESS_ID_COOKIE]
+              ) {
+                try {
+                  const { token } = await selectAccount(
+                    cookies[TOKEN_COOKIE],
+                    cookies[ACCOUNT_NO_COOKIE],
+                    cookies[ADDRESS_ID_COOKIE],
+                  );
+                  setCookies("account-token", token);
+                } catch {
+                  // Completely logout if refresh account token fails
+                  logout();
+                }
+              } else {
+                logout();
               }
-            } else {
-              await logout();
+
+              retryRef.current = false;
             }
           },
         }),

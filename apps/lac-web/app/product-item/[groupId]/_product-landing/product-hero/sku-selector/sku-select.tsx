@@ -1,5 +1,6 @@
 "use client";
 
+import { Label } from "@/_components/ui/label";
 import {
   Select,
   SelectContent,
@@ -7,7 +8,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/_components/ui/select";
-import * as Label from "@radix-ui/react-label";
 import { useRouter } from "next/navigation";
 import { useEffect, useId } from "react";
 
@@ -38,13 +38,18 @@ const SKUSelect = ({ groupId, selectedSku, variants }: SKUSelectProps) => {
   }, [groupId, router, variants]);
 
   return (
-    <div className="flex flex-row items-center gap-2">
-      <Label.Root htmlFor={skuSelectId}>Item # :</Label.Root>
+    <div className="mt-6 flex flex-row items-center gap-2">
+      <Label
+        htmlFor={skuSelectId}
+        className="text-nowrap text-lg leading-6 text-[#4F4F4F]"
+      >
+        Item # :
+      </Label>
 
       <Select value={selectedSku} onValueChange={onValueChange}>
         <SelectTrigger
           id={skuSelectId}
-          className="border-brand-gray-400 flex flex-row items-center gap-2 rounded-md border p-2"
+          className="border-brand-gray-400 flex h-auto w-full flex-row items-center gap-2 rounded-sm border px-1.5 py-1 text-[14px] leading-5"
         >
           <SelectValue placeholder="Make a Selection">
             {selectedValue

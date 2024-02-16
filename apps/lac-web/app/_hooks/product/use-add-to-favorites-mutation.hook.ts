@@ -14,10 +14,10 @@ const useAddToFavoritesMutation = () => {
       brandId: number;
       brandName: string;
       categoryId: number;
-      categoryName: string;
+      categoryName?: string;
       sku: string;
-      subCategoryId: number;
-      subCategoryName: string;
+      subCategoryId?: number;
+      subCategoryName?: string;
     }) =>
       api
         .post("am/my-favourite/add", {

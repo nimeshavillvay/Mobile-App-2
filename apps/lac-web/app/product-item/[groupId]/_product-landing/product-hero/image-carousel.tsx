@@ -95,7 +95,10 @@ const ImageCarousel = ({ productImages, productTitle }: ImageCarouselProps) => {
         </button>
       </div>
 
-      <div className="overflow-hidden" ref={emblaRef}>
+      <div
+        className="border-brand-gray-200 overflow-hidden border"
+        ref={emblaRef}
+      >
         <div className="flex h-[300px] flex-col">
           {productImages.map((productImage, index) => (
             <Image
@@ -105,7 +108,7 @@ const ImageCarousel = ({ productImages, productTitle }: ImageCarouselProps) => {
               width={300}
               height={300}
               priority={index === 0}
-              className="shrink-0 grow-0 basis-full object-contain"
+              className="size-[300px] shrink-0 grow-0 basis-full object-contain"
             />
           ))}
         </div>
