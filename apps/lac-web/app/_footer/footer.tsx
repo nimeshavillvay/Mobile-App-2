@@ -10,7 +10,7 @@ import vendorFreightRouting from "./vendor-freight-routing.jpg";
 
 const Footer = () => {
   return (
-    <footer className="bg-brand-gray-100">
+    <footer className="bg-brand-gray-100 mt-5">
       <div className="max-w-desktop mx-auto flex flex-row justify-between gap-2 p-5 text-sm leading-6 text-black">
         <div>
           <Link href="/">
