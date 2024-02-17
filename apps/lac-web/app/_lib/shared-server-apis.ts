@@ -23,3 +23,21 @@ export const getBreadcrumbs = async (
       }[]
     >();
 };
+
+export const getSitemapData = async () => {
+  return await api
+    .get("pim/webservice/rest/sitemap", {
+      cache: "no-store",
+    })
+    .json<{
+      siteMapProducts: {
+        sku: string;
+        groupId: string;
+      }[];
+      siteMapCategories: {
+        parentCatName: null | string;
+        subCatName: string;
+        catId: number;
+      }[];
+    }>();
+};

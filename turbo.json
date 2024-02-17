@@ -2,6 +2,7 @@
   "$schema": "https://turbo.build/schema.json",
   "globalDependencies": ["**/.env.*local"],
   "globalEnv": [
+    "NEXT_PUBLIC_WURTH_LAC_BASE_URL",
     "NEXT_PUBLIC_WURTH_LAC_API",
     "NEXT_PUBLIC_WURTH_LAC_LOGIN_PUBLIC_KEY",
     "EXPO_USE_METRO_WORKSPACE_ROOT",
