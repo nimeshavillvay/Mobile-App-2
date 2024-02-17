@@ -36,6 +36,13 @@ export const metadata: Metadata = {
 const RootLayout = ({ children }: { children: ReactNode }) => {
   return (
     <html lang="en" className={cn("h-full scroll-smooth", wurth.variable)}>
+      {!!process.env.NEXT_PUBLIC_WURTH_LAC_API && (
+        <head>
+          {/* Preconnect to the API */}
+          <link rel="preconnect" href={process.env.NEXT_PUBLIC_WURTH_LAC_API} />
+        </head>
+      )}
+
       <body className="font-arial flex h-full flex-col justify-between text-[15px] leading-5 antialiased">
         <NextTopLoader showSpinner={false} color="#cc0000" />
 
