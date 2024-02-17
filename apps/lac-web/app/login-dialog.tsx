@@ -93,7 +93,7 @@ const LoginDialog = () => {
         }>();
     },
     onSuccess: (data) => {
-      setCookies("token", data.token);
+      setCookies("token", data.token, { path: "/" });
 
       setOpen(false);
       setAccountSelectorOpen(true);

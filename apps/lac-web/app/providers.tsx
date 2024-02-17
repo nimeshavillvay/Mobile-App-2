@@ -85,7 +85,7 @@ const ReactQueryProvider = ({ children }: { children: ReactNode }) => {
                     cookies[ACCOUNT_NO_COOKIE],
                     cookies[ADDRESS_ID_COOKIE],
                   );
-                  setCookies("account-token", token);
+                  setCookies("account-token", token, { path: "/" });
                 } catch {
                   // Completely logout if refresh account token fails
                   logout();
