@@ -13,7 +13,7 @@ const CategoriesDropdown = ({ categories }: CategoriesDropdownProps) => {
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
-        <button className="flex h-full flex-row items-center gap-2.5 bg-black px-7 align-middle text-lg font-medium leading-6 text-white">
+        <button className="font-wurth flex h-full flex-row items-center gap-2.5 bg-black px-7 align-middle text-lg font-medium leading-6 text-white">
           <MdOutlineMenu className="text-2xl leading-none" />
           <span>Shop By Category</span>
         </button>

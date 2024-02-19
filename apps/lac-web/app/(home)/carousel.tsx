@@ -66,7 +66,7 @@ const Carousel = ({ banners }: CarouselProps) => {
           {banners.map((banner, index) => (
             <div key={banner.id} className="shrink-0 grow-0 basis-full">
               <a
-                href={getMediaUrl(banner.pdf_file_path)}
+                href={getMediaUrl(`/${banner.pdf_file_path}`)}
                 target="_blank"
                 rel="noopener noreferrer"
               >

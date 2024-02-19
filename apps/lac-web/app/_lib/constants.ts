@@ -11,3 +11,6 @@ export const QUERY_KEYS = {
   SORT: "sort",
 } as const;
 export const FILTERS_QUERY_PREFIX = "filter-";
+
+export const BASE_URL = "https://wurthlac.com";
+export const SITEMAP_SIZE = 45000;

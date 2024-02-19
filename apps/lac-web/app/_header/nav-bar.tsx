@@ -55,7 +55,7 @@ const NavBar = () => {
           <Link
             href={link.href}
             className={cn(
-              "rounded-sm px-2.5 py-2 text-base font-medium leading-none",
+              "font-wurth rounded-sm px-2.5 py-2 text-base font-medium leading-none",
               pathname === link.href
                 ? "text-brand-primary bg-white"
                 : "hover:text-brand-primary text-white hover:bg-white",

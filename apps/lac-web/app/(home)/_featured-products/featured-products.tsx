@@ -97,10 +97,11 @@ const FeaturedProducts = ({
           className="max-w-desktop"
         >
           <div className="mb-7 flex flex-row justify-between">
-            <Title asChild>
-              <h2 className="border-brand-gray-500 font-wurth flex-1 border-b pb-3.5 text-[28px] font-semibold leading-8">
-                Featured Products
-              </h2>
+            <Title
+              className="border-brand-gray-400 flex-1 border-b pb-3.5"
+              asChild
+            >
+              <h2>Featured Products</h2>
             </Title>
 
             <Tabs.List className="flex flex-row items-end">

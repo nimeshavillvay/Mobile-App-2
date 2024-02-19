@@ -11,13 +11,17 @@ import LoginDialog from "./login-dialog";
 import Providers from "./providers";
 
 const wurth = localFont({
-  src: "./wuerth.woff2",
+  src: [
+    {
+      path: "./wuerth-bold.woff2",
+      weight: "700",
+    },
+    {
+      path: "./wuerth-extrabold-cond.woff2",
+      weight: "800",
+    },
+  ],
   variable: "--wurth-font",
-  display: "swap",
-});
-const wurthCond = localFont({
-  src: "./wuerth-cond.woff2",
-  variable: "--wurth-cond-font",
   display: "swap",
 });
 
@@ -31,10 +35,14 @@ export const metadata: Metadata = {
 
 const RootLayout = ({ children }: { children: ReactNode }) => {
   return (
-    <html
-      lang="en"
-      className={cn("h-full scroll-smooth", wurth.variable, wurthCond.variable)}
-    >
+    <html lang="en" className={cn("h-full scroll-smooth", wurth.variable)}>
+      {!!process.env.NEXT_PUBLIC_WURTH_LAC_API && (
+        <head>
+          {/* Preconnect to the API */}
+          <link rel="preconnect" href={process.env.NEXT_PUBLIC_WURTH_LAC_API} />
+        </head>
+      )}
+
       <body className="font-arial flex h-full flex-col justify-between text-[15px] leading-5 antialiased">
         <NextTopLoader showSpinner={false} color="#cc0000" />
 

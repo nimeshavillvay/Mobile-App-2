@@ -313,7 +313,7 @@ const HomePage = async () => {
 
           <Separator
             orientation="horizontal"
-            className="bg-brand-gray h-px flex-1"
+            className="bg-brand-gray-300 h-px flex-1"
           />
         </div>
 
@@ -369,7 +369,7 @@ const HomePage = async () => {
             <Icon className="absolute inset-x-0 top-4 mx-auto" />
 
             <div className="absolute bottom-0 left-6 right-0 top-[164px] bg-black/40 p-5 text-white backdrop-blur-sm">
-              <div className="text-4xl font-extrabold uppercase leading-none">
+              <div className="font-wurth text-4xl font-extrabold uppercase leading-none">
                 {banner.title}
               </div>
 
@@ -377,7 +377,7 @@ const HomePage = async () => {
                 {banner.description}
               </div>
 
-              <div className="text-brand-secondary flex flex-row items-center gap-2 text-base font-extrabold uppercase leading-[22px]">
+              <div className="text-brand-secondary font-wurth flex flex-row items-center gap-2 text-base font-extrabold uppercase leading-[22px]">
                 <span>Learn more</span>
                 <MdChevronRight className="text-xs leading-none" />
               </div>
@@ -392,13 +392,13 @@ const HomePage = async () => {
       />
 
       <section className="mb-[92px] flex flex-row justify-between gap-5">
-        <div>
+        <div className="max-w-[370px] flex-1">
           <EmailSignup />
 
           <div className="mt-5">
-            <h3 className="text-[19px] font-medium leading-6">
-              Keep In Touch Through Social Media
-            </h3>
+            <Title className="text-[19px] leading-6" asChild>
+              <h3>Keep In Touch Through Social Media</h3>
+            </Title>
 
             <div className="mt-3 flex flex-row items-center gap-[22px]">
               {SOCIAL_LINK.map(({ name, href, Icon, color }) => (

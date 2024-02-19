@@ -164,7 +164,7 @@ const FeaturedProductCard = ({
                 />
 
                 <button
-                  className="bg-brand-primary flex flex-1 flex-row items-center justify-between rounded-sm p-1.5 font-extrabold uppercase text-white"
+                  className="bg-brand-primary font-wurth flex flex-1 flex-row items-center justify-between rounded-sm p-1.5 font-extrabold uppercase text-white"
                   type="submit"
                 >
                   <AddToCartIcon />
@@ -198,7 +198,7 @@ const FeaturedProductCard = ({
           ) : (
             <button
               onClick={() => setOpenLoginDialog(true)}
-              className="bg-brand-primary w-full rounded p-2 text-base text-white"
+              className="bg-brand-primary font-wurth w-full rounded p-2 text-base uppercase text-white"
               disabled={accountListQuery.isLoading}
             >
               Login to buy
@@ -209,7 +209,7 @@ const FeaturedProductCard = ({
         {flag !== "hidden" && (
           <span
             className={cn(
-              "absolute right-0 top-0 flex flex-row items-center gap-[5px] rounded-bl-[36px] p-3.5 text-[22px] font-extrabold uppercase leading-none",
+              "font-wurth absolute right-0 top-0 flex flex-row items-center gap-[5px] rounded-bl-[36px] p-3.5 text-[22px] font-extrabold uppercase leading-none",
               flag === "sale" && "bg-brand-secondary text-white",
               flag === "new" && "bg-brand-success text-white",
             )}

@@ -45,9 +45,9 @@ const AccountSelectorDialog = () => {
       shipTo: string;
     }) => selectAccount(cookies.token, accountNo, shipTo),
     onSuccess: (data, { accountNo, shipTo }) => {
-      setCookies(ACCOUNT_TOKEN_COOKIE, data.token);
-      setCookies(ACCOUNT_NO_COOKIE, accountNo);
-      setCookies(ADDRESS_ID_COOKIE, shipTo);
+      setCookies(ACCOUNT_TOKEN_COOKIE, data.token, { path: "/" });
+      setCookies(ACCOUNT_NO_COOKIE, accountNo, { path: "/" });
+      setCookies(ADDRESS_ID_COOKIE, shipTo, { path: "/" });
       setOpen(false);
     },
   });
