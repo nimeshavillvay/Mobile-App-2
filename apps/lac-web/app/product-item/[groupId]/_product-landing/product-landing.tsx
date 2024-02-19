@@ -69,7 +69,7 @@ const ProductLanding = async ({ groupId, sku }: ProductLandingProps) => {
         <ProductSections.Headings />
 
         <ProductSections.Section sectionType="variations" heading="Variations">
-          <ProductVariations groupId={groupId} sku={sku} />
+          <ProductVariations product={product} groupId={groupId} sku={sku} />
         </ProductSections.Section>
 
         <ProductSections.Section
@@ -149,11 +149,13 @@ const ProductLanding = async ({ groupId, sku }: ProductLandingProps) => {
                   target="_blank"
                   rel="noopener noreferrer"
                   download
-                  className="flex flex-row items-center gap-2.5 rounded-[5px] bg-[rgba(0,173,239,0.15)] p-2"
+                  className="bg-brand-secondary/[8%] flex flex-row items-center gap-1.5 rounded p-2.5"
                 >
-                  <MdOutlineSimCardDownload className="text-brand-secondary text-3xl" />
+                  <MdOutlineSimCardDownload className="text-brand-secondary text-[32px] leading-none" />
 
-                  <span>{doc.file_name}</span>
+                  <span className="text-xs leading-[18px]">
+                    {doc.file_name}
+                  </span>
                 </a>
               ))}
             </div>

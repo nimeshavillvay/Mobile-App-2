@@ -22,7 +22,7 @@ import type { Product } from "../../types";
 import { type AddItemSchema } from "./helpers";
 
 const buttonBaseClasses = cva(
-  "flex h-9 w-full max-w-64 flex-row items-center justify-center gap-2.5 rounded-sm border-2 text-center font-extrabold uppercase disabled:opacity-50",
+  "flex h-9 w-full max-w-64 flex-row items-center justify-center font-wurth gap-2.5 rounded-sm border-2 text-center font-extrabold uppercase disabled:opacity-50",
 );
 
 type AddItemFormProps = {
