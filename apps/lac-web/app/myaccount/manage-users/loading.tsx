@@ -10,7 +10,7 @@ import {
 } from "@/_components/ui/table";
 import { MdAccountBox } from "react-icons/md";
 
-const Loading = () => {
+const ManageUsersLoading = () => {
   return (
     <div>
       <h2 className="font-wurth text-brand-primary relative text-xl font-medium">
@@ -72,4 +72,4 @@ const Loading = () => {
   );
 };
 
-export default Loading;
+export default ManageUsersLoading;

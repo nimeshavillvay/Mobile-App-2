@@ -1,6 +1,7 @@
 "use client";
 
 import Separator from "@/_components/separator";
+import { Button } from "@/_components/ui/button";
 import {
   Table,
   TableBody,
@@ -100,17 +101,22 @@ const UsersList = ({ token }: { token: string }) => {
           &nbsp;Current Users On This Account
         </h6>
 
-        <button
-          className="font-wurth bg-brand-secondary relative flex min-w-[80px] items-center justify-center rounded-sm px-2 text-center text-base font-extrabold uppercase leading-[24px] text-white"
+        <Button
+          className="font-wurth bg-brand-secondary relative flex h-[24px] min-w-[80px] flex-row items-center justify-center gap-[2px] rounded-sm px-2 text-center text-base font-extrabold uppercase leading-[24px] text-white"
           onClick={() => setShowCurrentUsers(!showCurrentUsers)}
         >
-          {showCurrentUsers ? "Hide" : "Show"}
           {showCurrentUsers ? (
-            <MdKeyboardArrowUp className="text-xl leading-none" />
+            <>
+              Hide
+              <MdKeyboardArrowUp className="text-xl leading-none" />
+            </>
           ) : (
-            <MdKeyboardArrowDown className="text-xl leading-none" />
+            <>
+              Show
+              <MdKeyboardArrowDown className="text-xl leading-none" />
+            </>
           )}
-        </button>
+        </Button>
       </div>
 
       {showCurrentUsers && (

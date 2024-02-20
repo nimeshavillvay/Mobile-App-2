@@ -1,3 +1,4 @@
+import { Button } from "@/_components/ui/button";
 import { TableCell, TableRow } from "@/_components/ui/table";
 import { cn } from "@/_utils/helpers";
 import { useState } from "react";
@@ -24,43 +25,50 @@ const UserRow = ({ user, index }: { user: UserProfile; index: number }) => {
   };
 
   return (
-    <TableRow
-      key={user?.uuid}
-      className={index % 2 === 0 ? "bg-white" : "bg-brand-gray-100"}
-    >
-      <TableCell>{user?.email}</TableCell>
+    <>
+      <TableRow
+        key={user?.uuid}
+        className={index % 2 === 0 ? "bg-white" : "bg-brand-gray-100"}
+      >
+        <TableCell>{user?.email}</TableCell>
 
-      <TableCell className="text-center">{user?.permission}</TableCell>
+        <TableCell className="text-center">{user?.permission}</TableCell>
 
-      <TableCell className="text-center">
-        <div className="flex justify-center">
-          <div
-            className={cn(
-              "py px w-[90px] rounded-sm border font-bold capitalize",
-              getStatusClass(user?.status),
-            )}
-          >
-            {user?.status?.toLowerCase()}
+        <TableCell className="text-center">
+          <div className="flex justify-center">
+            <div
+              className={cn(
+                "py px w-[90px] rounded-sm border font-bold capitalize",
+                getStatusClass(user?.status),
+              )}
+            >
+              {user?.status?.toLowerCase()}
+            </div>
           </div>
-        </div>
-      </TableCell>
+        </TableCell>
 
-      <TableCell className="text-right">
-        <div className="flex justify-end">
-          <button
-            className="font-wurth bg-brand-secondary relative flex min-w-[80px] items-center justify-center rounded-sm px-2 text-base font-extrabold uppercase leading-[24px] text-white"
-            onClick={() => setIsOpen(!isOpen)}
-          >
-            {!isOpen ? "Open" : "Close"}
-            {!isOpen ? (
-              <MdKeyboardArrowDown className="text-xl leading-none" />
-            ) : (
-              <MdKeyboardArrowUp className="text-xl leading-none" />
-            )}
-          </button>
-        </div>
-      </TableCell>
-    </TableRow>
+        <TableCell className="text-right">
+          <div className="flex justify-end">
+            <Button
+              className="font-wurth bg-brand-secondary relative flex h-[24px] min-w-[80px] flex-row items-center justify-center gap-[2px] rounded-sm px-2 text-base font-extrabold uppercase leading-[24px] text-white"
+              onClick={() => setIsOpen(!isOpen)}
+            >
+              {!isOpen ? (
+                <>
+                  Open
+                  <MdKeyboardArrowDown className="text-xl leading-none" />
+                </>
+              ) : (
+                <>
+                  Close
+                  <MdKeyboardArrowUp className="text-xl leading-none" />
+                </>
+              )}
+            </Button>
+          </div>
+        </TableCell>
+      </TableRow>
+    </>
   );
 };
 
