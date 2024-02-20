@@ -45,24 +45,24 @@ const ManageUsersLoading = () => {
         <TableBody className="border-brand-gray-200 border">
           <TableRow>
             <TableCell>
-              <Skeleton className="h-[20px] w-[130px]" />
+              <Skeleton className="h-5 w-[130px]" />
             </TableCell>
 
             <TableCell>
               <div className="flex justify-center">
-                <Skeleton className="h-[20px] w-[80px]" />
+                <Skeleton className="h-5 w-20" />
               </div>
             </TableCell>
 
             <TableCell>
               <div className="flex justify-center">
-                <Skeleton className="h-[20px] w-[100px]" />
+                <Skeleton className="h-5 w-[100px]" />
               </div>
             </TableCell>
 
             <TableCell>
               <div className="flex justify-end">
-                <Skeleton className="h-[20px] w-[80px]" />
+                <Skeleton className="h-5 w-20" />
               </div>
             </TableCell>
           </TableRow>

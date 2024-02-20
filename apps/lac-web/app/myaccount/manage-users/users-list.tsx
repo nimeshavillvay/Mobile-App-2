@@ -66,10 +66,10 @@ const UsersList = ({ token }: { token: string }) => {
 
             <TableCell className="text-right">
               <div className="flex justify-end">
-                <button className="font-wurth bg-brand-secondary flex items-center justify-center rounded-sm pl-4 pr-2 text-base font-extrabold uppercase leading-[24px] text-white">
+                <Button className="font-wurth bg-brand-secondary flex h-6 min-w-20 flex-row items-center justify-center gap-0.5 px-2 text-base leading-6 text-white">
                   Open&nbsp;
                   <MdKeyboardArrowDown className="text-xl leading-none" />
-                </button>
+                </Button>
               </div>
             </TableCell>
           </TableRow>
@@ -83,10 +83,10 @@ const UsersList = ({ token }: { token: string }) => {
           &nbsp;New And Pending Users
         </h6>
 
-        <button className="font-wurth bg-brand-secondary flex items-center justify-center rounded-sm pl-4 pr-2 text-base font-extrabold uppercase leading-[24px] text-white">
-          Show&nbsp;
+        <Button className="font-wurth bg-brand-secondary flex h-6 min-w-20 flex-row items-center justify-center gap-0.5 px-2 text-base leading-6 text-white">
+          Show
           <MdKeyboardArrowDown className="text-xl leading-none" />
-        </button>
+        </Button>
       </div>
 
       <Separator
@@ -102,7 +102,7 @@ const UsersList = ({ token }: { token: string }) => {
         </h6>
 
         <Button
-          className="font-wurth bg-brand-secondary relative flex h-[24px] min-w-[80px] flex-row items-center justify-center gap-[2px] rounded-sm px-2 text-center text-base font-extrabold uppercase leading-[24px] text-white"
+          className="font-wurth bg-brand-secondary flex h-6 min-w-20 flex-row items-center justify-center gap-0.5 px-2 text-base leading-6 text-white"
           onClick={() => setShowCurrentUsers(!showCurrentUsers)}
         >
           {showCurrentUsers ? (

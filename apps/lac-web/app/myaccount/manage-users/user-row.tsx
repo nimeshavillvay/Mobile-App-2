@@ -50,7 +50,7 @@ const UserRow = ({ user, index }: { user: UserProfile; index: number }) => {
         <TableCell className="text-right">
           <div className="flex justify-end">
             <Button
-              className="font-wurth bg-brand-secondary relative flex h-[24px] min-w-[80px] flex-row items-center justify-center gap-[2px] rounded-sm px-2 text-base font-extrabold uppercase leading-[24px] text-white"
+              className="font-wurth bg-brand-secondary flex h-6 min-w-20 flex-row items-center justify-center gap-0.5 px-2 text-base leading-6 text-white"
               onClick={() => setIsOpen(!isOpen)}
             >
               {!isOpen ? (
