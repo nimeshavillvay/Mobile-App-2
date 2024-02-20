@@ -1,58 +1,69 @@
 "use client";
 
+import {
+  Table,
+  TableBody,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/_components/ui/table";
+import useAccountList from "@/_hooks/account/use-account-list.hook";
+import { type ComponentProps } from "react";
 import type { Attribute, Variant } from "../types";
+import VariantRow from "./variant-row";
 
 type VariationsTableProps = {
+  product: ComponentProps<typeof VariantRow>["product"];
   attributes: Attribute[];
   variants: Variant[];
 };
 
-const VariationsTable = ({ attributes, variants }: VariationsTableProps) => {
+const VariationsTable = ({
+  product,
+  attributes,
+  variants,
+}: VariationsTableProps) => {
+  const accountListQuery = useAccountList();
+
   return (
-    <table>
-      <thead>
-        <tr>
-          <th>Item # / MFR Part #</th>
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead>Item # / MFR Part #</TableHead>
 
           {attributes.map((attribute) => (
-            <th key={attribute.slug}>{attribute.name.trim()}</th>
+            <TableHead key={attribute.slug} className="text-center">
+              {attribute.name.trim()}
+            </TableHead>
           ))}
 
-          <th>UOM</th>
-          <th />
-        </tr>
-      </thead>
+          {!!accountListQuery.data && (
+            <>
+              <TableHead className="text-center">Price</TableHead>
 
-      <tbody>
+              <TableHead className="text-left">Quantity</TableHead>
+            </>
+          )}
+
+          <TableHead className="text-left">UOM</TableHead>
+
+          <TableHead>
+            {accountListQuery.data ? "Stock Availability" : ""}
+          </TableHead>
+        </TableRow>
+      </TableHeader>
+
+      <TableBody>
         {variants.map((variant) => (
-          <tr key={variant.txt_wurth_lac_item}>
-            <td>
-              <div>{variant.txt_wurth_lac_item}</div>
-              <div>{variant.txt_mfn}</div>
-            </td>
-
-            {attributes.map((attribute) => (
-              <td key={attribute.slug}>
-                {
-                  variant.Attributes.find(
-                    (variantAttribute) =>
-                      variantAttribute.slug === attribute.slug,
-                  )?.value
-                }
-              </td>
-            ))}
-
-            <td>{variant.txt_uom_label}</td>
-
-            <td>
-              <button className="bg-brand-primary rounded p-2 text-white">
-                Login to buy
-              </button>
-            </td>
-          </tr>
+          <VariantRow
+            key={variant.txt_wurth_lac_item}
+            product={product}
+            variant={variant}
+            attributes={attributes}
+          />
         ))}
-      </tbody>
-    </table>
+      </TableBody>
+    </Table>
   );
 };
 

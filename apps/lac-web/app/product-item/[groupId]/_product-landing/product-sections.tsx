@@ -52,7 +52,7 @@ export const Headings = () => {
   ];
 
   return (
-    <div className="border-b-brand-gray-200 sticky top-0 flex flex-row gap-16 border-b bg-white py-4">
+    <div className="border-b-brand-gray-200 sticky top-0 z-10 flex flex-row gap-16 border-b bg-white py-4">
       {headings.map((heading) => (
         <Link
           key={heading.id}
