@@ -1,9 +1,12 @@
 import { TableCell, TableRow } from "@/_components/ui/table";
 import { cn } from "@/_utils/helpers";
-import { MdKeyboardArrowDown } from "react-icons/md";
+import { useState } from "react";
+import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 import { UserProfile } from "./types";
 
 const UserRow = ({ user, index }: { user: UserProfile; index: number }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
   const getStatusClass = (status: string) => {
     switch (status) {
       case "ACTIVE":
@@ -44,9 +47,16 @@ const UserRow = ({ user, index }: { user: UserProfile; index: number }) => {
 
       <TableCell className="text-right">
         <div className="flex justify-end">
-          <button className="font-wurth bg-brand-secondary flex items-center justify-center rounded-sm pl-4 pr-2 text-base font-extrabold uppercase leading-[24px] text-white">
-            Open&nbsp;
-            <MdKeyboardArrowDown className="text-xl leading-none" />
+          <button
+            className="font-wurth bg-brand-secondary relative flex min-w-[80px] items-center justify-center rounded-sm px-2 text-base font-extrabold uppercase leading-[24px] text-white"
+            onClick={() => setIsOpen(!isOpen)}
+          >
+            {!isOpen ? "Open" : "Close"}
+            {!isOpen ? (
+              <MdKeyboardArrowDown className="text-xl leading-none" />
+            ) : (
+              <MdKeyboardArrowUp className="text-xl leading-none" />
+            )}
           </button>
         </div>
       </TableCell>

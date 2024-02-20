@@ -104,7 +104,7 @@ const UsersList = ({ token }: { token: string }) => {
           className="font-wurth bg-brand-secondary relative flex min-w-[80px] items-center justify-center rounded-sm px-2 text-center text-base font-extrabold uppercase leading-[24px] text-white"
           onClick={() => setShowCurrentUsers(!showCurrentUsers)}
         >
-          {showCurrentUsers ? "Hide" : "Show"}&nbsp;
+          {showCurrentUsers ? "Hide" : "Show"}
           {showCurrentUsers ? (
             <MdKeyboardArrowUp className="text-xl leading-none" />
           ) : (
