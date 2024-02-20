@@ -40,8 +40,11 @@ const UsersList = ({ token }: { token: string }) => {
         <TableHeader className="bg-brand-gray-200 border-brand-gray-200 border">
           <TableRow>
             <TableHead>Email</TableHead>
+
             <TableHead className="text-center">Permission</TableHead>
+
             <TableHead className="text-center">Status</TableHead>
+
             <TableHead></TableHead>
           </TableRow>
         </TableHeader>
@@ -49,14 +52,17 @@ const UsersList = ({ token }: { token: string }) => {
         <TableBody className="border-brand-gray-200 border">
           <TableRow>
             <TableCell>{yourProfile?.email}</TableCell>
+
             <TableCell className="text-center">
               {yourProfile?.permission}
             </TableCell>
+
             <TableCell className="text-center">
               <span className="border-brand-tertiary text-brand-tertiary min-w-24 rounded-sm border px-5 py-px font-bold">
                 {yourProfile?.status}
               </span>
             </TableCell>
+
             <TableCell className="text-right">
               <div className="flex justify-end">
                 <button className="font-wurth bg-brand-secondary flex items-center justify-center rounded-sm pl-4 pr-2 text-base font-extrabold uppercase leading-[24px] text-white">
@@ -116,8 +122,11 @@ const UsersList = ({ token }: { token: string }) => {
           <TableHeader className="bg-brand-gray-200 border-brand-gray-200 border">
             <TableRow>
               <TableHead>Email</TableHead>
+
               <TableHead className="text-center">Permission</TableHead>
+
               <TableHead className="text-center">Status</TableHead>
+
               <TableHead></TableHead>
             </TableRow>
           </TableHeader>

@@ -33,8 +33,11 @@ const Loading = () => {
         <TableHeader className="bg-brand-gray-200 border-brand-gray-200 border">
           <TableRow>
             <TableHead>Email</TableHead>
+
             <TableHead className="text-center">Permission</TableHead>
+
             <TableHead className="text-center">Status</TableHead>
+
             <TableHead></TableHead>
           </TableRow>
         </TableHeader>
@@ -44,16 +47,19 @@ const Loading = () => {
             <TableCell>
               <Skeleton className="h-[20px] w-[130px]" />
             </TableCell>
+
             <TableCell>
               <div className="flex justify-center">
                 <Skeleton className="h-[20px] w-[80px]" />
               </div>
             </TableCell>
+
             <TableCell>
               <div className="flex justify-center">
                 <Skeleton className="h-[20px] w-[100px]" />
               </div>
             </TableCell>
+
             <TableCell>
               <div className="flex justify-end">
                 <Skeleton className="h-[20px] w-[80px]" />
