@@ -1,4 +1,6 @@
 import Breadcrumbs from "@/_components/breadcrumbs";
+import Separator from "@/_components/separator";
+import Title from "@/_components/title";
 import { type ReactNode } from "react";
 import SideMenu from "./_side-menu";
 import Profile from "./profile";
@@ -12,7 +14,14 @@ const MyAccountLayout = ({ children }: MyAccountLayoutProps) => {
     <>
       <Breadcrumbs links={[{ href: "/myaccount", label: "My Account" }]} />
 
-      <h1>My Account</h1>
+      <div className="mb-4 mt-8 flex flex-row items-center gap-2.5">
+        <Title className="text-brand-primary">My Account</Title>
+
+        <Separator
+          orientation="horizontal"
+          className="bg-brand-primary h-px flex-1"
+        />
+      </div>
 
       <div className="flex flex-row">
         <aside className="w-[280px]">
@@ -21,7 +30,7 @@ const MyAccountLayout = ({ children }: MyAccountLayoutProps) => {
           <SideMenu />
         </aside>
 
-        <div>{children}</div>
+        <div className="relative w-full pl-12">{children}</div>
       </div>
     </>
   );

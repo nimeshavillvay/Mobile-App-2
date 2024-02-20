@@ -41,7 +41,10 @@ export const middleware = async (request: NextRequest) => {
       await getAccountList(tokenCookie.value);
 
       // Additional check for pages that need the account token
-      if (request.nextUrl.pathname.startsWith("/shopping-cart")) {
+      if (
+        request.nextUrl.pathname.startsWith("/myaccount") ||
+        request.nextUrl.pathname.startsWith("/shopping-cart")
+      ) {
         const accountTokenCookie = request.cookies.get(ACCOUNT_TOKEN_COOKIE);
         const accountNoCookie = request.cookies.get(ACCOUNT_NO_COOKIE);
         const addressIdCookie = request.cookies.get(ADDRESS_ID_COOKIE);
