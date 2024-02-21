@@ -69,7 +69,7 @@ const ProductLanding = async ({ groupId, sku }: ProductLandingProps) => {
         <ProductSections.Headings />
 
         <ProductSections.Section sectionType="variations" heading="Variations">
-          <ProductVariations product={product} groupId={groupId} sku={sku} />
+          <ProductVariations groupId={groupId} sku={sku} />
         </ProductSections.Section>
 
         <ProductSections.Section

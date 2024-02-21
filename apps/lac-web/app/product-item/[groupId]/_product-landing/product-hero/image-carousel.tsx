@@ -7,6 +7,8 @@ import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 
+const CAROUSEL_SIZE = 3;
+
 type ImageCarouselProps = {
   productImages: string[];
   productTitle: string;
@@ -51,6 +53,29 @@ const ImageCarousel = ({ productImages, productTitle }: ImageCarouselProps) => {
     emblaApi.on("select", onSelect);
   }, [emblaApi, onSelect]);
 
+  const pictureIndexes = [selectedIndex];
+  while (pictureIndexes.length < CAROUSEL_SIZE) {
+    let noPreviousAdded = true;
+    let noNextAdded = true;
+
+    const firstIndex = pictureIndexes[0];
+    if (typeof firstIndex === "number" && firstIndex > 0) {
+      pictureIndexes.unshift(firstIndex - 1);
+      noPreviousAdded = false;
+    }
+
+    const lastIndex = pictureIndexes[pictureIndexes.length - 1];
+    if (typeof lastIndex === "number" && lastIndex < productImages.length) {
+      pictureIndexes.push(lastIndex + 1);
+      noNextAdded = false;
+    }
+
+    // No indexes were added
+    if (noPreviousAdded && noNextAdded) {
+      break;
+    }
+  }
+
   return (
     <div className="flex flex-row items-center gap-2">
       <div className="flex flex-col items-center">
@@ -63,27 +88,35 @@ const ImageCarousel = ({ productImages, productTitle }: ImageCarouselProps) => {
           <MdKeyboardArrowUp />
         </button>
 
-        {productImages.map((productImage, index) => (
-          <button
-            key={productImage}
-            onClick={() => scrollTo(index)}
-            className={cn(
-              "border",
-              selectedIndex === index
-                ? "border-brand-primary"
-                : "border-brand-gray-200",
-            )}
-          >
-            <Image
-              src={getMediaUrl(productImage)}
-              alt={`Image ${index + 1} of ${productTitle}`}
-              width={68}
-              height={68}
-              priority={index < 3}
-              className="object-contain"
-            />
-          </button>
-        ))}
+        {pictureIndexes.map((index) => {
+          const image = productImages[index];
+
+          if (!image) {
+            return null;
+          }
+
+          return (
+            <button
+              key={image}
+              onClick={() => scrollTo(index)}
+              className={cn(
+                "border",
+                selectedIndex === index
+                  ? "border-brand-primary"
+                  : "border-brand-gray-200",
+              )}
+            >
+              <Image
+                src={getMediaUrl(image)}
+                alt={`Image ${index + 1} of ${productTitle}`}
+                width={68}
+                height={68}
+                priority={index < 3}
+                className="object-contain"
+              />
+            </button>
+          );
+        })}
 
         <button
           onClick={scrollNext}

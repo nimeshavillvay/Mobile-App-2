@@ -119,7 +119,6 @@ const AddItemForm = ({ product }: AddItemFormProps) => {
             placeholder="Qty"
             required
             className="h-7 max-w-16 px-2"
-            disabled={!accountListQuery.data}
             min={minOrder}
             step={qtyIncrements}
           />
@@ -144,7 +143,6 @@ const AddItemForm = ({ product }: AddItemFormProps) => {
               buttonBaseClasses(),
               "bg-brand-primary border-0 text-white",
             )}
-            disabled={accountListQuery.isLoading}
             onClick={() => setOpenLoginDialog(true)}
             type="button"
           >
