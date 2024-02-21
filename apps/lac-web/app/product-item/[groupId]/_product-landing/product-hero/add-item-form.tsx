@@ -13,7 +13,7 @@ import useAddToCartMutation from "@/_hooks/cart/use-add-to-cart-mutation.hook";
 import useAddToFavoritesMutation from "@/_hooks/product/use-add-to-favorites-mutation.hook";
 import useFavoriteSkus from "@/_hooks/product/use-favorite-skus.hook";
 import usePriceCalculation from "@/_hooks/product/use-price-calculation.hook";
-import { cn, getMediaUrl } from "@/_utils/helpers";
+import { cn, formatNumberToPrice, getMediaUrl } from "@/_utils/helpers";
 import { cva } from "class-variance-authority";
 import Link from "next/link";
 import { useId, useState } from "react";
@@ -102,7 +102,8 @@ const AddItemForm = ({ product }: AddItemFormProps) => {
                 </div>
 
                 <div className="bg-brand-success/10 text-brand-success rounded-sm px-1 py-0.5 font-bold leading-none">
-                  Save ${actualPrice - discountedPrice} ({discountPercentage}%)
+                  Save ${formatNumberToPrice(actualPrice - discountedPrice)} (
+                  {discountPercentage}%)
                 </div>
               </div>
             )}
