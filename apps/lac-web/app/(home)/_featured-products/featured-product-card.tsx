@@ -164,7 +164,7 @@ const FeaturedProductCard = ({
                 />
 
                 <button
-                  className="bg-brand-primary font-wurth flex flex-1 flex-row items-center justify-between rounded-sm p-1.5 font-extrabold uppercase text-white"
+                  className="bg-brand-primary font-wurth flex flex-1 flex-row items-center justify-center rounded-sm p-1.5 font-extrabold uppercase text-white"
                   type="submit"
                 >
                   <AddToCartIcon />
