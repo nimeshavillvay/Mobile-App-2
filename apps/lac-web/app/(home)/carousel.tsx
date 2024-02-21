@@ -82,16 +82,19 @@ const Carousel = ({ banners }: CarouselProps) => {
           ))}
         </div>
 
-        <div className="absolute inset-x-1/2 bottom-3 flex items-center justify-center gap-1">
+        <div className="absolute inset-x-1/2 bottom-0 flex items-center justify-center gap-1">
           {banners.map((banner, index) => (
             <button
               key={index}
               onClick={() => scrollTo(index)}
-              className={cn(
-                "h-1 w-9 shrink-0",
-                selectedIndex === index ? "bg-black/50" : " bg-black/15",
-              )}
+              className="h-4 w-9 shrink-0"
             >
+              <div
+                className={cn(
+                  "h-1 w-full",
+                  selectedIndex === index ? "bg-black/50" : " bg-black/15",
+                )}
+              />
               <VisuallyHidden>{banner.alt_tag}</VisuallyHidden>
             </button>
           ))}
