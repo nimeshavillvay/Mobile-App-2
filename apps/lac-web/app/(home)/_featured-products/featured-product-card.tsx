@@ -198,7 +198,7 @@ const FeaturedProductCard = ({
           ) : (
             <button
               onClick={() => setOpenLoginDialog(true)}
-              className="bg-brand-primary font-wurth w-full rounded p-2 text-base uppercase text-white"
+              className="bg-brand-primary font-wurth w-full rounded p-2 text-base font-extrabold uppercase text-white"
               disabled={accountListQuery.isLoading}
             >
               Login to buy
