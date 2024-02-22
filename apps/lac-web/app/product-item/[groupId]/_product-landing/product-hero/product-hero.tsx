@@ -4,6 +4,7 @@ import { getProduct } from "../../apis";
 import AddItemForm from "./add-item-form";
 import AddItemFormProvider from "./add-item-form-provider";
 import ImageCarousel from "./image-carousel";
+import ShippingOptions from "./shipping-options";
 import SKUSelector from "./sku-selector";
 
 type ProductHeroProps = {
@@ -61,7 +62,9 @@ const ProductHero = async ({ groupId, sku }: ProductHeroProps) => {
             )}
           </div>
 
-          <div className="w-[322px]"></div>
+          {!!product.selected_item?.txt_wurth_lac_item && (
+            <ShippingOptions sku={product.selected_item.txt_wurth_lac_item} />
+          )}
         </div>
       </div>
     </AddItemFormProvider>

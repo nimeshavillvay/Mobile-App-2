@@ -42,3 +42,24 @@ export type Address = {
   };
   "phone-no"?: string;
 };
+
+export type Availability = {
+  options: [
+    {
+      backOrder: string;
+      index: string;
+      plant_1: string;
+      quantity_1?: string;
+      shippingMethods_1: string;
+      type: string;
+      hash: string;
+      backOrderDate_1?: string;
+      backOrderQuantity_1?: string;
+    },
+  ];
+  price: number;
+  sku: string;
+  status: string;
+  willcallanywhere: unknown;
+  xplant: string;
+};

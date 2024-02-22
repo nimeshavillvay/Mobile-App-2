@@ -1,5 +1,5 @@
 import { api } from "./api";
-import type { Address } from "./types";
+import type { Address, Availability } from "./types";
 
 export const getAccountList = async (token: string) => {
   return await api
@@ -63,26 +63,5 @@ export const checkAvailability = async (
       },
       json: { skuidqty: [{ sku, quantity }] },
     })
-    .json<
-      [
-        {
-          options: [
-            {
-              backOrder: string;
-              index: string;
-              plant_1: string;
-              quantity_1: string;
-              shippingMethods_1: string;
-              type: string;
-              hash: string;
-            },
-          ];
-          price: number;
-          sku: string;
-          status: string;
-          willcallanywhere: unknown;
-          xplant: string;
-        },
-      ]
-    >();
+    .json<Availability[]>();
 };
