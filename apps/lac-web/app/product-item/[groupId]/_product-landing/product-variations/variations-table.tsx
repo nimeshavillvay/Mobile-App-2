@@ -84,7 +84,10 @@ const VariationsTable = ({ attributes, variants }: VariationsTableProps) => {
               value={filters[attribute.slug]}
               onValueChange={(value) => addFilter(attribute.slug, value)}
             >
-              <SelectTrigger className="h-7 min-w-32 px-1.5">
+              <SelectTrigger
+                id={`${attribute.slug}-${id}`}
+                className="h-7 min-w-32 px-1.5"
+              >
                 <SelectValue placeholder="Select" />
               </SelectTrigger>
 
