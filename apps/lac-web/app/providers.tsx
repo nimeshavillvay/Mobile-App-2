@@ -72,7 +72,9 @@ const ReactQueryProvider = ({ children }: { children: ReactNode }) => {
               setIsRefreshing(true);
 
               if (
-                error?.response?.status === 401 &&
+                // Temporarily disable check due to this error
+                // https://github.com/sindresorhus/ky/issues/513
+                // error?.response?.status === 401 &&
                 cookies[TOKEN_COOKIE] &&
                 cookies[ACCOUNT_NO_COOKIE] &&
                 cookies[ADDRESS_ID_COOKIE]
