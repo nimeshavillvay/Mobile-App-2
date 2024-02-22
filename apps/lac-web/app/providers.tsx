@@ -66,15 +66,13 @@ const ReactQueryProvider = ({ children }: { children: ReactNode }) => {
           },
         },
         queryCache: new QueryCache({
-          onError: async () => {
+          onError: async (error) => {
             // Refresh the account token
             if (!retryRef.current) {
               retryRef.current = true;
 
               if (
-                // Temporarily disable check due to this error
-                // https://github.com/sindresorhus/ky/issues/513
-                // error?.response?.status === 401 &&
+                error?.response?.status === 401 &&
                 cookies[TOKEN_COOKIE] &&
                 cookies[ACCOUNT_NO_COOKIE] &&
                 cookies[ADDRESS_ID_COOKIE]

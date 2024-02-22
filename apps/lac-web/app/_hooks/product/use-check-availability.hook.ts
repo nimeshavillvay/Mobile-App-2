@@ -16,7 +16,7 @@ const useCheckAvailability = (sku: string, quantity = 1) => {
     ],
     queryFn: () =>
       checkAvailability(cookies[ACCOUNT_TOKEN_COOKIE], sku, quantity),
-    enabled: !!cookies[ACCOUNT_TOKEN_COOKIE],
+    enabled: !!cookies[ACCOUNT_TOKEN_COOKIE] && !!quantity,
   });
 };
 
