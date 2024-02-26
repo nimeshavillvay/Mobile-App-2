@@ -2,7 +2,7 @@ import type { Config } from "tailwindcss";
 
 const config: Config = {
   content: ["./src/**/*.{ts,tsx}"],
-  prefix: "",
+  prefix: "ui-",
   theme: {
     container: {
       center: true,

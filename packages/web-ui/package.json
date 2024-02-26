@@ -1,16 +1,40 @@
 {
   "name": "@repo/web-ui",
+  "sideEffects": [
+    "**/*.css"
+  ],
   "exports": {
-    "./components/*": "./src/components/*"
+    "./styles.css": "./dist/index.css",
+    "./*": "./src/components/*/index.tsx"
+  },
+  "scripts": {
+    "postinstall": "pnpm build",
+    "dev": "concurrently \"pnpm:dev:storybook\" \"pnpm:dev:tailwind\"",
+    "dev:storybook": "storybook dev -p 6006",
+    "dev:tailwind": "tailwindcss -i ./src/styles.css -o ./dist/index.css --watch",
+    "build": "tailwindcss -i ./src/styles.css -o dist/index.css",
+    "lint": "eslint src/ --max-warnings 0",
+    "build-storybook": "storybook build"
   },
   "devDependencies": {
     "@radix-ui/react-slot": "^1.0.2",
+    "@repo/eslint-config": "workspace:^",
     "@repo/tailwindcss-config": "workspace:^",
+    "@storybook/addon-essentials": "^7.6.17",
+    "@storybook/addon-interactions": "^7.6.17",
+    "@storybook/addon-links": "^7.6.17",
+    "@storybook/addon-onboarding": "^1.0.11",
+    "@storybook/blocks": "^7.6.17",
+    "@storybook/react": "^7.6.17",
+    "@storybook/react-vite": "^7.6.17",
+    "@storybook/test": "^7.6.17",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
+    "concurrently": "^8.2.2",
     "lucide-react": "^0.331.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "storybook": "^7.6.17",
     "tailwind-merge": "^2.2.1",
     "tailwindcss": "^3.4.1",
     "typescript": "^5.3.3"
