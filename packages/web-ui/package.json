@@ -10,7 +10,7 @@
   "scripts": {
     "postinstall": "pnpm build",
     "dev": "concurrently \"pnpm:dev:storybook\" \"pnpm:dev:tailwind\"",
-    "dev:storybook": "storybook dev -p 6006",
+    "dev:storybook": "storybook dev -p 6006 --no-open",
     "dev:tailwind": "tailwindcss -i ./src/styles.css -o ./dist/index.css --watch",
     "build": "tailwindcss -i ./src/styles.css -o dist/index.css",
     "lint": "eslint src/ --max-warnings 0",
