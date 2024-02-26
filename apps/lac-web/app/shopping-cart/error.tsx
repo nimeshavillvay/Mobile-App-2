@@ -4,7 +4,6 @@ import { useEffect } from "react";
 
 const ShoppingCartError = ({
   error,
-  reset,
 }: {
   error: Error & { digest?: string };
   reset: () => void;

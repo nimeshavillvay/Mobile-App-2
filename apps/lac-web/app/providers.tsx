@@ -66,7 +66,7 @@ const ReactQueryProvider = ({ children }: { children: ReactNode }) => {
           },
         },
         queryCache: new QueryCache({
-          onError: async (error) => {
+          onError: async () => {
             // Refresh the account token
             if (!isRefreshing) {
               setIsRefreshing(true);
