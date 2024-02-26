@@ -14,7 +14,13 @@
     },
     "build": {
       "dependsOn": ["^build", "lint"],
-      "outputs": [".next/**", "!.next/cache/**", "node_modules/.cache/metro/**"]
+      "outputs": [
+        ".next/**",
+        "!.next/cache/**",
+        "node_modules/.cache/metro/**",
+        "dist/**",
+        "storybook-static/**"
+      ]
     },
     "start": {
       "dependsOn": ["build"],
