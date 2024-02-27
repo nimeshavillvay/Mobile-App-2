@@ -12,6 +12,7 @@ import {
   TableRow,
 } from "@/_components/ui/table";
 import VisuallyHidden from "@/_components/visually-hidden";
+import type { Role } from "@/_lib/types";
 import { useState } from "react";
 import {
   MdKeyboardArrowDown,
@@ -22,7 +23,13 @@ import {
 import useSuspenseUsersList from "./use-suspense-users-list.hook";
 import UserRow from "./user-row";
 
-const UsersList = ({ token }: { token: string }) => {
+const UsersList = ({
+  token,
+  jobRoles,
+}: {
+  token: string;
+  jobRoles: Role[];
+}) => {
   const [showCurrentUsers, setShowCurrentUsers] = useState(false);
   const usersListQuery = useSuspenseUsersList(token);
 
@@ -140,7 +147,12 @@ const UsersList = ({ token }: { token: string }) => {
           <TableBody className="border-brand-gray-200 text-brand-gray-500 border">
             {currentUsers &&
               currentUsers.map((user, index) => (
-                <UserRow key={user?.uuid} user={user} index={index} />
+                <UserRow
+                  key={user?.uuid}
+                  user={user}
+                  index={index}
+                  jobRoles={jobRoles}
+                />
               ))}
           </TableBody>
         </Table>

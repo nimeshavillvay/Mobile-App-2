@@ -1,5 +1,6 @@
 import Separator from "@/_components/separator";
 import { ACCOUNT_TOKEN_COOKIE } from "@/_lib/constants";
+import { getJobRoles } from "@/_lib/shared-server-apis";
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { MdAccountBox } from "react-icons/md";
@@ -9,12 +10,14 @@ export const metadata: Metadata = {
   title: "User Management",
 };
 
-const UserManagementPage = () => {
+const UserManagementPage = async () => {
   const accountTokenCookie = cookies().get(ACCOUNT_TOKEN_COOKIE);
 
   if (!accountTokenCookie?.value) {
     return null;
   }
+
+  const jobRoles = await getJobRoles();
 
   return (
     <>
@@ -35,7 +38,7 @@ const UserManagementPage = () => {
           </h6>
         </div>
 
-        <UsersList token={accountTokenCookie.value} />
+        <UsersList token={accountTokenCookie.value} jobRoles={jobRoles.roles} />
       </div>
     </>
   );

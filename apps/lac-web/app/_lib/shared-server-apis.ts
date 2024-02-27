@@ -1,6 +1,7 @@
 import "server-only";
 import { api } from "./api";
 import { DEFAULT_REVALIDATE } from "./constants";
+import type { Role } from "./types";
 
 export const getBreadcrumbs = async (
   id: string,
@@ -40,4 +41,14 @@ export const getSitemapData = async () => {
         catId: number;
       }[];
     }>();
+};
+
+export const getJobRoles = async () => {
+  return await api
+    .get("am/registration/get-roles", {
+      next: {
+        revalidate: DEFAULT_REVALIDATE,
+      },
+    })
+    .json<{ roles: Role[] }>();
 };

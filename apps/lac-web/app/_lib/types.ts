@@ -42,3 +42,8 @@ export type Address = {
   };
   "phone-no"?: string;
 };
+
+export type Role = {
+  code: string;
+  description: string;
+};

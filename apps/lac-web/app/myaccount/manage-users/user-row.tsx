@@ -1,11 +1,21 @@
 import { Button } from "@/_components/ui/button";
 import { TableCell, TableRow } from "@/_components/ui/table";
+import { Role } from "@/_lib/types";
 import { cn } from "@/_utils/helpers";
 import { useState } from "react";
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 import { UserProfile } from "./types";
+import UserUpdateForm from "./user-update-form";
 
-const UserRow = ({ user, index }: { user: UserProfile; index: number }) => {
+const UserRow = ({
+  user,
+  index,
+  jobRoles,
+}: {
+  user: UserProfile;
+  index: number;
+  jobRoles: Role[];
+}) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const getStatusClass = (status: string) => {
@@ -68,6 +78,14 @@ const UserRow = ({ user, index }: { user: UserProfile; index: number }) => {
           </div>
         </TableCell>
       </TableRow>
+
+      {isOpen && (
+        <TableRow>
+          <TableCell colSpan={4}>
+            <UserUpdateForm jobRoles={jobRoles} />
+          </TableCell>
+        </TableRow>
+      )}
     </>
   );
 };
