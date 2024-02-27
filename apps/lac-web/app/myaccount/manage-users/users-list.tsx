@@ -3,6 +3,11 @@
 import Separator from "@/_components/separator";
 import { Button } from "@/_components/ui/button";
 import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/_components/ui/collapsible";
+import {
   Table,
   TableBody,
   TableCaption,
@@ -12,6 +17,7 @@ import {
   TableRow,
 } from "@/_components/ui/table";
 import VisuallyHidden from "@/_components/visually-hidden";
+import type { Role } from "@/_lib/types";
 import { useState } from "react";
 import {
   MdKeyboardArrowDown,
@@ -22,7 +28,13 @@ import {
 import useSuspenseUsersList from "./use-suspense-users-list.hook";
 import UserRow from "./user-row";
 
-const UsersList = ({ token }: { token: string }) => {
+const UsersList = ({
+  token,
+  jobRoles,
+}: {
+  token: string;
+  jobRoles: Role[];
+}) => {
   const [showCurrentUsers, setShowCurrentUsers] = useState(false);
   const usersListQuery = useSuspenseUsersList(token);
 
@@ -95,56 +107,64 @@ const UsersList = ({ token }: { token: string }) => {
       />
 
       {/* Current Users Section */}
-      <div className="my-5 flex justify-between">
-        <h6 className="font-wurth text-brand-gray-500 flex text-base font-medium capitalize">
-          <MdSupervisorAccount className="self-center text-2xl leading-none" />
-          &nbsp;Current Users On This Account
-        </h6>
+      <Collapsible open={showCurrentUsers} onOpenChange={setShowCurrentUsers}>
+        <div className="my-5 flex justify-between">
+          <h6 className="font-wurth text-brand-gray-500 flex text-base font-medium capitalize">
+            <MdSupervisorAccount className="self-center text-2xl leading-none" />
+            &nbsp;Current Users On This Account
+          </h6>
 
-        <Button
-          className="font-wurth bg-brand-secondary flex h-6 min-w-20 flex-row items-center justify-center gap-0.5 px-2 text-base leading-6 text-white"
-          onClick={() => setShowCurrentUsers(!showCurrentUsers)}
-        >
-          {showCurrentUsers ? (
-            <>
-              Hide
-              <MdKeyboardArrowUp className="text-xl leading-none" />
-            </>
-          ) : (
-            <>
-              Show
-              <MdKeyboardArrowDown className="text-xl leading-none" />
-            </>
-          )}
-        </Button>
-      </div>
+          <CollapsibleTrigger asChild>
+            <Button className="font-wurth bg-brand-secondary flex h-6 min-w-20 flex-row items-center justify-center gap-0.5 px-2 text-base leading-6 text-white">
+              {showCurrentUsers ? (
+                <>
+                  Hide
+                  <MdKeyboardArrowUp className="text-xl leading-none" />
+                </>
+              ) : (
+                <>
+                  Show
+                  <MdKeyboardArrowDown className="text-xl leading-none" />
+                </>
+              )}
+            </Button>
+          </CollapsibleTrigger>
+        </div>
 
-      {showCurrentUsers && (
-        <Table>
-          <VisuallyHidden asChild>
-            <TableCaption>Current users on this account section.</TableCaption>
-          </VisuallyHidden>
+        <CollapsibleContent>
+          <Table>
+            <VisuallyHidden asChild>
+              <TableCaption>
+                Current users on this account section.
+              </TableCaption>
+            </VisuallyHidden>
 
-          <TableHeader className="bg-brand-gray-200 border-brand-gray-200 border">
-            <TableRow>
-              <TableHead>Email</TableHead>
+            <TableHeader className="bg-brand-gray-200 border-brand-gray-200 border">
+              <TableRow>
+                <TableHead>Email</TableHead>
 
-              <TableHead className="text-center">Permission</TableHead>
+                <TableHead className="text-center">Permission</TableHead>
 
-              <TableHead className="text-center">Status</TableHead>
+                <TableHead className="text-center">Status</TableHead>
 
-              <TableHead></TableHead>
-            </TableRow>
-          </TableHeader>
+                <TableHead></TableHead>
+              </TableRow>
+            </TableHeader>
 
-          <TableBody className="border-brand-gray-200 text-brand-gray-500 border">
-            {currentUsers &&
-              currentUsers.map((user, index) => (
-                <UserRow key={user?.uuid} user={user} index={index} />
-              ))}
-          </TableBody>
-        </Table>
-      )}
+            <TableBody className="border-brand-gray-200 text-brand-gray-500 border">
+              {currentUsers &&
+                currentUsers.map((user, index) => (
+                  <UserRow
+                    key={user?.uuid}
+                    user={user}
+                    index={index}
+                    jobRoles={jobRoles}
+                  />
+                ))}
+            </TableBody>
+          </Table>
+        </CollapsibleContent>
+      </Collapsible>
 
       <Separator
         orientation="horizontal"
