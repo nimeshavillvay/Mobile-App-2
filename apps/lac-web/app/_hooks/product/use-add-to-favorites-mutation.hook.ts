@@ -11,9 +11,9 @@ const useAddToFavoritesMutation = () => {
 
   return useMutation({
     mutationFn: (product: {
-      brandId: number;
-      brandName: string;
-      categoryId: number;
+      brandId?: number;
+      brandName?: string;
+      categoryId?: number;
       categoryName?: string;
       sku: string;
       subCategoryId?: number;

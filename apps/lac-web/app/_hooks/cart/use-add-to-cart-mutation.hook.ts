@@ -25,7 +25,7 @@ const useAddToCartMutation = () => {
       );
 
       // If not in stock
-      if (availability?.[0].status !== "inStock") {
+      if (!!availability?.[0] && availability?.[0].status !== "inStock") {
         throw new Error("Product not in stock");
       }
 

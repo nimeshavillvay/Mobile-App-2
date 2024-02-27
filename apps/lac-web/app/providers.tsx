@@ -15,7 +15,7 @@ import {
 } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { ReactQueryStreamedHydration } from "@tanstack/react-query-next-experimental";
-import { useRef, useState, type ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import { CookiesProvider } from "react-cookie";
 import { Toaster } from "./_components/ui/toaster";
 import useLogout from "./_hooks/account/use-logout.hook";
@@ -42,7 +42,7 @@ const Providers = ({ children }: ProvidersProps) => {
 export default Providers;
 
 const ReactQueryProvider = ({ children }: { children: ReactNode }) => {
-  const retryRef = useRef(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [cookies, setCookies] = useCookies();
   const logout = useLogout();
 
@@ -68,8 +68,8 @@ const ReactQueryProvider = ({ children }: { children: ReactNode }) => {
         queryCache: new QueryCache({
           onError: async () => {
             // Refresh the account token
-            if (!retryRef.current) {
-              retryRef.current = true;
+            if (!isRefreshing) {
+              setIsRefreshing(true);
 
               if (
                 // Temporarily disable check due to this error
@@ -94,7 +94,7 @@ const ReactQueryProvider = ({ children }: { children: ReactNode }) => {
                 logout();
               }
 
-              retryRef.current = false;
+              setIsRefreshing(false);
             }
           },
         }),

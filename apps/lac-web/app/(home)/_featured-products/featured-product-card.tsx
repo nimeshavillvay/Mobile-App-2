@@ -164,7 +164,7 @@ const FeaturedProductCard = ({
                 />
 
                 <button
-                  className="bg-brand-primary font-wurth flex flex-1 flex-row items-center justify-between rounded-sm p-1.5 font-extrabold uppercase text-white"
+                  className="bg-brand-primary font-wurth flex flex-1 flex-row items-center justify-center rounded-sm p-1.5 font-extrabold uppercase text-white"
                   type="submit"
                 >
                   <AddToCartIcon />
@@ -198,7 +198,7 @@ const FeaturedProductCard = ({
           ) : (
             <button
               onClick={() => setOpenLoginDialog(true)}
-              className="bg-brand-primary font-wurth w-full rounded p-2 text-base uppercase text-white"
+              className="bg-brand-primary font-wurth w-full rounded p-2 text-base font-extrabold uppercase text-white"
               disabled={accountListQuery.isLoading}
             >
               Login to buy

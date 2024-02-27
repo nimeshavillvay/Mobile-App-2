@@ -3,6 +3,7 @@
 import VisuallyHidden from "@/_components/visually-hidden";
 import useAccountList from "@/_hooks/account/use-account-list.hook";
 import useAccountSelectorDialog from "@/_hooks/account/use-account-selector-dialog.hook";
+import useSelectedAddress from "@/_hooks/account/use-selected-address.hook";
 import useCookies from "@/_hooks/storage/use-cookies.hook";
 import { ACCOUNT_NO_COOKIE, ADDRESS_ID_COOKIE } from "@/_lib/constants";
 import { cn } from "@/_utils/helpers";
@@ -16,6 +17,8 @@ const ShippingDetails = () => {
     (state) => state.setOpen,
   );
 
+  const address = useSelectedAddress();
+
   if (
     !accountListQuery.data ||
     !cookies[ACCOUNT_NO_COOKIE] ||
@@ -23,13 +26,6 @@ const ShippingDetails = () => {
   ) {
     return null;
   }
-
-  const account = accountListQuery.data.accounts.find(
-    (account) => parseInt(account["account-no"]) === cookies[ACCOUNT_NO_COOKIE],
-  );
-  const address = account?.addresses.find(
-    (address) => parseInt(address["address-id"]) === cookies[ADDRESS_ID_COOKIE],
-  );
 
   return (
     <div className="bg-brand-tertiary">
