@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@/_utils/helpers";
+import { cn } from "@/old/_utils/helpers";
 import { atom, Provider, useAtomValue, useSetAtom } from "jotai";
 import Link from "next/link";
 import { usePathname } from "next/navigation";

@@ -1,6 +1,6 @@
 "use client";
 
-import { cn, getMediaUrl } from "@/_utils/helpers";
+import { cn, getMediaUrl } from "@/old/_utils/helpers";
 import { EmblaCarouselType } from "embla-carousel";
 import useEmblaCarousel from "embla-carousel-react";
 import Image from "next/image";

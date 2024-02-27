@@ -1,17 +1,17 @@
 "use client";
 
-import CheckboxList from "@/_components/checkbox-list";
+import CheckboxList from "@/old/_components/checkbox-list";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/_components/ui/accordion";
-import { FILTERS_QUERY_PREFIX } from "@/_lib/constants";
+} from "@/old/_components/ui/accordion";
+import { FILTERS_QUERY_PREFIX } from "@/old/_lib/constants";
 import {
   toggleCheckboxInSearchparams,
   updateSearchParams,
-} from "@/_utils/client-helpers";
+} from "@/old/_utils/client-helpers";
 import { type CheckedState } from "@radix-ui/react-checkbox";
 import { type ReadonlyURLSearchParams } from "next/navigation";
 import type { FilterSection } from "./types";

@@ -1,4 +1,4 @@
-import { getMediaUrl } from "@/_utils/helpers";
+import { getMediaUrl } from "@/old/_utils/helpers";
 import Image from "next/image";
 import { getProduct } from "../../apis";
 import AddItemForm from "./add-item-form";

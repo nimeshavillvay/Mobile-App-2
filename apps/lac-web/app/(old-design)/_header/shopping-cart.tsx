@@ -1,8 +1,8 @@
 "use client";
 
-import VisuallyHidden from "@/_components/visually-hidden";
-import useSimulationCheckout from "@/_hooks/cart/use-simulation-checkout.hook";
-import { formatNumberToPrice } from "@/_utils/helpers";
+import VisuallyHidden from "@/old/_components/visually-hidden";
+import useSimulationCheckout from "@/old/_hooks/cart/use-simulation-checkout.hook";
+import { formatNumberToPrice } from "@/old/_utils/helpers";
 import Link from "next/link";
 import { MdOutlineShoppingCart } from "react-icons/md";
 

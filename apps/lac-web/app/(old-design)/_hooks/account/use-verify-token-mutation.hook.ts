@@ -1,4 +1,4 @@
-import { verifyAccountToken } from "@/_lib/shared-apis";
+import { verifyAccountToken } from "@/old/_lib/shared-apis";
 import { useMutation } from "@tanstack/react-query";
 import useCookies from "../storage/use-cookies.hook";
 

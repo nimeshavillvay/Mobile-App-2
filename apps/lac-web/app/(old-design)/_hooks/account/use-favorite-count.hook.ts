@@ -1,4 +1,4 @@
-import { api } from "@/_lib/api";
+import { api } from "@/old/_lib/api";
 import { useQuery } from "@tanstack/react-query";
 import useCookies from "../storage/use-cookies.hook";
 

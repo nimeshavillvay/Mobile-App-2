@@ -1,5 +1,5 @@
-import { api } from "@/_lib/api";
-import { ACCOUNT_TOKEN_COOKIE } from "@/_lib/constants";
+import { api } from "@/old/_lib/api";
+import { ACCOUNT_TOKEN_COOKIE } from "@/old/_lib/constants";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import useVerifyTokenMutation from "../account/use-verify-token-mutation.hook";
 import useCookies from "../storage/use-cookies.hook";

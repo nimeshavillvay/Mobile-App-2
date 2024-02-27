@@ -1,6 +1,6 @@
-import Breadcrumbs from "@/_components/breadcrumbs";
-import Separator from "@/_components/separator";
-import Title from "@/_components/title";
+import Breadcrumbs from "@/old/_components/breadcrumbs";
+import Separator from "@/old/_components/separator";
+import Title from "@/old/_components/title";
 import { type ReactNode } from "react";
 import SideMenu from "./_side-menu";
 import Profile from "./profile";

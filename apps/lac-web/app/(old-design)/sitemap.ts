@@ -1,6 +1,6 @@
-import { BASE_URL, SITEMAP_SIZE } from "@/_lib/constants";
-import { getSitemapData } from "@/_lib/shared-server-apis";
-import { splitArrayIntoChunks } from "@/_utils/helpers";
+import { BASE_URL, SITEMAP_SIZE } from "@/old/_lib/constants";
+import { getSitemapData } from "@/old/_lib/shared-server-apis";
+import { splitArrayIntoChunks } from "@/old/_utils/helpers";
 import type { MetadataRoute } from "next";
 
 const STATIC_PATHS = [

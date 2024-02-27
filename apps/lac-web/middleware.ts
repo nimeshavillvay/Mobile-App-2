@@ -3,12 +3,12 @@ import {
   ACCOUNT_TOKEN_COOKIE,
   ADDRESS_ID_COOKIE,
   TOKEN_COOKIE,
-} from "@/_lib/constants";
+} from "@/old/_lib/constants";
 import {
   getAccountList,
   selectAccount,
   verifyAccountToken,
-} from "@/_lib/shared-apis";
+} from "@/old/_lib/shared-apis";
 import { NextResponse, type NextRequest } from "next/server";
 
 const redirectToHome = (request: NextRequest) => {

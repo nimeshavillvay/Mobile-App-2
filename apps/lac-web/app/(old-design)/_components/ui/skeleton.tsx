@@ -1,4 +1,4 @@
-import { cn } from "@/_utils/helpers";
+import { cn } from "@/old/_utils/helpers";
 
 function Skeleton({
   className,

@@ -1,6 +1,6 @@
-import Separator from "@/_components/separator";
-import Title from "@/_components/title";
-import VisuallyHidden from "@/_components/visually-hidden";
+import Separator from "@/old/_components/separator";
+import Title from "@/old/_components/title";
+import VisuallyHidden from "@/old/_components/visually-hidden";
 import type { Metadata } from "next";
 import Image from "next/image";
 import careersBanner from "./careers-banner.jpg";

@@ -1,12 +1,12 @@
 "use client";
 
-import useCookies from "@/_hooks/storage/use-cookies.hook";
-import { api } from "@/_lib/api";
+import useCookies from "@/old/_hooks/storage/use-cookies.hook";
+import { api } from "@/old/_lib/api";
 import {
   ACCOUNT_NO_COOKIE,
   ADDRESS_ID_COOKIE,
   TOKEN_COOKIE,
-} from "@/_lib/constants";
+} from "@/old/_lib/constants";
 import { ApiProvider } from "@repo/shared-logic/providers";
 import {
   QueryCache,

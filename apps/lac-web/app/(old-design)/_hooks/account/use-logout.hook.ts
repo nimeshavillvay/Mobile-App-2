@@ -3,7 +3,7 @@ import {
   ACCOUNT_TOKEN_COOKIE,
   ADDRESS_ID_COOKIE,
   TOKEN_COOKIE,
-} from "@/_lib/constants";
+} from "@/old/_lib/constants";
 import { usePathname, useRouter } from "next/navigation";
 import useCookies from "../storage/use-cookies.hook";
 

@@ -1,4 +1,4 @@
-import { ADDRESS_ID_COOKIE } from "@/_lib/constants";
+import { ADDRESS_ID_COOKIE } from "@/old/_lib/constants";
 import useCookies from "../storage/use-cookies.hook";
 import useSelectedAccount from "./use-selected-account.hook";
 

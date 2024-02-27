@@ -1,5 +1,5 @@
-import { api } from "@/_lib/api";
-import { ACCOUNT_TOKEN_COOKIE } from "@/_lib/constants";
+import { api } from "@/old/_lib/api";
+import { ACCOUNT_TOKEN_COOKIE } from "@/old/_lib/constants";
 import { useQuery } from "@tanstack/react-query";
 import useCookies from "../storage/use-cookies.hook";
 

@@ -1,10 +1,10 @@
-import ProductCardWithSkuSwitcher from "@/_components/product-card-with-sku-switcher";
-import Separator from "@/_components/separator";
-import Title from "@/_components/title";
-import VisuallyHidden from "@/_components/visually-hidden";
-import { api } from "@/_lib/api";
-import { DEFAULT_REVALIDATE } from "@/_lib/constants";
-import { getMediaUrl } from "@/_utils/helpers";
+import ProductCardWithSkuSwitcher from "@/old/_components/product-card-with-sku-switcher";
+import Separator from "@/old/_components/separator";
+import Title from "@/old/_components/title";
+import VisuallyHidden from "@/old/_components/visually-hidden";
+import { api } from "@/old/_lib/api";
+import { DEFAULT_REVALIDATE } from "@/old/_lib/constants";
+import { getMediaUrl } from "@/old/_utils/helpers";
 import Image from "next/image";
 import Link from "next/link";
 import {

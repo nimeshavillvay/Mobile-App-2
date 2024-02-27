@@ -1,7 +1,7 @@
 "use client";
 
-import Title from "@/_components/title";
-import VisuallyHidden from "@/_components/visually-hidden";
+import Title from "@/old/_components/title";
+import VisuallyHidden from "@/old/_components/visually-hidden";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as Label from "@radix-ui/react-label";
 import { useId } from "react";

@@ -1,9 +1,9 @@
 "use client";
 
-import { TableCell, TableRow } from "@/_components/ui/table";
-import VisuallyHidden from "@/_components/visually-hidden";
-import useAccountList from "@/_hooks/account/use-account-list.hook";
-import { getMediaUrl } from "@/_utils/helpers";
+import { TableCell, TableRow } from "@/old/_components/ui/table";
+import VisuallyHidden from "@/old/_components/visually-hidden";
+import useAccountList from "@/old/_hooks/account/use-account-list.hook";
+import { getMediaUrl } from "@/old/_utils/helpers";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import Link from "next/link";

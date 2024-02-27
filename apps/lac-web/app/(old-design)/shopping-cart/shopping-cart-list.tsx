@@ -1,7 +1,7 @@
 "use client";
 
-import { Input } from "@/_components/ui/input";
-import { Label } from "@/_components/ui/label";
+import { Input } from "@/old/_components/ui/input";
+import { Label } from "@/old/_components/ui/label";
 import {
   Table,
   TableBody,
@@ -9,10 +9,10 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/_components/ui/table";
-import VisuallyHidden from "@/_components/visually-hidden";
-import useSuspenseCart from "@/_hooks/cart/use-suspense-cart.hook";
-import { getMediaUrl } from "@/_utils/helpers";
+} from "@/old/_components/ui/table";
+import VisuallyHidden from "@/old/_components/visually-hidden";
+import useSuspenseCart from "@/old/_hooks/cart/use-suspense-cart.hook";
+import { getMediaUrl } from "@/old/_utils/helpers";
 import Image from "next/image";
 import Link from "next/link";
 import { useId } from "react";

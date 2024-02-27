@@ -3,7 +3,7 @@ import {
   ACCOUNT_TOKEN_COOKIE,
   ADDRESS_ID_COOKIE,
   TOKEN_COOKIE,
-} from "@/_lib/constants";
+} from "@/old/_lib/constants";
 import { useCookies as useReactCookies } from "react-cookie";
 
 const useCookies = () => {

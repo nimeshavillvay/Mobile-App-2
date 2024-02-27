@@ -1,13 +1,13 @@
 "use client";
 
-import { Label } from "@/_components/ui/label";
+import { Label } from "@/old/_components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/_components/ui/select";
+} from "@/old/_components/ui/select";
 import { useRouter } from "next/navigation";
 import { useEffect, useId } from "react";
 

@@ -1,23 +1,23 @@
 "use client";
 
-import AddToCartIcon from "@/_components/icons/add-to-cart";
-import AddToFavoritesIcon from "@/_components/icons/add-to-favorites";
-import FavoriteIcon from "@/_components/icons/favorite";
-import { Button } from "@/_components/ui/button";
-import { Input } from "@/_components/ui/input";
+import AddToCartIcon from "@/old/_components/icons/add-to-cart";
+import AddToFavoritesIcon from "@/old/_components/icons/add-to-favorites";
+import FavoriteIcon from "@/old/_components/icons/favorite";
+import { Button } from "@/old/_components/ui/button";
+import { Input } from "@/old/_components/ui/input";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/_components/ui/popover";
-import { TableCell } from "@/_components/ui/table";
-import VisuallyHidden from "@/_components/visually-hidden";
-import useAccountList from "@/_hooks/account/use-account-list.hook";
-import useLoginDialog from "@/_hooks/account/use-login-dialog.hook";
-import useAddToFavoritesMutation from "@/_hooks/product/use-add-to-favorites-mutation.hook";
-import useFavoriteSkus from "@/_hooks/product/use-favorite-skus.hook";
-import usePriceCalculation from "@/_hooks/product/use-price-calculation.hook";
-import usePriceCheck from "@/_hooks/product/use-price-check.hook";
+} from "@/old/_components/ui/popover";
+import { TableCell } from "@/old/_components/ui/table";
+import VisuallyHidden from "@/old/_components/visually-hidden";
+import useAccountList from "@/old/_hooks/account/use-account-list.hook";
+import useLoginDialog from "@/old/_hooks/account/use-login-dialog.hook";
+import useAddToFavoritesMutation from "@/old/_hooks/product/use-add-to-favorites-mutation.hook";
+import useFavoriteSkus from "@/old/_hooks/product/use-favorite-skus.hook";
+import usePriceCalculation from "@/old/_hooks/product/use-price-calculation.hook";
+import usePriceCheck from "@/old/_hooks/product/use-price-check.hook";
 import Link from "next/link";
 import { useId } from "react";
 import { UseFormHandleSubmit, UseFormRegister } from "react-hook-form";

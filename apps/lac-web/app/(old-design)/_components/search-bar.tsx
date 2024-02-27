@@ -1,8 +1,8 @@
 "use client";
 
-import Separator from "@/_components/separator";
-import VisuallyHidden from "@/_components/visually-hidden";
-import { cn } from "@/_utils/helpers";
+import Separator from "@/old/_components/separator";
+import VisuallyHidden from "@/old/_components/visually-hidden";
+import { cn } from "@/old/_utils/helpers";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as Form from "@radix-ui/react-form";
 import { useForm } from "react-hook-form";

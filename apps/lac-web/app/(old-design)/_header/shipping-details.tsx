@@ -1,12 +1,12 @@
 "use client";
 
-import VisuallyHidden from "@/_components/visually-hidden";
-import useAccountList from "@/_hooks/account/use-account-list.hook";
-import useAccountSelectorDialog from "@/_hooks/account/use-account-selector-dialog.hook";
-import useSelectedAddress from "@/_hooks/account/use-selected-address.hook";
-import useCookies from "@/_hooks/storage/use-cookies.hook";
-import { ACCOUNT_NO_COOKIE, ADDRESS_ID_COOKIE } from "@/_lib/constants";
-import { cn } from "@/_utils/helpers";
+import VisuallyHidden from "@/old/_components/visually-hidden";
+import useAccountList from "@/old/_hooks/account/use-account-list.hook";
+import useAccountSelectorDialog from "@/old/_hooks/account/use-account-selector-dialog.hook";
+import useSelectedAddress from "@/old/_hooks/account/use-selected-address.hook";
+import useCookies from "@/old/_hooks/storage/use-cookies.hook";
+import { ACCOUNT_NO_COOKIE, ADDRESS_ID_COOKIE } from "@/old/_lib/constants";
+import { cn } from "@/old/_utils/helpers";
 import { type ReactNode } from "react";
 import { MdSwapHoriz } from "react-icons/md";
 

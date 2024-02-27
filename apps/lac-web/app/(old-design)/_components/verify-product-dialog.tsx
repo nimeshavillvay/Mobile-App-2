@@ -6,7 +6,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from "@/_components/ui/dialog";
+} from "@/old/_components/ui/dialog";
 import {
   Form,
   FormControl,
@@ -15,7 +15,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/_components/ui/form";
+} from "@/old/_components/ui/form";
 import {
   Table,
   TableBody,
@@ -24,9 +24,9 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/_components/ui/table";
-import useSimulationCheckout from "@/_hooks/cart/use-simulation-checkout.hook";
-import usePriceCheck from "@/_hooks/product/use-price-check.hook";
+} from "@/old/_components/ui/table";
+import useSimulationCheckout from "@/old/_hooks/cart/use-simulation-checkout.hook";
+import usePriceCheck from "@/old/_hooks/product/use-price-check.hook";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import Link from "next/link";

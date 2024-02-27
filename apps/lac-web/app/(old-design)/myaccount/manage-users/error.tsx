@@ -1,6 +1,6 @@
 "use client";
 
-import Separator from "@/_components/separator";
+import Separator from "@/old/_components/separator";
 
 const ManageUsersError = () => {
   return (

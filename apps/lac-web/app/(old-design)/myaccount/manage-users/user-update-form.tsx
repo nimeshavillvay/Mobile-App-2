@@ -1,4 +1,4 @@
-import { Button } from "@/_components/ui/button";
+import { Button } from "@/old/_components/ui/button";
 import {
   Form,
   FormControl,
@@ -7,17 +7,17 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/_components/ui/form";
-import { Input } from "@/_components/ui/input";
+} from "@/old/_components/ui/form";
+import { Input } from "@/old/_components/ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/_components/ui/select";
-import VisuallyHidden from "@/_components/visually-hidden";
-import { Role } from "@/_lib/types";
+} from "@/old/_components/ui/select";
+import VisuallyHidden from "@/old/_components/visually-hidden";
+import { Role } from "@/old/_lib/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";

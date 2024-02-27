@@ -8,11 +8,11 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/_components/ui/form";
-import { Input } from "@/_components/ui/input";
-import VisuallyHidden from "@/_components/visually-hidden";
-import useSuspenseCart from "@/_hooks/cart/use-suspense-cart.hook";
-import useUpdateCartConfigMutation from "@/_hooks/cart/use-update-cart-config-mutation.hook";
+} from "@/old/_components/ui/form";
+import { Input } from "@/old/_components/ui/input";
+import VisuallyHidden from "@/old/_components/visually-hidden";
+import useSuspenseCart from "@/old/_hooks/cart/use-suspense-cart.hook";
+import useUpdateCartConfigMutation from "@/old/_hooks/cart/use-update-cart-config-mutation.hook";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";

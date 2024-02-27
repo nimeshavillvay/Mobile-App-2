@@ -1,5 +1,5 @@
-import Separator from "@/_components/separator";
-import Title from "@/_components/title";
+import Separator from "@/old/_components/separator";
+import Title from "@/old/_components/title";
 import type { Metadata } from "next";
 import Image from "next/image";
 import aboutBanner from "./about-banner.jpg";

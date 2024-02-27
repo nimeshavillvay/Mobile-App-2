@@ -1,4 +1,4 @@
-import { FILTERS_QUERY_PREFIX } from "@/_lib/constants";
+import { FILTERS_QUERY_PREFIX } from "@/old/_lib/constants";
 import { type CheckedState } from "@radix-ui/react-checkbox";
 import "client-only";
 import { type ReadonlyURLSearchParams } from "next/navigation";

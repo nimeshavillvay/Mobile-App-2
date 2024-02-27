@@ -1,11 +1,11 @@
 "use client";
 
-import useAccountList from "@/_hooks/account/use-account-list.hook";
-import useFavoriteCount from "@/_hooks/account/use-favorite-count.hook";
-import useLoginDialog from "@/_hooks/account/use-login-dialog.hook";
-import useLogout from "@/_hooks/account/use-logout.hook";
-import useCookies from "@/_hooks/storage/use-cookies.hook";
-import { ADDRESS_ID_COOKIE } from "@/_lib/constants";
+import useAccountList from "@/old/_hooks/account/use-account-list.hook";
+import useFavoriteCount from "@/old/_hooks/account/use-favorite-count.hook";
+import useLoginDialog from "@/old/_hooks/account/use-login-dialog.hook";
+import useLogout from "@/old/_hooks/account/use-logout.hook";
+import useCookies from "@/old/_hooks/storage/use-cookies.hook";
+import { ADDRESS_ID_COOKIE } from "@/old/_lib/constants";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import Link from "next/link";
 import { FaRegUser } from "react-icons/fa";

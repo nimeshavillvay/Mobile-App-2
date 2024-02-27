@@ -1,4 +1,4 @@
-import { getAccountList } from "@/_lib/shared-apis";
+import { getAccountList } from "@/old/_lib/shared-apis";
 import { useQuery } from "@tanstack/react-query";
 import useCookies from "../storage/use-cookies.hook";
 

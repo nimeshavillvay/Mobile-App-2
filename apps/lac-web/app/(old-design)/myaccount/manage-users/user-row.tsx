@@ -1,7 +1,7 @@
-import { Button } from "@/_components/ui/button";
-import { TableCell, TableRow } from "@/_components/ui/table";
-import { Role } from "@/_lib/types";
-import { cn } from "@/_utils/helpers";
+import { Button } from "@/old/_components/ui/button";
+import { TableCell, TableRow } from "@/old/_components/ui/table";
+import { Role } from "@/old/_lib/types";
+import { cn } from "@/old/_utils/helpers";
 import { useState } from "react";
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 import { UserProfile } from "./types";

@@ -1,25 +1,25 @@
 "use client";
 
-import FullscreenLoading from "@/_components/fullscreen-loading";
-import { Checkbox } from "@/_components/ui/checkbox";
+import FullscreenLoading from "@/old/_components/fullscreen-loading";
+import { Checkbox } from "@/old/_components/ui/checkbox";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@/_components/ui/dialog";
-import { Label } from "@/_components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/_components/ui/radio-group";
-import useAccountList from "@/_hooks/account/use-account-list.hook";
-import useAccountSelectorDialog from "@/_hooks/account/use-account-selector-dialog.hook";
-import useCookies from "@/_hooks/storage/use-cookies.hook";
+} from "@/old/_components/ui/dialog";
+import { Label } from "@/old/_components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/old/_components/ui/radio-group";
+import useAccountList from "@/old/_hooks/account/use-account-list.hook";
+import useAccountSelectorDialog from "@/old/_hooks/account/use-account-selector-dialog.hook";
+import useCookies from "@/old/_hooks/storage/use-cookies.hook";
 import {
   ACCOUNT_NO_COOKIE,
   ACCOUNT_TOKEN_COOKIE,
   ADDRESS_ID_COOKIE,
-} from "@/_lib/constants";
-import { selectAccount } from "@/_lib/shared-apis";
+} from "@/old/_lib/constants";
+import { selectAccount } from "@/old/_lib/shared-apis";
 import * as Accordion from "@radix-ui/react-accordion";
 import { useMutation } from "@tanstack/react-query";
 import { useEffect, useId, useState } from "react";

@@ -1,8 +1,8 @@
 "use client";
 
-import Title from "@/_components/title";
-import VisuallyHidden from "@/_components/visually-hidden";
-import { cn } from "@/_utils/helpers";
+import Title from "@/old/_components/title";
+import VisuallyHidden from "@/old/_components/visually-hidden";
+import { cn } from "@/old/_utils/helpers";
 import * as Tabs from "@radix-ui/react-tabs";
 import { type EmblaCarouselType } from "embla-carousel";
 import useEmblaCarousel from "embla-carousel-react";

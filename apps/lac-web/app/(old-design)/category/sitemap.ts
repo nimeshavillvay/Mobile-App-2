@@ -1,5 +1,5 @@
-import { BASE_URL } from "@/_lib/constants";
-import { getSitemapData } from "@/_lib/shared-server-apis";
+import { BASE_URL } from "@/old/_lib/constants";
+import { getSitemapData } from "@/old/_lib/shared-server-apis";
 import type { MetadataRoute } from "next";
 
 const sitemap = async (): Promise<MetadataRoute.Sitemap> => {

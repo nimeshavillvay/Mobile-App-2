@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import CheckboxList from "@/_components/checkbox-list";
+import CheckboxList from "@/old/_components/checkbox-list";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/_components/ui/accordion";
+} from "@/old/_components/ui/accordion";
 import dayjs from "dayjs";
 import useMyAccountFilters from "./use-my-account-filters.hook";
 

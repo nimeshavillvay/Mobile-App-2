@@ -1,4 +1,4 @@
-import { api } from "@/_lib/api";
+import { api } from "@/old/_lib/api";
 import RelatedProductsTable from "./related-products-table";
 import type { RelatedProduct } from "./types";
 

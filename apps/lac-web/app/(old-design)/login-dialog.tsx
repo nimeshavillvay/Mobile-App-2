@@ -1,7 +1,7 @@
 "use client";
 
-import FullscreenLoading from "@/_components/fullscreen-loading";
-import { Checkbox } from "@/_components/ui/checkbox";
+import FullscreenLoading from "@/old/_components/fullscreen-loading";
+import { Checkbox } from "@/old/_components/ui/checkbox";
 import {
   Dialog,
   DialogClose,
@@ -9,7 +9,7 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@/_components/ui/dialog";
+} from "@/old/_components/ui/dialog";
 import {
   Form,
   FormControl,
@@ -18,14 +18,14 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/_components/ui/form";
-import { Input } from "@/_components/ui/input";
-import { Label } from "@/_components/ui/label";
-import VisuallyHidden from "@/_components/visually-hidden";
-import useAccountSelectorDialog from "@/_hooks/account/use-account-selector-dialog.hook";
-import useLoginDialog from "@/_hooks/account/use-login-dialog.hook";
-import useCookies from "@/_hooks/storage/use-cookies.hook";
-import { api } from "@/_lib/api";
+} from "@/old/_components/ui/form";
+import { Input } from "@/old/_components/ui/input";
+import { Label } from "@/old/_components/ui/label";
+import VisuallyHidden from "@/old/_components/visually-hidden";
+import useAccountSelectorDialog from "@/old/_hooks/account/use-account-selector-dialog.hook";
+import useLoginDialog from "@/old/_hooks/account/use-login-dialog.hook";
+import useCookies from "@/old/_hooks/storage/use-cookies.hook";
+import { api } from "@/old/_lib/api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { JSEncrypt } from "jsencrypt";

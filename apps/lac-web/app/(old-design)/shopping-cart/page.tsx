@@ -1,6 +1,6 @@
-import Separator from "@/_components/separator";
-import Title from "@/_components/title";
-import { ACCOUNT_TOKEN_COOKIE } from "@/_lib/constants";
+import Separator from "@/old/_components/separator";
+import Title from "@/old/_components/title";
+import { ACCOUNT_TOKEN_COOKIE } from "@/old/_lib/constants";
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";

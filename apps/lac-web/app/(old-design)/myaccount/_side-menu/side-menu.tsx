@@ -5,9 +5,9 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/_components/ui/accordion";
-import useLogout from "@/_hooks/account/use-logout.hook";
-import { cn } from "@/_utils/helpers";
+} from "@/old/_components/ui/accordion";
+import useLogout from "@/old/_hooks/account/use-logout.hook";
+import { cn } from "@/old/_utils/helpers";
 import { cva } from "class-variance-authority";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";

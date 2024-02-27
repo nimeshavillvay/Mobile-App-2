@@ -1,6 +1,6 @@
 "use client";
 
-import type { Category } from "@/_lib/types";
+import type { Category } from "@/old/_lib/types";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import Link from "next/link";
 import { MdOutlineMenu } from "react-icons/md";

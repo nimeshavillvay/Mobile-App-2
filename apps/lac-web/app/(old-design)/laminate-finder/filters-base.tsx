@@ -1,17 +1,17 @@
 "use client";
 
-import CheckboxList from "@/_components/checkbox-list";
+import CheckboxList from "@/old/_components/checkbox-list";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/_components/ui/accordion";
-import { Label } from "@/_components/ui/label";
-import VisuallyHidden from "@/_components/visually-hidden";
-import { FILTERS_QUERY_PREFIX } from "@/_lib/constants";
-import { toggleCheckboxInSearchparams } from "@/_utils/client-helpers";
-import { cn, getMediaUrl } from "@/_utils/helpers";
+} from "@/old/_components/ui/accordion";
+import { Label } from "@/old/_components/ui/label";
+import VisuallyHidden from "@/old/_components/visually-hidden";
+import { FILTERS_QUERY_PREFIX } from "@/old/_lib/constants";
+import { toggleCheckboxInSearchparams } from "@/old/_utils/client-helpers";
+import { cn, getMediaUrl } from "@/old/_utils/helpers";
 import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
 import { type CheckedState } from "@radix-ui/react-checkbox";
 import { Check } from "lucide-react";

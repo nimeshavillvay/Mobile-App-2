@@ -1,5 +1,5 @@
-import { ACCOUNT_TOKEN_COOKIE } from "@/_lib/constants";
-import { checkAvailability } from "@/_lib/shared-apis";
+import { ACCOUNT_TOKEN_COOKIE } from "@/old/_lib/constants";
+import { checkAvailability } from "@/old/_lib/shared-apis";
 import { useQuery } from "@tanstack/react-query";
 import useCookies from "../storage/use-cookies.hook";
 

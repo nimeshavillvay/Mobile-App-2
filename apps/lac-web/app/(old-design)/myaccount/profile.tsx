@@ -1,10 +1,10 @@
 "use client";
 
-import Separator from "@/_components/separator";
-import useAccountList from "@/_hooks/account/use-account-list.hook";
-import useAccountSelectorDialog from "@/_hooks/account/use-account-selector-dialog.hook";
-import useCookies from "@/_hooks/storage/use-cookies.hook";
-import { ACCOUNT_NO_COOKIE, ADDRESS_ID_COOKIE } from "@/_lib/constants";
+import Separator from "@/old/_components/separator";
+import useAccountList from "@/old/_hooks/account/use-account-list.hook";
+import useAccountSelectorDialog from "@/old/_hooks/account/use-account-selector-dialog.hook";
+import useCookies from "@/old/_hooks/storage/use-cookies.hook";
+import { ACCOUNT_NO_COOKIE, ADDRESS_ID_COOKIE } from "@/old/_lib/constants";
 import Image from "next/image";
 import Link from "next/link";
 import { FaArrowRight } from "react-icons/fa";

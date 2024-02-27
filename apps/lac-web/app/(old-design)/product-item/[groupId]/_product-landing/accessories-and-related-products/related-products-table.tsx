@@ -7,8 +7,8 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/_components/ui/table";
-import useAccountList from "@/_hooks/account/use-account-list.hook";
+} from "@/old/_components/ui/table";
+import useAccountList from "@/old/_hooks/account/use-account-list.hook";
 import { Fragment } from "react";
 import RelatedProductRow from "./related-product-row";
 import type { RelatedProduct } from "./types";

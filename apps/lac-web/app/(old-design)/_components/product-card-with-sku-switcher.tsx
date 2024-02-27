@@ -4,15 +4,15 @@ import {
   ProductCardActions,
   ProductCardContainer,
   ProductCardDetails,
-} from "@/_components/product-card";
+} from "@/old/_components/product-card";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/_components/ui/select";
-import { getMediaUrl } from "@/_utils/helpers";
+} from "@/old/_components/ui/select";
+import { getMediaUrl } from "@/old/_utils/helpers";
 import Link from "next/link";
 import { useState, type ComponentProps } from "react";
 

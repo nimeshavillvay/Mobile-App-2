@@ -21,7 +21,8 @@
       }
     ],
     "paths": {
-      "@/*": ["./app/*", "./app/(old-design)/*", "./app/(new-design)/*"]
+      "@/*": ["./app/*"],
+      "@/old/*": ["./app/(old-design)/*"]
     }
   },
   "include": [

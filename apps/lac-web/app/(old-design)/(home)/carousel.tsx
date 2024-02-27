@@ -1,7 +1,7 @@
 "use client";
 
-import VisuallyHidden from "@/_components/visually-hidden";
-import { cn, getMediaUrl } from "@/_utils/helpers";
+import VisuallyHidden from "@/old/_components/visually-hidden";
+import { cn, getMediaUrl } from "@/old/_utils/helpers";
 import { type EmblaCarouselType } from "embla-carousel";
 import Autoplay from "embla-carousel-autoplay";
 import useEmblaCarousel from "embla-carousel-react";

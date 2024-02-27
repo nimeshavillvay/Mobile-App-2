@@ -1,12 +1,12 @@
 "use client";
 
-import Separator from "@/_components/separator";
-import { Button } from "@/_components/ui/button";
+import Separator from "@/old/_components/separator";
+import { Button } from "@/old/_components/ui/button";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "@/_components/ui/collapsible";
+} from "@/old/_components/ui/collapsible";
 import {
   Table,
   TableBody,
@@ -15,9 +15,9 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/_components/ui/table";
-import VisuallyHidden from "@/_components/visually-hidden";
-import type { Role } from "@/_lib/types";
+} from "@/old/_components/ui/table";
+import VisuallyHidden from "@/old/_components/visually-hidden";
+import type { Role } from "@/old/_lib/types";
 import { useState } from "react";
 import {
   MdKeyboardArrowDown,

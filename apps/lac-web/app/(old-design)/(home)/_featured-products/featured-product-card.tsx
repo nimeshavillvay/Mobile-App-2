@@ -1,22 +1,22 @@
-import AddToCartIcon from "@/_components/icons/add-to-cart";
-import AddToFavoritesIcon from "@/_components/icons/add-to-favorites";
-import FavoriteIcon from "@/_components/icons/favorite";
+import AddToCartIcon from "@/old/_components/icons/add-to-cart";
+import AddToFavoritesIcon from "@/old/_components/icons/add-to-favorites";
+import FavoriteIcon from "@/old/_components/icons/favorite";
 import {
   ProductCardActions,
   ProductCardContainer,
   ProductCardDetails,
-} from "@/_components/product-card";
-import { Input } from "@/_components/ui/input";
-import { Skeleton } from "@/_components/ui/skeleton";
-import VerifyProductDialog from "@/_components/verify-product-dialog";
-import VisuallyHidden from "@/_components/visually-hidden";
-import useAccountList from "@/_hooks/account/use-account-list.hook";
-import useLoginDialog from "@/_hooks/account/use-login-dialog.hook";
-import useAddToCartMutation from "@/_hooks/cart/use-add-to-cart-mutation.hook";
-import useAddToFavoritesMutation from "@/_hooks/product/use-add-to-favorites-mutation.hook";
-import useFavoriteSkus from "@/_hooks/product/use-favorite-skus.hook";
-import usePriceCalculation from "@/_hooks/product/use-price-calculation.hook";
-import { cn, formatNumberToPrice, getMediaUrl } from "@/_utils/helpers";
+} from "@/old/_components/product-card";
+import { Input } from "@/old/_components/ui/input";
+import { Skeleton } from "@/old/_components/ui/skeleton";
+import VerifyProductDialog from "@/old/_components/verify-product-dialog";
+import VisuallyHidden from "@/old/_components/visually-hidden";
+import useAccountList from "@/old/_hooks/account/use-account-list.hook";
+import useLoginDialog from "@/old/_hooks/account/use-login-dialog.hook";
+import useAddToCartMutation from "@/old/_hooks/cart/use-add-to-cart-mutation.hook";
+import useAddToFavoritesMutation from "@/old/_hooks/product/use-add-to-favorites-mutation.hook";
+import useFavoriteSkus from "@/old/_hooks/product/use-favorite-skus.hook";
+import usePriceCalculation from "@/old/_hooks/product/use-price-calculation.hook";
+import { cn, formatNumberToPrice, getMediaUrl } from "@/old/_utils/helpers";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useId, useState } from "react";

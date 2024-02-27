@@ -1,15 +1,15 @@
 "use client";
 
-import Pagination from "@/_components/pagination";
-import { Label } from "@/_components/ui/label";
+import Pagination from "@/old/_components/pagination";
+import { Label } from "@/old/_components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/_components/ui/select";
-import { Skeleton } from "@/_components/ui/skeleton";
+} from "@/old/_components/ui/select";
+import { Skeleton } from "@/old/_components/ui/skeleton";
 import { type ReadonlyURLSearchParams } from "next/navigation";
 import { useId } from "react";
 import { PAGE_SIZES, SORTING_TYPES } from "./constants";

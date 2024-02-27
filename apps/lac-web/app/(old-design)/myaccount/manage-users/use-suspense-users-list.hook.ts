@@ -1,4 +1,4 @@
-import { api } from "@/_lib/api";
+import { api } from "@/old/_lib/api";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import type { ApproveContact, ManageContact } from "./types";
 

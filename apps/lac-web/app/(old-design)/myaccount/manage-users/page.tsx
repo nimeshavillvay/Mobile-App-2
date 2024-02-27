@@ -1,6 +1,6 @@
-import Separator from "@/_components/separator";
-import { ACCOUNT_TOKEN_COOKIE } from "@/_lib/constants";
-import { getJobRoles } from "@/_lib/shared-server-apis";
+import Separator from "@/old/_components/separator";
+import { ACCOUNT_TOKEN_COOKIE } from "@/old/_lib/constants";
+import { getJobRoles } from "@/old/_lib/shared-server-apis";
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { MdAccountBox } from "react-icons/md";

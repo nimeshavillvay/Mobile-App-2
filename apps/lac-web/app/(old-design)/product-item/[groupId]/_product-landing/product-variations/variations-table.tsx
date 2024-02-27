@@ -1,21 +1,21 @@
 "use client";
 
-import { Label } from "@/_components/ui/label";
+import { Label } from "@/old/_components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/_components/ui/select";
+} from "@/old/_components/ui/select";
 import {
   Table,
   TableBody,
   TableHead,
   TableHeader,
   TableRow,
-} from "@/_components/ui/table";
-import useAccountList from "@/_hooks/account/use-account-list.hook";
+} from "@/old/_components/ui/table";
+import useAccountList from "@/old/_hooks/account/use-account-list.hook";
 import { useId, useState } from "react";
 import { MdClose } from "react-icons/md";
 import type { Attribute, Variant } from "../types";

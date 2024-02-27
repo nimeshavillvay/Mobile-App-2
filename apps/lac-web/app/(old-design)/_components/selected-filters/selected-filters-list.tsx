@@ -1,8 +1,8 @@
 "use client";
 
-import { FILTERS_QUERY_PREFIX } from "@/_lib/constants";
-import { updateSearchParams } from "@/_utils/client-helpers";
-import { cn } from "@/_utils/helpers";
+import { FILTERS_QUERY_PREFIX } from "@/old/_lib/constants";
+import { updateSearchParams } from "@/old/_utils/client-helpers";
+import { cn } from "@/old/_utils/helpers";
 import { useSearchParams } from "next/navigation";
 import { type ComponentProps } from "react";
 import { MdClose } from "react-icons/md";

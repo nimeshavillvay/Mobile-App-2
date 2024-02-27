@@ -1,5 +1,5 @@
-import Separator from "@/_components/separator";
-import { Skeleton } from "@/_components/ui/skeleton";
+import Separator from "@/old/_components/separator";
+import { Skeleton } from "@/old/_components/ui/skeleton";
 import {
   Table,
   TableBody,
@@ -7,7 +7,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/_components/ui/table";
+} from "@/old/_components/ui/table";
 import { MdAccountBox } from "react-icons/md";
 
 const ManageUsersLoading = () => {

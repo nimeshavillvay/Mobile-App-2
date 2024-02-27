@@ -1,7 +1,7 @@
 "use client";
 
-import { TableCell, TableRow } from "@/_components/ui/table";
-import useAccountList from "@/_hooks/account/use-account-list.hook";
+import { TableCell, TableRow } from "@/old/_components/ui/table";
+import useAccountList from "@/old/_hooks/account/use-account-list.hook";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";

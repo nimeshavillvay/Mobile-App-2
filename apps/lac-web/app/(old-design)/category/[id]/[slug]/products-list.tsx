@@ -1,9 +1,9 @@
 "use client";
 
-import ProductCardWithSkuSwitcher from "@/_components/product-card-with-sku-switcher";
-import { FILTERS_QUERY_PREFIX, QUERY_KEYS } from "@/_lib/constants";
-import { updateSearchParams } from "@/_utils/client-helpers";
-import { getMediaUrl } from "@/_utils/helpers";
+import ProductCardWithSkuSwitcher from "@/old/_components/product-card-with-sku-switcher";
+import { FILTERS_QUERY_PREFIX, QUERY_KEYS } from "@/old/_lib/constants";
+import { updateSearchParams } from "@/old/_utils/client-helpers";
+import { getMediaUrl } from "@/old/_utils/helpers";
 import { useSearchParams } from "next/navigation";
 import { PAGE_SIZES, SORTING_TYPES } from "./constants";
 import ProductsListSelectors from "./products-list-selectors";

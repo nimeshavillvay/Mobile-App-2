@@ -1,8 +1,8 @@
 "use client";
 
-import Separator from "@/_components/separator";
-import useAccountList from "@/_hooks/account/use-account-list.hook";
-import { cn } from "@/_utils/helpers";
+import Separator from "@/old/_components/separator";
+import useAccountList from "@/old/_hooks/account/use-account-list.hook";
+import { cn } from "@/old/_utils/helpers";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Fragment } from "react";

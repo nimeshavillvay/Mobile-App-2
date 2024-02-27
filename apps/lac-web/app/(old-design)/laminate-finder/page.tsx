@@ -1,6 +1,6 @@
-import Breadcrumbs from "@/_components/breadcrumbs";
-import { api } from "@/_lib/api";
-import { DEFAULT_REVALIDATE } from "@/_lib/constants";
+import Breadcrumbs from "@/old/_components/breadcrumbs";
+import { api } from "@/old/_lib/api";
+import { DEFAULT_REVALIDATE } from "@/old/_lib/constants";
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import Filters from "./filters";

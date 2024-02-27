@@ -1,4 +1,4 @@
-import { ACCOUNT_NO_COOKIE } from "@/_lib/constants";
+import { ACCOUNT_NO_COOKIE } from "@/old/_lib/constants";
 import useCookies from "../storage/use-cookies.hook";
 import useAccountList from "./use-account-list.hook";
 

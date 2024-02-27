@@ -1,7 +1,7 @@
-import { useToast } from "@/_components/ui/use-toast";
-import { api } from "@/_lib/api";
-import { ACCOUNT_TOKEN_COOKIE } from "@/_lib/constants";
-import { checkAvailability } from "@/_lib/shared-apis";
+import { useToast } from "@/old/_components/ui/use-toast";
+import { api } from "@/old/_lib/api";
+import { ACCOUNT_TOKEN_COOKIE } from "@/old/_lib/constants";
+import { checkAvailability } from "@/old/_lib/shared-apis";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import useCookies from "../storage/use-cookies.hook";
 

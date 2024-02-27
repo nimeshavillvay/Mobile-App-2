@@ -1,17 +1,17 @@
-import Breadcrumbs from "@/_components/breadcrumbs";
-import ErrorBoundary from "@/_components/error-boundary";
+import Breadcrumbs from "@/old/_components/breadcrumbs";
+import ErrorBoundary from "@/old/_components/error-boundary";
 import {
   ProductCardActions,
   ProductCardContainer,
   ProductCardDetailsSkeleton,
-} from "@/_components/product-card";
-import SelectedFilters from "@/_components/selected-filters";
-import Separator from "@/_components/separator";
-import { Skeleton } from "@/_components/ui/skeleton";
-import { api } from "@/_lib/api";
-import { DEFAULT_REVALIDATE } from "@/_lib/constants";
-import { getBreadcrumbs } from "@/_lib/shared-server-apis";
-import { getMediaUrl } from "@/_utils/helpers";
+} from "@/old/_components/product-card";
+import SelectedFilters from "@/old/_components/selected-filters";
+import Separator from "@/old/_components/separator";
+import { Skeleton } from "@/old/_components/ui/skeleton";
+import { api } from "@/old/_lib/api";
+import { DEFAULT_REVALIDATE } from "@/old/_lib/constants";
+import { getBreadcrumbs } from "@/old/_lib/shared-server-apis";
+import { getMediaUrl } from "@/old/_utils/helpers";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
