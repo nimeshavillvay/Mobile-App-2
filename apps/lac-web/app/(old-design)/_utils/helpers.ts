@@ -9,7 +9,7 @@ export const cn = (...args: ClassValue[]) => {
 };
 
 export const getMediaUrl = (path: string) => {
-  return `${process.env.NEXT_PUBLIC_WURTH_LAC_API}/pim${path}`;
+  return `${process.env.NEXT_PUBLIC_WURTH_LAC_OLD_API}/pim${path}`;
 };
 
 export const formatNumberToPrice = (value: number) => {
