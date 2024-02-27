@@ -4,10 +4,48 @@ This package contains base components with minimal styling that can be imported 
 
 ## Usage
 
-First import the base CSS file.
+First add `postcss-import` to you PostCSS config and make sure it the first plugin.
 
-```typescript
-import "@repo/web-ui/styles.css";
+```js
+module.exports = {
+  plugins: {
+    "postcss-import": {},
+    // ...
+  },
+};
+```
+
+Then add some additional configuration so that `postcss-import` package can correctly resolve the path of the CSS file.
+
+```js
+/* eslint-disable @typescript-eslint/no-var-requires */
+const path = require("path");
+
+module.exports = {
+  plugins: {
+    "postcss-import": {
+      resolve: (importPath) => {
+        if (importPath.startsWith("@repo/web-ui")) {
+          return path.resolve(
+            __dirname,
+            "../../packages/web-ui/dist/index.css",
+          );
+        }
+        return importPath;
+      },
+    },
+    // ...
+  },
+};
+```
+
+After that, import the CSS file at the very top of the global CSS file.
+
+```css
+@import "@repo/web-ui/styles.css";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 ```
 
 Then import the required components.
