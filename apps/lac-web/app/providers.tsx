@@ -1,13 +1,11 @@
 "use client";
 
 import useCookies from "@/old/_hooks/storage/use-cookies.hook";
-import { api } from "@/old/_lib/api";
 import {
   ACCOUNT_NO_COOKIE,
   ADDRESS_ID_COOKIE,
   TOKEN_COOKIE,
 } from "@/old/_lib/constants";
-import { ApiProvider } from "@repo/shared-logic/providers";
 import {
   QueryCache,
   QueryClient,
@@ -17,9 +15,8 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { ReactQueryStreamedHydration } from "@tanstack/react-query-next-experimental";
 import { useState, type ReactNode } from "react";
 import { CookiesProvider } from "react-cookie";
-import { Toaster } from "./_components/ui/toaster";
-import useLogout from "./_hooks/account/use-logout.hook";
-import { selectAccount } from "./_lib/shared-apis";
+import useLogout from "./(old-design)/_hooks/account/use-logout.hook";
+import { selectAccount } from "./(old-design)/_lib/shared-apis";
 
 type ProvidersProps = {
   children: ReactNode;
@@ -28,13 +25,7 @@ type ProvidersProps = {
 const Providers = ({ children }: ProvidersProps) => {
   return (
     <CookiesProvider>
-      <ApiProvider kyInstance={api}>
-        <ReactQueryProvider>
-          {children}
-
-          <Toaster />
-        </ReactQueryProvider>
-      </ApiProvider>
+      <ReactQueryProvider>{children}</ReactQueryProvider>
     </CookiesProvider>
   );
 };

@@ -1,66 +1,27 @@
-import { type Metadata } from "next";
-import localFont from "next/font/local";
-import NextTopLoader from "nextjs-toploader";
 import { type ReactNode } from "react";
+import { Toaster } from "./_components/ui/toaster";
 import Footer from "./_footer";
 import Header from "./_header";
-import { cn } from "./_utils/helpers";
 import AccountSelectorDialog from "./account-selector-dialog";
-import "./globals.css";
 import LoginDialog from "./login-dialog";
-import Providers from "./providers";
 
-const wurth = localFont({
-  src: [
-    {
-      path: "./wuerth-bold.woff2",
-      weight: "700",
-    },
-    {
-      path: "./wuerth-extrabold-cond.woff2",
-      weight: "800",
-    },
-  ],
-  variable: "--wurth-font",
-  display: "swap",
-});
-
-export const metadata: Metadata = {
-  title: {
-    default: "Wurth Louis and Company",
-    template: "%s | Wurth Louis and Company",
-  },
-};
-
-const RootLayout = ({ children }: { children: ReactNode }) => {
+const OldDesignRootLayout = ({ children }: { children: ReactNode }) => {
   return (
-    <html lang="en" className={cn("h-full scroll-smooth", wurth.variable)}>
-      {!!process.env.NEXT_PUBLIC_WURTH_LAC_OLD_API && (
-        <head>
-          {/* Preconnect to the API */}
-          <link
-            rel="preconnect"
-            href={process.env.NEXT_PUBLIC_WURTH_LAC_OLD_API}
-          />
-        </head>
-      )}
+    <>
+      <Header />
 
-      <body className="font-arial flex h-full flex-col justify-between text-[15px] leading-5 antialiased">
-        <NextTopLoader showSpinner={false} color="#cc0000" />
+      <main className="full-bleed-wrapper old-design-text-base flex-1">
+        {children}
+      </main>
 
-        <Providers>
-          <Header />
+      <Footer />
 
-          <main className="full-bleed-wrapper flex-1">{children}</main>
+      <Toaster />
 
-          <Footer />
-
-          <LoginDialog />
-          <AccountSelectorDialog />
-        </Providers>
-      </body>
-    </html>
+      <LoginDialog />
+      <AccountSelectorDialog />
+    </>
   );
 };
 
-export default RootLayout;
+export default OldDesignRootLayout;

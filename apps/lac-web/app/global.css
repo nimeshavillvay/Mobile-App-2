@@ -21,6 +21,10 @@
       grid-column: 2;
     }
   }
+
+  .old-design-text-base {
+    @apply font-arial text-[15px] leading-5;
+  }
 }
 
 @layer utilities {

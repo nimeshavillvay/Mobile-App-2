@@ -114,7 +114,7 @@ const LoginDialog = () => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="max-w-[360px]">
+      <DialogContent className="old-design-text-base max-w-[360px]">
         <DialogHeader>
           <DialogTitle>Sign In</DialogTitle>
 
