@@ -7,15 +7,13 @@ import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 import { UserProfile } from "./types";
 import UserUpdateForm from "./user-update-form";
 
-const UserRow = ({
-  user,
-  index,
-  jobRoles,
-}: {
+type UserRowProps = {
   user: UserProfile;
   index: number;
   jobRoles: Role[];
-}) => {
+};
+
+const UserRow = ({ user, index, jobRoles }: UserRowProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const getStatusClass = (status: string) => {

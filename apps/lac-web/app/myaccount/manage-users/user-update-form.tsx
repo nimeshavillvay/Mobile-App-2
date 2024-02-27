@@ -36,7 +36,11 @@ const updateUserSchema = z.object({
 
 type UpdateUserSchema = z.infer<typeof updateUserSchema>;
 
-const UserUpdateForm = ({ jobRoles }: { jobRoles: Role[] }) => {
+type UpdateUserProps = {
+  jobRoles: Role[];
+};
+
+const UserUpdateForm = ({ jobRoles }: UpdateUserProps) => {
   const form = useForm<UpdateUserSchema>({
     resolver: zodResolver(updateUserSchema),
     values: {
