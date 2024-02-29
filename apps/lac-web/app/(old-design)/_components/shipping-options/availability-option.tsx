@@ -10,14 +10,14 @@ import {
   SelectValue,
 } from "@/old/_components/ui/select";
 import useSelectedAddress from "@/old/_hooks/account/use-selected-address.hook";
-import { Availability } from "@/old/_lib/types";
-import { cn } from "@/old/_utils/helpers";
-import { AVAILABLE_AVAILABILITY, BACK_ORDERED_AVAILABILITY } from "./constants";
 import {
-  getAvailabilityTypeLabel,
-  getShippingMethods,
-  getStatusLabel,
-} from "./helpers";
+  AVAILABILITY_STATUSES,
+  AVAILABLE_AVAILABILITY,
+  BACK_ORDERED_AVAILABILITY,
+} from "@/old/_lib/constants";
+import { Availability } from "@/old/_lib/types";
+import { cn, getStatusLabel } from "@/old/_utils/helpers";
+import { getAvailabilityTypeLabel, getShippingMethods } from "./helpers";
 
 type AvailabilityOption = {
   availability: Availability;
@@ -50,8 +50,10 @@ const AvailabilityOption = ({ availability }: AvailabilityOption) => {
     <>
       <div
         className={cn("mb-2.5 mt-3 font-bold", {
-          "text-brand-success": availability.status === "inStock",
-          "text-brand-primary": availability.status === "notInStock",
+          "text-brand-success":
+            availability.status === AVAILABILITY_STATUSES.IN_STOCK,
+          "text-brand-primary":
+            availability.status === AVAILABILITY_STATUSES.NOT_IN_STOCK,
         })}
       >
         {getStatusLabel(availability.status)}

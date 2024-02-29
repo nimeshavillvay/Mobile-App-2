@@ -1,3 +1,5 @@
+import type { UOM, UOMLabel } from "@/old/_lib/types";
+
 export type CarouselBanner = {
   id: number;
   slot: string;
@@ -23,8 +25,8 @@ export type FeaturedProduct = {
   group_img: string;
   product_img: string;
   sku: string;
-  txt_uom: "PR" | "EA" | "BX" | "SH" | "RL" | "ST";
-  txt_uom_label: "Pair" | "Each" | "Box" | "Sheet" | "Roll" | "Set";
+  txt_uom: UOM;
+  txt_uom_label: UOMLabel;
   is_sale: boolean;
   is_new: boolean;
   min_order_amount: number;

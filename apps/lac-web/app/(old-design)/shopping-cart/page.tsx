@@ -4,8 +4,8 @@ import { ACCOUNT_TOKEN_COOKIE } from "@/old/_lib/constants";
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import ShoppingCartList from "./_shopping-cart-list";
 import ShoppingCartDetailsForm from "./shopping-cart-details-form";
-import ShoppingCartList from "./shopping-cart-list";
 
 export const metadata: Metadata = {
   title: "Shopping Cart",

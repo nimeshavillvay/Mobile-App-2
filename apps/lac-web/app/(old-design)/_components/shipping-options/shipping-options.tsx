@@ -5,22 +5,19 @@ import { Label } from "@/old/_components/ui/label";
 import useAccountList from "@/old/_hooks/account/use-account-list.hook";
 import useCheckAvailability from "@/old/_hooks/product/use-check-availability.hook";
 import { useId, type ReactNode } from "react";
-import { useFormContext } from "react-hook-form";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import AvailabilityOption from "./availability-option";
-import { type AddItemSchema } from "./helpers";
 
 type ShippingOptionsProps = {
   sku: string;
+  quantity: number;
 };
 
-const ShippingOptions = ({ sku }: ShippingOptionsProps) => {
+const ShippingOptions = ({ sku, quantity }: ShippingOptionsProps) => {
   const id = useId();
   const willCallId = `willCall-${id}`;
 
   const accountListQuery = useAccountList();
-  const { watch } = useFormContext<AddItemSchema>();
-  const quantity = watch("quantity");
 
   const checkAvailabilityQuery = useCheckAvailability(sku, quantity);
 
@@ -30,10 +27,6 @@ const ShippingOptions = ({ sku }: ShippingOptionsProps) => {
 
   return (
     <Container>
-      <h3 className="font-wurth text-base font-extrabold uppercase text-black">
-        Shipping option/Stock availability
-      </h3>
-
       {quantity ? (
         !checkAvailabilityQuery.data?.length ? (
           <div className="mt-[15px] flex flex-row justify-center">
@@ -75,5 +68,5 @@ const ShippingOptions = ({ sku }: ShippingOptionsProps) => {
 export default ShippingOptions;
 
 const Container = ({ children }: { children?: ReactNode }) => {
-  return <div className="w-[322px]">{children}</div>;
+  return <div className="w-full max-w-[322px]">{children}</div>;
 };

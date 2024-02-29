@@ -14,3 +14,11 @@ export const FILTERS_QUERY_PREFIX = "filter-";
 
 export const BASE_URL = "https://wurthlac.com";
 export const SITEMAP_SIZE = 45000;
+
+export const AVAILABLE_AVAILABILITY = "availableAll";
+export const BACK_ORDERED_AVAILABILITY = "backOrderAll";
+
+export const AVAILABILITY_STATUSES = {
+  IN_STOCK: "inStock",
+  NOT_IN_STOCK: "notInStock",
+} as const;

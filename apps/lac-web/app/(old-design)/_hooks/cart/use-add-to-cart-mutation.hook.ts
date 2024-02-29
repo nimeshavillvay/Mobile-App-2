@@ -1,6 +1,9 @@
 import { useToast } from "@/old/_components/ui/use-toast";
 import { api } from "@/old/_lib/api";
-import { ACCOUNT_TOKEN_COOKIE } from "@/old/_lib/constants";
+import {
+  ACCOUNT_TOKEN_COOKIE,
+  AVAILABILITY_STATUSES,
+} from "@/old/_lib/constants";
 import { checkAvailability } from "@/old/_lib/shared-apis";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import useCookies from "../storage/use-cookies.hook";
@@ -25,7 +28,10 @@ const useAddToCartMutation = () => {
       );
 
       // If not in stock
-      if (!!availability?.[0] && availability?.[0].status !== "inStock") {
+      if (
+        !!availability?.[0] &&
+        availability?.[0].status !== AVAILABILITY_STATUSES.IN_STOCK
+      ) {
         throw new Error("Product not in stock");
       }
 
