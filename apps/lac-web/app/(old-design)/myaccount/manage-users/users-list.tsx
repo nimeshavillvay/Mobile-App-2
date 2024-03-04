@@ -46,7 +46,7 @@ const UsersList = ({
   return (
     <>
       <Table>
-        <VisuallyHidden asChild>
+        <VisuallyHidden>
           <TableCaption>Update your profile section.</TableCaption>
         </VisuallyHidden>
 
@@ -133,7 +133,7 @@ const UsersList = ({
 
         <CollapsibleContent>
           <Table>
-            <VisuallyHidden asChild>
+            <VisuallyHidden>
               <TableCaption>
                 Current users on this account section.
               </TableCaption>

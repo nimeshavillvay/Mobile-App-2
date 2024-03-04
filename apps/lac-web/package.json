@@ -24,7 +24,6 @@
     "@radix-ui/react-slot": "1.0.2",
     "@radix-ui/react-tabs": "1.0.4",
     "@radix-ui/react-toast": "^1.1.5",
-    "@radix-ui/react-visually-hidden": "1.0.3",
     "@repo/tailwindcss-config": "workspace:^",
     "@repo/web-ui": "workspace:^",
     "@tanstack/react-query": "5.20.5",
