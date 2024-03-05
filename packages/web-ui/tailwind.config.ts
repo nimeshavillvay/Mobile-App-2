@@ -3,6 +3,9 @@ import type { Config } from "tailwindcss";
 const config: Config = {
   content: ["./src/**/*.{ts,tsx}"],
   prefix: "ui-",
+  corePlugins: {
+    preflight: false,
+  },
   theme: {
     container: {
       center: true,

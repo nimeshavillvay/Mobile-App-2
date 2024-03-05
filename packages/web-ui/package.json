@@ -4,15 +4,16 @@
     "**/*.css"
   ],
   "exports": {
-    "./styles.css": "./dist/index.css",
-    "./*": "./src/components/*/index.tsx"
+    "./styles.css": "./dist/styles.css",
+    "./components/*": {
+      "import": "./dist/components/*/index.mjs",
+      "require": "./dist/components/*/index.js",
+      "types": "./dist/components/*/index.d.ts"
+    }
   },
   "scripts": {
-    "postinstall": "pnpm build",
-    "dev": "concurrently \"pnpm:dev:storybook\" \"pnpm:dev:tailwind\"",
-    "dev:storybook": "storybook dev -p 6006 --no-open",
-    "dev:tailwind": "tailwindcss -i ./src/styles.css -o ./dist/index.css --watch",
-    "build": "tailwindcss -i ./src/styles.css -o dist/index.css",
+    "dev": "storybook dev -p 6006 --no-open",
+    "build": "tsup",
     "lint": "eslint src/ --max-warnings 0",
     "build-storybook": "storybook build"
   },
@@ -29,7 +30,6 @@
     "@storybook/react-vite": "^7.6.17",
     "@storybook/test": "^7.6.17",
     "clsx": "^2.1.0",
-    "concurrently": "^8.2.2",
     "cva": "1.0.0-beta.1",
     "lucide-react": "^0.344.0",
     "react": "^18.2.0",
@@ -37,6 +37,7 @@
     "storybook": "^7.6.17",
     "tailwind-merge": "^2.2.1",
     "tailwindcss": "^3.4.1",
+    "tsup": "^8.0.2",
     "typescript": "^5.3.3",
     "vite": "^5.1.5",
     "vite-tsconfig-paths": "^4.3.1"
