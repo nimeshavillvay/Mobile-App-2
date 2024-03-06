@@ -6,6 +6,7 @@
     "wix.vscode-import-cost",
     "esbenp.prettier-vscode",
     "yoavbls.pretty-ts-errors",
-    "bradlc.vscode-tailwindcss"
+    "bradlc.vscode-tailwindcss",
+    "gruntfuggly.todo-tree"
   ]
 }

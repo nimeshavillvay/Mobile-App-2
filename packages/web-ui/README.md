@@ -26,10 +26,12 @@ module.exports = {
     "postcss-import": {
       resolve: (importPath) => {
         if (importPath.startsWith("@repo/web-ui")) {
-          return path.resolve(
-            __dirname,
-            "../../packages/web-ui/dist/index.css",
+          const newPath = importPath.replace(
+            "@repo/web-ui",
+            "../../packages/web-ui/dist",
           );
+
+          return path.resolve(__dirname, newPath);
         }
         return importPath;
       },

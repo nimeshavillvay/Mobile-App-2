@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import defaultTheme from "tailwindcss/defaultTheme";
 
 const config: Config = {
   content: [
@@ -7,6 +8,14 @@ const config: Config = {
     "./app/**/*.{ts,tsx}",
     "./src/**/*.{ts,tsx}",
   ],
+  theme: {
+    extend: {
+      fontFamily: {
+        title: ["var(--font-title)", ...defaultTheme.fontFamily.sans],
+        body: ["var(--font-body)", ...defaultTheme.fontFamily.sans],
+      },
+    },
+  },
   plugins: [
     require("@tailwindcss/forms"),
     require("tailwindcss-animate"),
