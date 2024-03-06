@@ -43,6 +43,8 @@ const UsersList = ({
   const currentUsers =
     usersListQuery?.data?.manage_contact?.contact_list ?? null;
 
+  console.log("cu >", currentUsers);
+
   return (
     <>
       <Table>
@@ -132,28 +134,28 @@ const UsersList = ({
         </div>
 
         <CollapsibleContent>
-          <Table>
-            <VisuallyHidden asChild>
-              <TableCaption>
-                Current users on this account section.
-              </TableCaption>
-            </VisuallyHidden>
+          {currentUsers && currentUsers?.length > 0 ? (
+            <Table>
+              <VisuallyHidden asChild>
+                <TableCaption>
+                  Current users on this account section.
+                </TableCaption>
+              </VisuallyHidden>
 
-            <TableHeader className="bg-brand-gray-200 border-brand-gray-200 border">
-              <TableRow>
-                <TableHead>Email</TableHead>
+              <TableHeader className="bg-brand-gray-200 border-brand-gray-200 border">
+                <TableRow>
+                  <TableHead>Email</TableHead>
 
-                <TableHead className="text-center">Permission</TableHead>
+                  <TableHead className="text-center">Permission</TableHead>
 
-                <TableHead className="text-center">Status</TableHead>
+                  <TableHead className="text-center">Status</TableHead>
 
-                <TableHead></TableHead>
-              </TableRow>
-            </TableHeader>
+                  <TableHead></TableHead>
+                </TableRow>
+              </TableHeader>
 
-            <TableBody className="border-brand-gray-200 text-brand-gray-500 border">
-              {currentUsers &&
-                currentUsers.map((user, index) => (
+              <TableBody className="border-brand-gray-200 text-brand-gray-500 border">
+                {currentUsers.map((user, index) => (
                   <UserRow
                     key={user?.uuid}
                     user={user}
@@ -161,8 +163,13 @@ const UsersList = ({
                     jobRoles={jobRoles}
                   />
                 ))}
-            </TableBody>
-          </Table>
+              </TableBody>
+            </Table>
+          ) : (
+            <div className="font-wurth text-brand-gray-300 border-brand-gray-300 mt-10 rounded-sm border p-6 text-center text-lg capitalize">
+              Current Users Not Available!
+            </div>
+          )}
         </CollapsibleContent>
       </Collapsible>
 

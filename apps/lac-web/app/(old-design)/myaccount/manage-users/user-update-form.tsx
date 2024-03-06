@@ -21,13 +21,25 @@ import { Role } from "@/old/_lib/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import { UserProfile } from "./types";
+
+const USER_PERMISSIONS = [
+  { label: "Admin", value: "ADMIN" },
+  { label: "Buyer", value: "BUYER" },
+] as const;
+
+const USER_STATUSES = [
+  { label: "Active", value: "ACTIVE" },
+  { label: "Deactive", value: "DEACTIVE" },
+];
 
 const updateUserSchema = z.object({
-  firstName: z.string().min(1, "Please enter first name."),
-  lastName: z.string().min(1, "Please enter last name."),
+  firstName: z.string().trim().min(1, "Please enter first name.").max(40),
+  lastName: z.string().trim().min(1, "Please enter last name.").max(40),
   jobTitle: z.string(),
   email: z
     .string()
+    .trim()
     .min(1, "Please enter email address.")
     .email("Please enter a valid email address."),
   permission: z.string().min(1, "Please enter permission type."),
@@ -37,24 +49,37 @@ const updateUserSchema = z.object({
 type UpdateUserSchema = z.infer<typeof updateUserSchema>;
 
 type UpdateUserProps = {
+  user: UserProfile;
   jobRoles: Role[];
 };
 
-const UserUpdateForm = ({ jobRoles }: UpdateUserProps) => {
+const UserUpdateForm = ({ user, jobRoles }: UpdateUserProps) => {
   const form = useForm<UpdateUserSchema>({
     resolver: zodResolver(updateUserSchema),
     values: {
-      firstName: "",
-      lastName: "",
-      jobTitle: "",
-      email: "",
-      permission: "",
-      status: "",
+      firstName: user?.first_name,
+      lastName: user?.last_name,
+      jobTitle: user?.role,
+      email: user?.email,
+      permission: user?.permission,
+      status: user?.status,
     },
   });
 
   const onSubmit = (values: UpdateUserSchema) => {
     console.log("> values: ", values);
+  };
+
+  const renderStatusOption = (status: string) => {
+    if (status === "PENDING") {
+      return <SelectItem value={status}>Pending</SelectItem>;
+    }
+    if (status === "INACTIVE") {
+      return <SelectItem value={status}>Inactive</SelectItem>;
+    }
+    if (status === "DISABLED") {
+      return <SelectItem value={status}>Disabled</SelectItem>;
+    }
   };
 
   return (
@@ -203,8 +228,14 @@ const UserUpdateForm = ({ jobRoles }: UpdateUserProps) => {
                       </FormControl>
 
                       <SelectContent>
-                        <SelectItem value="1234">Buyer</SelectItem>
-                        <SelectItem value="1235">Admin</SelectItem>
+                        {USER_PERMISSIONS.map((permission) => (
+                          <SelectItem
+                            value={permission?.value}
+                            key={permission?.value}
+                          >
+                            {permission?.label}
+                          </SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
 
@@ -237,8 +268,12 @@ const UserUpdateForm = ({ jobRoles }: UpdateUserProps) => {
                       </FormControl>
 
                       <SelectContent>
-                        <SelectItem value="1234">Active</SelectItem>
-                        <SelectItem value="1235">Deactive</SelectItem>
+                        {USER_STATUSES.map((status) => (
+                          <SelectItem value={status?.value} key={status?.value}>
+                            {status?.label}
+                          </SelectItem>
+                        ))}
+                        {renderStatusOption(user?.status)}
                       </SelectContent>
                     </Select>
 

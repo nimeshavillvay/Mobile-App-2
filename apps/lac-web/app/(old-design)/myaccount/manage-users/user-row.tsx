@@ -80,7 +80,7 @@ const UserRow = ({ user, index, jobRoles }: UserRowProps) => {
       {isOpen && (
         <TableRow>
           <TableCell colSpan={4}>
-            <UserUpdateForm jobRoles={jobRoles} />
+            <UserUpdateForm jobRoles={jobRoles} user={user} />
           </TableCell>
         </TableRow>
       )}
