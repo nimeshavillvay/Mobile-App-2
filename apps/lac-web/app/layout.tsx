@@ -7,6 +7,7 @@ import { type ReactNode } from "react";
 import "./global.css";
 import Providers from "./providers";
 
+// TODO Remove this and delete all the local font files after the old designs are removed
 const wurth = localFont({
   src: [
     {
