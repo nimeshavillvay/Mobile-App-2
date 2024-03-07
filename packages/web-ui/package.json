@@ -7,7 +7,6 @@
     "./styles.css": "./dist/styles.css",
     "./components/*": {
       "import": "./dist/components/*/index.mjs",
-      "require": "./dist/components/*/index.js",
       "types": "./dist/components/*/index.d.ts"
     }
   },
@@ -32,7 +31,7 @@
     "clsx": "^2.1.0",
     "cva": "1.0.0-beta.1",
     "lucide-react": "^0.344.0",
-    "next": "14.1.1",
+    "next": "^14.1.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "storybook": "^7.6.17",
@@ -40,5 +39,11 @@
     "tailwindcss": "^3.4.1",
     "tsup": "^8.0.2",
     "typescript": "^5.3.3"
+  },
+  "peerDependencies": {
+    "next": "^14.1.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "tailwind-merge": "^2.2.1"
   }
 }

@@ -55,3 +55,15 @@ Then import the required components.
 ```tsx
 import { Button } from "@repo/web-ui/ui/button";
 ```
+
+## Optimizing the bundle
+
+When bundling this package, certain dependencies will be excluded, such as `react`, `react-dom`, and `next`, as the expectation is they will always be installed in the main package.
+
+These packages should be installed in this package with the `--save-peer` flag.
+
+```shell
+pnpm install react --save-peer
+```
+
+Then they need to be specified in **tsup** configuration file to be excluded by the bundler through the `external` field.
