@@ -4,12 +4,12 @@ import { cva, type VariantProps } from "cva";
 import * as React from "react";
 
 const buttonVariants = cva({
-  base: "font-wurth inline-flex h-9 items-center justify-center gap-2 whitespace-nowrap rounded-sm px-3.5 text-[15px] font-extrabold uppercase leading-5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  base: "inline-flex h-9 items-center justify-center gap-2 whitespace-nowrap rounded-sm px-3.5 font-wurth text-[15px] font-extrabold uppercase leading-5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
   variants: {
     variant: {
       default: "bg-brand-primary text-white",
       secondary:
-        "text-brand-secondary border-brand-secondary border-2 bg-white",
+        "border-2 border-brand-secondary bg-white text-brand-secondary",
     },
   },
   defaultVariants: {

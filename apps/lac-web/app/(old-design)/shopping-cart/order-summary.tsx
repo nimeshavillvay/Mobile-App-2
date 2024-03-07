@@ -20,7 +20,7 @@ const OrderSummary = () => {
           className="mb-3.5 mt-2 h-px w-full bg-black"
         />
 
-        <div className="text-brand-gray-500 space-y-2 text-sm leading-5 [&>div]:flex [&>div]:flex-row [&>div]:items-center [&>div]:justify-between [&>div]:gap-4">
+        <div className="space-y-2 text-sm leading-5 text-brand-gray-500 [&>div]:flex [&>div]:flex-row [&>div]:items-center [&>div]:justify-between [&>div]:gap-4">
           <div>
             <div>{data?.["total-quantity"]} Items</div>
 
@@ -35,7 +35,7 @@ const OrderSummary = () => {
 
           <Separator
             orientation="horizontal"
-            className="bg-brand-gray-200 h-px w-full"
+            className="h-px w-full bg-brand-gray-200"
           />
 
           <div>
@@ -54,7 +54,7 @@ const OrderSummary = () => {
 
           <Separator
             orientation="horizontal"
-            className="bg-brand-gray-200 h-0.5 w-full"
+            className="h-0.5 w-full bg-brand-gray-200"
           />
 
           <div className="text-[15px] font-bold">
@@ -67,7 +67,7 @@ const OrderSummary = () => {
 
       <Link
         href="/checkout"
-        className="bg-brand-secondary font-wurth grid h-[42px] place-items-center items-center rounded-sm text-xl font-extrabold uppercase leading-none text-white"
+        className="grid h-[42px] place-items-center items-center rounded-sm bg-brand-secondary font-wurth text-xl font-extrabold uppercase leading-none text-white"
       >
         Continue
       </Link>

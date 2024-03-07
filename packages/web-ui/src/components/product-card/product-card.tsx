@@ -120,12 +120,12 @@ export const ProductCardActions = () => {
   return (
     <div className="ui-flex ui-flex-row ui-items-center ui-gap-2.5">
       <Button className="ui-flex-1">
-        <AddToCart className="ui-stroke-white ui-size-4" />{" "}
+        <AddToCart className="ui-size-4 ui-stroke-white" />{" "}
         <span>Add to cart</span>
       </Button>
 
       <Button variant="outline" size="icon">
-        <HeartOutline className="ui-fill-black ui-size-4" />
+        <HeartOutline className="ui-size-4 ui-fill-black" />
       </Button>
     </div>
   );

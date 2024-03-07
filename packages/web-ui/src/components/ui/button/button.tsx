@@ -5,7 +5,7 @@ import { type VariantProps } from "cva";
 import { forwardRef } from "react";
 
 const buttonVariants = cva({
-  base: "ui-inline-flex ui-items-center ui-justify-center ui-whitespace-nowrap ui-gap-2 ui-rounded-md ui-text-sm ui-font-medium ui-transition-colors focus-visible:ui-outline-none focus-visible:ui-ring-1 focus-visible:ui-ring-zinc-950 disabled:ui-pointer-events-none disabled:ui-opacity-50",
+  base: "ui-inline-flex ui-items-center ui-justify-center ui-gap-2 ui-whitespace-nowrap ui-rounded-md ui-text-sm ui-font-medium ui-transition-colors focus-visible:ui-outline-none focus-visible:ui-ring-1 focus-visible:ui-ring-zinc-950 disabled:ui-pointer-events-none disabled:ui-opacity-50",
   variants: {
     variant: {
       default:

@@ -59,7 +59,7 @@ const SelectedFiltersList = ({ sections }: SelectedFiltersListProps) => {
 
   return (
     <div className="sticky top-0 z-10 bg-white py-3.5">
-      <div className="bg-brand-gray-200 flex flex-row items-center justify-between gap-6 p-2">
+      <div className="flex flex-row items-center justify-between gap-6 bg-brand-gray-200 p-2">
         <div className="text-brand-gray-500">Active Filters</div>
 
         <ul className="flex flex-1 flex-row flex-nowrap items-center gap-[2px] overflow-x-auto">
@@ -89,7 +89,7 @@ const Button = ({ className, ...delegated }: ComponentProps<"button">) => {
   return (
     <button
       className={cn(
-        "bg-brand-primary min-w-0 shrink-0 text-nowrap rounded-[3px] px-5 py-1.5 text-base font-normal uppercase text-white",
+        "min-w-0 shrink-0 text-nowrap rounded-[3px] bg-brand-primary px-5 py-1.5 text-base font-normal uppercase text-white",
         className,
       )}
       {...delegated}

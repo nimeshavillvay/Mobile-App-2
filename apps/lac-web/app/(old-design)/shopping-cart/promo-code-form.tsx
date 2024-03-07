@@ -27,13 +27,13 @@ const PromoCodeForm = () => {
 
   return (
     <div>
-      <h4 className="font-wurth text-brand-gray-500 text-[19px] font-medium leading-6">
+      <h4 className="font-wurth text-[19px] font-medium leading-6 text-brand-gray-500">
         Promo Code
       </h4>
 
       <Separator
         orientation="horizontal"
-        className="bg-brand-gray-500 mb-5 mt-2 h-px w-full"
+        className="mb-5 mt-2 h-px w-full bg-brand-gray-500"
       />
 
       <form
@@ -48,7 +48,7 @@ const PromoCodeForm = () => {
 
         <button
           type="submit"
-          className="bg-brand-gray-200 text-brand-gray-500 font-wurth h-full rounded-sm px-2.5 text-base font-extrabold uppercase leading-5"
+          className="h-full rounded-sm bg-brand-gray-200 px-2.5 font-wurth text-base font-extrabold uppercase leading-5 text-brand-gray-500"
         >
           Redeem
         </button>

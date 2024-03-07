@@ -78,7 +78,7 @@ export const PriceTableCell = ({
 
   return (
     <TableCell className="flex flex-col items-end gap-1.5">
-      <div className="text-brand-gray-500 text-sm font-normal">
+      <div className="text-sm font-normal text-brand-gray-500">
         <span className="font-bold">${discountedPrice}</span> / {uom}
       </div>
 
@@ -86,14 +86,14 @@ export const PriceTableCell = ({
         <div className="flex flex-row items-center gap-2.5">
           <div className="text-brand-gray-400 line-through">${actualPrice}</div>
 
-          <div className="text-brand-success bg-brand-success/10 rounded-sm px-1 py-0.5 text-sm font-bold leading-[15px]">
+          <div className="rounded-sm bg-brand-success/10 px-1 py-0.5 text-sm font-bold leading-[15px] text-brand-success">
             {Math.round(discountPercentage)}% off
           </div>
         </div>
       )}
 
       <Popover>
-        <PopoverTrigger className="font-wurth group flex flex-row items-center gap-1 text-sm font-extrabold uppercase leading-[18px]">
+        <PopoverTrigger className="group flex flex-row items-center gap-1 font-wurth text-sm font-extrabold uppercase leading-[18px]">
           <span className="text-nowrap">Price breakdown</span>
 
           <FaChevronDown className="transition-transform duration-200 ease-out group-data-[state=open]:rotate-180" />
@@ -101,7 +101,7 @@ export const PriceTableCell = ({
 
         <PopoverContent>
           <table className="mt-2.5t ext-brand-gray-500">
-            <thead className="border-b-brand-gray-300 border-b pb-1 font-bold">
+            <thead className="border-b border-b-brand-gray-300 pb-1 font-bold">
               <tr className="[&>th]:min-w-20 [&>th]:text-left">
                 <th>Qty</th>
                 <th>UOM</th>
@@ -142,7 +142,7 @@ export const QuantityTableCell = ({
   const qtyId = `qty-${id}`;
 
   return (
-    <TableCell className="text-brand-gray-500 text-sm leading-[18px]">
+    <TableCell className="text-sm leading-[18px] text-brand-gray-500">
       <VisuallyHidden>
         <label htmlFor={qtyId}>Quantity</label>
       </VisuallyHidden>
@@ -203,7 +203,7 @@ export const AddItemCell = ({
             {favoriteSkusQuery.data?.[0].isFavourite ? (
               <Link
                 href="/myaccount/myfavorites"
-                className="border-brand-success grid size-9 place-items-center border-2 px-0"
+                className="grid size-9 place-items-center border-2 border-brand-success px-0"
               >
                 <VisuallyHidden>Favorites</VisuallyHidden>
 
@@ -224,7 +224,7 @@ export const AddItemCell = ({
           </div>
 
           <Popover>
-            <PopoverTrigger className="font-wurth flex flex-row items-center gap-1 text-sm font-extrabold uppercase leading-[18px]">
+            <PopoverTrigger className="flex flex-row items-center gap-1 font-wurth text-sm font-extrabold uppercase leading-[18px]">
               <span>Change shipping options</span>
 
               <FaChevronDown />

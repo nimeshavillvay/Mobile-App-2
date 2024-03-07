@@ -52,7 +52,7 @@ const ProductCardWithSkuSwitcher = ({
 
       <ProductCardActions>
         {variations.length === 1 ? (
-          <div className="text-brand-gray-500 text-center text-sm leading-5">
+          <div className="text-center text-sm leading-5 text-brand-gray-500">
             {selectedVariant?.sku}
           </div>
         ) : (
@@ -71,14 +71,14 @@ const ProductCardWithSkuSwitcher = ({
           </Select>
         )}
 
-        <div className="text-brand-gray-400 mb-5 mt-3 text-center text-sm leading-4">
+        <div className="mb-5 mt-3 text-center text-sm leading-4 text-brand-gray-400">
           {variations.length}{" "}
           {variations.length === 1 ? "variation" : "variations"}
         </div>
 
         <Link
           href={hrefWithSku}
-          className="bg-brand-primary font-wurth block w-full rounded-sm py-2 text-center font-extrabold uppercase text-white"
+          className="block w-full rounded-sm bg-brand-primary py-2 text-center font-wurth font-extrabold uppercase text-white"
         >
           View item
         </Link>

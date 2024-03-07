@@ -129,7 +129,7 @@ const ImageCarousel = ({ productImages, productTitle }: ImageCarouselProps) => {
       </div>
 
       <div
-        className="border-brand-gray-200 overflow-hidden border"
+        className="overflow-hidden border border-brand-gray-200"
         ref={emblaRef}
       >
         <div className="flex h-[300px] flex-col">

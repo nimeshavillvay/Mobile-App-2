@@ -64,7 +64,7 @@ const VariationsTable = ({ attributes, variants }: VariationsTableProps) => {
   return (
     <>
       <div className="mb-4 flex flex-row items-center gap-6">
-        <div className="text-brand-gray-500 font-bold leading-6">
+        <div className="font-bold leading-6 text-brand-gray-500">
           Available Options
         </div>
 
@@ -75,7 +75,7 @@ const VariationsTable = ({ attributes, variants }: VariationsTableProps) => {
           >
             <Label
               htmlFor={`${attribute.slug}-${id}`}
-              className="text-brand-gray-500 text-nowrap text-sm font-bold leading-[18px]"
+              className="text-nowrap text-sm font-bold leading-[18px] text-brand-gray-500"
             >
               {attribute.name}
             </Label>
@@ -104,7 +104,7 @@ const VariationsTable = ({ attributes, variants }: VariationsTableProps) => {
       </div>
 
       {!!activeFilters.length && (
-        <div className="bg-brand-gray-200 mb-1 flex flex-row items-center gap-1 p-2.5">
+        <div className="mb-1 flex flex-row items-center gap-1 bg-brand-gray-200 p-2.5">
           <div className="text-brand-gray-500">Active Filters</div>
 
           {activeFilters.map((filter) => (

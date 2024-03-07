@@ -19,7 +19,7 @@ const MyAccountLayout = ({ children }: MyAccountLayoutProps) => {
 
         <Separator
           orientation="horizontal"
-          className="bg-brand-primary h-px flex-1"
+          className="h-px flex-1 bg-brand-primary"
         />
       </div>
 

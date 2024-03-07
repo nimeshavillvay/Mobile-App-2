@@ -122,7 +122,7 @@ const Filters = ({ colors, sections, searchParams }: FiltersBaseProps) => {
                       onCheckedChange(section.attribute_name)(value.id, checked)
                     }
                   >
-                    <CheckboxPrimitive.Indicator className="bg-brand-secondary absolute left-2 top-2 size-[15px] text-white">
+                    <CheckboxPrimitive.Indicator className="absolute left-2 top-2 size-[15px] bg-brand-secondary text-white">
                       <Check />
                     </CheckboxPrimitive.Indicator>
 

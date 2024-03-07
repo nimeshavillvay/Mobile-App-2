@@ -82,7 +82,7 @@ const FiltersBase = ({ sections, searchParams }: FiltersBaseProps) => {
       <aside className="w-64">
         {hasSelectedFilters && (
           <button
-            className="bg-brand-primary mb-3.5 min-w-0 shrink-0 text-nowrap rounded-[3px] px-5 py-1.5 text-base font-normal uppercase text-white"
+            className="mb-3.5 min-w-0 shrink-0 text-nowrap rounded-[3px] bg-brand-primary px-5 py-1.5 text-base font-normal uppercase text-white"
             onClick={handleReset}
           >
             Reset

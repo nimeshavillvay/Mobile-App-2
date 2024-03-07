@@ -50,7 +50,7 @@ const UsersList = ({
           <TableCaption>Update your profile section.</TableCaption>
         </VisuallyHidden>
 
-        <TableHeader className="bg-brand-gray-200 border-brand-gray-200 border">
+        <TableHeader className="border border-brand-gray-200 bg-brand-gray-200">
           <TableRow>
             <TableHead>Email</TableHead>
 
@@ -62,7 +62,7 @@ const UsersList = ({
           </TableRow>
         </TableHeader>
 
-        <TableBody className="border-brand-gray-200 border">
+        <TableBody className="border border-brand-gray-200">
           <TableRow>
             <TableCell>{yourProfile?.email}</TableCell>
 
@@ -71,14 +71,14 @@ const UsersList = ({
             </TableCell>
 
             <TableCell className="text-center">
-              <span className="border-brand-tertiary text-brand-tertiary min-w-24 rounded-sm border px-5 py-px font-bold">
+              <span className="min-w-24 rounded-sm border border-brand-tertiary px-5 py-px font-bold text-brand-tertiary">
                 {yourProfile?.status}
               </span>
             </TableCell>
 
             <TableCell className="text-right">
               <div className="flex justify-end">
-                <Button className="font-wurth bg-brand-secondary flex h-6 min-w-20 flex-row items-center justify-center gap-0.5 px-2 text-base leading-6 text-white">
+                <Button className="flex h-6 min-w-20 flex-row items-center justify-center gap-0.5 bg-brand-secondary px-2 font-wurth text-base leading-6 text-white">
                   Open&nbsp;
                   <MdKeyboardArrowDown className="text-xl leading-none" />
                 </Button>
@@ -90,12 +90,12 @@ const UsersList = ({
 
       {/* New And Pending Users Section */}
       <div className="my-5 flex justify-between">
-        <h6 className="font-wurth text-brand-gray-500 flex text-base font-medium capitalize">
+        <h6 className="flex font-wurth text-base font-medium capitalize text-brand-gray-500">
           <MdSwitchAccount className="self-center text-2xl leading-none" />
           &nbsp;New And Pending Users
         </h6>
 
-        <Button className="font-wurth bg-brand-secondary flex h-6 min-w-20 flex-row items-center justify-center gap-0.5 px-2 text-base leading-6 text-white">
+        <Button className="flex h-6 min-w-20 flex-row items-center justify-center gap-0.5 bg-brand-secondary px-2 font-wurth text-base leading-6 text-white">
           Show
           <MdKeyboardArrowDown className="text-xl leading-none" />
         </Button>
@@ -103,19 +103,19 @@ const UsersList = ({
 
       <Separator
         orientation="horizontal"
-        className="bg-brand-gray-200 h-px flex-1"
+        className="h-px flex-1 bg-brand-gray-200"
       />
 
       {/* Current Users Section */}
       <Collapsible open={showCurrentUsers} onOpenChange={setShowCurrentUsers}>
         <div className="my-5 flex justify-between">
-          <h6 className="font-wurth text-brand-gray-500 flex text-base font-medium capitalize">
+          <h6 className="flex font-wurth text-base font-medium capitalize text-brand-gray-500">
             <MdSupervisorAccount className="self-center text-2xl leading-none" />
             &nbsp;Current Users On This Account
           </h6>
 
           <CollapsibleTrigger asChild>
-            <Button className="font-wurth bg-brand-secondary flex h-6 min-w-20 flex-row items-center justify-center gap-0.5 px-2 text-base leading-6 text-white">
+            <Button className="flex h-6 min-w-20 flex-row items-center justify-center gap-0.5 bg-brand-secondary px-2 font-wurth text-base leading-6 text-white">
               {showCurrentUsers ? (
                 <>
                   Hide
@@ -139,7 +139,7 @@ const UsersList = ({
               </TableCaption>
             </VisuallyHidden>
 
-            <TableHeader className="bg-brand-gray-200 border-brand-gray-200 border">
+            <TableHeader className="border border-brand-gray-200 bg-brand-gray-200">
               <TableRow>
                 <TableHead>Email</TableHead>
 
@@ -151,7 +151,7 @@ const UsersList = ({
               </TableRow>
             </TableHeader>
 
-            <TableBody className="border-brand-gray-200 text-brand-gray-500 border">
+            <TableBody className="border border-brand-gray-200 text-brand-gray-500">
               {currentUsers &&
                 currentUsers.map((user, index) => (
                   <UserRow
@@ -168,7 +168,7 @@ const UsersList = ({
 
       <Separator
         orientation="horizontal"
-        className="bg-brand-gray-200 h-px flex-1"
+        className="h-px flex-1 bg-brand-gray-200"
       />
     </>
   );

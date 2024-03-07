@@ -18,7 +18,7 @@ const CompliancePage = () => {
         src={compliance}
         alt="The banner for compliance page"
         placeholder="blur"
-        className="border-brand-gray-100 mb-8 h-auto w-full border object-cover"
+        className="mb-8 h-auto w-full border border-brand-gray-100 object-cover"
         priority={true}
       />
 
@@ -28,11 +28,11 @@ const CompliancePage = () => {
 
         <Separator
           orientation="horizontal"
-          className="bg-brand-primary h-px flex-1"
+          className="h-px flex-1 bg-brand-primary"
         />
       </div>
 
-      <div className="text-brand-gray-500 box-border space-y-4">
+      <div className="box-border space-y-4 text-brand-gray-500">
         <p>
           Mutual trust, reliability, honesty and straightforwardness, both
           inwards and outwards, are the fundamental principles deeply ingrained
@@ -87,13 +87,13 @@ const CompliancePage = () => {
         </div>
 
         <div className="relative w-full pt-8 md:w-1/2">
-          <h2 className="text-brand-primary relative pr-3 text-lg font-medium">
+          <h2 className="relative pr-3 text-lg font-medium text-brand-primary">
             Reporting Hotline Speak Up
           </h2>
 
           <Separator
             orientation="horizontal"
-            className="bg-brand-primary mt-0.5 h-px flex-1"
+            className="mt-0.5 h-px flex-1 bg-brand-primary"
           />
         </div>
 

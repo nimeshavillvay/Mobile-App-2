@@ -102,13 +102,13 @@ const CategoryPage = async ({ params: { id, slug } }: CategoryPageProps) => {
       />
 
       <div className="mb-[34px] mt-5 flex flex-row items-center gap-2.5">
-        <h1 className="text-brand-gray-500 text-[28px] font-medium leading-8">
+        <h1 className="text-[28px] font-medium leading-8 text-brand-gray-500">
           {category.main.catTitle}
         </h1>
 
         <Separator
           orientation="horizontal"
-          className="bg-brand-gray-300 h-px flex-1"
+          className="h-px flex-1 bg-brand-gray-300"
         />
       </div>
 
@@ -120,7 +120,7 @@ const CategoryPage = async ({ params: { id, slug } }: CategoryPageProps) => {
 
       {category.main.subCatgores.length > 0 && (
         <section className="my-8">
-          <h2 className="text-brand-primary mb-2 text-xl font-bold leading-6">
+          <h2 className="mb-2 text-xl font-bold leading-6 text-brand-primary">
             Categories
           </h2>
 

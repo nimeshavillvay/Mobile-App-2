@@ -34,7 +34,7 @@ const Profile = () => {
           />
 
           <button
-            className="bg-brand-secondary absolute bottom-0 right-0 p-1 text-white"
+            className="absolute bottom-0 right-0 bg-brand-secondary p-1 text-white"
             aria-label="Edit profile picture"
           >
             <MdOutlineModeEdit />

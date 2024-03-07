@@ -27,21 +27,21 @@ const NotFound = () => {
           />
         </svg>
 
-        <h1 className="text-brand-gray-500 text-2xl font-bold capitalize leading-7">
+        <h1 className="text-2xl font-bold capitalize leading-7 text-brand-gray-500">
           Page not found
         </h1>
 
-        <h2 className="text-brand-gray-300 text-sm uppercase leading-4">
+        <h2 className="text-sm uppercase leading-4 text-brand-gray-300">
           404 error
         </h2>
 
-        <p className="text-brand-gray-500 mx-auto mb-6 mt-9 max-w-96 text-base leading-5">
+        <p className="mx-auto mb-6 mt-9 max-w-96 text-base leading-5 text-brand-gray-500">
           The link you clicked may be broken or the page may have been removed.
         </p>
 
         <Link
           href="/"
-          className="bg-brand-secondary mx-auto block max-w-fit rounded-sm p-2 px-3.5 py-2 font-extrabold uppercase text-white"
+          className="mx-auto block max-w-fit rounded-sm bg-brand-secondary p-2 px-3.5 py-2 font-extrabold uppercase text-white"
         >
           Go to homepage
         </Link>

@@ -55,10 +55,10 @@ const NavBar = () => {
           <Link
             href={link.href}
             className={cn(
-              "font-wurth rounded-sm px-2.5 py-2 text-base font-medium leading-none",
+              "rounded-sm px-2.5 py-2 font-wurth text-base font-medium leading-none",
               pathname === link.href
-                ? "text-brand-primary bg-white"
-                : "hover:text-brand-primary text-white hover:bg-white",
+                ? "bg-white text-brand-primary"
+                : "text-white hover:bg-white hover:text-brand-primary",
             )}
           >
             {link.label}

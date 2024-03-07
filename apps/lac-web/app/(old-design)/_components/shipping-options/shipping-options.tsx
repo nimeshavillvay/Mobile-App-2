@@ -30,7 +30,7 @@ const ShippingOptions = ({ sku, quantity }: ShippingOptionsProps) => {
       {quantity ? (
         !checkAvailabilityQuery.data?.length ? (
           <div className="mt-[15px] flex flex-row justify-center">
-            <AiOutlineLoading3Quarters className="text-brand-primary animate-spin text-4xl leading-none" />
+            <AiOutlineLoading3Quarters className="animate-spin text-4xl leading-none text-brand-primary" />
           </div>
         ) : (
           <>
@@ -52,7 +52,7 @@ const ShippingOptions = ({ sku, quantity }: ShippingOptionsProps) => {
           </>
         )
       ) : (
-        <div className="bg-brand-gray-100 mt-[15px] px-6 py-4 font-medium">
+        <div className="mt-[15px] bg-brand-gray-100 px-6 py-4 font-medium">
           <div className="mb-1">Enter a quantity to:</div>
 
           <ul className="list-outside list-disc space-y-[5px] pl-10">

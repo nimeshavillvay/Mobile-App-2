@@ -14,7 +14,7 @@ import { usePathname, useRouter } from "next/navigation";
 import Filters from "./filters";
 
 const menuItem = cva({
-  base: "border-brand-gray-200 block border-b py-2.5 font-bold text-black first:border-t hover:underline",
+  base: "block border-b border-brand-gray-200 py-2.5 font-bold text-black first:border-t hover:underline",
   variants: {
     status: {
       active: "text-brand-primary",
@@ -68,7 +68,7 @@ const SideMenu = () => {
           value="/myaccount/purchaseditems"
           className="first:border-t-0"
         >
-          <AccordionTrigger className="data-[state=open]:text-brand-primary text-black">
+          <AccordionTrigger className="text-black data-[state=open]:text-brand-primary">
             My Purchased Items
           </AccordionTrigger>
 
@@ -78,7 +78,7 @@ const SideMenu = () => {
         </AccordionItem>
 
         <AccordionItem value="/myaccount/myfavorites">
-          <AccordionTrigger className="data-[state=open]:text-brand-primary text-black">
+          <AccordionTrigger className="text-black data-[state=open]:text-brand-primary">
             My Favorites
           </AccordionTrigger>
 

@@ -22,7 +22,7 @@ import type { Product } from "../../types";
 import { type AddItemSchema } from "./helpers";
 
 const buttonBaseClasses = cva({
-  base: "font-wurth flex h-9 w-full max-w-64 flex-row items-center justify-center gap-2.5 rounded-sm border-2 text-center font-extrabold uppercase disabled:opacity-50",
+  base: "flex h-9 w-full max-w-64 flex-row items-center justify-center gap-2.5 rounded-sm border-2 text-center font-wurth font-extrabold uppercase disabled:opacity-50",
 });
 
 type AddItemFormProps = {
@@ -101,7 +101,7 @@ const AddItemForm = ({ product }: AddItemFormProps) => {
                   ${actualPrice}
                 </div>
 
-                <div className="bg-brand-success/10 text-brand-success rounded-sm px-1 py-0.5 font-bold leading-none">
+                <div className="rounded-sm bg-brand-success/10 px-1 py-0.5 font-bold leading-none text-brand-success">
                   Save ${formatNumberToPrice(actualPrice - discountedPrice)} (
                   {discountPercentage}%)
                 </div>
@@ -132,7 +132,7 @@ const AddItemForm = ({ product }: AddItemFormProps) => {
 
           <Separator
             orientation="vertical"
-            className="bg-brand-gray-500 h-5 w-px"
+            className="h-5 w-px bg-brand-gray-500"
           />
 
           <span>Quantity Multiple : {qtyIncrements}</span>
@@ -142,7 +142,7 @@ const AddItemForm = ({ product }: AddItemFormProps) => {
           <button
             className={cn(
               buttonBaseClasses(),
-              "bg-brand-primary border-0 text-white",
+              "border-0 bg-brand-primary text-white",
             )}
             onClick={() => setOpenLoginDialog(true)}
             type="button"
@@ -154,7 +154,7 @@ const AddItemForm = ({ product }: AddItemFormProps) => {
             <button
               className={cn(
                 buttonBaseClasses(),
-                "bg-brand-primary border-0 text-white",
+                "border-0 bg-brand-primary text-white",
               )}
               disabled={addToCartMutation.isPending}
               type="submit"
@@ -169,7 +169,7 @@ const AddItemForm = ({ product }: AddItemFormProps) => {
                 href="/myaccount/myfavorites"
                 className={cn(
                   buttonBaseClasses(),
-                  "text-brand-success border-brand-success",
+                  "border-brand-success text-brand-success",
                 )}
               >
                 <FavoriteIcon />
@@ -180,7 +180,7 @@ const AddItemForm = ({ product }: AddItemFormProps) => {
               <button
                 className={cn(
                   buttonBaseClasses(),
-                  "text-brand-secondary border-brand-secondary",
+                  "border-brand-secondary text-brand-secondary",
                 )}
                 type="button"
                 onClick={addToFavorites}

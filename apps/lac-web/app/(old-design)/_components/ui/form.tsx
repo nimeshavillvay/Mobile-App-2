@@ -94,7 +94,7 @@ const FormLabel = React.forwardRef<
     <Label
       ref={ref}
       className={cn(
-        "text-brand-gray-500 text-sm font-normal",
+        "text-sm font-normal text-brand-gray-500",
         error && "text-brand-primary",
         className,
       )}

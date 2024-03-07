@@ -29,7 +29,7 @@ const ShoppingCartPage = () => {
 
           <Separator
             orientation="horizontal"
-            className="bg-brand-gray-300 h-px flex-1"
+            className="h-px flex-1 bg-brand-gray-300"
           />
         </div>
 

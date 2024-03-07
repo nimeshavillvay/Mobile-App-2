@@ -12,15 +12,12 @@ importers:
         specifier: 7.3.0
         version: 7.3.0
     devDependencies:
+      '@repo/prettier-config':
+        specifier: workspace:^
+        version: link:packages/prettier-config
       prettier:
         specifier: 3.2.5
         version: 3.2.5
-      prettier-plugin-organize-imports:
-        specifier: 3.2.4
-        version: 3.2.4(prettier@3.2.5)
-      prettier-plugin-tailwindcss:
-        specifier: 0.5.11
-        version: 0.5.11(prettier-plugin-organize-imports@3.2.4)(prettier@3.2.5)
       turbo:
         specifier: 1.12.4
         version: 1.12.4
@@ -55,6 +52,9 @@ importers:
       '@repo/eslint-config':
         specifier: workspace:^
         version: link:../../packages/eslint-config
+      '@repo/prettier-config':
+        specifier: workspace:^
+        version: link:../../packages/prettier-config
       '@total-typescript/ts-reset':
         specifier: 0.5.1
         version: 0.5.1
@@ -212,6 +212,9 @@ importers:
       '@repo/eslint-config':
         specifier: workspace:^
         version: link:../../packages/eslint-config
+      '@repo/prettier-config':
+        specifier: workspace:^
+        version: link:../../packages/prettier-config
       '@total-typescript/ts-reset':
         specifier: 0.5.1
         version: 0.5.1
@@ -270,6 +273,15 @@ importers:
         specifier: ^4.6.0
         version: 4.6.0(eslint@8.57.0)
 
+  packages/prettier-config:
+    devDependencies:
+      prettier-plugin-organize-imports:
+        specifier: ^3.2.4
+        version: 3.2.4(prettier@3.2.5)
+      prettier-plugin-tailwindcss:
+        specifier: ^0.5.11
+        version: 0.5.11(prettier-plugin-organize-imports@3.2.4)(prettier@3.2.5)
+
   packages/shared-logic:
     devDependencies:
       '@repo/eslint-config':
@@ -326,6 +338,9 @@ importers:
       '@repo/eslint-config':
         specifier: workspace:^
         version: link:../eslint-config
+      '@repo/prettier-config':
+        specifier: workspace:^
+        version: link:../prettier-config
       '@repo/tailwindcss-config':
         specifier: workspace:^
         version: link:../tailwindcss-config

@@ -22,17 +22,17 @@ const UserManagementPage = async () => {
   return (
     <>
       <div>
-        <h2 className="font-wurth text-brand-primary relative text-xl font-medium">
+        <h2 className="relative font-wurth text-xl font-medium text-brand-primary">
           Manage Users
         </h2>
 
         <Separator
           orientation="horizontal"
-          className="bg-brand-primary h-px flex-1"
+          className="h-px flex-1 bg-brand-primary"
         />
 
         <div className="my-5">
-          <h6 className="font-wurth text-brand-gray-500 flex text-base font-medium">
+          <h6 className="flex font-wurth text-base font-medium text-brand-gray-500">
             <MdAccountBox className="self-center text-2xl leading-none" />
             &nbsp;Update Your Profile
           </h6>
