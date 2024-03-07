@@ -14,16 +14,16 @@ import useAddToFavoritesMutation from "@/old/_hooks/product/use-add-to-favorites
 import useFavoriteSkus from "@/old/_hooks/product/use-favorite-skus.hook";
 import usePriceCalculation from "@/old/_hooks/product/use-price-calculation.hook";
 import { cn, formatNumberToPrice, getMediaUrl } from "@/old/_utils/helpers";
-import { cva } from "class-variance-authority";
+import { cva } from "cva";
 import Link from "next/link";
 import { useId, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import type { Product } from "../../types";
 import { type AddItemSchema } from "./helpers";
 
-const buttonBaseClasses = cva(
-  "flex h-9 w-full max-w-64 flex-row items-center justify-center font-wurth gap-2.5 rounded-sm border-2 text-center font-extrabold uppercase disabled:opacity-50",
-);
+const buttonBaseClasses = cva({
+  base: "font-wurth flex h-9 w-full max-w-64 flex-row items-center justify-center gap-2.5 rounded-sm border-2 text-center font-extrabold uppercase disabled:opacity-50",
+});
 
 type AddItemFormProps = {
   product: Product;

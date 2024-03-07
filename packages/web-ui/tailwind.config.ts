@@ -3,9 +3,6 @@ import type { Config } from "tailwindcss";
 const config: Config = {
   content: ["./src/**/*.{ts,tsx}"],
   prefix: "ui-",
-  corePlugins: {
-    preflight: false,
-  },
   theme: {
     container: {
       center: true,
@@ -32,6 +29,13 @@ const config: Config = {
       colors: {
         red: {
           650: "#BB271A",
+        },
+        wurth: {
+          gray: {
+            150: "#E8E9ED",
+            400: "#9FA1A6",
+            800: "#2A2C2E",
+          },
         },
       },
     },

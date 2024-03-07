@@ -1,3 +1,6 @@
 {
-  "extends": ["@repo/eslint-config/react-library.js"]
+  "extends": [
+    "@repo/eslint-config/react-library.js",
+    "@repo/eslint-config/next.js"
+  ]
 }

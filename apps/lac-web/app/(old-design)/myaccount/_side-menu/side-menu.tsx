@@ -8,22 +8,20 @@ import {
 } from "@/old/_components/ui/accordion";
 import useLogout from "@/old/_hooks/account/use-logout.hook";
 import { cn } from "@/old/_utils/helpers";
-import { cva } from "class-variance-authority";
+import { cva } from "cva";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import Filters from "./filters";
 
-const menuItem = cva(
-  "border-brand-gray-200 block border-b py-2.5 font-bold text-black first:border-t hover:underline",
-  {
-    variants: {
-      status: {
-        active: "text-brand-primary",
-        inactive: "hover:text-brand-primary",
-      },
+const menuItem = cva({
+  base: "border-brand-gray-200 block border-b py-2.5 font-bold text-black first:border-t hover:underline",
+  variants: {
+    status: {
+      active: "text-brand-primary",
+      inactive: "hover:text-brand-primary",
     },
   },
-);
+});
 
 const LINKS = [
   {
