@@ -27,10 +27,10 @@ const config: Config = {
         "accordion-up": "accordion-up 0.2s ease-out",
       },
       colors: {
-        red: {
-          650: "#BB271A",
-        },
         wurth: {
+          red: {
+            650: "#CC0000",
+          },
           gray: {
             150: "#E8E9ED",
             400: "#9FA1A6",
