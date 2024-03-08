@@ -50,7 +50,7 @@ const RootLayout = ({ children }: { children: ReactNode }) => {
         bodyFont.variable,
       )}
     >
-      <body className="font-content flex h-full flex-col justify-between antialiased">
+      <body className="flex h-full flex-col justify-between font-body antialiased">
         <Providers>
           <NextTopLoader showSpinner={false} color="#cc0000" />
 
