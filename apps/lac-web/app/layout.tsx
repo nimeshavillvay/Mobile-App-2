@@ -26,10 +26,12 @@ const wurth = localFont({
 const titleFont = Jost({
   subsets: ["latin"],
   variable: "--font-title",
+  display: "swap",
 });
 const bodyFont = DM_Sans({
   subsets: ["latin"],
-  variable: "--font-body",
+  variable: "--font-title",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
