@@ -1,6 +1,5 @@
 import { cn } from "@/_lib/utils";
 import { type Metadata } from "next";
-import { DM_Sans, Jost } from "next/font/google";
 import localFont from "next/font/local";
 import NextTopLoader from "nextjs-toploader";
 import { type ReactNode } from "react";
@@ -23,14 +22,22 @@ const wurth = localFont({
   display: "swap",
 });
 
-const titleFont = Jost({
-  subsets: ["latin"],
+const titleFont = localFont({
+  src: [
+    {
+      path: "./_fonts/Jost-VariableFont_wght.ttf",
+    },
+  ],
   variable: "--font-title",
   display: "swap",
 });
-const bodyFont = DM_Sans({
-  subsets: ["latin"],
-  variable: "--font-title",
+const bodyFont = localFont({
+  src: [
+    {
+      path: "./_fonts/DMSans-VariableFont_opsz,wght.ttf",
+    },
+  ],
+  variable: "--font-body",
   display: "swap",
 });
 
