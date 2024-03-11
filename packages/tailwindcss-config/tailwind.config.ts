@@ -9,6 +9,10 @@ const config: Config = {
     "./src/**/*.{ts,tsx}",
   ],
   theme: {
+    screens: {
+      xs: "480px",
+      ...defaultTheme.screens,
+    },
     extend: {
       fontFamily: {
         title: [
