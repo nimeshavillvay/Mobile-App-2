@@ -13,6 +13,4 @@ export default defineConfig({
   external: ["react", "react-dom", "next", "tailwind-merge"],
   treeshake: true,
   splitting: true,
-  sourcemap: true,
-  minify: true,
 });
