@@ -14,7 +14,12 @@ export type ApproveContact = {
   signedData: SignedData;
 };
 
-export type Status = "ACTIVE" | "DEACTIVE" | "PENDING";
+export type Status =
+  | "PENDING"
+  | "ACTIVE"
+  | "DEACTIVE"
+  | "INACTIVE"
+  | "DISABLED";
 
 export type UserProfile = {
   uuid: string;

@@ -21,7 +21,7 @@ import { Role } from "@/old/_lib/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { UserProfile } from "./types";
+import { Status, UserProfile } from "./types";
 
 const USER_PERMISSIONS = [
   { label: "Admin", value: "ADMIN" },
@@ -31,7 +31,7 @@ const USER_PERMISSIONS = [
 const USER_STATUSES = [
   { label: "Active", value: "ACTIVE" },
   { label: "Deactive", value: "DEACTIVE" },
-];
+] as const;
 
 const updateUserSchema = z.object({
   firstName: z.string().trim().min(1, "Please enter first name.").max(40),
@@ -70,7 +70,7 @@ const UserUpdateForm = ({ user, jobRoles }: UpdateUserProps) => {
     console.log("> values: ", values);
   };
 
-  const renderStatusOption = (status: string) => {
+  const renderStatusOption = (status: Status) => {
     if (status === "PENDING") {
       return <SelectItem value={status}>Pending</SelectItem>;
     }
