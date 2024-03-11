@@ -29,7 +29,7 @@ const ShippingDetails = () => {
 
   return (
     <div className="bg-brand-tertiary">
-      <div className="max-w-desktop mx-auto flex flex-row items-stretch gap-3.5 py-[7px]">
+      <div className="mx-auto flex max-w-desktop flex-row items-stretch gap-3.5 py-[7px]">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="58"

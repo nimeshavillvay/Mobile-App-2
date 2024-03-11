@@ -1,9 +1,17 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { ShoppingCart } from "lucide-react";
+import { Heart, ShoppingCart } from "lucide-react";
 import { Button } from "./button";
 
+const ButtonContent = () => {
+  return (
+    <>
+      <ShoppingCart /> <span>Shopping cart</span>
+    </>
+  );
+};
+
 const meta: Meta<typeof Button> = {
-  title: "Components/Button",
+  title: "Components/UI/Button",
   component: Button,
   parameters: {
     // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/configure/story-layout
@@ -12,17 +20,11 @@ const meta: Meta<typeof Button> = {
       exclude: /(children|asChild)/g,
     },
   },
+  args: {
+    children: <ButtonContent />,
+  },
   // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
   tags: ["autodocs"],
-  args: {
-    children: (
-      <>
-        <ShoppingCart />
-
-        <span>Add to cart</span>
-      </>
-    ),
-  },
 };
 
 export default meta;
@@ -37,96 +39,69 @@ type Story = StoryObj<typeof Button>;
 export const Default: Story = {
   args: {
     variant: "default",
-    size: "medium",
+    size: "default",
+    disabled: false,
+  },
+  render: ({ size, ...delegated }) => {
+    return (
+      <Button size={size} {...delegated}>
+        {size === "icon" ? <Heart /> : <ButtonContent />}
+      </Button>
+    );
   },
 };
 
-export const Variants: Story = {
-  render: () => {
-    return (
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(3, 1fr)",
-          gap: "0.5rem",
-          justifyContent: "center",
-          justifyItems: "center",
-          alignContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Button variant="default" size="small">
-          <ButtonContent />
-        </Button>
+export const Secondary: Story = {
+  args: {
+    variant: "secondary",
+  },
+};
 
-        <Button variant="default" size="medium">
-          <ButtonContent />
-        </Button>
+export const Destructive: Story = {
+  args: {
+    variant: "destructive",
+  },
+};
 
-        <Button variant="default" size="large">
-          <ButtonContent />
-        </Button>
+export const Outline: Story = {
+  args: {
+    variant: "outline",
+  },
+};
 
-        <Button variant="destructive" size="small">
-          <ButtonContent />
-        </Button>
+export const Ghost: Story = {
+  args: {
+    variant: "ghost",
+  },
+};
 
-        <Button variant="destructive" size="medium">
-          <ButtonContent />
-        </Button>
+export const Link: Story = {
+  args: {
+    variant: "link",
+  },
+};
 
-        <Button variant="destructive" size="large">
-          <ButtonContent />
-        </Button>
+export const Small: Story = {
+  args: {
+    size: "sm",
+  },
+};
 
-        <Button variant="outline" size="small">
-          <ButtonContent />
-        </Button>
+export const Large: Story = {
+  args: {
+    size: "lg",
+  },
+};
 
-        <Button variant="outline" size="medium">
-          <ButtonContent />
-        </Button>
-
-        <Button variant="outline" size="large">
-          <ButtonContent />
-        </Button>
-      </div>
-    );
+export const Icon: Story = {
+  args: {
+    size: "icon",
+    children: <Heart />,
   },
 };
 
 export const Disabled: Story = {
-  render: () => {
-    return (
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          gap: "0.5rem",
-          alignItems: "center",
-        }}
-      >
-        <Button variant="default" size="medium" disabled>
-          <ButtonContent />
-        </Button>
-
-        <Button variant="destructive" size="medium" disabled>
-          <ButtonContent />
-        </Button>
-
-        <Button variant="outline" size="medium" disabled>
-          <ButtonContent />
-        </Button>
-      </div>
-    );
+  args: {
+    disabled: true,
   },
-};
-
-const ButtonContent = () => {
-  return (
-    <>
-      <ShoppingCart />
-      <span>Add to cart</span>
-    </>
-  );
 };

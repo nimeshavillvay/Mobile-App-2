@@ -18,7 +18,7 @@ const AboutUsPage = () => {
         src={aboutBanner}
         alt="The banner for about us page"
         placeholder="blur"
-        className="border-brand-gray-100 mb-8 h-auto w-full border object-cover"
+        className="mb-8 h-auto w-full border border-brand-gray-100 object-cover"
         priority={true}
       />
 
@@ -28,12 +28,12 @@ const AboutUsPage = () => {
 
         <Separator
           orientation="horizontal"
-          className="bg-brand-primary h-px flex-1"
+          className="h-px flex-1 bg-brand-primary"
         />
       </div>
 
       {/* About us content */}
-      <div className="text-brand-gray-500 box-border space-y-4">
+      <div className="box-border space-y-4 text-brand-gray-500">
         <p>
           Louis and Company, founded in 1975, is a leading provider of quality
           products to the woodworking industry. With a product portfolio that
@@ -90,13 +90,13 @@ const AboutUsPage = () => {
         </p>
 
         <div className="relative w-full pt-8 md:w-1/2">
-          <h2 className="text-brand-primary relative pr-3 text-lg font-medium">
+          <h2 className="relative pr-3 text-lg font-medium text-brand-primary">
             Our Mission Statement
           </h2>
 
           <Separator
             orientation="horizontal"
-            className="bg-brand-primary mt-0.5 h-px flex-1"
+            className="mt-0.5 h-px flex-1 bg-brand-primary"
           />
         </div>
 
@@ -106,19 +106,19 @@ const AboutUsPage = () => {
         </p>
 
         <div className="relative w-full pt-8 md:w-1/2">
-          <h2 className="text-brand-primary relative pr-3 text-lg font-medium">
+          <h2 className="relative pr-3 text-lg font-medium text-brand-primary">
             Corporate Executives
           </h2>
 
           <Separator
             orientation="horizontal"
-            className="bg-brand-primary mt-0.5 h-px flex-1"
+            className="mt-0.5 h-px flex-1 bg-brand-primary"
           />
         </div>
 
         <div className="grid grid-cols-2 gap-8 md:w-1/2">
           <div className="relative">
-            <div className="border-brand-gray-200 relative flex flex-col rounded border">
+            <div className="relative flex flex-col rounded border border-brand-gray-200">
               <Image
                 src={chiefExecutiveOfficer}
                 alt="Photo of Thomas Stolmeier"
@@ -138,7 +138,7 @@ const AboutUsPage = () => {
           </div>
 
           <div className="relative">
-            <div className="border-brand-gray-200 relative flex flex-col rounded border">
+            <div className="relative flex flex-col rounded border border-brand-gray-200">
               <Image
                 src={chiefFinancialOfficer}
                 alt="Photo of Evangeline B. de Guzman"

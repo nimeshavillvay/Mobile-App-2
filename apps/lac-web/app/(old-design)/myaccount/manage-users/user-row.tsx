@@ -58,7 +58,7 @@ const UserRow = ({ user, index, jobRoles }: UserRowProps) => {
         <TableCell className="text-right">
           <div className="flex justify-end">
             <Button
-              className="font-wurth bg-brand-secondary flex h-6 min-w-20 flex-row items-center justify-center gap-0.5 px-2 text-base leading-6 text-white"
+              className="flex h-6 min-w-20 flex-row items-center justify-center gap-0.5 bg-brand-secondary px-2 font-wurth text-base leading-6 text-white"
               onClick={() => setIsOpen(!isOpen)}
             >
               {!isOpen ? (

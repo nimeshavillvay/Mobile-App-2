@@ -66,16 +66,16 @@ const BulkOrderForm = () => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <h3 className="text-brand-gray-500 font-wurth text-xl font-medium leading-6">
+      <h3 className="font-wurth text-xl font-medium leading-6 text-brand-gray-500">
         Forgot Something? Add More Items to this Cart.
       </h3>
 
       <div className="flex flex-row items-center justify-end gap-1 py-2.5">
-        <button className="bg-brand-primary font-wurth rounded-sm px-3 py-1.5 text-base font-extrabold uppercase leading-[22px] text-white">
+        <button className="rounded-sm bg-brand-primary px-3 py-1.5 font-wurth text-base font-extrabold uppercase leading-[22px] text-white">
           Delete
         </button>
 
-        <button className="bg-brand-gray-200 font-wurth text-brand-gray-500 rounded-sm px-3 py-1.5 text-base font-extrabold uppercase leading-[22px]">
+        <button className="rounded-sm bg-brand-gray-200 px-3 py-1.5 font-wurth text-base font-extrabold uppercase leading-[22px] text-brand-gray-500">
           Use large order pad
         </button>
       </div>
@@ -175,14 +175,14 @@ const BulkOrderForm = () => {
       <div className="flex flex-row items-center justify-between">
         <button
           type="reset"
-          className="font-wurth bg-brand-gray-200 text-brand-gray-500 rounded-sm px-3.5 py-2 font-extrabold uppercase"
+          className="rounded-sm bg-brand-gray-200 px-3.5 py-2 font-wurth font-extrabold uppercase text-brand-gray-500"
         >
           Clear form
         </button>
 
         <button
           type="submit"
-          className="font-wurth bg-brand-primary rounded-sm px-3.5 py-2 font-extrabold uppercase text-white"
+          className="rounded-sm bg-brand-primary px-3.5 py-2 font-wurth font-extrabold uppercase text-white"
         >
           Validate
         </button>

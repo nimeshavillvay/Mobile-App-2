@@ -11,8 +11,16 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        title: ["var(--font-title)", ...defaultTheme.fontFamily.sans],
-        body: ["var(--font-body)", ...defaultTheme.fontFamily.sans],
+        title: [
+          ["var(--font-title)", ...defaultTheme.fontFamily.sans],
+          { fontFeatureSettings: "'ss01' on" },
+        ],
+        body: [
+          ["var(--font-body)", ...defaultTheme.fontFamily.sans],
+          {
+            fontFeatureSettings: "'ss04' on, 'ss03' on, 'ss07' on, 'ss02' on",
+          },
+        ],
       },
     },
   },

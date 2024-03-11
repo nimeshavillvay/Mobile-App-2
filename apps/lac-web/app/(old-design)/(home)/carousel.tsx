@@ -61,7 +61,7 @@ const Carousel = ({ banners }: CarouselProps) => {
         <FaChevronLeft />
       </ScrollButton>
 
-      <div className="max-w-desktop relative overflow-hidden" ref={emblaRef}>
+      <div className="relative max-w-desktop overflow-hidden" ref={emblaRef}>
         <div className="flex">
           {banners.map((banner, index) => (
             <div key={banner.id} className="shrink-0 grow-0 basis-full">

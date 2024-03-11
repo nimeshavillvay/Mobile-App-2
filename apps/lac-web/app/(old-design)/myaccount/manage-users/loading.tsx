@@ -13,24 +13,24 @@ import { MdAccountBox } from "react-icons/md";
 const ManageUsersLoading = () => {
   return (
     <div>
-      <h2 className="font-wurth text-brand-primary relative text-xl font-medium">
+      <h2 className="relative font-wurth text-xl font-medium text-brand-primary">
         Manage Users
       </h2>
 
       <Separator
         orientation="horizontal"
-        className="bg-brand-primary h-px flex-1"
+        className="h-px flex-1 bg-brand-primary"
       />
 
       <div className="my-5">
-        <h6 className="font-wurth text-brand-gray-500 flex text-base font-medium">
+        <h6 className="flex font-wurth text-base font-medium text-brand-gray-500">
           <MdAccountBox className="self-center text-2xl leading-none" />
           &nbsp;Update Your Profile
         </h6>
       </div>
 
       <Table>
-        <TableHeader className="bg-brand-gray-200 border-brand-gray-200 border">
+        <TableHeader className="border border-brand-gray-200 bg-brand-gray-200">
           <TableRow>
             <TableHead>Email</TableHead>
 
@@ -42,7 +42,7 @@ const ManageUsersLoading = () => {
           </TableRow>
         </TableHeader>
 
-        <TableBody className="border-brand-gray-200 border">
+        <TableBody className="border border-brand-gray-200">
           <TableRow>
             <TableCell>
               <Skeleton className="h-5 w-[130px]" />

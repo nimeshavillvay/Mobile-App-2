@@ -13,7 +13,7 @@ const CategoriesDropdown = ({ categories }: CategoriesDropdownProps) => {
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
-        <button className="font-wurth flex h-full flex-row items-center gap-2.5 bg-black px-7 align-middle text-lg font-medium leading-6 text-white">
+        <button className="flex h-full flex-row items-center gap-2.5 bg-black px-7 align-middle font-wurth text-lg font-medium leading-6 text-white">
           <MdOutlineMenu className="text-2xl leading-none" />
           <span>Shop By Category</span>
         </button>
@@ -24,7 +24,7 @@ const CategoriesDropdown = ({ categories }: CategoriesDropdownProps) => {
           {categories.map((category) => (
             <DropdownMenu.Sub key={category.id}>
               <DropdownMenu.SubTrigger
-                className="data-[state=open]:text-brand-primary hover:text-brand-primary p-2.5"
+                className="p-2.5 hover:text-brand-primary data-[state=open]:text-brand-primary"
                 asChild
               >
                 <DropdownMenu.Item key={category.id} asChild>
@@ -39,7 +39,7 @@ const CategoriesDropdown = ({ categories }: CategoriesDropdownProps) => {
                   subCategory.subsubcategory?.length ? (
                     <DropdownMenu.Sub key={subCategory.subid}>
                       <DropdownMenu.SubTrigger
-                        className="data-[state=open]:text-brand-primary hover:text-brand-primary p-2.5"
+                        className="p-2.5 hover:text-brand-primary data-[state=open]:text-brand-primary"
                         asChild
                       >
                         <DropdownMenu.Item asChild>
@@ -55,7 +55,7 @@ const CategoriesDropdown = ({ categories }: CategoriesDropdownProps) => {
                         {subCategory.subsubcategory.map((subSubCategory) => (
                           <DropdownMenu.Item
                             key={subSubCategory.subsubid}
-                            className="hover:text-brand-primary p-2.5"
+                            className="p-2.5 hover:text-brand-primary"
                             asChild
                           >
                             <Link
@@ -70,7 +70,7 @@ const CategoriesDropdown = ({ categories }: CategoriesDropdownProps) => {
                   ) : (
                     <DropdownMenu.Item
                       key={subCategory.subid}
-                      className="hover:text-brand-primary p-2.5"
+                      className="p-2.5 hover:text-brand-primary"
                       asChild
                     >
                       <Link

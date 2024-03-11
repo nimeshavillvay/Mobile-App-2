@@ -49,7 +49,7 @@ const ProductsListSelectors = ({
     <div className="col-span-4 flex flex-row items-center justify-between">
       {!isLoading ? (
         <>
-          <div className="text-brand-gray-500 min-w-[115px]">
+          <div className="min-w-[115px] text-brand-gray-500">
             {(pageNo - 1) * pageSize + 1} - {Math.min(pageNo * pageSize, total)}{" "}
             of {total}
           </div>

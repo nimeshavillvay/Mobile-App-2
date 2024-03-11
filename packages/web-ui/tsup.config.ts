@@ -9,7 +9,7 @@ export default defineConfig({
   // Clean the `dist` directory before building.
   // This is useful to ensure the output is only the latest.
   clean: true,
-  format: ["esm", "cjs"],
-  skipNodeModulesBundle: true,
+  format: ["esm"],
+  external: ["react", "react-dom", "next", "tailwind-merge"],
   treeshake: true,
 });

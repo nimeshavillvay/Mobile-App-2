@@ -82,7 +82,7 @@ const ShoppingCartListRow = ({ item }: ShoppingCartListRowProps) => {
               alt={item.itemInfo.txt_sub_description}
               width={92}
               height={92}
-              className="border-brand-gray-200 size-[92px] border object-contain"
+              className="size-[92px] border border-brand-gray-200 object-contain"
             />
           </Link>
         </TableCell>
@@ -90,7 +90,7 @@ const ShoppingCartListRow = ({ item }: ShoppingCartListRowProps) => {
         <TableCell className="flex flex-col gap-0.5 pb-0">
           <Link
             href={`/product-item/${item.itemInfo.groupId}/${item.itemInfo.txt_wurth_lac_item}`}
-            className="text-brand-gray-500 text-sm"
+            className="text-sm text-brand-gray-500"
           >
             Item#: {item.itemInfo.txt_wurth_lac_item}
           </Link>
@@ -98,7 +98,7 @@ const ShoppingCartListRow = ({ item }: ShoppingCartListRowProps) => {
           <h4 className="font-bold">{item.itemInfo.txt_description_name}</h4>
         </TableCell>
 
-        <TableCell className="text-brand-gray-500 pb-0 text-right">
+        <TableCell className="pb-0 text-right text-brand-gray-500">
           <span className="font-bold">${price}</span> /{" "}
           {getUomLabel(item.itemInfo.txt_uom)}
         </TableCell>
@@ -117,11 +117,11 @@ const ShoppingCartListRow = ({ item }: ShoppingCartListRowProps) => {
           />
         </TableCell>
 
-        <TableCell className="text-brand-gray-500 pb-0 text-center">
+        <TableCell className="pb-0 text-center text-brand-gray-500">
           {getUomLabel(item.itemInfo.txt_uom)}
         </TableCell>
 
-        <TableCell className="text-brand-gray-500 pb-0 text-right font-bold">
+        <TableCell className="pb-0 text-right font-bold text-brand-gray-500">
           $ {formatNumberToPrice(quantity * price)}
         </TableCell>
 
@@ -143,13 +143,13 @@ const ShoppingCartListRow = ({ item }: ShoppingCartListRowProps) => {
           <Input
             id={jobNameId}
             placeholder="PO/Job Name"
-            className="border-brand-gray-300 placeholder:text-brand-gray-300 h-6 w-full max-w-[164px] px-1 text-base leading-4"
+            className="h-6 w-full max-w-[164px] border-brand-gray-300 px-1 text-base leading-4 placeholder:text-brand-gray-300"
           />
         </TableCell>
 
         <TableCell colSpan={4}>
           <Collapsible className="flex flex-col items-end">
-            <CollapsibleTrigger className="font-wurth group flex flex-row items-center text-sm font-extrabold uppercase leading-[22px] text-black">
+            <CollapsibleTrigger className="group flex flex-row items-center font-wurth text-sm font-extrabold uppercase leading-[22px] text-black">
               <span>Change Shipping Options</span>
 
               <MdKeyboardArrowDown className="text-[22px] leading-none transition-transform duration-200 ease-out group-data-[state=open]:rotate-180" />
@@ -168,12 +168,12 @@ const ShoppingCartListRow = ({ item }: ShoppingCartListRowProps) => {
       <TableRow>
         <TableCell
           colSpan={7}
-          className="text-brand-gray-500 space-y-1 text-right text-sm font-bold leading-5"
+          className="space-y-1 text-right text-sm font-bold leading-5 text-brand-gray-500"
         >
           <div className="flex flex-row items-center justify-end gap-1">
             <span>Availability</span>
 
-            <Separator className="bg-brand-gray-500 h-3.5 w-0.5" />
+            <Separator className="h-3.5 w-0.5 bg-brand-gray-500" />
 
             <span
               className={cn({
@@ -192,11 +192,11 @@ const ShoppingCartListRow = ({ item }: ShoppingCartListRowProps) => {
           <div className="flex flex-row items-center justify-end gap-1">
             <span className="font-normal">Quantity {quantity} </span>
 
-            <Separator className="bg-brand-gray-500 inline-block h-3.5 w-0.5" />
+            <Separator className="inline-block h-3.5 w-0.5 bg-brand-gray-500" />
 
             <span>{shipText}</span>
 
-            <Separator className="bg-brand-gray-500 inline-block h-3.5 w-0.5" />
+            <Separator className="inline-block h-3.5 w-0.5 bg-brand-gray-500" />
 
             <span>{shipTime}</span>
           </div>

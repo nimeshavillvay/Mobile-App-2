@@ -44,7 +44,7 @@ const RelatedProductRow = ({ item }: RelatedProductRowProps) => {
             alt={`An image of ${item.txt_sub_description}`}
             width={84}
             height={87}
-            className="border-brand-gray-200 h-[87px] w-[84px] rounded-sm border object-contain"
+            className="h-[87px] w-[84px] rounded-sm border border-brand-gray-200 object-contain"
           />
         </Link>
       </TableCell>
@@ -61,7 +61,7 @@ const RelatedProductRow = ({ item }: RelatedProductRowProps) => {
           {item.txt_sub_description}
         </Link>
 
-        <div className="text-brand-gray-500 flex flex-row gap-1.5 text-sm leading-5">
+        <div className="flex flex-row gap-1.5 text-sm leading-5 text-brand-gray-500">
           <div>
             Item #: <span className="font-bold">{item.txt_wurth_lac_item}</span>
           </div>

@@ -47,10 +47,10 @@ const EmailSignup = () => {
           type="email"
           required
           placeholder="Enter your Email to sign up"
-          className="placeholder:text-brand-gray-400 h-9 flex-1 rounded px-2"
+          className="h-9 flex-1 rounded px-2 placeholder:text-brand-gray-400"
         />
 
-        <button className="bg-brand-primary font-wurth h-9 rounded px-2 py-[7px] text-base font-extrabold uppercase leading-[22px] text-white">
+        <button className="h-9 rounded bg-brand-primary px-2 py-[7px] font-wurth text-base font-extrabold uppercase leading-[22px] text-white">
           Subscribe
         </button>
       </form>

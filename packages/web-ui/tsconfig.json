@@ -2,7 +2,7 @@
   "compilerOptions": {
     "lib": ["ES2015", "DOM"],
     "module": "ESNext",
-    "target": "ES6",
+    "target": "ESNext",
     "jsx": "react-jsx",
     "noEmit": true,
     "composite": false,
@@ -25,5 +25,6 @@
       "@/*": ["./src/*"]
     }
   },
+  "include": ["src", "next-env.d.ts"],
   "exclude": ["node_modules"]
 }

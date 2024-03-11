@@ -52,7 +52,7 @@ const ProductHero = async ({ groupId, sku }: ProductHeroProps) => {
 
             {!!product?.selected_item && (
               <>
-                <div className="text-brand-gray-400 mt-2 leading-[17px]">
+                <div className="mt-2 leading-[17px] text-brand-gray-400">
                   Manufacturer Part # :{" "}
                   {product.selected_item?.txt_wurth_lac_item}
                 </div>

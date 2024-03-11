@@ -98,7 +98,7 @@ const FeaturedProducts = ({
         >
           <div className="mb-7 flex flex-row justify-between">
             <Title
-              className="border-brand-gray-400 flex-1 border-b pb-3.5"
+              className="flex-1 border-b border-brand-gray-400 pb-3.5"
               asChild
             >
               <h2>Featured Products</h2>
@@ -109,7 +109,7 @@ const FeaturedProducts = ({
                 <Tabs.Trigger
                   key={productType}
                   value={productType}
-                  className="text-brand-gray-500 border-brand-gray-400 px-7 py-3 text-base font-bold capitalize leading-5 data-[state=active]:border-x data-[state=active]:border-t data-[state=inactive]:border-b data-[state=active]:text-black"
+                  className="border-brand-gray-400 px-7 py-3 text-base font-bold capitalize leading-5 text-brand-gray-500 data-[state=active]:border-x data-[state=active]:border-t data-[state=inactive]:border-b data-[state=active]:text-black"
                 >
                   {productType.split(/(?=[A-Z])/).join(" ")}
                 </Tabs.Trigger>

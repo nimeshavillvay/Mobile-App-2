@@ -22,14 +22,14 @@ const Header = async () => {
   return (
     <header className="old-design-text-base">
       <div className="bg-brand-gray-100">
-        <div className="max-w-desktop mx-auto flex h-9 flex-row items-center justify-between text-sm leading-4 text-black">
+        <div className="mx-auto flex h-9 max-w-desktop flex-row items-center justify-between text-sm leading-4 text-black">
           <nav className="flex flex-row items-center gap-4">
-            <Link href="/" className="text-brand-primary font-bold">
+            <Link href="/" className="font-bold text-brand-primary">
               Wurth Louis and Company
             </Link>
 
             <Separator
-              className="bg-brand-gray-200 h-5 w-px"
+              className="h-5 w-px bg-brand-gray-200"
               orientation="vertical"
             />
 
@@ -43,7 +43,7 @@ const Header = async () => {
             </a>
 
             <Separator
-              className="bg-brand-gray-200 h-5 w-px"
+              className="h-5 w-px bg-brand-gray-200"
               orientation="vertical"
             />
 
@@ -59,20 +59,20 @@ const Header = async () => {
         </div>
       </div>
 
-      <div className="max-w-desktop mx-auto my-5 flex flex-row items-center gap-12">
+      <div className="mx-auto my-5 flex max-w-desktop flex-row items-center gap-12">
         <Link href="/">
           <VisuallyHidden>Wurth</VisuallyHidden>
 
           <WurthLogo width={192} height={41} />
         </Link>
 
-        <SearchBar className="border-brand-primary/50 ring-brand-primary/15 flex-1 ring-[3px]" />
+        <SearchBar className="flex-1 border-brand-primary/50 ring-[3px] ring-brand-primary/15" />
 
         <ShoppingCart />
       </div>
 
       <div className="bg-brand-primary">
-        <div className="max-w-desktop mx-auto flex h-[50px] flex-row items-center gap-[15px]">
+        <div className="mx-auto flex h-[50px] max-w-desktop flex-row items-center gap-[15px]">
           <CategoriesDropdown categories={categories} />
 
           <NavBar />

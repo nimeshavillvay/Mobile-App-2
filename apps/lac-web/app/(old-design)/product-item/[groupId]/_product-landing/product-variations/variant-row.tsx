@@ -36,7 +36,7 @@ const VariantRow = ({ variant, attributes }: VariantRowProps) => {
       {attributes.map((attribute) => (
         <TableCell
           key={attribute.slug}
-          className="text-brand-gray-500 text-center text-sm leading-5"
+          className="text-center text-sm leading-5 text-brand-gray-500"
         >
           {
             variant.Attributes.find(
@@ -62,7 +62,7 @@ const VariantRow = ({ variant, attributes }: VariantRowProps) => {
         </>
       )}
 
-      <TableCell className="text-brand-gray-500 text-left text-sm leading-5">
+      <TableCell className="text-left text-sm leading-5 text-brand-gray-500">
         {variant.txt_uom_label}
       </TableCell>
 

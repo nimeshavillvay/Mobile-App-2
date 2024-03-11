@@ -107,13 +107,13 @@ const FeaturedProductCard = ({
         />
 
         <ProductCardActions>
-          <div className="text-brand-gray-400 mb-2 text-center text-sm leading-5">
+          <div className="mb-2 text-center text-sm leading-5 text-brand-gray-400">
             {product.sku}
           </div>
 
           {accountListQuery.data ? (
             <>
-              <div className="text-brand-gray-500 flex flex-row items-center justify-center gap-1 text-lg font-normal leading-5">
+              <div className="flex flex-row items-center justify-center gap-1 text-lg font-normal leading-5 text-brand-gray-500">
                 {discountedPrice ? (
                   <span className="font-bold">${discountedPrice}</span>
                 ) : (
@@ -130,7 +130,7 @@ const FeaturedProductCard = ({
                       ${actualPrice}
                     </div>
 
-                    <div className="text-brand-success bg-brand-success/10 rounded-sm px-1 py-0.5 font-bold leading-none">
+                    <div className="rounded-sm bg-brand-success/10 px-1 py-0.5 font-bold leading-none text-brand-success">
                       Save ${formatNumberToPrice(actualPrice - discountedPrice)}{" "}
                       ({Math.round(discountPercentage)}%)
                     </div>
@@ -164,7 +164,7 @@ const FeaturedProductCard = ({
                 />
 
                 <button
-                  className="bg-brand-primary font-wurth flex flex-1 flex-row items-center justify-center rounded-sm p-1.5 font-extrabold uppercase text-white"
+                  className="flex flex-1 flex-row items-center justify-center rounded-sm bg-brand-primary p-1.5 font-wurth font-extrabold uppercase text-white"
                   type="submit"
                 >
                   <AddToCartIcon />
@@ -175,7 +175,7 @@ const FeaturedProductCard = ({
                 {favoriteSkusQuery?.data?.[0].isFavourite ? (
                   <Link
                     href="/myaccount/myfavorites"
-                    className="border-brand-success grid size-9 place-items-center rounded-sm border-2"
+                    className="grid size-9 place-items-center rounded-sm border-2 border-brand-success"
                   >
                     <VisuallyHidden>Favorites</VisuallyHidden>
 
@@ -184,7 +184,7 @@ const FeaturedProductCard = ({
                 ) : (
                   <button
                     type="button"
-                    className="border-brand-secondary grid size-9 place-items-center rounded-sm border-2"
+                    className="grid size-9 place-items-center rounded-sm border-2 border-brand-secondary"
                     onClick={addToFavorites}
                     disabled={addToFavoritesMutation.isPending}
                   >
@@ -198,7 +198,7 @@ const FeaturedProductCard = ({
           ) : (
             <button
               onClick={() => setOpenLoginDialog(true)}
-              className="bg-brand-primary font-wurth w-full rounded p-2 text-base font-extrabold uppercase text-white"
+              className="w-full rounded bg-brand-primary p-2 font-wurth text-base font-extrabold uppercase text-white"
               disabled={accountListQuery.isLoading}
             >
               Login to buy
@@ -209,7 +209,7 @@ const FeaturedProductCard = ({
         {flag !== "hidden" && (
           <span
             className={cn(
-              "font-wurth absolute right-0 top-0 flex flex-row items-center gap-[5px] rounded-bl-[36px] p-3.5 text-[22px] font-extrabold uppercase leading-none",
+              "absolute right-0 top-0 flex flex-row items-center gap-[5px] rounded-bl-[36px] p-3.5 font-wurth text-[22px] font-extrabold uppercase leading-none",
               flag === "sale" && "bg-brand-secondary text-white",
               flag === "new" && "bg-brand-success text-white",
             )}

@@ -98,7 +98,7 @@ const UserUpdateForm = ({ user, jobRoles }: UpdateUserProps) => {
                     <FormControl>
                       <Input
                         placeholder="First Name"
-                        className="placeholder:text-brand-gray-400 text-[15px]"
+                        className="text-[15px] placeholder:text-brand-gray-400"
                         {...field}
                       />
                     </FormControl>
@@ -109,7 +109,7 @@ const UserUpdateForm = ({ user, jobRoles }: UpdateUserProps) => {
                       </FormDescription>
                     </VisuallyHidden>
 
-                    <FormMessage className="dark:text-brand-primary text-xs" />
+                    <FormMessage className="text-xs dark:text-brand-primary" />
                   </FormItem>
                 )}
               />
@@ -124,7 +124,7 @@ const UserUpdateForm = ({ user, jobRoles }: UpdateUserProps) => {
                     <FormControl>
                       <Input
                         placeholder="Last Name"
-                        className="placeholder:text-brand-gray-400 text-[15px]"
+                        className="text-[15px] placeholder:text-brand-gray-400"
                         {...field}
                       />
                     </FormControl>
@@ -135,7 +135,7 @@ const UserUpdateForm = ({ user, jobRoles }: UpdateUserProps) => {
                       </FormDescription>
                     </VisuallyHidden>
 
-                    <FormMessage className="dark:text-brand-primary text-xs" />
+                    <FormMessage className="text-xs dark:text-brand-primary" />
                   </FormItem>
                 )}
               />
@@ -154,7 +154,7 @@ const UserUpdateForm = ({ user, jobRoles }: UpdateUserProps) => {
                       defaultValue={field.value}
                     >
                       <FormControl>
-                        <SelectTrigger className="focus:ring-brand-gray-500 h-8 rounded-sm py-0">
+                        <SelectTrigger className="h-8 rounded-sm py-0 focus:ring-brand-gray-500">
                           <SelectValue placeholder="Job Title" />
                         </SelectTrigger>
                       </FormControl>
@@ -174,7 +174,7 @@ const UserUpdateForm = ({ user, jobRoles }: UpdateUserProps) => {
                       </FormDescription>
                     </VisuallyHidden>
 
-                    <FormMessage className="dark:text-brand-primary text-xs" />
+                    <FormMessage className="text-xs dark:text-brand-primary" />
                   </FormItem>
                 )}
               />
@@ -190,7 +190,7 @@ const UserUpdateForm = ({ user, jobRoles }: UpdateUserProps) => {
                       <Input
                         placeholder="Email"
                         type="email"
-                        className="placeholder:text-brand-gray-400 text-[15px]"
+                        className="text-[15px] placeholder:text-brand-gray-400"
                         {...field}
                       />
                     </FormControl>
@@ -201,7 +201,7 @@ const UserUpdateForm = ({ user, jobRoles }: UpdateUserProps) => {
                       </FormDescription>
                     </VisuallyHidden>
 
-                    <FormMessage className="dark:text-brand-primary text-xs" />
+                    <FormMessage className="text-xs dark:text-brand-primary" />
                   </FormItem>
                 )}
               />
@@ -222,7 +222,7 @@ const UserUpdateForm = ({ user, jobRoles }: UpdateUserProps) => {
                       defaultValue={field.value}
                     >
                       <FormControl>
-                        <SelectTrigger className="focus:ring-brand-gray-500 h-8 rounded-sm py-0">
+                        <SelectTrigger className="h-8 rounded-sm py-0 focus:ring-brand-gray-500">
                           <SelectValue placeholder="Permission" />
                         </SelectTrigger>
                       </FormControl>
@@ -245,7 +245,7 @@ const UserUpdateForm = ({ user, jobRoles }: UpdateUserProps) => {
                       </FormDescription>
                     </VisuallyHidden>
 
-                    <FormMessage className="dark:text-brand-primary text-xs" />
+                    <FormMessage className="text-xs dark:text-brand-primary" />
                   </FormItem>
                 )}
               />
@@ -262,7 +262,7 @@ const UserUpdateForm = ({ user, jobRoles }: UpdateUserProps) => {
                       defaultValue={field.value}
                     >
                       <FormControl>
-                        <SelectTrigger className="focus:ring-brand-gray-500 h-8 rounded-sm py-0">
+                        <SelectTrigger className="h-8 rounded-sm py-0 focus:ring-brand-gray-500">
                           <SelectValue placeholder="Status" />
                         </SelectTrigger>
                       </FormControl>
@@ -283,7 +283,7 @@ const UserUpdateForm = ({ user, jobRoles }: UpdateUserProps) => {
                       </FormDescription>
                     </VisuallyHidden>
 
-                    <FormMessage className="dark:text-brand-primary text-xs" />
+                    <FormMessage className="text-xs dark:text-brand-primary" />
                   </FormItem>
                 )}
               />

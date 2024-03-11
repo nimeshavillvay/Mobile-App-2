@@ -78,7 +78,7 @@ const ProductLanding = async ({ groupId, sku }: ProductLandingProps) => {
         >
           <div className="flex flex-row gap-[15px]">
             <div className="flex-1 space-y-4">
-              <h3 className="text-brand-gray-500 font-wurth text-[19px] font-normal leading-6">
+              <h3 className="font-wurth text-[19px] font-normal leading-6 text-brand-gray-500">
                 Description
               </h3>
 
@@ -106,11 +106,11 @@ const ProductLanding = async ({ groupId, sku }: ProductLandingProps) => {
 
             <Separator
               orientation="vertical"
-              className="bg-brand-gray-400 w-px self-stretch"
+              className="w-px self-stretch bg-brand-gray-400"
             />
 
             <div className="w-[350px]">
-              <h4 className="text-brand-gray-400 font-wurth mb-[18px] text-xl leading-6">
+              <h4 className="mb-[18px] font-wurth text-xl leading-6 text-brand-gray-400">
                 Technical Details
               </h4>
 
@@ -118,7 +118,7 @@ const ProductLanding = async ({ groupId, sku }: ProductLandingProps) => {
                 <tbody>
                   {product.selected_object_attributes.map((attribute) => (
                     <tr key={attribute.attribute_name}>
-                      <td className="text-brand-gray-500 pr-8 font-bold">
+                      <td className="pr-8 font-bold text-brand-gray-500">
                         {attribute.attribute_name.trim()}
                       </td>
                       <td className="text-[#4A4A4A]">
@@ -149,9 +149,9 @@ const ProductLanding = async ({ groupId, sku }: ProductLandingProps) => {
                   target="_blank"
                   rel="noopener noreferrer"
                   download
-                  className="bg-brand-secondary/[8%] flex flex-row items-center gap-1.5 rounded p-2.5"
+                  className="flex flex-row items-center gap-1.5 rounded bg-brand-secondary/[8%] p-2.5"
                 >
-                  <MdOutlineSimCardDownload className="text-brand-secondary text-[32px] leading-none" />
+                  <MdOutlineSimCardDownload className="text-[32px] leading-none text-brand-secondary" />
 
                   <span className="text-xs leading-[18px]">
                     {doc.file_name}

@@ -1,5 +1,5 @@
 import * as ToastPrimitives from "@radix-ui/react-toast";
-import { cva, type VariantProps } from "class-variance-authority";
+import { cva, type VariantProps } from "cva";
 import { X } from "lucide-react";
 import * as React from "react";
 
@@ -22,21 +22,19 @@ const ToastViewport = React.forwardRef<
 ));
 ToastViewport.displayName = ToastPrimitives.Viewport.displayName;
 
-const toastVariants = cva(
-  "group pointer-events-auto relative flex w-full items-center justify-between space-x-4 overflow-hidden text-white text-base rounded p-4 shadow-lg transition-all data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)] data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=move]:transition-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[swipe=end]:animate-out data-[state=closed]:fade-out-80 data-[state=closed]:slide-out-to-right-full data-[state=open]:slide-in-from-top-full data-[state=open]:sm:slide-in-from-bottom-full",
-  {
-    variants: {
-      variant: {
-        default: "bg-brand-gray-500",
-        success: "bg-brand-success",
-        destructive: "destructive group bg-[#FF003D]",
-      },
-    },
-    defaultVariants: {
-      variant: "default",
+const toastVariants = cva({
+  base: "group pointer-events-auto relative flex w-full items-center justify-between space-x-4 overflow-hidden rounded p-4 text-base text-white shadow-lg transition-all data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)] data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=move]:transition-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[swipe=end]:animate-out data-[state=closed]:fade-out-80 data-[state=closed]:slide-out-to-right-full data-[state=open]:slide-in-from-top-full data-[state=open]:sm:slide-in-from-bottom-full",
+  variants: {
+    variant: {
+      default: "bg-brand-gray-500",
+      success: "bg-brand-success",
+      destructive: "destructive group bg-[#FF003D]",
     },
   },
-);
+  defaultVariants: {
+    variant: "default",
+  },
+});
 
 const Toast = React.forwardRef<
   React.ElementRef<typeof ToastPrimitives.Root>,

@@ -17,12 +17,12 @@ const TermsOfSalePage = () => {
 
           <Separator
             orientation="horizontal"
-            className="bg-brand-primary h-px flex-1"
+            className="h-px flex-1 bg-brand-primary"
           />
         </div>
 
         {/* Terms of sale content */}
-        <div className="text-brand-gray-500 box-border space-y-4">
+        <div className="box-border space-y-4 text-brand-gray-500">
           <p>
             <em>
               If you are vision-impaired or have some other impairment covered

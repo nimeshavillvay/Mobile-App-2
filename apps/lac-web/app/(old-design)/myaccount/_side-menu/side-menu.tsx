@@ -8,22 +8,20 @@ import {
 } from "@/old/_components/ui/accordion";
 import useLogout from "@/old/_hooks/account/use-logout.hook";
 import { cn } from "@/old/_utils/helpers";
-import { cva } from "class-variance-authority";
+import { cva } from "cva";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import Filters from "./filters";
 
-const menuItem = cva(
-  "border-brand-gray-200 block border-b py-2.5 font-bold text-black first:border-t hover:underline",
-  {
-    variants: {
-      status: {
-        active: "text-brand-primary",
-        inactive: "hover:text-brand-primary",
-      },
+const menuItem = cva({
+  base: "block border-b border-brand-gray-200 py-2.5 font-bold text-black first:border-t hover:underline",
+  variants: {
+    status: {
+      active: "text-brand-primary",
+      inactive: "hover:text-brand-primary",
     },
   },
-);
+});
 
 const LINKS = [
   {
@@ -70,7 +68,7 @@ const SideMenu = () => {
           value="/myaccount/purchaseditems"
           className="first:border-t-0"
         >
-          <AccordionTrigger className="data-[state=open]:text-brand-primary text-black">
+          <AccordionTrigger className="text-black data-[state=open]:text-brand-primary">
             My Purchased Items
           </AccordionTrigger>
 
@@ -80,7 +78,7 @@ const SideMenu = () => {
         </AccordionItem>
 
         <AccordionItem value="/myaccount/myfavorites">
-          <AccordionTrigger className="data-[state=open]:text-brand-primary text-black">
+          <AccordionTrigger className="text-black data-[state=open]:text-brand-primary">
             My Favorites
           </AccordionTrigger>
 

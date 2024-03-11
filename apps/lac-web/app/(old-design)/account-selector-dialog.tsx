@@ -131,7 +131,7 @@ const AccountSelectorDialog = () => {
                         <div className="flex flex-col items-start gap-2">
                           <Label
                             htmlFor={`account-${account["account-no"]}`}
-                            className="text-brand-gray-500 font-bold"
+                            className="font-bold text-brand-gray-500"
                           >
                             {account.name} # {account["account-no"]}
                           </Label>
@@ -147,7 +147,7 @@ const AccountSelectorDialog = () => {
                   </Accordion.Header>
 
                   {account.addresses.length > 1 && (
-                    <Accordion.Content className="data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down bg-brand-gray-100 overflow-hidden text-sm transition-all">
+                    <Accordion.Content className="overflow-hidden bg-brand-gray-100 text-sm transition-all data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down">
                       <RadioGroup
                         value={addressId}
                         onValueChange={setAddressId}
@@ -157,7 +157,7 @@ const AccountSelectorDialog = () => {
                             key={address["address-id"]}
                             className="grid grid-cols-[auto,1fr] gap-x-1 py-3 pl-5"
                           >
-                            <div className="text-brand-gray-500 col-start-2 font-bold">
+                            <div className="col-start-2 font-bold text-brand-gray-500">
                               # {address["address-id"]}
                             </div>
 
@@ -188,7 +188,7 @@ const AccountSelectorDialog = () => {
           </div>
 
           <button
-            className="bg-brand-primary block h-9 w-full rounded-[3px] px-4 text-base font-normal uppercase text-white"
+            className="block h-9 w-full rounded-[3px] bg-brand-primary px-4 text-base font-normal uppercase text-white"
             onClick={() =>
               accountSelectMutation.mutate({ accountNo, shipTo: addressId })
             }

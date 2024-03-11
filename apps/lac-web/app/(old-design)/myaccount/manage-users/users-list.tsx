@@ -52,7 +52,7 @@ const UsersList = ({
           <TableCaption>Update your profile section.</TableCaption>
         </VisuallyHidden>
 
-        <TableHeader className="bg-brand-gray-200 border-brand-gray-200 border">
+        <TableHeader className="border-brand-gray-200 bg-brand-gray-200 border">
           <TableRow>
             <TableHead>Email</TableHead>
 
@@ -80,7 +80,7 @@ const UsersList = ({
 
             <TableCell className="text-right">
               <div className="flex justify-end">
-                <Button className="font-wurth bg-brand-secondary flex h-6 min-w-20 flex-row items-center justify-center gap-0.5 px-2 text-base leading-6 text-white">
+                <Button className="bg-brand-secondary font-wurth flex h-6 min-w-20 flex-row items-center justify-center gap-0.5 px-2 text-base leading-6 text-white">
                   Open&nbsp;
                   <MdKeyboardArrowDown className="text-xl leading-none" />
                 </Button>
@@ -97,7 +97,7 @@ const UsersList = ({
           &nbsp;New And Pending Users
         </h6>
 
-        <Button className="font-wurth bg-brand-secondary flex h-6 min-w-20 flex-row items-center justify-center gap-0.5 px-2 text-base leading-6 text-white">
+        <Button className="bg-brand-secondary font-wurth flex h-6 min-w-20 flex-row items-center justify-center gap-0.5 px-2 text-base leading-6 text-white">
           Show
           <MdKeyboardArrowDown className="text-xl leading-none" />
         </Button>
@@ -117,7 +117,7 @@ const UsersList = ({
           </h6>
 
           <CollapsibleTrigger asChild>
-            <Button className="font-wurth bg-brand-secondary flex h-6 min-w-20 flex-row items-center justify-center gap-0.5 px-2 text-base leading-6 text-white">
+            <Button className="bg-brand-secondary font-wurth flex h-6 min-w-20 flex-row items-center justify-center gap-0.5 px-2 text-base leading-6 text-white">
               {showCurrentUsers ? (
                 <>
                   Hide

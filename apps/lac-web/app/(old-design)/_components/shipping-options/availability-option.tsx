@@ -95,7 +95,7 @@ const AvailabilityOption = ({ availability }: AvailabilityOption) => {
           </SelectContent>
         </Select>
 
-        <div className="text-brand-gray-500 font-bold leading-6">
+        <div className="font-bold leading-6 text-brand-gray-500">
           {quantity}{" "}
           <span
             className={cn({

@@ -32,7 +32,7 @@ const SearchBar = ({ className }: SearchBarProps) => {
     <Form.Root
       onSubmit={handleSubmit(onSubmit)}
       className={cn(
-        "border-brand-gray-400 text-brand-gray-400 flex flex-row items-center gap-2.5 rounded-[10px] border pr-2.5 text-2xl leading-none",
+        "flex flex-row items-center gap-2.5 rounded-[10px] border border-brand-gray-400 pr-2.5 text-2xl leading-none text-brand-gray-400",
         className,
       )}
     >
@@ -47,7 +47,7 @@ const SearchBar = ({ className }: SearchBarProps) => {
             type="text"
             required
             placeholder="Search for product or scan a barcode..."
-            className="placeholder:text-brand-gray-400 w-full rounded-l-[10px] border-0 bg-transparent px-5 py-1.5 leading-6 text-black"
+            className="w-full rounded-l-[10px] border-0 bg-transparent px-5 py-1.5 leading-6 text-black placeholder:text-brand-gray-400"
           />
         </Form.Control>
       </Form.Field>
@@ -60,7 +60,7 @@ const SearchBar = ({ className }: SearchBarProps) => {
 
       <Separator
         orientation="vertical"
-        className="bg-brand-gray-200 h-[26px] w-px"
+        className="h-[26px] w-px bg-brand-gray-200"
       />
 
       <Form.Submit asChild>

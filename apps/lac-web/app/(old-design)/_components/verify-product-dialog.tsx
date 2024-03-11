@@ -120,7 +120,7 @@ const VerifyProductDialog = ({
                     alt={product.image.alt}
                     width={92}
                     height={92}
-                    className="aspect-1 border-brand-gray-200 border object-cover"
+                    className="aspect-1 border border-brand-gray-200 object-cover"
                   />
 
                   <div className="flex-1 space-y-0.5">
@@ -161,7 +161,7 @@ const VerifyProductDialog = ({
                   </div>
                 </TableCell>
 
-                <TableCell className="text-brand-gray-500 text-nowrap text-center">
+                <TableCell className="text-nowrap text-center text-brand-gray-500">
                   <div className="text-sm">
                     <span className="font-bold">${discountedPrice}</span> /{" "}
                     {product.uom}
@@ -173,18 +173,18 @@ const VerifyProductDialog = ({
                         ${priceCheckQuery?.data?.["list-sku-price"][0].price}
                       </div>
 
-                      <div className="text-brand-success bg-brand-success/10 rounded-sm px-1 py-0.5 font-bold">
+                      <div className="rounded-sm bg-brand-success/10 px-1 py-0.5 font-bold text-brand-success">
                         {Math.round(discount)}% off
                       </div>
                     </div>
                   )}
                 </TableCell>
 
-                <TableCell className="text-brand-gray-500 text-center">
+                <TableCell className="text-center text-brand-gray-500">
                   {quantity} {product.uom}
                 </TableCell>
 
-                <TableCell className="text-brand-gray-500 text-right font-bold">
+                <TableCell className="text-right font-bold text-brand-gray-500">
                   ${priceCheckQuery.data?.["list-sku-price"]?.[0].price}
                 </TableCell>
               </TableRow>
@@ -192,18 +192,18 @@ const VerifyProductDialog = ({
           </Table>
 
           <div className="mt-4 flex flex-row items-center justify-end gap-2 font-extrabold text-white">
-            <DialogClose className="bg-brand-primary rounded-sm px-8 py-2 uppercase">
+            <DialogClose className="rounded-sm bg-brand-primary px-8 py-2 uppercase">
               Continue Shopping
             </DialogClose>
 
             <Link
               href="/shopping-cart"
-              className="bg-brand-gray-500 flex flex-row items-center gap-2 rounded-sm px-8 py-2 uppercase"
+              className="flex flex-row items-center gap-2 rounded-sm bg-brand-gray-500 px-8 py-2 uppercase"
             >
               <span className="relative">
                 <MdOutlineShoppingCart className="text-xl leading-none text-white" />
 
-                <span className="text-brand-gray-500 absolute bottom-0 right-0 rounded-full bg-white px-0.5 py-px text-[8px] font-bold leading-none">
+                <span className="absolute bottom-0 right-0 rounded-full bg-white px-0.5 py-px text-[8px] font-bold leading-none text-brand-gray-500">
                   {simulationCheckoutQuery.data?.cartItemsCount}
                 </span>
               </span>

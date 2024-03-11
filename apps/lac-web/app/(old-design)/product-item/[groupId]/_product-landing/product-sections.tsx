@@ -52,7 +52,7 @@ export const Headings = () => {
   ];
 
   return (
-    <div className="border-b-brand-gray-200 sticky top-0 z-10 flex flex-row gap-16 border-b bg-white py-4">
+    <div className="sticky top-0 z-10 flex flex-row gap-16 border-b border-b-brand-gray-200 bg-white py-4">
       {headings.map((heading) => (
         <Link
           key={heading.id}
@@ -96,7 +96,7 @@ export const Section = ({
       ref={ref}
       className="scroll-mt-[57px] pb-16 pt-2.5"
     >
-      <h2 className="text-brand-primary font-wurth mb-6 text-[28px] font-medium leading-8">
+      <h2 className="mb-6 font-wurth text-[28px] font-medium leading-8 text-brand-primary">
         {heading}
       </h2>
 

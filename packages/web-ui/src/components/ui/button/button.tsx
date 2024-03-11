@@ -2,33 +2,38 @@ import { cva } from "@/lib/cva.config";
 import { cn } from "@/lib/utils";
 import { Slot } from "@radix-ui/react-slot";
 import { type VariantProps } from "cva";
-import { forwardRef, type ButtonHTMLAttributes } from "react";
+import { forwardRef } from "react";
 
 const buttonVariants = cva({
-  base: "ui-inline-flex ui-items-center ui-justify-center ui-whitespace-nowrap ui-text-sm ui-font-semibold ui-border-2 disabled:ui-pointer-events-none disabled:ui-opacity-50",
+  base: "ui-inline-flex ui-items-center ui-justify-center ui-gap-2 ui-whitespace-nowrap ui-rounded-md ui-text-sm ui-font-medium ui-transition-colors focus-visible:ui-outline-none focus-visible:ui-ring-1 focus-visible:ui-ring-zinc-950 disabled:ui-pointer-events-none disabled:ui-opacity-50",
   variants: {
     variant: {
       default:
-        "ui-bg-black ui-border-black hover:ui-bg-zinc-800 hover:ui-border-zinc-800 focus:ui-bg-zinc-800 focus:ui-border-black ui-text-white",
+        "ui-bg-zinc-900 ui-text-zinc-50 ui-shadow hover:ui-bg-zinc-900/90",
       destructive:
-        "ui-bg-red-650 ui-border-red-650 hover:ui-bg-red-800 hover:ui-border-red-800 focus:ui-bg-red-800 focus:ui-border-[#0E0E13]/25 ui-text-white",
+        "ui-bg-red-500 ui-text-zinc-50 ui-shadow-sm hover:ui-bg-red-500/90",
       outline:
-        "ui-bg-white ui-border-[#0E0E13]/[8%] hover:ui-bg-zinc-100 hover:ui-border-[#0E0E13]/15 focus:ui-border-[#0E0E13]/50 focus:ui-bg-zinc-100 ui-text-zinc-950",
+        "ui-border ui-border-zinc-200 ui-bg-white ui-shadow-sm hover:ui-bg-zinc-100 hover:ui-text-zinc-900",
+      secondary:
+        "ui-bg-zinc-100 ui-text-zinc-900 ui-shadow-sm hover:ui-bg-zinc-100/80",
+      ghost: "hover:ui-bg-zinc-100 hover:ui-text-zinc-900",
+      link: "ui-text-zinc-900 ui-underline-offset-4 hover:ui-underline",
     },
     size: {
-      small: "ui-rounded-lg ui-py-3 ui-px-4 ui-gap-2",
-      medium: "ui-rounded-lg ui-py-3 ui-px-6 ui-gap-3",
-      large: "ui-rounded-xl ui-py-4 ui-px-8 ui-gap-4",
+      default: "ui-h-9 ui-px-4 ui-py-2",
+      sm: "ui-h-8 ui-rounded-md ui-px-3 ui-text-xs",
+      lg: "ui-h-10 ui-rounded-md ui-px-8",
+      icon: "ui-h-9 ui-w-9",
     },
   },
   defaultVariants: {
     variant: "default",
-    size: "medium",
+    size: "default",
   },
 });
 
 export interface ButtonProps
-  extends ButtonHTMLAttributes<HTMLButtonElement>,
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
 }
@@ -36,7 +41,6 @@ export interface ButtonProps
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : "button";
-
     return (
       <Comp
         className={cn(buttonVariants({ variant, size, className }))}

@@ -48,13 +48,13 @@ const UserActions = () => {
         <DropdownMenu.Trigger asChild>
           <button
             aria-label="User menu"
-            className="text-brand-gray-500 group flex flex-row items-center gap-[5px] self-stretch text-sm leading-4"
+            className="group flex flex-row items-center gap-[5px] self-stretch text-sm leading-4 text-brand-gray-500"
           >
             <FaRegUser className="text-base leading-none" />
 
             <div className="ml-1.5 text-right">
               <div>
-                <span className="group-hover:text-brand-primary group-data-[state=open]:text-brand-primary text-black">
+                <span className="text-black group-hover:text-brand-primary group-data-[state=open]:text-brand-primary">
                   Hi! {accountListQuery.data?.["given-name"]}{" "}
                 </span>
                 (#{cookies[ADDRESS_ID_COOKIE]})

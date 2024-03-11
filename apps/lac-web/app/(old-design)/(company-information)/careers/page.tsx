@@ -17,7 +17,7 @@ const CareersPage = () => {
         src={careersBanner}
         alt="The banner for careers page"
         placeholder="blur"
-        className="border-brand-gray-100 mb-8 h-auto w-full border object-cover"
+        className="mb-8 h-auto w-full border border-brand-gray-100 object-cover"
         priority={true}
       />
 
@@ -27,12 +27,12 @@ const CareersPage = () => {
 
         <Separator
           orientation="horizontal"
-          className="bg-brand-primary h-px flex-1"
+          className="h-px flex-1 bg-brand-primary"
         />
       </div>
 
       {/* Careers content */}
-      <div className="text-brand-gray-500 box-border space-y-4">
+      <div className="box-border space-y-4 text-brand-gray-500">
         <p>
           People are the indispensable element of Wurth Louis and Company - no
           matter what side of the business they are on. We are as passionate

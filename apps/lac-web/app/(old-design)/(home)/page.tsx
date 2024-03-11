@@ -313,7 +313,7 @@ const HomePage = async () => {
 
           <Separator
             orientation="horizontal"
-            className="bg-brand-gray-300 h-px flex-1"
+            className="h-px flex-1 bg-brand-gray-300"
           />
         </div>
 
@@ -377,7 +377,7 @@ const HomePage = async () => {
                 {banner.description}
               </div>
 
-              <div className="text-brand-secondary font-wurth flex flex-row items-center gap-2 text-base font-extrabold uppercase leading-[22px]">
+              <div className="flex flex-row items-center gap-2 font-wurth text-base font-extrabold uppercase leading-[22px] text-brand-secondary">
                 <span>Learn more</span>
                 <MdChevronRight className="text-xs leading-none" />
               </div>
@@ -388,7 +388,7 @@ const HomePage = async () => {
 
       <Separator
         orientation="horizontal"
-        className="bg-brand-gray-200 my-[55px] h-px w-full"
+        className="my-[55px] h-px w-full bg-brand-gray-200"
       />
 
       <section className="mb-[92px] flex flex-row justify-between gap-5">
