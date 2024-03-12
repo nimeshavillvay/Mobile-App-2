@@ -14,7 +14,7 @@ import Link from "next/link";
 // TODO: Change breakpoint "md" to "xs" after designs are finalized
 const Header = () => {
   return (
-    <header className="border-b-wurth-gray-250 flex flex-col gap-4 border-b px-4 py-5 shadow-[0px_1px_5px_0px_rgba(0,0,0,0.05),0px_1px_2px_-1px_rgba(0,0,0,0.05)]">
+    <header className="flex flex-col gap-4 border-b border-b-wurth-gray-250 px-4 py-5 shadow-[0px_1px_5px_0px_rgba(0,0,0,0.05),0px_1px_2px_-1px_rgba(0,0,0,0.05)]">
       <div className="flex flex-row items-center gap-7">
         <Button
           variant="ghost"

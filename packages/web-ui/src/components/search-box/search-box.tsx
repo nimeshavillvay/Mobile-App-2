@@ -10,7 +10,7 @@ export const SearchBox = ({
   return (
     <div
       className={cn(
-        "ui-border-wurth-gray-250 ui-flex ui-w-full ui-flex-row ui-items-center ui-rounded-full ui-border",
+        "ui-flex ui-w-full ui-flex-row ui-items-center ui-rounded-full ui-border ui-border-wurth-gray-250",
         className,
       )}
       {...delegated}
