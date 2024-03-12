@@ -1,5 +1,9 @@
 import { defineConfig } from "tsup";
 
+// To get rid of the `Error [ERR_WORKER_OUT_OF_MEMORY]: Worker terminated due to reaching memory limit: JS heap out of memory`
+// error, putting `NODE_OPTIONS='--max-old-space-size=16384'` seems to work
+// https://github.com/egoist/tsup/issues/920#issuecomment-1791496481
+
 export default defineConfig({
   // The file we created above that will be the entrypoint to the library.
   entry: ["src/styles.css", "src/components/**/*/index.ts"],

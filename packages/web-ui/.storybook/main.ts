@@ -17,11 +17,9 @@ const config: StorybookConfig = {
     getAbsolutePath("@storybook/addon-interactions"),
   ],
   framework: {
-    name: "@storybook/nextjs",
+    name: getAbsolutePath("@storybook/nextjs"),
     options: {
-      builder: {
-        useSWC: true,
-      },
+      builder: {},
     },
   },
   docs: {

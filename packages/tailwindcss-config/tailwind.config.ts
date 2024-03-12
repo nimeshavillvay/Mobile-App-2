@@ -26,6 +26,19 @@ const config: Config = {
           },
         ],
       },
+      colors: {
+        wurth: {
+          red: {
+            650: "#CC0000",
+          },
+          gray: {
+            150: "#E8E9ED",
+            250: "#DEDEDE",
+            400: "#9FA1A6",
+            800: "#2A2C2E",
+          },
+        },
+      },
     },
   },
   plugins: [

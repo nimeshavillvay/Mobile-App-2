@@ -26,18 +26,6 @@ const config: Config = {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
-      colors: {
-        wurth: {
-          red: {
-            650: "#CC0000",
-          },
-          gray: {
-            150: "#E8E9ED",
-            400: "#9FA1A6",
-            800: "#2A2C2E",
-          },
-        },
-      },
     },
   },
   plugins: [],

@@ -3,6 +3,8 @@ import AddToCart from "./add-to-cart";
 import Bell from "./bell";
 import HeartFilled from "./heart-filled";
 import HeartOutline from "./heart-outline";
+import MagnifyingGlass from "./magnifying-glass";
+import Menu from "./menu";
 import Profile from "./profile";
 import ShoppingCart from "./shopping-cart";
 
@@ -30,6 +32,10 @@ export const Showcase: Story = {
           gap: "1rem",
         }}
       >
+        <Menu />
+
+        <MagnifyingGlass />
+
         <ShoppingCart />
 
         <AddToCart />
