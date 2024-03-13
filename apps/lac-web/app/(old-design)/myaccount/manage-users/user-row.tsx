@@ -3,8 +3,14 @@ import { TableCell, TableRow } from "@/old/_components/ui/table";
 import { Role } from "@/old/_lib/types";
 import { cn } from "@/old/_utils/helpers";
 import { useState } from "react";
-import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
-import { UserProfile } from "./types";
+import {
+  MdDeleteOutline,
+  MdKeyboardArrowDown,
+  MdKeyboardArrowUp,
+} from "react-icons/md";
+import ActionConfirmationDialog from "./action-confirmation-dialog";
+import { Status, UserProfile } from "./types";
+import useDeleteOtherUserMutation from "./use-delete-other-user-mutation.hook";
 import UserUpdateForm from "./user-update-form";
 
 type UserRowProps = {
@@ -15,8 +21,13 @@ type UserRowProps = {
 
 const UserRow = ({ user, index, jobRoles }: UserRowProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isOpenDelete, setIsOpenDelete] = useState(false);
+  const [isOpenMessage, setIsOpenMessage] = useState(false);
+  const [message, setMessage] = useState("");
 
-  const getStatusClass = (status: string) => {
+  const deleteOtherUserMutation = useDeleteOtherUserMutation();
+
+  const getStatusClass = (status: Status) => {
     switch (status) {
       case "ACTIVE":
         return "border-brand-tertiary text-brand-tertiary";
@@ -40,7 +51,9 @@ const UserRow = ({ user, index, jobRoles }: UserRowProps) => {
       >
         <TableCell>{user?.email}</TableCell>
 
-        <TableCell className="text-center">{user?.permission}</TableCell>
+        <TableCell className="text-center capitalize">
+          {user?.permission.toLowerCase()}
+        </TableCell>
 
         <TableCell className="text-center">
           <div className="flex justify-center">
@@ -57,6 +70,12 @@ const UserRow = ({ user, index, jobRoles }: UserRowProps) => {
 
         <TableCell className="text-right">
           <div className="flex justify-end">
+            <div className="cursor-pointer px-3 text-brand-gray-500">
+              <MdDeleteOutline
+                className="self-center text-2xl leading-none"
+                onClick={() => setIsOpenDelete(true)}
+              />
+            </div>
             <Button
               className="flex h-6 min-w-20 flex-row items-center justify-center gap-0.5 bg-brand-secondary px-2 font-wurth text-base leading-6 text-white"
               onClick={() => setIsOpen(!isOpen)}
@@ -80,10 +99,34 @@ const UserRow = ({ user, index, jobRoles }: UserRowProps) => {
       {isOpen && (
         <TableRow>
           <TableCell colSpan={4}>
-            <UserUpdateForm jobRoles={jobRoles} user={user} />
+            <UserUpdateForm
+              jobRoles={jobRoles}
+              user={user}
+              setMessage={setMessage}
+              setMessageOpen={setIsOpenMessage}
+            />
           </TableCell>
         </TableRow>
       )}
+
+      <ActionConfirmationDialog
+        open={isOpenDelete}
+        onOpenChange={setIsOpenDelete}
+        title="Confirm Action"
+        text="Do you really want to delete these records?"
+        onConfirm={() => deleteOtherUserMutation.mutate(user?.signed_data)}
+        okText="Confirm"
+      />
+
+      <ActionConfirmationDialog
+        open={isOpenMessage}
+        onOpenChange={setIsOpenMessage}
+        title="Manage User"
+        text={message}
+        textColor="primary"
+        onConfirm={() => setIsOpenMessage(false)}
+        showCancelBtn={false}
+      />
     </>
   );
 };

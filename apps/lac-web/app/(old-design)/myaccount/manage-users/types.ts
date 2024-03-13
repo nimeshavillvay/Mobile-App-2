@@ -39,3 +39,9 @@ export type ManageContact = {
   your_profile: UserProfile;
   contact_list: UserProfile[];
 };
+
+export type ForgetPasswordResponse = {
+  data: { status: Status };
+  message: string | null;
+  isSuccess: boolean;
+};

@@ -16,7 +16,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/old/_components/ui/table";
-import VisuallyHidden from "@/old/_components/visually-hidden";
 import type { Role } from "@/old/_lib/types";
 import { useState } from "react";
 import {
@@ -43,14 +42,14 @@ const UsersList = ({
   const currentUsers =
     usersListQuery?.data?.manage_contact?.contact_list ?? null;
 
-  console.log("cu >", currentUsers);
+  // console.log("cu >", currentUsers);
 
   return (
     <>
       <Table>
-        <VisuallyHidden>
-          <TableCaption>Update your profile section.</TableCaption>
-        </VisuallyHidden>
+        <TableCaption className="sr-only">
+          Update your profile section.
+        </TableCaption>
 
         <TableHeader className="border-brand-gray-200 bg-brand-gray-200 border">
           <TableRow>
@@ -136,11 +135,9 @@ const UsersList = ({
         <CollapsibleContent>
           {currentUsers && currentUsers?.length > 0 ? (
             <Table>
-              <VisuallyHidden>
-                <TableCaption>
-                  Current users on this account section.
-                </TableCaption>
-              </VisuallyHidden>
+              <TableCaption className="sr-only">
+                Current users on this account section.
+              </TableCaption>
 
               <TableHeader className="bg-brand-gray-200 border-brand-gray-200 border">
                 <TableRow>
