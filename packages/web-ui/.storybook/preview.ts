@@ -1,9 +1,10 @@
 import "@/styles.css";
 import type { Preview } from "@storybook/react";
+import { fn } from "@storybook/test";
 
 const preview: Preview = {
+  args: { onClick: fn() },
   parameters: {
-    actions: { argTypesRegex: "^on[A-Z].*" },
     controls: {
       matchers: {
         color: /(background|color)$/i,

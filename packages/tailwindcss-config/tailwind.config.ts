@@ -9,6 +9,10 @@ const config: Config = {
     "./src/**/*.{ts,tsx}",
   ],
   theme: {
+    screens: {
+      xs: "480px",
+      ...defaultTheme.screens,
+    },
     extend: {
       fontFamily: {
         title: [
@@ -21,6 +25,19 @@ const config: Config = {
             fontFeatureSettings: "'ss04' on, 'ss03' on, 'ss07' on, 'ss02' on",
           },
         ],
+      },
+      colors: {
+        wurth: {
+          red: {
+            650: "#CC0000",
+          },
+          gray: {
+            150: "#E8E9ED",
+            250: "#DEDEDE",
+            400: "#9FA1A6",
+            800: "#2A2C2E",
+          },
+        },
       },
     },
   },

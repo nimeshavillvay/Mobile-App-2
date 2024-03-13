@@ -1,4 +1,5 @@
-import { AddToCart, HeartOutline } from "@/components/icons";
+import AddToCart from "@/components/icons/add-to-cart";
+import HeartOutline from "@/components/icons/heart-outline";
 import { Button } from "@/components/ui/button";
 import { cn, formatNumberToPrice } from "@/lib/utils";
 import Image, { type ImageProps } from "next/image";
