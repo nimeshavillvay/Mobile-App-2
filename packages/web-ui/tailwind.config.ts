@@ -1,3 +1,4 @@
+import colors from "@repo/tailwindcss-config/colors";
 import type { Config } from "tailwindcss";
 
 const config: Config = {
@@ -26,6 +27,8 @@ const config: Config = {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
+      // This is a workaround for colors not being picked up when running Storybook
+      colors,
     },
   },
   plugins: [],

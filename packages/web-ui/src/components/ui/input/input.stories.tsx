@@ -6,6 +6,9 @@ const meta: Meta = {
   component: Input,
   parameters: {
     layout: "centered",
+    controls: {
+      exclude: /(onClick)/g,
+    },
   },
   args: {
     disabled: false,
