@@ -15,6 +15,6 @@
     "jsx": "react-jsx",
     "outDir": "dist"
   },
-  "include": ["src", "global-error-registration.d.ts"],
+  "include": ["src", "global-error-registration.d.ts", "reset.d.ts"],
   "exclude": ["node_modules", "dist"]
 }
