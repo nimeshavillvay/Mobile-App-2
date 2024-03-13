@@ -22,7 +22,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { ForgetPasswordResponse, Status, UserProfile } from "./types";
+import StatusOption from "./status-option";
+import {
+  ForgetPasswordResponse,
+  Status,
+  UpdateField,
+  UserProfile,
+} from "./types";
 import useUpdateOtherUserMutation from "./use-update-other-user-mutation.hook";
 
 const USER_PERMISSIONS = [
@@ -84,109 +90,93 @@ const UserUpdateForm = ({
   const forgetPasswordMutation = useForgetPasswordMutation();
 
   const onSubmit = (values: UpdateUserSchema) => {
-    const update_fields = [];
+    const updateFields: UpdateField[] = [];
 
     if (values?.firstName !== user?.first_name) {
-      update_fields.push({
+      updateFields.push({
         field: "first_name",
         value: values?.firstName.trim(),
       });
     }
 
     if (values?.lastName !== user?.last_name) {
-      update_fields.push({
+      updateFields.push({
         field: "last_name",
         value: values?.lastName.trim(),
       });
     }
 
     if (values?.jobTitle !== user?.role) {
-      update_fields.push({
+      updateFields.push({
         field: "role",
         value: values?.jobTitle,
       });
     }
 
     if (values?.permission !== user?.permission) {
-      update_fields.push({
+      updateFields.push({
         field: "permission",
         value: values?.permission,
       });
     }
 
     if (values?.status !== user?.status) {
-      update_fields.push({
+      updateFields.push({
         field: "status",
         value: values?.status,
       });
     }
 
     if (values?.email !== user?.email) {
-      update_fields.push({
+      updateFields.push({
         field: "email",
         value: values?.email.trim(),
       });
     }
 
-    if (update_fields.length > 0) {
+    if (updateFields.length > 0) {
       // Mutate other user update
       updateOtherUserMutation.mutate({
-        signed_data: user?.signed_data,
-        update_fields: update_fields,
+        signedData: user?.signed_data,
+        updateFields: updateFields,
       });
     }
   };
 
   const hasEditPermissions = (status: Status) => {
-    switch (status) {
-      case "PENDING":
-        return false;
-      case "INACTIVE":
-        return false;
-      default:
-        return true;
-    }
+    if (status === "PENDING") return false;
+    if (status === "INACTIVE") return false;
+    return true;
   };
 
   const handlePasswordReset = () => {
-    const formData = new FormData();
-    formData.append("email", user?.email);
-    formData.append("key", "user-management");
-
     // Mutate user password reset
-    forgetPasswordMutation.mutate(formData, {
-      onError: async (error) => {
-        // Get data for error response body
-        const response =
-          (await error?.response?.json()) as ForgetPasswordResponse;
-
-        if (response?.data?.status) {
-          switch (response?.data?.status) {
-            case "DEACTIVE":
-              setMessage(PASSWORD_RESET_INACTIVE_MSG);
-              setMessageOpen(true);
-              break;
-            case "PENDING":
-              setMessage(PASSWORD_RESET_PENDING_MSG);
-              setMessageOpen(true);
-              break;
-          }
-        }
+    forgetPasswordMutation.mutate(
+      {
+        email: user?.email,
+        key: "user-management",
       },
-    });
-  };
+      {
+        onError: async (error) => {
+          // Get data for error response body
+          const response =
+            (await error?.response?.json()) as ForgetPasswordResponse;
 
-  const renderStatusOption = (status: Status) => {
-    switch (status) {
-      case "PENDING":
-        return <SelectItem value={status}>Pending</SelectItem>;
-      case "INACTIVE":
-        return <SelectItem value={status}>Inactive</SelectItem>;
-      case "DISABLED":
-        return <SelectItem value={status}>Disabled</SelectItem>;
-      default:
-        return null;
-    }
+          if (response?.data?.status) {
+            switch (response?.data?.status) {
+              case "DEACTIVE":
+                setMessage(PASSWORD_RESET_INACTIVE_MSG);
+                setMessageOpen(true);
+                break;
+              case "PENDING":
+                setMessage(PASSWORD_RESET_PENDING_MSG);
+                setMessageOpen(true);
+                break;
+            }
+          }
+        },
+      },
+    );
   };
 
   return (
@@ -376,7 +366,7 @@ const UserUpdateForm = ({
                             {status?.label}
                           </SelectItem>
                         ))}
-                        {renderStatusOption(user?.status)}
+                        <StatusOption status={user?.status} />
                       </SelectContent>
                     </Select>
 

@@ -40,8 +40,18 @@ export type ManageContact = {
   contact_list: UserProfile[];
 };
 
+export type ManageUsers = {
+  approve_contacts: ApproveContact[];
+  manage_contact: ManageContact;
+};
+
 export type ForgetPasswordResponse = {
   data: { status: Status };
   message: string | null;
   isSuccess: boolean;
+};
+
+export type UpdateField = {
+  field: string;
+  value: string;
 };

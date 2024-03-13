@@ -3,7 +3,7 @@ import useCookies from "@/old/_hooks/storage/use-cookies.hook";
 import { api } from "@/old/_lib/api";
 import { ACCOUNT_TOKEN_COOKIE } from "@/old/_lib/constants";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { SignedData } from "./types";
+import { SignedData, UpdateField } from "./types";
 
 const useUpdateOtherUserMutation = () => {
   const queryClient = useQueryClient();
@@ -11,16 +11,22 @@ const useUpdateOtherUserMutation = () => {
   const { toast } = useToast();
 
   return useMutation({
-    mutationFn: (contact: {
-      signed_data: SignedData;
-      update_fields: { field: string; value: string }[];
+    mutationFn: ({
+      signedData,
+      updateFields,
+    }: {
+      signedData: SignedData;
+      updateFields: UpdateField[];
     }) =>
       api
         .put("am/admin/update_other_contact", {
           headers: {
             authorization: `Bearer ${cookies[ACCOUNT_TOKEN_COOKIE]}`,
           },
-          json: contact,
+          json: {
+            signed_data: signedData,
+            update_fields: updateFields,
+          },
         })
         .json<unknown>(),
     onMutate: () => {

@@ -24,6 +24,7 @@ import {
   MdSupervisorAccount,
   MdSwitchAccount,
 } from "react-icons/md";
+import PendingUserRow from "./pending-user-row";
 import useSuspenseUsersList from "./use-suspense-users-list.hook";
 import UserRow from "./user-row";
 
@@ -35,14 +36,14 @@ const UsersList = ({
   jobRoles: Role[];
 }) => {
   const [showCurrentUsers, setShowCurrentUsers] = useState(false);
+  const [showPendingUsers, setShowPendingUsers] = useState(false);
   const usersListQuery = useSuspenseUsersList(token);
 
+  const pendingUsers = usersListQuery?.data?.approve_contacts ?? null;
   const yourProfile =
     usersListQuery?.data?.manage_contact?.your_profile ?? null;
   const currentUsers =
     usersListQuery?.data?.manage_contact?.contact_list ?? null;
-
-  // console.log("cu >", currentUsers);
 
   return (
     <>
@@ -51,7 +52,7 @@ const UsersList = ({
           Update your profile section.
         </TableCaption>
 
-        <TableHeader className="border-brand-gray-200 bg-brand-gray-200 border">
+        <TableHeader className="border border-brand-gray-200 bg-brand-gray-200">
           <TableRow>
             <TableHead>Email</TableHead>
 
@@ -63,7 +64,7 @@ const UsersList = ({
           </TableRow>
         </TableHeader>
 
-        <TableBody className="border-brand-gray-200 border">
+        <TableBody className="border border-brand-gray-200">
           <TableRow>
             <TableCell>{yourProfile?.email}</TableCell>
 
@@ -72,14 +73,14 @@ const UsersList = ({
             </TableCell>
 
             <TableCell className="text-center">
-              <span className="border-brand-tertiary text-brand-tertiary min-w-24 rounded-sm border px-5 py-px font-bold">
+              <span className="min-w-24 rounded-sm border border-brand-tertiary px-5 py-px font-bold text-brand-tertiary">
                 {yourProfile?.status}
               </span>
             </TableCell>
 
             <TableCell className="text-right">
               <div className="flex justify-end">
-                <Button className="bg-brand-secondary font-wurth flex h-6 min-w-20 flex-row items-center justify-center gap-0.5 px-2 text-base leading-6 text-white">
+                <Button className="flex h-6 min-w-20 flex-row items-center justify-center gap-0.5 bg-brand-secondary px-2 font-wurth text-base leading-6 text-white">
                   Open&nbsp;
                   <MdKeyboardArrowDown className="text-xl leading-none" />
                 </Button>
@@ -90,33 +91,79 @@ const UsersList = ({
       </Table>
 
       {/* New And Pending Users Section */}
-      <div className="my-5 flex justify-between">
-        <h6 className="font-wurth text-brand-gray-500 flex text-base font-medium capitalize">
-          <MdSwitchAccount className="self-center text-2xl leading-none" />
-          &nbsp;New And Pending Users
-        </h6>
+      <Collapsible open={showPendingUsers} onOpenChange={setShowPendingUsers}>
+        <div className="my-5 flex justify-between">
+          <h6 className="flex font-wurth text-base font-medium capitalize text-brand-gray-500">
+            <MdSwitchAccount className="self-center text-2xl leading-none" />
+            &nbsp;New And Pending Users
+          </h6>
 
-        <Button className="bg-brand-secondary font-wurth flex h-6 min-w-20 flex-row items-center justify-center gap-0.5 px-2 text-base leading-6 text-white">
-          Show
-          <MdKeyboardArrowDown className="text-xl leading-none" />
-        </Button>
-      </div>
+          <CollapsibleTrigger asChild>
+            <Button className="flex h-6 min-w-20 flex-row items-center justify-center gap-0.5 bg-brand-secondary px-2 font-wurth text-base leading-6 text-white">
+              {showPendingUsers ? (
+                <>
+                  Hide
+                  <MdKeyboardArrowUp className="text-xl leading-none" />
+                </>
+              ) : (
+                <>
+                  Show
+                  <MdKeyboardArrowDown className="text-xl leading-none" />
+                </>
+              )}
+            </Button>
+          </CollapsibleTrigger>
+        </div>
+
+        <CollapsibleContent>
+          <Table>
+            <TableCaption className="sr-only">
+              New and pending users section.
+            </TableCaption>
+
+            <TableHeader className="border border-brand-gray-200 bg-brand-gray-200">
+              <TableRow>
+                <TableHead>Email</TableHead>
+
+                <TableHead className="capitalize">
+                  First and Last Name
+                </TableHead>
+
+                <TableHead className="capitalize">Job Title</TableHead>
+
+                <TableHead></TableHead>
+              </TableRow>
+            </TableHeader>
+
+            <TableBody className="border border-brand-gray-200 text-brand-gray-500">
+              {pendingUsers.map((user, index) => (
+                <PendingUserRow
+                  key={user?.email}
+                  user={user}
+                  index={index}
+                  jobRoles={jobRoles}
+                />
+              ))}
+            </TableBody>
+          </Table>
+        </CollapsibleContent>
+      </Collapsible>
 
       <Separator
         orientation="horizontal"
-        className="bg-brand-gray-200 h-px flex-1"
+        className="h-px flex-1 bg-brand-gray-200"
       />
 
       {/* Current Users Section */}
       <Collapsible open={showCurrentUsers} onOpenChange={setShowCurrentUsers}>
         <div className="my-5 flex justify-between">
-          <h6 className="font-wurth text-brand-gray-500 flex text-base font-medium capitalize">
+          <h6 className="flex font-wurth text-base font-medium capitalize text-brand-gray-500">
             <MdSupervisorAccount className="self-center text-2xl leading-none" />
             &nbsp;Current Users On This Account
           </h6>
 
           <CollapsibleTrigger asChild>
-            <Button className="bg-brand-secondary font-wurth flex h-6 min-w-20 flex-row items-center justify-center gap-0.5 px-2 text-base leading-6 text-white">
+            <Button className="flex h-6 min-w-20 flex-row items-center justify-center gap-0.5 bg-brand-secondary px-2 font-wurth text-base leading-6 text-white">
               {showCurrentUsers ? (
                 <>
                   Hide
@@ -139,7 +186,7 @@ const UsersList = ({
                 Current users on this account section.
               </TableCaption>
 
-              <TableHeader className="bg-brand-gray-200 border-brand-gray-200 border">
+              <TableHeader className="border border-brand-gray-200 bg-brand-gray-200">
                 <TableRow>
                   <TableHead>Email</TableHead>
 
@@ -151,7 +198,7 @@ const UsersList = ({
                 </TableRow>
               </TableHeader>
 
-              <TableBody className="border-brand-gray-200 text-brand-gray-500 border">
+              <TableBody className="border border-brand-gray-200 text-brand-gray-500">
                 {currentUsers.map((user, index) => (
                   <UserRow
                     key={user?.uuid}
@@ -163,7 +210,7 @@ const UsersList = ({
               </TableBody>
             </Table>
           ) : (
-            <div className="font-wurth text-brand-gray-300 border-brand-gray-300 mt-10 rounded-sm border p-6 text-center text-lg capitalize">
+            <div className="mt-10 rounded-sm border border-brand-gray-300 p-6 text-center font-wurth text-lg capitalize text-brand-gray-300">
               Current Users Not Available!
             </div>
           )}
@@ -172,7 +219,7 @@ const UsersList = ({
 
       <Separator
         orientation="horizontal"
-        className="bg-brand-gray-200 h-px flex-1"
+        className="h-px flex-1 bg-brand-gray-200"
       />
     </>
   );

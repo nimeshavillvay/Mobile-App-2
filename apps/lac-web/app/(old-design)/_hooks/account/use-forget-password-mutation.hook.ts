@@ -9,8 +9,10 @@ const PASSWORD_RESET_ACTIVE_MSG =
 const PASSWORD_RESET_INACTIVE_MSG =
   "This User is currently flagged as inactive in the system. please contact web support at websupport@wurthlac.com, or call 800-422-4389 x1014.";
 
+type Status = "PENDING" | "ACTIVE" | "DEACTIVE" | "INACTIVE" | "DISABLED";
+
 type ForgetPasswordResponse = {
-  data: { status: string };
+  data: { status: Status };
   message: string | null;
   isSuccess: boolean;
 };
@@ -20,33 +22,36 @@ const useForgetPasswordMutation = () => {
   const [cookies] = useCookies();
   const { toast } = useToast();
 
-  const handleToast = (status: string) => {
-    switch (status) {
-      case "ACTIVE":
-        toast({
-          description: PASSWORD_RESET_ACTIVE_MSG,
-          variant: "success",
-        });
-        break;
-      case "INACTIVE":
-        toast({
-          description: PASSWORD_RESET_INACTIVE_MSG,
-          variant: "success",
-        });
-        break;
+  const handleToast = (status: Status) => {
+    if (status === "ACTIVE") {
+      toast({
+        description: PASSWORD_RESET_ACTIVE_MSG,
+        variant: "success",
+      });
+    }
+    if (status === "INACTIVE") {
+      toast({
+        description: PASSWORD_RESET_INACTIVE_MSG,
+        variant: "success",
+      });
     }
   };
 
   return useMutation({
-    mutationFn: (formData: FormData) =>
-      api
+    mutationFn: ({ email, key }: { email: string; key: string }) => {
+      const data = new FormData();
+      data.append("email", email);
+      data.append("key", key);
+
+      return api
         .post("am/auth/password-reset", {
           headers: {
             authorization: `Bearer ${cookies[ACCOUNT_TOKEN_COOKIE]}`,
           },
-          body: formData,
+          body: data,
         })
-        .json<ForgetPasswordResponse>(),
+        .json<ForgetPasswordResponse>();
+    },
     onMutate: () => {
       toast({ description: "Resetting user password" });
     },
