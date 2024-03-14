@@ -200,3 +200,18 @@ export const ProductCardActions = () => {
     </div>
   );
 };
+
+export const ProductCardSkeleton = ({
+  className,
+  ...delegated
+}: Omit<ComponentProps<"div">, "children">) => {
+  return (
+    <div
+      className={cn(
+        "ui-h-[23.25rem] ui-w-[17.5rem] ui-animate-pulse ui-rounded-lg ui-border ui-border-wurth-gray-250 ui-bg-wurth-gray-250 md:ui-h-[25.75rem] md:ui-w-64 ",
+        className,
+      )}
+      {...delegated}
+    />
+  );
+};

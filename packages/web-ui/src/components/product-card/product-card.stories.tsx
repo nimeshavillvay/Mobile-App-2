@@ -10,6 +10,7 @@ import {
   ProductCardImage,
   ProductCardLabel,
   ProductCardPrice,
+  ProductCardSkeleton,
 } from "./product-card";
 import productImage from "./product-image.png";
 
@@ -89,5 +90,11 @@ export const WithoutDiscount: Story = {
         </ProductCardContent>
       </ProductCard>
     );
+  },
+};
+
+export const LoadingSkeleton: Story = {
+  render: () => {
+    return <ProductCardSkeleton />;
   },
 };
