@@ -22,7 +22,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import StatusOption from "./status-option";
 import {
   ForgetPasswordResponse,
   Status,
@@ -405,3 +404,16 @@ const UserUpdateForm = ({
 };
 
 export default UserUpdateForm;
+
+const StatusOption = ({ status }: { status: Status }) => {
+  switch (status) {
+    case "PENDING":
+      return <SelectItem value={status}>Pending</SelectItem>;
+    case "INACTIVE":
+      return <SelectItem value={status}>Inactive</SelectItem>;
+    case "DISABLED":
+      return <SelectItem value={status}>Disabled</SelectItem>;
+    default:
+      return null;
+  }
+};
