@@ -5,24 +5,24 @@ import { type VariantProps } from "cva";
 import { forwardRef } from "react";
 
 const buttonVariants = cva({
-  base: "ui-inline-flex ui-items-center ui-justify-center ui-gap-2 ui-whitespace-nowrap ui-rounded-md ui-text-sm ui-font-medium ui-transition-colors focus-visible:ui-outline-none focus-visible:ui-ring-1 focus-visible:ui-ring-zinc-950 disabled:ui-pointer-events-none disabled:ui-opacity-50",
+  base: "ui-inline-flex ui-items-center ui-justify-center ui-gap-2 ui-whitespace-nowrap ui-rounded ui-text-sm ui-font-medium ui-transition-colors focus-visible:ui-outline-none focus-visible:ui-ring-1 focus-visible:ui-ring-zinc-950 disabled:ui-pointer-events-none disabled:ui-opacity-50",
   variants: {
     variant: {
-      default:
-        "ui-bg-zinc-900 ui-text-zinc-50 ui-shadow hover:ui-bg-zinc-900/90",
-      destructive:
-        "ui-bg-red-500 ui-text-zinc-50 ui-shadow-sm hover:ui-bg-red-500/90",
-      outline:
-        "ui-border ui-border-zinc-200 ui-bg-white ui-shadow-sm hover:ui-bg-zinc-100 hover:ui-text-zinc-900",
+      default: "ui-bg-black ui-text-white ui-shadow hover:ui-bg-wurth-gray-800",
       secondary:
-        "ui-bg-zinc-100 ui-text-zinc-900 ui-shadow-sm hover:ui-bg-zinc-100/80",
-      ghost: "hover:ui-bg-zinc-100 hover:ui-text-zinc-900",
-      link: "ui-text-zinc-900 ui-underline-offset-4 hover:ui-underline",
+        "ui-bg-wurth-red-650 ui-text-white ui-shadow-sm hover:ui-bg-red-800",
+      destructive:
+        "ui-bg-orange-600 ui-text-white ui-shadow-sm hover:ui-bg-orange-700",
+      cancel:
+        "ui-border ui-border-wurth-gray-400 ui-bg-white ui-text-wurth-gray-800 hover:ui-border-wurth-gray-800 hover:ui-bg-wurth-gray-50",
+      subtle: "ui-bg-wurth-gray-50 ui-text-black hover:ui-bg-wurth-gray-150",
+      ghost: "ui-text-black hover:ui-bg-wurth-gray-50",
+      link: "ui-text-black hover:ui-text-red-800 hover:ui-underline",
     },
     size: {
       default: "ui-h-9 ui-px-4 ui-py-2",
-      sm: "ui-h-8 ui-rounded-md ui-px-3 ui-text-xs",
-      lg: "ui-h-10 ui-rounded-md ui-px-8",
+      sm: "ui-h-8 ui-rounded ui-px-3 ui-text-xs",
+      lg: "ui-h-10 ui-rounded ui-px-8",
       icon: "ui-h-9 ui-w-9",
     },
   },

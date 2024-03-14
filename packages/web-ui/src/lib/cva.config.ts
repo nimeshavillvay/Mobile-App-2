@@ -1,5 +1,5 @@
 import { defineConfig } from "cva";
-import { twMerge } from "tailwind-merge";
+import { twMerge } from "./utils";
 
 export const { cva, cx, compose } = defineConfig({
   hooks: {

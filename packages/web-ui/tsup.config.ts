@@ -14,7 +14,7 @@ export default defineConfig({
   // This is useful to ensure the output is only the latest.
   clean: true,
   format: ["esm"],
-  external: ["react", "react-dom", "next", "tailwind-merge"],
+  external: ["react", "react-dom", "next", "tailwind-merge", "clsx"],
   treeshake: true,
   splitting: true,
 });

@@ -2,10 +2,13 @@ import type { Meta, StoryObj } from "@storybook/react";
 import {
   ProductCard,
   ProductCardActions,
-  ProductCardBanner,
+  ProductCardCompare,
   ProductCardContent,
   ProductCardDetails,
+  ProductCardDiscount,
+  ProductCardHero,
   ProductCardImage,
+  ProductCardLabel,
   ProductCardPrice,
 } from "./product-card";
 import productImage from "./product-image.png";
@@ -25,16 +28,26 @@ export const WithDiscount: Story = {
   render: () => {
     return (
       <ProductCard>
-        <ProductCardBanner>
-          <span style={{ fontWeight: "700" }}>30%</span> off
-        </ProductCardBanner>
+        <ProductCardHero>
+          <ProductCardDiscount>30</ProductCardDiscount>
 
-        <ProductCardImage src={productImage} alt="The product image" />
+          <ProductCardImage
+            src={productImage}
+            alt="The product image"
+            href="/product/771770/PROMD3-MB"
+            title="The product title"
+          />
+
+          <ProductCardLabel>Label</ProductCardLabel>
+
+          <ProductCardCompare />
+        </ProductCardHero>
 
         <ProductCardContent>
           <ProductCardDetails
             title='blum 21" Tandem Plus 563H Undermount Drawer Slide for 5/8" Material, 100lb Capacity Full Extension with BLUMOTION Soft-Closing'
             sku="SCMN100CR+"
+            href="/product/771770/PROMD3-MB"
           />
 
           <ProductCardPrice price={39} uom="pair" actualPrice={49} />
@@ -50,12 +63,24 @@ export const WithoutDiscount: Story = {
   render: () => {
     return (
       <ProductCard>
-        <ProductCardImage src={productImage} alt="The product image" />
+        <ProductCardHero>
+          <ProductCardImage
+            src={productImage}
+            alt="The product image"
+            href="/product/771770/PROMD3-MB"
+            title="The product title"
+          />
+
+          <ProductCardLabel>Label</ProductCardLabel>
+
+          <ProductCardCompare />
+        </ProductCardHero>
 
         <ProductCardContent>
           <ProductCardDetails
             title='blum 21" Tandem Plus 563H Undermount Drawer Slide for 5/8" Material, 100lb Capacity Full Extension with BLUMOTION Soft-Closing'
             sku="SCMN100CR+"
+            href="/product/771770/PROMD3-MB"
           />
 
           <ProductCardPrice price={39} uom="pair" />
