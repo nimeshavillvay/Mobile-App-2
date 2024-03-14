@@ -14,7 +14,12 @@ export type ApproveContact = {
   signedData: SignedData;
 };
 
-export type Status = "ACTIVE" | "DEACTIVE" | "PENDING";
+export type Status =
+  | "PENDING"
+  | "ACTIVE"
+  | "DEACTIVE"
+  | "INACTIVE"
+  | "DISABLED";
 
 export type UserProfile = {
   uuid: string;
@@ -33,4 +38,20 @@ export type UserProfile = {
 export type ManageContact = {
   your_profile: UserProfile;
   contact_list: UserProfile[];
+};
+
+export type ManageUsers = {
+  approve_contacts: ApproveContact[];
+  manage_contact: ManageContact;
+};
+
+export type ForgetPasswordResponse = {
+  data: { status: Status };
+  message: string | null;
+  isSuccess: boolean;
+};
+
+export type UpdateField = {
+  field: string;
+  value: string;
 };

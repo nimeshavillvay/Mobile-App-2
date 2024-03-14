@@ -16,7 +16,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/old/_components/ui/table";
-import VisuallyHidden from "@/old/_components/visually-hidden";
 import type { Role } from "@/old/_lib/types";
 import { useState } from "react";
 import {
@@ -25,6 +24,7 @@ import {
   MdSupervisorAccount,
   MdSwitchAccount,
 } from "react-icons/md";
+import PendingUserRow from "./pending-user-row";
 import useSuspenseUsersList from "./use-suspense-users-list.hook";
 import UserRow from "./user-row";
 
@@ -36,8 +36,10 @@ const UsersList = ({
   jobRoles: Role[];
 }) => {
   const [showCurrentUsers, setShowCurrentUsers] = useState(false);
+  const [showPendingUsers, setShowPendingUsers] = useState(false);
   const usersListQuery = useSuspenseUsersList(token);
 
+  const pendingUsers = usersListQuery?.data?.approve_contacts ?? null;
   const yourProfile =
     usersListQuery?.data?.manage_contact?.your_profile ?? null;
   const currentUsers =
@@ -46,9 +48,9 @@ const UsersList = ({
   return (
     <>
       <Table>
-        <VisuallyHidden>
-          <TableCaption>Update your profile section.</TableCaption>
-        </VisuallyHidden>
+        <TableCaption className="sr-only">
+          Update your profile section.
+        </TableCaption>
 
         <TableHeader className="border border-brand-gray-200 bg-brand-gray-200">
           <TableRow>
@@ -89,17 +91,63 @@ const UsersList = ({
       </Table>
 
       {/* New And Pending Users Section */}
-      <div className="my-5 flex justify-between">
-        <h6 className="flex font-wurth text-base font-medium capitalize text-brand-gray-500">
-          <MdSwitchAccount className="self-center text-2xl leading-none" />
-          &nbsp;New And Pending Users
-        </h6>
+      <Collapsible open={showPendingUsers} onOpenChange={setShowPendingUsers}>
+        <div className="my-5 flex justify-between">
+          <h6 className="flex font-wurth text-base font-medium capitalize text-brand-gray-500">
+            <MdSwitchAccount className="self-center text-2xl leading-none" />
+            &nbsp;New And Pending Users
+          </h6>
 
-        <Button className="flex h-6 min-w-20 flex-row items-center justify-center gap-0.5 bg-brand-secondary px-2 font-wurth text-base leading-6 text-white">
-          Show
-          <MdKeyboardArrowDown className="text-xl leading-none" />
-        </Button>
-      </div>
+          <CollapsibleTrigger asChild>
+            <Button className="flex h-6 min-w-20 flex-row items-center justify-center gap-0.5 bg-brand-secondary px-2 font-wurth text-base leading-6 text-white">
+              {showPendingUsers ? (
+                <>
+                  Hide
+                  <MdKeyboardArrowUp className="text-xl leading-none" />
+                </>
+              ) : (
+                <>
+                  Show
+                  <MdKeyboardArrowDown className="text-xl leading-none" />
+                </>
+              )}
+            </Button>
+          </CollapsibleTrigger>
+        </div>
+
+        <CollapsibleContent>
+          <Table>
+            <TableCaption className="sr-only">
+              New and pending users section.
+            </TableCaption>
+
+            <TableHeader className="border border-brand-gray-200 bg-brand-gray-200">
+              <TableRow>
+                <TableHead>Email</TableHead>
+
+                <TableHead className="capitalize">
+                  First and Last Name
+                </TableHead>
+
+                <TableHead className="capitalize">Job Title</TableHead>
+
+                <TableHead></TableHead>
+              </TableRow>
+            </TableHeader>
+
+            <TableBody className="border border-brand-gray-200 text-brand-gray-500">
+              {pendingUsers.map((user, index) => (
+                <PendingUserRow
+                  key={user?.email}
+                  user={user}
+                  index={index}
+                  jobRoles={jobRoles}
+                />
+              ))}
+            </TableBody>
+          </Table>
+        </CollapsibleContent>
+      </Collapsible>
 
       <Separator
         orientation="horizontal"
@@ -132,28 +180,26 @@ const UsersList = ({
         </div>
 
         <CollapsibleContent>
-          <Table>
-            <VisuallyHidden>
-              <TableCaption>
+          {currentUsers && currentUsers?.length > 0 ? (
+            <Table>
+              <TableCaption className="sr-only">
                 Current users on this account section.
               </TableCaption>
-            </VisuallyHidden>
 
-            <TableHeader className="border border-brand-gray-200 bg-brand-gray-200">
-              <TableRow>
-                <TableHead>Email</TableHead>
+              <TableHeader className="border border-brand-gray-200 bg-brand-gray-200">
+                <TableRow>
+                  <TableHead>Email</TableHead>
 
-                <TableHead className="text-center">Permission</TableHead>
+                  <TableHead className="text-center">Permission</TableHead>
 
-                <TableHead className="text-center">Status</TableHead>
+                  <TableHead className="text-center">Status</TableHead>
 
-                <TableHead></TableHead>
-              </TableRow>
-            </TableHeader>
+                  <TableHead></TableHead>
+                </TableRow>
+              </TableHeader>
 
-            <TableBody className="border border-brand-gray-200 text-brand-gray-500">
-              {currentUsers &&
-                currentUsers.map((user, index) => (
+              <TableBody className="border border-brand-gray-200 text-brand-gray-500">
+                {currentUsers.map((user, index) => (
                   <UserRow
                     key={user?.uuid}
                     user={user}
@@ -161,8 +207,13 @@ const UsersList = ({
                     jobRoles={jobRoles}
                   />
                 ))}
-            </TableBody>
-          </Table>
+              </TableBody>
+            </Table>
+          ) : (
+            <div className="mt-10 rounded-sm border border-brand-gray-300 p-6 text-center font-wurth text-lg capitalize text-brand-gray-300">
+              Current Users Not Available!
+            </div>
+          )}
         </CollapsibleContent>
       </Collapsible>
 
