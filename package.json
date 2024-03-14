@@ -10,7 +10,7 @@
     "prettier:check": "prettier --check \"**/*.{js,jsx,ts,tsx,md,json}\""
   },
   "engines": {
-    "node": ">=20.4.0"
+    "node": ">=18"
   },
   "pnpm": {
     "peerDependencyRules": {
