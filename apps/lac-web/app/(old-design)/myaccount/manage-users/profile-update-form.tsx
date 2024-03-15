@@ -150,8 +150,6 @@ const ProfileUpdateForm = ({ user, jobRoles }: UpdateProfileProps) => {
       const encryptedKey: string = `${encryptedPass}:${base64Obj}`;
       const base64Key: string = base64Encode(encryptedKey);
 
-      console.log("base64key > : ", base64Key);
-
       if (base64Key) {
         updateFields.push({
           field: "password",
