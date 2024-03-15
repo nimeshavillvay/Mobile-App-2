@@ -1,6 +1,7 @@
 import { AVAILABILITY_STATUSES } from "@/old/_lib/constants";
 import type { UOM, UOMLabel } from "@/old/_lib/types";
 import { clsx, type ClassValue } from "clsx";
+import { JSEncrypt } from "jsencrypt";
 import { twMerge } from "tailwind-merge";
 
 /**
@@ -61,4 +62,17 @@ export const getStatusLabel = (status: string) => {
   }
 
   return "";
+};
+
+export const encryptString = (value: string) => {
+  const RSAEncrypt = new JSEncrypt();
+  if (process.env.NEXT_PUBLIC_WURTH_LAC_LOGIN_PUBLIC_KEY) {
+    RSAEncrypt.setPublicKey(process.env.NEXT_PUBLIC_WURTH_LAC_LOGIN_PUBLIC_KEY);
+  }
+
+  return RSAEncrypt.encrypt(value);
+};
+
+export const base64Encode = (value: string) => {
+  return Buffer.from(value).toString("base64");
 };

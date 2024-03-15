@@ -1,10 +1,11 @@
 import { TableCell, TableRow } from "@/old/_components/ui/table";
 import { Role } from "@/old/_lib/types";
 import { useState } from "react";
-import { MdDeleteOutline } from "react-icons/md";
+import { MdDelete } from "react-icons/md";
 import ActionConfirmationDialog from "./action-confirmation-dialog";
 import { ApproveContact } from "./types";
-import useDeleteOtherUserMutation from "./use-delete-other-user-mutation.hook";
+import useDeletePendingUserMutation from "./use-delete-pending-user-mutation.hook";
+import UserApproveForm from "./user-approve-form";
 
 type UserRowProps = {
   user: ApproveContact;
@@ -12,26 +13,28 @@ type UserRowProps = {
   jobRoles: Role[];
 };
 
-const PendingUserRow = ({ user }: UserRowProps) => {
+const PendingUserRow = ({ user, jobRoles }: UserRowProps) => {
   const [isOpenDelete, setIsOpenDelete] = useState(false);
 
-  const deleteOtherUserMutation = useDeleteOtherUserMutation();
+  const deletePendingUserMutation = useDeletePendingUserMutation();
 
   return (
     <>
       <TableRow className="bg-white">
-        <TableCell>{user?.email}</TableCell>
+        <TableCell className="align-middle">{user?.email}</TableCell>
 
-        <TableCell className="capitalize">
+        <TableCell className="align-middle capitalize">
           {`${user?.firstName} ${user?.lastName}`}
         </TableCell>
 
-        <TableCell className="capitalize">Office Manager</TableCell>
+        <TableCell className="align-middle capitalize">
+          Office Manager
+        </TableCell>
 
         <TableCell className="text-right">
           <div className="flex justify-end">
             <div className="cursor-pointer text-brand-gray-500">
-              <MdDeleteOutline
+              <MdDelete
                 className="self-center text-2xl leading-none"
                 onClick={() => setIsOpenDelete(true)}
               />
@@ -41,7 +44,9 @@ const PendingUserRow = ({ user }: UserRowProps) => {
       </TableRow>
 
       <TableRow>
-        <TableCell colSpan={4}></TableCell>
+        <TableCell colSpan={4}>
+          <UserApproveForm jobRoles={jobRoles} user={user} />
+        </TableCell>
       </TableRow>
 
       <ActionConfirmationDialog
@@ -49,7 +54,7 @@ const PendingUserRow = ({ user }: UserRowProps) => {
         onOpenChange={setIsOpenDelete}
         title="Confirm Action"
         text="Do you really want to delete these records?"
-        onConfirm={() => deleteOtherUserMutation.mutate(user?.signedData)}
+        onConfirm={() => deletePendingUserMutation.mutate(user?.signedData)}
         okText="Confirm"
       />
     </>

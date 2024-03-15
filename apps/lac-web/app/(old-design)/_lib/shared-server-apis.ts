@@ -1,7 +1,7 @@
 import "server-only";
 import { api } from "./api";
 import { DEFAULT_REVALIDATE } from "./constants";
-import type { Role } from "./types";
+import type { PasswordPolicy, Role } from "./types";
 
 export const getBreadcrumbs = async (
   id: string,
@@ -51,4 +51,22 @@ export const getJobRoles = async () => {
       },
     })
     .json<{ roles: Role[] }>();
+};
+
+export const getPasswordPolicy = async () => {
+  return await api
+    .get("pim/webservice/rest/passwordpolicy", {
+      searchParams: {
+        requestBy: "FE",
+      },
+      next: {
+        revalidate: DEFAULT_REVALIDATE,
+      },
+    })
+    .json<{
+      success: boolean;
+      message: string;
+      error_code: number;
+      data: { passwordPolicies: PasswordPolicy[] };
+    }>();
 };
