@@ -2,7 +2,7 @@
   "name": "@repo/tailwindcss-config",
   "exports": {
     ".": "./tailwind.config.ts",
-    "./colors": "./colors.ts"
+    "./config": "./config.ts"
   },
   "devDependencies": {
     "@tailwindcss/aspect-ratio": "^0.4.2",
