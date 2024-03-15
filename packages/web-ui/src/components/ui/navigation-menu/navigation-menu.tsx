@@ -1,7 +1,7 @@
+import ChevronDown from "@/components/icons/chevron-down";
 import { cva } from "@/lib/cva.config";
 import { cn } from "@/lib/utils";
 import * as NavigationMenuPrimitive from "@radix-ui/react-navigation-menu";
-import { ChevronDown } from "lucide-react";
 import {
   forwardRef,
   type ComponentPropsWithoutRef,
@@ -59,7 +59,7 @@ const NavigationMenuTrigger = forwardRef<
     <span>{children}</span>
 
     <ChevronDown
-      className="ui-size-4 ui-transition ui-duration-300 group-data-[state=open]:ui-rotate-180"
+      className="ui-size-3 ui-stroke-white ui-transition ui-duration-300 group-data-[state=open]:ui-rotate-180"
       aria-hidden="true"
     />
   </NavigationMenuPrimitive.Trigger>
