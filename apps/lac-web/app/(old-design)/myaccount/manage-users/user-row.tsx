@@ -49,9 +49,9 @@ const UserRow = ({ user, index, jobRoles }: UserRowProps) => {
         key={user?.uuid}
         className={index % 2 === 0 ? "bg-white" : "bg-brand-gray-100"}
       >
-        <TableCell>{user?.email}</TableCell>
+        <TableCell className="align-middle">{user?.email}</TableCell>
 
-        <TableCell className="text-center capitalize">
+        <TableCell className="text-center align-middle capitalize">
           {user?.permission.toLowerCase()}
         </TableCell>
 
