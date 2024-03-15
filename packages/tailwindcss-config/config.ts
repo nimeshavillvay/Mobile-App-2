@@ -46,6 +46,7 @@ const config: Omit<Config, "content"> = {
     require("@tailwindcss/forms"),
     require("tailwindcss-animate"),
     require("@tailwindcss/aspect-ratio"),
+    require("@tailwindcss/container-queries"),
     plugin(({ addComponents }) => {
       addComponents({
         ".container": {
@@ -54,7 +55,7 @@ const config: Omit<Config, "content"> = {
           marginLeft: "auto",
           paddingRight: "1rem",
           paddingLeft: "1rem",
-          "@screen md": {
+          "@screen xs": {
             paddingRight: "2rem",
             paddingLeft: "2rem",
           },
