@@ -15,7 +15,7 @@ const NavigationMenu = forwardRef<
   <NavigationMenuPrimitive.Root
     ref={ref}
     className={cn(
-      "ui-relative ui-z-10 ui-flex ui-max-w-full ui-flex-1 ui-items-center ui-justify-start ui-bg-wurth-red-650 ui-px-8",
+      "ui-container ui-relative ui-z-10 ui-flex ui-max-w-full ui-flex-1 ui-items-center ui-justify-start ui-bg-wurth-red-650",
       className,
     )}
     {...props}

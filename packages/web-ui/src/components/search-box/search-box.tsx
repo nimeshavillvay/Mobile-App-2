@@ -10,7 +10,7 @@ export const SearchBox = ({
   return (
     <div
       className={cn(
-        "ui-flex ui-w-full ui-flex-row ui-items-center ui-rounded-full ui-border ui-border-wurth-gray-250",
+        "ui-flex ui-flex-row ui-items-center ui-rounded-full ui-border ui-border-wurth-gray-250",
         className,
       )}
       {...delegated}
@@ -25,7 +25,7 @@ export const SearchBoxInput = ({
   return (
     <input
       className={cn(
-        "ui-flex-1 ui-rounded-l-full ui-border-0 ui-py-2.5 ui-pl-3.5 ui-text-sm placeholder:ui-text-wurth-gray-400",
+        "ui-min-w-0 ui-flex-1 ui-shrink ui-rounded-l-full ui-border-0 ui-py-2.5 ui-pl-3.5 ui-text-sm placeholder:ui-text-wurth-gray-400",
         className,
       )}
       {...delegated}

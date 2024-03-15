@@ -1,8 +1,11 @@
 import { cn } from "@/_lib/utils";
+import AccountSelectorDialog from "@/old/account-selector-dialog";
+import LoginDialog from "@/old/login-dialog";
 import { type Metadata } from "next";
 import localFont from "next/font/local";
 import NextTopLoader from "nextjs-toploader";
 import { type ReactNode } from "react";
+import Header from "./_header";
 import "./global.css";
 import Providers from "./providers";
 
@@ -63,7 +66,14 @@ const RootLayout = ({ children }: { children: ReactNode }) => {
         <Providers>
           <NextTopLoader showSpinner={false} color="#cc0000" />
 
-          {children}
+          <Header />
+
+          <main className="flex-1">{children}</main>
+
+          <footer>Footer</footer>
+
+          <LoginDialog />
+          <AccountSelectorDialog />
         </Providers>
       </body>
     </html>

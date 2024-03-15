@@ -15,7 +15,7 @@ type Story = StoryObj<typeof SearchBox>;
 export const Default: Story = {
   render: () => {
     return (
-      <SearchBox style={{ width: 400, maxWidth: "100%" }}>
+      <SearchBox>
         <SearchBoxInput placeholder="What are you looking for?" />
 
         <SearchBoxButton />
