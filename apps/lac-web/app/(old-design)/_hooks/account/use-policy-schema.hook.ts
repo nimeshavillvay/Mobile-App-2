@@ -22,25 +22,21 @@ const usePolicySchema = (passwordPolicies: PasswordPolicy[]) => {
       path: ["confirmPassword"],
     })
     .refine(
-      (data) => {
-        if (data.password === "") return true; // Allow empty passwords
+      ({ password }) => {
+        if (password === "") return true; // Allow empty passwords
 
         for (const policy of passwordPolicies) {
           switch (policy.code) {
             case "MIN_CHAR_LEN":
-              if (data.password.length < Number(policy.value)) return false;
+              if (password.length < Number(policy.value)) return false;
               break;
             case "MIN_NUMBER":
-              if (
-                !new RegExp(`\\d{${Number(policy.value)}}`).test(data.password)
-              )
+              if (!new RegExp(`\\d{${Number(policy.value)}}`).test(password))
                 return false;
               break;
             case "MIN_CHAR_Cha_LEN":
               if (
-                !new RegExp(`[a-zA-Z]{${Number(policy.value)}}`).test(
-                  data.password,
-                )
+                !new RegExp(`[a-zA-Z]{${Number(policy.value)}}`).test(password)
               )
                 return false;
               break;
