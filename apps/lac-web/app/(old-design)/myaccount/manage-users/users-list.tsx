@@ -106,12 +106,7 @@ const UsersList = ({
             <CollapsibleContent asChild>
               <TableRow>
                 <TableCell colSpan={4}>
-                  <ProfileUpdateForm
-                    jobRoles={jobRoles}
-                    user={yourProfile}
-                    setMessage={() => {}}
-                    setMessageOpen={() => {}}
-                  />
+                  <ProfileUpdateForm jobRoles={jobRoles} user={yourProfile} />
                 </TableCell>
               </TableRow>
             </CollapsibleContent>

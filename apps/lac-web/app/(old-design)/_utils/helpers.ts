@@ -64,11 +64,6 @@ export const getStatusLabel = (status: string) => {
   return "";
 };
 
-/**
- *
- * @param value string to be encrypted
- * @returns encrypted string
- */
 export const encryptString = (value: string) => {
   const RSAEncrypt = new JSEncrypt();
   if (process.env.NEXT_PUBLIC_WURTH_LAC_LOGIN_PUBLIC_KEY) {
@@ -78,11 +73,6 @@ export const encryptString = (value: string) => {
   return RSAEncrypt.encrypt(value);
 };
 
-/**
- *
- * @param value string to be base64 encoded
- * @returns encoded base64 string
- */
 export const base64Encode = (value: string) => {
   return Buffer.from(value).toString("base64");
 };

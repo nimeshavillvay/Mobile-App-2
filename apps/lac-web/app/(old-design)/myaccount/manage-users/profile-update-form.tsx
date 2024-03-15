@@ -19,7 +19,6 @@ import {
 import { Role } from "@/old/_lib/types";
 import { base64Encode, encryptString } from "@/old/_utils/helpers";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { SignedData, UpdateField, UserProfile } from "./types";
@@ -74,8 +73,6 @@ type UpdateProfileSchema = z.infer<typeof updateProfileSchema>;
 type UpdateProfileProps = {
   user: UserProfile;
   jobRoles: Role[];
-  setMessage: Dispatch<SetStateAction<string>>;
-  setMessageOpen: Dispatch<SetStateAction<boolean>>;
 };
 
 const ProfileUpdateForm = ({ user, jobRoles }: UpdateProfileProps) => {
@@ -224,7 +221,7 @@ const ProfileUpdateForm = ({ user, jobRoles }: UpdateProfileProps) => {
               />
             </div>
 
-            <div className="mb-4 flex gap-4">
+            <div className="flex gap-4">
               <FormField
                 control={form.control}
                 name="jobTitle"
@@ -287,145 +284,137 @@ const ProfileUpdateForm = ({ user, jobRoles }: UpdateProfileProps) => {
             </div>
           </div>
 
-          <div className="col-span-1">
-            <div className="flex flex-col gap-2">
-              <FormField
-                control={form.control}
-                name="permission"
-                render={({ field }) => (
-                  <FormItem className="flex-1 space-y-0.5">
-                    <FormLabel className="font-bold">Permission*</FormLabel>
+          <div className="col-span-1 flex flex-col">
+            <FormField
+              control={form.control}
+              name="permission"
+              render={({ field }) => (
+                <FormItem className="mb-2 flex-1 space-y-0.5">
+                  <FormLabel className="font-bold">Permission*</FormLabel>
 
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                      disabled={true}
-                    >
-                      <FormControl>
-                        <SelectTrigger className="h-8 rounded-sm py-0 focus:ring-brand-gray-500">
-                          <SelectValue placeholder="Permission" />
-                        </SelectTrigger>
-                      </FormControl>
-
-                      <SelectContent>
-                        {USER_PERMISSIONS.map((permission) => (
-                          <SelectItem
-                            value={permission?.value}
-                            key={permission?.value}
-                          >
-                            {permission?.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-
-                    <FormDescription className="sr-only">
-                      This is the permission of your profile
-                    </FormDescription>
-
-                    <FormMessage className="text-xs dark:text-brand-primary" />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="status"
-                render={({ field }) => (
-                  <FormItem className="flex-1 space-y-0.5">
-                    <FormLabel className="font-bold">Status</FormLabel>
-
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                      disabled={true}
-                    >
-                      <FormControl>
-                        <SelectTrigger className="h-8 rounded-sm py-0 focus:ring-brand-gray-500">
-                          <SelectValue placeholder="Status" />
-                        </SelectTrigger>
-                      </FormControl>
-
-                      <SelectContent>
-                        {USER_STATUSES.map((status) => (
-                          <SelectItem value={status?.value} key={status?.value}>
-                            {status?.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-
-                    <FormDescription className="sr-only">
-                      This is the status of your profile
-                    </FormDescription>
-
-                    <FormMessage className="text-xs dark:text-brand-primary" />
-                  </FormItem>
-                )}
-              />
-            </div>
-          </div>
-
-          <div className="col-span-2">
-            <div className="flex gap-4">
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem className="flex-1 space-y-0.5">
-                    <FormLabel className="font-bold">New Password</FormLabel>
-
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                    disabled={true}
+                  >
                     <FormControl>
-                      <Input
-                        className="text-[15px] placeholder:text-brand-gray-400"
-                        type="password"
-                        {...field}
-                      />
+                      <SelectTrigger className="h-8 rounded-sm py-0 focus:ring-brand-gray-500">
+                        <SelectValue placeholder="Permission" />
+                      </SelectTrigger>
                     </FormControl>
 
-                    <FormDescription className="sr-only">
-                      This is the first name of your profile
-                    </FormDescription>
+                    <SelectContent>
+                      {USER_PERMISSIONS.map((permission) => (
+                        <SelectItem
+                          value={permission?.value}
+                          key={permission?.value}
+                        >
+                          {permission?.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
 
-                    <FormMessage className="text-xs dark:text-brand-primary" />
-                  </FormItem>
-                )}
-              />
+                  <FormDescription className="sr-only">
+                    This is the permission of your profile
+                  </FormDescription>
 
-              <FormField
-                control={form.control}
-                name="confirmPassword"
-                render={({ field }) => (
-                  <FormItem className="flex-1 space-y-0.5">
-                    <FormLabel className="font-bold">
-                      Confirm Password
-                    </FormLabel>
+                  <FormMessage className="text-xs dark:text-brand-primary" />
+                </FormItem>
+              )}
+            />
 
+            <FormField
+              control={form.control}
+              name="status"
+              render={({ field }) => (
+                <FormItem className="flex-1 space-y-0.5">
+                  <FormLabel className="font-bold">Status</FormLabel>
+
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                    disabled={true}
+                  >
                     <FormControl>
-                      <Input
-                        className="text-[15px] placeholder:text-brand-gray-400"
-                        type="password"
-                        {...field}
-                      />
+                      <SelectTrigger className="h-8 rounded-sm py-0 focus:ring-brand-gray-500">
+                        <SelectValue placeholder="Status" />
+                      </SelectTrigger>
                     </FormControl>
 
-                    <FormDescription className="sr-only">
-                      This is the first name of your profile
-                    </FormDescription>
+                    <SelectContent>
+                      {USER_STATUSES.map((status) => (
+                        <SelectItem value={status?.value} key={status?.value}>
+                          {status?.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
 
-                    <FormMessage className="text-xs dark:text-brand-primary" />
-                  </FormItem>
-                )}
-              />
-            </div>
+                  <FormDescription className="sr-only">
+                    This is the status of your profile
+                  </FormDescription>
+
+                  <FormMessage className="text-xs dark:text-brand-primary" />
+                </FormItem>
+              )}
+            />
           </div>
 
-          <div className="col-span-3">
-            <div className="flex justify-end">
-              <Button type="submit" className="px-6">
-                Update
-              </Button>
-            </div>
+          <div className="col-span-2 flex gap-4">
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem className="flex-1 space-y-0.5">
+                  <FormLabel className="font-bold">New Password</FormLabel>
+
+                  <FormControl>
+                    <Input
+                      className="text-[15px] placeholder:text-brand-gray-400"
+                      type="password"
+                      {...field}
+                    />
+                  </FormControl>
+
+                  <FormDescription className="sr-only">
+                    This is the first name of your profile
+                  </FormDescription>
+
+                  <FormMessage className="text-xs dark:text-brand-primary" />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="confirmPassword"
+              render={({ field }) => (
+                <FormItem className="flex-1 space-y-0.5">
+                  <FormLabel className="font-bold">Confirm Password</FormLabel>
+
+                  <FormControl>
+                    <Input
+                      className="text-[15px] placeholder:text-brand-gray-400"
+                      type="password"
+                      {...field}
+                    />
+                  </FormControl>
+
+                  <FormDescription className="sr-only">
+                    This is the first name of your profile
+                  </FormDescription>
+
+                  <FormMessage className="text-xs dark:text-brand-primary" />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div className="col-span-3 flex justify-end">
+            <Button type="submit" className="px-6">
+              Update
+            </Button>
           </div>
         </div>
       </form>
