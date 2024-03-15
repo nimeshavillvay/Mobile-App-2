@@ -25,6 +25,7 @@ import {
   MdSwitchAccount,
 } from "react-icons/md";
 import PendingUserRow from "./pending-user-row";
+import ProfileUpdateForm from "./profile-update-form";
 import useSuspenseUsersList from "./use-suspense-users-list.hook";
 import UserRow from "./user-row";
 
@@ -35,6 +36,7 @@ const UsersList = ({
   token: string;
   jobRoles: Role[];
 }) => {
+  const [showYourProfile, setShowYourProfile] = useState(false);
   const [showCurrentUsers, setShowCurrentUsers] = useState(false);
   const [showPendingUsers, setShowPendingUsers] = useState(false);
   const usersListQuery = useSuspenseUsersList(token);
@@ -47,48 +49,70 @@ const UsersList = ({
 
   return (
     <>
-      <Table>
-        <TableCaption className="sr-only">
-          Update your profile section.
-        </TableCaption>
+      {/* Update Your Profile Section */}
+      <Collapsible open={showYourProfile} onOpenChange={setShowYourProfile}>
+        <Table>
+          <TableCaption className="sr-only">
+            Update your profile section.
+          </TableCaption>
 
-        <TableHeader className="border border-brand-gray-200 bg-brand-gray-200">
-          <TableRow>
-            <TableHead>Email</TableHead>
+          <TableHeader className="border border-brand-gray-200 bg-brand-gray-200">
+            <TableRow>
+              <TableHead>Email</TableHead>
 
-            <TableHead className="text-center">Permission</TableHead>
+              <TableHead className="text-center">Permission</TableHead>
 
-            <TableHead className="text-center">Status</TableHead>
+              <TableHead className="text-center">Status</TableHead>
 
-            <TableHead></TableHead>
-          </TableRow>
-        </TableHeader>
+              <TableHead></TableHead>
+            </TableRow>
+          </TableHeader>
 
-        <TableBody className="border border-brand-gray-200">
-          <TableRow>
-            <TableCell>{yourProfile?.email}</TableCell>
+          <TableBody className="border border-brand-gray-200">
+            <TableRow>
+              <TableCell>{yourProfile?.email}</TableCell>
 
-            <TableCell className="text-center">
-              {yourProfile?.permission}
-            </TableCell>
+              <TableCell className="text-center">
+                {yourProfile?.permission}
+              </TableCell>
 
-            <TableCell className="text-center">
-              <span className="min-w-24 rounded-sm border border-brand-tertiary px-5 py-px font-bold text-brand-tertiary">
-                {yourProfile?.status}
-              </span>
-            </TableCell>
+              <TableCell className="text-center">
+                <span className="min-w-24 rounded-sm border border-brand-tertiary px-5 py-px font-bold text-brand-tertiary">
+                  {yourProfile?.status}
+                </span>
+              </TableCell>
 
-            <TableCell className="text-right">
-              <div className="flex justify-end">
-                <Button className="flex h-6 min-w-20 flex-row items-center justify-center gap-0.5 bg-brand-secondary px-2 font-wurth text-base leading-6 text-white">
-                  Open&nbsp;
-                  <MdKeyboardArrowDown className="text-xl leading-none" />
-                </Button>
-              </div>
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
+              <TableCell className="text-right">
+                <div className="flex justify-end">
+                  <CollapsibleTrigger asChild>
+                    <Button className="flex h-6 min-w-20 flex-row items-center justify-center gap-0.5 bg-brand-secondary px-2 font-wurth text-base leading-6 text-white">
+                      {showYourProfile ? (
+                        <>
+                          Close
+                          <MdKeyboardArrowUp className="text-xl leading-none" />
+                        </>
+                      ) : (
+                        <>
+                          Open
+                          <MdKeyboardArrowDown className="text-xl leading-none" />
+                        </>
+                      )}
+                    </Button>
+                  </CollapsibleTrigger>
+                </div>
+              </TableCell>
+            </TableRow>
+
+            <CollapsibleContent asChild>
+              <TableRow>
+                <TableCell colSpan={4}>
+                  <ProfileUpdateForm jobRoles={jobRoles} user={yourProfile} />
+                </TableCell>
+              </TableRow>
+            </CollapsibleContent>
+          </TableBody>
+        </Table>
+      </Collapsible>
 
       {/* New And Pending Users Section */}
       <Collapsible open={showPendingUsers} onOpenChange={setShowPendingUsers}>
