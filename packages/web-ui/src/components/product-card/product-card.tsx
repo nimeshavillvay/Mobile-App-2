@@ -6,20 +6,34 @@ import { Label } from "@/components/ui/label";
 import { cn, formatNumberToPrice } from "@/lib/utils";
 import Image, { type ImageProps } from "next/image";
 import Link, { type LinkProps } from "next/link";
-import { useId, type ComponentProps } from "react";
+import { createContext, useContext, useId, type ComponentProps } from "react";
+
+type Orientation = "vertical" | "horizontal";
+
+const OrientationContext = createContext<Orientation>("vertical");
+const useOrientation = () => {
+  return useContext(OrientationContext);
+};
 
 export const ProductCard = ({
   className,
+  orientation = "vertical",
   ...delegated
-}: ComponentProps<"article">) => {
+}: ComponentProps<"article"> & { orientation?: Orientation }) => {
   return (
-    <article
-      className={cn(
-        "ui-flex ui-w-[12.5rem] ui-flex-col ui-gap-2 ui-rounded-lg ui-border ui-border-solid ui-border-wurth-gray-250 ui-bg-white ui-p-3 ui-shadow-[0px_1px_2px_-1px_rgba(0,0,0,0.06),0px_1px_3px_0px_rgba(0,0,0,0.08)] md:ui-w-64 md:ui-p-4",
-        className,
-      )}
-      {...delegated}
-    />
+    <OrientationContext.Provider value={orientation}>
+      <article
+        className={cn(
+          "ui-flex ui-rounded-lg ui-border ui-border-solid ui-border-wurth-gray-250 ui-bg-white ui-p-3 ui-shadow-[0px_1px_2px_-1px_rgba(0,0,0,0.06),0px_1px_3px_0px_rgba(0,0,0,0.08)]",
+          orientation === "vertical" &&
+            "ui-w-[12.5rem] ui-flex-col ui-gap-2 md:ui-w-64 md:ui-p-4",
+          orientation === "horizontal" &&
+            "ui-w-[24.75rem] ui-flex-row ui-gap-3",
+          className,
+        )}
+        {...delegated}
+      />
+    </OrientationContext.Provider>
   );
 };
 
@@ -27,9 +41,16 @@ export const ProductCardHero = ({
   className,
   ...delegated
 }: ComponentProps<"div">) => {
+  const orientation = useOrientation();
+
   return (
     <div
-      className={cn("ui-relative ui-overflow-hidden ui-rounded", className)}
+      className={cn(
+        "ui-relative ui-shrink-0 ui-overflow-hidden ui-rounded",
+        orientation === "horizontal" &&
+          "ui-flex ui-flex-col ui-justify-between",
+        className,
+      )}
       {...delegated}
     />
   );
@@ -51,6 +72,8 @@ export const ProductCardImage = ({
      */
     title: string;
   }) => {
+  const orientation = useOrientation();
+
   return (
     <Link href={href}>
       <Image
@@ -59,7 +82,9 @@ export const ProductCardImage = ({
         width={width}
         height={height}
         className={cn(
-          "ui-aspect-1 ui-size-44 ui-object-contain md:ui-size-56",
+          "ui-aspect-1 ui-object-contain",
+          orientation === "vertical" && "ui-size-44 md:ui-size-56",
+          orientation === "horizontal" && "ui-size-[8.5rem]",
           className,
         )}
         {...delegated}
@@ -75,10 +100,13 @@ export const ProductCardDiscount = ({
   children,
   ...delegated
 }: ComponentProps<"div">) => {
+  const orientation = useOrientation();
+
   return (
     <div
       className={cn(
-        "ui-absolute ui-left-0 ui-top-0 ui-flex ui-flex-row ui-items-center ui-gap-0.5 ui-bg-green-50 ui-px-1.5 ui-text-base ui-text-green-600 md:ui-px-2 md:ui-text-lg",
+        "ui-absolute ui-left-0 ui-top-0 ui-flex ui-flex-row ui-items-center ui-gap-0.5 ui-bg-green-50 ui-px-1.5 ui-text-base ui-text-green-600",
+        orientation === "vertical" && "md:ui-px-2 md:ui-text-lg",
         className,
       )}
       {...delegated}
@@ -88,15 +116,26 @@ export const ProductCardDiscount = ({
   );
 };
 
+/**
+ * When the orientation is "vertical", this component needs to be a child
+ * of `ProductCardHero`. If the orientation is "horizontal", the parent
+ * component should be `ProductCardContent`.
+ */
 export const ProductCardLabel = ({
   variant = "secondary",
   className,
   ...delegated
 }: BadgeProps) => {
+  const orientation = useOrientation();
+
   return (
     <Badge
       variant={variant}
-      className={cn("ui-absolute ui-right-0 ui-top-0", className)}
+      className={cn(
+        orientation === "vertical" && "ui-absolute ui-right-0 ui-top-0",
+        orientation === "horizontal" && "-ui-mb-1 ui-self-end",
+        className,
+      )}
       {...delegated}
     />
   );
@@ -107,9 +146,16 @@ export const ProductCardCompare = ({
   ...delegated
 }: Omit<ComponentProps<typeof Checkbox>, "id">) => {
   const id = useId();
+  const orientation = useOrientation();
 
   return (
-    <div className="ui-absolute ui-bottom-0 ui-left-0 ui-flex ui-flex-row ui-items-center ui-gap-1 ui-rounded ui-bg-wurth-gray-50 ui-px-2 ui-py-1.5">
+    <div
+      className={cn(
+        "ui-flex ui-flex-row ui-items-center ui-gap-1 ui-rounded ui-bg-wurth-gray-50 ui-px-2 ui-py-1.5",
+        orientation === "vertical" && "ui-absolute ui-bottom-0 ui-left-0",
+        orientation === "horizontal" && "ui-mt-auto ui-max-w-fit",
+      )}
+    >
       <Checkbox
         id={id}
         className={cn("ui-bg-white", className)}
@@ -125,7 +171,12 @@ export const ProductCardContent = ({
   className,
   ...delegated
 }: ComponentProps<"div">) => {
-  return <div className={cn("ui-space-y-2", className)} {...delegated} />;
+  return (
+    <div
+      className={cn("ui-flex ui-flex-col ui-space-y-2", className)}
+      {...delegated}
+    />
+  );
 };
 
 export const ProductCardDetails = ({
@@ -137,9 +188,17 @@ export const ProductCardDetails = ({
   sku: string;
   href: LinkProps["href"];
 }) => {
+  const orientation = useOrientation();
+
   return (
     <div className="ui-space-y-1 ui-text-sm">
-      <h3 className="ui-line-clamp-3 ui-font-medium ui-text-black">
+      <h3
+        className={cn(
+          "ui-font-medium ui-text-black",
+          orientation === "vertical" && "ui-line-clamp-3",
+          orientation === "horizontal" && "ui-line-clamp-2",
+        )}
+      >
         <Link href={href}>{title}</Link>
       </h3>
 
@@ -198,5 +257,24 @@ export const ProductCardActions = () => {
         <span className="ui-sr-only">Add to favorites</span>
       </Button>
     </div>
+  );
+};
+
+export const ProductCardSkeleton = ({
+  className,
+  orientation = "vertical",
+  ...delegated
+}: Omit<ComponentProps<"div">, "children"> & { orientation?: Orientation }) => {
+  return (
+    <div
+      className={cn(
+        "ui-animate-pulse ui-rounded-lg ui-border ui-border-wurth-gray-150 ui-bg-wurth-gray-150 ui-shadow-[0px_1px_2px_-1px_rgba(0,0,0,0.06),0px_1px_3px_0px_rgba(0,0,0,0.08)]",
+        orientation === "vertical" &&
+          "ui-h-[23.25rem] ui-w-[17.5rem] md:ui-h-[25.75rem] md:ui-w-64",
+        orientation === "horizontal" && "ui-h-48 ui-w-[24.75rem]",
+        className,
+      )}
+      {...delegated}
+    />
   );
 };

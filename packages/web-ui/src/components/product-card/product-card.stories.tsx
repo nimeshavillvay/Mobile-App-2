@@ -10,6 +10,7 @@ import {
   ProductCardImage,
   ProductCardLabel,
   ProductCardPrice,
+  ProductCardSkeleton,
 } from "./product-card";
 import productImage from "./product-image.png";
 
@@ -89,5 +90,52 @@ export const WithoutDiscount: Story = {
         </ProductCardContent>
       </ProductCard>
     );
+  },
+};
+
+export const Horizontal: Story = {
+  render: () => {
+    return (
+      <ProductCard orientation="horizontal">
+        <ProductCardHero>
+          <ProductCardDiscount>30</ProductCardDiscount>
+
+          <ProductCardImage
+            src={productImage}
+            alt="The product image"
+            href="/product/771770/PROMD3-MB"
+            title="The product title"
+          />
+
+          <ProductCardCompare />
+        </ProductCardHero>
+
+        <ProductCardContent>
+          <ProductCardLabel>Label</ProductCardLabel>
+
+          <ProductCardDetails
+            title='blum 21" Tandem Plus 563H Undermount Drawer Slide for 5/8" Material, 100lb Capacity Full Extension with BLUMOTION Soft-Closing'
+            sku="SCMN100CR+"
+            href="/product/771770/PROMD3-MB"
+          />
+
+          <ProductCardPrice price={39} uom="pair" actualPrice={49} />
+
+          <ProductCardActions />
+        </ProductCardContent>
+      </ProductCard>
+    );
+  },
+};
+
+export const LoadingSkeleton: Story = {
+  render: () => {
+    return <ProductCardSkeleton />;
+  },
+};
+
+export const LoadingSkeletonHorizontal: Story = {
+  render: () => {
+    return <ProductCardSkeleton orientation="horizontal" />;
   },
 };
