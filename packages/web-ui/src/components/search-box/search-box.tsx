@@ -43,7 +43,7 @@ export const SearchBoxButton = ({
       type={type}
       variant="ghost"
       size="icon"
-      className={cn("ui-rounded-full ui-px-2.5", className)}
+      className={cn("ui-mx-0.5 ui-rounded-full ui-px-2", className)}
       {...delegated}
     >
       <MagnifyingGlass className="ui-size-5" />
