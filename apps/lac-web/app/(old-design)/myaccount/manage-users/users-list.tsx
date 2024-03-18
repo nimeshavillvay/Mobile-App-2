@@ -16,7 +16,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/old/_components/ui/table";
-import type { Role } from "@/old/_lib/types";
+import type { PasswordPolicy, Role } from "@/old/_lib/types";
 import { useState } from "react";
 import {
   MdKeyboardArrowDown,
@@ -32,9 +32,11 @@ import UserRow from "./user-row";
 const UsersList = ({
   token,
   jobRoles,
+  passwordPolicies = [],
 }: {
   token: string;
   jobRoles: Role[];
+  passwordPolicies: PasswordPolicy[];
 }) => {
   const [showYourProfile, setShowYourProfile] = useState(false);
   const [showCurrentUsers, setShowCurrentUsers] = useState(false);
@@ -106,7 +108,11 @@ const UsersList = ({
             <CollapsibleContent asChild>
               <TableRow>
                 <TableCell colSpan={4}>
-                  <ProfileUpdateForm jobRoles={jobRoles} user={yourProfile} />
+                  <ProfileUpdateForm
+                    jobRoles={jobRoles}
+                    user={yourProfile}
+                    passwordPolicies={passwordPolicies}
+                  />
                 </TableCell>
               </TableRow>
             </CollapsibleContent>

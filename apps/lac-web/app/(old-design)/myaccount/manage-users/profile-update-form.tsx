@@ -16,7 +16,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/old/_components/ui/select";
-import { Role } from "@/old/_lib/types";
+import usePolicySchema from "@/old/_hooks/account/use-policy-schema.hook";
+import { PasswordPolicy, Role } from "@/old/_lib/types";
 import { base64Encode, encryptString } from "@/old/_utils/helpers";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -42,40 +43,21 @@ type UpdateProfileRequest = {
   update_fields: UpdateField[];
 };
 
-const updateProfileSchema = z
-  .object({
-    firstName: z.string().trim().min(1, "Please enter first name.").max(40),
-    lastName: z.string().trim().min(1, "Please enter last name.").max(40),
-    jobTitle: z.string().min(1, "Please enter job title."),
-    email: z
-      .string()
-      .trim()
-      .min(1, "Please enter email address.")
-      .email("Please enter a valid email address."),
-    permission: z.string().min(1, "Please enter permission type."),
-    status: z.string(),
-    password: z
-      .string()
-      .min(8, "Minimum no of characters is 8.")
-      .or(z.literal("")),
-    confirmPassword: z
-      .string()
-      .min(8, "Minimum no of characters is 8.")
-      .or(z.literal("")),
-  })
-  .refine(({ password, confirmPassword }) => password === confirmPassword, {
-    message: "Passwords don't match",
-    path: ["confirmPassword"],
-  });
-
-type UpdateProfileSchema = z.infer<typeof updateProfileSchema>;
-
 type UpdateProfileProps = {
   user: UserProfile;
   jobRoles: Role[];
+  passwordPolicies: PasswordPolicy[];
 };
 
-const ProfileUpdateForm = ({ user, jobRoles }: UpdateProfileProps) => {
+const ProfileUpdateForm = ({
+  user,
+  jobRoles,
+  passwordPolicies,
+}: UpdateProfileProps) => {
+  const updateProfileSchema = usePolicySchema(passwordPolicies);
+
+  type UpdateProfileSchema = z.infer<typeof updateProfileSchema>;
+
   const form = useForm<UpdateProfileSchema>({
     resolver: zodResolver(updateProfileSchema),
     values: {

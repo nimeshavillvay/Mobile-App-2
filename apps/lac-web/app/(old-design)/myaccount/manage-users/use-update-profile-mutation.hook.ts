@@ -1,4 +1,5 @@
 import { useToast } from "@/old/_components/ui/use-toast";
+import useLogout from "@/old/_hooks/account/use-logout.hook";
 import useCookies from "@/old/_hooks/storage/use-cookies.hook";
 import { api } from "@/old/_lib/api";
 import { ACCOUNT_TOKEN_COOKIE } from "@/old/_lib/constants";
@@ -9,6 +10,7 @@ const useUpdateProfileMutation = () => {
   const queryClient = useQueryClient();
   const [cookies] = useCookies();
   const { toast } = useToast();
+  const logout = useLogout();
 
   return useMutation({
     mutationFn: ({
@@ -32,11 +34,18 @@ const useUpdateProfileMutation = () => {
     onMutate: () => {
       toast({ description: "Updating your profile" });
     },
-    onSuccess: () => {
+    onSuccess: (data, { updateFields }) => {
       toast({
         description: "Your profile has been successfully updated.",
         variant: "success",
       });
+
+      if (data?.status === "logout") {
+        // Check if password field also updated
+        if (updateFields.some((field) => field?.field === "password")) {
+          logout();
+        }
+      }
     },
     onError: () => {
       toast({
