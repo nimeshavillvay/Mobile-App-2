@@ -24,7 +24,7 @@ const MyAccountLayout = ({ children }: MyAccountLayoutProps) => {
       </div>
 
       <div className="xs:flex-row container flex flex-col">
-        <aside className="xs:w-full xs:mb-0 mb-6 w-[280px]">
+        <aside className="xs xs:mb-0 xs:w-[280px] mb-6">
           <Profile />
 
           <SideMenu />
