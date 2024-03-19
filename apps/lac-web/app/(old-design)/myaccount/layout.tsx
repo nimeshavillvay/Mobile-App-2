@@ -14,7 +14,7 @@ const MyAccountLayout = ({ children }: MyAccountLayoutProps) => {
     <>
       <Breadcrumbs links={[{ href: "/myaccount", label: "My Account" }]} />
 
-      <div className="mb-4 mt-8 flex flex-row items-center gap-2.5">
+      <div className="container mb-4 mt-8 flex flex-row items-center gap-2.5">
         <Title className="text-brand-primary">My Account</Title>
 
         <Separator
@@ -23,7 +23,7 @@ const MyAccountLayout = ({ children }: MyAccountLayoutProps) => {
         />
       </div>
 
-      <div className="flex flex-row">
+      <div className="container flex flex-row">
         <aside className="w-[280px]">
           <Profile />
 
