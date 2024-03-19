@@ -13,7 +13,7 @@ import Link from "next/link";
 const Header = () => {
   return (
     <header className="flex flex-col gap-4 border-b border-b-wurth-gray-250 py-5 shadow-[0px_1px_5px_0px_rgba(0,0,0,0.05),0px_1px_2px_-1px_rgba(0,0,0,0.05)] @container/header">
-      <div className="flex flex-row items-center gap-7 container w-full">
+      <div className="container flex w-full flex-row items-center gap-7">
         <Button
           variant="ghost"
           size="icon"
@@ -30,7 +30,7 @@ const Header = () => {
           <span className="sr-only">Home</span>
         </Link>
 
-        <SearchBox className="hidden mx-auto xs:flex max-w-[35rem] flex-1 min-w-0">
+        <SearchBox className="mx-auto hidden min-w-0 max-w-[35rem] flex-1 xs:flex">
           <SearchBoxInput placeholder="What are you looking for?" />
 
           <SearchBoxButton />
@@ -75,7 +75,7 @@ const Header = () => {
         </div>
       </div>
 
-      <div className="container xs:hidden w-full">
+      <div className="container w-full xs:hidden">
         <SearchBox>
           <SearchBoxInput placeholder="What are you looking for?" />
 
