@@ -3,6 +3,7 @@ import { Badge, BadgeProps } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
+import { Skeleton } from "@/components/ui/skeleton";
 import { cn, formatNumberToPrice } from "@/lib/utils";
 import Image, { type ImageProps } from "next/image";
 import Link, { type LinkProps } from "next/link";
@@ -264,11 +265,13 @@ export const ProductCardSkeleton = ({
   className,
   orientation = "vertical",
   ...delegated
-}: Omit<ComponentProps<"div">, "children"> & { orientation?: Orientation }) => {
+}: Omit<ComponentProps<typeof Skeleton>, "children"> & {
+  orientation?: Orientation;
+}) => {
   return (
-    <div
+    <Skeleton
       className={cn(
-        "ui-animate-pulse ui-rounded-lg ui-border ui-border-wurth-gray-150 ui-bg-wurth-gray-150 ui-shadow-[0px_1px_2px_-1px_rgba(0,0,0,0.06),0px_1px_3px_0px_rgba(0,0,0,0.08)]",
+        "ui-rounded-lg ui-shadow-[0px_1px_2px_-1px_rgba(0,0,0,0.06),0px_1px_3px_0px_rgba(0,0,0,0.08)]",
         orientation === "vertical" &&
           "ui-h-[23.25rem] ui-w-[17.5rem] md:ui-h-[25.75rem] md:ui-w-64",
         orientation === "horizontal" && "ui-h-48 ui-w-[24.75rem]",
