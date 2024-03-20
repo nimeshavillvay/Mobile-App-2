@@ -61,12 +61,10 @@ const UsersList = ({
         className="h-px flex-1 bg-brand-primary"
       />
 
-      <div className="my-5">
-        <h6 className="flex font-wurth text-base font-medium text-brand-gray-500">
-          <MdAccountBox className="self-center text-2xl leading-none" />
-          &nbsp;Update Your Profile
-        </h6>
-      </div>
+      <h6 className="my-5 flex font-wurth text-base font-medium text-brand-gray-500">
+        <MdAccountBox className="self-center text-2xl leading-none" />
+        &nbsp;Update Your Profile
+      </h6>
 
       {/* Update Your Profile Section */}
       <Collapsible open={showYourProfile} onOpenChange={setShowYourProfile}>

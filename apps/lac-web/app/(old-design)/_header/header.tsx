@@ -20,8 +20,8 @@ const Header = async () => {
     .json<Category[]>();
 
   return (
-    <header className="old-design-text-base">
-      <div className="hidden bg-brand-gray-100 xs:block">
+    <header className="old-design-text-base hidden xs:block xs:w-full">
+      <div className="bg-brand-gray-100">
         <div className="mx-auto flex h-9 max-w-desktop flex-row items-center justify-between text-sm leading-4 text-black">
           <nav className="flex flex-row items-center gap-4">
             <Link href="/" className="font-bold text-brand-primary">
@@ -59,7 +59,7 @@ const Header = async () => {
         </div>
       </div>
 
-      <div className="mx-auto my-5 hidden max-w-desktop flex-row items-center gap-12 xs:flex">
+      <div className="mx-auto my-5 flex max-w-desktop flex-row items-center gap-12">
         <Link href="/">
           <VisuallyHidden>Wurth</VisuallyHidden>
 
@@ -71,7 +71,7 @@ const Header = async () => {
         <ShoppingCart />
       </div>
 
-      <div className="hidden bg-brand-primary xs:block">
+      <div className="bg-brand-primary">
         <div className="mx-auto flex h-[50px] max-w-desktop flex-row items-center gap-[15px]">
           <CategoriesDropdown categories={categories} />
 
