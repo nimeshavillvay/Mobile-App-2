@@ -37,6 +37,9 @@ type CarouselContextProps = {
   scrollNext: () => void;
   canScrollPrev: boolean;
   canScrollNext: boolean;
+  selectedIndex: number;
+  scrollSnaps: number[];
+  scrollTo: (index: number) => void;
 } & CarouselProps;
 
 const CarouselContext = createContext<CarouselContextProps | null>(null);
@@ -67,6 +70,9 @@ const Carousel = forwardRef<
     },
     ref,
   ) => {
+    const [selectedIndex, setSelectedIndex] = useState(0);
+    const [scrollSnaps, setScrollSnaps] = useState<number[]>([]);
+
     const [carouselRef, api] = useEmblaCarousel(
       {
         ...opts,
@@ -77,6 +83,14 @@ const Carousel = forwardRef<
     const [canScrollPrev, setCanScrollPrev] = useState(false);
     const [canScrollNext, setCanScrollNext] = useState(false);
 
+    const onInit = useCallback((api: CarouselApi) => {
+      if (!api) {
+        return;
+      }
+
+      setScrollSnaps(api.scrollSnapList());
+    }, []);
+
     const onSelect = useCallback((api: CarouselApi) => {
       if (!api) {
         return;
@@ -84,7 +98,15 @@ const Carousel = forwardRef<
 
       setCanScrollPrev(api.canScrollPrev());
       setCanScrollNext(api.canScrollNext());
+      setSelectedIndex(api.selectedScrollSnap());
     }, []);
+
+    const scrollTo = useCallback(
+      (index: number) => {
+        api?.scrollTo(index);
+      },
+      [api],
+    );
 
     const scrollPrev = useCallback(() => {
       api?.scrollPrev();
@@ -120,14 +142,16 @@ const Carousel = forwardRef<
         return;
       }
 
+      onInit(api);
       onSelect(api);
+      api.on("reInit", onInit);
       api.on("reInit", onSelect);
       api.on("select", onSelect);
 
       return () => {
         api?.off("select", onSelect);
       };
-    }, [api, onSelect]);
+    }, [api, onInit, onSelect]);
 
     return (
       <CarouselContext.Provider
@@ -141,6 +165,9 @@ const Carousel = forwardRef<
           scrollNext,
           canScrollPrev,
           canScrollNext,
+          selectedIndex,
+          scrollSnaps,
+          scrollTo,
         }}
       >
         <div
@@ -260,9 +287,42 @@ const CarouselNext = forwardRef<
 });
 CarouselNext.displayName = "CarouselNext";
 
+const CarouselDots = ({
+  className,
+  buttonClassName,
+  ...delegated
+}: ComponentProps<"div"> & { buttonClassName?: string }) => {
+  const { scrollSnaps, scrollTo, selectedIndex } = useCarousel();
+
+  return (
+    <div
+      className={cn(
+        "ui-mx-auto ui-flex ui-h-3 ui-flex-row ui-items-center ui-justify-center ui-gap-3",
+        className,
+      )}
+      {...delegated}
+    >
+      {scrollSnaps.map((_, index) => (
+        <button
+          key={index}
+          onClick={() => scrollTo(index)}
+          className={cn(
+            "ui-size-2 ui-rounded-full ui-border-[0.1rem] ui-border-black/40 data-[selected]:ui-border-transparent data-[selected]:ui-bg-black/40",
+            buttonClassName,
+          )}
+          data-selected={selectedIndex === index ? true : undefined}
+        >
+          <span className="ui-sr-only">Item {index + 1}</span>
+        </button>
+      ))}
+    </div>
+  );
+};
+
 export {
   Carousel,
   CarouselContent,
+  CarouselDots,
   CarouselItem,
   CarouselNext,
   CarouselPrevious,

@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import {
   Carousel,
   CarouselContent,
+  CarouselDots,
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
@@ -62,6 +63,8 @@ export const Demo: Story = {
         </CarouselContent>
         <CarouselPrevious />
         <CarouselNext />
+
+        <CarouselDots style={{ marginTop: "1rem" }} />
       </Carousel>
     );
   },
