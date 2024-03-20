@@ -34,9 +34,11 @@ const ActionConfirmationDialog = ({
 }: ActionConfirmationDialogProps) => {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[490px]">
+      <DialogContent className="bottom-0 top-auto max-w-[490px] translate-y-[0%] xs:bottom-auto xs:top-[50%] xs:translate-y-[-50%]">
         <DialogHeader>
-          <DialogTitle className="font-wurth">{title}</DialogTitle>
+          <DialogTitle className="text-left font-wurth xs:text-center">
+            {title}
+          </DialogTitle>
         </DialogHeader>
 
         <div className="px-6">
@@ -51,15 +53,15 @@ const ActionConfirmationDialog = ({
             {text}
           </div>
 
-          <div className="mb-7 flex flex-row items-center justify-end gap-2 font-wurth font-extrabold text-white">
+          <div className="mb-7 flex flex-row items-center justify-between gap-2 font-wurth font-extrabold text-white xs:justify-end">
             {showCancelBtn && (
-              <DialogClose className="w-[120px] rounded-sm border border-brand-primary px-8 py-1.5 uppercase text-brand-primary">
+              <DialogClose className="w-1/2 rounded-sm border border-brand-primary px-8 py-1.5 uppercase text-brand-primary xs:w-[120px]">
                 {cancelText}
               </DialogClose>
             )}
 
             <Button
-              className="w-[120px] rounded-sm bg-brand-primary px-8 py-1.5 uppercase"
+              className="w-1/2 rounded-sm bg-brand-primary px-8 py-1.5 uppercase xs:w-[120px]"
               onClick={onConfirm}
             >
               {okText}
