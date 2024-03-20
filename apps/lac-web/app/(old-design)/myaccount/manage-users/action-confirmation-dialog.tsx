@@ -53,7 +53,12 @@ const ActionConfirmationDialog = ({
             {text}
           </div>
 
-          <div className="mb-7 flex flex-row items-center justify-between gap-2 font-wurth font-extrabold text-white xs:justify-end">
+          <div
+            className={cn(
+              showCancelBtn ? "justify-between" : "justify-end",
+              "mb-7 flex flex-row items-center gap-2 font-wurth font-extrabold text-white xs:justify-end",
+            )}
+          >
             {showCancelBtn && (
               <DialogClose className="w-1/2 rounded-sm border border-brand-primary px-8 py-1.5 uppercase text-brand-primary xs:w-[120px]">
                 {cancelText}
