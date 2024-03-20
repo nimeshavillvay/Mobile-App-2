@@ -28,7 +28,7 @@ const ShippingDetails = () => {
   }
 
   return (
-    <div className="xs:block hidden bg-brand-tertiary">
+    <div className="hidden bg-brand-tertiary xs:block">
       <div className="mx-auto flex max-w-desktop flex-row items-stretch gap-3.5 py-[7px]">
         <svg
           xmlns="http://www.w3.org/2000/svg"
