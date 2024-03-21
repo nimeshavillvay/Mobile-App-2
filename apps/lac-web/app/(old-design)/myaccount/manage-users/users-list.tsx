@@ -19,6 +19,7 @@ import {
 import type { PasswordPolicy, Role } from "@/old/_lib/types";
 import { useState } from "react";
 import {
+  MdAccountBox,
   MdKeyboardArrowDown,
   MdKeyboardArrowUp,
   MdSupervisorAccount,
@@ -51,6 +52,20 @@ const UsersList = ({
 
   return (
     <>
+      <h2 className="relative font-wurth text-xl font-medium text-brand-primary">
+        Manage Users
+      </h2>
+
+      <Separator
+        orientation="horizontal"
+        className="h-px flex-1 bg-brand-primary"
+      />
+
+      <h6 className="my-5 flex font-wurth text-base font-medium text-brand-gray-500">
+        <MdAccountBox className="self-center text-2xl leading-none" />
+        &nbsp;Update Your Profile
+      </h6>
+
       {/* Update Your Profile Section */}
       <Collapsible open={showYourProfile} onOpenChange={setShowYourProfile}>
         <Table>

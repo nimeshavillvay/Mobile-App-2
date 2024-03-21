@@ -7,7 +7,7 @@ const OldDesignRootLayout = ({ children }: { children: ReactNode }) => {
     <>
       <Header />
 
-      <div className="old-design-text-base container">{children}</div>
+      <div className="old-design-text-base">{children}</div>
 
       <Toaster />
     </>
