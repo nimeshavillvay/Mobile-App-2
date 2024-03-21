@@ -15,7 +15,7 @@ import productImage from "./product-image.png";
 const PlaceholderItem = () => {
   return (
     <CarouselItem>
-      <div className="rounded-lg bg-[#362A23] shadow-lg overflow-hidden">
+      <div className="overflow-hidden rounded-lg bg-[#362A23] shadow-lg">
         <Image
           src={productImage}
           alt="Placeholder item"
@@ -25,18 +25,18 @@ const PlaceholderItem = () => {
         />
 
         <div className="p-5">
-          <h2 className="text-[#FFC296] font-title text-2xl leading-7">
+          <h2 className="font-title text-2xl leading-7 text-[#FFC296]">
             <Balancer>Introducing Revego Pocket Door System</Balancer>
           </h2>
 
-          <p className="text-[#FFC296] text-sm">
+          <p className="text-sm text-[#FFC296]">
             <Balancer>
               Pocket systems for new space concepts is available now
             </Balancer>
           </p>
 
           <div className="mt-5 flex flex-row items-end justify-between">
-            <Button className="py-2.5 bg-[#F37021] text-white font-bold">
+            <Button className="bg-[#F37021] py-2.5 font-bold text-white">
               Shop Now
               <ArrowRight width={16} height={16} className="stroke-white" />
             </Button>
@@ -64,8 +64,8 @@ const PlaceholderItem = () => {
 
 const HeroBanners = () => {
   return (
-    <div className="bg-[#271E1A] py-4 container">
-      <Carousel className="w-full">
+    <section className="bg-[#271E1A] py-4">
+      <Carousel className="container w-full">
         <CarouselContent>
           <PlaceholderItem />
 
@@ -79,7 +79,7 @@ const HeroBanners = () => {
           buttonClassName="border-white/40 data-[selected]:bg-white/40"
         />
       </Carousel>
-    </div>
+    </section>
   );
 };
 

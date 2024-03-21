@@ -1,3 +1,5 @@
+"use client";
+
 import HeartOutline from "@/components/icons/heart-outline";
 import { Badge, BadgeProps } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -224,7 +226,7 @@ export const ProductCardPrice = ({
       <span
         className={cn(
           "ui-font-bold",
-          actualPrice ? "ui-text-green-600" : "ui-text-wurth-gray-400",
+          actualPrice ? "ui-text-green-600" : "ui-text-wurth-gray-800",
         )}
       >
         $
