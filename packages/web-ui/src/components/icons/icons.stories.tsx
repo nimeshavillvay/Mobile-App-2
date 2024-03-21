@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import AddToCart from "./add-to-cart";
+import ArrowRight from "./arrow-right";
 import Bell from "./bell";
 import HeartFilled from "./heart-filled";
 import HeartOutline from "./heart-outline";
@@ -47,6 +48,8 @@ export const Showcase: Story = {
         <Profile />
 
         <Bell />
+
+        <ArrowRight />
       </div>
     );
   },
