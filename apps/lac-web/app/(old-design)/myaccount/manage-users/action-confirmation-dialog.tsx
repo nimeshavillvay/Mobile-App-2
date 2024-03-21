@@ -55,8 +55,8 @@ const ActionConfirmationDialog = ({
 
           <div
             className={cn(
-              showCancelBtn ? "justify-between" : "justify-end",
               "mb-7 flex flex-row items-center gap-2 font-wurth font-extrabold text-white xs:justify-end",
+              showCancelBtn ? "justify-between" : "justify-end",
             )}
           >
             {showCancelBtn && (
