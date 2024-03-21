@@ -15,6 +15,11 @@ export default defineConfig({
   clean: true,
   format: ["esm"],
   external: ["react", "react-dom", "next", "tailwind-merge", "clsx"],
-  treeshake: true,
-  splitting: true,
+  // treeshake: true, // Disabled because "use client" directive gets removed
+  // splitting: true, // Disabled because "use client" directive gets removed
+  esbuildOptions: (options) => {
+    options.banner = {
+      js: '"use client"',
+    };
+  },
 });
