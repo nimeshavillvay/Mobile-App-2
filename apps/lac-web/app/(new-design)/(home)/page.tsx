@@ -6,7 +6,9 @@ import Title from "./Title";
 import ad1 from "./ad-1.png";
 import ad2 from "./ad-2.png";
 import Banner from "./banner";
+import blogImage from "./blog-image.png";
 import FeaturedBrand from "./featured-brand";
+import FeaturedCategories from "./featured-categories";
 import FlashSale from "./flash-sale";
 import HeroBanners from "./hero-banners";
 
@@ -191,6 +193,42 @@ const HomePage = () => {
       </section>
 
       <Banner />
+
+      <FeaturedCategories />
+
+      <section className="my-14 space-y-6 bg-wurth-gray-50 py-9">
+        <Title>Latest From Our Blog</Title>
+
+        <ul className="container flex snap-x scroll-pl-4 flex-row items-center gap-4 overflow-x-auto">
+          {Array.from({ length: 5 }).map((_, index) => (
+            <li key={index} className="snap-start">
+              <article className="w-[19.75rem] overflow-hidden rounded-lg border border-wurth-gray-250 bg-white shadow-md">
+                <Image
+                  src={blogImage}
+                  alt="Blog image"
+                  width={316}
+                  height={180}
+                />
+
+                <div className="space-y-1 p-5">
+                  <h3 className="line-clamp-3 text-lg font-bold leading-6 text-black">
+                    <Balancer>
+                      2024 Kitchen Trends - Delivering What Homeowners Want
+                    </Balancer>
+                  </h3>
+
+                  <p className="line-clamp-2 text-sm text-wurth-gray-500">
+                    Stay ahead of the curve with the hottest kitchen trends
+                    homeowners are craving. Discover design tips, material
+                    recommendations, and strategies to win over clients with
+                    cutting-edge kitchens.
+                  </p>
+                </div>
+              </article>
+            </li>
+          ))}
+        </ul>
+      </section>
     </>
   );
 };
