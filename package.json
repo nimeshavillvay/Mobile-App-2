@@ -24,7 +24,7 @@
   "devDependencies": {
     "@repo/prettier-config": "workspace:^",
     "prettier": "3.2.5",
-    "turbo": "1.12.4"
+    "turbo": "1.13.0"
   },
   "dependencies": {
     "dotenv-cli": "7.3.0"
