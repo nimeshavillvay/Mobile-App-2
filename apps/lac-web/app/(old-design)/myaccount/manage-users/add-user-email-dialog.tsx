@@ -3,6 +3,7 @@
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/old/_components/ui/dialog";
@@ -60,6 +61,9 @@ const AddUserEmailDialog = ({
 
   const form = useForm<AddUserSchema>({
     resolver: zodResolver(addUserSchema),
+    defaultValues: {
+      email: "",
+    },
   });
 
   const onSubmit = (data: AddUserSchema) => {
@@ -81,9 +85,9 @@ const AddUserEmailDialog = ({
         <DialogHeader>
           <DialogTitle>Add User</DialogTitle>
 
-          <FormDescription className="sr-only">
+          <DialogDescription className="sr-only">
             Add a new user by entering the email
-          </FormDescription>
+          </DialogDescription>
         </DialogHeader>
 
         <div className="px-12 pb-12 pt-6">
