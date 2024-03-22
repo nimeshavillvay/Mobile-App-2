@@ -20,7 +20,7 @@ const Header = async () => {
     .json<Category[]>();
 
   return (
-    <header className="old-design-text-base">
+    <header className="old-design-text-base hidden md:block">
       <div className="bg-brand-gray-100">
         <div className="mx-auto flex h-9 max-w-desktop flex-row items-center justify-between text-sm leading-4 text-black">
           <nav className="flex flex-row items-center gap-4">
