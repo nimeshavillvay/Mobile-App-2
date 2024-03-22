@@ -4,6 +4,7 @@ import { Role } from "@/(old-design)/_lib/types";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/old/_components/ui/dialog";
@@ -92,9 +93,9 @@ const AddUserDataDialog = ({
         <DialogHeader>
           <DialogTitle>Add User</DialogTitle>
 
-          <FormDescription className="sr-only">
+          <DialogDescription className="sr-only">
             Add a new user by entering the email
-          </FormDescription>
+          </DialogDescription>
         </DialogHeader>
 
         <div className="px-5 pb-8 pt-2">
