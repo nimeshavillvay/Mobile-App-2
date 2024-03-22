@@ -1,7 +1,7 @@
 {
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
-  "cSpell.words": ["wurth", "embla", "localstorage", "sku"],
+  "cSpell.words": ["wurth", "embla", "localstorage", "sku", "turborepo"],
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"
   },
