@@ -1,5 +1,6 @@
 "use client";
 
+import DatePicker from "@/(old-design)/_components/date-picker";
 import { Button } from "@/old/_components/ui/button";
 import { Label } from "@/old/_components/ui/label";
 import {
@@ -19,6 +20,8 @@ const PurchasedItemsSelectors = () => {
   const [duration, setDuration] = useState<Duration>(
     initialDuration as Duration,
   );
+  const [fromDate, setFromDate] = useState<Date>(new Date());
+  const [toDate, setToDate] = useState<Date>(new Date());
 
   const id = useId();
   const durationId = `duration-${id}`;
@@ -53,12 +56,15 @@ const PurchasedItemsSelectors = () => {
         </Select>
       </div>
 
-      <div className="flex flex-row items-center gap-2">
-        <div>From</div>
-        <div>To</div>
+      <div className="mt-4 flex flex-row items-center gap-2">
+        <DatePicker date={fromDate} setDate={setFromDate} />
+
+        <div>to</div>
+
+        <DatePicker date={toDate} setDate={setToDate} />
       </div>
 
-      <div className="flex flex-row items-center gap-2">
+      <div className="mt-4 flex flex-row items-center gap-2">
         <Button className="min-w-24">Search</Button>
         <Button className="min-w-24 bg-brand-secondary">Reset</Button>
       </div>
