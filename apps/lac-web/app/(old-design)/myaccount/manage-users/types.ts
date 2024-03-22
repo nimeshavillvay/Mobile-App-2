@@ -55,3 +55,7 @@ export type UpdateField = {
   field: string;
   value: string;
 };
+
+export type CurrentUser = {
+  email: string;
+};
