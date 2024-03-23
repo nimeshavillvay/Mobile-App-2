@@ -1,3 +1,4 @@
+import react18Plugin from "esbuild-plugin-react18";
 import { defineConfig } from "tsup";
 
 // To get rid of the `Error [ERR_WORKER_OUT_OF_MEMORY]: Worker terminated due to reaching memory limit: JS heap out of memory`
@@ -17,9 +18,5 @@ export default defineConfig({
   external: ["react", "react-dom", "next", "tailwind-merge", "clsx"],
   // treeshake: true, // Disabled because "use client" directive gets removed
   // splitting: true, // Disabled because "use client" directive gets removed
-  esbuildOptions: (options) => {
-    options.banner = {
-      js: '"use client"',
-    };
-  },
+  esbuildPlugins: [react18Plugin()],
 });

@@ -413,6 +413,9 @@ importers:
       embla-carousel-react:
         specifier: ^8.0.0
         version: 8.0.0(react@18.2.0)
+      esbuild-plugin-react18:
+        specifier: ^0.1.0
+        version: 0.1.0
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
@@ -8856,6 +8859,10 @@ packages:
 
   /esbuild-plugin-alias@0.2.1:
     resolution: {integrity: sha512-jyfL/pwPqaFXyKnj8lP8iLk6Z0m099uXR45aSN8Av1XD4vhvQutxxPzgA2bTcAwQpa1zCXDcWOlhFgyP3GKqhQ==}
+    dev: true
+
+  /esbuild-plugin-react18@0.1.0:
+    resolution: {integrity: sha512-HikMY4KzexG68Y7cG3Zpc8NcnAIPgP7HNqdXbNK5JmJyH/2QbRYkt/NlBWPZ0pXF/8Fvhcu9qKiMBkUlCfkDTA==}
     dev: true
 
   /esbuild-register@3.5.0(esbuild@0.19.12):
