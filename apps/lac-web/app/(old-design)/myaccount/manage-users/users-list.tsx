@@ -22,9 +22,12 @@ import {
   MdAccountBox,
   MdKeyboardArrowDown,
   MdKeyboardArrowUp,
+  MdPersonAdd,
   MdSupervisorAccount,
   MdSwitchAccount,
 } from "react-icons/md";
+import AddUserDataDialog from "./add-user-data-dialog";
+import AddUserEmailDialog from "./add-user-email-dialog";
 import PendingUserRow from "./pending-user-row";
 import ProfileUpdateForm from "./profile-update-form";
 import useSuspenseUsersList from "./use-suspense-users-list.hook";
@@ -42,6 +45,10 @@ const UsersList = ({
   const [showYourProfile, setShowYourProfile] = useState(false);
   const [showCurrentUsers, setShowCurrentUsers] = useState(false);
   const [showPendingUsers, setShowPendingUsers] = useState(false);
+  const [openAddUserEmailDialog, setOpenAddUserEmailDialog] = useState(false);
+  const [openAddUserDataDialog, setOpenAddUserDataDialog] = useState(false);
+  const [addUserDataDialogEmail, setAddUserDataDialogEmail] = useState("");
+
   const usersListQuery = useSuspenseUsersList(token);
 
   const pendingUsers = usersListQuery?.data?.approve_contacts ?? null;
@@ -52,6 +59,15 @@ const UsersList = ({
 
   return (
     <>
+      <Button
+        type="submit"
+        className="absolute right-0 top-[-20px] px-6"
+        onClick={() => setOpenAddUserEmailDialog(true)}
+      >
+        <MdPersonAdd className="text-xl leading-none" />
+        Add user
+      </Button>
+
       <h2 className="relative font-wurth text-xl font-medium text-brand-primary">
         Manage Users
       </h2>
@@ -265,6 +281,20 @@ const UsersList = ({
       <Separator
         orientation="horizontal"
         className="h-px flex-1 bg-brand-gray-200"
+      />
+
+      <AddUserEmailDialog
+        open={openAddUserEmailDialog}
+        setOpen={setOpenAddUserEmailDialog}
+        setOpenAddUserDataDialog={setOpenAddUserDataDialog}
+        setEmail={setAddUserDataDialogEmail}
+        currentUsers={currentUsers}
+      />
+      <AddUserDataDialog
+        jobRoles={jobRoles}
+        open={openAddUserDataDialog}
+        email={addUserDataDialogEmail}
+        setOpen={setOpenAddUserDataDialog}
       />
     </>
   );
