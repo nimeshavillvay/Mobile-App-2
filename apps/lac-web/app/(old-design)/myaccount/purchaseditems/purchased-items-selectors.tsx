@@ -12,14 +12,12 @@ import {
 } from "@/old/_components/ui/select";
 import { useId, useState } from "react";
 import { DURATIONS } from "./constants";
-import { Duration } from "./types";
+import { Option } from "./types";
 
 const PurchasedItemsSelectors = () => {
   const initialDuration = DURATIONS[DURATIONS.length - 2]; // Initial duration before last item in the `DURATIONS` array
 
-  const [duration, setDuration] = useState<Duration>(
-    initialDuration as Duration,
-  );
+  const [duration, setDuration] = useState<Option>(initialDuration as Option);
   const [fromDate, setFromDate] = useState<Date>(new Date());
   const [toDate, setToDate] = useState<Date>(new Date());
 
@@ -38,7 +36,7 @@ const PurchasedItemsSelectors = () => {
           onValueChange={(value) =>
             setDuration(
               DURATIONS.find((duration) => duration.value === value) ??
-                (initialDuration as Duration),
+                (initialDuration as Option),
             )
           }
         >

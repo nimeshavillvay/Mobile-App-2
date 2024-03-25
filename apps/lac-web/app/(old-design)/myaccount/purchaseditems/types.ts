@@ -1,4 +1,4 @@
-export type Duration = {
+export type Option = {
   value: string;
   label: string;
 };
