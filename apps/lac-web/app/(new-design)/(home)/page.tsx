@@ -61,19 +61,6 @@ const ADS: (
     colors: { text: "#FFF", background: "#053868", accent: "#000" },
     image: ad1,
   },
-  {
-    id: 4,
-    type: "spotlight",
-    title: "Sakes alive only $205!",
-    subtitle:
-      "Get the Würth 5” PSA Non-Vac Random Orbital Sander & 3 boxes of Abrasives for only $205!",
-    colors: {
-      text: "#000",
-      background: "#C8C3C3",
-      accent: "#CC0000",
-    },
-    image: ad2,
-  },
 ];
 
 const HomePage = () => {
@@ -81,7 +68,7 @@ const HomePage = () => {
     <>
       <HeroBanners />
 
-      <section className="container my-3 flex w-full snap-x scroll-pl-4 flex-row items-stretch gap-4 overflow-x-auto">
+      <section className="container my-3 flex w-full snap-x scroll-pl-4 flex-row  items-stretch gap-4 overflow-x-auto md:my-6 md:grid md:snap-none md:scroll-pl-0 md:grid-cols-3 md:gap-5">
         {ADS.map((ad) => (
           <article
             key={ad.id}
@@ -91,21 +78,21 @@ const HomePage = () => {
                 "--text-color": ad.colors.text,
               } as CSSProperties
             }
-            className="flex w-[11.75rem] shrink-0 snap-start flex-col justify-between overflow-hidden rounded-lg bg-[var(--background-color)]"
+            className="flex w-[11.75rem] shrink-0 snap-start flex-col justify-between overflow-hidden rounded-lg bg-[var(--background-color)] md:relative md:max-h-[21.25rem] md:w-auto md:snap-align-none"
           >
-            <div className="flex-1 px-4 pt-4">
+            <div className="shrink-1 z-10 min-h-0 flex-1 truncate px-4 pt-4 md:max-w-56 md:px-9 md:pt-9">
               {ad.type === "sale" && (
-                <div className="font-title text-sm tracking-[-0.00438rem] text-[var(--text-color)]">
+                <div className="font-title text-sm tracking-[-0.00438rem] text-[var(--text-color)] md:text-lg md:tracking-[-0.00625rem]">
                   Super Sale!
                 </div>
               )}
 
-              <h3 className="font-title text-2xl font-medium leading-7 text-[var(--text-color)]">
+              <h3 className="font-title text-2xl font-medium leading-7 text-[var(--text-color)] md:text-[2.75rem] md:leading-[3rem]">
                 <Balancer>{ad.title}</Balancer>
               </h3>
 
               {ad.type === "spotlight" && (
-                <div className="text-xs font-medium text-[var(--text-color)]">
+                <div className="text-xs font-medium text-[var(--text-color)] md:mt-2 md:text-base">
                   {ad.subtitle}
                 </div>
               )}
@@ -116,12 +103,12 @@ const HomePage = () => {
               alt="A picture of the sale"
               width={170}
               height={170}
-              className="self-end object-contain"
+              className="self-end object-contain md:absolute md:bottom-7 md:right-0"
             />
 
             <div
               style={{ "--accent-color": ad.colors.accent } as CSSProperties}
-              className="flex flex-row items-center gap-2 bg-[var(--accent-color)] px-4 py-2 text-sm font-bold text-white"
+              className="z-10 flex flex-row items-center gap-2 bg-[var(--accent-color)] px-4 py-2 text-sm font-bold text-white"
             >
               <span>Shop Now</span>
 
@@ -132,8 +119,8 @@ const HomePage = () => {
       </section>
 
       <section className="container">
-        <div className="space-y-6 rounded-lg bg-wurth-gray-800 px-6 py-9">
-          <div className="space-y-3 text-white">
+        <div className="flex flex-col gap-6 rounded-lg bg-wurth-gray-800 px-6 py-9 md:flex-row md:items-center md:gap-8 md:p-10">
+          <div className="space-y-3 text-white md:flex-1">
             <h2 className="font-title text-4xl font-medium leading-none tracking-[-0.01688rem]">
               <Balancer>Crafted for Craftsmen. Built for Business.</Balancer>
             </h2>
@@ -146,9 +133,9 @@ const HomePage = () => {
             </p>
           </div>
 
-          <div className="h-[17rem] rounded-lg bg-white" />
+          <div className="h-[17rem] rounded-lg bg-white md:h-80 md:flex-1" />
 
-          <div className="h-[17rem] rounded-lg bg-white" />
+          <div className="h-[17rem] rounded-lg bg-white md:h-80 md:flex-1" />
         </div>
       </section>
 
@@ -158,23 +145,25 @@ const HomePage = () => {
 
       <FeaturedBrand />
 
-      <section className="container my-14 space-y-6">
+      <section className="container my-14 space-y-6 md:my-20 md:space-y-9">
         <Title>Save More...</Title>
 
-        <ul className="grid grid-cols-2 gap-4">
+        <ul className="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-8">
           {Array.from({ length: 4 }).map((_, index) => (
             <li
               key={index}
-              className="relative flex aspect-1 flex-col justify-between gap-2 rounded-lg bg-green-50 p-3"
+              className="md:aspect-auto aspect-square relative flex flex-col justify-between gap-2 rounded-lg bg-green-50 p-3 md:min-h-[11.25rem] md:p-4"
             >
-              <h3 className="text-sm font-medium text-black">
+              <h3 className="text-sm font-medium text-black md:text-base md:leading-tight">
                 <Balancer>GRASS Institutional Hinges</Balancer>
               </h3>
 
-              <div className="z-10 font-title text-xl leading-6 text-green-700">
-                <span className="tracking-[-0.00625rem]">Up to</span>
+              <div className="z-10 font-title text-xl leading-6 text-green-700 md:text-2xl md:leading-none">
+                <span className="tracking-[-0.00625rem] md:tracking-[-0.0075rem]">
+                  Up to
+                </span>
                 <br />
-                <span className="text-2xl font-bold leading-none tracking-[-0.01125rem]">
+                <span className="text-2xl font-bold leading-none tracking-[-0.01125rem] md:text-4xl md:tracking-[-0.01688rem]">
                   30%
                 </span>{" "}
                 <span className="text-base uppercase">off</span>
@@ -196,11 +185,11 @@ const HomePage = () => {
 
       <FeaturedCategories />
 
-      <section className="my-14 space-y-6 bg-wurth-gray-50 py-9">
+      <section className="my-14 space-y-6 bg-wurth-gray-50 py-9 md:my-20 md:space-y-9 md:py-16">
         <Title>Latest From Our Blog</Title>
 
-        <ul className="container flex snap-x scroll-pl-4 flex-row items-center gap-4 overflow-x-auto">
-          {Array.from({ length: 5 }).map((_, index) => (
+        <ul className="container flex snap-x scroll-pl-4 flex-row items-center gap-4 overflow-x-auto md:scroll-pl-8">
+          {Array.from({ length: 10 }).map((_, index) => (
             <li key={index} className="snap-start">
               <article className="w-[19.75rem] overflow-hidden rounded-lg border border-wurth-gray-250 bg-white shadow-md">
                 <Image
