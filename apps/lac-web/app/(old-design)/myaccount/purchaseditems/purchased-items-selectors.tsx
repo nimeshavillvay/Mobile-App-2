@@ -10,16 +10,33 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/old/_components/ui/select";
-import { useId, useState } from "react";
+import {
+  Dispatch,
+  MouseEventHandler,
+  SetStateAction,
+  useId,
+  useState,
+} from "react";
 import { DURATIONS } from "./constants";
 import { Option } from "./types";
 
-const PurchasedItemsSelectors = () => {
-  const initialDuration = DURATIONS[DURATIONS.length - 2]; // Initial duration before last item in the `DURATIONS` array
+type PurchasedItemsSelectorProps = {
+  fromDate: Date;
+  setFromDate: Dispatch<SetStateAction<Date>>;
+  toDate: Date;
+  setToDate: Dispatch<SetStateAction<Date>>;
+  onSearch: MouseEventHandler<HTMLButtonElement>;
+};
 
+const PurchasedItemsSelectors = ({
+  fromDate,
+  setFromDate,
+  toDate,
+  setToDate,
+  onSearch,
+}: PurchasedItemsSelectorProps) => {
+  const initialDuration = DURATIONS[DURATIONS.length - 2]; // Initial duration before last item in the `DURATIONS` array
   const [duration, setDuration] = useState<Option>(initialDuration as Option);
-  const [fromDate, setFromDate] = useState<Date>(new Date());
-  const [toDate, setToDate] = useState<Date>(new Date());
 
   const id = useId();
   const durationId = `duration-${id}`;
@@ -63,7 +80,9 @@ const PurchasedItemsSelectors = () => {
       </div>
 
       <div className="mt-4 flex flex-row items-center gap-2">
-        <Button className="min-w-24">Search</Button>
+        <Button className="min-w-24" onClick={onSearch}>
+          Search
+        </Button>
         <Button className="min-w-24 bg-brand-secondary">Reset</Button>
       </div>
     </div>

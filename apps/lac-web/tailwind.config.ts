@@ -29,7 +29,7 @@ const config: Config = {
         desktop: "var(--desktop-width)",
       },
       fontFamily: {
-        arial: ["Arial", ...defaultTheme.fontFamily.serif],
+        arial: [...defaultTheme.fontFamily.serif],
         wurth: ["var(--wurth-font)", ...defaultTheme.fontFamily.serif],
       },
       keyframes: {
