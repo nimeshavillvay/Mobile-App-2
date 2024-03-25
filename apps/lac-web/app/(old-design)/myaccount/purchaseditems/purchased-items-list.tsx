@@ -14,9 +14,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/old/_components/ui/table";
+import dayjs from "dayjs";
 import { useState } from "react";
 import PurchasedItemsSelectors from "./purchased-items-selectors";
 import { Option } from "./types";
+import useGetItemInfo from "./use-get-items-info.hook";
+import useSuspensePurchasedItemsList from "./use-suspense-purchased-items-list.hook";
 
 const SORT_TYPES = [
   { label: "Sort...", value: "default" },
@@ -24,7 +27,7 @@ const SORT_TYPES = [
   { label: "Descending", value: "desc" },
 ];
 
-const PurchasedItemsList = () => {
+const PurchasedItemsList = ({ token }: { token: string }) => {
   const [itemNoOrder, setItemNoOrder] = useState<Option>(
     SORT_TYPES[0] as Option,
   );
@@ -35,9 +38,48 @@ const PurchasedItemsList = () => {
     SORT_TYPES[0] as Option,
   );
 
+  const [fromDate, setFromDate] = useState<Date>(
+    new Date(dayjs().subtract(1, "year").format("YYYY-MM-DD")),
+  );
+  const [toDate, setToDate] = useState<Date>(new Date());
+  const [page, setPage] = useState<number>(0);
+  const [size, setSize] = useState<number>(10);
+  const [orderField, setOrderField] = useState<string>("orderDate");
+  const [orderType, setOrderType] = useState<string>("desc");
+
+  const purchasedItemsList = useSuspensePurchasedItemsList(
+    token,
+    dayjs(fromDate).format("YYYY-MM-DD"),
+    dayjs(toDate).format("YYYY-MM-DD"),
+    page,
+    size,
+    orderField,
+    orderType,
+  );
+
+  const skuIds: string[] = [];
+  purchasedItemsList.data.purchesOrders.content.forEach((element) => {
+    const isExist = skuIds.find((e) => e === element.sku);
+    if (!isExist) {
+      skuIds.push(element.sku);
+    }
+  });
+
+  const getItemInfo = useGetItemInfo(token, skuIds.toString());
+
+  const onSearch = () => {
+    console.log("search");
+  };
+
   return (
     <>
-      <PurchasedItemsSelectors />
+      <PurchasedItemsSelectors
+        fromDate={fromDate}
+        setFromDate={setFromDate}
+        toDate={toDate}
+        setToDate={setToDate}
+        onSearch={onSearch}
+      />
 
       <div className="my-6 flex flex-row justify-between text-brand-gray-400">
         <div>1-10 of 17</div>

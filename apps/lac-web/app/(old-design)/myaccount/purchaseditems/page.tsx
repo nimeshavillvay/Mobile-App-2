@@ -1,5 +1,7 @@
+import { ACCOUNT_TOKEN_COOKIE } from "@/(old-design)/_lib/constants";
 import Separator from "@/old/_components/separator";
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
 import PurchasedItemsList from "./purchased-items-list";
 
 export const metadata: Metadata = {
@@ -7,6 +9,12 @@ export const metadata: Metadata = {
 };
 
 const PurchasedItemsPage = () => {
+  const accountTokenCookie = cookies().get(ACCOUNT_TOKEN_COOKIE);
+
+  if (!accountTokenCookie?.value) {
+    return null;
+  }
+
   return (
     <>
       <h2 className="relative font-wurth text-xl font-medium text-brand-primary">
@@ -18,7 +26,7 @@ const PurchasedItemsPage = () => {
         className="mb-4 h-px flex-1 bg-brand-primary"
       />
 
-      <PurchasedItemsList />
+      <PurchasedItemsList token={accountTokenCookie?.value} />
     </>
   );
 };
