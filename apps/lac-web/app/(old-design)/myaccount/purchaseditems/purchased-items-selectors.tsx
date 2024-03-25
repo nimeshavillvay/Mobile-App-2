@@ -27,7 +27,7 @@ const PurchasedItemsSelectors = () => {
   const durationId = `duration-${id}`;
 
   return (
-    <div className="col-span-4 flex flex-row items-center justify-between bg-brand-gray-100 px-4 py-5">
+    <div className="col-span-4 flex flex-col items-center justify-between bg-brand-gray-100 px-4 py-5 sm:flex-row">
       <div className="min-w-[160px] text-brand-gray-500">
         <Label htmlFor={durationId} className="text-nowrap font-bold">
           Duration
@@ -56,7 +56,7 @@ const PurchasedItemsSelectors = () => {
         </Select>
       </div>
 
-      <div className="mt-4 flex flex-row items-center gap-2">
+      <div className="mt-4 flex flex-col items-center gap-2 sm:flex-row">
         <DatePicker date={fromDate} setDate={setFromDate} />
 
         <div>to</div>
