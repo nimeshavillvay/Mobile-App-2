@@ -20,6 +20,7 @@ export type PurchasedOrder = {
 export type PurchasedOrders = {
   purchesOrders: {
     content: PurchasedOrder[];
+    totalElements: number;
   };
 };
 

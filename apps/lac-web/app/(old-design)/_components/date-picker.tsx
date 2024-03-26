@@ -15,14 +15,14 @@ import { Dispatch, SetStateAction } from "react";
 
 type DatePickerProps = {
   date: Date;
-  setDate: Dispatch<SetStateAction<Date>>;
+  onSelectDate: Dispatch<SetStateAction<Date>>;
   dateFormat?: "PPP" | "mm/dd/yyyy";
   placeholder?: string;
 };
 
 const DatePicker = ({
   date,
-  setDate,
+  onSelectDate,
   dateFormat = "PPP",
   placeholder = "Pick a date",
 }: DatePickerProps) => {
@@ -46,7 +46,7 @@ const DatePicker = ({
         <Calendar
           mode="single"
           selected={date}
-          onSelect={(selectedDate) => setDate(selectedDate as Date)}
+          onSelect={(selectedDate) => onSelectDate(selectedDate as Date)}
           initialFocus
         />
       </PopoverContent>
