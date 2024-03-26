@@ -16,8 +16,9 @@ import {
 } from "@/old/_components/ui/table";
 import dayjs from "dayjs";
 import { useState } from "react";
+import PurchasedItemRow from "./purchased-item-row";
 import PurchasedItemsSelectors from "./purchased-items-selectors";
-import { Option } from "./types";
+import { CombinedPurchasedItem, Option, OrderHistoryItem } from "./types";
 import useGetItemInfo from "./use-get-items-info.hook";
 import useSuspensePurchasedItemsList from "./use-suspense-purchased-items-list.hook";
 
@@ -68,8 +69,47 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
   const getItemInfo = useGetItemInfo(token, skuIds.toString());
 
   const onSearch = () => {
-    console.log("search");
+    console.log("search", purchasedItemsList.data);
   };
+
+  const combinedPurchasedItems: CombinedPurchasedItem[] = [];
+
+  if (purchasedItemsList?.data?.purchesOrders?.content?.length > 0) {
+    purchasedItemsList.data.purchesOrders.content.map((item) => {
+      const itemInfo = getItemInfo?.data?.find(
+        (info) => info.txt_wurth_lac_item === item.sku,
+      );
+
+      const initialDetails: OrderHistoryItem = {
+        txt_wurth_lac_item: "",
+        txt_sap: null,
+        txt_sap_description_name: "",
+        txt_x_pant_Mat_status: "",
+        sel_assigned_brand: null,
+        txt_CI_number: "",
+        txt_hazardous: "",
+        txt_special_shipping: "",
+        txt_web_direct: "",
+        txt_mfn: "",
+        txt_uom: "",
+        txt_uom_label: "",
+        txt_uom_value: "",
+        txt_min_order_amount: null,
+        txt_order_qty_increments: null,
+        txt_category: "",
+        img: "",
+        brand_name: "",
+        categoryInfo: [],
+        is_product_exclude: null,
+        group_id: "",
+      };
+
+      combinedPurchasedItems.push({ ...item, ...(itemInfo || initialDetails) });
+    });
+  }
+
+  console.log("itemInfo > ", getItemInfo.data);
+  console.log("merged > ", combinedPurchasedItems);
 
   return (
     <>
@@ -168,11 +208,16 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
 
             <TableHead className="space-y-2 py-3">Price</TableHead>
             <TableHead className="space-y-2 py-3">Quantity</TableHead>
-            <TableHead className="space-y-2 py-3">UOM</TableHead>
+            <TableHead className="space-y-2 py-3 text-right">UOM</TableHead>
           </TableRow>
         </TableHeader>
 
-        <TableBody></TableBody>
+        <TableBody>
+          {combinedPurchasedItems &&
+            combinedPurchasedItems.map((item, index) => (
+              <PurchasedItemRow key={item.sku} index={index} item={item} />
+            ))}
+        </TableBody>
       </Table>
     </>
   );

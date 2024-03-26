@@ -33,15 +33,15 @@ export type OrderHistoryItem = {
   categoryInfo: Category[];
   group_id: string;
   img: string;
-  is_product_exclude: boolean;
-  sel_assigned_brand: number;
+  is_product_exclude: boolean | null;
+  sel_assigned_brand: number | null;
   txt_CI_number: string;
   txt_category: string;
   txt_hazardous: string;
   txt_mfn: string;
-  txt_min_order_amount: number;
-  txt_order_qty_increments: number;
-  txt_sap: number;
+  txt_min_order_amount: number | null;
+  txt_order_qty_increments: number | null;
+  txt_sap: number | null;
   txt_sap_description_name: string;
   txt_special_shipping: string;
   txt_uom: string;
@@ -53,3 +53,5 @@ export type OrderHistoryItem = {
 };
 
 export type OrderHistoryItems = OrderHistoryItem[];
+
+export type CombinedPurchasedItem = OrderHistoryItem & PurchasedOrder;

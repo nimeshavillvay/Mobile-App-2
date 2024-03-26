@@ -5,3 +5,5 @@ export const DURATIONS = [
   { value: "12", label: "12 months" },
   { value: "0", label: "Custom" },
 ] as const;
+
+export const DATE_FORMAT = "MM/DD/YYYY" as const;
