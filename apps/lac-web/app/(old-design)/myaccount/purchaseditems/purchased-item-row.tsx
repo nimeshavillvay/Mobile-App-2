@@ -1,4 +1,5 @@
 import ErrorBoundary from "@/old/_components/error-boundary";
+import { Button } from "@/old/_components/ui/button";
 import {
   Collapsible,
   CollapsibleContent,
@@ -14,6 +15,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Suspense, useId, useState } from "react";
 import { useForm } from "react-hook-form";
+import { IoMdHeartEmpty } from "react-icons/io";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import * as z from "zod";
 import ItemAttributes from "./_item-attributes/item-attributes";
@@ -143,7 +145,7 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
           )}
         </TableCell>
 
-        <TableCell className="text-right text-sm text-brand-gray-500">
+        <TableCell className="text-sm text-brand-gray-500">
           {item.txt_uom !== "" ? item.txt_uom : "N/A"}
         </TableCell>
       </TableRow>
@@ -177,6 +179,7 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
                 <MdKeyboardArrowDown className="text-lg leading-none transition-transform duration-200 ease-out group-data-[state=open]:rotate-180" />
               </div>
             </CollapsibleTrigger>
+
             <CollapsibleContent>
               <ErrorBoundary
                 fallback={
@@ -198,6 +201,7 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
             </CollapsibleContent>
           </Collapsible>
         </TableCell>
+
         <TableCell></TableCell>
         <TableCell></TableCell>
         <TableCell></TableCell>
@@ -210,7 +214,15 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
         )}
       >
         <TableCell colSpan={7}>
-          <div className="h-8 bg-slate-100"></div>
+          <div className="flex flex-row items-end justify-end gap-2">
+            <Button className="w-[170px]" disabled>
+              Add to cart
+            </Button>
+
+            <Button variant="ghost">
+              <IoMdHeartEmpty className="text-2xl text-brand-gray-500" />
+            </Button>
+          </div>
         </TableCell>
       </TableRow>
     </>
