@@ -11,7 +11,6 @@ export const DATE_FORMAT = "MM/DD/YYYY" as const;
 export const PAGE_SIZES = ["10", "20", "40"] as const;
 
 export const SORTING_TYPES = [
-  { label: "Sort...", value: "default" },
   { label: "Ascending", value: "asc" },
   { label: "Descending", value: "desc" },
 ] as const;
