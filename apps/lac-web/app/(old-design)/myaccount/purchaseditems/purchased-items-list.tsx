@@ -168,16 +168,25 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
 
   return (
     <>
-      <PurchasedItemsSelectors
-        fromDate={fromDate}
-        setFromDate={setFromDate}
-        toDate={toDate}
-        setToDate={setToDate}
-        onSearch={onClickSearch}
-        onReset={onClickReset}
-      />
+      {!isLoading && (
+        <div>
+          <PurchasedItemsSelectors
+            fromDate={fromDate}
+            setFromDate={setFromDate}
+            toDate={toDate}
+            setToDate={setToDate}
+            onSearch={onClickSearch}
+            onReset={onClickReset}
+            isLoading={isLoading}
+            searchParams={searchParams}
+            page={page}
+            perPage={perPage}
+            totalItems={totalItems}
+          />
+        </div>
+      )}
 
-      <div className="my-6 flex flex-row justify-between text-brand-gray-400">
+      <div className="my-6 hidden flex-row justify-between text-brand-gray-400 md:flex">
         {!isLoading && (
           <div>
             {(page - 1) * perPage + 1} - {Math.min(page * perPage, totalItems)}{" "}
