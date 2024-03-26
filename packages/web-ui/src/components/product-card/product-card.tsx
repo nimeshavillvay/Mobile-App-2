@@ -254,10 +254,13 @@ export const ProductCardActions = () => {
         Add to cart
       </Button>
 
-      <Button variant="cancel" size="icon" className="ui-size-10">
+      <Button
+        variant="cancel"
+        size="icon"
+        className="ui-size-10"
+        aria-label="Add to favorites"
+      >
         <HeartOutline className="ui-size-4 ui-fill-black" />
-
-        <span className="ui-sr-only">Add to favorites</span>
       </Button>
     </div>
   );

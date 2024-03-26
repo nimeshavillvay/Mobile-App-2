@@ -56,7 +56,7 @@ const config: Omit<Config, "content"> = {
           marginLeft: "auto",
           paddingRight: "1rem",
           paddingLeft: "1rem",
-          "@screen xs": {
+          "@screen md": {
             paddingRight: "2rem",
             paddingLeft: "2rem",
           },
