@@ -182,6 +182,7 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
             page={page}
             perPage={perPage}
             totalItems={totalItems}
+            onChangeSortingParams={onChangeSortingParams}
           />
         </div>
       )}
