@@ -76,20 +76,6 @@ const PurchasedItemsSelectors = ({
     setToDate(new Date(dayjs().format("YYYY-MM-DD")));
   };
 
-  const handleDurationChange = (value: string) => {
-    setDuration(
-      DURATIONS.find((duration) => duration.value === value) ??
-        (initialDuration as Option),
-    );
-
-    if (value == "0") return;
-
-    setFromDate(
-      new Date(dayjs().subtract(Number(value), "months").format("YYYY-MM-DD")),
-    );
-    setToDate(new Date(dayjs().format("YYYY-MM-DD")));
-  };
-
   return (
     <>
       <div className="col-span-4 hidden flex-col items-center justify-between bg-brand-gray-100 px-4 py-5 sm:flex-row md:flex">
