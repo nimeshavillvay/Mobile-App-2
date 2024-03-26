@@ -1,5 +1,7 @@
 "use client";
 
+import Pagination from "@/(old-design)/_components/pagination";
+import { updateSearchParams } from "@/(old-design)/_utils/client-helpers";
 import {
   Select,
   SelectContent,
@@ -15,61 +17,114 @@ import {
   TableRow,
 } from "@/old/_components/ui/table";
 import dayjs from "dayjs";
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
+import {
+  DEFAULT_SORT,
+  ORDER_BY_FIELDS,
+  PAGE_SIZES,
+  QUERY_KEYS,
+  SORTING_TYPES,
+} from "./constants";
 import PurchasedItemRow from "./purchased-item-row";
 import PurchasedItemsSelectors from "./purchased-items-selectors";
-import { CombinedPurchasedItem, Option, OrderHistoryItem } from "./types";
+import { CombinedPurchasedItem, OrderHistoryItem } from "./types";
 import useGetItemInfo from "./use-get-items-info.hook";
 import useSuspensePurchasedItemsList from "./use-suspense-purchased-items-list.hook";
 
-const SORT_TYPES = [
-  { label: "Sort...", value: "default" },
-  { label: "Ascending", value: "asc" },
-  { label: "Descending", value: "desc" },
-];
-
 const PurchasedItemsList = ({ token }: { token: string }) => {
-  const [itemNoOrder, setItemNoOrder] = useState<Option>(
-    SORT_TYPES[0] as Option,
-  );
-  const [orderDateOrder, setOrderDateOrder] = useState<Option>(
-    SORT_TYPES[0] as Option,
-  );
-  const [orderCountOrder, setOrderCountOrder] = useState<Option>(
-    SORT_TYPES[0] as Option,
+  const searchParams = useSearchParams();
+  const orderField = searchParams.get("orderBy") ?? ORDER_BY_FIELDS.ORDER_DATE;
+  const orderType = searchParams.get("orderType") ?? "desc";
+  const page = Number(searchParams.get("page") ?? "1");
+  const perPage = Number(searchParams.get("perPage") ?? "10");
+
+  let isLoading = true;
+  let totalItems: number = 0;
+
+  const initialFromDate = dayjs().subtract(1, "year").format("YYYY-MM-DD");
+  const initialToDate = dayjs().format("YYYY-MM-DD");
+
+  const selectedSorting = SORTING_TYPES.find(
+    (sortingType) => sortingType.value === orderType,
   );
 
-  const [fromDate, setFromDate] = useState<Date>(
-    new Date(dayjs().subtract(1, "year").format("YYYY-MM-DD")),
-  );
+  const [fromDate, setFromDate] = useState<Date>(new Date(initialFromDate));
   const [toDate, setToDate] = useState<Date>(new Date());
-  const [page, setPage] = useState<number>(0);
-  const [size, setSize] = useState<number>(10);
-  const [orderField, setOrderField] = useState<string>("orderDate");
-  const [orderType, setOrderType] = useState<string>("desc");
 
   const purchasedItemsList = useSuspensePurchasedItemsList(
     token,
-    dayjs(fromDate).format("YYYY-MM-DD"),
-    dayjs(toDate).format("YYYY-MM-DD"),
-    page,
-    size,
+    searchParams.get("from") ?? initialFromDate,
+    searchParams.get("to") ?? initialToDate,
+    Number(searchParams.get("page") ?? page) - 1,
+    perPage,
     orderField,
     orderType,
   );
 
+  console.log("purchasedItemsList", purchasedItemsList.data);
+
   const skuIds: string[] = [];
-  purchasedItemsList.data.purchesOrders.content.forEach((element) => {
-    const isExist = skuIds.find((e) => e === element.sku);
-    if (!isExist) {
-      skuIds.push(element.sku);
-    }
-  });
+  if (purchasedItemsList.data) {
+    totalItems = purchasedItemsList.data.purchesOrders.totalElements;
+
+    purchasedItemsList.data.purchesOrders.content.forEach((element) => {
+      const isExist = skuIds.find((e) => e === element.sku);
+      if (!isExist) {
+        skuIds.push(element.sku);
+      }
+    });
+  }
 
   const getItemInfo = useGetItemInfo(token, skuIds.toString());
+  if (purchasedItemsList && getItemInfo) {
+    isLoading = false;
+  }
 
-  const onSearch = () => {
-    console.log("search", purchasedItemsList.data);
+  const onClickSearch = () => {
+    changeSearchParams([
+      {
+        key: QUERY_KEYS.FROM_DATE,
+        value: dayjs(fromDate).format("YYYY-MM-DD"),
+      },
+      {
+        key: QUERY_KEYS.TO_DATE,
+        value: dayjs(toDate).format("YYYY-MM-DD"),
+      },
+    ]);
+  };
+
+  const onClickReset = () => {
+    const params = new URLSearchParams();
+    updateSearchParams(params);
+  };
+
+  const changeSearchParams = (
+    params: {
+      key: (typeof QUERY_KEYS)[keyof typeof QUERY_KEYS];
+      value: string;
+    }[],
+  ) => {
+    const newSearchParams = new URLSearchParams(searchParams);
+
+    params.map(function (param) {
+      newSearchParams.set(param.key, param.value);
+    });
+
+    updateSearchParams(newSearchParams);
+  };
+
+  const onChangeSortingParams = (orderBy: string, orderType: string) => {
+    changeSearchParams([
+      {
+        key: QUERY_KEYS.ORDER_BY,
+        value: orderBy,
+      },
+      {
+        key: QUERY_KEYS.ORDER_TYPE,
+        value: orderType,
+      },
+    ]);
   };
 
   const combinedPurchasedItems: CombinedPurchasedItem[] = [];
@@ -118,15 +173,56 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
         setFromDate={setFromDate}
         toDate={toDate}
         setToDate={setToDate}
-        onSearch={onSearch}
+        onSearch={onClickSearch}
+        onReset={onClickReset}
       />
 
       <div className="my-6 flex flex-row justify-between text-brand-gray-400">
-        <div>1-10 of 17</div>
+        {!isLoading && (
+          <div>
+            {(page - 1) * perPage + 1} - {Math.min(page * perPage, totalItems)}{" "}
+            of {totalItems}
+          </div>
+        )}
 
-        <div>Per Page:</div>
+        <div className="flex items-center">
+          <div className="mr-2">Per Page:</div>
 
-        <div>1</div>
+          <Select
+            value={perPage.toString()}
+            onValueChange={(value) => {
+              changeSearchParams([
+                {
+                  key: QUERY_KEYS.PAGE,
+                  value: "1",
+                },
+                {
+                  key: QUERY_KEYS.PER_PAGE,
+                  value: value,
+                },
+              ]);
+            }}
+          >
+            <SelectTrigger className="h-8 w-[70px] py-0">
+              <SelectValue>{perPage.toString()}</SelectValue>
+            </SelectTrigger>
+
+            <SelectContent>
+              {PAGE_SIZES.map((size) => (
+                <SelectItem key={size} value={size}>
+                  {size}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        <Pagination
+          pageSize={perPage}
+          totalSize={totalItems}
+          currentPage={page}
+          searchParams={searchParams}
+        />
       </div>
 
       <Table>
@@ -135,20 +231,21 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
             <TableHead colSpan={2} className="space-y-2 py-3">
               <div>Item # / MFR Part #</div>
               <Select
-                value={itemNoOrder.value}
-                onValueChange={(value) =>
-                  setItemNoOrder(
-                    SORT_TYPES.find((type) => type.value === value) ??
-                      (SORT_TYPES[0] as Option),
-                  )
-                }
+                value={ORDER_BY_FIELDS.SKU}
+                onValueChange={(value) => {
+                  onChangeSortingParams(ORDER_BY_FIELDS.SKU, value);
+                }}
               >
                 <SelectTrigger className="h-8 w-[120px] py-0">
-                  <SelectValue>{itemNoOrder.label}</SelectValue>
+                  <SelectValue>
+                    {orderField == ORDER_BY_FIELDS.SKU
+                      ? selectedSorting?.label
+                      : DEFAULT_SORT}
+                  </SelectValue>
                 </SelectTrigger>
 
                 <SelectContent>
-                  {SORT_TYPES.map((type) => (
+                  {SORTING_TYPES.map((type) => (
                     <SelectItem key={type.value} value={type.value}>
                       {type.label}
                     </SelectItem>
@@ -159,20 +256,21 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
             <TableHead className="space-y-2 py-3">
               <div>Order Date</div>
               <Select
-                value={orderDateOrder.value}
-                onValueChange={(value) =>
-                  setOrderDateOrder(
-                    SORT_TYPES.find((type) => type.value === value) ??
-                      (SORT_TYPES[0] as Option),
-                  )
-                }
+                value={ORDER_BY_FIELDS.ORDER_DATE}
+                onValueChange={(value) => {
+                  onChangeSortingParams(ORDER_BY_FIELDS.ORDER_DATE, value);
+                }}
               >
                 <SelectTrigger className="h-8 w-[120px] py-0">
-                  <SelectValue>{orderDateOrder.label}</SelectValue>
+                  <SelectValue>
+                    {orderField == ORDER_BY_FIELDS.ORDER_DATE
+                      ? selectedSorting?.label
+                      : DEFAULT_SORT}
+                  </SelectValue>
                 </SelectTrigger>
 
                 <SelectContent>
-                  {SORT_TYPES.map((type) => (
+                  {SORTING_TYPES.map((type) => (
                     <SelectItem key={type.value} value={type.value}>
                       {type.label}
                     </SelectItem>
@@ -184,20 +282,21 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
             <TableHead className="space-y-2 py-3">
               <div>Order Count</div>
               <Select
-                value={orderCountOrder.value}
-                onValueChange={(value) =>
-                  setOrderCountOrder(
-                    SORT_TYPES.find((type) => type.value === value) ??
-                      (SORT_TYPES[0] as Option),
-                  )
-                }
+                value={ORDER_BY_FIELDS.TOTAL_ITEM}
+                onValueChange={(value) => {
+                  onChangeSortingParams(ORDER_BY_FIELDS.TOTAL_ITEM, value);
+                }}
               >
                 <SelectTrigger className="h-8 w-[120px] py-0">
-                  <SelectValue>{orderCountOrder.label}</SelectValue>
+                  <SelectValue>
+                    {orderField == ORDER_BY_FIELDS.TOTAL_ITEM
+                      ? selectedSorting?.label
+                      : DEFAULT_SORT}
+                  </SelectValue>
                 </SelectTrigger>
 
                 <SelectContent>
-                  {SORT_TYPES.map((type) => (
+                  {SORTING_TYPES.map((type) => (
                     <SelectItem key={type.value} value={type.value}>
                       {type.label}
                     </SelectItem>
