@@ -12,6 +12,7 @@ import {
   RadioGroup,
   RadioGroupItem,
 } from "@/(old-design)/_components/ui/radio-group";
+import { cn } from "@/(old-design)/_utils/helpers";
 import {
   Dialog,
   DialogContent,
@@ -106,7 +107,6 @@ const FiltersForMobileDialog = ({
                           (durationObj) => durationObj.value === value,
                         ) ?? (initialDuration as Option),
                       );
-                      // handleDurationChange(value);
                     }}
                     className="gap-auto grid grid-cols-2 justify-between sm:grid-cols-4"
                   >
@@ -115,7 +115,12 @@ const FiltersForMobileDialog = ({
                         durationObj.value != "0" && (
                           <div
                             key={durationObj.label}
-                            className={`flex items-center space-x-2 rounded border bg-gray-100 px-2 py-2 ${duration.value == durationObj.value && "border-brand-secondary bg-[#00adef] bg-opacity-20 text-brand-secondary"}`}
+                            className={cn(
+                              "flex items-center space-x-2 rounded border px-2 py-2",
+                              duration.value == durationObj.value
+                                ? "border-brand-secondary bg-brand-secondary bg-opacity-20 text-brand-secondary"
+                                : "bg-gray-100",
+                            )}
                           >
                             <RadioGroupItem
                               value={durationObj.value}
