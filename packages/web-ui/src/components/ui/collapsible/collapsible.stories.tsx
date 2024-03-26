@@ -19,7 +19,7 @@ const meta: Meta<typeof Collapsible> = {
 export default meta;
 type Story = StoryObj<typeof Collapsible>;
 
-export const Demo: Story = {
+export const Showcase: Story = {
   render: () => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const [isOpen, setIsOpen] = useState(false);

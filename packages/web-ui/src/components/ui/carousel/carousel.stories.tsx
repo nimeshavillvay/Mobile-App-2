@@ -19,7 +19,7 @@ const meta: Meta<typeof Carousel> = {
 export default meta;
 type Story = StoryObj<typeof Carousel>;
 
-export const Demo: Story = {
+export const Showcase: Story = {
   render: () => {
     return (
       <Carousel style={{ width: "100%", maxWidth: "20rem" }}>

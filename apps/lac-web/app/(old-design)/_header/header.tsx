@@ -86,7 +86,7 @@ const Header = async () => {
         <ul>
           {categories.map((category) => (
             <li key={category.id}>
-              <a href={`/category/${category.id}/${category.slug}`}>
+              <a href={`/old/category/${category.id}/${category.slug}`}>
                 {category.name}
               </a>
             </li>

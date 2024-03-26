@@ -96,7 +96,7 @@ const CategoryPage = async ({ params: { id, slug } }: CategoryPageProps) => {
     <>
       <Breadcrumbs
         links={breadcrumbs.map((breadcrumb) => ({
-          href: `/category/${breadcrumb.oo_id}/${breadcrumb.slug}`,
+          href: `/old/category/${breadcrumb.oo_id}/${breadcrumb.slug}`,
           label: breadcrumb.cat_name,
         }))}
       />
@@ -128,7 +128,7 @@ const CategoryPage = async ({ params: { id, slug } }: CategoryPageProps) => {
             {category.main.subCatgores.map((subCategory, index) => (
               <Link
                 key={subCategory.SubCatId}
-                href={`/category/${subCategory.SubCatId}/${subCategory.slug}`}
+                href={`/old/category/${subCategory.SubCatId}/${subCategory.slug}`}
               >
                 <Image
                   src={getMediaUrl(subCategory.Image)}

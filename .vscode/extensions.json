@@ -7,7 +7,6 @@
     "esbenp.prettier-vscode",
     "yoavbls.pretty-ts-errors",
     "bradlc.vscode-tailwindcss",
-    "gruntfuggly.todo-tree",
-    "vercel.turbo-vsc"
+    "gruntfuggly.todo-tree"
   ]
 }

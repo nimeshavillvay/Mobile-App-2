@@ -53,7 +53,7 @@ const ProductLanding = async ({ groupId, sku }: ProductLandingProps) => {
       <Breadcrumbs
         links={[
           ...breadcrumbs.map((breadcrumb) => ({
-            href: `/category/${breadcrumb.oo_id}/${breadcrumb.slug}`,
+            href: `/old/category/${breadcrumb.oo_id}/${breadcrumb.slug}`,
             label: breadcrumb.cat_name,
           })),
           {

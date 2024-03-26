@@ -1,6 +1,6 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "experimentalUI": true,
+  "experimentalUI": false,
   "globalDependencies": ["**/.env.*local"],
   "globalEnv": [
     "NEXT_PUBLIC_WURTH_LAC_OLD_API",

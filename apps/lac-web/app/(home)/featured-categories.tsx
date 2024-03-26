@@ -20,7 +20,7 @@ const FeaturedCategories = () => {
 
         <CollapsibleTrigger asChild>
           <Button
-            variant="cancel"
+            variant="outline"
             className="mx-auto py-2.5 font-bold text-black"
           >
             View all categories

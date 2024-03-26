@@ -255,7 +255,7 @@ export const ProductCardActions = () => {
       </Button>
 
       <Button
-        variant="cancel"
+        variant="outline"
         size="icon"
         className="ui-size-10"
         aria-label="Add to favorites"
