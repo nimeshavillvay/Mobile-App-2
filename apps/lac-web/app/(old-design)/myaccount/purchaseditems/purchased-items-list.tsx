@@ -314,7 +314,12 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
         <TableBody>
           {combinedPurchasedItems &&
             combinedPurchasedItems.map((item, index) => (
-              <PurchasedItemRow key={item.sku} index={index} item={item} />
+              <PurchasedItemRow
+                key={item.sku}
+                token={token}
+                index={index}
+                item={item}
+              />
             ))}
         </TableBody>
       </Table>
