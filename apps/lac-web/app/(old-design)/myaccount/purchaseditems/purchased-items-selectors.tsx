@@ -36,7 +36,8 @@ type PurchasedItemsSelectorProps = {
   page: number;
   perPage: number;
   totalItems: number;
-  searchParams?: ReadonlyURLSearchParams;
+  searchParams: ReadonlyURLSearchParams;
+  onChangeSortingParams: (orderBy: string, orderType: string) => void;
 };
 
 const PurchasedItemsSelectors = ({
@@ -51,6 +52,7 @@ const PurchasedItemsSelectors = ({
   perPage,
   totalItems,
   searchParams,
+  onChangeSortingParams,
 }: PurchasedItemsSelectorProps) => {
   const initialDuration = DURATIONS[DURATIONS.length - 2]; // Initial duration before last item in the `DURATIONS` array
   const customDuration = DURATIONS[DURATIONS.length - 1]; // Custom duration: last item in the `DURATIONS` array
@@ -73,6 +75,7 @@ const PurchasedItemsSelectors = ({
     setFromDate(
       new Date(dayjs().subtract(Number(value), "months").format("YYYY-MM-DD")),
     );
+
     setToDate(new Date(dayjs().format("YYYY-MM-DD")));
   };
 
@@ -174,6 +177,10 @@ const PurchasedItemsSelectors = ({
           setToDate={setToDate}
           duration={duration}
           setDuration={setDuration}
+          handleDurationChange={handleDurationChange}
+          onChangeSortingParams={onChangeSortingParams}
+          onSearch={onSearch}
+          onReset={onReset}
         />
       </>
     </>
