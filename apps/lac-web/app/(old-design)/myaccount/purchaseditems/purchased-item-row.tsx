@@ -1,4 +1,5 @@
 import ErrorBoundary from "@/old/_components/error-boundary";
+import ShippingOptions from "@/old/_components/shipping-options";
 import { Button } from "@/old/_components/ui/button";
 import {
   Collapsible,
@@ -8,6 +9,7 @@ import {
 import { Input } from "@/old/_components/ui/input";
 import { Label } from "@/old/_components/ui/label";
 import { TableCell, TableRow } from "@/old/_components/ui/table";
+import useAddToCartMutation from "@/old/_hooks/cart/use-add-to-cart-mutation.hook";
 import { cn, getMediaUrl } from "@/old/_utils/helpers";
 import { zodResolver } from "@hookform/resolvers/zod";
 import dayjs from "dayjs";
@@ -37,21 +39,37 @@ type PurchasedItemRowProps = {
 
 const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
   const [showItemAttributes, setShowItemAttributes] = useState<boolean>(false);
+  const [showShippingOptions, setShowShippingOptions] =
+    useState<boolean>(false);
   const id = useId();
   const quantityId = `quantity-${id}`;
+  const addToCartMutation = useAddToCartMutation();
 
-  const { register } = useForm<Schema>({
+  const { register, watch, handleSubmit } = useForm<Schema>({
     resolver: zodResolver(schema),
     values: {
       quantity: null,
     },
   });
 
+  const quantity = watch("quantity");
+
   const generateItemUrl = (group_id: string, sku: string) => {
     if (group_id && sku) {
       return `/product-item/${group_id}/${sku}`;
     }
     return "#";
+  };
+
+  const onSubmit = (values: Schema) => {
+    addToCartMutation.mutate(
+      { sku: item.sku, quantity: values.quantity as number },
+      {
+        onSuccess: (resp) => {
+          console.log("Added to cart", resp);
+        },
+      },
+    );
   };
 
   return (
@@ -112,8 +130,10 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
         </TableCell>
 
         <TableCell>
-          <div className="cursor-pointer text-sm text-brand-primary">
-            Show my price
+          <div className="flex cursor-pointer flex-row items-center text-sm text-brand-primary">
+            <span>Show my price</span>
+
+            <MdKeyboardArrowDown className="text-lg leading-none transition-transform duration-200 ease-out group-data-[state=open]:rotate-180" />
           </div>
         </TableCell>
 
@@ -215,15 +235,50 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
       >
         <TableCell colSpan={7}>
           <div className="flex flex-row items-end justify-end gap-2">
-            <Button className="w-[170px]" disabled>
-              Add to cart
+            <Button
+              variant="ghost"
+              className="text-brand-secondary"
+              onClick={() => setShowShippingOptions(!showShippingOptions)}
+              disabled={!quantity || quantity < 1}
+            >
+              <span>Change Shipping Options</span>
+
+              <MdKeyboardArrowDown className="text-xl leading-none transition-transform duration-200 ease-out group-data-[state=open]:rotate-180" />
             </Button>
+
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <Button
+                className="w-[170px]"
+                disabled={!quantity || quantity < 1}
+              >
+                Add to cart
+              </Button>
+            </form>
 
             <Button variant="ghost">
               <IoMdHeartEmpty className="text-2xl text-brand-gray-500" />
             </Button>
           </div>
         </TableCell>
+      </TableRow>
+
+      <TableRow
+        className={cn(
+          "border-b-0",
+          index % 2 === 0 ? "bg-white" : "bg-brand-gray-100",
+        )}
+      >
+        {showShippingOptions && (
+          <>
+            <TableCell colSpan={5} className="pt-0">
+              <div className="flex justify-end">
+                <ShippingOptions sku={item.sku} quantity={quantity as number} />
+              </div>
+            </TableCell>
+            <TableCell></TableCell>
+            <TableCell></TableCell>
+          </>
+        )}
       </TableRow>
     </>
   );
