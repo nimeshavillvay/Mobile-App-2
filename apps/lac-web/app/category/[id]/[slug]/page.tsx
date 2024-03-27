@@ -1,4 +1,13 @@
+import Banner from "@/_components/banner";
 import ChevronLeft from "@repo/web-ui/components/icons/chevron-left";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@repo/web-ui/components/ui/breadcrumb";
 import { Button } from "@repo/web-ui/components/ui/button";
 import {
   Collapsible,
@@ -10,6 +19,8 @@ import Image from "next/image";
 import Link from "next/link";
 import Balancer from "react-wrap-balancer";
 import categoryImage from "./category.jpeg";
+import PopularBrands from "./popular-brands";
+import TopSubCategories from "./top-sub-categories";
 
 type CategoryPageProps = {
   params: {
@@ -30,7 +41,7 @@ export const generateMetadata = async ({
 const CategoryPage = () => {
   return (
     <>
-      <div className="md:hidden my-2 container">
+      <div className="container my-2 md:hidden">
         <Button variant="link" asChild className="group gap-1 px-0">
           <Link href="/">
             <ChevronLeft
@@ -43,24 +54,41 @@ const CategoryPage = () => {
         </Button>
       </div>
 
-      <section className="container">
-        <div className="border border-wurth-gray-250 bg-white rounded-lg shadow-lg overflow-hidden">
-          <div className="aspect-w-2 aspect-h-1">
+      <Breadcrumb className="container hidden md:block my-3">
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild>
+              <Link href="/">Home</Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+
+          <BreadcrumbSeparator />
+
+          <BreadcrumbItem>
+            <BreadcrumbPage>
+              Decorative Hardware & Wood Components
+            </BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
+
+      <section className="container md:my-10">
+        <div className="overflow-hidden rounded-lg border border-wurth-gray-250 bg-white shadow-lg md:items-center md:flex md:flex-row-reverse md:max-h-[21rem]">
+          <div className="aspect-h-1 aspect-w-2 md:flex-1 relative">
             <Image
               src={categoryImage}
               alt="A placeholder category"
-              width={664}
-              height={336}
-              className="object-cover"
+              className="object-cover object-center"
+              priority
             />
           </div>
 
-          <div className="p-6 space-y-3">
-            <h1 className="font-title text-4xl text-wurth-gray-800 font-medium tracking-tight">
-              <Balancer>Decorative Hardware & Wood Components</Balancer>
+          <div className="space-y-3 md:space-y-5 p-6 md:p-10 md:flex-1">
+            <h1 className="font-title text-4xl md:text-5xl md:leading-[3.5rem] line-clamp-3 text-balance md:tracking-[-0.036rem] font-medium tracking-tight text-wurth-gray-800">
+              Decorative Hardware & Wood Components
             </h1>
 
-            <p className="text-wurth-gray-800 text-base">
+            <p className="text-base text-wurth-gray-800 md:text-lg md:line-clamp-3">
               Lorem ipsum dolor sit amet consectetur. Curabitur diam urna
               faucibus quisque. Pretium lectus morbi justo amet amet quisque
               ipsum elementum ut. Tincidunt pellentesque ipsum ac dignissim
@@ -70,10 +98,10 @@ const CategoryPage = () => {
         </div>
       </section>
 
-      <section className="my-10 container space-y-6">
+      <section className="container my-10 space-y-6 md:space-y-9 md:my-16">
         <CategoriesGrid />
 
-        <Collapsible className="flex flex-col gap-6">
+        <Collapsible className="flex flex-col gap-6 space-y-6 md:space-y-9">
           <CollapsibleContent asChild>
             <CategoriesGrid />
           </CollapsibleContent>
@@ -88,6 +116,12 @@ const CategoryPage = () => {
           </CollapsibleTrigger>
         </Collapsible>
       </section>
+
+      <TopSubCategories />
+
+      <PopularBrands />
+
+      <Banner />
     </>
   );
 };
@@ -96,12 +130,12 @@ export default CategoryPage;
 
 const CategoriesGrid = () => {
   return (
-    <div className="grid grid-cols-3 gap-y-10 justify-items-center">
+    <div className="grid grid-cols-3 justify-items-center gap-y-10 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
       {Array.from({ length: 6 }).map((_, index) => (
-        <article key={index} className="space-y-4">
-          <div className="rounded-full size-28 bg-[linear-gradient(180deg,#FBFDFF_0%,#F0F3FB_100%)]" />
+        <article key={index} className="flex flex-col items-center gap-4">
+          <div className="size-28 rounded-full bg-[linear-gradient(180deg,#FBFDFF_0%,#F0F3FB_100%)]" />
 
-          <h2 className="text-center text-black text-[0.9375rem] leading-5 font-semibold">
+          <h2 className="text-center text-[0.9375rem] font-semibold leading-5 text-black">
             <Balancer>Bathroom Stall Hardware</Balancer>
           </h2>
         </article>

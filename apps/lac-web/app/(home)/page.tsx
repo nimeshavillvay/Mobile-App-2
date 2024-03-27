@@ -1,11 +1,11 @@
+import Banner from "@/_components/banner";
+import SubHeading from "@/_components/sub-heading";
 import ArrowLeft from "@repo/web-ui/components/icons/arrow-right";
 import Image, { type StaticImageData } from "next/image";
 import { type CSSProperties } from "react";
 import Balancer from "react-wrap-balancer";
-import Title from "./Title";
 import ad1 from "./ad-1.png";
 import ad2 from "./ad-2.png";
-import Banner from "./banner";
 import blogImage from "./blog-image.png";
 import FeaturedBrand from "./featured-brand";
 import FeaturedCategories from "./featured-categories";
@@ -146,7 +146,7 @@ const HomePage = () => {
       <FeaturedBrand />
 
       <section className="container my-14 space-y-6 md:my-20 md:space-y-9">
-        <Title>Save More...</Title>
+        <SubHeading>Save More...</SubHeading>
 
         <ul className="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-8">
           {Array.from({ length: 4 }).map((_, index) => (
@@ -186,7 +186,7 @@ const HomePage = () => {
       <FeaturedCategories />
 
       <section className="my-14 space-y-6 bg-wurth-gray-50 py-9 md:my-20 md:space-y-9 md:py-16">
-        <Title>Latest From Our Blog</Title>
+        <SubHeading>Latest From Our Blog</SubHeading>
 
         <ul className="container flex snap-x scroll-pl-4 flex-row items-center gap-4 overflow-x-auto md:scroll-pl-8">
           {Array.from({ length: 10 }).map((_, index) => (

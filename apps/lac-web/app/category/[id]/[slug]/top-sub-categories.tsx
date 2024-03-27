@@ -1,5 +1,3 @@
-"use client";
-
 import productItemImage from "@/_assets/images/product-item-image.png";
 import SubHeading from "@/_components/sub-heading";
 import {
@@ -15,17 +13,35 @@ import {
   ProductCardPrice,
 } from "@repo/web-ui/components/product-card";
 
-const FlashSale = () => {
-  return (
-    <section className="my-14 space-y-6 md:my-20 md:space-y-10">
-      <header className="text-center">
-        <SubHeading>Flash Sale</SubHeading>
+const TOP_CATEGORIES = [
+  "Bar Railings",
+  "Decorative Grills & Lattices",
+  "Decorative Fillers & Caps",
+  "Hardwood Dowels",
+];
 
-        <p className="mt-2 text-base text-wurth-gray-800 md:mt-6 md:text-lg">
-          Lorem ipsum dolor sit amet consectetur. Amet vitae tempus laoreet et
-          sit. Venenatis maecenas scelerisque massa arcu sed.
-        </p>
-      </header>
+const TopSubCategories = () => {
+  return (
+    <section className="my-14 md:my-20 space-y-6">
+      <SubHeading>Top Decorative Hardware & Wood Components</SubHeading>
+
+      <p className="hidden md:block pb-4 container text-center text-lg text-wurth-gray-800">
+        Lorem ipsum dolor sit amet consectetur. Amet vitae tempus laoreet et
+        sit. Venenatis maecenas scelerisque massa arcu sed.
+      </p>
+
+      <ul className="container flex snap-x scroll-pl-4 flex-row items-center md:justify-center gap-2 md:gap-3 overflow-x-auto md:scroll-pl-8">
+        {TOP_CATEGORIES.map((category, index) => (
+          <li key={category} className="shrink-0 snap-start">
+            <button
+              data-active={index === 0}
+              className="rounded-full px-3 md:px-4 py-2 text-sm md:text-base font-semibold leading-4 md:leading-5 text-black data-[active=true]:bg-wurth-gray-150"
+            >
+              {category}
+            </button>
+          </li>
+        ))}
+      </ul>
 
       <div className="container flex w-full snap-x scroll-pl-4 flex-row gap-4 overflow-x-auto md:scroll-pl-8 md:gap-5">
         {Array.from({ length: 20 }).map((_, index) => (
@@ -63,4 +79,4 @@ const FlashSale = () => {
   );
 };
 
-export default FlashSale;
+export default TopSubCategories;
