@@ -1,17 +1,15 @@
-import { ItemAttributes } from "./types";
+import type { ItemAttributes } from "./types";
 import useSuspenseItemAttributes from "./use-suspense-item-attributes.hook";
 
-type PurchasedItemAttributesProps = {
+type ItemAttributesProps = {
   token: string;
   sku: string;
 };
 
-const ItemAttributes = ({ token, sku }: PurchasedItemAttributesProps) => {
+const ItemAttributes = ({ token, sku }: ItemAttributesProps) => {
   const itemAttributesQuery = useSuspenseItemAttributes(token, sku);
 
   const attributes: ItemAttributes = itemAttributesQuery.data ?? null;
-
-  console.log("attributes > ", itemAttributesQuery.data);
 
   return (
     <div className="flex flex-row py-2 text-sm text-brand-gray-500">

@@ -315,9 +315,9 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
               </Select>
             </TableHead>
 
-            <TableHead className="space-y-2 py-3">Price</TableHead>
+            <TableHead className="space-y-2 py-3 text-center">Price</TableHead>
             <TableHead className="space-y-2 py-3">Quantity</TableHead>
-            <TableHead className="space-y-2 py-3 text-right">UOM</TableHead>
+            <TableHead className="space-y-2 py-3">UOM</TableHead>
           </TableRow>
         </TableHeader>
 

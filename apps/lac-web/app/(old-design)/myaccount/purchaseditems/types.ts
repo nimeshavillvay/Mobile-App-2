@@ -1,5 +1,3 @@
-import { Category } from "@/(old-design)/_lib/types";
-
 export type Option = {
   value: string;
   label: string;
@@ -31,7 +29,7 @@ export type CategoryInfo = {
 
 export type OrderHistoryItem = {
   brand_name: string;
-  categoryInfo: Category[];
+  categoryInfo: CategoryInfo[];
   group_id: string;
   img: string;
   is_product_exclude: boolean | null;
