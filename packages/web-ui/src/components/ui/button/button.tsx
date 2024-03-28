@@ -13,7 +13,7 @@ const buttonVariants = cva({
         "ui-bg-wurth-red-650 ui-text-white ui-shadow-sm hover:ui-bg-red-800",
       destructive:
         "ui-bg-orange-600 ui-text-white ui-shadow-sm hover:ui-bg-orange-700",
-      cancel:
+      outline:
         "ui-border ui-border-wurth-gray-400 ui-bg-white ui-text-wurth-gray-800 hover:ui-border-wurth-gray-800 hover:ui-bg-wurth-gray-50",
       subtle: "ui-bg-wurth-gray-50 ui-text-black hover:ui-bg-wurth-gray-150",
       ghost: "ui-text-black hover:ui-bg-wurth-gray-50",

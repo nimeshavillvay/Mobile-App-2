@@ -28,7 +28,7 @@ const CategoriesDropdown = ({ categories }: CategoriesDropdownProps) => {
                 asChild
               >
                 <DropdownMenu.Item key={category.id} asChild>
-                  <Link href={`/category/${category.id}/${category.slug}`}>
+                  <Link href={`/old/category/${category.id}/${category.slug}`}>
                     {category.name}
                   </Link>
                 </DropdownMenu.Item>
@@ -44,7 +44,7 @@ const CategoriesDropdown = ({ categories }: CategoriesDropdownProps) => {
                       >
                         <DropdownMenu.Item asChild>
                           <Link
-                            href={`/category/${subCategory.subid}/${subCategory.slug}`}
+                            href={`/old/category/${subCategory.subid}/${subCategory.slug}`}
                           >
                             {subCategory.name}
                           </Link>
@@ -59,7 +59,7 @@ const CategoriesDropdown = ({ categories }: CategoriesDropdownProps) => {
                             asChild
                           >
                             <Link
-                              href={`/category/${subSubCategory.subsubid}/${subSubCategory.slug}`}
+                              href={`/old/category/${subSubCategory.subsubid}/${subSubCategory.slug}`}
                             >
                               {subSubCategory.subsubname}
                             </Link>
@@ -74,7 +74,7 @@ const CategoriesDropdown = ({ categories }: CategoriesDropdownProps) => {
                       asChild
                     >
                       <Link
-                        href={`/category/${subCategory.subid}/${subCategory.slug}`}
+                        href={`/old/category/${subCategory.subid}/${subCategory.slug}`}
                       >
                         {subCategory.name}
                       </Link>

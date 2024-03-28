@@ -63,9 +63,9 @@ export const Destructive: Story = {
   },
 };
 
-export const Cancel: Story = {
+export const Outline: Story = {
   args: {
-    variant: "cancel",
+    variant: "outline",
   },
 };
 

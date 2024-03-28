@@ -1,15 +1,15 @@
+import SubHeading from "@/_components/sub-heading";
 import { Button } from "@repo/web-ui/components/ui/button";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@repo/web-ui/components/ui/collapsible";
-import Title from "./Title";
 
 const FeaturedCategories = () => {
   return (
     <section className="container my-14 space-y-6 md:my-20 md:space-y-9">
-      <Title>Featured Categories</Title>
+      <SubHeading>Featured Categories</SubHeading>
 
       <CategoriesGrid />
 
@@ -20,7 +20,7 @@ const FeaturedCategories = () => {
 
         <CollapsibleTrigger asChild>
           <Button
-            variant="cancel"
+            variant="outline"
             className="mx-auto py-2.5 font-bold text-black"
           >
             View all categories

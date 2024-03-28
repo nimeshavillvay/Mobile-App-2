@@ -23,7 +23,7 @@ const meta: Meta<typeof Dialog> = {
 export default meta;
 type Story = StoryObj<typeof Dialog>;
 
-export const Demo: Story = {
+export const Showcase: Story = {
   render: () => {
     return (
       <Dialog>

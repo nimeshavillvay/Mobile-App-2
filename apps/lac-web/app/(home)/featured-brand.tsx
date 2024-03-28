@@ -1,3 +1,4 @@
+import productItemImage from "@/_assets/images/product-item-image.png";
 import {
   ProductCard,
   ProductCardActions,
@@ -11,7 +12,6 @@ import {
 } from "@repo/web-ui/components/product-card";
 import Image from "next/image";
 import productImage from "./product-image.png";
-import productItemImage from "./product-item-image.png";
 
 const FeaturedBrand = () => {
   return (

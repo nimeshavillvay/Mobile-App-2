@@ -1,7 +1,7 @@
 import { type ReactNode } from "react";
 import Balancer from "react-wrap-balancer";
 
-const Title = ({ children }: { children: ReactNode }) => {
+const SubHeading = ({ children }: { children: ReactNode }) => {
   return (
     <h2 className="text-center font-title text-3xl font-medium tracking-[-0.01875rem] text-black md:text-5xl md:tracking-[-0.036rem]">
       <Balancer>{children}</Balancer>
@@ -9,4 +9,4 @@ const Title = ({ children }: { children: ReactNode }) => {
   );
 };
 
-export default Title;
+export default SubHeading;
