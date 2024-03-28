@@ -74,8 +74,8 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
     addToCartMutation.mutate(
       { sku: item.sku, quantity: values.quantity as number },
       {
-        onSuccess: (resp) => {
-          console.log("Added to cart", resp);
+        onSuccess: () => {
+          // TODO: handle add to cart popup here
         },
       },
     );
@@ -85,7 +85,6 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
     if (item.isFavourite) {
       router.push("/myaccount/myfavorites");
     } else {
-      console.log("cat > ", category, subCategory);
       if (category && subCategory) {
         addToFavoritesMutation.mutate({
           brandId: item.sel_assigned_brand as number,
@@ -120,6 +119,8 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
     );
   };
 
+  const isItemNotAdded = !item.txt_wurth_lac_item;
+
   return (
     <>
       <TableRow
@@ -128,19 +129,19 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
           index % 2 === 0 ? "bg-white" : "bg-brand-gray-100",
         )}
       >
-        <TableCell>
+        <TableCell className="min-w-[76px]">
           <Link
             href={generateItemUrl(item.group_id, item.sku)}
             className={
-              item.group_id ? "pointer-events-auto" : "pointer-events-none"
+              isItemNotAdded ? "pointer-events-none" : "pointer-events-auto"
             }
           >
             <Image
               src={item.img ? getMediaUrl(item.img) : ItemPlaceholder}
               alt={item.txt_sap_description_name}
-              width={92}
-              height={92}
-              className="size-[92px] border border-brand-gray-200 object-contain"
+              width={76}
+              height={76}
+              className="border border-brand-gray-200 object-contain"
             />
           </Link>
         </TableCell>
@@ -150,23 +151,28 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
             href={generateItemUrl(item.group_id, item.sku)}
             className={cn(
               "text-sm text-brand-gray-500",
-              item.group_id ? "pointer-events-auto" : "pointer-events-none",
+              isItemNotAdded ? "pointer-events-none" : "pointer-events-auto",
             )}
           >
             Item# : {item.sku !== "" ? item.sku : "N/A"}
           </Link>
 
-          <div className="text-sm text-brand-gray-500">
-            MRF Part# : {item.txt_mfn !== "" ? item.txt_mfn : "N/A"}
-          </div>
+          {!isItemNotAdded && (
+            <>
+              <div className="text-sm text-brand-gray-500">
+                MRF Part# : {item.txt_mfn !== "" ? item.txt_mfn : "N/A"}
+              </div>
 
-          <h4 className="text-wrap font-bold">
-            {item.txt_sap_description_name}
-          </h4>
+              <h4 className="text-wrap font-bold">
+                {item.txt_sap_description_name}
+              </h4>
 
-          <div className="text-sm text-brand-gray-500">
-            Category : {item.txt_category !== "" ? item.txt_category : "N/A"}
-          </div>
+              <div className="text-sm text-brand-gray-500">
+                Category :{" "}
+                {item.txt_category !== "" ? item.txt_category : "N/A"}
+              </div>
+            </>
+          )}
         </TableCell>
 
         <TableCell className="text-center text-sm text-brand-gray-500">
@@ -181,10 +187,17 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
           <Collapsible
             open={showMyPrice}
             onOpenChange={setShowMyPrice}
-            disabled={!item?.group_id}
+            disabled={isItemNotAdded}
             className="min-w-[260px]"
           >
-            <CollapsibleTrigger className="mx-auto flex cursor-pointer flex-row items-center justify-center text-sm text-brand-primary">
+            <CollapsibleTrigger
+              className={cn(
+                "mx-auto flex cursor-pointer flex-row items-center justify-center text-sm",
+                isItemNotAdded
+                  ? "cursor-not-allowed text-brand-gray-400"
+                  : "cursor-pointer text-brand-primary",
+              )}
+            >
               <span>{showMyPrice ? "Hide" : "Show"} my price</span>
 
               <MdKeyboardArrowDown className="text-lg leading-none transition-transform duration-200 ease-out group-data-[state=open]:rotate-180" />
@@ -193,14 +206,14 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
             <CollapsibleContent>
               <ErrorBoundary
                 fallback={
-                  <div className="p-4 text-brand-primary">
+                  <div className="p-4 text-center text-brand-primary">
                     Failed to Prices!!!
                   </div>
                 }
               >
                 <Suspense
                   fallback={
-                    <div className="p-4 text-brand-gray-400">
+                    <div className="p-4 text-center text-brand-gray-400">
                       Prices Loading...
                     </div>
                   }
@@ -210,6 +223,7 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
                     sku={item.sku}
                     quantity={1}
                     uom={item.txt_uom}
+                    salePrice={item.override_price ?? 0}
                   />
                 </Suspense>
               </ErrorBoundary>
@@ -224,13 +238,13 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
           <Input
             id={quantityId}
             type="number"
-            disabled={!item.group_id}
+            disabled={isItemNotAdded}
             className="h-6 w-16 px-1 text-right text-base leading-4"
             {...register("quantity", {
               valueAsNumber: true,
             })}
           />
-          {item.group_id && (
+          {!isItemNotAdded && (
             <>
               <div className="text-nowrap">
                 <span className="font-bold text-black">Min: </span>
@@ -261,15 +275,15 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
           <Collapsible
             open={showItemAttributes}
             onOpenChange={setShowItemAttributes}
-            disabled={!item?.group_id}
+            disabled={isItemNotAdded}
           >
             <CollapsibleTrigger>
               <div
                 className={cn(
                   "group flex flex-row items-center text-sm",
-                  item.group_id
-                    ? "cursor-pointer text-brand-primary"
-                    : "cursor-not-allowed text-brand-gray-400",
+                  isItemNotAdded
+                    ? "cursor-not-allowed text-brand-gray-400"
+                    : "cursor-pointer text-brand-primary",
                 )}
               >
                 <span>
@@ -283,14 +297,14 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
             <CollapsibleContent>
               <ErrorBoundary
                 fallback={
-                  <div className="p-4 text-brand-primary">
+                  <div className="p-4 text-center text-brand-primary">
                     Failed to Load Attributes!!!
                   </div>
                 }
               >
                 <Suspense
                   fallback={
-                    <div className="p-4 text-brand-gray-400">
+                    <div className="p-4 text-center text-brand-gray-400">
                       Attributes Loading...
                     </div>
                   }
@@ -336,7 +350,7 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
               </form>
 
               <Button variant="ghost" onClick={() => onAddToFavorites()}>
-                {item.isFavourite ? (
+                {item?.isFavourite ? (
                   <IoMdHeart className="text-2xl text-brand-primary" />
                 ) : (
                   <IoMdHeartEmpty className="text-2xl text-brand-gray-500" />

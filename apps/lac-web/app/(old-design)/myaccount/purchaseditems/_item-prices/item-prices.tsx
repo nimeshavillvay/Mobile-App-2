@@ -1,3 +1,4 @@
+import { formatNumberToPrice } from "@/old/_utils/helpers";
 import type { ItemPrices, PriceBreakDowns, PriceRow, SKUPrice } from "./types";
 import useSuspensePriceCheck from "./use-suspense-price-check.hook";
 
@@ -6,14 +7,24 @@ type ItemPricesProps = {
   sku: string;
   quantity: number;
   uom: string;
+  salePrice: string;
 };
 
-const ItemPrices = ({ token, sku, quantity, uom }: ItemPricesProps) => {
+const ItemPrices = ({
+  token,
+  sku,
+  quantity,
+  uom,
+  salePrice,
+}: ItemPricesProps) => {
   const itemPricesQuery = useSuspensePriceCheck(token, sku, quantity);
 
   const prices: ItemPrices = itemPricesQuery.data ?? null;
   const priceBreakDown: SKUPrice =
-    (prices?.["list-sku-price"]?.[0] as SKUPrice) ?? null;
+    (prices?.["list-sku-price"][0] as SKUPrice) ?? null;
+  const priceUnit: string = prices?.["list-sku-price"][0]?.[
+    "price-unit"
+  ] as string;
   const priceBreakDownArray: PriceRow[] = [];
 
   if (priceBreakDown) {
@@ -37,7 +48,7 @@ const ItemPrices = ({ token, sku, quantity, uom }: ItemPricesProps) => {
   }
 
   return (
-    <div className="flex flex-row py-2 text-sm text-brand-gray-500">
+    <div className="flex flex-col space-y-2 py-2 text-sm text-brand-gray-500">
       {priceBreakDown?.pricebreakdowns.quantity1 > 0 && (
         <div className="grid grid-cols-3 gap-2 pt-2">
           <div className="text-left font-bold text-black">Qty</div>
@@ -49,10 +60,18 @@ const ItemPrices = ({ token, sku, quantity, uom }: ItemPricesProps) => {
                 key={index}
                 quantity={breakDown.quantity}
                 uom={uom}
-                price={`$${breakDown.price} / ${uom}`}
+                price={`$${formatNumberToPrice(breakDown.price)} / ${priceUnit}`}
               />
             ))}
         </div>
+      )}
+
+      {priceBreakDown && (
+        <EachPriceRow
+          salePrice={Number(salePrice)}
+          uom={priceUnit}
+          price={priceBreakDown.price}
+        />
       )}
     </div>
   );
@@ -75,3 +94,40 @@ const PriceRow = ({
     <div className="text-nowrap text-right">{price}</div>
   </>
 );
+
+const EachPriceRow = ({
+  salePrice,
+  price,
+  uom,
+}: {
+  salePrice: number;
+  price: number;
+  uom: string;
+}) => {
+  const displayPrice: number =
+    salePrice > 0 && price > salePrice ? salePrice : price;
+  const originalPrice: number = salePrice > 0 && price > salePrice ? price : 0;
+  const savingAmount: number =
+    salePrice > 0 && price > salePrice ? price - salePrice : 0;
+  const discount =
+    salePrice > 0 && price > salePrice
+      ? (((price - salePrice) / price) * 100).toFixed(0.5)
+      : 0;
+
+  return (
+    <div className="flex flex-row justify-end gap-1">
+      <div className="font-bold">${formatNumberToPrice(displayPrice)}</div>
+      <div>/ {uom ?? ""}</div>
+      {savingAmount > 0 && (
+        <>
+          <div className="line-through">
+            ${formatNumberToPrice(originalPrice)}
+          </div>
+          <div className="rounded-md bg-brand-success/10 px-1.5 font-bold text-brand-success">
+            {discount}% off
+          </div>
+        </>
+      )}
+    </div>
+  );
+};
