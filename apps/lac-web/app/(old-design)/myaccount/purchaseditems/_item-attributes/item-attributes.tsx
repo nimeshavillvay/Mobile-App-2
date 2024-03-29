@@ -9,7 +9,7 @@ type ItemAttributesProps = {
 const ItemAttributes = ({ token, sku }: ItemAttributesProps) => {
   const itemAttributesQuery = useSuspenseItemAttributes(token, sku);
 
-  const attributes: ItemAttributes = itemAttributesQuery.data ?? null;
+  const attributes = itemAttributesQuery.data ?? null;
 
   return (
     <div className="flex flex-row py-2 text-sm text-brand-gray-500">

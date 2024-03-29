@@ -27,10 +27,10 @@ import ItemAttributes from "./_item-attributes/item-attributes";
 import ItemPrices from "./_item-prices/item-prices";
 import { DATE_FORMAT } from "./constants";
 import ItemPlaceholder from "./item-placeholder.png";
-import { CategoryInfo, CombinedPurchasedItem } from "./types";
+import { CombinedPurchasedItem } from "./types";
 
 const schema = z.object({
-  quantity: z.number().min(1).nullable(),
+  quantity: z.number().int().min(1),
 });
 
 type Schema = z.infer<typeof schema>;
@@ -42,26 +42,22 @@ type PurchasedItemRowProps = {
 };
 
 const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
-  const [showItemAttributes, setShowItemAttributes] = useState<boolean>(false);
-  const [showShippingOptions, setShowShippingOptions] =
-    useState<boolean>(false);
-  const [showMyPrice, setShowMyPrice] = useState<boolean>(false);
+  const [showItemAttributes, setShowItemAttributes] = useState(false);
+  const [showShippingOptions, setShowShippingOptions] = useState(false);
+  const [showMyPrice, setShowMyPrice] = useState(false);
   const id = useId();
   const router = useRouter();
   const quantityId = `quantity-${id}`;
-  const category: CategoryInfo = item.categoryInfo[0] as CategoryInfo;
-  const subCategory: CategoryInfo = item.categoryInfo[1] as CategoryInfo;
+  const category = item?.categoryInfo[0] ?? null;
+  const subCategory = item?.categoryInfo[1] ?? null;
   const addToCartMutation = useAddToCartMutation();
   const addToFavoritesMutation = useAddToFavoritesMutation();
 
   const { register, watch, handleSubmit } = useForm<Schema>({
     resolver: zodResolver(schema),
-    values: {
-      quantity: null,
-    },
   });
 
-  const quantity = watch("quantity");
+  const quantity = watch("quantity") ?? 1;
 
   const generateItemUrl = (group_id: string, sku: string) => {
     if (group_id && sku) {
@@ -72,7 +68,7 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
 
   const onSubmit = (values: Schema) => {
     addToCartMutation.mutate(
-      { sku: item.sku, quantity: values.quantity as number },
+      { sku: item.sku, quantity: values.quantity },
       {
         onSuccess: () => {
           // TODO: handle add to cart popup here
@@ -192,7 +188,7 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
           >
             <CollapsibleTrigger
               className={cn(
-                "mx-auto flex cursor-pointer flex-row items-center justify-center text-sm",
+                "group mx-auto flex cursor-pointer flex-row items-center justify-center text-sm",
                 isItemNotAdded
                   ? "cursor-not-allowed text-brand-gray-400"
                   : "cursor-pointer text-brand-primary",
@@ -277,21 +273,19 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
             onOpenChange={setShowItemAttributes}
             disabled={isItemNotAdded}
           >
-            <CollapsibleTrigger>
-              <div
-                className={cn(
-                  "group flex flex-row items-center text-sm",
-                  isItemNotAdded
-                    ? "cursor-not-allowed text-brand-gray-400"
-                    : "cursor-pointer text-brand-primary",
-                )}
-              >
-                <span>
-                  {showItemAttributes ? "Hide" : "View"} item attributes
-                </span>
+            <CollapsibleTrigger
+              className={cn(
+                "group flex flex-row items-center text-sm",
+                isItemNotAdded
+                  ? "cursor-not-allowed text-brand-gray-400"
+                  : "cursor-pointer text-brand-primary",
+              )}
+            >
+              <span>
+                {showItemAttributes ? "Hide" : "View"} item attributes
+              </span>
 
-                <MdKeyboardArrowDown className="text-lg leading-none transition-transform duration-200 ease-out group-data-[state=open]:rotate-180" />
-              </div>
+              <MdKeyboardArrowDown className="text-lg leading-none transition-transform duration-200 ease-out group-data-[state=open]:rotate-180" />
             </CollapsibleTrigger>
 
             <CollapsibleContent>
@@ -383,7 +377,7 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
         >
           <TableCell colSpan={5} className="pt-0">
             <div className="flex justify-end">
-              <ShippingOptions sku={item.sku} quantity={quantity as number} />
+              <ShippingOptions sku={item.sku} quantity={quantity} />
             </div>
           </TableCell>
           <TableCell></TableCell>

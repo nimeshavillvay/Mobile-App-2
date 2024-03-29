@@ -1,5 +1,5 @@
 import { formatNumberToPrice } from "@/old/_utils/helpers";
-import type { ItemPrices, PriceBreakDowns, PriceRow, SKUPrice } from "./types";
+import type { ItemPrices, PriceBreakDowns, PriceRow } from "./types";
 import useSuspensePriceCheck from "./use-suspense-price-check.hook";
 
 type ItemPricesProps = {
@@ -19,12 +19,9 @@ const ItemPrices = ({
 }: ItemPricesProps) => {
   const itemPricesQuery = useSuspensePriceCheck(token, sku, quantity);
 
-  const prices: ItemPrices = itemPricesQuery.data ?? null;
-  const priceBreakDown: SKUPrice =
-    (prices?.["list-sku-price"][0] as SKUPrice) ?? null;
-  const priceUnit: string = prices?.["list-sku-price"][0]?.[
-    "price-unit"
-  ] as string;
+  const prices = itemPricesQuery.data ?? null;
+  const priceBreakDown = prices?.["list-sku-price"][0] ?? null;
+  const priceUnit = prices?.["list-sku-price"][0]?.["price-unit"] ?? null;
   const priceBreakDownArray: PriceRow[] = [];
 
   if (priceBreakDown) {
@@ -49,7 +46,7 @@ const ItemPrices = ({
 
   return (
     <div className="flex flex-col space-y-2 py-2 text-sm text-brand-gray-500">
-      {priceBreakDown?.pricebreakdowns.quantity1 > 0 && (
+      {priceBreakDown && priceBreakDown.pricebreakdowns.quantity1 > 0 && (
         <div className="grid grid-cols-3 gap-2 pt-2">
           <div className="text-left font-bold text-black">Qty</div>
           <div className="text-center font-bold text-black">UOM</div>
@@ -69,7 +66,7 @@ const ItemPrices = ({
       {priceBreakDown && (
         <EachPriceRow
           salePrice={Number(salePrice)}
-          uom={priceUnit}
+          uom={priceUnit ?? ""}
           price={priceBreakDown.price}
         />
       )}
@@ -104,10 +101,9 @@ const EachPriceRow = ({
   price: number;
   uom: string;
 }) => {
-  const displayPrice: number =
-    salePrice > 0 && price > salePrice ? salePrice : price;
-  const originalPrice: number = salePrice > 0 && price > salePrice ? price : 0;
-  const savingAmount: number =
+  const displayPrice = salePrice > 0 && price > salePrice ? salePrice : price;
+  const originalPrice = salePrice > 0 && price > salePrice ? price : 0;
+  const savingAmount =
     salePrice > 0 && price > salePrice ? price - salePrice : 0;
   const discount =
     salePrice > 0 && price > salePrice
