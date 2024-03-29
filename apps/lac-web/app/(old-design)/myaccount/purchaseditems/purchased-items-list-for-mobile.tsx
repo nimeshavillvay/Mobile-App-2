@@ -26,7 +26,10 @@ const PurchasedItemsListForMobile = ({
       {items &&
         items.length > 0 &&
         items.map((item) => (
-          <div key={item.sku} className="flex flex-row gap-4 bg-white p-4">
+          <div
+            key={item.sku}
+            className="flex flex-row justify-between bg-white p-4"
+          >
             <Link
               href={generateItemUrl(item.group_id, item.sku)}
               className="min-w-[92px]"
@@ -40,21 +43,21 @@ const PurchasedItemsListForMobile = ({
               />
             </Link>
 
-            <div className="flex min-w-[200px] flex-col gap-1 text-brand-gray-500">
+            <div className="flex w-full min-w-[200px] flex-col gap-1 px-2 text-brand-gray-500">
               {item.txt_category && (
                 <div className="text-sm">{item.txt_category}</div>
               )}
 
-              <h4 className="min-w-[200px] text-wrap font-bold text-black">
+              <h4 className="text-wrap font-bold text-black">
                 {item.txt_sap_description_name}
               </h4>
 
               <div className="truncate text-sm">
-                {item.sku !== "" ? item.sku : "N/A"} • MRFP#:{" "}
+                {item.sku !== "" ? item.sku : "N/A"}&nbsp;•&nbsp;MRFP#:&nbsp;
                 {item.txt_mfn !== "" ? item.txt_mfn : "N/A"}
               </div>
 
-              <div className="flex flex-row gap-1 bg-brand-gray-100 p-2 text-sm">
+              <div className="flex flex-row gap-1 rounded-sm bg-brand-gray-100 p-2 text-sm">
                 <div className="flex-1">
                   <div className="text-nowrap">Last Order Date</div>
                   <div className="font-bold">
