@@ -1,6 +1,5 @@
 "use client";
 
-import { updateSearchParams } from "@/(old-design)/_utils/client-helpers";
 import {
   Select,
   SelectContent,
@@ -30,7 +29,6 @@ import {
   SORTING_TYPES,
 } from "./constants";
 import PurchasedItemRow from "./purchased-item-row";
-import PurchasedItemsListForMobile from "./purchased-items-list-for-mobile";
 import PurchasedItemsSelectors from "./purchased-items-selectors";
 import TotalCountAndPagination from "./total-count-and-pagination";
 import { CombinedPurchasedItem, OrderHistoryItem } from "./types";
@@ -140,11 +138,7 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
 
       <TotalCountAndPagination isLoading={isLoading} totalItems={totalItems} />
 
-      {/* Mobile View for Items List */}
-      <PurchasedItemsListForMobile items={combinedPurchasedItems} />
-
-      {/* Desktop View for Items List */}
-      <Table className="hidden md:block">
+      <Table>
         <TableHeader>
           <TableRow>
             <TableHead colSpan={2} className="space-y-2 py-3">
