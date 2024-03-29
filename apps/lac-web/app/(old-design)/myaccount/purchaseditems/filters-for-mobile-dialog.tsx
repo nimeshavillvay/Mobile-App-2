@@ -77,6 +77,7 @@ const FiltersForMobileDialog = ({ open, setOpen }: FiltersForMobileProps) => {
 
     const params = new URLSearchParams();
     updateSearchParams(params);
+
     setOpen(false);
   }
 

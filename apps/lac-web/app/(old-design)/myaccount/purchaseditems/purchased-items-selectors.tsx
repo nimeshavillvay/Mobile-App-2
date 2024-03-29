@@ -1,7 +1,6 @@
 "use client";
 
 import DatePicker from "@/(old-design)/_components/date-picker";
-import Pagination from "@/(old-design)/_components/pagination";
 import { updateSearchParams } from "@/(old-design)/_utils/client-helpers";
 import { Button } from "@/old/_components/ui/button";
 import { Label } from "@/old/_components/ui/label";
@@ -180,18 +179,10 @@ const PurchasedItemsSelectors = ({
               )}
             </div>
           </div>
-          {/* <div className="flex justify-between"> */}
-          <div className="mb-4 content-end rounded border bg-gray-100 p-2">
+          <div className="mb-4 w-fit content-end rounded border  bg-gray-100 p-2">
             <div className="text-[10px] uppercase">Duration</div>
             <div className="font-bold">{`${formattedFromDate} - ${formattedToDate}`}</div>
           </div>
-          <Pagination
-            pageSize={perPage}
-            totalSize={totalItems}
-            currentPage={page}
-            searchParams={urlSearchParams}
-          />
-          {/* </div> */}
         </div>
         <div className="flex lg:hidden">
           <FiltersForMobileDialog open={open} setOpen={setOpen} />
