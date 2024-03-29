@@ -28,7 +28,7 @@ const PurchasedItemsListForMobile = ({
         items.map((item) => (
           <div
             key={item.sku}
-            className="flex flex-row justify-between bg-white p-4"
+            className="flex min-h-[180px] flex-row justify-between bg-white p-4"
           >
             <Link
               href={generateItemUrl(item.group_id, item.sku)}
