@@ -27,6 +27,7 @@ import {
   SORTING_TYPES,
 } from "./constants";
 import PurchasedItemRow from "./purchased-item-row";
+import PurchasedItemsListForMobile from "./purchased-items-list-for-mobile";
 import PurchasedItemsSelectors from "./purchased-items-selectors";
 import { CombinedPurchasedItem, OrderHistoryItem } from "./types";
 import useGetItemInfo from "./use-get-items-info.hook";
@@ -235,7 +236,11 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
         />
       </div>
 
-      <Table>
+      {/* Mobile View for Items List */}
+      <PurchasedItemsListForMobile />
+
+      {/* Desktop View for Items List */}
+      <Table className="hidden md:block">
         <TableHeader>
           <TableRow>
             <TableHead colSpan={2} className="space-y-2 py-3">
