@@ -15,17 +15,21 @@ import {
   TableHeader,
   TableRow,
 } from "@/old/_components/ui/table";
-import dayjs from "dayjs";
 import { useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { changeSearchParams } from "./client-helpers";
 import {
   DEFAULT_SORT,
+  INIT_FROM_DATE,
+  INIT_PAGE_NUMBER,
+  INIT_PER_PAGE,
+  INIT_SORTING_FIELD,
+  INIT_SORTING_TYPE,
+  INIT_TO_DATE,
   QUERY_KEYS,
   SORTING_BY_FIELDS,
   SORTING_TYPES,
 } from "./constants";
 import PurchasedItemRow from "./purchased-item-row";
-import PurchasedItemsListForMobile from "./purchased-items-list-for-mobile";
 import PurchasedItemsSelectors from "./purchased-items-selectors";
 import TotalCountAndPagination from "./total-count-and-pagination";
 import { CombinedPurchasedItem, OrderHistoryItem } from "./types";
@@ -33,14 +37,9 @@ import useGetItemInfo from "./use-get-items-info.hook";
 import useSuspensePurchasedItemsList from "./use-suspense-purchased-items-list.hook";
 
 const PurchasedItemsList = ({ token }: { token: string }) => {
-  const INIT_SORTING_TYPE = "desc";
-  const INIT_PAGE_NUMBER = "1";
-  const INIT_PER_PAGE = "1";
-  const INIT_FROM_DATE = dayjs().subtract(1, "year").format("YYYY-MM-DD");
-  const INIT_TO_DATE = dayjs().format("YYYY-MM-DD");
-  const INIT_SORTING_FIELD = SORTING_BY_FIELDS.ORDER_DATE;
-
   const searchParams = useSearchParams();
+  const fromDate = searchParams.get("from") ?? INIT_FROM_DATE;
+  const toDate = searchParams.get("to") ?? INIT_TO_DATE;
   const orderField = searchParams.get("orderBy") ?? INIT_SORTING_FIELD;
   const orderType = searchParams.get("orderType") ?? INIT_SORTING_TYPE;
   const page = Number(searchParams.get("page") ?? INIT_PAGE_NUMBER);
@@ -53,14 +52,11 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
     (sortingType) => sortingType.value === orderType,
   );
 
-  const [fromDate, setFromDate] = useState(new Date(INIT_FROM_DATE));
-  const [toDate, setToDate] = useState(new Date());
-
   const purchasedItemsList = useSuspensePurchasedItemsList(
     token,
-    searchParams.get("from") ?? INIT_FROM_DATE,
-    searchParams.get("to") ?? INIT_TO_DATE,
-    Number(searchParams.get("page") ?? page) - 1,
+    fromDate,
+    toDate,
+    page - 1,
     perPage,
     orderField,
     orderType,
@@ -83,44 +79,8 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
     isLoading = false;
   }
 
-  const onClickSearch = () => {
-    changeSearchParams([
-      {
-        key: QUERY_KEYS.FROM_DATE,
-        value: dayjs(fromDate).format("YYYY-MM-DD"),
-      },
-      {
-        key: QUERY_KEYS.TO_DATE,
-        value: dayjs(toDate).format("YYYY-MM-DD"),
-      },
-    ]);
-  };
-
-  const onClickReset = () => {
-    setFromDate(new Date(INIT_FROM_DATE));
-    setToDate(new Date(INIT_TO_DATE));
-
-    const params = new URLSearchParams();
-    updateSearchParams(params);
-  };
-
-  const changeSearchParams = (
-    params: {
-      key: (typeof QUERY_KEYS)[keyof typeof QUERY_KEYS];
-      value: string;
-    }[],
-  ) => {
-    const newSearchParams = new URLSearchParams(searchParams);
-
-    params.map(function (param) {
-      newSearchParams.set(param.key, param.value);
-    });
-
-    updateSearchParams(newSearchParams);
-  };
-
   const onChangeSortingParams = (orderBy: string, orderType: string) => {
-    changeSearchParams([
+    changeSearchParams(searchParams, [
       {
         key: QUERY_KEYS.ORDER_BY,
         value: orderBy,
@@ -172,35 +132,14 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
     <>
       {!isLoading && (
         <PurchasedItemsSelectors
-          fromDate={fromDate}
-          setFromDate={setFromDate}
-          toDate={toDate}
-          setToDate={setToDate}
-          onSearch={onClickSearch}
-          onReset={onClickReset}
           isLoading={isLoading}
-          searchParams={searchParams}
-          page={page}
-          perPage={perPage}
           totalItems={totalItems}
-          changeSearchParams={changeSearchParams}
         />
       )}
 
-      <TotalCountAndPagination
-        isLoading={isLoading}
-        searchParams={searchParams}
-        page={page}
-        perPage={perPage}
-        totalItems={totalItems}
-        changeSearchParams={changeSearchParams}
-      />
+      <TotalCountAndPagination isLoading={isLoading} totalItems={totalItems} />
 
-      {/* Mobile View for Items List */}
-      <PurchasedItemsListForMobile items={combinedPurchasedItems} />
-
-      {/* Desktop View for Items List */}
-      <Table className="hidden md:block">
+      <Table>
         <TableHeader>
           <TableRow>
             <TableHead colSpan={2} className="space-y-2 py-3">
@@ -299,14 +238,7 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
         </TableBody>
       </Table>
 
-      <TotalCountAndPagination
-        isLoading={isLoading}
-        searchParams={searchParams}
-        page={page}
-        perPage={perPage}
-        totalItems={totalItems}
-        changeSearchParams={changeSearchParams}
-      />
+      <TotalCountAndPagination isLoading={isLoading} totalItems={totalItems} />
     </>
   );
 };

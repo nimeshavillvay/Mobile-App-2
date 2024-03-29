@@ -8,29 +8,26 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/old/_components/ui/select";
-import { ReadonlyURLSearchParams } from "next/navigation";
-import { PAGE_SIZES, QUERY_KEYS } from "./constants";
+import { useSearchParams } from "next/navigation";
+import { changeSearchParams } from "./client-helpers";
+import {
+  INIT_PAGE_NUMBER,
+  INIT_PER_PAGE,
+  PAGE_SIZES,
+  QUERY_KEYS,
+} from "./constants";
 
 const TotalCountAndPagination = ({
   isLoading,
-  page,
-  perPage,
   totalItems,
-  changeSearchParams,
-  searchParams,
 }: {
   isLoading: boolean;
-  page: number;
-  perPage: number;
   totalItems: number;
-  changeSearchParams: (
-    params: {
-      key: (typeof QUERY_KEYS)[keyof typeof QUERY_KEYS];
-      value: string;
-    }[],
-  ) => void;
-  searchParams: ReadonlyURLSearchParams;
 }) => {
+  const urlSearchParams = useSearchParams();
+  const page = Number(urlSearchParams.get("page") ?? INIT_PAGE_NUMBER);
+  const perPage = Number(urlSearchParams.get("perPage") ?? INIT_PER_PAGE);
+
   return (
     <div className="my-6 hidden flex-row justify-between text-brand-gray-400 md:flex">
       {!isLoading && (
@@ -46,7 +43,7 @@ const TotalCountAndPagination = ({
         <Select
           value={perPage.toString()}
           onValueChange={(value) => {
-            changeSearchParams([
+            changeSearchParams(urlSearchParams, [
               {
                 key: QUERY_KEYS.PAGE,
                 value: "1",
@@ -77,7 +74,7 @@ const TotalCountAndPagination = ({
           pageSize={perPage}
           totalSize={totalItems}
           currentPage={page}
-          searchParams={searchParams}
+          searchParams={urlSearchParams}
         />
       ) : (
         <div></div>

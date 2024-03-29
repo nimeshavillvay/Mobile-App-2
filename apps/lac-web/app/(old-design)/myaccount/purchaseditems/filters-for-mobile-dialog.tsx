@@ -13,6 +13,7 @@ import {
   RadioGroup,
   RadioGroupItem,
 } from "@/(old-design)/_components/ui/radio-group";
+import { updateSearchParams } from "@/(old-design)/_utils/client-helpers";
 import { cn } from "@/(old-design)/_utils/helpers";
 import {
   Dialog,
@@ -22,10 +23,15 @@ import {
   DialogTitle,
 } from "@/old/_components/ui/dialog";
 import dayjs from "dayjs";
+import { useSearchParams } from "next/navigation";
 import { Dispatch, SetStateAction, useState } from "react";
 import { MdCheck } from "react-icons/md";
+import { changeSearchParams } from "./client-helpers";
 import {
   DURATIONS,
+  INIT_DURATION,
+  INIT_FROM_DATE,
+  INIT_TO_DATE,
   QUERY_KEYS,
   SORTING_BY_FIELDS,
   SORTING_FILTERS_FOR_MOBILE,
@@ -36,41 +42,41 @@ const customDuration = DURATIONS[DURATIONS.length - 1]; // Custom duration: last
 type FiltersForMobileProps = {
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
-  fromDate: Date;
-  setFromDate: Dispatch<SetStateAction<Date>>;
-  toDate: Date;
-  setToDate: Dispatch<SetStateAction<Date>>;
-  duration: (typeof DURATIONS)[number] | undefined;
-  setDuration: Dispatch<SetStateAction<(typeof DURATIONS)[number] | undefined>>;
-  handleDurationChange: (value: string) => void;
-  changeSearchParams: (
-    params: {
-      key: (typeof QUERY_KEYS)[keyof typeof QUERY_KEYS];
-      value: string;
-    }[],
-  ) => void;
-  onReset: Dispatch<SetStateAction<void>>;
 };
 
-const FiltersForMobileDialog = ({
-  open,
-  setOpen,
-  fromDate,
-  setFromDate,
-  toDate,
-  setToDate,
-  duration,
-  setDuration,
-  handleDurationChange,
-  changeSearchParams,
-  onReset,
-}: FiltersForMobileProps) => {
+const FiltersForMobileDialog = ({ open, setOpen }: FiltersForMobileProps) => {
+  const urlSearchParams = useSearchParams();
+
+  const [fromDate, setFromDate] = useState(new Date(INIT_FROM_DATE));
+  const [toDate, setToDate] = useState(new Date());
+  const [duration, setDuration] = useState(INIT_DURATION);
   const [activeFilter, setActiveFilter] = useState<string>(
     `${SORTING_BY_FIELDS.SKU}-desc`,
   );
 
+  const handleDurationChange = (value: string) => {
+    const duration = DURATIONS.find((duration) => duration.value === value);
+
+    if (duration) {
+      setDuration(duration);
+    }
+
+    if (value == "0") return;
+
+    setFromDate(
+      new Date(dayjs().subtract(Number(value), "months").format("YYYY-MM-DD")),
+    );
+
+    setToDate(new Date(dayjs().format("YYYY-MM-DD")));
+  };
+
   function onResetFiltersMobile() {
-    onReset();
+    setDuration(INIT_DURATION);
+    setFromDate(new Date(INIT_FROM_DATE));
+    setToDate(new Date(INIT_TO_DATE));
+
+    const params = new URLSearchParams();
+    updateSearchParams(params);
     setOpen(false);
   }
 
@@ -103,14 +109,14 @@ const FiltersForMobileDialog = ({
       },
     );
 
-    changeSearchParams(searchParams);
+    changeSearchParams(urlSearchParams, searchParams);
 
     setOpen(false);
   };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="old-design-text-base max-h-[80vh] max-w-[500px] overflow-scroll md:hidden">
+      <DialogContent className="old-design-text-base max-h-[80vh] max-w-[500px] overflow-scroll">
         <DialogHeader>
           <DialogTitle className="text-left">Sort & Filter</DialogTitle>
 
@@ -120,7 +126,12 @@ const FiltersForMobileDialog = ({
         </DialogHeader>
 
         <div>
-          <Accordion type="single" collapsible className="w-full ">
+          <Accordion
+            type="single"
+            collapsible
+            className="w-full"
+            defaultValue="item-1"
+          >
             <AccordionItem value="item-1">
               <AccordionTrigger className="bg-gray-100 px-5 py-3 text-xl text-[#000] hover:no-underline">
                 Duration
@@ -154,7 +165,7 @@ const FiltersForMobileDialog = ({
                     onValueChange={(value) => {
                       handleDurationChange(value);
                     }}
-                    className="gap-auto grid grid-cols-2 justify-between sm:grid-cols-4"
+                    className="gap-auto grid grid-cols-2 justify-between md:grid-cols-4"
                   >
                     {DURATIONS.map(
                       (durationObj) =>

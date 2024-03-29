@@ -1,3 +1,5 @@
+import dayjs from "dayjs";
+
 export const DURATIONS = [
   { value: "3", label: "3 months" },
   { value: "6", label: "6 months" },
@@ -73,3 +75,12 @@ export const SORTING_FILTERS_FOR_MOBILE = [
     ],
   },
 ] as const;
+
+export const INIT_SORTING_TYPE = "desc";
+export const INIT_PAGE_NUMBER = "1";
+export const INIT_PER_PAGE = "1";
+export const INIT_FROM_DATE = dayjs().subtract(1, "year").format("YYYY-MM-DD");
+export const INIT_TO_DATE = dayjs().format("YYYY-MM-DD");
+export const INIT_SORTING_FIELD = SORTING_BY_FIELDS.ORDER_DATE;
+export const INIT_DURATION = DURATIONS.at(-2); // Initial duration before last item in the `DURATIONS` array
+export const CUSTOM_DURATION = DURATIONS.at(-1); // Custom duration: last item in the `DURATIONS` array
