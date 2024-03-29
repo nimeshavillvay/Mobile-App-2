@@ -197,7 +197,7 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
       />
 
       {/* Mobile View for Items List */}
-      <PurchasedItemsListForMobile />
+      <PurchasedItemsListForMobile items={combinedPurchasedItems} />
 
       {/* Desktop View for Items List */}
       <Table className="hidden md:block">

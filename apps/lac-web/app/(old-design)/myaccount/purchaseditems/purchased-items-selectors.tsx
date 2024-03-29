@@ -86,7 +86,7 @@ const PurchasedItemsSelectors = ({
 
   return (
     <>
-      <div className="col-span-4 hidden flex-col items-center justify-between bg-brand-gray-100 px-4 py-5 sm:flex-row md:flex">
+      <div className="md:flex-warp col-span-4 hidden flex-col items-center justify-between bg-brand-gray-100 px-4 py-5 md:flex lg:flex-row">
         <div className="min-w-[160px] text-brand-gray-500">
           <Label htmlFor={durationId} className="text-nowrap font-bold">
             Duration
