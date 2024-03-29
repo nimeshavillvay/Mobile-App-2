@@ -21,9 +21,8 @@ import {
   useId,
   useState,
 } from "react";
-import { DURATIONS } from "./constants";
+import { DURATIONS, QUERY_KEYS } from "./constants";
 import FiltersForMobileDialog from "./filters-for-mobile-dialog";
-import { Option } from "./types";
 
 type PurchasedItemsSelectorProps = {
   fromDate: Date;
@@ -31,13 +30,18 @@ type PurchasedItemsSelectorProps = {
   toDate: Date;
   setToDate: Dispatch<SetStateAction<Date>>;
   onSearch: MouseEventHandler<HTMLButtonElement>;
-  onReset: MouseEventHandler<HTMLButtonElement>;
+  onReset: Dispatch<SetStateAction<void>>;
   isLoading: boolean;
   page: number;
   perPage: number;
   totalItems: number;
   searchParams: ReadonlyURLSearchParams;
-  onChangeSortingParams: (orderBy: string, orderType: string) => void;
+  changeSearchParams: (
+    params: {
+      key: (typeof QUERY_KEYS)[keyof typeof QUERY_KEYS];
+      value: string;
+    }[],
+  ) => void;
 };
 
 const PurchasedItemsSelectors = ({
@@ -52,12 +56,12 @@ const PurchasedItemsSelectors = ({
   perPage,
   totalItems,
   searchParams,
-  onChangeSortingParams,
+  changeSearchParams,
 }: PurchasedItemsSelectorProps) => {
-  const initialDuration = DURATIONS[DURATIONS.length - 2]; // Initial duration before last item in the `DURATIONS` array
-  const customDuration = DURATIONS[DURATIONS.length - 1]; // Custom duration: last item in the `DURATIONS` array
-  const [duration, setDuration] = useState<Option>(initialDuration as Option);
-  const [open, setOpen] = useState<boolean>(false);
+  const initialDuration = DURATIONS.at(-2); // Initial duration before last item in the `DURATIONS` array
+  const customDuration = DURATIONS.at(-1); // Custom duration: last item in the `DURATIONS` array
+  const [duration, setDuration] = useState(initialDuration);
+  const [open, setOpen] = useState(false);
 
   const id = useId();
   const durationId = `duration-${id}`;
@@ -65,10 +69,11 @@ const PurchasedItemsSelectors = ({
   const formattedToDate = dayjs(toDate).format("YYYY-MM-DD");
 
   const handleDurationChange = (value: string) => {
-    setDuration(
-      DURATIONS.find((duration) => duration.value === value) ??
-        (initialDuration as Option),
-    );
+    const duration = DURATIONS.find((duration) => duration.value === value);
+
+    if (duration) {
+      setDuration(duration);
+    }
 
     if (value == "0") return;
 
@@ -88,13 +93,13 @@ const PurchasedItemsSelectors = ({
           </Label>
 
           <Select
-            value={duration.value}
+            value={duration?.value}
             onValueChange={function (value) {
               handleDurationChange(value);
             }}
           >
             <SelectTrigger id={durationId} className="h-8 py-0">
-              <SelectValue>{duration.label}</SelectValue>
+              <SelectValue>{duration?.label}</SelectValue>
             </SelectTrigger>
 
             <SelectContent>
@@ -112,7 +117,7 @@ const PurchasedItemsSelectors = ({
             date={fromDate}
             onSelectDate={(date) => {
               setFromDate(date);
-              setDuration(customDuration as Option);
+              setDuration(customDuration);
             }}
           />
 
@@ -122,7 +127,7 @@ const PurchasedItemsSelectors = ({
             date={toDate}
             onSelectDate={(date) => {
               setToDate(date);
-              setDuration(customDuration as Option);
+              setDuration(customDuration);
             }}
           />
         </div>
@@ -131,17 +136,25 @@ const PurchasedItemsSelectors = ({
           <Button className="min-w-24" onClick={onSearch}>
             Search
           </Button>
-          <Button className="min-w-24 bg-brand-secondary" onClick={onReset}>
+          <Button
+            className="min-w-24 bg-brand-secondary"
+            onClick={() => {
+              setDuration(initialDuration);
+              onReset();
+            }}
+          >
             Reset
           </Button>
         </div>
       </div>
       <>
-        <div className="py-3 sm:flex-row">
+        <div className="py-3 sm:hidden sm:flex-row">
           <div className="mb-3 flex justify-between">
             <div
               className="items-left flex items-center text-base font-bold uppercase tracking-wide"
-              onClick={() => setOpen(true)}
+              onClick={function () {
+                setOpen(true);
+              }}
             >
               Sort & Filter
               <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200" />
@@ -178,8 +191,7 @@ const PurchasedItemsSelectors = ({
           duration={duration}
           setDuration={setDuration}
           handleDurationChange={handleDurationChange}
-          onChangeSortingParams={onChangeSortingParams}
-          onSearch={onSearch}
+          changeSearchParams={changeSearchParams}
           onReset={onReset}
         />
       </>

@@ -15,10 +15,10 @@ export const SORTING_TYPES = [
   { label: "Descending", value: "desc" },
 ] as const;
 
-export const ORDER_BY_FIELDS = {
+export const SORTING_BY_FIELDS = {
   SKU: "sku",
   ORDER_DATE: "orderDate",
-  TOTAL_ITEM: "totalItem",
+  TOTAL_ITEMS: "totalItem",
 } as const;
 
 export const QUERY_KEYS = {
@@ -31,3 +31,45 @@ export const QUERY_KEYS = {
 } as const;
 
 export const DEFAULT_SORT = "Sort...";
+
+export const SORTING_FILTERS_FOR_MOBILE = [
+  {
+    title: "Item # / MFR Part #",
+    options: [
+      {
+        title: "Item# / MFR Part# Ascending",
+        type: `${SORTING_BY_FIELDS.SKU}-asc`,
+      },
+      {
+        title: "Item# / MFR Part# Descending",
+        type: `${SORTING_BY_FIELDS.SKU}-desc`,
+      },
+    ],
+  },
+  {
+    title: "Order Date",
+    options: [
+      {
+        title: "Order Date Ascending",
+        type: `${SORTING_BY_FIELDS.ORDER_DATE}-asc`,
+      },
+      {
+        title: "Order Date Descending",
+        type: `${SORTING_BY_FIELDS.ORDER_DATE}-desc`,
+      },
+    ],
+  },
+  {
+    title: "Order Count",
+    options: [
+      {
+        title: "Order Count Ascending",
+        type: `${SORTING_BY_FIELDS.TOTAL_ITEMS}-asc`,
+      },
+      {
+        title: "Order Count Descending",
+        type: `${SORTING_BY_FIELDS.TOTAL_ITEMS}-desc`,
+      },
+    ],
+  },
+] as const;

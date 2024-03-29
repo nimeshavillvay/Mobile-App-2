@@ -1,6 +1,5 @@
 "use client";
 
-import Pagination from "@/(old-design)/_components/pagination";
 import { updateSearchParams } from "@/(old-design)/_utils/client-helpers";
 import {
   Select,
@@ -21,48 +20,50 @@ import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import {
   DEFAULT_SORT,
-  ORDER_BY_FIELDS,
-  PAGE_SIZES,
   QUERY_KEYS,
+  SORTING_BY_FIELDS,
   SORTING_TYPES,
 } from "./constants";
 import PurchasedItemRow from "./purchased-item-row";
 import PurchasedItemsSelectors from "./purchased-items-selectors";
+import TotalCountAndPagination from "./total-count-and-pagination";
 import { CombinedPurchasedItem, OrderHistoryItem } from "./types";
 import useGetItemInfo from "./use-get-items-info.hook";
 import useSuspensePurchasedItemsList from "./use-suspense-purchased-items-list.hook";
 
 const PurchasedItemsList = ({ token }: { token: string }) => {
+  const INIT_SORTING_TYPE = "desc";
+  const INIT_PAGE_NUMBER = "1";
+  const INIT_PER_PAGE = "1";
+  const INIT_FROM_DATE = dayjs().subtract(1, "year").format("YYYY-MM-DD");
+  const INIT_TO_DATE = dayjs().format("YYYY-MM-DD");
+  const INIT_SORTING_FIELD = SORTING_BY_FIELDS.ORDER_DATE;
+
   const searchParams = useSearchParams();
-  const orderField = searchParams.get("orderBy") ?? ORDER_BY_FIELDS.ORDER_DATE;
-  const orderType = searchParams.get("orderType") ?? "desc";
-  const page = Number(searchParams.get("page") ?? "1");
-  const perPage = Number(searchParams.get("perPage") ?? "10");
+  const orderField = searchParams.get("orderBy") ?? INIT_SORTING_FIELD;
+  const orderType = searchParams.get("orderType") ?? INIT_SORTING_TYPE;
+  const page = Number(searchParams.get("page") ?? INIT_PAGE_NUMBER);
+  const perPage = Number(searchParams.get("perPage") ?? INIT_PER_PAGE);
 
   let isLoading = true;
-  let totalItems: number = 0;
-
-  const initialFromDate = dayjs().subtract(1, "year").format("YYYY-MM-DD");
-  const initialToDate = dayjs().format("YYYY-MM-DD");
+  let totalItems = 0;
 
   const selectedSorting = SORTING_TYPES.find(
     (sortingType) => sortingType.value === orderType,
   );
 
-  const [fromDate, setFromDate] = useState<Date>(new Date(initialFromDate));
-  const [toDate, setToDate] = useState<Date>(new Date());
+  const [fromDate, setFromDate] = useState(new Date(INIT_FROM_DATE));
+  const [toDate, setToDate] = useState(new Date());
 
   const purchasedItemsList = useSuspensePurchasedItemsList(
     token,
-    searchParams.get("from") ?? initialFromDate,
-    searchParams.get("to") ?? initialToDate,
+    searchParams.get("from") ?? INIT_FROM_DATE,
+    searchParams.get("to") ?? INIT_TO_DATE,
     Number(searchParams.get("page") ?? page) - 1,
     perPage,
     orderField,
     orderType,
   );
-
-  console.log("purchasedItemsList", purchasedItemsList.data);
 
   const skuIds: string[] = [];
   if (purchasedItemsList.data) {
@@ -95,6 +96,9 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
   };
 
   const onClickReset = () => {
+    setFromDate(new Date(INIT_FROM_DATE));
+    setToDate(new Date(INIT_TO_DATE));
+
     const params = new URLSearchParams();
     updateSearchParams(params);
   };
@@ -163,77 +167,33 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
     });
   }
 
-  console.log("itemInfo > ", getItemInfo.data);
-  console.log("merged > ", combinedPurchasedItems);
-
   return (
     <>
       {!isLoading && (
-        <div>
-          <PurchasedItemsSelectors
-            fromDate={fromDate}
-            setFromDate={setFromDate}
-            toDate={toDate}
-            setToDate={setToDate}
-            onSearch={onClickSearch}
-            onReset={onClickReset}
-            isLoading={isLoading}
-            searchParams={searchParams}
-            page={page}
-            perPage={perPage}
-            totalItems={totalItems}
-            onChangeSortingParams={onChangeSortingParams}
-          />
-        </div>
+        <PurchasedItemsSelectors
+          fromDate={fromDate}
+          setFromDate={setFromDate}
+          toDate={toDate}
+          setToDate={setToDate}
+          onSearch={onClickSearch}
+          onReset={onClickReset}
+          isLoading={isLoading}
+          searchParams={searchParams}
+          page={page}
+          perPage={perPage}
+          totalItems={totalItems}
+          changeSearchParams={changeSearchParams}
+        />
       )}
 
-      <div className="my-6 hidden flex-row justify-between text-brand-gray-400 md:flex">
-        {!isLoading && (
-          <div>
-            {(page - 1) * perPage + 1} - {Math.min(page * perPage, totalItems)}{" "}
-            of {totalItems}
-          </div>
-        )}
-
-        <div className="flex items-center">
-          <div className="mr-2">Per Page:</div>
-
-          <Select
-            value={perPage.toString()}
-            onValueChange={(value) => {
-              changeSearchParams([
-                {
-                  key: QUERY_KEYS.PAGE,
-                  value: "1",
-                },
-                {
-                  key: QUERY_KEYS.PER_PAGE,
-                  value: value,
-                },
-              ]);
-            }}
-          >
-            <SelectTrigger className="h-8 w-[70px] py-0">
-              <SelectValue>{perPage.toString()}</SelectValue>
-            </SelectTrigger>
-
-            <SelectContent>
-              {PAGE_SIZES.map((size) => (
-                <SelectItem key={size} value={size}>
-                  {size}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-
-        <Pagination
-          pageSize={perPage}
-          totalSize={totalItems}
-          currentPage={page}
-          searchParams={searchParams}
-        />
-      </div>
+      <TotalCountAndPagination
+        isLoading={isLoading}
+        searchParams={searchParams}
+        page={page}
+        perPage={perPage}
+        totalItems={totalItems}
+        changeSearchParams={changeSearchParams}
+      />
 
       <Table>
         <TableHeader>
@@ -241,14 +201,14 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
             <TableHead colSpan={2} className="space-y-2 py-3">
               <div>Item # / MFR Part #</div>
               <Select
-                value={ORDER_BY_FIELDS.SKU}
+                value={SORTING_BY_FIELDS.SKU}
                 onValueChange={(value) => {
-                  onChangeSortingParams(ORDER_BY_FIELDS.SKU, value);
+                  onChangeSortingParams(SORTING_BY_FIELDS.SKU, value);
                 }}
               >
                 <SelectTrigger className="h-8 w-[120px] py-0">
                   <SelectValue>
-                    {orderField == ORDER_BY_FIELDS.SKU
+                    {orderField == SORTING_BY_FIELDS.SKU
                       ? selectedSorting?.label
                       : DEFAULT_SORT}
                   </SelectValue>
@@ -266,14 +226,14 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
             <TableHead className="space-y-2 py-3">
               <div>Order Date</div>
               <Select
-                value={ORDER_BY_FIELDS.ORDER_DATE}
+                value={SORTING_BY_FIELDS.ORDER_DATE}
                 onValueChange={(value) => {
-                  onChangeSortingParams(ORDER_BY_FIELDS.ORDER_DATE, value);
+                  onChangeSortingParams(SORTING_BY_FIELDS.ORDER_DATE, value);
                 }}
               >
                 <SelectTrigger className="h-8 w-[120px] py-0">
                   <SelectValue>
-                    {orderField == ORDER_BY_FIELDS.ORDER_DATE
+                    {orderField == SORTING_BY_FIELDS.ORDER_DATE
                       ? selectedSorting?.label
                       : DEFAULT_SORT}
                   </SelectValue>
@@ -292,14 +252,14 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
             <TableHead className="space-y-2 py-3">
               <div>Order Count</div>
               <Select
-                value={ORDER_BY_FIELDS.TOTAL_ITEM}
+                value={SORTING_BY_FIELDS.TOTAL_ITEMS}
                 onValueChange={(value) => {
-                  onChangeSortingParams(ORDER_BY_FIELDS.TOTAL_ITEM, value);
+                  onChangeSortingParams(SORTING_BY_FIELDS.TOTAL_ITEMS, value);
                 }}
               >
                 <SelectTrigger className="h-8 w-[120px] py-0">
                   <SelectValue>
-                    {orderField == ORDER_BY_FIELDS.TOTAL_ITEM
+                    {orderField == SORTING_BY_FIELDS.TOTAL_ITEMS
                       ? selectedSorting?.label
                       : DEFAULT_SORT}
                   </SelectValue>
@@ -333,6 +293,15 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
             ))}
         </TableBody>
       </Table>
+
+      <TotalCountAndPagination
+        isLoading={isLoading}
+        searchParams={searchParams}
+        page={page}
+        perPage={perPage}
+        totalItems={totalItems}
+        changeSearchParams={changeSearchParams}
+      />
     </>
   );
 };
