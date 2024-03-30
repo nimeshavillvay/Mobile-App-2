@@ -29,6 +29,7 @@ import {
   SORTING_TYPES,
 } from "./constants";
 import PurchasedItemRow from "./purchased-item-row";
+import PurchasedItemsListForMobile from "./purchased-items-list-for-mobile";
 import PurchasedItemsSelectors from "./purchased-items-selectors";
 import TotalCountAndPagination from "./total-count-and-pagination";
 import { CombinedPurchasedItem, OrderHistoryItem } from "./types";
@@ -138,104 +139,112 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
 
       <TotalCountAndPagination isLoading={isLoading} totalItems={totalItems} />
 
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead colSpan={2} className="space-y-2 py-3">
-              <div>Item # / MFR Part #</div>
-              <Select
-                value={SORTING_BY_FIELDS.SKU}
-                onValueChange={(value) => {
-                  onChangeSortingParams(SORTING_BY_FIELDS.SKU, value);
-                }}
-              >
-                <SelectTrigger className="h-8 w-[120px] py-0">
-                  <SelectValue>
-                    {orderField == SORTING_BY_FIELDS.SKU
-                      ? selectedSorting?.label
-                      : DEFAULT_SORT}
-                  </SelectValue>
-                </SelectTrigger>
+      {/* Mobile View for Items List */}
+      <PurchasedItemsListForMobile items={combinedPurchasedItems} />
 
-                <SelectContent>
-                  {SORTING_TYPES.map((type) => (
-                    <SelectItem key={type.value} value={type.value}>
-                      {type.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </TableHead>
-            <TableHead className="space-y-2 py-3">
-              <div>Order Date</div>
-              <Select
-                value={SORTING_BY_FIELDS.ORDER_DATE}
-                onValueChange={(value) => {
-                  onChangeSortingParams(SORTING_BY_FIELDS.ORDER_DATE, value);
-                }}
-              >
-                <SelectTrigger className="h-8 w-[120px] py-0">
-                  <SelectValue>
-                    {orderField == SORTING_BY_FIELDS.ORDER_DATE
-                      ? selectedSorting?.label
-                      : DEFAULT_SORT}
-                  </SelectValue>
-                </SelectTrigger>
+      {/* Desktop View for Items List */}
+      <div className="hidden md:block">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead colSpan={2} className="space-y-2 py-3">
+                <div>Item # / MFR Part #</div>
+                <Select
+                  value={SORTING_BY_FIELDS.SKU}
+                  onValueChange={(value) => {
+                    onChangeSortingParams(SORTING_BY_FIELDS.SKU, value);
+                  }}
+                >
+                  <SelectTrigger className="h-8 w-[120px] py-0">
+                    <SelectValue>
+                      {orderField == SORTING_BY_FIELDS.SKU
+                        ? selectedSorting?.label
+                        : DEFAULT_SORT}
+                    </SelectValue>
+                  </SelectTrigger>
 
-                <SelectContent>
-                  {SORTING_TYPES.map((type) => (
-                    <SelectItem key={type.value} value={type.value}>
-                      {type.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </TableHead>
+                  <SelectContent>
+                    {SORTING_TYPES.map((type) => (
+                      <SelectItem key={type.value} value={type.value}>
+                        {type.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </TableHead>
+              <TableHead className="space-y-2 py-3">
+                <div>Order Date</div>
+                <Select
+                  value={SORTING_BY_FIELDS.ORDER_DATE}
+                  onValueChange={(value) => {
+                    onChangeSortingParams(SORTING_BY_FIELDS.ORDER_DATE, value);
+                  }}
+                >
+                  <SelectTrigger className="h-8 w-[120px] py-0">
+                    <SelectValue>
+                      {orderField == SORTING_BY_FIELDS.ORDER_DATE
+                        ? selectedSorting?.label
+                        : DEFAULT_SORT}
+                    </SelectValue>
+                  </SelectTrigger>
 
-            <TableHead className="space-y-2 py-3">
-              <div>Order Count</div>
-              <Select
-                value={SORTING_BY_FIELDS.TOTAL_ITEMS}
-                onValueChange={(value) => {
-                  onChangeSortingParams(SORTING_BY_FIELDS.TOTAL_ITEMS, value);
-                }}
-              >
-                <SelectTrigger className="h-8 w-[120px] py-0">
-                  <SelectValue>
-                    {orderField == SORTING_BY_FIELDS.TOTAL_ITEMS
-                      ? selectedSorting?.label
-                      : DEFAULT_SORT}
-                  </SelectValue>
-                </SelectTrigger>
+                  <SelectContent>
+                    {SORTING_TYPES.map((type) => (
+                      <SelectItem key={type.value} value={type.value}>
+                        {type.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </TableHead>
 
-                <SelectContent>
-                  {SORTING_TYPES.map((type) => (
-                    <SelectItem key={type.value} value={type.value}>
-                      {type.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </TableHead>
+              <TableHead className="space-y-2 py-3">
+                <div>Order Count</div>
+                <Select
+                  value={SORTING_BY_FIELDS.TOTAL_ITEMS}
+                  onValueChange={(value) => {
+                    onChangeSortingParams(SORTING_BY_FIELDS.TOTAL_ITEMS, value);
+                  }}
+                >
+                  <SelectTrigger className="h-8 w-[120px] py-0">
+                    <SelectValue>
+                      {orderField == SORTING_BY_FIELDS.TOTAL_ITEMS
+                        ? selectedSorting?.label
+                        : DEFAULT_SORT}
+                    </SelectValue>
+                  </SelectTrigger>
 
-            <TableHead className="space-y-2 py-3 text-center">Price</TableHead>
-            <TableHead className="space-y-2 py-3">Quantity</TableHead>
-            <TableHead className="space-y-2 py-3">UOM</TableHead>
-          </TableRow>
-        </TableHeader>
+                  <SelectContent>
+                    {SORTING_TYPES.map((type) => (
+                      <SelectItem key={type.value} value={type.value}>
+                        {type.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </TableHead>
 
-        <TableBody>
-          {combinedPurchasedItems &&
-            combinedPurchasedItems.map((item, index) => (
-              <PurchasedItemRow
-                key={item.sku}
-                token={token}
-                index={index}
-                item={item}
-              />
-            ))}
-        </TableBody>
-      </Table>
+              <TableHead className="space-y-2 py-3 text-center">
+                Price
+              </TableHead>
+              <TableHead className="space-y-2 py-3">Quantity</TableHead>
+              <TableHead className="space-y-2 py-3">UOM</TableHead>
+            </TableRow>
+          </TableHeader>
+
+          <TableBody>
+            {combinedPurchasedItems &&
+              combinedPurchasedItems.map((item, index) => (
+                <PurchasedItemRow
+                  key={item.sku}
+                  token={token}
+                  index={index}
+                  item={item}
+                />
+              ))}
+          </TableBody>
+        </Table>
+      </div>
 
       <TotalCountAndPagination isLoading={isLoading} totalItems={totalItems} />
     </>
