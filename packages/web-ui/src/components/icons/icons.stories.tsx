@@ -6,6 +6,7 @@ import ChevronDown from "./chevron-down";
 import ChevronLeft from "./chevron-left";
 import ChevronRight from "./chevron-right";
 import ChevronUp from "./chevron-up";
+import Close from "./close";
 import HeartFilled from "./heart-filled";
 import HeartOutline from "./heart-outline";
 import MagnifyingGlass from "./magnifying-glass";
@@ -52,6 +53,8 @@ export const Showcase: Story = {
         <Profile />
 
         <Bell />
+
+        <Close />
 
         <ArrowRight />
 

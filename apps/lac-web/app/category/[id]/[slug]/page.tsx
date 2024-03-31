@@ -1,4 +1,5 @@
 import Banner from "@/_components/banner";
+import ProductsGrid from "@/_components/products-grid";
 import ChevronLeft from "@repo/web-ui/components/icons/chevron-left";
 import {
   Breadcrumb,
@@ -54,7 +55,7 @@ const CategoryPage = () => {
         </Button>
       </div>
 
-      <Breadcrumb className="container hidden md:block my-3">
+      <Breadcrumb className="container my-3 hidden md:block">
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink asChild>
@@ -73,8 +74,8 @@ const CategoryPage = () => {
       </Breadcrumb>
 
       <section className="container md:my-10">
-        <div className="overflow-hidden rounded-lg border border-wurth-gray-250 bg-white shadow-lg md:items-center md:flex md:flex-row-reverse md:max-h-[21rem]">
-          <div className="aspect-h-1 aspect-w-2 md:flex-1 relative">
+        <div className="overflow-hidden rounded-lg border border-wurth-gray-250 bg-white shadow-lg md:flex md:max-h-[21rem] md:flex-row-reverse md:items-center">
+          <div className="aspect-h-1 aspect-w-2 relative md:flex-1">
             <Image
               src={categoryImage}
               alt="A placeholder category"
@@ -83,12 +84,12 @@ const CategoryPage = () => {
             />
           </div>
 
-          <div className="space-y-3 md:space-y-5 p-6 md:p-10 md:flex-1">
-            <h1 className="font-title text-4xl md:text-5xl md:leading-[3.5rem] line-clamp-3 text-balance md:tracking-[-0.036rem] font-medium tracking-tight text-wurth-gray-800">
+          <div className="space-y-3 p-6 md:flex-1 md:space-y-5 md:p-10">
+            <h1 className="line-clamp-3 text-balance font-title text-4xl font-medium tracking-tight text-wurth-gray-800 md:text-5xl md:leading-[3.5rem] md:tracking-[-0.036rem]">
               Decorative Hardware & Wood Components
             </h1>
 
-            <p className="text-base text-wurth-gray-800 md:text-lg md:line-clamp-3">
+            <p className="text-base text-wurth-gray-800 md:line-clamp-3 md:text-lg">
               Lorem ipsum dolor sit amet consectetur. Curabitur diam urna
               faucibus quisque. Pretium lectus morbi justo amet amet quisque
               ipsum elementum ut. Tincidunt pellentesque ipsum ac dignissim
@@ -98,7 +99,7 @@ const CategoryPage = () => {
         </div>
       </section>
 
-      <section className="container my-10 space-y-6 md:space-y-9 md:my-16">
+      <section className="container my-10 space-y-6 md:my-16 md:space-y-9">
         <CategoriesGrid />
 
         <Collapsible className="flex flex-col gap-6 space-y-6 md:space-y-9">
@@ -122,6 +123,8 @@ const CategoryPage = () => {
       <PopularBrands />
 
       <Banner />
+
+      <ProductsGrid />
     </>
   );
 };
