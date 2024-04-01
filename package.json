@@ -22,7 +22,7 @@
     }
   },
   "devDependencies": {
-    "@repo/prettier-config": "workspace:^",
+    "@repo/prettier-config": "workspace:*",
     "prettier": "3.2.5",
     "turbo": "1.13.0"
   },

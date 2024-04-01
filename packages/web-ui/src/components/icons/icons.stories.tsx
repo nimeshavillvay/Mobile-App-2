@@ -12,6 +12,7 @@ import HeartOutline from "./heart-outline";
 import MagnifyingGlass from "./magnifying-glass";
 import Menu from "./menu";
 import Profile from "./profile";
+import Settings from "./settings";
 import ShoppingCart from "./shopping-cart";
 
 const Icon = () => {
@@ -41,6 +42,8 @@ export const Showcase: Story = {
         <Menu />
 
         <MagnifyingGlass />
+
+        <Settings />
 
         <ShoppingCart />
 

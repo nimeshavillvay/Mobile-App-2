@@ -10,7 +10,7 @@
     "web": "expo start --web"
   },
   "dependencies": {
-    "@repo/shared-logic": "workspace:^",
+    "@repo/shared-logic": "workspace:*",
     "@tanstack/react-query": "5.27.5",
     "expo": "50.0.11",
     "expo-status-bar": "1.11.1",
@@ -20,8 +20,8 @@
   },
   "devDependencies": {
     "@babel/core": "7.24.0",
-    "@repo/eslint-config": "workspace:^",
-    "@repo/prettier-config": "workspace:^",
+    "@repo/eslint-config": "workspace:*",
+    "@repo/prettier-config": "workspace:*",
     "@total-typescript/ts-reset": "0.5.1",
     "@types/react": "18.2.65",
     "eslint": "8.57.0",
