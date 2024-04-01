@@ -1,5 +1,4 @@
-import AlertInline from "@/(old-design)/_components/alert-inline";
-import useAddToFavoritesMutation from "@/(old-design)/_hooks/product/use-add-to-favorites-mutation.hook";
+import AlertInline from "@/old/_components/alert-inline";
 import ErrorBoundary from "@/old/_components/error-boundary";
 import ShippingOptions from "@/old/_components/shipping-options";
 import { Button } from "@/old/_components/ui/button";
@@ -12,6 +11,7 @@ import { Input } from "@/old/_components/ui/input";
 import { Label } from "@/old/_components/ui/label";
 import { TableCell, TableRow } from "@/old/_components/ui/table";
 import useAddToCartMutation from "@/old/_hooks/cart/use-add-to-cart-mutation.hook";
+import useAddToFavoritesMutation from "@/old/_hooks/product/use-add-to-favorites-mutation.hook";
 import { cn, getMediaUrl } from "@/old/_utils/helpers";
 import { zodResolver } from "@hookform/resolvers/zod";
 import dayjs from "dayjs";
@@ -25,6 +25,7 @@ import { MdKeyboardArrowDown } from "react-icons/md";
 import * as z from "zod";
 import ItemAttributes from "./_item-attributes/item-attributes";
 import ItemPrices from "./_item-prices/item-prices";
+import { generateItemUrl } from "./client-helpers";
 import { DATE_FORMAT } from "./constants";
 import ItemPlaceholder from "./item-placeholder.png";
 import { CombinedPurchasedItem } from "./types";
@@ -58,13 +59,6 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
   });
 
   const quantity = watch("quantity") ?? 1;
-
-  const generateItemUrl = (group_id: string, sku: string) => {
-    if (group_id && sku) {
-      return `/product-item/${group_id}/${sku}`;
-    }
-    return "#";
-  };
 
   const onSubmit = (values: Schema) => {
     addToCartMutation.mutate(
@@ -104,6 +98,11 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
     );
   };
 
+  /**
+   * TODO: Should move to a common function
+   * @param item
+   * @returns true | false
+   */
   const isItemError = (item: CombinedPurchasedItem) => {
     return (
       !item ||
@@ -203,7 +202,7 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
               <ErrorBoundary
                 fallback={
                   <div className="p-4 text-center text-brand-primary">
-                    Failed to Prices!!!
+                    Failed to Load Prices!!!
                   </div>
                 }
               >
@@ -219,7 +218,10 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
                     sku={item.sku}
                     quantity={1}
                     uom={item.txt_uom}
-                    salePrice={item.override_price ?? 0}
+                    salePrice={
+                      item.override_price ? Number(item.override_price) : 0
+                    }
+                    showUnitPrice={true}
                   />
                 </Suspense>
               </ErrorBoundary>
@@ -331,7 +333,12 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
               >
                 <span>Change Shipping Options</span>
 
-                <MdKeyboardArrowDown className="text-xl leading-none transition-transform duration-200 ease-out group-data-[state=open]:rotate-180" />
+                <MdKeyboardArrowDown
+                  className={cn(
+                    "text-xl leading-none transition-transform duration-200 ease-out",
+                    showShippingOptions ? "rotate-180" : "",
+                  )}
+                />
               </Button>
 
               <form onSubmit={handleSubmit(onSubmit)}>
@@ -433,6 +440,4 @@ const ErrorAlert = ({ item }: { item: CombinedPurchasedItem }) => {
       />
     );
   }
-
-  return null;
 };

@@ -49,7 +49,7 @@ export type OrderHistoryItem = {
   txt_web_direct: string;
   txt_wurth_lac_item: string;
   txt_x_pant_Mat_status: string;
-  override_price: string;
+  override_price?: string;
 };
 
 export type OrderHistoryItems = OrderHistoryItem[];

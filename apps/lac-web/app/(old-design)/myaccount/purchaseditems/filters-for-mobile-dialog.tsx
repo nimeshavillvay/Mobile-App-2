@@ -13,6 +13,7 @@ import {
   RadioGroup,
   RadioGroupItem,
 } from "@/(old-design)/_components/ui/radio-group";
+import { updateSearchParams } from "@/(old-design)/_utils/client-helpers";
 import { cn } from "@/(old-design)/_utils/helpers";
 import {
   Dialog,
@@ -21,57 +22,102 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/old/_components/ui/dialog";
-import { Dispatch, MouseEventHandler, SetStateAction, useState } from "react";
+import dayjs from "dayjs";
+import { useSearchParams } from "next/navigation";
+import { Dispatch, SetStateAction, useState } from "react";
 import { MdCheck } from "react-icons/md";
-import { DURATIONS } from "./constants";
-import { Option } from "./types";
+import { changeSearchParams } from "./client-helpers";
+import {
+  DURATIONS,
+  INIT_DURATION,
+  INIT_FROM_DATE,
+  INIT_TO_DATE,
+  QUERY_KEYS,
+  SORTING_BY_FIELDS,
+  SORTING_FILTERS_FOR_MOBILE,
+} from "./constants";
 
 const customDuration = DURATIONS[DURATIONS.length - 1]; // Custom duration: last item in the `DURATIONS` array
 
 type FiltersForMobileProps = {
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
-  fromDate: Date;
-  setFromDate: Dispatch<SetStateAction<Date>>;
-  toDate: Date;
-  setToDate: Dispatch<SetStateAction<Date>>;
-  duration: Option;
-  setDuration: Dispatch<SetStateAction<Option>>;
-  handleDurationChange: (value: string) => void;
-  onChangeSortingParams: (orderBy: string, orderType: string) => void;
-  onSearch: MouseEventHandler<HTMLButtonElement>;
-  onReset: MouseEventHandler<HTMLButtonElement>;
 };
 
-const FiltersForMobileDialog = ({
-  open,
-  setOpen,
-  fromDate,
-  setFromDate,
-  toDate,
-  setToDate,
-  duration,
-  setDuration,
-  handleDurationChange,
-  onChangeSortingParams,
-  onReset,
-}: FiltersForMobileProps) => {
-  const [activeFilter, setActiveFilter] = useState<string>("sku-desc");
+const FiltersForMobileDialog = ({ open, setOpen }: FiltersForMobileProps) => {
+  const urlSearchParams = useSearchParams();
+
+  const [fromDate, setFromDate] = useState(new Date(INIT_FROM_DATE));
+  const [toDate, setToDate] = useState(new Date());
+  const [duration, setDuration] = useState(INIT_DURATION);
+  const [activeFilter, setActiveFilter] = useState<string>(
+    `${SORTING_BY_FIELDS.SKU}-desc`,
+  );
+
+  const handleDurationChange = (value: string) => {
+    const duration = DURATIONS.find((duration) => duration.value === value);
+
+    if (duration) {
+      setDuration(duration);
+    }
+
+    if (value == "0") return;
+
+    setFromDate(
+      new Date(dayjs().subtract(Number(value), "months").format("YYYY-MM-DD")),
+    );
+
+    setToDate(new Date(dayjs().format("YYYY-MM-DD")));
+  };
+
+  function onResetFiltersMobile() {
+    setDuration(INIT_DURATION);
+    setFromDate(new Date(INIT_FROM_DATE));
+    setToDate(new Date(INIT_TO_DATE));
+
+    const params = new URLSearchParams();
+    updateSearchParams(params);
+
+    setOpen(false);
+  }
 
   const onSearchMobileFilters = () => {
-    const sortingFilterData = activeFilter.split("-");
+    const [orderBy = null, orderType = null] = activeFilter.split("-");
 
-    onChangeSortingParams(
-      sortingFilterData[0] as string,
-      sortingFilterData[1] as string,
+    const searchParams = [];
+
+    if (orderBy && orderType) {
+      searchParams.push(
+        {
+          key: QUERY_KEYS.ORDER_BY,
+          value: orderBy,
+        },
+        {
+          key: QUERY_KEYS.ORDER_TYPE,
+          value: orderType,
+        },
+      );
+    }
+
+    searchParams.push(
+      {
+        key: QUERY_KEYS.FROM_DATE,
+        value: dayjs(fromDate).format("YYYY-MM-DD"),
+      },
+      {
+        key: QUERY_KEYS.TO_DATE,
+        value: dayjs(toDate).format("YYYY-MM-DD"),
+      },
     );
+
+    changeSearchParams(urlSearchParams, searchParams);
 
     setOpen(false);
   };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="old-design-text-base max-w-[500px] md:hidden">
+      <DialogContent className="old-design-text-base max-h-[80vh] max-w-[500px] overflow-scroll">
         <DialogHeader>
           <DialogTitle className="text-left">Sort & Filter</DialogTitle>
 
@@ -81,18 +127,24 @@ const FiltersForMobileDialog = ({
         </DialogHeader>
 
         <div>
-          <Accordion type="single" collapsible className="w-full ">
+          <Accordion
+            type="single"
+            collapsible
+            className="w-full"
+            defaultValue="item-1"
+          >
             <AccordionItem value="item-1">
               <AccordionTrigger className="bg-gray-100 px-5 py-3 text-xl text-[#000] hover:no-underline">
                 Duration
               </AccordionTrigger>
+
               <AccordionContent className="grid gap-y-5 px-5 py-3">
                 <div className="mt-4 flex flex-col items-center gap-2 xs:flex-row">
                   <DatePicker
                     date={fromDate}
                     onSelectDate={(date) => {
                       setFromDate(date);
-                      setDuration(customDuration as Option);
+                      setDuration(customDuration);
                     }}
                   />
 
@@ -102,18 +154,19 @@ const FiltersForMobileDialog = ({
                     date={toDate}
                     onSelectDate={(date) => {
                       setToDate(date);
-                      setDuration(customDuration as Option);
+                      setDuration(customDuration);
                     }}
                   />
                 </div>
+
                 <div>
                   <RadioGroup
-                    value={duration.value}
+                    value={duration?.value}
                     defaultValue="12"
                     onValueChange={(value) => {
                       handleDurationChange(value);
                     }}
-                    className="gap-auto grid grid-cols-2 justify-between sm:grid-cols-4"
+                    className="gap-auto grid grid-cols-2 justify-between md:grid-cols-4"
                   >
                     {DURATIONS.map(
                       (durationObj) =>
@@ -122,7 +175,7 @@ const FiltersForMobileDialog = ({
                             key={durationObj.label}
                             className={cn(
                               "flex items-center space-x-2 rounded border px-2 py-2",
-                              duration.value == durationObj.value
+                              duration?.value == durationObj.value
                                 ? "border-brand-secondary bg-brand-secondary bg-opacity-20 text-brand-secondary"
                                 : "bg-gray-100",
                             )}
@@ -145,82 +198,44 @@ const FiltersForMobileDialog = ({
                 </div>
               </AccordionContent>
             </AccordionItem>
+
             <AccordionItem value="item-2">
               <AccordionTrigger className="bg-gray-100 px-5 py-3 text-xl text-[#000] hover:no-underline">
                 Sort
               </AccordionTrigger>
-              <AccordionContent className="grid gap-y-5 py-3">
-                <ul>
-                  <li>
-                    <div className="bg-gray-200 px-5 py-3 text-base font-bold ">
-                      Item # / MFR Part #
+
+              <AccordionContent className="grid">
+                {SORTING_FILTERS_FOR_MOBILE.map((sortingFilter) => (
+                  <div key={sortingFilter.title}>
+                    <MobileFilterSortItem
+                      key={sortingFilter.title}
+                      title={sortingFilter.title}
+                    />
+                    <div className="bg-white font-bold">
+                      {sortingFilter.options.map((sortingType) => (
+                        <MobileFilterSortItemOption
+                          key={sortingType.type}
+                          title={sortingType.title}
+                          activeFilter={activeFilter}
+                          setActiveFilter={setActiveFilter}
+                          sortingType={sortingType.type}
+                        />
+                      ))}
                     </div>
-                    <ul className="bg-white text-base font-bold">
-                      <li
-                        className={cn(
-                          "flex items-center justify-between py-4 pl-8 pr-5",
-                          activeFilter == "sku-asc"
-                            ? "bg-brand-secondary bg-opacity-20 text-brand-secondary"
-                            : "",
-                        )}
-                        onClick={() => {
-                          setActiveFilter("sku-asc");
-                        }}
-                      >
-                        Item # / MFR Part # Ascending
-                        <MdCheck
-                          className={cn(
-                            "text-3xl leading-none text-brand-secondary",
-                            activeFilter == "sku-asc" ? "block" : "hidden",
-                          )}
-                        />
-                      </li>
-                      <li
-                        className={cn(
-                          "flex items-center justify-between py-4 pl-8 pr-5",
-                          activeFilter == "sku-desc"
-                            ? "bg-brand-secondary bg-opacity-20 text-brand-secondary"
-                            : "",
-                        )}
-                        onClick={() => {
-                          setActiveFilter("sku-desc");
-                        }}
-                      >
-                        Item # / MFR Part # Descending
-                        <MdCheck
-                          className={cn(
-                            "text-3xl leading-none text-brand-secondary",
-                            activeFilter == "sku-desc" ? "block" : "hidden",
-                          )}
-                        />
-                      </li>
-                    </ul>
-                  </li>
-                  <li>
-                    Order Date
-                    <ul>
-                      <li>Order Date Ascending</li>
-                      <li>Order Date Descending</li>
-                    </ul>
-                  </li>
-                  <li>
-                    Order Count
-                    <ul>
-                      <li>Order Count Ascending</li>
-                      <li>Order Count Descending</li>
-                    </ul>
-                  </li>
-                </ul>
+                  </div>
+                ))}
               </AccordionContent>
             </AccordionItem>
           </Accordion>
+
           <div className="grid grid-cols-2 gap-3 p-5">
             <Button
               className="min-w-24 rounded-sm border border-brand-primary bg-transparent p-6 font-bold text-brand-primary"
-              onClick={onReset}
+              onClick={onResetFiltersMobile}
             >
               Reset
             </Button>
+
             <Button
               className="min-w-24 p-6"
               onClick={() => onSearchMobileFilters()}
@@ -235,3 +250,47 @@ const FiltersForMobileDialog = ({
 };
 
 export default FiltersForMobileDialog;
+
+const MobileFilterSortItem = ({ title }: { title: string }) => {
+  return (
+    <div className="bg-gray-200 px-5 py-3 text-base font-bold ">{title}</div>
+  );
+};
+
+const MobileFilterSortItemOption = ({
+  title,
+  sortingType,
+  activeFilter,
+  setActiveFilter,
+}: {
+  title: string;
+  sortingType: string;
+  activeFilter: string;
+  setActiveFilter: Dispatch<SetStateAction<string>>;
+}) => {
+  return (
+    <div
+      className={cn(
+        "py-2 pl-8 pr-2",
+        activeFilter == sortingType
+          ? "bg-brand-secondary bg-opacity-20 text-brand-secondary"
+          : "",
+      )}
+    >
+      <button
+        className="flex w-full items-center justify-between text-sm"
+        onClick={() => {
+          setActiveFilter(sortingType);
+        }}
+      >
+        {title}
+        <MdCheck
+          className={cn(
+            "text-3xl leading-none text-brand-secondary",
+            activeFilter == sortingType ? "block" : "hidden",
+          )}
+        />
+      </button>
+    </div>
+  );
+};

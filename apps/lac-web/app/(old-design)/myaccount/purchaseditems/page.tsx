@@ -17,14 +17,16 @@ const PurchasedItemsPage = () => {
 
   return (
     <>
-      <h2 className="relative font-wurth text-xl font-medium text-brand-primary">
-        My Purchased Items
-      </h2>
+      <div className="px-4 pt-4 md:px-0 md:pt-0">
+        <h2 className="relative font-wurth text-xl font-medium text-brand-primary">
+          My Purchased Items
+        </h2>
 
-      <Separator
-        orientation="horizontal"
-        className="mb-4 h-px flex-1 bg-brand-primary"
-      />
+        <Separator
+          orientation="horizontal"
+          className="mb-4 h-px flex-1 bg-brand-primary"
+        />
+      </div>
 
       <PurchasedItemsList token={accountTokenCookie?.value} />
     </>
