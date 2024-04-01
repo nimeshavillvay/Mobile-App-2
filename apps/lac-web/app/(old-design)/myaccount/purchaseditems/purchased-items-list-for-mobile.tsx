@@ -12,10 +12,12 @@ import { CombinedPurchasedItem } from "./types";
 
 type PurchasedItemsListForMobileProps = {
   items: CombinedPurchasedItem[];
+  token: string;
 };
 
 const PurchasedItemsListForMobile = ({
   items,
+  token,
 }: PurchasedItemsListForMobileProps) => {
   const [selectedItem, setSelectedItem] = useState<CombinedPurchasedItem>();
   const [showDetailedView, setShowDetailedView] = useState(false);
@@ -41,6 +43,7 @@ const PurchasedItemsListForMobile = ({
           open={showDetailedView}
           onOpenChange={setShowDetailedView}
           item={selectedItem}
+          token={token}
         />
       )}
     </>

@@ -1,8 +1,15 @@
+import ErrorBoundary from "@/old/_components/error-boundary";
 import AddToCartIcon from "@/old/_components/icons/add-to-cart";
 import AddToFavoritesIcon from "@/old/_components/icons/add-to-favorites";
 import FavoriteIcon from "@/old/_components/icons/favorite";
 import Separator from "@/old/_components/separator";
+import ShippingOptions from "@/old/_components/shipping-options";
 import { Button } from "@/old/_components/ui/button";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/old/_components/ui/collapsible";
 import { Dialog, DialogContent } from "@/old/_components/ui/dialog";
 import { Input } from "@/old/_components/ui/input";
 import { Label } from "@/old/_components/ui/label";
@@ -14,9 +21,18 @@ import dayjs from "dayjs";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useId, type ComponentProps } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  Suspense,
+  useEffect,
+  useId,
+  useState,
+} from "react";
 import { useForm } from "react-hook-form";
+import { MdKeyboardArrowDown, MdKeyboardArrowRight } from "react-icons/md";
 import * as z from "zod";
+import ItemPrices from "./_item-prices/item-prices";
 import { generateItemUrl } from "./client-helpers";
 import { DATE_FORMAT } from "./constants";
 import ItemPlaceholder from "./item-placeholder.png";
@@ -30,15 +46,19 @@ type Schema = z.infer<typeof schema>;
 
 type ActionConfirmationDialogProps = {
   open: boolean;
-  onOpenChange: ComponentProps<typeof Dialog>["onOpenChange"];
+  onOpenChange: Dispatch<SetStateAction<boolean>>;
   item: CombinedPurchasedItem;
+  token: string;
 };
 
 const PurchasedItemDetailedViewDialog = ({
   open,
   onOpenChange,
   item,
+  token,
 }: ActionConfirmationDialogProps) => {
+  const [showShippingOptions, setShowShippingOptions] = useState(false);
+  const [showPriceBreakdown, setShowPriceBreakdown] = useState(false);
   const id = useId();
   const router = useRouter();
   const quantityId = `quantity-${id}`;
@@ -83,10 +103,26 @@ const PurchasedItemDetailedViewDialog = ({
   };
 
   const isItemNotAdded = !item.txt_wurth_lac_item;
+  const isValidQuantity = quantity && quantity >= 1;
+
+  useEffect(() => {
+    if (!isValidQuantity) {
+      return setShowShippingOptions(false);
+    }
+  }, [quantity, isValidQuantity]);
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bottom-0 top-auto max-w-[490px] translate-y-[0%] gap-0 py-8 md:bottom-auto md:top-[50%] md:translate-y-[-50%]">
+    <Dialog
+      open={open}
+      onOpenChange={(open) => {
+        if (!open) {
+          setShowPriceBreakdown(false);
+          setShowShippingOptions(false);
+        }
+        onOpenChange(open);
+      }}
+    >
+      <DialogContent className="bottom-0 top-auto max-w-[768px] translate-y-[0%] gap-0 py-8 md:bottom-auto md:top-[50%] md:translate-y-[-50%]">
         <div className="flex flex-col gap-4 px-6 text-brand-gray-500">
           <div className="flex flex-row gap-4">
             <Link
@@ -151,53 +187,146 @@ const PurchasedItemDetailedViewDialog = ({
           className="h-px flex-1 bg-brand-gray-200"
         />
 
-        <div className="flex flex-row gap-2 px-6 py-4 text-brand-gray-500">
-          <div className="flex-1">
-            <div>
-              <span className="font-bold">$95.06</span>
-              <span className="text-sm"> / Each</span>
+        <div className="max-h-[300px] overflow-y-scroll">
+          <div className="flex flex-row gap-2 px-6 py-4 text-brand-gray-500">
+            <div className="flex-1">
+              {!isItemNotAdded && (
+                <>
+                  <ErrorBoundary
+                    fallback={
+                      <div className="p-4 text-center text-brand-primary">
+                        Failed to Load Price!!!
+                      </div>
+                    }
+                  >
+                    <Suspense
+                      fallback={
+                        <div className="p-4 text-center text-brand-gray-400">
+                          Price Loading...
+                        </div>
+                      }
+                    >
+                      <ItemPrices
+                        token={token}
+                        sku={item.sku}
+                        quantity={1}
+                        uom={item.txt_uom}
+                        salePrice={
+                          item.override_price ? Number(item.override_price) : 0
+                        }
+                        unitPriceOnly
+                      />
+                    </Suspense>
+                  </ErrorBoundary>
+
+                  <div
+                    className="flex h-10 items-center justify-between rounded-sm border border-brand-gray-300 px-2"
+                    onClick={() => setShowPriceBreakdown(!showPriceBreakdown)}
+                  >
+                    <div>Price Breakdown</div>
+                    <MdKeyboardArrowRight className="text-2xl leading-none" />
+                  </div>
+                </>
+              )}
             </div>
 
-            <div>
-              <div className="flex h-10 items-center rounded-sm border border-brand-gray-300 px-2">
+            <div className="flex-1 self-end">
+              <div className="mb-1 text-sm">Min:1, Multiple:1</div>
+              <div className="flex">
+                <Label htmlFor={quantityId} className="sr-only">
+                  Quantity
+                </Label>
+
+                <Input
+                  id={quantityId}
+                  autoFocus={false}
+                  type="number"
+                  disabled={isItemNotAdded}
+                  className="h-10 rounded-r-none px-2 text-base"
+                  placeholder="Qty"
+                  {...register("quantity", {
+                    valueAsNumber: true,
+                  })}
+                />
+
+                <div className="flex h-10 items-center rounded-r-sm border border-s-0 border-brand-gray-400 px-2">
+                  Each
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <Collapsible
+            open={showShippingOptions}
+            onOpenChange={setShowShippingOptions}
+            disabled={!isValidQuantity}
+          >
+            <CollapsibleTrigger
+              className={cn(
+                "group flex w-full flex-row items-center justify-between bg-brand-gray-100 px-6 py-4",
+                !isValidQuantity ? "pointer-events-none opacity-50" : "",
+              )}
+            >
+              <h4 className="font-wurth font-extrabold uppercase">
+                Shipping Options / Stock Availability
+              </h4>
+
+              <MdKeyboardArrowDown className="text-2xl leading-none transition-transform duration-200 ease-out group-data-[state=open]:rotate-180" />
+            </CollapsibleTrigger>
+            <CollapsibleContent className="flex w-full justify-center">
+              <ShippingOptions sku={item.sku} quantity={quantity} />
+            </CollapsibleContent>
+          </Collapsible>
+
+          <Collapsible
+            open={showPriceBreakdown}
+            onOpenChange={setShowPriceBreakdown}
+            disabled={isItemNotAdded}
+          >
+            <CollapsibleTrigger
+              className={cn(
+                "group flex w-full flex-row items-center justify-between bg-brand-gray-100 px-6 py-4",
+                isItemNotAdded ? "pointer-events-none opacity-50" : "",
+              )}
+            >
+              <h4 className="font-wurth font-extrabold uppercase">
                 Price Breakdown
-              </div>
-            </div>
-          </div>
+              </h4>
 
-          <div className="flex-1">
-            <div className="text-sm leading-6">Min:1, Multiple:1</div>
-            <div className="flex">
-              <Label htmlFor={quantityId} className="sr-only">
-                Quantity
-              </Label>
-
-              <Input
-                id={quantityId}
-                autoFocus={false}
-                type="number"
-                disabled={isItemNotAdded}
-                className="h-10 px-2 text-base"
-                placeholder="Qty"
-                {...register("quantity", {
-                  valueAsNumber: true,
-                })}
-              />
-
-              <div className="flex h-10 items-center rounded-r-sm border border-s-0 border-brand-gray-400 px-2">
-                Each
-              </div>
-            </div>
-          </div>
+              <MdKeyboardArrowDown className="text-2xl leading-none transition-transform duration-200 ease-out group-data-[state=open]:rotate-180" />
+            </CollapsibleTrigger>
+            <CollapsibleContent className="flex w-full justify-center">
+              <ErrorBoundary
+                fallback={
+                  <div className="p-4 text-center text-brand-primary">
+                    Failed to Load Prices!!!
+                  </div>
+                }
+              >
+                <Suspense
+                  fallback={
+                    <div className="p-4 text-center text-brand-gray-400">
+                      Prices Loading...
+                    </div>
+                  }
+                >
+                  <ItemPrices
+                    token={token}
+                    sku={item.sku}
+                    quantity={1}
+                    uom={item.txt_uom}
+                    salePrice={
+                      item.override_price ? Number(item.override_price) : 0
+                    }
+                  />
+                </Suspense>
+              </ErrorBoundary>
+            </CollapsibleContent>
+          </Collapsible>
         </div>
 
-        <div className="bg-brand-gray-100 px-6 py-4">
-          <h4 className="font-wurth font-extrabold uppercase">
-            Shipping Options / Stock Availability
-          </h4>
-        </div>
-
-        <div className="flex flex-col gap-4 px-6 pt-4">
+        {/* Action Buttons Section */}
+        <div className="flex flex-col gap-4 px-6 pt-6">
           <Button
             variant="secondary"
             className={cn(
@@ -231,10 +360,7 @@ const PurchasedItemDetailedViewDialog = ({
               View Product
             </Button>
 
-            <Button
-              className="h-12 flex-1"
-              disabled={!quantity || quantity < 1}
-            >
+            <Button className="h-12 flex-1" disabled={!isValidQuantity}>
               <AddToCartIcon /> Add to Cart
             </Button>
           </form>

@@ -202,7 +202,7 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
               <ErrorBoundary
                 fallback={
                   <div className="p-4 text-center text-brand-primary">
-                    Failed to Prices!!!
+                    Failed to Load Prices!!!
                   </div>
                 }
               >
@@ -221,6 +221,7 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
                     salePrice={
                       item.override_price ? Number(item.override_price) : 0
                     }
+                    showUnitPrice={true}
                   />
                 </Suspense>
               </ErrorBoundary>
@@ -332,7 +333,12 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
               >
                 <span>Change Shipping Options</span>
 
-                <MdKeyboardArrowDown className="text-xl leading-none transition-transform duration-200 ease-out group-data-[state=open]:rotate-180" />
+                <MdKeyboardArrowDown
+                  className={cn(
+                    "text-xl leading-none transition-transform duration-200 ease-out",
+                    showShippingOptions ? "rotate-180" : "",
+                  )}
+                />
               </Button>
 
               <form onSubmit={handleSubmit(onSubmit)}>

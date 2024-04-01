@@ -140,7 +140,10 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
       <TotalCountAndPagination isLoading={isLoading} totalItems={totalItems} />
 
       {/* Mobile View for Items List */}
-      <PurchasedItemsListForMobile items={combinedPurchasedItems} />
+      <PurchasedItemsListForMobile
+        items={combinedPurchasedItems}
+        token={token}
+      />
 
       {/* Desktop View for Items List */}
       <div className="hidden md:block">
