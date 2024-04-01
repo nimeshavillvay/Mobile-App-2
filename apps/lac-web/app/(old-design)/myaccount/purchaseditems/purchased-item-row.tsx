@@ -25,6 +25,7 @@ import { MdKeyboardArrowDown } from "react-icons/md";
 import * as z from "zod";
 import ItemAttributes from "./_item-attributes/item-attributes";
 import ItemPrices from "./_item-prices/item-prices";
+import { generateItemUrl } from "./client-helpers";
 import { DATE_FORMAT } from "./constants";
 import ItemPlaceholder from "./item-placeholder.png";
 import { CombinedPurchasedItem } from "./types";
@@ -58,13 +59,6 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
   });
 
   const quantity = watch("quantity") ?? 1;
-
-  const generateItemUrl = (group_id: string, sku: string) => {
-    if (group_id && sku) {
-      return `/product-item/${group_id}/${sku}`;
-    }
-    return "#";
-  };
 
   const onSubmit = (values: Schema) => {
     addToCartMutation.mutate(
@@ -219,7 +213,9 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
                     sku={item.sku}
                     quantity={1}
                     uom={item.txt_uom}
-                    salePrice={item.override_price ?? 0}
+                    salePrice={
+                      item.override_price ? Number(item.override_price) : 0
+                    }
                   />
                 </Suspense>
               </ErrorBoundary>
@@ -433,6 +429,4 @@ const ErrorAlert = ({ item }: { item: CombinedPurchasedItem }) => {
       />
     );
   }
-
-  return null;
 };

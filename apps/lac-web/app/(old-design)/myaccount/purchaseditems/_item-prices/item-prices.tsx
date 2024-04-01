@@ -7,7 +7,7 @@ type ItemPricesProps = {
   sku: string;
   quantity: number;
   uom: string;
-  salePrice: string;
+  salePrice: number;
 };
 
 const ItemPrices = ({
@@ -65,7 +65,7 @@ const ItemPrices = ({
 
       {priceBreakDown && (
         <EachPriceRow
-          salePrice={Number(salePrice)}
+          salePrice={salePrice}
           uom={priceUnit ?? ""}
           price={priceBreakDown.price}
         />

@@ -17,3 +17,10 @@ export const changeSearchParams = (
 
   updateSearchParams(newSearchParams);
 };
+
+export const generateItemUrl = (group_id: string, sku: string) => {
+  if (group_id && sku) {
+    return `/product-item/${group_id}/${sku}`;
+  }
+  return "#";
+};

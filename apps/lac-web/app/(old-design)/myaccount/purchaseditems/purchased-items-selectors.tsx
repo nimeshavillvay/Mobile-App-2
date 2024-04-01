@@ -100,7 +100,7 @@ const PurchasedItemsSelectors = ({
 
   return (
     <>
-      <div className="col-span-4 hidden flex-col items-center justify-between bg-brand-gray-100 px-4 py-5 md:flex md:flex-row">
+      <div className="col-span-4 hidden flex-col items-center justify-between bg-brand-gray-100 px-4 py-5 md:flex md:flex-wrap lg:flex-row">
         <div className="min-w-[160px] text-brand-gray-500">
           <Label htmlFor={durationId} className="text-nowrap font-bold">
             Duration
@@ -160,34 +160,33 @@ const PurchasedItemsSelectors = ({
           </Button>
         </div>
       </div>
-      <>
-        <div className="block py-3 md:hidden">
-          <div className="mb-3 flex justify-between">
-            <button
-              className="items-left flex cursor-pointer items-center text-base font-bold uppercase tracking-wide"
-              onClick={() => setOpen(true)}
-            >
-              Sort & Filter
-              <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200" />
-            </button>
-            <div>
-              {!isLoading && (
-                <div className="text-base">
-                  {(page - 1) * perPage + 1} -{" "}
-                  {Math.min(page * perPage, totalItems)} of {totalItems}
-                </div>
-              )}
-            </div>
-          </div>
-          <div className="mb-4 w-fit content-end rounded border  bg-gray-100 p-2">
-            <div className="text-[10px] uppercase">Duration</div>
-            <div className="font-bold">{`${formattedFromDate} - ${formattedToDate}`}</div>
+
+      <div className="block px-4 md:hidden">
+        <div className="mb-3 flex justify-between">
+          <button
+            className="items-left flex cursor-pointer items-center text-base font-bold uppercase tracking-wide"
+            onClick={() => setOpen(true)}
+          >
+            Sort & Filter
+            <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200" />
+          </button>
+          <div>
+            {!isLoading && (
+              <div className="text-base">
+                {(page - 1) * perPage + 1} -{" "}
+                {Math.min(page * perPage, totalItems)} of {totalItems}
+              </div>
+            )}
           </div>
         </div>
-        <div className="flex lg:hidden">
-          <FiltersForMobileDialog open={open} setOpen={setOpen} />
+        <div className="mb-4 w-fit content-end rounded border  bg-gray-100 p-2">
+          <div className="text-[10px] uppercase">Duration</div>
+          <div className="font-bold">{`${formattedFromDate} - ${formattedToDate}`}</div>
         </div>
-      </>
+      </div>
+      <div className="flex md:hidden">
+        <FiltersForMobileDialog open={open} setOpen={setOpen} />
+      </div>
     </>
   );
 };
