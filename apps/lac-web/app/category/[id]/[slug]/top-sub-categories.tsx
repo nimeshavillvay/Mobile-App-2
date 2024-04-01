@@ -22,20 +22,20 @@ const TOP_CATEGORIES = [
 
 const TopSubCategories = () => {
   return (
-    <section className="my-14 md:my-20 space-y-6">
+    <section className="my-14 space-y-6 md:my-20">
       <SubHeading>Top Decorative Hardware & Wood Components</SubHeading>
 
-      <p className="hidden md:block pb-4 container text-center text-lg text-wurth-gray-800">
+      <p className="container hidden pb-4 text-center text-lg text-wurth-gray-800 md:block">
         Lorem ipsum dolor sit amet consectetur. Amet vitae tempus laoreet et
         sit. Venenatis maecenas scelerisque massa arcu sed.
       </p>
 
-      <ul className="container flex snap-x scroll-pl-4 flex-row items-center md:justify-center gap-2 md:gap-3 overflow-x-auto md:scroll-pl-8">
+      <ul className="container flex snap-x scroll-pl-4 flex-row items-center gap-2 overflow-x-auto md:scroll-pl-8 md:justify-center md:gap-3">
         {TOP_CATEGORIES.map((category, index) => (
           <li key={category} className="shrink-0 snap-start">
             <button
               data-active={index === 0}
-              className="rounded-full px-3 md:px-4 py-2 text-sm md:text-base font-semibold leading-4 md:leading-5 text-black data-[active=true]:bg-wurth-gray-150"
+              className="rounded-full px-3 py-2 text-sm font-semibold leading-4 text-black data-[active=true]:bg-wurth-gray-150 md:px-4 md:text-base md:leading-5"
             >
               {category}
             </button>
