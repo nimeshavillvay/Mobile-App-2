@@ -1,5 +1,4 @@
-import AlertInline from "@/(old-design)/_components/alert-inline";
-import useAddToFavoritesMutation from "@/(old-design)/_hooks/product/use-add-to-favorites-mutation.hook";
+import AlertInline from "@/old/_components/alert-inline";
 import ErrorBoundary from "@/old/_components/error-boundary";
 import ShippingOptions from "@/old/_components/shipping-options";
 import { Button } from "@/old/_components/ui/button";
@@ -12,6 +11,7 @@ import { Input } from "@/old/_components/ui/input";
 import { Label } from "@/old/_components/ui/label";
 import { TableCell, TableRow } from "@/old/_components/ui/table";
 import useAddToCartMutation from "@/old/_hooks/cart/use-add-to-cart-mutation.hook";
+import useAddToFavoritesMutation from "@/old/_hooks/product/use-add-to-favorites-mutation.hook";
 import { cn, getMediaUrl } from "@/old/_utils/helpers";
 import { zodResolver } from "@hookform/resolvers/zod";
 import dayjs from "dayjs";
@@ -98,6 +98,11 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
     );
   };
 
+  /**
+   * TODO: Should move to a common function
+   * @param item
+   * @returns true | false
+   */
   const isItemError = (item: CombinedPurchasedItem) => {
     return (
       !item ||

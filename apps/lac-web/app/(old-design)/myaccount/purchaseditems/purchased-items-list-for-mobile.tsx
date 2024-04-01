@@ -17,6 +17,7 @@ type PurchasedItemsListForMobileProps = {
 const PurchasedItemsListForMobile = ({
   items,
 }: PurchasedItemsListForMobileProps) => {
+  const [selectedItem, setSelectedItem] = useState<CombinedPurchasedItem>();
   const [showDetailedView, setShowDetailedView] = useState(false);
 
   return (
@@ -28,15 +29,18 @@ const PurchasedItemsListForMobile = ({
             <PurchasedItemRowForMobile
               key={item.sku}
               item={item}
-              onClick={() => setShowDetailedView(!showDetailedView)}
+              onClick={() => {
+                setSelectedItem(item);
+                setShowDetailedView(!showDetailedView);
+              }}
             />
           ))}
       </div>
-      {items && items[0] && (
+      {selectedItem && (
         <PurchasedItemDetailedViewDialog
           open={showDetailedView}
           onOpenChange={setShowDetailedView}
-          item={items[0]}
+          item={selectedItem}
         />
       )}
     </>
