@@ -91,7 +91,7 @@ const ProductPage = () => {
           Shop <span className="font-semibold">Blum</span>
         </div>
 
-        <div className="text-wurth-blue-450 rounded bg-sky-50 px-2 py-1.5 text-sm font-semibold leading-4">
+        <div className="rounded bg-sky-50 px-2 py-1.5 text-sm font-semibold leading-4 text-wurth-blue-450">
           Flash Deal
         </div>
 
