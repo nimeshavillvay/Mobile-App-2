@@ -1,5 +1,6 @@
 import { api } from "@/old/_lib/api";
 import { useSuspenseQuery } from "@tanstack/react-query";
+import { MyOrders } from "./types";
 
 const useSuspenseOrderHistoryList = (
   token: string,
@@ -37,7 +38,7 @@ const useSuspenseOrderHistoryList = (
             order: orderType,
           },
         })
-        .json<unknown>(),
+        .json<MyOrders>(),
   });
 };
 
