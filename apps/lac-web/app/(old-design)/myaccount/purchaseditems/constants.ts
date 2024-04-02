@@ -78,7 +78,7 @@ export const SORTING_FILTERS_FOR_MOBILE = [
 
 export const INIT_SORTING_TYPE = "desc";
 export const INIT_PAGE_NUMBER = "1";
-export const INIT_PER_PAGE = "1";
+export const INIT_PER_PAGE = "10";
 export const INIT_FROM_DATE = dayjs().subtract(1, "year").format("YYYY-MM-DD");
 export const INIT_TO_DATE = dayjs().format("YYYY-MM-DD");
 export const INIT_SORTING_FIELD = SORTING_BY_FIELDS.ORDER_DATE;
