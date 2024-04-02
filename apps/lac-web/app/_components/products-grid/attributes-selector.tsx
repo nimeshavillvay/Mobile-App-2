@@ -15,7 +15,7 @@ const AttributesSelector = () => {
           <AccordionTrigger>
             <span className="flex-1 text-left">Brands</span>
 
-            <span className="rounded-full size-5 grid place-items-center bg-black text-white text-xs leading-none font-semibold">
+            <span className="grid size-5 place-items-center rounded-full bg-black text-xs font-semibold leading-none text-white">
               2
             </span>
           </AccordionTrigger>

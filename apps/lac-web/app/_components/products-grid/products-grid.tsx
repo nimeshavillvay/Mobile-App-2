@@ -25,11 +25,11 @@ import ProductsGridHeader from "./products-grid-header";
 
 const ProductsGrid = () => {
   return (
-    <section className="md:my-20 my-14 space-y-3 md:space-y-6">
+    <section className="my-14 space-y-3 md:my-20 md:space-y-6">
       <ProductsGridHeader />
 
       {/* Mobile products list */}
-      <div className="flex flex-col gap-3 md:hidden container">
+      <div className="container flex flex-col gap-3 md:hidden">
         {Array.from({ length: 20 }).map((_, index) => (
           <ProductCard key={index} orientation="horizontal" className="w-full">
             <ProductCardHero>
@@ -63,10 +63,10 @@ const ProductsGrid = () => {
       </div>
 
       {/* Desktop products grid */}
-      <div className="hidden md:flex flex-row gap-10">
+      <div className="hidden flex-row gap-10 md:flex">
         <AttributesSelector />
 
-        <div className="flex-1 grid grid-cols-5 gap-5">
+        <div className="grid flex-1 grid-cols-5 gap-5">
           {Array.from({ length: 20 }).map((_, index) => (
             <ProductCard key={index}>
               <ProductCardHero>

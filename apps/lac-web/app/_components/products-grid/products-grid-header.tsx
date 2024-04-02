@@ -9,13 +9,13 @@ const ProductsGridHeader = () => {
   return (
     <header className="space-y-3">
       {/* Mobile filters selector */}
-      <div className="flex flex-row items-center md:hidden gap-2 overflow-x-auto w-full snap-x container scroll-pl-4">
+      <div className="container flex w-full snap-x scroll-pl-4 flex-row items-center gap-2 overflow-x-auto md:hidden">
         <MobileAttributePill>
           <Settings className="size-5" />
 
-          <span className="flex flex-row gap-1 items-center">
+          <span className="flex flex-row items-center gap-1">
             Filters & sort
-            <span className="rounded-full size-5 bg-wurth-gray-800 text-white text-xs leading-none font-semibold grid place-content-center">
+            <span className="grid size-5 place-content-center rounded-full bg-wurth-gray-800 text-xs font-semibold leading-none text-white">
               2
             </span>
           </span>
@@ -30,7 +30,7 @@ const ProductsGridHeader = () => {
         </MobileAttributePill>
       </div>
 
-      <div className="flex flex-row items-end justify-between text-wurth-gray-800 container">
+      <div className="container flex flex-row items-end justify-between text-wurth-gray-800">
         <div className="font-title text-lg font-medium tracking-normal md:text-3xl md:tracking-[-0.01406rem]">
           126 items
         </div>
@@ -39,7 +39,7 @@ const ProductsGridHeader = () => {
       </div>
 
       {/* Desktop selected attributes viewer */}
-      <div className="hidden md:flex md:flex-row md:items-center md:gap-2 container">
+      <div className="container hidden md:flex md:flex-row md:items-center md:gap-2">
         <DesktopAttributePill
           name="Brands"
           values={[
@@ -70,7 +70,7 @@ export default ProductsGridHeader;
 
 const MobileAttributePill = ({ children }: { children: ReactNode }) => {
   return (
-    <button className="px-4 py-3 rounded-full flex flex-row items-center gap-2 shadow-sm border border-wurth-gray-250 text-sm font-medium text-wurth-gray-800 shrink-0 snap-start">
+    <button className="flex shrink-0 snap-start flex-row items-center gap-2 rounded-full border border-wurth-gray-250 px-4 py-3 text-sm font-medium text-wurth-gray-800 shadow-sm">
       {children}
     </button>
   );
