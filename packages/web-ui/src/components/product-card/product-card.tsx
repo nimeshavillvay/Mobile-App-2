@@ -125,7 +125,7 @@ export const ProductCardDiscount = ({
  * component should be `ProductCardContent`.
  */
 export const ProductCardLabel = ({
-  variant = "secondary",
+  variant = "success",
   className,
   ...delegated
 }: BadgeProps) => {
@@ -135,6 +135,7 @@ export const ProductCardLabel = ({
     <Badge
       variant={variant}
       className={cn(
+        "ui-bg-wurth-gray-50 ui-text-wurth-gray-800 ui-shadow-none hover:ui-bg-wurth-gray-150",
         orientation === "vertical" && "ui-absolute ui-right-0 ui-top-0",
         orientation === "horizontal" && "-ui-mb-1 ui-self-end",
         className,

@@ -20,21 +20,21 @@ const AddToCart = () => {
   };
 
   return (
-    <section className="my-6 container space-y-3">
-      <div className="py-1 space-y-2">
+    <section className="container my-6 space-y-3">
+      <div className="space-y-2 py-1">
         <div className="flex flex-row items-center gap-2">
-          <div className="bg-green-50 text-green-700 py-2 px-4 rounded text-sm leading-4 font-semibold">
+          <div className="rounded bg-green-50 px-4 py-2 text-sm font-semibold leading-4 text-green-700">
             In Stock
           </div>
 
-          <div className="text-sm text-wurth-gray-800 font-medium">
+          <div className="text-sm font-medium text-wurth-gray-800">
             156 in stock at Brea, CA
           </div>
         </div>
 
         <Button
           variant="subtle"
-          className="w-full flex flex-row items-center justify-between font-bold"
+          className="flex w-full flex-row items-center justify-between font-bold"
         >
           <span>Check Other Stores</span>
 
@@ -43,8 +43,8 @@ const AddToCart = () => {
       </div>
 
       <form className="flex flex-row items-stretch gap-2">
-        <div className="flex-[4] p-0.5 rounded-md border border-wurth-gray-250">
-          <div className="uppercase text-center text-wurth-gray-400 text-xs leading-none font-medium">
+        <div className="flex-[4] rounded-md border border-wurth-gray-250 p-0.5">
+          <div className="text-center text-xs font-medium uppercase leading-none text-wurth-gray-400">
             Qty / Each
           </div>
 
@@ -65,7 +65,7 @@ const AddToCart = () => {
               type="number"
               value={quantity}
               onChange={(e) => setQuantity(Number(e.target.value))}
-              className="flex-1 border-0 shadow-none text-center p-0 text-wurth-gray-800 font-semibold text-lg rounded-sm"
+              className="flex-1 rounded-sm border-0 p-0 text-center text-lg font-semibold text-wurth-gray-800 shadow-none"
             />
 
             <Button
@@ -85,7 +85,7 @@ const AddToCart = () => {
         <Button
           type="submit"
           variant="secondary"
-          className="flex-[5] px-5 py-4 shadow-md h-full rounded-lg gap-2"
+          className="h-full flex-[5] gap-2 rounded-lg px-5 py-4 shadow-md"
         >
           <AddToCartIcon className="stroke-white" />
 
@@ -94,15 +94,15 @@ const AddToCart = () => {
       </form>
 
       <div className="flex flex-row items-center justify-between gap-2">
-        <div className="text-sm text-wurth-gray-500 flex-1">
+        <div className="flex-1 text-sm text-wurth-gray-500">
           <div>
             Min Order:{" "}
-            <span className="text-wurth-gray-800 font-semibold">4</span>
+            <span className="font-semibold text-wurth-gray-800">4</span>
           </div>
 
           <div>
             Quantity Multiple by:{" "}
-            <span className="text-wurth-gray-800 font-semibold">8</span>
+            <span className="font-semibold text-wurth-gray-800">8</span>
           </div>
         </div>
 

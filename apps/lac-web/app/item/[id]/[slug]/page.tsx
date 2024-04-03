@@ -1,9 +1,26 @@
-import productImage from "@/_assets/images/product-item-image.png";
+import {
+  default as productImage,
+  default as productItemImage,
+} from "@/_assets/images/product-item-image.png";
+import RelatedSearches from "@/_components/related-searches";
 import { cn } from "@/_lib/utils";
 import Check from "@repo/web-ui/components/icons/check";
 import ChevronLeft from "@repo/web-ui/components/icons/chevron-left";
 import Save from "@repo/web-ui/components/icons/save";
 import Truck from "@repo/web-ui/components/icons/truck";
+import {
+  ProductCard,
+  ProductCardActions,
+  ProductCardCompare,
+  ProductCardContent,
+  ProductCardDetails,
+  ProductCardDiscount,
+  ProductCardHero,
+  ProductCardImage,
+  ProductCardLabel,
+  ProductCardPrice,
+} from "@repo/web-ui/components/product-card";
+import { Badge } from "@repo/web-ui/components/ui/badge";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -294,15 +311,15 @@ const ProductPage = () => {
       <AddToCart />
 
       <section className="container my-6">
-        <div className="p-4 flex flex-row gap-2 bg-wurth-gray-50 rounded-lg">
-          <Truck className="size-4 mt-1 shrink-0" />
+        <div className="flex flex-row gap-2 rounded-lg bg-wurth-gray-50 p-4">
+          <Truck className="mt-1 size-4 shrink-0" />
 
-          <div className="space-y-1 flex-1">
-            <h4 className="text-wurth-gray-800 text-base font-semibold">
+          <div className="flex-1 space-y-1">
+            <h4 className="text-base font-semibold text-wurth-gray-800">
               Drop Ship Item
             </h4>
 
-            <p className="text-wurth-gray-500 text-sm leading-6">
+            <p className="text-sm leading-6 text-wurth-gray-500">
               This item ships directly from the vendor. Additional freight
               charges may apply.
             </p>
@@ -311,11 +328,11 @@ const ProductPage = () => {
       </section>
 
       <section className="container my-10 text-wurth-gray-800">
-        <h2 className="font-title text-2xl font-medium tracking-[-0.144px] mb-4">
+        <h2 className="mb-4 font-title text-2xl font-medium tracking-[-0.144px]">
           Product Details
         </h2>
 
-        <div className="text-base leading-7 font-normal space-y-7 mb-6">
+        <div className="mb-6 space-y-7 text-base font-normal leading-7">
           <p>
             For drawers, right-hand or left-hand doors with lipped/overlay
             construction (straight cam) or flush construction (formed cam). For
@@ -326,7 +343,7 @@ const ProductPage = () => {
           <div>
             <h3 className="font-semibold leading-6">Features</h3>
 
-            <ul className="list-disc list-inside pl-2">
+            <ul className="list-inside list-disc pl-2">
               <li>90° cam turn</li>
 
               <li>Key removable in both locked and unlocked positions</li>
@@ -344,7 +361,7 @@ const ProductPage = () => {
           </div>
         </div>
 
-        <div className="mb-8 rounded-xl bg-yellow-50 px-4 py-2 flex flex-row items-center gap-4">
+        <div className="mb-8 flex flex-row items-center gap-4 rounded-xl bg-yellow-50 px-4 py-2">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="36"
@@ -380,9 +397,9 @@ const ProductPage = () => {
               <Button
                 key={index}
                 variant="outline"
-                className="p-3 border-wurth-gray-250 shadow-sm rounded-lg flex flex-col gap-2 max-w-full h-fit items-start"
+                className="flex h-fit max-w-full flex-col items-start gap-2 rounded-lg border-wurth-gray-250 p-3 shadow-sm"
               >
-                <Save className="size-5 mt-1 shrink-0" />
+                <Save className="mt-1 size-5 shrink-0" />
 
                 <div className="text-wrap text-left text-sm font-semibold text-wurth-gray-800">
                   ICS 10” Cabinet Saw Owners Manual V3
@@ -397,8 +414,8 @@ const ProductPage = () => {
         </div>
       </section>
 
-      <section className="my-10 container space-y-4">
-        <h2 className="font-title text-wurth-gray-800 text-2xl font-medium tracking-[-0.144px]">
+      <section className="container my-10 space-y-4">
+        <h2 className="font-title text-2xl font-medium tracking-[-0.144px] text-wurth-gray-800">
           Specifications
         </h2>
 
@@ -407,13 +424,13 @@ const ProductPage = () => {
             {SPECIFICATIONS.map((specification) => (
               <tr
                 key={specification.name}
-                className="text-sm border-b border-b-wurth-gray-150"
+                className="border-b border-b-wurth-gray-150 text-sm"
               >
                 <td className="w-1/2 px-2 py-3 text-wurth-gray-500">
                   {specification.name}
                 </td>
 
-                <td className="w-1/2 px-2 py-3 text-wurth-gray-800 font-semibold">
+                <td className="w-1/2 px-2 py-3 font-semibold text-wurth-gray-800">
                   {specification.value}
                 </td>
               </tr>
@@ -421,6 +438,114 @@ const ProductPage = () => {
           </tbody>
         </table>
       </section>
+
+      <section className="my-10 space-y-4">
+        <h2 className="container font-title text-2xl font-medium tracking-[-0.144px] text-wurth-gray-800">
+          <Balancer>Accessories and Related Products</Balancer>
+        </h2>
+
+        {Array.from({ length: 3 }).map((_, index) => (
+          <div
+            key={index}
+            className={cn(
+              "space-y-3",
+              index === 0 ? "bg-red-50 py-4" : "bg-white",
+            )}
+          >
+            <div className="container flex flex-row items-center gap-1.5">
+              <h3 className="text-lg font-semibold text-wurth-gray-800">
+                Rollers
+              </h3>
+
+              {index === 0 && <Badge variant="primary">Required</Badge>}
+            </div>
+
+            <div className="container flex flex-col gap-3">
+              {Array.from({ length: 4 }).map((_, index) => (
+                <ProductCard
+                  key={index}
+                  orientation="horizontal"
+                  className="w-full"
+                >
+                  <ProductCardHero>
+                    <ProductCardDiscount>30</ProductCardDiscount>
+
+                    <ProductCardImage
+                      src={productItemImage}
+                      alt="A placeholder product"
+                      href={"/product/12345"}
+                      title='Pro 128mm Mod Bar Pull, Satin Champagne, 5-11/16" Length'
+                    />
+
+                    <ProductCardCompare />
+                  </ProductCardHero>
+
+                  <ProductCardContent>
+                    <ProductCardDetails
+                      title='Pro 128mm Mod Bar Pull, Satin Champagne, 5-11/16" Length'
+                      sku="PROMD8-SCP"
+                      href="/product/771770/PROMD3-MB"
+                    />
+
+                    <ProductCardPrice
+                      price={2.05}
+                      uom="pair"
+                      actualPrice={4.11}
+                    />
+
+                    <ProductCardActions />
+                  </ProductCardContent>
+                </ProductCard>
+              ))}
+            </div>
+
+            <div className="container">
+              <Button className="w-full font-bold">Load 4 more</Button>
+            </div>
+          </div>
+        ))}
+      </section>
+
+      <section className="my-10 space-y-6 bg-wurth-gray-50 py-10">
+        <h2 className="container text-center font-title text-2xl font-medium tracking-[-0.144px] text-wurth-gray-800">
+          More to consider
+        </h2>
+
+        <div className="container flex w-full snap-x scroll-pl-4 flex-row gap-4 overflow-x-auto">
+          {Array.from({ length: 5 }).map((_, index) => (
+            <ProductCard key={index} className="shrink-0 snap-start">
+              <ProductCardHero>
+                <ProductCardDiscount>30</ProductCardDiscount>
+
+                <ProductCardImage
+                  src={productItemImage}
+                  alt="A placeholder product"
+                  href={"/product/12345"}
+                  title='Pro 128mm Mod Bar Pull, Satin Champagne, 5-11/16" Length'
+                />
+
+                <ProductCardLabel>Label</ProductCardLabel>
+
+                <ProductCardCompare />
+              </ProductCardHero>
+
+              <ProductCardContent>
+                <ProductCardDetails
+                  title='Pro 128mm Mod Bar Pull, Satin Champagne, 5-11/16" Length'
+                  sku="PROMD8-SCP"
+                  href="/product/771770/PROMD3-MB"
+                />
+
+                <ProductCardPrice price={2.05} uom="pair" actualPrice={4.11} />
+
+                <ProductCardActions />
+              </ProductCardContent>
+            </ProductCard>
+          ))}
+        </div>
+      </section>
+
+      <RelatedSearches />
     </>
   );
 };
