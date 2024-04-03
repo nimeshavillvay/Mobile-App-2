@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import AddToCart from "./add-to-cart";
 import ArrowRight from "./arrow-right";
 import Bell from "./bell";
+import Check from "./check";
 import ChevronDown from "./chevron-down";
 import ChevronLeft from "./chevron-left";
 import ChevronRight from "./chevron-right";
@@ -11,9 +12,13 @@ import HeartFilled from "./heart-filled";
 import HeartOutline from "./heart-outline";
 import MagnifyingGlass from "./magnifying-glass";
 import Menu from "./menu";
+import Minus from "./minus";
+import Plus from "./plus";
 import Profile from "./profile";
+import Save from "./save";
 import Settings from "./settings";
 import ShoppingCart from "./shopping-cart";
+import Truck from "./truck";
 
 const Icon = () => {
   return <svg></svg>;
@@ -45,6 +50,12 @@ export const Showcase: Story = {
 
         <Settings />
 
+        <Save />
+
+        <Minus />
+
+        <Plus />
+
         <ShoppingCart />
 
         <AddToCart />
@@ -57,7 +68,11 @@ export const Showcase: Story = {
 
         <Bell />
 
+        <Truck />
+
         <Close />
+
+        <Check />
 
         <ArrowRight />
 
