@@ -97,7 +97,7 @@ const ProductPage = () => {
 
       <ProductHero />
 
-      <section className="my-10 md:my-[3.75rem] space-y-4 md:space-y-9">
+      <section className="my-10 space-y-4 md:my-[3.75rem] md:space-y-9">
         <h2 className="container font-title text-2xl font-medium tracking-[-0.144px] text-wurth-gray-800">
           <Balancer>Accessories and Related Products</Balancer>
         </h2>
@@ -107,7 +107,7 @@ const ProductPage = () => {
             key={index}
             className={cn(
               "space-y-3",
-              index === 0 ? "bg-red-50 py-4 md:pt-10 md:pb-12" : "bg-white",
+              index === 0 ? "bg-red-50 py-4 md:pb-12 md:pt-10" : "bg-white",
             )}
           >
             <div className="container flex flex-row items-center gap-1.5">
@@ -118,7 +118,7 @@ const ProductPage = () => {
               {index === 0 && <Badge variant="primary">Required</Badge>}
             </div>
 
-            <div className="container grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3 md:gap-4">
+            <div className="container grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-4 xl:grid-cols-3 2xl:grid-cols-4">
               {Array.from({ length: 4 }).map((_, index) => (
                 <ProductCard
                   key={index}
@@ -164,12 +164,12 @@ const ProductPage = () => {
         ))}
       </section>
 
-      <section className="my-10 space-y-6 md:space-y-5 bg-wurth-gray-50 py-10">
+      <section className="my-10 space-y-6 bg-wurth-gray-50 py-10 md:space-y-5">
         <h2 className="container text-center font-title text-2xl font-medium tracking-[-0.144px] text-wurth-gray-800">
           More to consider
         </h2>
 
-        <div className="container flex w-full snap-x scroll-pl-4 md:scroll-pl-8 flex-row gap-5 overflow-x-auto">
+        <div className="container flex w-full snap-x scroll-pl-4 flex-row gap-5 overflow-x-auto md:scroll-pl-8">
           {Array.from({ length: 5 }).map((_, index) => (
             <ProductCard key={index} className="shrink-0 snap-start">
               <ProductCardHero>

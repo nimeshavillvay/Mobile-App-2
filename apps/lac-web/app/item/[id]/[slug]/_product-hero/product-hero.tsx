@@ -9,6 +9,7 @@ import {
 import Image from "next/image";
 import Balancer from "react-wrap-balancer";
 import AddToCart from "./add-to-cart";
+import ProductDesktopCarousel from "./product-desktop-carousel";
 import {
   DropShipItemNotice,
   ProductDescription,
@@ -27,8 +28,8 @@ const ProductHero = () => {
           Shop <span className="font-semibold">Blum</span>
         </div>
 
-        <div className="rounded flex flex-row items-center gap-1 bg-sky-50 px-2 py-1.5 text-sm font-semibold leading-4 text-wurth-blue-450">
-          <Zap className="stroke-wurth-blue-450 size-4 hidden md:block" />
+        <div className="flex flex-row items-center gap-1 rounded bg-sky-50 px-2 py-1.5 text-sm font-semibold leading-4 text-wurth-blue-450">
+          <Zap className="hidden size-4 stroke-wurth-blue-450 md:block" />
           <span>Flash Deal</span>
         </div>
 
@@ -37,7 +38,7 @@ const ProductHero = () => {
         </div>
       </div>
 
-      <h1 className="container my-2 md:mt-1 md:mb-7 md:tracking-[-0.144px] font-title text-2xl font-medium tracking-[-0.009rem] text-wurth-gray-800">
+      <h1 className="container my-2 font-title text-2xl font-medium tracking-[-0.009rem] text-wurth-gray-800 md:mb-7 md:mt-1 md:tracking-[-0.144px]">
         <Balancer>
           CompX 8053 Disc Tumbler Cylinder Cam Lock with FlexaCam, Antique
           Brass, Keyed to C346A Key
@@ -45,8 +46,8 @@ const ProductHero = () => {
       </h1>
 
       {/* Desktop view */}
-      <div className="hidden md:grid md:container md:grid-cols-[minmax(0,3fr)_minmax(26rem,2fr)] md:gap-x-12 md:gap-y-[3.75rem]">
-        <div>Carousel</div>
+      <div className="hidden md:container md:grid md:grid-cols-[minmax(0,3fr)_minmax(26rem,2fr)] md:gap-x-8 md:gap-y-[3.75rem]">
+        <ProductDesktopCarousel />
 
         <div className="space-y-6">
           <div className="space-y-2">

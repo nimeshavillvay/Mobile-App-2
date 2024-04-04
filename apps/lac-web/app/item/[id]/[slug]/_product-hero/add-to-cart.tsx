@@ -26,9 +26,9 @@ const AddToCart = ({ className }: AddToCartProps) => {
 
   return (
     <section className={cn("space-y-3", className)}>
-      <div className="space-y-2 md:space-y-0 py-1 md:flex md:flex-row md:items-center md:justify-between">
-        <div className="flex flex-row items-center gap-2 shrink-0">
-          <div className="rounded bg-green-50 px-4 md:px-2 py-2 md:py-1 text-sm font-semibold leading-4 text-green-700">
+      <div className="space-y-2 py-1 md:flex md:flex-row md:items-center md:justify-between md:space-y-0">
+        <div className="flex shrink-0 flex-row items-center gap-2">
+          <div className="rounded bg-green-50 px-4 py-2 text-sm font-semibold leading-4 text-green-700 md:px-2 md:py-1">
             In Stock
           </div>
 
@@ -39,7 +39,7 @@ const AddToCart = ({ className }: AddToCartProps) => {
 
         <Button
           variant="subtle"
-          className="flex w-full h-fit md:w-fit md:px-2 md:py-0.5 flex-row items-center justify-between font-bold"
+          className="flex h-fit w-full flex-row items-center justify-between font-bold md:w-fit md:px-2 md:py-0.5"
         >
           <span>Check Other Stores</span>
 
@@ -48,7 +48,7 @@ const AddToCart = ({ className }: AddToCartProps) => {
       </div>
 
       <form className="flex flex-row items-stretch gap-2">
-        <div className="flex-[4] md:flex-1 rounded-md border border-wurth-gray-250 p-0.5">
+        <div className="flex-[4] rounded-md border border-wurth-gray-250 p-0.5 md:flex-1">
           <div className="text-center text-xs font-medium uppercase leading-none text-wurth-gray-400">
             Qty / Each
           </div>
@@ -90,7 +90,7 @@ const AddToCart = ({ className }: AddToCartProps) => {
         <Button
           type="submit"
           variant="secondary"
-          className="h-full flex-[5] md:flex-[2] gap-2 rounded-lg px-5 py-4 shadow-md"
+          className="h-full flex-[5] gap-2 rounded-lg px-5 py-4 shadow-md md:flex-[2]"
         >
           <AddToCartIcon className="stroke-white" />
 

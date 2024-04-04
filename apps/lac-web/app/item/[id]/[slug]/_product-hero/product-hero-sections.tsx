@@ -41,7 +41,7 @@ export const ProductPrices = ({ className }: { className?: string }) => {
   return (
     <section className={cn("space-y-3 md:space-y-4", className)}>
       <div className="flex flex-row items-end gap-1 text-lg leading-6 text-wurth-gray-800">
-        <div className="font-semibold leading-none text-xl">
+        <div className="text-xl font-semibold leading-none">
           $<span className="font-title text-[1.75rem] leading-8">8.33</span>
         </div>
 
@@ -62,7 +62,7 @@ export const ProductPrices = ({ className }: { className?: string }) => {
         ].map((item) => (
           <div
             key={item.items}
-            className="rounded-lg bg-wurth-gray-50 px-4 py-3 md:py-2 odd:rounded-r-none last:odd:rounded-r-lg even:rounded-l-none"
+            className="rounded-lg bg-wurth-gray-50 px-4 py-3 odd:rounded-r-none last:odd:rounded-r-lg even:rounded-l-none md:py-2"
           >
             <h5 className="text-sm font-medium text-wurth-gray-800">
               {item.items} items
