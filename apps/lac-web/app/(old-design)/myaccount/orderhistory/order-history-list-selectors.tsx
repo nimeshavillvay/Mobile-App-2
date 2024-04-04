@@ -88,41 +88,26 @@ const OrderHistoryListSelectors = () => {
   // const currentPage = Number(urlSearchParams.get("page") ?? INIT_PAGE_NUMBER);
   // const pageSize = Number(urlSearchParams.get("perPage") ?? INIT_PAGE_SIZE);
 
-  //   if (urlOrderType) {
-  //     if (urlOrderType.includes(",")) {
-  //       const orderTypes = urlOrderType.split(",");
-  //       selectorOrderTypes = selectorOrderTypes.map((orderType) => ({
-  //         ...orderType,
-  //         checked: orderTypes.includes(orderType.type),
-  //       }));
-  //     } else {
-  //       if (ALL_ORDER_TYPES.includes(urlOrderType)) {
-  //         selectorOrderTypes = selectorOrderTypes.map((orderType) => ({
-  //           ...orderType,
-  //           checked: urlOrderType === orderType.type,
-  //         }));
-  //       } else {
-  //         selectorOrderTypes = selectorOrderTypes.map((orderType) => ({
-  //           ...orderType,
-  //           checked: false,
-  //         }));
-  //       }
-  //     }
-  //   } else {
-  //     selectorOrderTypes = selectorOrderTypes.map((orderType) => ({
-  //       ...orderType,
-  //       checked: true,
-  //     }));
-  //   }
-
   if (urlOrderType) {
-    const orderTypes = urlOrderType.includes(",")
-      ? urlOrderType.split(",")
-      : [urlOrderType];
-    selectorOrderTypes = selectorOrderTypes.map((orderType) => ({
-      ...orderType,
-      checked: orderTypes.includes(orderType.type),
-    }));
+    if (urlOrderType.includes(",")) {
+      const orderTypes = urlOrderType.split(",");
+      selectorOrderTypes = selectorOrderTypes.map((orderType) => ({
+        ...orderType,
+        checked: orderTypes.includes(orderType.type),
+      }));
+    } else {
+      if (ALL_ORDER_TYPES.includes(urlOrderType)) {
+        selectorOrderTypes = selectorOrderTypes.map((orderType) => ({
+          ...orderType,
+          checked: urlOrderType === orderType.type,
+        }));
+      } else {
+        selectorOrderTypes = selectorOrderTypes.map((orderType) => ({
+          ...orderType,
+          checked: false,
+        }));
+      }
+    }
   } else {
     selectorOrderTypes = selectorOrderTypes.map((orderType) => ({
       ...orderType,
