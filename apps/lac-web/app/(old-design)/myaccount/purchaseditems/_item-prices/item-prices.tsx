@@ -1,8 +1,8 @@
+import useSuspensePriceCheck from "@/_hooks/use-suspense-price-check.hook";
 import { formatNumberToPrice } from "@/old/_utils/helpers";
 import type { ItemPrices, PriceBreakDowns, PriceRow } from "./types";
 import UnitPriceRow from "./unit-price-row";
 import UnitPriceRowForMobile from "./unit-price-row-for-mobile";
-import useSuspensePriceCheck from "./use-suspense-price-check.hook";
 
 type ItemPricesProps = {
   token: string;

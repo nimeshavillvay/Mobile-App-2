@@ -1,6 +1,6 @@
 import { api } from "@/old/_lib/api";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { ItemPrices } from "./types";
+import type { ItemPrices } from "./types";
 
 const useSuspensePriceCheck = (
   token: string,
