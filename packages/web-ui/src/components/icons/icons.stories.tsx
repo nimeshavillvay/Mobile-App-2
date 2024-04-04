@@ -19,6 +19,7 @@ import Save from "./save";
 import Settings from "./settings";
 import ShoppingCart from "./shopping-cart";
 import Truck from "./truck";
+import Zap from "./zap";
 
 const Icon = () => {
   return <svg></svg>;
@@ -63,6 +64,8 @@ export const Showcase: Story = {
         <HeartFilled />
 
         <HeartOutline />
+
+        <Zap />
 
         <Profile />
 
