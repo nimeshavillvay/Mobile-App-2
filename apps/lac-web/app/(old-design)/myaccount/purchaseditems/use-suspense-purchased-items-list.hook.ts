@@ -1,4 +1,4 @@
-import { api } from "@/old/_lib/api";
+import { api } from "@/_lib/api";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import type { PurchasedOrders } from "./types";
 
@@ -25,10 +25,9 @@ const useSuspensePurchasedItemsList = (
     ],
     queryFn: () =>
       api
-        .get("am/order-history/purchase", {
+        .get("rest/order-history/purchase", {
           headers: {
             authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
           },
           searchParams: {
             from: fromDate,

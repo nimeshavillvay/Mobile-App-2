@@ -1,4 +1,5 @@
 import { getMediaUrl } from "@/old/_utils/helpers";
+import WurthFullBlack from "@repo/web-ui/components/logos/wurth-full-black";
 import dayjs from "dayjs";
 import Image from "next/image";
 import Link from "next/link";
@@ -6,7 +7,6 @@ import { useState } from "react";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { generateItemUrl } from "./client-helpers";
 import { DATE_FORMAT } from "./constants";
-import ItemPlaceholder from "./item-placeholder.png";
 import PurchasedItemDetailedViewDialog from "./purchased-item-detailed-view-dialog";
 import { CombinedPurchasedItem } from "./types";
 
@@ -65,13 +65,21 @@ const PurchasedItemRowForMobile = ({
         href={generateItemUrl(item.group_id, item.sku)}
         className="min-w-[92px]"
       >
-        <Image
-          src={item.img ? getMediaUrl(item.img) : ItemPlaceholder}
-          alt={item.txt_sap_description_name}
-          width={92}
-          height={92}
-          className="size-[92px] border border-brand-gray-200 object-contain"
-        />
+        {item.img ? (
+          <Image
+            src={getMediaUrl(item.img)}
+            alt={item.txt_sap_description_name}
+            width={92}
+            height={92}
+            className="size-[92px] border border-brand-gray-200 object-contain"
+          />
+        ) : (
+          <WurthFullBlack
+            width={92}
+            height={92}
+            className="border border-brand-gray-200 px-2"
+          />
+        )}
       </Link>
 
       <div className="flex w-full min-w-[200px] flex-col gap-1 px-2 text-brand-gray-500">

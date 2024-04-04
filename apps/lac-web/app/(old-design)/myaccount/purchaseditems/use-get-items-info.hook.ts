@@ -1,26 +1,20 @@
-import { api } from "@/old/_lib/api";
+import { api } from "@/_lib/api";
 import { useQuery } from "@tanstack/react-query";
 import type { OrderHistoryItems } from "./types";
 
-const useGetItemInfo = (token: string, skuList: string) => {
+const useGetItemInfo = (token: string, skuList: string[]) => {
   return useQuery({
     queryKey: ["item-info", token, skuList],
     queryFn: () =>
       api
-        .get("pim/webservice/rest/oderhistoryitems", {
+        .get("rest/oderhistoryitems", {
           headers: {
             authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
           },
-          searchParams: {
-            sku: skuList,
-            country: "US",
-            county: "ORANGE",
-            region: "CA",
-          },
+          searchParams: { sku: skuList.toString() },
         })
         .json<OrderHistoryItems>(),
-    enabled: !!skuList,
+    enabled: skuList.length > 0,
   });
 };
 

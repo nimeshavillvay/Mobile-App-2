@@ -1,7 +1,6 @@
-import { cva, type VariantProps } from "cva";
-import * as React from "react";
-
 import { cn } from "@/old/_utils/helpers";
+import { cva, type VariantProps } from "cva";
+import { forwardRef, type HTMLAttributes } from "react";
 
 const alertVariants = cva({
   base: "flex w-full flex-row items-center gap-2 rounded-lg border px-4 py-3 text-sm",
@@ -16,9 +15,9 @@ const alertVariants = cva({
   },
 });
 
-const Alert = React.forwardRef<
+const Alert = forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement> & VariantProps<typeof alertVariants>
+  HTMLAttributes<HTMLDivElement> & VariantProps<typeof alertVariants>
 >(({ className, variant, ...props }, ref) => (
   <div
     ref={ref}
@@ -29,9 +28,9 @@ const Alert = React.forwardRef<
 ));
 Alert.displayName = "Alert";
 
-const AlertTitle = React.forwardRef<
+const AlertTitle = forwardRef<
   HTMLParagraphElement,
-  React.HTMLAttributes<HTMLHeadingElement>
+  HTMLAttributes<HTMLHeadingElement>
 >(({ className, ...props }, ref) => (
   <h5
     ref={ref}
@@ -41,9 +40,9 @@ const AlertTitle = React.forwardRef<
 ));
 AlertTitle.displayName = "AlertTitle";
 
-const AlertDescription = React.forwardRef<
+const AlertDescription = forwardRef<
   HTMLParagraphElement,
-  React.HTMLAttributes<HTMLParagraphElement>
+  HTMLAttributes<HTMLParagraphElement>
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}

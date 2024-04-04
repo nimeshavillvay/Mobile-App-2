@@ -6,22 +6,22 @@ export const DURATIONS = [
   { value: "9", label: "9 months" },
   { value: "12", label: "12 months" },
   { value: "0", label: "Custom" },
-] as const;
+];
 
-export const DATE_FORMAT = "MM/DD/YYYY" as const;
+export const DATE_FORMAT = "MM/DD/YYYY";
 
-export const PAGE_SIZES = ["10", "20", "40"] as const;
+export const PAGE_SIZES = ["10", "20", "40"];
 
 export const SORTING_TYPES = [
   { label: "Ascending", value: "asc" },
   { label: "Descending", value: "desc" },
-] as const;
+];
 
 export const SORTING_BY_FIELDS = {
   SKU: "sku",
   ORDER_DATE: "orderDate",
   TOTAL_ITEMS: "totalItem",
-} as const;
+};
 
 export const QUERY_KEYS = {
   FROM_DATE: "from",
@@ -30,7 +30,7 @@ export const QUERY_KEYS = {
   PER_PAGE: "perPage",
   ORDER_BY: "orderBy",
   ORDER_TYPE: "orderType",
-} as const;
+};
 
 export const DEFAULT_SORT = "Sort...";
 
@@ -74,7 +74,7 @@ export const SORTING_FILTERS_FOR_MOBILE = [
       },
     ],
   },
-] as const;
+];
 
 export const INIT_SORTING_TYPE = "desc";
 export const INIT_PAGE_NUMBER = "1";
