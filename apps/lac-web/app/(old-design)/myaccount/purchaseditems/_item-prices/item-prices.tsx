@@ -28,7 +28,7 @@ const ItemPrices = ({
   const prices = itemPricesQuery.data?.["list-sku-price"][0] ?? null;
   const priceUnit = prices?.["price-unit"] ?? "";
 
-  const priceBreakDownArray: PriceRow[] = prices
+  const priceBreakDownArray = prices
     ? Object.keys(prices.pricebreakdowns)
         .filter((key) => key.startsWith("quantity"))
         .map((key) => {

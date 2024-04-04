@@ -23,12 +23,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
-  Dispatch,
-  SetStateAction,
   Suspense,
-  useEffect,
   useId,
   useState,
+  type Dispatch,
+  type SetStateAction,
 } from "react";
 import { useForm } from "react-hook-form";
 import { MdKeyboardArrowDown, MdKeyboardArrowRight } from "react-icons/md";
@@ -103,13 +102,7 @@ const PurchasedItemDetailedViewDialog = ({
   };
 
   const isItemNotAdded = !item.txt_wurth_lac_item;
-  const isValidQuantity = quantity && quantity >= 1;
-
-  useEffect(() => {
-    if (!isValidQuantity) {
-      return setShowShippingOptions(false);
-    }
-  }, [quantity, isValidQuantity]);
+  const isValidQuantity = !!(quantity && quantity >= 1);
 
   return (
     <Dialog
@@ -265,7 +258,7 @@ const PurchasedItemDetailedViewDialog = ({
           </div>
 
           <Collapsible
-            open={showShippingOptions}
+            open={isValidQuantity && showShippingOptions}
             onOpenChange={setShowShippingOptions}
             disabled={!isValidQuantity}
           >
