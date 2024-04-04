@@ -8,6 +8,11 @@ const config: Config = {
     "./app/**/*.{ts,tsx}",
     "./src/**/*.{ts,tsx}",
   ],
+  corePlugins: {
+    // TODO Revisit this when Tailwind CSS v4 is out
+    // Disable preflight to avoid conflicts with the `web-ui` package
+    preflight: false,
+  },
   theme: {
     extend: {
       colors: {

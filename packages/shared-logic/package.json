@@ -10,7 +10,7 @@
     "lint": "eslint . --max-warnings 0"
   },
   "devDependencies": {
-    "@repo/eslint-config": "workspace:^",
+    "@repo/eslint-config": "workspace:*",
     "@tanstack/react-query": "^5.27.5",
     "@total-typescript/ts-reset": "0.5.1",
     "@types/node": "^20.11.26",

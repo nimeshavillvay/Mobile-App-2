@@ -1,5 +1,6 @@
 import Banner from "@/_components/banner";
 import ProductsGrid from "@/_components/products-grid";
+import RelatedSearches from "@/_components/related-searches";
 import ChevronLeft from "@repo/web-ui/components/icons/chevron-left";
 import {
   Breadcrumb,
@@ -125,6 +126,8 @@ const CategoryPage = () => {
       <Banner />
 
       <ProductsGrid />
+
+      <RelatedSearches />
     </>
   );
 };
