@@ -3,7 +3,13 @@ import { cn, formatNumberToPrice } from "@/old/_utils/helpers";
 import dayjs from "dayjs";
 import Link from "next/link";
 import { MdInsertDriveFile } from "react-icons/md";
-import { ORDER_STATUS, ORDER_TYPES, STATUS_COLOR_CLASSES } from "./constants";
+import { getTableRowBgColor } from "../_utils/client-helpers";
+import {
+  ORDER_STATUS,
+  ORDER_TYPES,
+  STATUS_COLOR_CLASSES,
+  UI_DATE_FORMAT,
+} from "./constants";
 import type { OrderItem, OrderStatus } from "./types";
 
 type OrderHistoryRowProps = {
@@ -21,7 +27,7 @@ const OrderHistoryRow = ({ index, order }: OrderHistoryRowProps) => {
 
   return (
     <>
-      <TableRow className={index % 2 === 0 ? "bg-white" : "bg-brand-gray-100"}>
+      <TableRow className={getTableRowBgColor(index)}>
         <TableCell className="text-center" rowSpan={2}>
           <Link
             className="flex flex-col items-center justify-center gap-2"
@@ -36,7 +42,7 @@ const OrderHistoryRow = ({ index, order }: OrderHistoryRowProps) => {
 
         <TableCell className="text-center">
           {order.orderDate !== ""
-            ? dayjs(order.orderDate).format("MM/DD/YYYY")
+            ? dayjs(order.orderDate).format(UI_DATE_FORMAT)
             : "N/A"}
         </TableCell>
 
@@ -57,7 +63,7 @@ const OrderHistoryRow = ({ index, order }: OrderHistoryRowProps) => {
         </TableCell>
       </TableRow>
 
-      <TableRow className={index % 2 === 0 ? "bg-white" : "bg-brand-gray-100"}>
+      <TableRow className={getTableRowBgColor(index)}>
         <TableCell className="flex flex-col text-center">
           <h4 className="font-bold">Order By:</h4>
           <div>{order.orderBy !== "" ? order.orderBy : "N/A"}</div>

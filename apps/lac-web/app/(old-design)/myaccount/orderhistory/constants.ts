@@ -1,4 +1,14 @@
-export const DATE_FORMAT = "MM/DD/YYYY" as const;
+import dayjs from "dayjs";
+
+export const UI_DATE_FORMAT = "MM/DD/YYYY" as const;
+export const URL_DATE_FORMAT = "YYYY-MM-DD" as const;
+
+export const DURATIONS = [
+  { value: "30", label: "30 days" },
+  { value: "60", label: "60 days" },
+  { value: "90", label: "90 days" },
+  { value: "0", label: "Custom" },
+] as const;
 
 export const ORDER_STATUS = {
   C: "Cancelled",
@@ -44,4 +54,23 @@ export const ORDER_TYPES = {
   V: "Purchase Order",
   W: "Independent reqts plan",
   X: "Handling unit",
-};
+} as const;
+
+export const QUERY_KEYS = {
+  FROM_DATE: "from",
+  TO_DATE: "to",
+  PAGE: "page",
+  PER_PAGE: "perPage",
+  ORDER_BY: "orderBy",
+  ORDER_TYPE: "orderType",
+} as const;
+
+export const PAGE_SIZES = ["10", "20", "30", "40"] as const;
+export const INIT_PAGE_NUMBER = "1" as const;
+export const INIT_PAGE_SIZE = "10" as const;
+export const INIT_FROM_DATE = dayjs()
+  .subtract(1, "year")
+  .format(URL_DATE_FORMAT);
+export const INIT_TO_DATE = dayjs().format(URL_DATE_FORMAT);
+export const INIT_DURATION = DURATIONS.at(0); // Initial duration is 30 days
+export const CUSTOM_DURATION = DURATIONS.at(-1); // Custom duration is the last item in the list
