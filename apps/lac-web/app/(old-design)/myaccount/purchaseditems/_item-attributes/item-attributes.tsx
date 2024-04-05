@@ -1,4 +1,3 @@
-import type { ItemAttributes } from "./types";
 import useSuspenseItemAttributes from "./use-suspense-item-attributes.hook";
 
 type ItemAttributesProps = {
@@ -17,7 +16,10 @@ const ItemAttributes = ({ token, sku }: ItemAttributesProps) => {
         <>
           <div className="flex-1 flex-col">
             <Attribute label="Brand" value={attributes.brand} />
-            <Attribute label="Box Quantity" value={attributes.box_quantity} />
+            <Attribute
+              label="Box Quantity"
+              value={attributes.box_quantity.toString()}
+            />
             <Attribute
               label="Manufacturer&rsquo;s Part"
               value={attributes.manufacturer_part}
@@ -43,13 +45,7 @@ const ItemAttributes = ({ token, sku }: ItemAttributesProps) => {
 
 export default ItemAttributes;
 
-const Attribute = ({
-  label,
-  value,
-}: {
-  label: string;
-  value: string | number;
-}) => (
+const Attribute = ({ label, value }: { label: string; value: string }) => (
   <div className="flex flex-row">
     <div className="flex-1 font-bold">{label}:</div>
     <div className="flex-1" dangerouslySetInnerHTML={{ __html: value }} />

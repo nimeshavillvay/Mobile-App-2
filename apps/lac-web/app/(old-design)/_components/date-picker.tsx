@@ -1,8 +1,5 @@
 "use client";
 
-import { CalendarIcon } from "@radix-ui/react-icons";
-import dayjs from "dayjs";
-
 import { Button } from "@/old/_components/ui/button";
 import { Calendar } from "@/old/_components/ui/calendar";
 import {
@@ -11,7 +8,9 @@ import {
   PopoverTrigger,
 } from "@/old/_components/ui/popover";
 import { cn } from "@/old/_utils/helpers";
-import { Dispatch, SetStateAction } from "react";
+import { CalendarIcon } from "@radix-ui/react-icons";
+import dayjs from "dayjs";
+import type { Dispatch, SetStateAction } from "react";
 
 type DatePickerProps = {
   date: Date;
@@ -34,16 +33,14 @@ const DatePicker = ({
         <Button
           variant="outline"
           className={cn(
-            "font-base justify-start gap-2 text-left font-normal capitalize",
+            "font-base justify-start gap-2 text-left font-normal",
             !date && "text-muted-foreground",
             containerClassName,
           )}
         >
           <CalendarIcon className="h-4 w-4" />
 
-          <div>
-            {date ? dayjs(date).format(dateFormat) : <span>{placeholder}</span>}
-          </div>
+          {date ? dayjs(date).format(dateFormat) : <span>{placeholder}</span>}
         </Button>
       </PopoverTrigger>
 

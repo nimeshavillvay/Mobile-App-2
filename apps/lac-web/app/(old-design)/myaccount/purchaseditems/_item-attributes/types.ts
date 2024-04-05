@@ -3,7 +3,7 @@ export type Attribute = {
   attribute_value: string;
 };
 
-export type ItemAttributes = {
+export type ItemAttributeResults = {
   attributes: Attribute[];
   brand: string;
   weight: string;

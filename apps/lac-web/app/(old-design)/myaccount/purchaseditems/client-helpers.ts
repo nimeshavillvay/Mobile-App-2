@@ -1,4 +1,4 @@
-import { updateSearchParams } from "@/(old-design)/_utils/client-helpers";
+import { updateSearchParams } from "@/old/_utils/client-helpers";
 import "client-only";
 import { QUERY_KEYS } from "./constants";
 
@@ -11,16 +11,16 @@ export const changeSearchParams = (
 ) => {
   const newSearchParams = new URLSearchParams(searchParams);
 
-  params.map(function (param) {
+  params.map((param) => {
     newSearchParams.set(param.key, param.value);
   });
 
   updateSearchParams(newSearchParams);
 };
 
-export const generateItemUrl = (group_id: string, sku: string) => {
-  if (group_id && sku) {
-    return `/product-item/${group_id}/${sku}`;
+export const generateItemUrl = (groupId: string, sku: string) => {
+  if (groupId && sku) {
+    return `/product-item/${groupId}/${sku}`;
   }
   return "#";
 };

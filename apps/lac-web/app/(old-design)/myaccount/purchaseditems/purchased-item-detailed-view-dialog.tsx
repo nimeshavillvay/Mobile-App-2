@@ -17,17 +17,17 @@ import useAddToCartMutation from "@/old/_hooks/cart/use-add-to-cart-mutation.hoo
 import useAddToFavoritesMutation from "@/old/_hooks/product/use-add-to-favorites-mutation.hook";
 import { cn, getMediaUrl } from "@/old/_utils/helpers";
 import { zodResolver } from "@hookform/resolvers/zod";
+import WurthFullBlack from "@repo/web-ui/components/logos/wurth-full-black";
 import dayjs from "dayjs";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
-  Dispatch,
-  SetStateAction,
   Suspense,
-  useEffect,
   useId,
   useState,
+  type Dispatch,
+  type SetStateAction,
 } from "react";
 import { useForm } from "react-hook-form";
 import { MdKeyboardArrowDown, MdKeyboardArrowRight } from "react-icons/md";
@@ -35,7 +35,6 @@ import * as z from "zod";
 import ItemPrices from "./_item-prices/item-prices";
 import { generateItemUrl } from "./client-helpers";
 import { DATE_FORMAT } from "./constants";
-import ItemPlaceholder from "./item-placeholder.png";
 import { CombinedPurchasedItem } from "./types";
 
 const schema = z.object({
@@ -103,13 +102,7 @@ const PurchasedItemDetailedViewDialog = ({
   };
 
   const isItemNotAdded = !item.txt_wurth_lac_item;
-  const isValidQuantity = quantity && quantity >= 1;
-
-  useEffect(() => {
-    if (!isValidQuantity) {
-      return setShowShippingOptions(false);
-    }
-  }, [quantity, isValidQuantity]);
+  const isValidQuantity = !!(quantity && quantity >= 1);
 
   return (
     <Dialog
@@ -129,13 +122,21 @@ const PurchasedItemDetailedViewDialog = ({
               href={generateItemUrl(item.group_id, item.sku)}
               className="min-w-[92px]"
             >
-              <Image
-                src={item.img ? getMediaUrl(item.img) : ItemPlaceholder}
-                alt={item.txt_sap_description_name}
-                width={92}
-                height={92}
-                className="size-[92px] border border-brand-gray-200 object-contain"
-              />
+              {item.img ? (
+                <Image
+                  src={getMediaUrl(item.img)}
+                  alt={item.txt_sap_description_name}
+                  width={92}
+                  height={92}
+                  className="size-[92px] border border-brand-gray-200 object-contain"
+                />
+              ) : (
+                <WurthFullBlack
+                  width={92}
+                  height={92}
+                  className="border border-brand-gray-200 px-2"
+                />
+              )}
             </Link>
 
             <div className="flex flex-col">
@@ -257,7 +258,7 @@ const PurchasedItemDetailedViewDialog = ({
           </div>
 
           <Collapsible
-            open={showShippingOptions}
+            open={isValidQuantity && showShippingOptions}
             onOpenChange={setShowShippingOptions}
             disabled={!isValidQuantity}
           >

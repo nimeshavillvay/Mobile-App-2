@@ -1,6 +1,6 @@
 import { api } from "@/old/_lib/api";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { ItemAttributes } from "./types";
+import { ItemAttributeResults } from "./types";
 
 const useSuspenseItemAttributes = (token: string, sku: string) => {
   return useSuspenseQuery({
@@ -10,11 +10,10 @@ const useSuspenseItemAttributes = (token: string, sku: string) => {
         .get("pim/webservice/rest/oderhistoryattribute", {
           headers: {
             authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
           },
           searchParams: { sku },
         })
-        .json<ItemAttributes>(),
+        .json<ItemAttributeResults>(),
   });
 };
 

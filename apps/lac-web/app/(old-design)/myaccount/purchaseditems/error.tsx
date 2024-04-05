@@ -4,7 +4,7 @@ import Separator from "@/old/_components/separator";
 
 const PurchasedItemsError = () => {
   return (
-    <div>
+    <>
       <h2 className="relative font-wurth text-xl font-medium text-brand-primary">
         Purchased Items
       </h2>
@@ -17,7 +17,7 @@ const PurchasedItemsError = () => {
       <div className="mt-10 rounded-sm border border-brand-primary p-6 text-center font-wurth text-lg capitalize text-brand-primary">
         Oops... Something went wrong!
       </div>
-    </div>
+    </>
   );
 };
 

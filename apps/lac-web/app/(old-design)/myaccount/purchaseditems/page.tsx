@@ -2,6 +2,7 @@ import { ACCOUNT_TOKEN_COOKIE } from "@/(old-design)/_lib/constants";
 import Separator from "@/old/_components/separator";
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import PurchasedItemsList from "./purchased-items-list";
 
 export const metadata: Metadata = {
@@ -12,7 +13,7 @@ const PurchasedItemsPage = () => {
   const accountTokenCookie = cookies().get(ACCOUNT_TOKEN_COOKIE);
 
   if (!accountTokenCookie?.value) {
-    return null;
+    return redirect("/");
   }
 
   return (

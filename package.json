@@ -22,9 +22,9 @@
     }
   },
   "devDependencies": {
-    "@repo/prettier-config": "workspace:^",
+    "@repo/prettier-config": "workspace:*",
     "prettier": "3.2.5",
-    "turbo": "1.13.0"
+    "turbo": "1.13.2"
   },
   "dependencies": {
     "dotenv-cli": "7.3.0"

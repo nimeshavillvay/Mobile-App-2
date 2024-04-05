@@ -14,6 +14,7 @@ import useAddToCartMutation from "@/old/_hooks/cart/use-add-to-cart-mutation.hoo
 import useAddToFavoritesMutation from "@/old/_hooks/product/use-add-to-favorites-mutation.hook";
 import { cn, getMediaUrl } from "@/old/_utils/helpers";
 import { zodResolver } from "@hookform/resolvers/zod";
+import WurthFullBlack from "@repo/web-ui/components/logos/wurth-full-black";
 import dayjs from "dayjs";
 import Image from "next/image";
 import Link from "next/link";
@@ -27,7 +28,6 @@ import ItemAttributes from "./_item-attributes/item-attributes";
 import ItemPrices from "./_item-prices/item-prices";
 import { generateItemUrl } from "./client-helpers";
 import { DATE_FORMAT } from "./constants";
-import ItemPlaceholder from "./item-placeholder.png";
 import { CombinedPurchasedItem } from "./types";
 
 const schema = z.object({
@@ -131,13 +131,21 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
               isItemNotAdded ? "pointer-events-none" : "pointer-events-auto"
             }
           >
-            <Image
-              src={item.img ? getMediaUrl(item.img) : ItemPlaceholder}
-              alt={item.txt_sap_description_name}
-              width={76}
-              height={76}
-              className="border border-brand-gray-200 object-contain"
-            />
+            {item.img ? (
+              <Image
+                src={getMediaUrl(item.img)}
+                alt={item.txt_sap_description_name}
+                width={76}
+                height={76}
+                className="border border-brand-gray-200 object-contain"
+              />
+            ) : (
+              <WurthFullBlack
+                width={76}
+                height={76}
+                className="border border-brand-gray-200 px-2"
+              />
+            )}
           </Link>
         </TableCell>
 
@@ -440,4 +448,6 @@ const ErrorAlert = ({ item }: { item: CombinedPurchasedItem }) => {
       />
     );
   }
+
+  return null;
 };

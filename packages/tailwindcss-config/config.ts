@@ -31,6 +31,9 @@ const config: Omit<Config, "content"> = {
           red: {
             650: "#CC0000",
           },
+          blue: {
+            450: "#00ADEF",
+          },
           gray: {
             50: "#F7F8FA",
             150: "#E8E9ED",
