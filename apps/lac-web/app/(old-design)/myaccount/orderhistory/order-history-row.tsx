@@ -10,11 +10,11 @@ import {
   STATUS_COLOR_CLASSES,
   UI_DATE_FORMAT,
 } from "./constants";
-import type { OrderItem, OrderStatus } from "./types";
+import type { Order, OrderStatus } from "./types";
 
 type OrderHistoryRowProps = {
   index: number;
-  order: OrderItem;
+  order: Order;
 };
 
 const OrderHistoryRow = ({ index, order }: OrderHistoryRowProps) => {
@@ -47,7 +47,7 @@ const OrderHistoryRow = ({ index, order }: OrderHistoryRowProps) => {
         </TableCell>
 
         <TableCell className="text-center">
-          ${formatNumberToPrice(order.orderTotal)}
+          ${formatNumberToPrice(Number(order.orderTotal))}
         </TableCell>
 
         <TableCell className="text-center" rowSpan={2}>
@@ -91,7 +91,7 @@ const OrderStatusBadge = ({ status }: { status: OrderStatus }) => {
 
   return (
     <div className={cn("px-4 py-2 font-bold", colorClass)}>
-      {ORDER_STATUS[status]}
+      {ORDER_STATUS[status] || "N/A"}
     </div>
   );
 };

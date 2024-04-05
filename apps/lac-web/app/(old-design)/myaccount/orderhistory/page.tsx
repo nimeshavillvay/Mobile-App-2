@@ -2,6 +2,7 @@ import Separator from "@/old/_components/separator";
 import { ACCOUNT_TOKEN_COOKIE } from "@/old/_lib/constants";
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import OrderHistoryList from "./order-history-list";
 
 export const metadata: Metadata = {
@@ -12,7 +13,7 @@ const OrderHistoryPage = () => {
   const accountTokenCookie = cookies().get(ACCOUNT_TOKEN_COOKIE);
 
   if (!accountTokenCookie?.value) {
-    return null;
+    return redirect("/");
   }
 
   return (

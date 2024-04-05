@@ -9,6 +9,7 @@ import {
 } from "@/old/_components/ui/table";
 import { useSearchParams } from "next/navigation";
 import {
+  ALL_ORDER_TYPES,
   INIT_FROM_DATE,
   INIT_PAGE_NUMBER,
   INIT_PAGE_SIZE,
@@ -23,24 +24,29 @@ const OrderHistoryList = ({ token }: { token: string }) => {
   const searchParams = useSearchParams();
   const fromDate = searchParams.get("from") ?? INIT_FROM_DATE;
   const toDate = searchParams.get("to") ?? INIT_TO_DATE;
+  const urlOrderType = searchParams.get("orderType");
   const currentPage = Number(searchParams.get("page") ?? INIT_PAGE_NUMBER);
   const pageSize = Number(searchParams.get("perPage") ?? INIT_PAGE_SIZE);
+  const orderTypes = urlOrderType?.split(",") ?? ALL_ORDER_TYPES;
+  const orderStatus = searchParams.get("orderStatus")?.split(",") ?? [];
 
   const orderHistoryListQuery = useSuspenseOrderHistoryList(
     token,
     fromDate,
     toDate,
-    "",
-    "desc",
-    "orderDate",
+    orderTypes,
+    orderStatus,
     currentPage - 1,
     pageSize,
+    "date",
+    "desc",
+    "",
   );
 
-  const orderHistoryItems =
-    orderHistoryListQuery?.data?.orderHistoryResponse?.content ?? null;
-  const totalItems =
-    orderHistoryListQuery?.data?.orderHistoryResponse?.totalElements ?? 0;
+  console.log("orderTypes", orderTypes);
+
+  const orderHistoryItems = orderHistoryListQuery?.data?.orders ?? null;
+  const totalItems = orderHistoryListQuery?.data?.pagination[0]?.db_count ?? 0;
 
   return (
     <>

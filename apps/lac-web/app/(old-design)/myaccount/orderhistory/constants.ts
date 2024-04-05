@@ -74,3 +74,4 @@ export const INIT_FROM_DATE = dayjs()
 export const INIT_TO_DATE = dayjs().format(URL_DATE_FORMAT);
 export const INIT_DURATION = DURATIONS.at(0); // Initial duration is 30 days
 export const CUSTOM_DURATION = DURATIONS.at(-1); // Custom duration is the last item in the list
+export const ALL_ORDER_TYPES = ["H", "C", "B", "K", "L"];
