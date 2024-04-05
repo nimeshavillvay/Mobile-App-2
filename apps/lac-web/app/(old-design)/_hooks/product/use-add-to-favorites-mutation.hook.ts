@@ -46,7 +46,7 @@ const useAddToFavoritesMutation = () => {
     },
     onSettled: (data, error, { sku }) => {
       queryClient.invalidateQueries({
-        queryKey: ["user", "favorite", "sku", sku],
+        queryKey: ["user", "favorite", "sku", "order-history", sku],
         exact: false,
       });
     },
