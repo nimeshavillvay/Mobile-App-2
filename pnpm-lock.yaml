@@ -426,7 +426,7 @@ importers:
         specifier: 1.0.0-beta.1
         version: 1.0.0-beta.1(typescript@5.4.3)
       embla-carousel-react:
-        specifier: 8.0.0
+        specifier: ^8.0.0
         version: 8.0.0(react@18.2.0)
       esbuild-plugin-react18:
         specifier: ^0.1.0

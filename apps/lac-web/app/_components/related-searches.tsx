@@ -9,7 +9,7 @@ const RELATED_SEARCHES = [
 const RelatedSearches = () => {
   return (
     <section className="container my-14 space-y-6 md:my-20">
-      <h2 className="text-center font-title text-3xl font-medium tracking-[-0.01875rem] text-black md:text-right">
+      <h2 className="text-center font-title text-3xl font-medium tracking-[-0.01875rem] text-black md:text-left">
         Related Searches
       </h2>
 
