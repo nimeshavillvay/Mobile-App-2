@@ -12,7 +12,7 @@
   },
   "scripts": {
     "dev": "storybook dev -p 6006 --no-open",
-    "build": "cross-env NODE_OPTIONS='--max-old-space-size=16384' tsup",
+    "build": "cross-env NODE_OPTIONS='--max-old-space-size=16384' TAILWIND_EXCLUDE_STORIES=true tsup",
     "lint": "eslint src/ --max-warnings 0",
     "build-storybook": "storybook build"
   },
