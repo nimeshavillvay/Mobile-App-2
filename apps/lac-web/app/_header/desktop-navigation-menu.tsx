@@ -18,17 +18,17 @@ type DesktopNavigationMenuProps = {
 
 const DesktopNavigationMenu = ({ categories }: DesktopNavigationMenuProps) => {
   return (
-    <NavigationMenu className="hidden md:flex max-w-full justify-start">
+    <NavigationMenu className="hidden max-w-full justify-start md:flex">
       <NavigationMenuList>
         <NavigationMenuItem value="categories">
           <NavigationMenuTrigger>Categories</NavigationMenuTrigger>
 
-          <NavigationMenuContent className="p-4 flex flex-col">
+          <NavigationMenuContent className="flex flex-col p-4">
             {categories.map((category) => (
               <NavigationMenuLink
                 key={category.id}
                 asChild
-                className="text-nowrap px-2 py-1.5 flex flex-row items-center justify-between gap-2 text-sm hover:bg-wurth-gray-150 active:bg-wurth-gray-150 rounded"
+                className="flex flex-row items-center justify-between gap-2 text-nowrap rounded px-2 py-1.5 text-sm hover:bg-wurth-gray-150 active:bg-wurth-gray-150"
               >
                 <Link href={`/category/${category.id}/${category.slug}`}>
                   <span>{category.name}</span>

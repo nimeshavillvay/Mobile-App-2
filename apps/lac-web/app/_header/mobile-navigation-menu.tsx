@@ -16,10 +16,10 @@ import Link from "next/link";
 import type { Category } from "./types";
 
 const sectionHeadingStyles = cva({
-  base: "pt-5 pr-2 pb-2 pl-4 bg-wurth-gray-50 text-wurth-gray-800 text-sm font-semibold",
+  base: "bg-wurth-gray-50 pb-2 pl-4 pr-2 pt-5 text-sm font-semibold text-wurth-gray-800",
 });
 const sectionLinkStyles = cva({
-  base: "flex flex-row justify-between items-center gap-2 px-4 py-3 text-base text-black font-normal",
+  base: "flex flex-row items-center justify-between gap-2 px-4 py-3 text-base font-normal text-black",
 });
 const dividerStyles = cva({
   base: "divide-y divide-wurth-gray-250",

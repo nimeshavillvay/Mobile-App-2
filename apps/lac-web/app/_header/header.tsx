@@ -28,7 +28,7 @@ const Header = async () => {
     .json<Category[]>();
 
   return (
-    <header className="flex flex-col gap-4 border-b md:border-0 border-b-wurth-gray-250 py-5 md:pb-0 shadow-[0px_1px_5px_0px_rgba(0,0,0,0.05),0px_1px_2px_-1px_rgba(0,0,0,0.05)]">
+    <header className="flex flex-col gap-4 border-b border-b-wurth-gray-250 py-5 shadow-[0px_1px_5px_0px_rgba(0,0,0,0.05),0px_1px_2px_-1px_rgba(0,0,0,0.05)] md:border-0 md:pb-0">
       <div className="container flex w-full flex-row items-center gap-7">
         <MobileNavigationMenu categories={categories} />
 
