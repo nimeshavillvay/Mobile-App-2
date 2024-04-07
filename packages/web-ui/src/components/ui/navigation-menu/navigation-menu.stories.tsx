@@ -1,7 +1,6 @@
 import Zap from "@/components/icons/zap";
 import { cn } from "@/lib/utils";
 import type { Meta, StoryObj } from "@storybook/react";
-import Link from "next/link";
 import {
   forwardRef,
   type ComponentPropsWithoutRef,
@@ -11,10 +10,10 @@ import {
   NavigationMenu,
   NavigationMenuContent,
   NavigationMenuItem,
+  NavigationMenuItemLink,
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
-  navigationMenuTriggerStyle,
 } from "./navigation-menu";
 
 const meta: Meta<typeof NavigationMenu> = {
@@ -120,13 +119,9 @@ export const Showcase: Story = {
               </ul>
             </NavigationMenuContent>
           </NavigationMenuItem>
-          <NavigationMenuItem>
-            <Link href="/docs" legacyBehavior passHref>
-              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                Documentation
-              </NavigationMenuLink>
-            </Link>
-          </NavigationMenuItem>
+          <NavigationMenuItemLink href="/">
+            Documentation
+          </NavigationMenuItemLink>
         </NavigationMenuList>
       </NavigationMenu>
     );

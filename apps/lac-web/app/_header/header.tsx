@@ -1,3 +1,5 @@
+import { api } from "@/_lib/api";
+import { DEFAULT_REVALIDATE } from "@/_lib/constants";
 import Menu from "@repo/web-ui/components/icons/menu";
 import Profile from "@repo/web-ui/components/icons/profile";
 import ShoppingCart from "@repo/web-ui/components/icons/shopping-cart";
@@ -9,10 +11,24 @@ import {
 } from "@repo/web-ui/components/search-box";
 import { Button } from "@repo/web-ui/components/ui/button";
 import Link from "next/link";
+import DesktopNavigationMenu from "./desktop-navigation-menu";
+import type { Category } from "./types";
 
-const Header = () => {
+const Header = async () => {
+  const categories = await api
+    .get("rest/getcategorylist/0", {
+      searchParams: {
+        membershipid: 1,
+        level: 3,
+      },
+      next: {
+        revalidate: DEFAULT_REVALIDATE,
+      },
+    })
+    .json<Category[]>();
+
   return (
-    <header className="flex flex-col gap-4 border-b border-b-wurth-gray-250 py-5 shadow-[0px_1px_5px_0px_rgba(0,0,0,0.05),0px_1px_2px_-1px_rgba(0,0,0,0.05)]">
+    <header className="flex flex-col gap-4 border-b md:border-0 border-b-wurth-gray-250 py-5 md:pb-0 shadow-[0px_1px_5px_0px_rgba(0,0,0,0.05),0px_1px_2px_-1px_rgba(0,0,0,0.05)]">
       <div className="container flex w-full flex-row items-center gap-7">
         <Button
           variant="ghost"
@@ -78,6 +94,8 @@ const Header = () => {
           <SearchBoxButton />
         </SearchBox>
       </div>
+
+      <DesktopNavigationMenu categories={categories} />
     </header>
   );
 };

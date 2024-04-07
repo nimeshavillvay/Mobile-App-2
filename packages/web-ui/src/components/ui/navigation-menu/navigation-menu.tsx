@@ -17,7 +17,7 @@ const NavigationMenu = forwardRef<
   <NavigationMenuPrimitive.Root
     ref={ref}
     className={cn(
-      "ui-relative ui-z-10 ui-flex ui-max-w-max ui-flex-1 ui-items-center ui-justify-center",
+      "ui-relative ui-z-10 ui-flex ui-max-w-max ui-flex-1 ui-items-center ui-justify-center ui-bg-wurth-red-650",
       className,
     )}
     {...props}
@@ -35,7 +35,7 @@ const NavigationMenuList = forwardRef<
   <NavigationMenuPrimitive.List
     ref={ref}
     className={cn(
-      "ui-group ui-flex ui-flex-1 ui-list-none ui-items-center ui-justify-center ui-space-x-1",
+      "ui-group ui-container ui-flex ui-flex-1 ui-list-none ui-items-center ui-justify-center",
       className,
     )}
     {...props}
@@ -46,7 +46,7 @@ NavigationMenuList.displayName = NavigationMenuPrimitive.List.displayName;
 const NavigationMenuItem = NavigationMenuPrimitive.Item;
 
 const navigationMenuTriggerStyle = cva({
-  base: "ui-group ui-inline-flex ui-h-9 ui-w-max ui-items-center ui-justify-center ui-rounded-md ui-bg-white ui-px-4 ui-py-2 ui-text-sm ui-font-medium ui-transition-colors hover:ui-bg-zinc-100 hover:ui-text-zinc-900 focus:ui-bg-zinc-100 focus:ui-text-zinc-900 focus:ui-outline-none disabled:ui-pointer-events-none disabled:ui-opacity-50 data-[active]:ui-bg-zinc-100/50 data-[state=open]:ui-bg-zinc-100/50",
+  base: "data-[state=open]:ui-bg-g-wurth-red-65050 ui-group ui-inline-flex ui-w-max ui-items-center ui-justify-center ui-gap-1 ui-bg-wurth-red-650 ui-px-5 ui-py-3 ui-text-base ui-font-semibold ui-text-white ui-transition-colors hover:ui-bg-red-700 focus:ui-bg-red-700 focus:ui-outline-none disabled:ui-pointer-events-none disabled:ui-opacity-50 data-[active]:ui-bg-wurth-red-650/50",
 });
 
 const NavigationMenuTrigger = forwardRef<
@@ -61,7 +61,7 @@ const NavigationMenuTrigger = forwardRef<
     {children}
     {""}
     <ChevronDown
-      className="ui-relative ui-top-[1px] ui-ml-1 ui-h-3 ui-w-3 ui-transition ui-duration-300 group-data-[state=open]:ui-rotate-180"
+      className="ui-size-3 ui-stroke-white ui-stroke-2 ui-transition ui-duration-300 group-data-[state=open]:ui-rotate-180"
       aria-hidden="true"
     />
   </NavigationMenuPrimitive.Trigger>
@@ -125,11 +125,26 @@ const NavigationMenuIndicator = forwardRef<
 NavigationMenuIndicator.displayName =
   NavigationMenuPrimitive.Indicator.displayName;
 
+const NavigationMenuItemLink = forwardRef<
+  ElementRef<typeof NavigationMenuPrimitive.Link>,
+  ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Link>
+>(({ className, ...delegated }, ref) => (
+  <NavigationMenuItem>
+    <NavigationMenuLink
+      ref={ref}
+      className={cn(navigationMenuTriggerStyle(), className)}
+      {...delegated}
+    />
+  </NavigationMenuItem>
+));
+NavigationMenuItemLink.displayName = "NavigationMenuItemLink";
+
 export {
   NavigationMenu,
   NavigationMenuContent,
   NavigationMenuIndicator,
   NavigationMenuItem,
+  NavigationMenuItemLink,
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
