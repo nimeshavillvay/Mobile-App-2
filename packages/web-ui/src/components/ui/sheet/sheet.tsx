@@ -1,9 +1,9 @@
 "use client";
 
+import Close from "@/components/icons/close";
 import { cva, type VariantProps } from "@/lib/cva.config";
 import { cn } from "@/lib/utils";
 import * as SheetPrimitive from "@radix-ui/react-dialog";
-import { Cross2Icon } from "@radix-ui/react-icons";
 import {
   forwardRef,
   type ComponentPropsWithoutRef,
@@ -35,15 +35,15 @@ const SheetOverlay = forwardRef<
 SheetOverlay.displayName = SheetPrimitive.Overlay.displayName;
 
 const sheetVariants = cva({
-  base: "ui-fixed ui-z-50 ui-gap-4 ui-bg-white ui-p-6 ui-shadow-lg ui-transition ui-ease-in-out data-[state=closed]:ui-duration-300 data-[state=open]:ui-duration-500 data-[state=open]:ui-animate-in data-[state=closed]:ui-animate-out",
+  base: "ui-fixed ui-z-50 ui-gap-4 ui-bg-white ui-shadow-lg ui-transition ui-ease-in-out data-[state=closed]:ui-duration-300 data-[state=open]:ui-duration-500 data-[state=open]:ui-animate-in data-[state=closed]:ui-animate-out",
   variants: {
     side: {
-      top: "ui-inset-x-0 ui-top-0 ui-border-b data-[state=closed]:ui-slide-out-to-top data-[state=open]:ui-slide-in-from-top",
+      top: "ui-inset-x-0 ui-top-0 data-[state=closed]:ui-slide-out-to-top data-[state=open]:ui-slide-in-from-top",
       bottom:
-        "ui-inset-x-0 ui-bottom-0 ui-border-t data-[state=closed]:ui-slide-out-to-bottom data-[state=open]:ui-slide-in-from-bottom",
-      left: "ui-inset-y-0 ui-left-0 ui-h-full ui-w-3/4 ui-border-r data-[state=closed]:ui-slide-out-to-left data-[state=open]:ui-slide-in-from-left sm:ui-max-w-sm",
+        "ui-inset-x-0 ui-bottom-0 data-[state=closed]:ui-slide-out-to-bottom data-[state=open]:ui-slide-in-from-bottom",
+      left: "ui-inset-y-0 ui-left-0 ui-h-full ui-w-3/4 data-[state=closed]:ui-slide-out-to-left data-[state=open]:ui-slide-in-from-left sm:ui-max-w-sm",
       right:
-        "ui-inset-y-0 ui-right-0 ui-h-full ui-w-3/4 ui-border-l data-[state=closed]:ui-slide-out-to-right data-[state=open]:ui-slide-in-from-right sm:ui-max-w-sm",
+        "ui-inset-y-0 ui-right-0 ui-h-full ui-w-3/4 data-[state=closed]:ui-slide-out-to-right data-[state=open]:ui-slide-in-from-right sm:ui-max-w-sm",
     },
   },
   defaultVariants: {
@@ -67,8 +67,8 @@ const SheetContent = forwardRef<
       {...props}
     >
       {children}
-      <SheetPrimitive.Close className="ui-absolute ui-right-4 ui-top-4 ui-rounded-sm ui-opacity-70 ui-ring-offset-white ui-transition-opacity hover:ui-opacity-100 focus:ui-outline-none focus:ui-ring-2 focus:ui-ring-zinc-950 focus:ui-ring-offset-2 disabled:ui-pointer-events-none data-[state=open]:ui-bg-zinc-100">
-        <Cross2Icon className="ui-h-4 ui-w-4" />
+      <SheetPrimitive.Close className="ui-absolute ui-right-3 ui-top-3 ui-rounded ui-bg-black/10 ui-p-1.5 ui-opacity-70 ui-ring-offset-white ui-transition-opacity hover:ui-opacity-100 focus:ui-outline-none focus:ui-ring-2 focus:ui-ring-zinc-950 focus:ui-ring-offset-2 disabled:ui-pointer-events-none data-[state=open]:ui-bg-zinc-100">
+        <Close className="ui-size-3 ui-stroke-white ui-stroke-2" />
         <span className="ui-sr-only">Close</span>
       </SheetPrimitive.Close>
     </SheetPrimitive.Content>
@@ -82,7 +82,7 @@ const SheetHeader = ({
 }: HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn(
-      "ui-flex ui-flex-col ui-space-y-2 ui-text-center sm:ui-text-left",
+      "ui-flex ui-min-h-[5.75rem] ui-flex-col ui-justify-end ui-space-y-2 ui-bg-wurth-red-650 ui-pb-3 ui-pl-4 ui-pr-9 ui-pt-5 ui-text-center sm:ui-text-left",
       className,
     )}
     {...props}
@@ -110,7 +110,10 @@ const SheetTitle = forwardRef<
 >(({ className, ...props }, ref) => (
   <SheetPrimitive.Title
     ref={ref}
-    className={cn("ui-text-lg ui-font-semibold ui-text-zinc-950", className)}
+    className={cn(
+      "ui-text-balance ui-font-title ui-text-2xl ui-font-medium ui-tracking-[-0.144px] ui-text-white",
+      className,
+    )}
     {...props}
   />
 ));
@@ -122,7 +125,7 @@ const SheetDescription = forwardRef<
 >(({ className, ...props }, ref) => (
   <SheetPrimitive.Description
     ref={ref}
-    className={cn("ui-text-sm ui-text-zinc-500", className)}
+    className={cn("ui-text-sm ui-text-white", className)}
     {...props}
   />
 ));

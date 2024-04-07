@@ -42,7 +42,7 @@ export const Showcase: Story = {
                   done.
                 </SheetDescription>
               </SheetHeader>
-              <div className="ui-grid ui-gap-4 ui-py-4">
+              <div className="ui-grid ui-gap-4 ui-px-6 ui-py-4">
                 <div className="ui-grid ui-grid-cols-4 ui-items-center ui-gap-4">
                   <Label htmlFor="name" className="ui-text-right">
                     Name
@@ -64,7 +64,7 @@ export const Showcase: Story = {
                   />
                 </div>
               </div>
-              <SheetFooter>
+              <SheetFooter className="ui-px-6 ui-pb-6">
                 <SheetClose asChild>
                   <Button type="submit">Save changes</Button>
                 </SheetClose>

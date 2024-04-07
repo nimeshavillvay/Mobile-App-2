@@ -1,6 +1,5 @@
 import { api } from "@/_lib/api";
 import { DEFAULT_REVALIDATE } from "@/_lib/constants";
-import Menu from "@repo/web-ui/components/icons/menu";
 import Profile from "@repo/web-ui/components/icons/profile";
 import ShoppingCart from "@repo/web-ui/components/icons/shopping-cart";
 import WurthFullBlack from "@repo/web-ui/components/logos/wurth-full-black";
@@ -12,6 +11,7 @@ import {
 import { Button } from "@repo/web-ui/components/ui/button";
 import Link from "next/link";
 import DesktopNavigationMenu from "./desktop-navigation-menu";
+import MobileNavigationMenu from "./mobile-navigation-menu";
 import type { Category } from "./types";
 
 const Header = async () => {
@@ -30,15 +30,7 @@ const Header = async () => {
   return (
     <header className="flex flex-col gap-4 border-b md:border-0 border-b-wurth-gray-250 py-5 md:pb-0 shadow-[0px_1px_5px_0px_rgba(0,0,0,0.05),0px_1px_2px_-1px_rgba(0,0,0,0.05)]">
       <div className="container flex w-full flex-row items-center gap-7">
-        <Button
-          variant="ghost"
-          size="icon"
-          className="size-6 flex-shrink-0 md:hidden"
-        >
-          <Menu />
-
-          <span className="sr-only">Menu</span>
-        </Button>
+        <MobileNavigationMenu categories={categories} />
 
         <Link href="/" className="flex-shrink-0">
           <WurthFullBlack className="h-[24px] w-[114px] md:h-[28px] md:w-[133px]" />
