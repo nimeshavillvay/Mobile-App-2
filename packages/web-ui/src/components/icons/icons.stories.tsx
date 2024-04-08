@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import AddToCart from "./add-to-cart";
+import Alert from "./alert";
 import ArrowLeft from "./arrow-left";
 import ArrowRight from "./arrow-right";
 import ArrowUp from "./arrow-up";
@@ -55,6 +56,8 @@ export const Showcase: Story = {
         <Settings />
 
         <Save />
+
+        <Alert />
 
         <Minus />
 
