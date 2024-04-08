@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import AddToCart from "./add-to-cart";
+import ArrowLeft from "./arrow-left";
 import ArrowRight from "./arrow-right";
+import ArrowUp from "./arrow-up";
 import ArrowUpRight from "./arrow-up-right";
 import Bell from "./bell";
 import Check from "./check";
@@ -78,9 +80,13 @@ export const Showcase: Story = {
 
         <Check />
 
+        <ArrowUpRight />
+
         <ArrowRight />
 
-        <ArrowUpRight />
+        <ArrowLeft />
+
+        <ArrowUp />
 
         <ChevronRight />
 
