@@ -35,7 +35,7 @@ const NavigationMenuList = forwardRef<
   <NavigationMenuPrimitive.List
     ref={ref}
     className={cn(
-      "ui-group ui-container ui-flex ui-flex-1 ui-list-none ui-items-center ui-justify-center",
+      "ui-group ui-flex ui-flex-1 ui-list-none ui-items-center ui-justify-center",
       className,
     )}
     {...props}
