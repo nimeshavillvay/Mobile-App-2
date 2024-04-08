@@ -75,7 +75,6 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
   }
 
   const getItemInfo = useGetItemInfo(token, productIds);
-  console.log("getItemInfo", getItemInfo);
   if (purchasedItemsList && getItemInfo) {
     isLoading = false;
   }
