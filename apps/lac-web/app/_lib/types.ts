@@ -47,6 +47,7 @@ export type ItemInfo = {
   brand_name: string;
   category_name: string;
 };
+
 // TODO: Types used in old design needs remove in future
 export type PriceBreakDowns = {
   price1: number;

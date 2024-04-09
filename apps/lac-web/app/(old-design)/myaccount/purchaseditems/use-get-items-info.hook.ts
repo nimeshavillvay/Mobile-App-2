@@ -1,5 +1,5 @@
 import { api } from "@/_lib/api";
-import { mapGetItemInfoResponse } from "@/_mappers/get-item-info-mapper";
+import { mapGetItemInfoResponse } from "@/_mappers/get-item-info.mapper";
 import { useQuery } from "@tanstack/react-query";
 import type { OrderHistoryItems } from "./types";
 
