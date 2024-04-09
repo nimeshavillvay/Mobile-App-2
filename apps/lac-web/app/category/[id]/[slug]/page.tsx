@@ -209,7 +209,7 @@ const CategoryPage = async ({ params: { id, slug } }: CategoryPageProps) => {
       <Banner />
 
       <Suspense fallback={<div>Loading...</div>}>
-        <Products />
+        <Products catId={id} />
       </Suspense>
 
       <RelatedSearches />

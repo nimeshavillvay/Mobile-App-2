@@ -21,13 +21,13 @@ const AccordionTrigger = forwardRef<
     <AccordionPrimitive.Trigger
       ref={ref}
       className={cn(
-        "ui-flex ui-flex-1 ui-items-center ui-gap-2 ui-p-2 ui-text-sm ui-font-semibold ui-text-black ui-transition-all hover:ui-underline [&[data-state=open]>svg]:ui-rotate-180",
+        "ui-flex ui-flex-1 ui-items-center ui-gap-2 ui-p-2 ui-text-left ui-text-sm ui-font-semibold ui-text-black ui-transition-all hover:ui-underline [&[data-state=open]>svg]:ui-rotate-180",
         className,
       )}
       {...props}
     >
       <ChevronDown className="ui-h-4 ui-w-4 ui-shrink-0 ui-transition-transform ui-duration-200" />
-      {children}
+      <span>{children}</span>
     </AccordionPrimitive.Trigger>
   </AccordionPrimitive.Header>
 ));
