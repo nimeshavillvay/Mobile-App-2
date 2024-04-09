@@ -67,7 +67,7 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
     totalItems = purchasedItemsList.data.pagination.db_count;
 
     purchasedItemsList.data.products.forEach((element) => {
-      const isExist = productIds.find((e) => e === element.id);
+      const isExist = productIds.find((id) => id === element.id);
       if (!isExist) {
         productIds.push(element.id);
       }
