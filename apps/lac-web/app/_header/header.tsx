@@ -1,4 +1,5 @@
-import Menu from "@repo/web-ui/components/icons/menu";
+import { api } from "@/_lib/api";
+import { DEFAULT_REVALIDATE } from "@/_lib/constants";
 import Profile from "@repo/web-ui/components/icons/profile";
 import ShoppingCart from "@repo/web-ui/components/icons/shopping-cart";
 import WurthFullBlack from "@repo/web-ui/components/logos/wurth-full-black";
@@ -9,20 +10,27 @@ import {
 } from "@repo/web-ui/components/search-box";
 import { Button } from "@repo/web-ui/components/ui/button";
 import Link from "next/link";
+import DesktopNavigationMenu from "./desktop-navigation-menu";
+import MobileNavigationMenu from "./mobile-navigation-menu";
+import type { Category } from "./types";
 
-const Header = () => {
+const Header = async () => {
+  const categories = await api
+    .get("rest/getcategorylist/0", {
+      searchParams: {
+        membershipid: 1,
+        level: 3,
+      },
+      next: {
+        revalidate: DEFAULT_REVALIDATE,
+      },
+    })
+    .json<Category[]>();
+
   return (
-    <header className="flex flex-col gap-4 border-b border-b-wurth-gray-250 py-5 shadow-[0px_1px_5px_0px_rgba(0,0,0,0.05),0px_1px_2px_-1px_rgba(0,0,0,0.05)]">
+    <header className="flex flex-col gap-4 border-b border-b-wurth-gray-250 py-5 shadow-[0px_1px_5px_0px_rgba(0,0,0,0.05),0px_1px_2px_-1px_rgba(0,0,0,0.05)] md:border-0 md:pb-0">
       <div className="container flex w-full flex-row items-center gap-7">
-        <Button
-          variant="ghost"
-          size="icon"
-          className="size-6 flex-shrink-0 md:hidden"
-        >
-          <Menu />
-
-          <span className="sr-only">Menu</span>
-        </Button>
+        <MobileNavigationMenu categories={categories} />
 
         <Link href="/" className="flex-shrink-0">
           <WurthFullBlack className="h-[24px] w-[114px] md:h-[28px] md:w-[133px]" />
@@ -78,6 +86,8 @@ const Header = () => {
           <SearchBoxButton />
         </SearchBox>
       </div>
+
+      <DesktopNavigationMenu categories={categories} />
     </header>
   );
 };

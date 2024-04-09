@@ -15,7 +15,16 @@ export default defineConfig({
   // This is useful to ensure the output is only the latest.
   clean: true,
   format: ["esm"],
-  external: ["react", "react-dom", "next", "tailwind-merge", "clsx"],
+  external: [
+    "react",
+    "react-dom",
+    "next",
+    "tailwind-merge",
+    "clsx",
+    "embla-carousel-react",
+    "cva",
+    /^@radix-ui\/react-/g,
+  ],
   // treeshake: true, // Disabled because "use client" directive gets removed
   // splitting: true, // Disabled because "use client" directive gets removed
   esbuildPlugins: [react18Plugin()],

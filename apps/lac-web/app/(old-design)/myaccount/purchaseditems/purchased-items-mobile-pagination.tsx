@@ -10,7 +10,7 @@ import {
   DialogTitle,
 } from "@/old/_components/ui/dialog";
 import { useSearchParams } from "next/navigation";
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState, type Dispatch, type SetStateAction } from "react";
 import { MdCheck } from "react-icons/md";
 import { changeSearchParams } from "./client-helpers";
 import { INIT_PAGE_NUMBER, QUERY_KEYS } from "./constants";

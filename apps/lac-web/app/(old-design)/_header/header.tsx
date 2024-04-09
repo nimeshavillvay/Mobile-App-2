@@ -1,9 +1,9 @@
+import { DEFAULT_REVALIDATE } from "@/_lib/constants";
 import SearchBar from "@/old/_components/search-bar";
 import Separator from "@/old/_components/separator";
 import VisuallyHidden from "@/old/_components/visually-hidden";
 import WurthLogo from "@/old/_components/wurth-logo";
 import { api } from "@/old/_lib/api";
-import { DEFAULT_REVALIDATE } from "@/old/_lib/constants";
 import type { Category } from "@/old/_lib/types";
 import Link from "next/link";
 import CategoriesDropdown from "./categories-dropdown";

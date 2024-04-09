@@ -2,9 +2,17 @@
 
 import HeartOutline from "@/components/icons/heart-outline";
 import { Badge, BadgeProps } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn, formatNumberToPrice } from "@/lib/utils";
 import Image, { type ImageProps } from "next/image";
@@ -245,13 +253,52 @@ export const ProductCardPrice = ({
   );
 };
 
+export const ProductCardVariantSelector = ({
+  href,
+  variants,
+  value,
+  onValueChange,
+}: {
+  href: string;
+  variants: { value: string; title: string }[];
+  value?: string;
+  onValueChange: (value: string) => void;
+}) => {
+  return (
+    <div className="ui-space-y-1">
+      <h4 className="ui-text-sm ui-font-normal ui-text-wurth-gray-800">
+        {variants.length} variations
+      </h4>
+
+      <Select value={value} onValueChange={onValueChange}>
+        <SelectTrigger className="ui-w-full">
+          <SelectValue placeholder="Select a variation" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectGroup>
+            {variants.map((variant) => (
+              <SelectItem key={variant.value} value={variant.value}>
+                {variant.title}
+              </SelectItem>
+            ))}
+          </SelectGroup>
+        </SelectContent>
+      </Select>
+
+      <Link
+        href={href}
+        className={cn(buttonVariants({ variant: "default" }), "ui-w-full")}
+      >
+        View item
+      </Link>
+    </div>
+  );
+};
+
 export const ProductCardActions = () => {
   return (
     <div className="ui-flex ui-flex-row ui-items-center ui-gap-1 md:ui-gap-2">
-      <Button
-        variant="secondary"
-        className="ui-h-10 ui-max-h-full ui-flex-1 ui-px-4 ui-text-[0.875rem] ui-leading-5"
-      >
+      <Button className="ui-h-10 ui-max-h-full ui-flex-1 ui-px-4 ui-text-[0.875rem] ui-leading-5">
         Add to cart
       </Button>
 

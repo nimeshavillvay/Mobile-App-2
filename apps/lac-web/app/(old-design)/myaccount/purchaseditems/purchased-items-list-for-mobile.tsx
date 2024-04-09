@@ -1,3 +1,4 @@
+import { Button } from "@/(old-design)/_components/ui/button";
 import { getMediaUrl } from "@/old/_utils/helpers";
 import WurthFullBlack from "@repo/web-ui/components/logos/wurth-full-black";
 import dayjs from "dayjs";
@@ -80,6 +81,7 @@ const PurchasedItemRowForMobile = ({
             className="border border-brand-gray-200 px-2"
           />
         )}
+        <span className="sr-only">Item image</span>
       </Link>
 
       <div className="flex w-full min-w-[200px] flex-col gap-1 px-2 text-brand-gray-500">
@@ -112,9 +114,13 @@ const PurchasedItemRowForMobile = ({
         </div>
       </div>
 
-      <div onClick={onClick}>
+      <Button
+        variant="ghost"
+        onClick={onClick}
+        className="h-full items-start px-0.5"
+      >
         <MdKeyboardArrowRight className="text-3xl" />
-      </div>
+      </Button>
     </div>
   );
 };

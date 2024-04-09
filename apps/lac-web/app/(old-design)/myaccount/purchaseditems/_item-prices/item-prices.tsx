@@ -1,6 +1,13 @@
 import useSuspensePriceCheck from "@/_hooks/use-suspense-price-check.hook";
+import type { PriceBreakDowns } from "@/_lib/types";
+import {
+  Table,
+  TableCell,
+  TableHead,
+  TableRow,
+} from "@/old/_components/ui/table";
 import { formatNumberToPrice } from "@/old/_utils/helpers";
-import type { ItemPrices, PriceBreakDowns, PriceRow } from "./types";
+import type { PriceRow } from "./types";
 import UnitPriceRow from "./unit-price-row";
 import UnitPriceRowForMobile from "./unit-price-row-for-mobile";
 
@@ -28,7 +35,7 @@ const ItemPrices = ({
   const prices = itemPricesQuery.data?.["list-sku-price"][0] ?? null;
   const priceUnit = prices?.["price-unit"] ?? "";
 
-  const priceBreakDownArray: PriceRow[] = prices
+  const priceBreakDownArray = prices
     ? Object.keys(prices.pricebreakdowns)
         .filter((key) => key.startsWith("quantity"))
         .map((key) => {
@@ -55,10 +62,19 @@ const ItemPrices = ({
   return (
     <div className="flex flex-col space-y-2 py-2 text-sm text-brand-gray-500">
       {priceBreakDownArray.length > 0 && (
-        <div className="grid grid-cols-3 gap-2 pt-2">
-          <div className="text-left font-bold text-black">Qty</div>
-          <div className="text-center font-bold text-black">UOM</div>
-          <div className="text-right font-bold text-black">Price</div>
+        <Table>
+          <TableRow className="border-b-0">
+            <TableHead className="h-8 text-left font-bold text-black">
+              Qty
+            </TableHead>
+            <TableHead className="h-8 text-center font-bold text-black">
+              UOM
+            </TableHead>
+            <TableHead className="h-8 text-right font-bold text-black">
+              Price
+            </TableHead>
+          </TableRow>
+
           {priceBreakDownArray.map((breakDown, index) => (
             <PriceRow
               key={index}
@@ -67,7 +83,7 @@ const ItemPrices = ({
               price={`$${formatNumberToPrice(breakDown.price)} / ${priceUnit}`}
             />
           ))}
-        </div>
+        </Table>
       )}
 
       {showUnitPrice && prices && (
@@ -92,9 +108,9 @@ const PriceRow = ({
   uom: string;
   price: string;
 }) => (
-  <>
-    <div className="text-left">{quantity}</div>
-    <div className="text-center">{uom}</div>
-    <div className="text-nowrap text-right">{price}</div>
-  </>
+  <TableRow className="border-b-0">
+    <TableCell className="py-1 text-left">{quantity}</TableCell>
+    <TableCell className="py-1 text-center">{uom}</TableCell>
+    <TableCell className="text-nowrap py-1 text-right">{price}</TableCell>
+  </TableRow>
 );

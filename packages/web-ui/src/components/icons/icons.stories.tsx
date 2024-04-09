@@ -1,6 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import AddToCart from "./add-to-cart";
+import Alert from "./alert";
+import ArrowLeft from "./arrow-left";
 import ArrowRight from "./arrow-right";
+import ArrowUp from "./arrow-up";
+import ArrowUpRight from "./arrow-up-right";
 import Bell from "./bell";
 import Check from "./check";
 import ChevronDown from "./chevron-down";
@@ -19,6 +23,7 @@ import Save from "./save";
 import Settings from "./settings";
 import ShoppingCart from "./shopping-cart";
 import Truck from "./truck";
+import Zap from "./zap";
 
 const Icon = () => {
   return <svg></svg>;
@@ -52,6 +57,8 @@ export const Showcase: Story = {
 
         <Save />
 
+        <Alert />
+
         <Minus />
 
         <Plus />
@@ -64,6 +71,8 @@ export const Showcase: Story = {
 
         <HeartOutline />
 
+        <Zap />
+
         <Profile />
 
         <Bell />
@@ -74,7 +83,13 @@ export const Showcase: Story = {
 
         <Check />
 
+        <ArrowUpRight />
+
         <ArrowRight />
+
+        <ArrowLeft />
+
+        <ArrowUp />
 
         <ChevronRight />
 
