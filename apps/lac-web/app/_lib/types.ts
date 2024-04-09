@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 export type ImageInfo = {
   original: number;
   webp: string;
@@ -47,7 +46,7 @@ export type ItemInfo = {
   product_summary: string;
   brand_name: string;
   category_name: string;
-=======
+};
 // TODO: Types used in old design needs remove in future
 export type PriceBreakDowns = {
   price1: number;
@@ -70,5 +69,4 @@ export type SKUPrice = {
 
 export type ItemPricesResult = {
   "list-sku-price": SKUPrice[];
->>>>>>> feature/purchased-items
 };
