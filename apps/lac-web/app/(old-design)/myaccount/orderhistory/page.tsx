@@ -24,7 +24,7 @@ const OrderHistoryPage = () => {
 
       <Separator
         orientation="horizontal"
-        className="mb-4 h-px flex-1 bg-brand-primary"
+        className="h-px flex-1 bg-brand-primary"
       />
 
       <OrderHistoryList token={accountTokenCookie?.value} />

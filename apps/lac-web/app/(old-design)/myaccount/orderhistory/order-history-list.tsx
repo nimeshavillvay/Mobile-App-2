@@ -1,5 +1,7 @@
 "use client";
 
+import { Button } from "@/old/_components/ui/button";
+import { Input } from "@/old/_components/ui/input";
 import {
   Table,
   TableBody,
@@ -7,7 +9,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/old/_components/ui/table";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { MdSearch } from "react-icons/md";
 import {
   ALL_ORDER_TYPES,
   INIT_FROM_DATE,
@@ -43,13 +47,32 @@ const OrderHistoryList = ({ token }: { token: string }) => {
     "",
   );
 
-  console.log("orderTypes", orderTypes);
-
   const orderHistoryItems = orderHistoryListQuery?.data?.orders ?? null;
   const totalItems = orderHistoryListQuery?.data?.pagination[0]?.db_count ?? 0;
 
   return (
     <>
+      <div className="flex flex-row items-center justify-between py-4">
+        <div className="flex flex-row">
+          <Input
+            className="h-9 max-w-[270px] rounded-l-full border-r-0 border-brand-gray-200 text-sm"
+            placeholder="Search by order number"
+          />
+          <Button
+            variant="ghost"
+            className="gap-0 rounded-r-full border border-l-0 pl-0 pr-2"
+          >
+            <MdSearch className="text-xl leading-none text-brand-gray-400" />
+          </Button>
+        </div>
+        <Link
+          className="block rounded-sm bg-brand-secondary px-4 py-2 text-center font-wurth font-extrabold uppercase text-white"
+          href="https://wurthlac.billtrust.com/"
+        >
+          Pay Your Bill Online
+        </Link>
+      </div>
+
       <OrderHistoryListSelectors />
 
       <TotalCountAndPagination

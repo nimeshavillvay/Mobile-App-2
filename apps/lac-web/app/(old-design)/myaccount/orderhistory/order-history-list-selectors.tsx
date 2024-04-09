@@ -34,42 +34,42 @@ import type { Option } from "./types";
 
 const SELECTOR_ORDER_TYPES = [
   {
-    id: "order-type-all",
+    id: 0,
     name: "All",
     type: "all",
     isActive: true,
     checked: false,
   },
   {
-    id: `order-type-${ORDER_TYPES["H"]}`,
+    id: 1,
     name: ORDER_TYPES["H"],
     type: "H",
     isActive: true,
     checked: false,
   },
   {
-    id: `order-type-${ORDER_TYPES["C"]}`,
+    id: 2,
     name: ORDER_TYPES["C"],
     type: "C",
     isActive: true,
     checked: false,
   },
   {
-    id: `order-type-${ORDER_TYPES["B"]}`,
+    id: 3,
     name: ORDER_TYPES["B"],
     type: "B",
     isActive: true,
     checked: false,
   },
   {
-    id: `order-type-${ORDER_TYPES["K"]}`,
+    id: 4,
     name: ORDER_TYPES["K"],
     type: "K",
     isActive: true,
     checked: false,
   },
   {
-    id: `order-type-${ORDER_TYPES["L"]}`,
+    id: 5,
     name: ORDER_TYPES["L"],
     type: "L",
     isActive: true,
@@ -332,7 +332,7 @@ const OrderTypeCheckbox = ({
   checked,
   onCheckedChanged,
 }: {
-  id: string;
+  id: number;
   name: string;
   isActive: boolean;
   checked: boolean;
@@ -341,13 +341,13 @@ const OrderTypeCheckbox = ({
   return (
     <div className="flex flex-row items-center gap-2">
       <Checkbox
-        id={id}
+        id={id.toString()}
         disabled={!isActive}
         checked={checked}
         onCheckedChange={onCheckedChanged}
       />
 
-      <Label htmlFor={id} className="text-wrap">
+      <Label htmlFor={id.toString()} className="text-wrap">
         {name}
       </Label>
     </div>
