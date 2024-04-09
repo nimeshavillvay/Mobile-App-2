@@ -1,3 +1,4 @@
+// TODO: Types used in old design needs remove in future
 export type PriceBreakDowns = {
   price1: number;
   price2: number;
@@ -17,6 +18,6 @@ export type SKUPrice = {
   sku: string;
 };
 
-export type ItemPrices = {
+export type ItemPricesResult = {
   "list-sku-price": SKUPrice[];
 };

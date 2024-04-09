@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Pagination,
   PaginationContent,
@@ -11,6 +13,7 @@ import { type ComponentProps } from "react";
 import AttributesSelector from "./attributes-selector";
 import Product from "./product";
 import ProductsGridHeader from "./products-grid-header";
+import type { Filter } from "./types";
 
 type ProductsGridProps = {
   total: number;
@@ -21,9 +24,15 @@ type ProductsGridProps = {
   products: (ComponentProps<typeof Product>["product"] & {
     groupId: string;
   })[];
+  filters: Filter[];
 };
 
-const ProductsGrid = ({ total, page, products }: ProductsGridProps) => {
+const ProductsGrid = ({
+  total,
+  page,
+  products,
+  filters,
+}: ProductsGridProps) => {
   const mappedProducts: {
     prop: ComponentProps<typeof Product>["product"];
     info: { groupId: string };
@@ -49,8 +58,8 @@ const ProductsGrid = ({ total, page, products }: ProductsGridProps) => {
       </div>
 
       {/* Desktop products grid */}
-      <div className="container hidden flex-row gap-10 md:flex">
-        <AttributesSelector />
+      <div className="container hidden flex-row gap-10 md:flex items-start">
+        <AttributesSelector filters={filters} />
 
         <div className="grid flex-1 grid-cols-5 gap-5">
           {mappedProducts.map(({ prop, info }) => (
