@@ -27,7 +27,7 @@ const makeQueryClient = () => {
       queries: {
         // With SSR, we usually want to set some default staleTime
         // above 0 to avoid refetching immediately on the client
-        staleTime: 600000, // 10 mins
+        staleTime: 60000, // 1 min
       },
     },
   });

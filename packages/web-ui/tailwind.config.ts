@@ -2,8 +2,16 @@ import baseConfig from "@repo/tailwindcss-config/config";
 import merge from "lodash/merge";
 import type { Config } from "tailwindcss";
 
+const content = ["./src/**/*.{ts,tsx}"];
+
+// Exclude stories from the Tailwind CSS build
+// eslint-disable-next-line turbo/no-undeclared-env-vars
+if (process.env.TAILWIND_EXCLUDE_STORIES === "true") {
+  content.push("!./src/**/*.stories.{ts,tsx}");
+}
+
 const config: Config = {
-  content: ["./src/**/*.{ts,tsx}"],
+  content,
   prefix: "ui-",
   theme: {
     extend: {

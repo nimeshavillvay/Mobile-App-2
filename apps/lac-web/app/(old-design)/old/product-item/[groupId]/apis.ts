@@ -1,5 +1,5 @@
+import { DEFAULT_REVALIDATE } from "@/_lib/constants";
 import { api } from "@/old/_lib/api";
-import { DEFAULT_REVALIDATE } from "@/old/_lib/constants";
 import { notFound } from "next/navigation";
 import "server-only";
 import type { Product } from "./types";

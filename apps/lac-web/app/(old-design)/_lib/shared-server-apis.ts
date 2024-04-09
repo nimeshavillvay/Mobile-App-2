@@ -1,6 +1,6 @@
+import { DEFAULT_REVALIDATE } from "@/_lib/constants";
 import "server-only";
 import { api } from "./api";
-import { DEFAULT_REVALIDATE } from "./constants";
 import type { PasswordPolicy, Role } from "./types";
 
 export const getBreadcrumbs = async (
