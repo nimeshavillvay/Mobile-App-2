@@ -63,6 +63,7 @@ export const QUERY_KEYS = {
   PER_PAGE: "perPage",
   ORDER_BY: "orderBy",
   ORDER_TYPE: "orderType",
+  ORDER_STATUS: "orderStatus",
 } as const;
 
 export const PAGE_SIZES = ["10", "20", "30", "40"] as const;

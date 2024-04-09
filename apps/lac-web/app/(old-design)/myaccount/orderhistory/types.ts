@@ -1,3 +1,4 @@
+import { ORDER_STATUS, ORDER_TYPES } from "./constants";
 // Types used in old design
 export type MyOrdersOld = {
   order_status: unknown[];
@@ -84,30 +85,12 @@ export type SortBy =
 export type SortDirection = "asc" | "desc";
 
 // Common types for both old and new designs
-export type OrderStatus = "C" | "I" | "R" | "S" | "K" | "F";
+export type OrderStatus = keyof typeof ORDER_STATUS;
 
-export type OrderType =
-  | "A"
-  | "B"
-  | "C"
-  | "D"
-  | "E"
-  | "F"
-  | "G"
-  | "H"
-  | "I"
-  | "J"
-  | "K"
-  | "L"
-  | "M"
-  | "N"
-  | "O"
-  | "P"
-  | "Q"
-  | "R"
-  | "S"
-  | "T"
-  | "U"
-  | "V"
-  | "W"
-  | "X";
+export type OrderType = keyof typeof ORDER_TYPES;
+
+export type Option = {
+  id: number;
+  value: string;
+  label: string;
+};

@@ -13,18 +13,24 @@ import { updateSearchParams } from "@/old/_utils/client-helpers";
 import dayjs from "dayjs";
 import { useSearchParams } from "next/navigation";
 import { useId, useState } from "react";
-import { changeSearchParams } from "../_utils/client-helpers";
+import {
+  changeSearchParams,
+  deleteSearchParams,
+} from "../_utils/client-helpers";
 import {
   CUSTOM_DURATION,
   DURATIONS,
   INIT_DURATION,
   INIT_FROM_DATE,
   INIT_TO_DATE,
+  ORDER_STATUS,
   ORDER_TYPES,
   QUERY_KEYS,
   UI_DATE_FORMAT,
   URL_DATE_FORMAT,
 } from "./constants";
+import MultiSelect from "./multi-select";
+import type { Option } from "./types";
 
 const SELECTOR_ORDER_TYPES = [
   {
@@ -73,6 +79,15 @@ const SELECTOR_ORDER_TYPES = [
 
 const ALL_ORDER_TYPES = ["H", "C", "B", "K", "L"];
 
+const SELECTOR_ORDER_STATUS = [
+  { id: 0, label: ORDER_STATUS["C"], value: "C" },
+  { id: 1, label: ORDER_STATUS["I"], value: "I" },
+  { id: 2, label: ORDER_STATUS["R"], value: "R" },
+  { id: 3, label: ORDER_STATUS["S"], value: "S" },
+  { id: 4, label: ORDER_STATUS["K"], value: "K" },
+  { id: 5, label: ORDER_STATUS["F"], value: "F" },
+];
+
 const OrderHistoryListSelectors = () => {
   const urlSearchParams = useSearchParams();
   const urlFromDate = urlSearchParams.get("from");
@@ -85,6 +100,7 @@ const OrderHistoryListSelectors = () => {
     new Date(urlFromDate ?? INIT_FROM_DATE),
   );
   const [toDate, setToDate] = useState(new Date(urlToDate ?? INIT_TO_DATE));
+  const [orderStatus, setOrderStatus] = useState<number[]>([]);
   // const currentPage = Number(urlSearchParams.get("page") ?? INIT_PAGE_NUMBER);
   // const pageSize = Number(urlSearchParams.get("perPage") ?? INIT_PAGE_SIZE);
 
@@ -144,7 +160,15 @@ const OrderHistoryListSelectors = () => {
         key: QUERY_KEYS.TO_DATE,
         value: dayjs(toDate).format(URL_DATE_FORMAT),
       },
+      {
+        key: QUERY_KEYS.ORDER_STATUS,
+        value: orderStatus.join(","),
+      },
     ]);
+
+    if (orderStatus.length === 0) {
+      deleteSearchParams(urlSearchParams, [QUERY_KEYS.ORDER_STATUS]);
+    }
   };
 
   const handleReset = () => {
@@ -163,7 +187,7 @@ const OrderHistoryListSelectors = () => {
 
       if (type === "all") {
         if (checked) {
-          params.delete(QUERY_KEYS.ORDER_TYPE);
+          deleteSearchParams(urlSearchParams, [QUERY_KEYS.ORDER_TYPE]);
         } else {
           params.set(QUERY_KEYS.ORDER_TYPE, "null");
         }
@@ -197,57 +221,64 @@ const OrderHistoryListSelectors = () => {
       updateSearchParams(params);
     };
 
+  const handleOrderStatusChange = (values: Option[]) => {
+    const selectedOrderStatus = values.map((value) => value.id);
+    setOrderStatus(selectedOrderStatus);
+  };
+
   return (
     <div className="hidden flex-col justify-between bg-brand-gray-100 px-4 py-5 md:flex md:flex-wrap lg:flex-row">
-      <div className="space-y-4">
-        <div className="text-brand-gray-500">
-          <Label htmlFor={durationId} className="text-nowrap font-bold">
-            Duration
-          </Label>
+      <div className="flex flex-col justify-between">
+        <div className="space-y-4">
+          <div className="text-brand-gray-500">
+            <Label htmlFor={durationId} className="text-nowrap font-bold">
+              Duration
+            </Label>
 
-          <Select
-            value={duration?.value}
-            onValueChange={function (value) {
-              handleDurationChange(value);
-            }}
-          >
-            <SelectTrigger id={durationId} className="h-8 py-0">
-              <SelectValue>{duration?.label}</SelectValue>
-            </SelectTrigger>
+            <Select
+              value={duration?.value}
+              onValueChange={function (value) {
+                handleDurationChange(value);
+              }}
+            >
+              <SelectTrigger id={durationId} className="h-8 py-0">
+                <SelectValue>{duration?.label}</SelectValue>
+              </SelectTrigger>
 
-            <SelectContent>
-              {DURATIONS.map((duration) => (
-                <SelectItem key={duration.value} value={duration.value}>
-                  {duration.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+              <SelectContent>
+                {DURATIONS.map((duration) => (
+                  <SelectItem key={duration.value} value={duration.value}>
+                    {duration.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="flex flex-row items-center gap-2 self-start">
+            <DatePicker
+              date={fromDate}
+              onSelectDate={(date) => {
+                setFromDate(date);
+                setDuration(CUSTOM_DURATION);
+              }}
+              dateFormat={UI_DATE_FORMAT}
+            />
+
+            <div>to</div>
+
+            <DatePicker
+              date={toDate}
+              onSelectDate={(date) => {
+                setToDate(date);
+                setDuration(CUSTOM_DURATION);
+              }}
+              dateFormat={UI_DATE_FORMAT}
+            />
+          </div>
         </div>
 
         <div className="flex flex-row items-center gap-2">
-          <DatePicker
-            date={fromDate}
-            onSelectDate={(date) => {
-              setFromDate(date);
-              setDuration(CUSTOM_DURATION);
-            }}
-            dateFormat={UI_DATE_FORMAT}
-          />
-
-          <div>to</div>
-
-          <DatePicker
-            date={toDate}
-            onSelectDate={(date) => {
-              setToDate(date);
-              setDuration(CUSTOM_DURATION);
-            }}
-            dateFormat={UI_DATE_FORMAT}
-          />
-        </div>
-
-        <div className="mt-4 flex flex-row items-center gap-2">
           <Button className="min-w-24" onClick={handleSearch}>
             Search
           </Button>
@@ -276,6 +307,17 @@ const OrderHistoryListSelectors = () => {
       {/* Filter By Column */}
       <div>
         <Label className="text-nowrap font-bold">Filter By</Label>
+
+        <div className="flex flex-col gap-2">
+          <MultiSelect label="PO No." data={SELECTOR_ORDER_STATUS} />
+          <MultiSelect label="Job Name" data={SELECTOR_ORDER_STATUS} />
+          <MultiSelect
+            label="Order Status"
+            data={SELECTOR_ORDER_STATUS}
+            onValuesChange={handleOrderStatusChange}
+            onClear={() => setOrderStatus([])}
+          />
+        </div>
       </div>
     </div>
   );
