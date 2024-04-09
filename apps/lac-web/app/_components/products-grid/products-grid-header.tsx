@@ -5,7 +5,15 @@ import { Button } from "@repo/web-ui/components/ui/button";
 import { Separator } from "@repo/web-ui/components/ui/separator";
 import { type ReactNode } from "react";
 
-const ProductsGridHeader = () => {
+type ProductsGridHeaderProps = {
+  total: number;
+  page: {
+    current: number;
+    total: number;
+  };
+};
+
+const ProductsGridHeader = ({ total, page }: ProductsGridHeaderProps) => {
   return (
     <header className="space-y-3">
       {/* Mobile filters selector */}
@@ -32,10 +40,12 @@ const ProductsGridHeader = () => {
 
       <div className="container flex flex-row items-end justify-between text-wurth-gray-800">
         <div className="font-title text-lg font-medium tracking-normal md:text-3xl md:tracking-[-0.01406rem]">
-          126 items
+          {total} {total === 1 ? "item" : "items"}
         </div>
 
-        <div className="text-sm font-normal md:text-base">Page 1 of 15</div>
+        <div className="text-sm font-normal md:text-base">
+          Page {page.current} of {page.total}
+        </div>
       </div>
 
       {/* Desktop selected attributes viewer */}

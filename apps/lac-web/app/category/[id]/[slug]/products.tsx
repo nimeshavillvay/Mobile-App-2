@@ -8,6 +8,11 @@ const Products = () => {
 
   return (
     <ProductsGrid
+      total={parseInt(data.pagination[0].db_count)}
+      page={{
+        current: 1,
+        total: 15,
+      }}
       products={data.group_list.map((product) => ({
         groupId: product.groupid,
         groupName: product.item_group_name,

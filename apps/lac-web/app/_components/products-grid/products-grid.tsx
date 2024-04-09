@@ -13,12 +13,17 @@ import Product from "./product";
 import ProductsGridHeader from "./products-grid-header";
 
 type ProductsGridProps = {
+  total: number;
+  page: {
+    current: number;
+    total: number;
+  };
   products: (ComponentProps<typeof Product>["product"] & {
     groupId: string;
   })[];
 };
 
-const ProductsGrid = ({ products }: ProductsGridProps) => {
+const ProductsGrid = ({ total, page, products }: ProductsGridProps) => {
   const mappedProducts: {
     prop: ComponentProps<typeof Product>["product"];
     info: { groupId: string };
@@ -34,7 +39,7 @@ const ProductsGrid = ({ products }: ProductsGridProps) => {
 
   return (
     <section className="my-14 space-y-3 md:my-20 md:space-y-6">
-      <ProductsGridHeader />
+      <ProductsGridHeader total={total} page={page} />
 
       {/* Mobile products list */}
       <div className="container flex flex-col gap-3 md:hidden">

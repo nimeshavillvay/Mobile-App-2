@@ -1,6 +1,7 @@
 import Banner from "@/_components/banner";
 import RelatedSearches from "@/_components/related-searches";
 import { api } from "@/_lib/api";
+import { getBreadcrumbs } from "@/_lib/apis/server";
 import { DEFAULT_REVALIDATE } from "@/_lib/constants";
 import ChevronLeft from "@repo/web-ui/components/icons/chevron-left";
 import {
@@ -21,7 +22,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Suspense } from "react";
+import { Fragment, Suspense } from "react";
 import Balancer from "react-wrap-balancer";
 import categoryImage from "./category.jpeg";
 import PopularBrands from "./popular-brands";
@@ -92,6 +93,8 @@ export const generateMetadata = async ({
 const CategoryPage = async ({ params: { id, slug } }: CategoryPageProps) => {
   const category = await getCategory(id, slug);
 
+  const breadcrumbs = await getBreadcrumbs(id, "category");
+
   const subCategories = category.subCatgores.map(
     (subCategory) =>
       ({
@@ -133,13 +136,25 @@ const CategoryPage = async ({ params: { id, slug } }: CategoryPageProps) => {
             </BreadcrumbLink>
           </BreadcrumbItem>
 
-          <BreadcrumbSeparator />
+          {breadcrumbs.map((breadcrumb, index) => (
+            <Fragment key={breadcrumb.oo_id}>
+              <BreadcrumbSeparator />
 
-          <BreadcrumbItem>
-            <BreadcrumbPage>
-              Decorative Hardware & Wood Components
-            </BreadcrumbPage>
-          </BreadcrumbItem>
+              <BreadcrumbItem>
+                {index < breadcrumbs.length - 1 ? (
+                  <BreadcrumbLink asChild>
+                    <Link
+                      href={`/category/${breadcrumb.oo_id}/${breadcrumb.slug}`}
+                    >
+                      {breadcrumb.cat_name}
+                    </Link>
+                  </BreadcrumbLink>
+                ) : (
+                  <BreadcrumbPage>{breadcrumb.cat_name}</BreadcrumbPage>
+                )}
+              </BreadcrumbItem>
+            </Fragment>
+          ))}
         </BreadcrumbList>
       </Breadcrumb>
 
