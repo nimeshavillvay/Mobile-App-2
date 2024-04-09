@@ -1,16 +1,3 @@
-import productItemImage from "@/_assets/images/product-item-image.png";
-import {
-  ProductCard,
-  ProductCardActions,
-  ProductCardCompare,
-  ProductCardContent,
-  ProductCardDetails,
-  ProductCardDiscount,
-  ProductCardHero,
-  ProductCardImage,
-  ProductCardLabel,
-  ProductCardPrice,
-} from "@repo/web-ui/components/product-card";
 import {
   Pagination,
   PaginationContent,
@@ -20,82 +7,49 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@repo/web-ui/components/ui/pagination";
+import { type ComponentProps } from "react";
 import AttributesSelector from "./attributes-selector";
+import Product from "./product";
 import ProductsGridHeader from "./products-grid-header";
 
-const ProductsGrid = () => {
+type ProductsGridProps = {
+  products: (ComponentProps<typeof Product>["product"] & {
+    groupId: string;
+  })[];
+};
+
+const ProductsGrid = ({ products }: ProductsGridProps) => {
+  const mappedProducts: {
+    prop: ComponentProps<typeof Product>["product"];
+    info: { groupId: string };
+  }[] = products.map((product) => ({
+    prop: {
+      groupName: product.groupName,
+      variants: product.variants,
+    },
+    info: {
+      groupId: product.groupId,
+    },
+  }));
+
   return (
     <section className="my-14 space-y-3 md:my-20 md:space-y-6">
       <ProductsGridHeader />
 
       {/* Mobile products list */}
       <div className="container flex flex-col gap-3 md:hidden">
-        {Array.from({ length: 20 }).map((_, index) => (
-          <ProductCard key={index} orientation="horizontal" className="w-full">
-            <ProductCardHero>
-              <ProductCardDiscount>30</ProductCardDiscount>
-
-              <ProductCardImage
-                src={productItemImage}
-                alt="A placeholder product"
-                href={"/product/12345"}
-                title='Pro 128mm Mod Bar Pull, Satin Champagne, 5-11/16" Length'
-              />
-
-              <ProductCardLabel>Label</ProductCardLabel>
-
-              <ProductCardCompare />
-            </ProductCardHero>
-
-            <ProductCardContent>
-              <ProductCardDetails
-                title='Pro 128mm Mod Bar Pull, Satin Champagne, 5-11/16" Length'
-                sku="PROMD8-SCP"
-                href="/product/771770/PROMD3-MB"
-              />
-
-              <ProductCardPrice price={2.05} uom="pair" actualPrice={4.11} />
-
-              <ProductCardActions />
-            </ProductCardContent>
-          </ProductCard>
+        {mappedProducts.map(({ prop, info }) => (
+          <Product key={info.groupId} orientation="horizontal" product={prop} />
         ))}
       </div>
 
       {/* Desktop products grid */}
-      <div className="hidden flex-row gap-10 md:flex">
+      <div className="container hidden flex-row gap-10 md:flex">
         <AttributesSelector />
 
         <div className="grid flex-1 grid-cols-5 gap-5">
-          {Array.from({ length: 20 }).map((_, index) => (
-            <ProductCard key={index}>
-              <ProductCardHero>
-                <ProductCardDiscount>30</ProductCardDiscount>
-
-                <ProductCardImage
-                  src={productItemImage}
-                  alt="A placeholder product"
-                  href={"/product/12345"}
-                  title='Pro 128mm Mod Bar Pull, Satin Champagne, 5-11/16" Length'
-                />
-
-                <ProductCardLabel>Label</ProductCardLabel>
-
-                <ProductCardCompare />
-              </ProductCardHero>
-
-              <ProductCardContent>
-                <ProductCardDetails
-                  title='Pro 128mm Mod Bar Pull, Satin Champagne, 5-11/16" Length'
-                  sku="PROMD8-SCP"
-                  href="/product/771770/PROMD3-MB"
-                />
-
-                <ProductCardPrice price={2.05} uom="pair" actualPrice={4.11} />
-
-                <ProductCardActions />
-              </ProductCardContent>
-            </ProductCard>
+          {mappedProducts.map(({ prop, info }) => (
+            <Product key={info.groupId} product={prop} />
           ))}
         </div>
       </div>

@@ -1,6 +1,7 @@
 import Banner from "@/_components/banner";
-import ProductsGrid from "@/_components/products-grid";
 import RelatedSearches from "@/_components/related-searches";
+import { api } from "@/_lib/api";
+import { DEFAULT_REVALIDATE } from "@/_lib/constants";
 import ChevronLeft from "@repo/web-ui/components/icons/chevron-left";
 import {
   Breadcrumb,
@@ -19,10 +20,50 @@ import {
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { notFound } from "next/navigation";
+import { Suspense } from "react";
 import Balancer from "react-wrap-balancer";
 import categoryImage from "./category.jpeg";
 import PopularBrands from "./popular-brands";
+import Products from "./products";
 import TopSubCategories from "./top-sub-categories";
+
+const VISIBLE_SUB_CATEGORIES_LENGTH = 6;
+
+const getCategory = async (id: string, slug: string) => {
+  try {
+    const category = await api
+      .get(`rest/productlandingcategory/${id}`, {
+        next: { revalidate: DEFAULT_REVALIDATE },
+      })
+      .json<{
+        main: {
+          catId: string;
+          type: string;
+          catTitle: string;
+          description: string;
+          additional_description: string;
+          Image: string;
+          slug: string;
+          subCatgores: {
+            SubCatId: string;
+            SubCatTitle: string;
+            slug: string;
+            Image: string;
+          }[];
+        };
+      }>();
+
+    // Compare slug
+    if (slug !== category.main.slug) {
+      notFound();
+    }
+
+    return category.main;
+  } catch {
+    notFound();
+  }
+};
 
 type CategoryPageProps = {
   params: {
@@ -30,17 +71,45 @@ type CategoryPageProps = {
     slug: string;
   };
 };
+type SubCategory = {
+  id: string;
+  slug: string;
+  title: string;
+  image: string;
+};
 
 export const generateMetadata = async ({
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   params: { id, slug },
 }: CategoryPageProps): Promise<Metadata> => {
+  const category = await getCategory(id, slug);
+
   return {
-    title: "Lorem Ipsum",
+    title: category.catTitle,
+    description: category.description,
   };
 };
 
-const CategoryPage = () => {
+const CategoryPage = async ({ params: { id, slug } }: CategoryPageProps) => {
+  const category = await getCategory(id, slug);
+
+  const subCategories = category.subCatgores.map(
+    (subCategory) =>
+      ({
+        id: subCategory.SubCatId,
+        slug: subCategory.slug,
+        title: subCategory.SubCatTitle,
+        image: subCategory.Image,
+      }) satisfies SubCategory,
+  );
+  const visibleSubCategories = subCategories.slice(
+    0,
+    VISIBLE_SUB_CATEGORIES_LENGTH,
+  );
+  const hiddenSubCategories = subCategories.slice(
+    VISIBLE_SUB_CATEGORIES_LENGTH,
+    VISIBLE_SUB_CATEGORIES_LENGTH + category.subCatgores.length,
+  );
+
   return (
     <>
       <div className="container my-2 md:hidden">
@@ -87,45 +156,46 @@ const CategoryPage = () => {
 
           <div className="space-y-3 p-6 md:flex-1 md:space-y-5 md:p-10">
             <h1 className="line-clamp-3 text-balance font-title text-4xl font-medium tracking-tight text-wurth-gray-800 md:text-5xl md:leading-[3.5rem] md:tracking-[-0.036rem]">
-              Decorative Hardware & Wood Components
+              {category.catTitle}
             </h1>
 
             <p className="text-base text-wurth-gray-800 md:line-clamp-3 md:text-lg">
-              Lorem ipsum dolor sit amet consectetur. Curabitur diam urna
-              faucibus quisque. Pretium lectus morbi justo amet amet quisque
-              ipsum elementum ut. Tincidunt pellentesque ipsum ac dignissim
-              lectus id.
+              {category.description}
             </p>
           </div>
         </div>
       </section>
 
       <section className="container my-10 space-y-6 md:my-16 md:space-y-9">
-        <CategoriesGrid />
+        <CategoriesGrid categories={visibleSubCategories} />
 
-        <Collapsible className="flex flex-col gap-6 space-y-6 md:space-y-9">
-          <CollapsibleContent asChild>
-            <CategoriesGrid />
-          </CollapsibleContent>
+        {hiddenSubCategories.length > 0 && (
+          <Collapsible className="flex flex-col gap-6 space-y-6 md:space-y-9">
+            <CollapsibleContent asChild>
+              <CategoriesGrid categories={hiddenSubCategories} />
+            </CollapsibleContent>
 
-          <CollapsibleTrigger asChild>
-            <Button
-              variant="outline"
-              className="self-center py-2.5 font-bold text-black"
-            >
-              Show all
-            </Button>
-          </CollapsibleTrigger>
-        </Collapsible>
+            <CollapsibleTrigger asChild>
+              <Button
+                variant="outline"
+                className="self-center py-2.5 font-bold text-black"
+              >
+                Show all
+              </Button>
+            </CollapsibleTrigger>
+          </Collapsible>
+        )}
       </section>
 
-      <TopSubCategories />
+      <TopSubCategories title={category.catTitle} />
 
       <PopularBrands />
 
       <Banner />
 
-      <ProductsGrid />
+      <Suspense fallback={<div>Loading...</div>}>
+        <Products />
+      </Suspense>
 
       <RelatedSearches />
     </>
@@ -134,18 +204,23 @@ const CategoryPage = () => {
 
 export default CategoryPage;
 
-const CategoriesGrid = () => {
+const CategoriesGrid = ({ categories }: { categories: SubCategory[] }) => {
   return (
-    <div className="grid grid-cols-3 justify-items-center gap-y-10 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
-      {Array.from({ length: 6 }).map((_, index) => (
-        <article key={index} className="flex flex-col items-center gap-4">
-          <div className="size-28 rounded-full bg-[linear-gradient(180deg,#FBFDFF_0%,#F0F3FB_100%)]" />
+    <ul className="grid grid-cols-3 justify-items-center gap-y-10 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
+      {categories.map((category) => (
+        <li key={category.id}>
+          <Link
+            href={`/category/${category.id}/${category.slug}`}
+            className="flex flex-col items-center gap-4"
+          >
+            <span className="size-28 rounded-full bg-[linear-gradient(180deg,#FBFDFF_0%,#F0F3FB_100%)]" />
 
-          <h2 className="text-center text-[0.9375rem] font-semibold leading-5 text-black">
-            <Balancer>Bathroom Stall Hardware</Balancer>
-          </h2>
-        </article>
+            <h2 className="text-center text-[0.9375rem] font-semibold leading-5 text-black">
+              <Balancer>{category.title}</Balancer>
+            </h2>
+          </Link>
+        </li>
       ))}
-    </div>
+    </ul>
   );
 };

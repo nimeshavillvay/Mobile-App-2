@@ -20,10 +20,14 @@ const TOP_CATEGORIES = [
   "Hardwood Dowels",
 ];
 
-const TopSubCategories = () => {
+type TopSubCategoriesProps = {
+  title: string;
+};
+
+const TopSubCategories = ({ title }: TopSubCategoriesProps) => {
   return (
     <section className="my-14 space-y-6 md:my-20">
-      <SubHeading>Top Decorative Hardware & Wood Components</SubHeading>
+      <SubHeading>Top {title}</SubHeading>
 
       <p className="container hidden pb-4 text-center text-lg text-wurth-gray-800 md:block">
         Lorem ipsum dolor sit amet consectetur. Amet vitae tempus laoreet et
