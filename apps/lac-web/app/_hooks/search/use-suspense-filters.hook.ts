@@ -12,49 +12,56 @@ const FILTER_TYPES = {
   [FAVORITES]: "F",
   [CATEGORIES]: "C",
 } as const;
-type FilterType = keyof typeof FILTER_TYPES;
 
-const useSuspenseFilters = <T extends FilterType>({
-  type,
-  id,
-  membershipId,
-  from,
-  to,
-}: {
-  type: T;
-  id: T extends typeof ORDER_HISTORY ? string : undefined;
-  membershipId: T extends typeof CATEGORIES ? number : undefined;
-  from: T extends typeof ORDER_HISTORY | typeof PURCHASES ? string : undefined;
-  to: T extends typeof ORDER_HISTORY | typeof PURCHASES ? string : undefined;
-}) => {
-  return useSuspenseQuery({
-    queryKey: [
-      "filters",
-      {
-        type,
-        id,
-        membershipId,
-        from,
-        to,
+const useSuspenseFilters = (
+  args:
+    | {
+        type: typeof ORDER_HISTORY;
+        from: string;
+        to: string;
+      }
+    | {
+        type: typeof PURCHASES;
+        id: string;
+        from: string;
+        to: string;
+      }
+    | {
+        type: typeof FAVORITES;
+        id: string;
+      }
+    | {
+        type: typeof CATEGORIES;
+        id: string;
+        membershipId: number;
       },
-    ],
+) => {
+  return useSuspenseQuery({
+    queryKey: ["filters", args],
     queryFn: () => {
       const searchParams = new URLSearchParams();
 
-      if (membershipId) {
-        searchParams.append("membershipid", membershipId.toString());
+      if (args.type === "Categories" && args.membershipId) {
+        searchParams.append("membershipid", args.membershipId.toString());
       }
 
-      if (from && to) {
-        searchParams.append("from", from);
-        searchParams.append("to", to);
+      if (
+        (args.type === "Order History" || args.type === "Purchases") &&
+        args.from &&
+        args.to
+      ) {
+        searchParams.append("from", args.from);
+        searchParams.append("to", args.to);
       }
 
       return api
-        .post(`rest/filters/${FILTER_TYPES[type]}${id ? `/${id}` : ""}`, {
-          searchParams,
-          cache: "no-store",
-        })
+        .post(
+          `rest/filters/${FILTER_TYPES[args.type]}${args.type !== "Order History" ? `/${args.id}` : ""}`,
+          {
+            searchParams,
+            cache: "no-store",
+          },
+        )
         .json<
           {
             id: string;
