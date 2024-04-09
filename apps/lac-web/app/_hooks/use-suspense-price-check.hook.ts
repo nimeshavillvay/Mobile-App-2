@@ -1,4 +1,4 @@
-import { ItemPricesResult } from "@/_lib/types";
+import type { ItemPricesResult } from "@/_lib/types";
 import { api } from "@/old/_lib/api";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
