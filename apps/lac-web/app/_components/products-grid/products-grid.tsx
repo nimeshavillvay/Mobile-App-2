@@ -1,5 +1,6 @@
 "use client";
 
+import ProductCard from "@/_components/product-card";
 import {
   Pagination,
   PaginationContent,
@@ -11,7 +12,6 @@ import {
 } from "@repo/web-ui/components/ui/pagination";
 import { type ComponentProps } from "react";
 import AttributesSelector from "./attributes-selector";
-import Product from "./product";
 import ProductsGridHeader from "./products-grid-header";
 import type { Filter } from "./types";
 
@@ -21,7 +21,7 @@ type ProductsGridProps = {
     current: number;
     total: number;
   };
-  products: (ComponentProps<typeof Product>["product"] & {
+  products: (ComponentProps<typeof ProductCard>["product"] & {
     groupId: string;
   })[];
   filters: Filter[];
@@ -34,7 +34,7 @@ const ProductsGrid = ({
   filters,
 }: ProductsGridProps) => {
   const mappedProducts: {
-    prop: ComponentProps<typeof Product>["product"];
+    prop: ComponentProps<typeof ProductCard>["product"];
     info: { groupId: string };
   }[] = products.map((product) => ({
     prop: {
@@ -53,7 +53,11 @@ const ProductsGrid = ({
       {/* Mobile products list */}
       <div className="container flex flex-col gap-3 md:hidden">
         {mappedProducts.map(({ prop, info }) => (
-          <Product key={info.groupId} orientation="horizontal" product={prop} />
+          <ProductCard
+            key={info.groupId}
+            orientation="horizontal"
+            product={prop}
+          />
         ))}
       </div>
 
@@ -63,7 +67,7 @@ const ProductsGrid = ({
 
         <div className="grid flex-1 grid-cols-5 gap-5">
           {mappedProducts.map(({ prop, info }) => (
-            <Product key={info.groupId} product={prop} />
+            <ProductCard key={info.groupId} product={prop} />
           ))}
         </div>
       </div>
