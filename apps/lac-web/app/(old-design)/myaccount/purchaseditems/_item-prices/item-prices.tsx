@@ -1,4 +1,4 @@
-import useSuspensePriceCheck from "@/_hooks/use-suspense-price-check.hook";
+import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import type { PriceBreakDowns } from "@/_lib/types";
 import {
   Table,
