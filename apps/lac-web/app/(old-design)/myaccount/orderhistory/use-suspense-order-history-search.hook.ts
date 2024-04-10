@@ -2,7 +2,7 @@ import { api } from "@/_lib/api";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import type { MyOrders, OrderStatus, SortBy, SortDirection } from "./types";
 
-const useSuspenseOrderHistoryList = (
+const useSuspenseOrderHistorySearch = (
   token: string,
   fromDate: string,
   toDate: string,
@@ -63,4 +63,4 @@ const useSuspenseOrderHistoryList = (
   });
 };
 
-export default useSuspenseOrderHistoryList;
+export default useSuspenseOrderHistorySearch;

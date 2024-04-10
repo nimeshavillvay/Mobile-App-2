@@ -1,13 +1,14 @@
 import { Button } from "@/old/_components/ui/button";
+import { Checkbox } from "@/old/_components/ui/checkbox";
 import { Label } from "@/old/_components/ui/label";
 import { cn } from "@/old/_utils/helpers";
 import { useMultipleSelection, useSelect } from "downshift";
-import { Check, ChevronDown, X } from "lucide-react";
+import { ChevronDown, X } from "lucide-react";
 
 type Option = {
-  id: number;
+  id: string;
   value: string;
-  label: string;
+  active: boolean;
 };
 
 type MultiSelectProps = {
@@ -37,9 +38,7 @@ const MultiSelect = ({
 
   const filteredItems = data;
 
-  const isItemSelected = (item: Option) => {
-    return selectedItems?.includes(item) ?? false;
-  };
+  const isItemSelected = (item: Option) => !!selectedItems?.includes(item);
 
   const {
     isOpen,
@@ -85,7 +84,7 @@ const MultiSelect = ({
         type === ToggleButtonKeyDownSpaceButton ||
         type === ItemClick
       ) {
-        if (selectedItem) {
+        if (selectedItem && selectedItem.active) {
           onValuesChange && onValuesChange([...selectedItems, selectedItem]);
 
           if (isItemSelected(selectedItem)) {
@@ -148,7 +147,7 @@ const MultiSelect = ({
 
       <ul
         className={cn(
-          "w-inherit absolute z-10 mt-1 max-h-80 translate-x-[50%] overflow-scroll bg-white p-0 shadow-md",
+          "w-inherit absolute right-4 z-10 mt-1 max-h-80 min-w-[138px] overflow-scroll bg-white p-0 shadow-md",
           !(isOpen && filteredItems.length) ? "hidden" : "",
         )}
         {...getMenuProps()}
@@ -157,14 +156,18 @@ const MultiSelect = ({
           filteredItems.map((item, index) => (
             <li
               className={cn(
-                "flex min-w-[160px] cursor-pointer flex-row justify-between px-3 py-2 shadow-sm hover:bg-brand-secondary/10",
+                "flex cursor-pointer flex-row items-center gap-2 px-3 py-2 shadow-sm hover:bg-brand-secondary/10",
                 isItemSelected(item) ? "bg-brand-gray-200" : "",
               )}
               key={item.id}
               {...getItemProps({ item, index })}
             >
-              <span>{item.label}</span>
-              {isItemSelected(item) && <Check className="h-4 w-4" />}
+              <Checkbox
+                id={`${item.id}${item.value}`}
+                disabled={!item.active}
+                checked={isItemSelected(item)}
+              />
+              <Label htmlFor={`${item.id}${item.value}`}>{item.value}</Label>
             </li>
           ))}
       </ul>

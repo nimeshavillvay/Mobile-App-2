@@ -1,5 +1,6 @@
 "use client";
 
+import useSuspenseFilters from "@/_hooks/search/use-suspense-filters.hook";
 import { Button } from "@/old/_components/ui/button";
 import { Input } from "@/old/_components/ui/input";
 import {
@@ -19,10 +20,11 @@ import {
   INIT_PAGE_SIZE,
   INIT_TO_DATE,
 } from "./constants";
+import OrderHistoryListForMobile from "./order-history-list-for-mobile";
 import OrderHistoryListSelectors from "./order-history-list-selectors";
 import OrderHistoryRow from "./order-history-row";
 import TotalCountAndPagination from "./total-count-and-pagination";
-import useSuspenseOrderHistoryList from "./use-suspense-order-history-list.hook";
+import useSuspenseOrderHistorySearch from "./use-suspense-order-history-search.hook";
 
 const OrderHistoryList = ({ token }: { token: string }) => {
   const searchParams = useSearchParams();
@@ -34,7 +36,7 @@ const OrderHistoryList = ({ token }: { token: string }) => {
   const orderTypes = urlOrderType?.split(",") ?? ALL_ORDER_TYPES;
   const orderStatus = searchParams.get("orderStatus")?.split(",") ?? [];
 
-  const orderHistoryListQuery = useSuspenseOrderHistoryList(
+  const searchQuery = useSuspenseOrderHistorySearch(
     token,
     fromDate,
     toDate,
@@ -47,40 +49,64 @@ const OrderHistoryList = ({ token }: { token: string }) => {
     "",
   );
 
-  const orderHistoryItems = orderHistoryListQuery?.data?.orders ?? null;
-  const totalItems = orderHistoryListQuery?.data?.pagination[0]?.db_count ?? 0;
+  const filterQuery = useSuspenseFilters({
+    type: "Order History",
+    from: fromDate,
+    to: toDate,
+  });
+
+  const orderHistoryItems = searchQuery?.data?.orders ?? null;
+  const totalItems = searchQuery?.data?.pagination[0]?.db_count ?? 0;
 
   return (
     <>
-      <div className="flex flex-row items-center justify-between py-4">
-        <div className="flex flex-row">
+      <div className="flex flex-row items-center py-4 md:justify-between">
+        <div className="flex w-full flex-row">
           <Input
-            className="h-9 max-w-[270px] rounded-l-full border-r-0 border-brand-gray-200 text-sm"
+            className="h-9 rounded-l-full border-r-0 border-brand-gray-200 text-sm md:w-[270px]"
             placeholder="Search by order number"
           />
           <Button
             variant="ghost"
-            className="gap-0 rounded-r-full border border-l-0 pl-0 pr-2"
+            className="gap-0 rounded-r-full border border-l-0 px-2"
           >
             <MdSearch className="text-xl leading-none text-brand-gray-400" />
           </Button>
         </div>
         <Link
-          className="block rounded-sm bg-brand-secondary px-4 py-2 text-center font-wurth font-extrabold uppercase text-white"
+          className="hidden text-nowrap rounded-sm bg-brand-secondary px-4 py-2 text-center font-wurth font-extrabold uppercase text-white md:block"
           href="https://wurthlac.billtrust.com/"
         >
           Pay Your Bill Online
         </Link>
       </div>
 
-      <OrderHistoryListSelectors />
+      <OrderHistoryListSelectors
+        filters={filterQuery.data.map((filter) => ({
+          id: filter.id,
+          title: filter.filter,
+          values: filter.values.map((value) => ({
+            id: value.id.toString(),
+            value: value.value,
+            active: value.active,
+          })),
+        }))}
+      />
 
       <TotalCountAndPagination
-        isLoading={orderHistoryListQuery.isLoading}
+        isLoading={searchQuery.isLoading}
         totalItems={totalItems}
       />
 
-      <Table>
+      {/* Mobile View */}
+      <OrderHistoryListForMobile
+        items={orderHistoryItems}
+        token={token}
+        isLoading={searchQuery.isLoading}
+      />
+
+      {/* Desktop View */}
+      <Table className="hidden md:table">
         <TableHeader>
           <TableRow>
             <TableHead className="text-center">Order Type</TableHead>
@@ -104,7 +130,7 @@ const OrderHistoryList = ({ token }: { token: string }) => {
       </Table>
 
       <TotalCountAndPagination
-        isLoading={orderHistoryListQuery.isLoading}
+        isLoading={searchQuery.isLoading}
         totalItems={totalItems}
       />
     </>

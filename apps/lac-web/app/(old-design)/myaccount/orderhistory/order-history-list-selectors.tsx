@@ -1,3 +1,5 @@
+import type { Filter } from "@/_lib/types";
+import { filterAndMapValues } from "@/_lib/utils";
 import DatePicker from "@/old/_components/date-picker";
 import { Button } from "@/old/_components/ui/button";
 import { Checkbox } from "@/old/_components/ui/checkbox";
@@ -13,18 +15,13 @@ import { updateSearchParams } from "@/old/_utils/client-helpers";
 import dayjs from "dayjs";
 import { useSearchParams } from "next/navigation";
 import { useId, useState } from "react";
-import {
-  changeSearchParams,
-  deleteSearchParams,
-} from "../_utils/client-helpers";
+import { changeSearchParams } from "../_utils/client-helpers";
 import {
   CUSTOM_DURATION,
   DURATIONS,
   INIT_DURATION,
   INIT_FROM_DATE,
   INIT_TO_DATE,
-  ORDER_STATUS,
-  ORDER_TYPES,
   QUERY_KEYS,
   UI_DATE_FORMAT,
   URL_DATE_FORMAT,
@@ -32,104 +29,29 @@ import {
 import MultiSelect from "./multi-select";
 import type { Option } from "./types";
 
-const SELECTOR_ORDER_TYPES = [
-  {
-    id: 0,
-    name: "All",
-    type: "all",
-    isActive: true,
-    checked: false,
-  },
-  {
-    id: 1,
-    name: ORDER_TYPES["H"],
-    type: "H",
-    isActive: true,
-    checked: false,
-  },
-  {
-    id: 2,
-    name: ORDER_TYPES["C"],
-    type: "C",
-    isActive: true,
-    checked: false,
-  },
-  {
-    id: 3,
-    name: ORDER_TYPES["B"],
-    type: "B",
-    isActive: true,
-    checked: false,
-  },
-  {
-    id: 4,
-    name: ORDER_TYPES["K"],
-    type: "K",
-    isActive: true,
-    checked: false,
-  },
-  {
-    id: 5,
-    name: ORDER_TYPES["L"],
-    type: "L",
-    isActive: true,
-    checked: false,
-  },
-];
+type OrderHistoryListSelectorsProps = {
+  filters: Filter[];
+};
 
-const ALL_ORDER_TYPES = ["H", "C", "B", "K", "L"];
+const OrderHistoryListSelectors = ({
+  filters,
+}: OrderHistoryListSelectorsProps) => {
+  const poNoFilter = filterAndMapValues(filters, "PO #");
+  const jobNameFilter = filterAndMapValues(filters, "Job Name");
+  const statusFilter = filterAndMapValues(filters, "Status");
+  const typesFilter = filterAndMapValues(filters, "Transaction Type");
 
-const SELECTOR_ORDER_STATUS = [
-  { id: 0, label: ORDER_STATUS["C"], value: "C" },
-  { id: 1, label: ORDER_STATUS["I"], value: "I" },
-  { id: 2, label: ORDER_STATUS["R"], value: "R" },
-  { id: 3, label: ORDER_STATUS["S"], value: "S" },
-  { id: 4, label: ORDER_STATUS["K"], value: "K" },
-  { id: 5, label: ORDER_STATUS["F"], value: "F" },
-];
-
-const OrderHistoryListSelectors = () => {
   const urlSearchParams = useSearchParams();
   const urlFromDate = urlSearchParams.get("from");
   const urlToDate = urlSearchParams.get("to");
-  const urlOrderType = urlSearchParams.get("orderType");
-  let selectorOrderTypes = SELECTOR_ORDER_TYPES;
 
   const [duration, setDuration] = useState(INIT_DURATION);
   const [fromDate, setFromDate] = useState(
     new Date(urlFromDate ?? INIT_FROM_DATE),
   );
   const [toDate, setToDate] = useState(new Date(urlToDate ?? INIT_TO_DATE));
-  const [orderStatus, setOrderStatus] = useState<number[]>([]);
-  // const currentPage = Number(urlSearchParams.get("page") ?? INIT_PAGE_NUMBER);
-  // const pageSize = Number(urlSearchParams.get("perPage") ?? INIT_PAGE_SIZE);
-
-  if (urlOrderType) {
-    if (urlOrderType.includes(",")) {
-      const orderTypes = urlOrderType.split(",");
-      selectorOrderTypes = selectorOrderTypes.map((orderType) => ({
-        ...orderType,
-        checked: orderTypes.includes(orderType.type),
-      }));
-    } else {
-      if (ALL_ORDER_TYPES.includes(urlOrderType)) {
-        selectorOrderTypes = selectorOrderTypes.map((orderType) => ({
-          ...orderType,
-          checked: urlOrderType === orderType.type,
-        }));
-      } else {
-        selectorOrderTypes = selectorOrderTypes.map((orderType) => ({
-          ...orderType,
-          checked: false,
-        }));
-      }
-    }
-  } else {
-    selectorOrderTypes = selectorOrderTypes.map((orderType) => ({
-      ...orderType,
-      checked: true,
-    }));
-  }
+  const [orderStatuses, setOrderStatuses] = useState<string[]>([]);
+  const [orderTypes, setOrderTypes] = useState<string[]>([]);
 
   const id = useId();
   const durationId = `duration-${id}`;
@@ -162,13 +84,13 @@ const OrderHistoryListSelectors = () => {
       },
       {
         key: QUERY_KEYS.ORDER_STATUS,
-        value: orderStatus.join(","),
+        value: orderStatuses.join(","),
+      },
+      {
+        key: QUERY_KEYS.ORDER_TYPE,
+        value: orderTypes.join(","),
       },
     ]);
-
-    if (orderStatus.length === 0) {
-      deleteSearchParams(urlSearchParams, [QUERY_KEYS.ORDER_STATUS]);
-    }
   };
 
   const handleReset = () => {
@@ -181,54 +103,22 @@ const OrderHistoryListSelectors = () => {
     updateSearchParams(params);
   };
 
-  const handleOrderTypeCheckedChanged =
-    (type: string) => (checked: boolean) => {
-      const params = new URLSearchParams();
-
-      if (type === "all") {
-        if (checked) {
-          deleteSearchParams(urlSearchParams, [QUERY_KEYS.ORDER_TYPE]);
-        } else {
-          params.set(QUERY_KEYS.ORDER_TYPE, "null");
-        }
-      } else if (checked && urlOrderType) {
-        const orderTypes =
-          urlOrderType === "null" ? [] : urlOrderType.split(",");
-        const newOrderTypes = [...orderTypes, type].filter((orderType) =>
-          ALL_ORDER_TYPES.includes(orderType),
-        );
-        if (newOrderTypes.length === ALL_ORDER_TYPES.length) {
-          params.delete(QUERY_KEYS.ORDER_TYPE);
-        } else {
-          params.set(QUERY_KEYS.ORDER_TYPE, newOrderTypes.join(","));
-        }
-      } else if (!checked && urlOrderType) {
-        const orderTypes = urlOrderType.split(",");
-        const newOrderTypes = orderTypes.filter(
-          (orderType) => orderType !== type,
-        );
-        params.set(
-          QUERY_KEYS.ORDER_TYPE,
-          newOrderTypes.length ? newOrderTypes.join(",") : "null",
-        );
-      } else {
-        const newOrderTypes = ALL_ORDER_TYPES.filter(
-          (orderType) => orderType !== type,
-        );
-        params.set(QUERY_KEYS.ORDER_TYPE, newOrderTypes.join(","));
-      }
-
-      updateSearchParams(params);
-    };
+  const handleOrderTypeCheckedChanged = (id: string, checked: boolean) => {
+    if (checked) {
+      setOrderTypes((prev) => [...prev, id]);
+    } else {
+      setOrderTypes((prev) => prev.filter((type) => type !== id));
+    }
+  };
 
   const handleOrderStatusChange = (values: Option[]) => {
     const selectedOrderStatus = values.map((value) => value.id);
-    setOrderStatus(selectedOrderStatus);
+    setOrderStatuses(selectedOrderStatus);
   };
 
   return (
-    <div className="hidden flex-col justify-between bg-brand-gray-100 px-4 py-5 md:flex md:flex-wrap lg:flex-row">
-      <div className="flex flex-col justify-between">
+    <div className="hidden flex-col justify-between gap-4 bg-brand-gray-100 px-4 py-5 md:flex md:flex-wrap lg:flex-row lg:gap-0">
+      <div className="flex flex-col justify-between gap-4 lg:gap-0">
         <div className="space-y-4">
           <div className="text-brand-gray-500">
             <Label htmlFor={durationId} className="text-nowrap font-bold">
@@ -293,12 +183,14 @@ const OrderHistoryListSelectors = () => {
       <div>
         <Label className="text-nowrap font-bold">Order Types</Label>
 
-        <div className="flex min-w-[170px] flex-col gap-2 rounded-sm border bg-white p-3">
-          {selectorOrderTypes.map((orderType) => (
+        <div className="flex min-h-[186px] min-w-[170px] flex-col gap-2 rounded-sm border bg-white p-3">
+          {typesFilter.map((orderType) => (
             <OrderTypeCheckbox
-              key={orderType.type}
+              key={orderType.id}
+              onCheckedChanged={(checked) =>
+                handleOrderTypeCheckedChanged(orderType.id, checked)
+              }
               {...orderType}
-              onCheckedChanged={handleOrderTypeCheckedChanged(orderType.type)}
             />
           ))}
         </div>
@@ -309,13 +201,13 @@ const OrderHistoryListSelectors = () => {
         <Label className="text-nowrap font-bold">Filter By</Label>
 
         <div className="flex flex-col gap-2">
-          <MultiSelect label="PO No." data={SELECTOR_ORDER_STATUS} />
-          <MultiSelect label="Job Name" data={SELECTOR_ORDER_STATUS} />
+          <MultiSelect label="PO No." data={poNoFilter} />
+          <MultiSelect label="Job Name" data={jobNameFilter} />
           <MultiSelect
             label="Order Status"
-            data={SELECTOR_ORDER_STATUS}
-            onValuesChange={handleOrderStatusChange}
-            onClear={() => setOrderStatus([])}
+            data={statusFilter}
+            onValuesChange={(values) => handleOrderStatusChange(values)}
+            onClear={() => setOrderStatuses([])}
           />
         </div>
       </div>
@@ -327,28 +219,25 @@ export default OrderHistoryListSelectors;
 
 const OrderTypeCheckbox = ({
   id,
-  name,
-  isActive,
-  checked,
+  value,
+  active,
   onCheckedChanged,
 }: {
-  id: number;
-  name: string;
-  isActive: boolean;
-  checked: boolean;
+  id: string;
+  value: string;
+  active: boolean;
   onCheckedChanged: (checked: boolean) => void;
 }) => {
   return (
     <div className="flex flex-row items-center gap-2">
       <Checkbox
-        id={id.toString()}
-        disabled={!isActive}
-        checked={checked}
+        id={`order-type-${id}`}
+        disabled={!active}
         onCheckedChange={onCheckedChanged}
       />
 
-      <Label htmlFor={id.toString()} className="text-wrap">
-        {name}
+      <Label htmlFor={`order-type-${id}`} className="text-wrap">
+        {value}
       </Label>
     </div>
   );

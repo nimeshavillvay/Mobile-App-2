@@ -90,7 +90,7 @@ export type OrderStatus = keyof typeof ORDER_STATUS;
 export type OrderType = keyof typeof ORDER_TYPES;
 
 export type Option = {
-  id: number;
+  id: string;
   value: string;
-  label: string;
+  active: boolean;
 };

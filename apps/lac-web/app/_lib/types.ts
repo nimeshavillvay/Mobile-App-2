@@ -21,3 +21,14 @@ export type SKUPrice = {
 export type ItemPricesResult = {
   "list-sku-price": SKUPrice[];
 };
+
+// Shared types for new design
+export type Filter = {
+  id: string;
+  title: string;
+  values: {
+    id: string;
+    value: string;
+    active: boolean;
+  }[];
+};
