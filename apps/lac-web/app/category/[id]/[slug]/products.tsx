@@ -1,20 +1,15 @@
 "use client";
 
 import ProductsGrid from "@/_components/products-grid";
-import useSuspenseFilters from "@/_hooks/search/use-suspense-filters.hook";
 import useSuspenseSearch from "@/_hooks/search/use-suspense-search.hook";
+import { type ComponentProps } from "react";
 
 type ProductsProps = {
-  catId: string;
+  filters: ComponentProps<typeof ProductsGrid>["filters"];
 };
 
-const Products = ({ catId }: ProductsProps) => {
+const Products = ({ filters }: ProductsProps) => {
   const searchQuery = useSuspenseSearch({ groupResults: true, page: 1 });
-  const filterQuery = useSuspenseFilters({
-    type: "Categories",
-    id: catId,
-    membershipId: 1,
-  });
 
   return (
     <ProductsGrid
@@ -32,15 +27,7 @@ const Products = ({ catId }: ProductsProps) => {
           title: variant.item_name,
         })),
       }))}
-      filters={filterQuery.data.map((filter) => ({
-        id: filter.id,
-        title: filter.filter,
-        values: filter.values.map((value) => ({
-          id: value.id.toString(),
-          value: value.value,
-          active: value.active,
-        })),
-      }))}
+      filters={filters}
     />
   );
 };

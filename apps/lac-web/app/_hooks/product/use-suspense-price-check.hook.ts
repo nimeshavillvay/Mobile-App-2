@@ -2,7 +2,6 @@ import type { ItemPricesResult } from "@/_lib/types";
 import { api } from "@/old/_lib/api";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
-// TODO: Need to remove usePriceCheck hook and replace it with useSuspensePriceCheck
 const useSuspensePriceCheck = (
   token: string,
   sku: string,
@@ -12,6 +11,7 @@ const useSuspensePriceCheck = (
     queryKey: ["user", "price-check", token, sku, quantity],
     queryFn: () =>
       api
+        // TODO Replace with X-Cart route
         .post("pim/webservice/ecommerce/price-check", {
           headers: {
             authorization: `Bearer ${token}`,
@@ -20,6 +20,7 @@ const useSuspensePriceCheck = (
           json: { skuqty: [{ sku, quantity }] },
         })
         .json<ItemPricesResult>(),
+    staleTime: 60000,
   });
 };
 
