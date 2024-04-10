@@ -2,6 +2,7 @@ import Banner from "@/_components/banner";
 import RelatedSearches from "@/_components/related-searches";
 import { api } from "@/_lib/api";
 import { getBreadcrumbs } from "@/_lib/apis/server";
+import { getFilters } from "@/_lib/apis/shared";
 import { DEFAULT_REVALIDATE } from "@/_lib/constants";
 import ChevronLeft from "@repo/web-ui/components/icons/chevron-left";
 import {
@@ -93,7 +94,14 @@ export const generateMetadata = async ({
 const CategoryPage = async ({ params: { id, slug } }: CategoryPageProps) => {
   const category = await getCategory(id, slug);
 
-  const breadcrumbs = await getBreadcrumbs(id, "category");
+  const [breadcrumbs, filters] = await Promise.all([
+    getBreadcrumbs(id, "category"),
+    getFilters({
+      type: "Categories",
+      id: id,
+      membershipId: 1,
+    }),
+  ]);
 
   const subCategories = category.subCatgores.map(
     (subCategory) =>
@@ -209,7 +217,17 @@ const CategoryPage = async ({ params: { id, slug } }: CategoryPageProps) => {
       <Banner />
 
       <Suspense fallback={<div>Loading...</div>}>
-        <Products />
+        <Products
+          filters={filters.map((filter) => ({
+            id: filter.id,
+            title: filter.filter,
+            values: filter.values.map((value) => ({
+              id: value.id.toString(),
+              value: value.value,
+              active: value.active,
+            })),
+          }))}
+        />
       </Suspense>
 
       <RelatedSearches />

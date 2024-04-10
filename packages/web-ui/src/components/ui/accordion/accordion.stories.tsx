@@ -45,6 +45,24 @@ export const Showcase: Story = {
             prefer.
           </AccordionContent>
         </AccordionItem>
+        <AccordionItem value="item-4">
+          <AccordionTrigger>
+            This is a very long text. This is to test if the text will wrap
+            properly. Lorem ipsum dolor sit amet.
+          </AccordionTrigger>
+          <AccordionContent>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sed
+            justo ligula. Donec volutpat blandit justo vitae efficitur. Nulla
+            auctor dui tincidunt odio mollis, et imperdiet nisi ultricies. Ut
+            rhoncus ante magna. Pellentesque consequat magna nec nulla
+            efficitur, ac suscipit dui auctor. Vestibulum vel ornare ex, in
+            finibus felis. Nullam condimentum quis felis at blandit.
+            Pellentesque blandit porttitor tempor. Donec pretium sapien aliquam
+            ex luctus, eget faucibus diam posuere. Curabitur efficitur mattis
+            lectus id interdum. Maecenas eget ligula ac neque auctor feugiat.
+            Suspendisse potenti.
+          </AccordionContent>
+        </AccordionItem>
       </Accordion>
     );
   },

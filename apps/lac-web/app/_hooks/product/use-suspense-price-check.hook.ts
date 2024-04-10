@@ -20,6 +20,7 @@ const useSuspensePriceCheck = (
           json: { skuqty: [{ sku, quantity }] },
         })
         .json<ItemPricesResult>(),
+    staleTime: 60000,
   });
 };
 
