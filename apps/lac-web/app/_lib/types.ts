@@ -1,11 +1,11 @@
 export type ImageInfo = {
-  original: number;
+  original: string;
   webp: string;
   jp2: string;
 };
 
 export type Attributes = {
-  attribute_name: number;
+  attribute_name: string;
   attribute_value: string;
 };
 
@@ -70,4 +70,24 @@ export type SKUPrice = {
 
 export type ItemPricesResult = {
   "list-sku-price": SKUPrice[];
+};
+
+export type PurchasedProduct = {
+  product: string;
+  id: string;
+  isFavourite: boolean;
+  orderDate: string;
+  sku: string;
+  totalItem: string;
+};
+
+export type Pagination = {
+  db_count: string;
+  offset: number;
+  perPage: number;
+};
+
+export type PurchasedItems = {
+  products: PurchasedProduct[];
+  pagination: Pagination[];
 };

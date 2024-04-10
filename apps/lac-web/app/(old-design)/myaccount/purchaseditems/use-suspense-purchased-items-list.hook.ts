@@ -1,6 +1,7 @@
 import { api } from "@/_lib/api";
+import type { PurchasedItems } from "@/_lib/types";
+import { mapGetPurchasedItemListResponse } from "@/_mappers/get-purchased-item-list.mapper";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import type { PurchasedOrders } from "./types";
 
 const useSuspensePurchasedItemsList = (
   token: string,
@@ -38,7 +39,8 @@ const useSuspensePurchasedItemsList = (
             order: orderType,
           },
         })
-        .json<PurchasedOrders>(),
+        .json<PurchasedItems>(),
+    select: (data) => mapGetPurchasedItemListResponse(data),
   });
 };
 
