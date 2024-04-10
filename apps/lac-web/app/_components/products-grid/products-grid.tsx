@@ -62,7 +62,7 @@ const ProductsGrid = ({
       </div>
 
       {/* Desktop products grid */}
-      <div className="container hidden flex-row gap-10 md:flex items-start">
+      <div className="container hidden flex-row items-start gap-10 md:flex">
         <AttributesSelector filters={filters} />
 
         <div className="grid flex-1 grid-cols-5 gap-5">

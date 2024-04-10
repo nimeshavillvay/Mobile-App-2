@@ -111,7 +111,7 @@ const FeaturedBrand = async () => {
             />
           </div>
 
-          <div className="p-6 md:flex-1 md:p-12 text-[var(--text-color)]">
+          <div className="p-6 text-[var(--text-color)] md:flex-1 md:p-12">
             {/* TODO Replace with actual brand logo */}
             <svg
               xmlns="http://www.w3.org/2000/svg"
