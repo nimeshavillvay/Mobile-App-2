@@ -74,7 +74,10 @@ const ProductCard = ({ orientation, product }: ProductProps) => {
   return (
     <ProductCardRoot
       orientation={orientation}
-      className={cn("shrink-0", orientation === "horizontal" && "w-full")}
+      className={cn(
+        "shrink-0 snap-start",
+        orientation === "horizontal" && "w-full",
+      )}
     >
       <ProductCardHero>
         <ProductCardDiscount>30</ProductCardDiscount>
