@@ -1,7 +1,20 @@
 import { api } from "@/_lib/api";
+import type { Pagination } from "@/_lib/types";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { mapGetPurchasedItemListResponse } from "./get-purchased-item-list.mapper";
-import type { PurchasedItems } from "./types";
+
+type PurchasedProduct = {
+  product: string;
+  id: string;
+  isFavourite: boolean;
+  orderDate: string;
+  sku: string;
+  totalItem: string;
+};
+
+type PurchasedItems = {
+  products: PurchasedProduct[];
+  pagination: [Pagination];
+};
 
 const useSuspensePurchasedItemsList = (
   token: string,
@@ -40,7 +53,33 @@ const useSuspensePurchasedItemsList = (
           },
         })
         .json<PurchasedItems>(),
-    select: (data) => mapGetPurchasedItemListResponse(data),
+    select: (data) => {
+      const { products, pagination } = data;
+
+      const mappedProducts = products.map(
+        ({ product, sku, id, totalItem, orderDate }) => ({
+          productTitle: product,
+          productSku: sku,
+          productId: Number(id),
+          totalItem: Number(totalItem),
+          purchaseOrderDate: orderDate,
+        }),
+      );
+
+      const firstPagination = pagination[0] || {
+        db_count: "0",
+        offset: 0,
+        perPage: 0,
+      };
+
+      const mappedPagination = {
+        totalCount: Number(firstPagination.db_count),
+        offset: firstPagination.offset,
+        perPage: firstPagination.perPage,
+      };
+
+      return { products: mappedProducts, pagination: mappedPagination };
+    },
   });
 };
 

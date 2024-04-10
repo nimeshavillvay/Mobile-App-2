@@ -71,3 +71,9 @@ export type SKUPrice = {
 export type ItemPricesResult = {
   "list-sku-price": SKUPrice[];
 };
+
+export type Pagination = {
+  db_count: string;
+  offset: number;
+  perPage: number;
+};
