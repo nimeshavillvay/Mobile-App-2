@@ -89,5 +89,5 @@ export type Pagination = {
 
 export type PurchasedItems = {
   products: PurchasedProduct[];
-  pagination: Pagination[];
+  pagination: [Pagination];
 };

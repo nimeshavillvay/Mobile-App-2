@@ -1,4 +1,4 @@
-import type { PurchasedItems } from "@/_lib/types";
+import type { PurchasedItems } from "./types";
 
 export const mapGetPurchasedItemListResponse = (response: PurchasedItems) => {
   const { products, pagination } = response;

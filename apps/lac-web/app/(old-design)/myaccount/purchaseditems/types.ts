@@ -52,6 +52,26 @@ export type OrderHistoryItem = {
   override_price?: string;
 };
 
+export type PurchasedProduct = {
+  product: string;
+  id: string;
+  isFavourite: boolean;
+  orderDate: string;
+  sku: string;
+  totalItem: string;
+};
+
+export type Pagination = {
+  db_count: string;
+  offset: number;
+  perPage: number;
+};
+
+export type PurchasedItems = {
+  products: PurchasedProduct[];
+  pagination: [Pagination];
+};
+
 export type OrderHistoryItems = OrderHistoryItem[];
 
 export type CombinedPurchasedItem = OrderHistoryItem & PurchasedOrder;
