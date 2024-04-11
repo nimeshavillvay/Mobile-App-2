@@ -48,30 +48,6 @@ export type ItemInfo = {
   category_name: string;
 };
 
-// TODO: Types used in old design needs remove in future
-export type PriceBreakDowns = {
-  price1: number;
-  price2: number;
-  price3: number;
-  price4: number;
-  quantity1: number;
-  quantity2: number;
-  quantity3: number;
-  quantity4: number;
-};
-
-export type SKUPrice = {
-  extended: number;
-  price: number;
-  "price-unit": string;
-  pricebreakdowns: PriceBreakDowns;
-  sku: string;
-};
-
-export type ItemPricesResult = {
-  "list-sku-price": SKUPrice[];
-};
-
 export type Pagination = {
   db_count: string;
   offset: number;
