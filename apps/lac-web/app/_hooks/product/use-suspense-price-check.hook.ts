@@ -32,7 +32,10 @@ const getPriceBreakDowns = (price_breakdowns: PriceBreakDowns) => {
     .map(([key, value]) => {
       const index = parseInt(key.replace("price_", ""));
       const quantityKey = `qty_${index}` as keyof PriceBreakDowns;
-      return { quantity: price_breakdowns[quantityKey], price: Number(value) };
+      return {
+        quantity: Number(price_breakdowns[quantityKey]),
+        price: Number(value),
+      };
     });
 };
 
