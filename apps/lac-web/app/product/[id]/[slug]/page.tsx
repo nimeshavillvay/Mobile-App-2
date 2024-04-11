@@ -1,5 +1,6 @@
 import productItemImage from "@/_assets/images/product-item-image.png";
 import RelatedSearches from "@/_components/related-searches";
+import { getBreadcrumbs } from "@/_lib/apis/server";
 import { cn } from "@/_lib/utils";
 import ChevronLeft from "@repo/web-ui/components/icons/chevron-left";
 import {
@@ -20,14 +21,16 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
-  BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@repo/web-ui/components/ui/breadcrumb";
 import { Button, buttonVariants } from "@repo/web-ui/components/ui/button";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { notFound } from "next/navigation";
+import { Fragment } from "react";
 import Balancer from "react-wrap-balancer";
 import ProductHero from "./_product-hero";
+import { getProduct } from "./apis";
 
 type ProductPageProps = {
   params: {
@@ -37,16 +40,31 @@ type ProductPageProps = {
 };
 
 export const generateMetadata = async ({
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  params,
+  params: { id, slug },
 }: ProductPageProps): Promise<Metadata> => {
+  const product = await getProduct(id);
+
+  // Check if the slug matches the product's slug
+  if (slug !== product.selected_item.url) {
+    return notFound();
+  }
+
   return {
-    title:
-      "8102 Pin Tumbler Cylinder Cam Lock for Lipped/Overlay Application, Dull Chrome, Keyed to C101 Key",
+    title: product.selected_item.item_name,
+    description: product.selected_item.txt_sub_description,
   };
 };
 
-const ProductPage = () => {
+const ProductPage = async ({ params: { id, slug } }: ProductPageProps) => {
+  const product = await getProduct(id);
+
+  // Check if the slug matches the product's slug
+  if (slug !== product.selected_item.url) {
+    return notFound();
+  }
+
+  const breadcrumbs = await getBreadcrumbs(id, "product");
+
   return (
     <>
       <div className="container my-4 md:hidden">
@@ -71,31 +89,25 @@ const ProductPage = () => {
             </BreadcrumbLink>
           </BreadcrumbItem>
 
-          <BreadcrumbSeparator />
+          {breadcrumbs.map((breadcrumb) => (
+            <Fragment key={breadcrumb.oo_id}>
+              <BreadcrumbSeparator />
 
-          <BreadcrumbItem>
-            <BreadcrumbLink asChild>
-              <Link href="/">Catches & Locks</Link>
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-
-          <BreadcrumbSeparator />
-
-          <BreadcrumbItem>
-            <BreadcrumbLink asChild>
-              <Link href="/">Locks</Link>
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-
-          <BreadcrumbSeparator />
-
-          <BreadcrumbItem>
-            <BreadcrumbPage>Cams Locks</BreadcrumbPage>
-          </BreadcrumbItem>
+              <BreadcrumbItem>
+                <BreadcrumbLink asChild>
+                  <Link
+                    href={`/category/${breadcrumb.oo_id}/${breadcrumb.slug}`}
+                  >
+                    {breadcrumb.cat_name}
+                  </Link>
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+            </Fragment>
+          ))}
         </BreadcrumbList>
       </Breadcrumb>
 
-      <ProductHero />
+      <ProductHero id={id} />
 
       <section className="my-10 space-y-4 md:my-[3.75rem] md:space-y-9">
         <h2 className="container font-title text-2xl font-medium tracking-[-0.144px] text-wurth-gray-800">

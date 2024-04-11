@@ -45,9 +45,9 @@ const ProductCard = ({ orientation, product }: ProductProps) => {
   ) {
     // If there is only one variant or if there are multiple variants and
     // none of them have been selected
-    href = `/item/${defaultVariant.id}/${defaultVariant.slug}`;
+    href = `/product/${defaultVariant.id}/${defaultVariant.slug}`;
   } else if (selectedVariant) {
-    href = `/item/${selectedVariant.id}/${selectedVariant.slug}`;
+    href = `/product/${selectedVariant.id}/${selectedVariant.slug}`;
   }
 
   let sku = "";

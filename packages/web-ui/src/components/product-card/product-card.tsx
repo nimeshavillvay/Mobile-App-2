@@ -270,12 +270,8 @@ export const ProductCardVariantSelector = ({
   value?: string;
   onValueChange: (value: string) => void;
 }) => {
-  const orientation = useOrientation();
-
   return (
-    <div
-      className={cn("ui-space-y-1", orientation === "vertical" && "ui-mt-auto")}
-    >
+    <div className="ui-mt-auto ui-space-y-1">
       <h4 className="ui-text-sm ui-font-normal ui-text-wurth-gray-800">
         {variants.length} variations
       </h4>
@@ -306,15 +302,8 @@ export const ProductCardVariantSelector = ({
 };
 
 export const ProductCardActions = () => {
-  const orientation = useOrientation();
-
   return (
-    <div
-      className={cn(
-        "ui-flex ui-flex-row ui-items-center ui-gap-1 md:ui-gap-2",
-        orientation === "vertical" && "ui-mt-auto",
-      )}
-    >
+    <div className="ui-mt-auto ui-flex ui-flex-row ui-items-center ui-gap-1 md:ui-gap-2">
       <Button className="ui-h-10 ui-max-h-full ui-flex-1 ui-px-4 ui-text-[0.875rem] ui-leading-5">
         Add to cart
       </Button>

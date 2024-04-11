@@ -1,10 +1,21 @@
+import { api } from "@/_lib/api";
+import { DEFAULT_REVALIDATE } from "@/_lib/constants";
 import { cn } from "@/_lib/utils";
 import Save from "@repo/web-ui/components/icons/save";
 import Truck from "@repo/web-ui/components/icons/truck";
 import { Button } from "@repo/web-ui/components/ui/button";
+import { type ReactNode } from "react";
 import Balancer from "react-wrap-balancer";
 
-export const ProductNumbers = ({ className }: { className?: string }) => {
+export const ProductNumbers = ({
+  groupId,
+  productId,
+  className,
+}: {
+  groupId: string;
+  productId: number;
+  className?: string;
+}) => {
   return (
     <div
       className={cn(
@@ -13,26 +24,28 @@ export const ProductNumbers = ({ className }: { className?: string }) => {
       )}
     >
       <div>
-        Item # <span className="font-medium">B71T555</span>
+        Item # <span className="font-medium">{groupId}</span>
       </div>
 
       <span className="select-none">•</span>
 
       <div>
-        Model # <span className="font-medium">B71T555</span>
+        Model # <span className="font-medium">{productId}</span>
       </div>
     </div>
   );
 };
 
-export const ProductDescription = ({ className }: { className?: string }) => {
+export const ProductDescription = ({
+  children,
+  className,
+}: {
+  children?: ReactNode;
+  className?: string;
+}) => {
   return (
     <p className={cn("text-base text-wurth-gray-500", className)}>
-      <Balancer>
-        Lorem ipsum dolor sit amet consectetur. Curabitur diam urna faucibus
-        quisque. Pretium lectus morbi justo amet amet quisque ipsum elementum
-        ut.
-      </Balancer>
+      <Balancer>{children}</Balancer>
     </p>
   );
 };
@@ -102,7 +115,32 @@ export const DropShipItemNotice = ({ className }: { className?: string }) => {
   );
 };
 
-export const ProductDetails = ({ className }: { className?: string }) => {
+type GroupAsset = {
+  title: string;
+  file_name: string;
+  file_path: string;
+};
+export const ProductDetails = async ({
+  id,
+  className,
+}: {
+  id: string;
+  className?: string;
+}) => {
+  const attachments = await api
+    .get(`rest/landingattachment/${id}`, {
+      next: {
+        revalidate: DEFAULT_REVALIDATE,
+      },
+    })
+    .json<{
+      group_assets_images: GroupAsset[];
+      group_assets_doc: GroupAsset[];
+      group_assets_video: GroupAsset[];
+      group_assets_downloads: GroupAsset[];
+      cross_sell: unknown[];
+    }>();
+
   return (
     <section className={cn("text-wurth-gray-800", className)}>
       <h2 className="mb-4 font-title text-2xl font-medium tracking-[-0.144px]">
@@ -170,17 +208,17 @@ export const ProductDetails = ({ className }: { className?: string }) => {
         <h3 className="text-lg font-semibold">Downloads</h3>
 
         <div className="grid grid-cols-2 gap-2">
-          {Array.from({ length: 4 }).map((_, index) => (
+          {attachments.group_assets_doc.map((attachment) => (
             <Button
-              key={index}
+              key={attachment.file_path}
               variant="outline"
               className="flex h-fit max-w-full flex-col items-start gap-2 rounded-lg border-wurth-gray-250 p-3 shadow-sm"
             >
               <Save className="mt-1 size-5 shrink-0" />
 
-              <div className="text-wrap text-left text-sm font-semibold text-wurth-gray-800">
-                ICS 10” Cabinet Saw Owners Manual V3
-              </div>
+              <span className="text-wrap text-left text-sm font-semibold text-wurth-gray-800">
+                {attachment.title}
+              </span>
             </Button>
           ))}
         </div>
@@ -193,19 +231,11 @@ export const ProductDetails = ({ className }: { className?: string }) => {
   );
 };
 
-const SPECIFICATIONS = [
-  { name: "Brand", value: "CompX" },
-  { name: "Item #", value: "NC8053-346A-4G" },
-  { name: "Model #", value: "C8053-C346A-4G" },
-  { name: "Product Type", value: "Cylinder Cam Lock" },
-  { name: "Priced By", value: "each" },
-  { name: "Sold in Multiples of", value: "1" },
-  { name: "Cylinder Diameter", value: '3/4"' },
-];
-
 export const ProductSpecifications = ({
+  attributes,
   className,
 }: {
+  attributes: { name: string; value: string }[];
   className?: string;
 }) => {
   return (
@@ -216,17 +246,17 @@ export const ProductSpecifications = ({
 
       <table className="w-full">
         <tbody>
-          {SPECIFICATIONS.map((specification) => (
+          {attributes.map((attribute) => (
             <tr
-              key={specification.name}
+              key={attribute.name}
               className="border-b border-b-wurth-gray-150 text-sm"
             >
               <td className="w-1/2 px-2 py-3 text-wurth-gray-500">
-                {specification.name}
+                {attribute.name}
               </td>
 
               <td className="w-1/2 px-2 py-3 font-semibold text-wurth-gray-800">
-                {specification.value}
+                {attribute.value}
               </td>
             </tr>
           ))}
