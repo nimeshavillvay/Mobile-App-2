@@ -1,4 +1,4 @@
-import type { Filter } from "@/_lib/types";
+import type { Filter, FilterTitle } from "@/_lib/types";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -9,7 +9,7 @@ export const cn = (...args: ClassValue[]) => {
   return twMerge(clsx(args));
 };
 
-export const filterAndMapValues = (filters: Filter[], title: string) => {
+export const filterAndMapValues = (filters: Filter[], title: FilterTitle) => {
   const filter = filters.find((filter) => filter.title === title);
   return filter ? filter.values : [];
 };

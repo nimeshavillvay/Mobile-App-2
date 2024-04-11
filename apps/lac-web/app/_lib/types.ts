@@ -32,3 +32,5 @@ export type Filter = {
     active: boolean;
   }[];
 };
+
+export type FilterTitle = "PO #" | "Job Name" | "Status" | "Transaction Type";

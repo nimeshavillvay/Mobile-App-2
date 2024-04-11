@@ -15,26 +15,34 @@ import { updateSearchParams } from "@/old/_utils/client-helpers";
 import dayjs from "dayjs";
 import { useSearchParams } from "next/navigation";
 import { useId, useState } from "react";
+import { MdKeyboardArrowDown } from "react-icons/md";
 import { changeSearchParams } from "../_utils/client-helpers";
 import {
   CUSTOM_DURATION,
   DURATIONS,
   INIT_DURATION,
   INIT_FROM_DATE,
+  INIT_PAGE_NUMBER,
+  INIT_PAGE_SIZE,
   INIT_TO_DATE,
   QUERY_KEYS,
   UI_DATE_FORMAT,
   URL_DATE_FORMAT,
 } from "./constants";
 import MultiSelect from "./multi-select";
+import SelectorsForMobileDialog from "./selectors-for-mobile-dialog";
 import type { Option } from "./types";
 
 type OrderHistoryListSelectorsProps = {
   filters: Filter[];
+  isLoading: boolean;
+  totalItems: number;
 };
 
 const OrderHistoryListSelectors = ({
   filters,
+  isLoading,
+  totalItems,
 }: OrderHistoryListSelectorsProps) => {
   const poNoFilter = filterAndMapValues(filters, "PO #");
   const jobNameFilter = filterAndMapValues(filters, "Job Name");
@@ -44,7 +52,10 @@ const OrderHistoryListSelectors = ({
   const urlSearchParams = useSearchParams();
   const urlFromDate = urlSearchParams.get("from");
   const urlToDate = urlSearchParams.get("to");
+  const page = Number(urlSearchParams.get("page") ?? INIT_PAGE_NUMBER);
+  const perPage = Number(urlSearchParams.get("perPage") ?? INIT_PAGE_SIZE);
 
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [duration, setDuration] = useState(INIT_DURATION);
   const [fromDate, setFromDate] = useState(
     new Date(urlFromDate ?? INIT_FROM_DATE),
@@ -52,6 +63,9 @@ const OrderHistoryListSelectors = ({
   const [toDate, setToDate] = useState(new Date(urlToDate ?? INIT_TO_DATE));
   const [orderStatuses, setOrderStatuses] = useState<string[]>([]);
   const [orderTypes, setOrderTypes] = useState<string[]>([]);
+
+  const formattedFromDate = dayjs(fromDate).format(URL_DATE_FORMAT);
+  const formattedToDate = dayjs(toDate).format(URL_DATE_FORMAT);
 
   const id = useId();
   const durationId = `duration-${id}`;
@@ -117,101 +131,147 @@ const OrderHistoryListSelectors = ({
   };
 
   return (
-    <div className="hidden flex-col justify-between gap-4 bg-brand-gray-100 px-4 py-5 md:flex md:flex-wrap lg:flex-row lg:gap-0">
-      <div className="flex flex-col justify-between gap-4 lg:gap-0">
-        <div className="space-y-4">
-          <div className="text-brand-gray-500">
-            <Label htmlFor={durationId} className="text-nowrap font-bold">
-              Duration
-            </Label>
+    <>
+      <div className="hidden flex-col justify-between gap-4 bg-brand-gray-100 px-4 py-5 md:flex md:flex-wrap lg:flex-row lg:gap-0">
+        <div className="flex flex-col justify-between gap-4 lg:gap-0">
+          <div className="space-y-4">
+            <div className="text-brand-gray-500">
+              <Label htmlFor={durationId} className="text-nowrap font-bold">
+                Duration
+              </Label>
 
-            <Select
-              value={duration?.value}
-              onValueChange={function (value) {
-                handleDurationChange(value);
-              }}
+              <Select
+                value={duration?.value}
+                onValueChange={function (value) {
+                  handleDurationChange(value);
+                }}
+              >
+                <SelectTrigger id={durationId} className="h-8 py-0">
+                  <SelectValue>{duration?.label}</SelectValue>
+                </SelectTrigger>
+
+                <SelectContent>
+                  {DURATIONS.map((duration) => (
+                    <SelectItem key={duration.value} value={duration.value}>
+                      {duration.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="flex flex-row items-center gap-2 self-start">
+              <DatePicker
+                date={fromDate}
+                onSelectDate={(date) => {
+                  setFromDate(date);
+                  setDuration(CUSTOM_DURATION);
+                }}
+                dateFormat={UI_DATE_FORMAT}
+              />
+
+              <div>to</div>
+
+              <DatePicker
+                date={toDate}
+                onSelectDate={(date) => {
+                  setToDate(date);
+                  setDuration(CUSTOM_DURATION);
+                }}
+                dateFormat={UI_DATE_FORMAT}
+              />
+            </div>
+          </div>
+
+          <div className="flex flex-row items-center gap-2">
+            <Button className="min-w-24" onClick={handleSearch}>
+              Search
+            </Button>
+
+            <Button
+              className="min-w-24 bg-brand-secondary"
+              onClick={handleReset}
             >
-              <SelectTrigger id={durationId} className="h-8 py-0">
-                <SelectValue>{duration?.label}</SelectValue>
-              </SelectTrigger>
-
-              <SelectContent>
-                {DURATIONS.map((duration) => (
-                  <SelectItem key={duration.value} value={duration.value}>
-                    {duration.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="flex flex-row items-center gap-2 self-start">
-            <DatePicker
-              date={fromDate}
-              onSelectDate={(date) => {
-                setFromDate(date);
-                setDuration(CUSTOM_DURATION);
-              }}
-              dateFormat={UI_DATE_FORMAT}
-            />
-
-            <div>to</div>
-
-            <DatePicker
-              date={toDate}
-              onSelectDate={(date) => {
-                setToDate(date);
-                setDuration(CUSTOM_DURATION);
-              }}
-              dateFormat={UI_DATE_FORMAT}
-            />
+              Reset
+            </Button>
           </div>
         </div>
 
-        <div className="flex flex-row items-center gap-2">
-          <Button className="min-w-24" onClick={handleSearch}>
-            Search
-          </Button>
+        {/* Order Types Column */}
+        <div>
+          <Label className="text-nowrap font-bold">Order Types</Label>
 
-          <Button className="min-w-24 bg-brand-secondary" onClick={handleReset}>
-            Reset
-          </Button>
+          <div className="flex min-h-[186px] min-w-[170px] flex-col gap-2 rounded-sm border bg-white p-3">
+            {typesFilter.map((orderType) => (
+              <OrderTypeCheckbox
+                key={orderType.id}
+                onCheckedChanged={(checked) =>
+                  handleOrderTypeCheckedChanged(orderType.id, checked)
+                }
+                {...orderType}
+              />
+            ))}
+          </div>
         </div>
-      </div>
 
-      {/* Order Types Column */}
-      <div>
-        <Label className="text-nowrap font-bold">Order Types</Label>
+        {/* Filter By Column */}
+        <div>
+          <Label className="text-nowrap font-bold">Filter By</Label>
 
-        <div className="flex min-h-[186px] min-w-[170px] flex-col gap-2 rounded-sm border bg-white p-3">
-          {typesFilter.map((orderType) => (
-            <OrderTypeCheckbox
-              key={orderType.id}
-              onCheckedChanged={(checked) =>
-                handleOrderTypeCheckedChanged(orderType.id, checked)
-              }
-              {...orderType}
+          <div className="flex flex-col gap-2">
+            <MultiSelect label="PO No." data={poNoFilter} />
+            <MultiSelect label="Job Name" data={jobNameFilter} />
+            <MultiSelect
+              label="Order Status"
+              data={statusFilter}
+              onValuesChange={(values) => handleOrderStatusChange(values)}
+              onClear={() => setOrderStatuses([])}
             />
-          ))}
+          </div>
         </div>
       </div>
 
-      {/* Filter By Column */}
-      <div>
-        <Label className="text-nowrap font-bold">Filter By</Label>
+      {/* Mobile Filters */}
+      <div className="block md:hidden">
+        <div className="flex flex-row items-center justify-between">
+          <Button
+            variant="ghost"
+            className="px-0"
+            onClick={() => setMobileFiltersOpen(!mobileFiltersOpen)}
+          >
+            Sort & Filter
+            <MdKeyboardArrowDown className="text-2xl transition-transform duration-200" />
+          </Button>
 
-        <div className="flex flex-col gap-2">
-          <MultiSelect label="PO No." data={poNoFilter} />
-          <MultiSelect label="Job Name" data={jobNameFilter} />
-          <MultiSelect
-            label="Order Status"
-            data={statusFilter}
-            onValuesChange={(values) => handleOrderStatusChange(values)}
-            onClear={() => setOrderStatuses([])}
+          <div>
+            {!isLoading && (
+              <div className="text-base font-bold text-brand-gray-500">
+                {(page - 1) * perPage + 1} -{" "}
+                {Math.min(page * perPage, totalItems)} of {totalItems}
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="flex flex-row justify-between text-brand-gray-500">
+          <FilterDetailsBoxForMobile
+            label="Duration"
+            value={`${formattedFromDate} - ${formattedToDate}`}
+          />
+
+          <FilterDetailsBoxForMobile
+            label="Order Type"
+            value={`Return, Credit (+2)`}
           />
         </div>
       </div>
-    </div>
+
+      <SelectorsForMobileDialog
+        open={mobileFiltersOpen}
+        onOpenChange={setMobileFiltersOpen}
+        filters={filters}
+      />
+    </>
   );
 };
 
@@ -239,6 +299,22 @@ const OrderTypeCheckbox = ({
       <Label htmlFor={`order-type-${id}`} className="text-wrap">
         {value}
       </Label>
+    </div>
+  );
+};
+
+// TODO: Move this to a separate file (Reusable component)
+const FilterDetailsBoxForMobile = ({
+  label,
+  value,
+}: {
+  label: string;
+  value: string;
+}) => {
+  return (
+    <div className="w-fit rounded-md bg-gray-100 p-2">
+      <div className="text-[10px] uppercase">{label}</div>
+      <div className="font-bold">{value}</div>
     </div>
   );
 };

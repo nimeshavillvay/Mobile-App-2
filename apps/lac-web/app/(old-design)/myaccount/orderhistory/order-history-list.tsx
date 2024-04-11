@@ -91,6 +91,8 @@ const OrderHistoryList = ({ token }: { token: string }) => {
             active: value.active,
           })),
         }))}
+        isLoading={searchQuery.isLoading}
+        totalItems={totalItems}
       />
 
       <TotalCountAndPagination
