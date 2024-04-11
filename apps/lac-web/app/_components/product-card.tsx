@@ -3,7 +3,6 @@
 import productItemImage from "@/_assets/images/product-item-image.png";
 import { cn } from "@/_lib/utils";
 import {
-  ProductCard,
   ProductCardActions,
   ProductCardCompare,
   ProductCardContent,
@@ -13,12 +12,13 @@ import {
   ProductCardImage,
   ProductCardLabel,
   ProductCardPrice,
+  ProductCard as ProductCardRoot,
   ProductCardVariantSelector,
 } from "@repo/web-ui/components/product-card";
 import { useState, type ComponentProps } from "react";
 
 type ProductProps = {
-  orientation?: ComponentProps<typeof ProductCard>["orientation"];
+  orientation?: ComponentProps<typeof ProductCardRoot>["orientation"];
   product: {
     groupName: string;
     variants: {
@@ -29,7 +29,7 @@ type ProductProps = {
   };
 };
 
-const Product = ({ orientation, product }: ProductProps) => {
+const ProductCard = ({ orientation, product }: ProductProps) => {
   const [selectedId, setSelectedId] = useState<string | undefined>();
 
   const defaultVariant = product.variants[0];
@@ -72,9 +72,12 @@ const Product = ({ orientation, product }: ProductProps) => {
   }
 
   return (
-    <ProductCard
+    <ProductCardRoot
       orientation={orientation}
-      className={cn(orientation === "horizontal" && "w-full")}
+      className={cn(
+        "shrink-0 snap-start",
+        orientation === "horizontal" && "w-full",
+      )}
     >
       <ProductCardHero>
         <ProductCardDiscount>30</ProductCardDiscount>
@@ -112,8 +115,8 @@ const Product = ({ orientation, product }: ProductProps) => {
           </>
         )}
       </ProductCardContent>
-    </ProductCard>
+    </ProductCardRoot>
   );
 };
 
-export default Product;
+export default ProductCard;

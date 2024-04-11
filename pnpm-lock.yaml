@@ -157,6 +157,9 @@ importers:
       embla-carousel-react:
         specifier: 8.0.0
         version: 8.0.0(react@18.2.0)
+      font-color-contrast:
+        specifier: 11.1.0
+        version: 11.1.0
       jotai:
         specifier: 2.7.1
         version: 2.7.1(@types/react@18.2.70)(react@18.2.0)
@@ -11858,6 +11861,10 @@ packages:
     resolution: {integrity: sha512-WVzuqwq7ZnvBceCG0DGeTQebZE+iIU0mlk5PmJgYj9DDrt+0isGC2m1ezW9vxL4V+HERJJo9ExppOnwKH2op6Q==}
     engines: {node: '>=0.4.0'}
     dev: true
+
+  /font-color-contrast@11.1.0:
+    resolution: {integrity: sha512-PxpFaesCSsDwaciw7MF6B2thUkH7skqZlz4BzUnvapR6+Es2877q7ru/tqfsITuaraPz+TGfsOfdtU4D0qjqEw==}
+    dev: false
 
   /fontfaceobserver@2.3.0:
     resolution: {integrity: sha512-6FPvD/IVyT4ZlNe7Wcn5Fb/4ChigpucKYSvD6a+0iMoLn2inpo711eyIcKjmDtE5XNcgAkSH9uN/nfAeZzHEfg==}
