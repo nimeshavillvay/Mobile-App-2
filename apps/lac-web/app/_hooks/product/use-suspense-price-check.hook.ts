@@ -22,8 +22,18 @@ type ItemPrice = {
 };
 
 type ItemsPriceResult = {
-  error: null; //TODO need to clarify how errors send
+  error: true | null; //TODO need to clarify how errors send
   items: ItemPrice[];
+};
+
+const getPriceBreakDowns = (price_breakdowns: PriceBreakDowns) => {
+  return Object.entries(price_breakdowns)
+    .filter(([key]) => key.startsWith("price_"))
+    .map(([key, value]) => {
+      const index = parseInt(key.replace("price_", ""));
+      const quantityKey = `qty_${index}` as keyof PriceBreakDowns;
+      return { quantity: price_breakdowns[quantityKey], price: Number(value) };
+    });
 };
 
 // TODO: Need to remove usePriceCheck hook and replace it with useSuspensePriceCheck
@@ -46,7 +56,6 @@ const useSuspensePriceCheck = (
         .json<ItemsPriceResult>(),
     select: (data) => {
       const { items, error } = data;
-      console.log("items", items);
       const mappedItems = items.map(
         ({
           productid,
@@ -61,16 +70,7 @@ const useSuspensePriceCheck = (
           priceUnit: price_unit,
           extendedPrice: Number(extended),
           couponCode: coupon,
-          priceBreakDowns: {
-            price1: Number(price_breakdowns?.price_1),
-            price2: Number(price_breakdowns?.price_2),
-            price3: Number(price_breakdowns?.price_3),
-            price4: Number(price_breakdowns?.price_4),
-            quantity1: price_breakdowns?.qty_1 ?? 0,
-            quantity2: price_breakdowns?.qty_2 ?? 0,
-            quantity3: price_breakdowns?.qty_3 ?? 0,
-            quantity4: price_breakdowns?.qty_4 ?? 0,
-          },
+          priceBreakDowns: getPriceBreakDowns(price_breakdowns),
         }),
       );
 
