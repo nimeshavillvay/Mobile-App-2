@@ -65,7 +65,7 @@ const DesktopNavigationMenu = ({ categories }: DesktopNavigationMenuProps) => {
                       <Link
                         href={`/category/${selectedCategory.id}/${selectedCategory.slug}`}
                       >
-                        {selectedCategory.name}
+                        Shop all {selectedCategory.name}
                       </Link>
                     </NavigationMenuLink>
                   </li>
