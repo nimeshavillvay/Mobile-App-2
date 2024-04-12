@@ -60,7 +60,7 @@ const DesktopNavigationMenu = ({ categories }: DesktopNavigationMenuProps) => {
                   <li>
                     <NavigationMenuLink
                       asChild
-                      className="block rounded px-2 py-1.5 text-sm font-semibold text-wurth-red-650 hover:bg-wurth-gray-150 active:bg-wurth-gray-150"
+                      className="block text-nowrap rounded px-2 py-1.5 text-sm font-semibold text-wurth-red-650 hover:bg-wurth-gray-150 active:bg-wurth-gray-150"
                     >
                       <Link
                         href={`/category/${selectedCategory.id}/${selectedCategory.slug}`}
