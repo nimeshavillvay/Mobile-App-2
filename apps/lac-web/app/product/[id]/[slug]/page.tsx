@@ -175,7 +175,7 @@ const ProductPage = async ({ params: { id, slug } }: ProductPageProps) => {
 
         {relatedProducts.map((relatedSection) => (
           <div key={relatedSection.heading} className="space-y-3 bg-white">
-            <h3 className="text-lg container font-semibold text-wurth-gray-800">
+            <h3 className="container text-lg font-semibold text-wurth-gray-800">
               <Balancer>{relatedSection.heading}</Balancer>
             </h3>
 
