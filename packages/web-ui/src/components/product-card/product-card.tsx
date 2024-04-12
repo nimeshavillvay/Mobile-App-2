@@ -183,15 +183,9 @@ export const ProductCardContent = ({
   className,
   ...delegated
 }: ComponentProps<"div">) => {
-  const orientation = useOrientation();
-
   return (
     <div
-      className={cn(
-        "ui-flex ui-flex-col ui-gap-2",
-        orientation === "vertical" && "ui-flex-1",
-        className,
-      )}
+      className={cn("ui-flex ui-flex-1 ui-flex-col ui-gap-2", className)}
       {...delegated}
     />
   );

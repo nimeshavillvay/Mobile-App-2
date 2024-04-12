@@ -211,6 +211,9 @@ importers:
       tailwind-merge:
         specifier: 2.2.2
         version: 2.2.2
+      ultrahtml:
+        specifier: 1.5.3
+        version: 1.5.3
       zod:
         specifier: 3.22.4
         version: 3.22.4
@@ -17399,6 +17402,10 @@ packages:
     requiresBuild: true
     dev: true
     optional: true
+
+  /ultrahtml@1.5.3:
+    resolution: {integrity: sha512-GykOvZwgDWZlTQMtp5jrD4BVL+gNn2NVlVafjcFUJ7taY20tqYdwdoWBFy6GBJsNTZe1GkGPkSl5knQAjtgceg==}
+    dev: false
 
   /unbox-primitive@1.0.2:
     resolution: {integrity: sha512-61pPlCD9h51VoreyJ0BReideM3MDKMKnh6+V9L08331ipq6Q8OFXZYiqP6n/tbHx4s5I9uRhcye6BrbkizkBDw==}
