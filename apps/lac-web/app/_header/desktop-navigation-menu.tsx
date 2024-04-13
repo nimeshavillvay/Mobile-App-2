@@ -29,8 +29,8 @@ const DesktopNavigationMenu = ({ categories }: DesktopNavigationMenuProps) => {
   );
 
   return (
-    <div className="bg-wurth-red-650">
-      <NavigationMenu className="container hidden justify-start md:flex">
+    <div className="hidden bg-wurth-red-650 md:block">
+      <NavigationMenu className="container justify-start">
         <NavigationMenuList>
           <NavigationMenuItem>
             <NavigationMenuTrigger>Categories</NavigationMenuTrigger>

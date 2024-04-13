@@ -5,6 +5,7 @@ import { type Metadata } from "next";
 import localFont from "next/font/local";
 import NextTopLoader from "nextjs-toploader";
 import { type ReactNode } from "react";
+import Footer from "./_footer";
 import Header from "./_header";
 import "./global.css";
 import Providers from "./providers";
@@ -70,7 +71,7 @@ const RootLayout = ({ children }: { children: ReactNode }) => {
 
           <main className="flex-1">{children}</main>
 
-          <footer>Footer</footer>
+          <Footer />
 
           <LoginDialog />
           <AccountSelectorDialog />
