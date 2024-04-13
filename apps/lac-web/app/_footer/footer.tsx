@@ -206,41 +206,43 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="container flex flex-col gap-6 md:flex-row md:justify-between">
-          <p className="text-center text-xs text-wurth-gray-500 md:text-left">
-            <Balancer>
-              Copyright © 2004-{new Date().getFullYear()}, Würth Baer Supply
-              Company. All Rights Reserved. All logos are Trademarks of their
-              respective owners.
-            </Balancer>
-          </p>
+        <div className="container">
+          <div className="flex flex-col gap-6 md:flex-row md:justify-between md:border-t md:border-wurth-gray-250 md:pt-7">
+            <p className="text-center text-xs text-wurth-gray-500 md:text-left">
+              <Balancer>
+                Copyright © 2004-{new Date().getFullYear()}, Würth Baer Supply
+                Company. All Rights Reserved. All logos are Trademarks of their
+                respective owners.
+              </Balancer>
+            </p>
 
-          <div className="flex flex-col items-center gap-3 text-xs text-wurth-gray-800 md:flex-row md:gap-6">
-            <nav className="flex flex-row items-center justify-center gap-6">
-              <Link
-                href="/accessibility"
-                className="text-nowrap hover:underline"
-              >
-                Accessibility
-              </Link>
+            <div className="flex flex-col items-center gap-3 text-xs text-wurth-gray-800 md:flex-row md:gap-6">
+              <nav className="flex flex-row items-center justify-center gap-6">
+                <Link
+                  href="/accessibility"
+                  className="text-nowrap hover:underline"
+                >
+                  Accessibility
+                </Link>
 
-              <Link
-                href="/privacy-policy"
-                className="text-nowrap hover:underline"
-              >
-                Privacy Policy
-              </Link>
+                <Link
+                  href="/privacy-policy"
+                  className="text-nowrap hover:underline"
+                >
+                  Privacy Policy
+                </Link>
 
-              <Link
-                href="/terms-of-sale"
-                className="text-nowrap hover:underline"
-              >
-                Terms of Sale
-              </Link>
-            </nav>
+                <Link
+                  href="/terms-of-sale"
+                  className="text-nowrap hover:underline"
+                >
+                  Terms of Sale
+                </Link>
+              </nav>
 
-            <div className="text-nowrap text-center">
-              Do Not Sell My Personal Information
+              <div className="text-nowrap text-center">
+                Do Not Sell My Personal Information
+              </div>
             </div>
           </div>
         </div>
