@@ -1,7 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { type ReactNode } from "react";
 import AddToCart from "./add-to-cart";
 import Alert from "./alert";
 import ArrowLeft from "./arrow-left";
+import ArrowPathUp from "./arrow-path-up";
 import ArrowRight from "./arrow-right";
 import ArrowUp from "./arrow-up";
 import ArrowUpRight from "./arrow-up-right";
@@ -12,17 +14,28 @@ import ChevronLeft from "./chevron-left";
 import ChevronRight from "./chevron-right";
 import ChevronUp from "./chevron-up";
 import Close from "./close";
+import Facebook from "./facebook";
+import Headset from "./headset";
 import HeartFilled from "./heart-filled";
 import HeartOutline from "./heart-outline";
+import Instagram from "./instagram";
+import LinkedIn from "./linkedin";
 import MagnifyingGlass from "./magnifying-glass";
 import Menu from "./menu";
 import Minus from "./minus";
+import PackageDelivery from "./package-delivery";
+import Pinterest from "./pinterest";
 import Plus from "./plus";
 import Profile from "./profile";
 import Save from "./save";
 import Settings from "./settings";
 import ShoppingCart from "./shopping-cart";
+import TikTok from "./tiktok";
 import Truck from "./truck";
+import TruckWithClock from "./truck-with-clock";
+import Twitter from "./twitter";
+import Wallet from "./wallet";
+import YouTube from "./youtube";
 import Zap from "./zap";
 
 const Icon = () => {
@@ -39,66 +52,175 @@ const meta: Meta<typeof Icon> = {
 export default meta;
 type Story = StoryObj<typeof Icon>;
 
+const IconContainer = ({
+  name,
+  children,
+}: {
+  name: string;
+  children: ReactNode;
+}) => {
+  return (
+    <li className="ui-flex ui-flex-col ui-items-center">
+      {children}{" "}
+      <div className="ui-text-center ui-text-sm ui-text-wurth-gray-800">
+        {name}
+      </div>
+    </li>
+  );
+};
+
 export const Showcase: Story = {
   render: () => {
     return (
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(6, minmax(0, 1fr))",
-          gap: "1rem",
-        }}
-      >
-        <Menu />
+      <ul className="ui-grid ui-grid-cols-6 ui-gap-4">
+        <IconContainer name="Menu">
+          <Menu />
+        </IconContainer>
 
-        <MagnifyingGlass />
+        <IconContainer name="MagnifyingGlass">
+          <MagnifyingGlass />
+        </IconContainer>
 
-        <Settings />
+        <IconContainer name="ArrowPathUp">
+          <ArrowPathUp />
+        </IconContainer>
 
-        <Save />
+        <IconContainer name="Wallet">
+          <Wallet />
+        </IconContainer>
 
-        <Alert />
+        <IconContainer name="Headset">
+          <Headset />
+        </IconContainer>
 
-        <Minus />
+        <IconContainer name="Settings">
+          <Settings />
+        </IconContainer>
 
-        <Plus />
+        <IconContainer name="Save">
+          <Save />
+        </IconContainer>
 
-        <ShoppingCart />
+        <IconContainer name="Alert">
+          <Alert />
+        </IconContainer>
 
-        <AddToCart />
+        <IconContainer name="Minus">
+          <Minus />
+        </IconContainer>
 
-        <HeartFilled />
+        <IconContainer name="Plus">
+          <Plus />
+        </IconContainer>
 
-        <HeartOutline />
+        <IconContainer name="ShoppingCart">
+          <ShoppingCart />
+        </IconContainer>
 
-        <Zap />
+        <IconContainer name="AddToCart">
+          <AddToCart />
+        </IconContainer>
 
-        <Profile />
+        <IconContainer name="PackageDelivery">
+          <PackageDelivery />
+        </IconContainer>
 
-        <Bell />
+        <IconContainer name="HeartFilled">
+          <HeartFilled />
+        </IconContainer>
 
-        <Truck />
+        <IconContainer name="HeartOutline">
+          <HeartOutline />
+        </IconContainer>
 
-        <Close />
+        <IconContainer name="Zap">
+          <Zap />
+        </IconContainer>
 
-        <Check />
+        <IconContainer name="Profile">
+          <Profile />
+        </IconContainer>
 
-        <ArrowUpRight />
+        <IconContainer name="Bell">
+          <Bell />
+        </IconContainer>
 
-        <ArrowRight />
+        <IconContainer name="Truck">
+          <Truck />
+        </IconContainer>
 
-        <ArrowLeft />
+        <IconContainer name="TruckWithClock">
+          <TruckWithClock />
+        </IconContainer>
 
-        <ArrowUp />
+        <IconContainer name="Close">
+          <Close />
+        </IconContainer>
 
-        <ChevronRight />
+        <IconContainer name="Check">
+          <Check />
+        </IconContainer>
 
-        <ChevronDown />
+        <IconContainer name="ArrowUpRight">
+          <ArrowUpRight />
+        </IconContainer>
 
-        <ChevronLeft />
+        <IconContainer name="ArrowRight">
+          <ArrowRight />
+        </IconContainer>
 
-        <ChevronUp />
-      </div>
+        <IconContainer name="ArrowLeft">
+          <ArrowLeft />
+        </IconContainer>
+
+        <IconContainer name="ArrowUp">
+          <ArrowUp />
+        </IconContainer>
+
+        <IconContainer name="ChevronRight">
+          <ChevronRight />
+        </IconContainer>
+
+        <IconContainer name="ChevronDown">
+          <ChevronDown />
+        </IconContainer>
+
+        <IconContainer name="ChevronLeft">
+          <ChevronLeft />
+        </IconContainer>
+
+        <IconContainer name="ChevronUp">
+          <ChevronUp />
+        </IconContainer>
+
+        <IconContainer name="Facebook">
+          <Facebook />
+        </IconContainer>
+
+        <IconContainer name="Instagram">
+          <Instagram />
+        </IconContainer>
+
+        <IconContainer name="LinkedIn">
+          <LinkedIn />
+        </IconContainer>
+
+        <IconContainer name="Twitter">
+          <Twitter />
+        </IconContainer>
+
+        <IconContainer name="Pinterest">
+          <Pinterest />
+        </IconContainer>
+
+        <IconContainer name="YouTube">
+          <YouTube />
+        </IconContainer>
+
+        <IconContainer name="TikTok">
+          <TikTok />
+        </IconContainer>
+      </ul>
     );
   },
 };

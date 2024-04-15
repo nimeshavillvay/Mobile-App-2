@@ -12,16 +12,18 @@ import { Input } from "@repo/web-ui/components/ui/input";
 import { useState } from "react";
 
 type AddToCartProps = {
+  minQty: number;
+  incQty: number;
   className?: string;
 };
 
-const AddToCart = ({ className }: AddToCartProps) => {
-  const [quantity, setQuantity] = useState(4);
+const AddToCart = ({ minQty, incQty, className }: AddToCartProps) => {
+  const [quantity, setQuantity] = useState(minQty);
   const reduceQuantity = () => {
-    setQuantity((quantity) => quantity - 1);
+    setQuantity((quantity) => quantity - incQty);
   };
   const increaseQuantity = () => {
-    setQuantity((quantity) => quantity + 1);
+    setQuantity((quantity) => quantity + incQty);
   };
 
   return (
@@ -60,7 +62,7 @@ const AddToCart = ({ className }: AddToCartProps) => {
               size="icon"
               className="size-10 rounded-sm"
               onClick={reduceQuantity}
-              disabled={quantity === 1}
+              disabled={quantity === minQty}
             >
               <Minus className="size-4" />
               <span className="sr-only">Reduce quantity</span>
@@ -68,6 +70,8 @@ const AddToCart = ({ className }: AddToCartProps) => {
 
             <Input
               type="number"
+              min={minQty}
+              step={incQty}
               value={quantity}
               onChange={(e) => setQuantity(Number(e.target.value))}
               className="flex-1 rounded-sm border-0 p-0 text-center text-lg font-semibold text-wurth-gray-800 shadow-none"
@@ -79,7 +83,6 @@ const AddToCart = ({ className }: AddToCartProps) => {
               size="icon"
               className="size-10 rounded-sm"
               onClick={increaseQuantity}
-              disabled={quantity === 10}
             >
               <Plus className="size-4" />
               <span className="sr-only">Increase quantity</span>
@@ -102,12 +105,12 @@ const AddToCart = ({ className }: AddToCartProps) => {
         <div className="flex-1 text-sm text-wurth-gray-500 md:flex md:flex-row md:items-center md:gap-4">
           <div>
             Min Order:{" "}
-            <span className="font-semibold text-wurth-gray-800">4</span>
+            <span className="font-semibold text-wurth-gray-800">{minQty}</span>
           </div>
 
           <div>
             Quantity Multiple by:{" "}
-            <span className="font-semibold text-wurth-gray-800">8</span>
+            <span className="font-semibold text-wurth-gray-800">{incQty}</span>
           </div>
         </div>
 

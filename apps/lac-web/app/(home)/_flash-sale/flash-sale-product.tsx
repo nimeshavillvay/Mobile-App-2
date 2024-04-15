@@ -32,7 +32,7 @@ const FlashSaleProduct = ({
         <ProductCardImage
           src={productItemImage}
           alt={`A picture of the product ${title}`}
-          href={`/item/12345`}
+          href={`/product/12345`}
           title={title}
         />
 
