@@ -2,19 +2,17 @@ import { api } from "@/_lib/api";
 import { DEFAULT_REVALIDATE } from "@/_lib/constants";
 import "server-only";
 
-type ShipToAddress = {
-  attention: string;
-  shipToStreet: string;
-  shipToCity: Date;
-  shipToZip: string;
-  shipToCountry: string;
-  shipToRegion: string;
-  shipToPhone: string;
-};
-
 type OrderTracker = {
   orderNo: string;
-  shipToAddress: ShipToAddress;
+  shipToAddress: {
+    attention: string;
+    shipToStreet: string;
+    shipToCity: string;
+    shipToZip: string;
+    shipToCountry: string;
+    shipToRegion: string;
+    shipToPhone: string;
+  };
   tracking_info: unknown[];
   driverNotes: string;
 };
