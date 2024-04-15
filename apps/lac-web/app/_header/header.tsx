@@ -1,5 +1,6 @@
 import { api } from "@/_lib/api";
 import { DEFAULT_REVALIDATE } from "@/_lib/constants";
+import { cn } from "@/_lib/utils";
 import Profile from "@repo/web-ui/components/icons/profile";
 import ShoppingCart from "@repo/web-ui/components/icons/shopping-cart";
 import WurthFullBlack from "@repo/web-ui/components/logos/wurth-full-black";
@@ -8,7 +9,7 @@ import {
   SearchBoxButton,
   SearchBoxInput,
 } from "@repo/web-ui/components/search-box";
-import { Button } from "@repo/web-ui/components/ui/button";
+import { Button, buttonVariants } from "@repo/web-ui/components/ui/button";
 import Link from "next/link";
 import DesktopNavigationMenu from "./desktop-navigation-menu";
 import MobileNavigationMenu from "./mobile-navigation-menu";
@@ -52,11 +53,20 @@ const Header = async () => {
             <span className="sr-only">User Profile</span>
           </Button>
 
-          <Button variant="ghost" size="icon" className="size-6 md:hidden">
+          <Link
+            href="/cart"
+            className={cn(
+              buttonVariants({
+                variant: "ghost",
+                size: "icon",
+              }),
+              "size-6 md:hidden",
+            )}
+          >
             <ShoppingCart />
 
-            <span className="sr-only">Shopping Cart</span>
-          </Button>
+            <span className="sr-only">Cart</span>
+          </Link>
 
           {/* Desktop */}
           <Button
@@ -68,14 +78,17 @@ const Header = async () => {
             <span className="text-base font-semibold">Sign in / Register</span>
           </Button>
 
-          <Button
-            variant="ghost"
-            className="hidden shrink-0 md:flex md:h-min md:flex-row md:items-center md:gap-2 md:p-0"
+          <Link
+            href="/cart"
+            className={cn(
+              buttonVariants({ variant: "ghost" }),
+              "hidden shrink-0 md:flex md:h-min md:flex-row md:items-center md:gap-2 md:p-0",
+            )}
           >
             <ShoppingCart className="size-7" />
 
             <span className="text-base font-semibold">Cart</span>
-          </Button>
+          </Link>
         </div>
       </div>
 
