@@ -40,7 +40,7 @@ export const getOrderTrackingLog = async (orderId: string) => {
       zipCode: shipToAddress.shipToZip,
       country: shipToAddress.shipToCountry,
       region: shipToAddress.shipToRegion,
-      phone: shipToAddress.shipToPhone,
+      phoneNumber: shipToAddress.shipToPhone,
     },
     trackingInfo: tracking_info,
     driverNotes: driverNotes,
