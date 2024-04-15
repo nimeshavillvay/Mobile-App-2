@@ -33,7 +33,7 @@ const OrderTrackingLogPage = async ({
 
   return (
     <>
-      <BackButton orderId={trackingLog.orderNo} />
+      <BackButton orderId={trackingLog.orderNo.toString()} />
 
       <Separator
         orientation="horizontal"
@@ -53,7 +53,7 @@ const OrderTrackingLogPage = async ({
           <SelectedShippingName />
 
           <div className="text-wrap">
-            {trackingLog.shipToAddress.shipToStreet}
+            {trackingLog.shipToAddress.street ?? "N/A"}
           </div>
 
           {trackingLog.shipToAddress.attention !== "" && (
@@ -61,12 +61,12 @@ const OrderTrackingLogPage = async ({
           )}
 
           <div>
-            {trackingLog.shipToAddress.shipToCity ?? "N/A"},&nbsp;
-            {trackingLog.shipToAddress.shipToRegion ?? "N/A"}&nbsp;
-            {trackingLog.shipToAddress.shipToZip ?? "N/A"}
+            {trackingLog.shipToAddress.city ?? "N/A"},&nbsp;
+            {trackingLog.shipToAddress.region ?? "N/A"}&nbsp;
+            {trackingLog.shipToAddress.zipCode ?? "N/A"}
           </div>
 
-          <div>Phone: {trackingLog.shipToAddress.shipToPhone}</div>
+          <div>Phone: {trackingLog.shipToAddress.phoneNumber}</div>
         </div>
 
         <div className="flex flex-col rounded-b border p-3 md:border-0 md:p-0">
