@@ -1,6 +1,6 @@
 import { api } from "@/_lib/api";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import type { MyOrders, OrderStatus } from "./types";
+import type { MyOrders } from "./types";
 
 const useSuspenseOrderHistorySearch = (
   token: string,
@@ -46,20 +46,6 @@ const useSuspenseOrderHistorySearch = (
           },
         })
         .json<MyOrders>(),
-    // Transformer to select the data needed
-    select: (data) => {
-      const ORDER_STATUS = ["C", "I", "R", "S", "K", "F"];
-      const getRandomStatus = () =>
-        Math.floor(Math.random() * ORDER_STATUS.length);
-
-      return {
-        orders: data.orders.map((order) => ({
-          ...order,
-          status: ORDER_STATUS[getRandomStatus()] as OrderStatus,
-        })),
-        pagination: data.pagination,
-      };
-    },
   });
 };
 

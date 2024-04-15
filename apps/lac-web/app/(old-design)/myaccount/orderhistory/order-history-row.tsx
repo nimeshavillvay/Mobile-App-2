@@ -4,12 +4,7 @@ import dayjs from "dayjs";
 import Link from "next/link";
 import { MdInsertDriveFile } from "react-icons/md";
 import { getTableRowBgColor } from "../_utils/client-helpers";
-import {
-  ORDER_STATUS,
-  ORDER_TYPES,
-  STATUS_COLOR_CLASSES,
-  UI_DATE_FORMAT,
-} from "./constants";
+import { ORDER_TYPES, STATUS_COLOR_CLASSES, UI_DATE_FORMAT } from "./constants";
 import type { Order, OrderStatus } from "./types";
 
 type OrderHistoryRowProps = {
@@ -91,7 +86,7 @@ const OrderStatusBadge = ({ status }: { status: OrderStatus }) => {
 
   return (
     <div className={cn("px-4 py-2 font-bold", colorClass)}>
-      {ORDER_STATUS[status] || "N/A"}
+      {status || "N/A"}
     </div>
   );
 };
