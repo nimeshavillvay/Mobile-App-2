@@ -2,8 +2,25 @@ import { api } from "@/_lib/api";
 import { DEFAULT_REVALIDATE } from "@/_lib/constants";
 import "server-only";
 
+type ShipToAddress = {
+  attention: string;
+  shipToStreet: string;
+  shipToCity: Date;
+  shipToZip: string;
+  shipToCountry: string;
+  shipToRegion: string;
+  shipToPhone: string;
+};
+
+type OrderTracker = {
+  orderNo: string;
+  shipToAddress: ShipToAddress;
+  tracking_info: unknown[];
+  driverNotes: string;
+};
+
 export const getOrderTrackingLog = async (orderId: string) => {
-  return await api
+  const { orderNo, shipToAddress, tracking_info, driverNotes } = await api
     .get("rest/order-history/tracker", {
       searchParams: {
         orderNo: orderId,
@@ -12,18 +29,22 @@ export const getOrderTrackingLog = async (orderId: string) => {
         revalidate: DEFAULT_REVALIDATE,
       },
     })
-    .json<{
-      orderNo: string;
-      shipToAddress: {
-        attention: string;
-        shipToStreet: string;
-        shipToCity: Date;
-        shipToZip: string;
-        shipToCountry: string;
-        shipToRegion: string;
-        shipToPhone: string;
-      };
-      tracking_info: unknown[];
-      driverNotes: string;
-    }>();
+    .json<OrderTracker>();
+
+  const transformedData = {
+    orderNo: Number(orderNo),
+    shipToAddress: {
+      attention: shipToAddress.attention,
+      street: shipToAddress.shipToStreet,
+      city: shipToAddress.shipToCity,
+      zipCode: shipToAddress.shipToZip,
+      country: shipToAddress.shipToCountry,
+      region: shipToAddress.shipToRegion,
+      phone: shipToAddress.shipToPhone,
+    },
+    trackingInfo: tracking_info,
+    driverNotes: driverNotes,
+  };
+
+  return transformedData;
 };
