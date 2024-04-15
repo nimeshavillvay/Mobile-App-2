@@ -1,6 +1,6 @@
 import { api } from "@/_lib/api";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import type { MyOrders, OrderStatus, SortBy, SortDirection } from "./types";
+import type { MyOrders, OrderStatus } from "./types";
 
 const useSuspenseOrderHistorySearch = (
   token: string,
@@ -10,8 +10,8 @@ const useSuspenseOrderHistorySearch = (
   orderStatus: string[],
   currentPage: number,
   pageSize: number,
-  sortBy: SortBy,
-  sortDirection: SortDirection,
+  sortBy: string,
+  sortDirection: string,
   rfData: string,
 ) => {
   return useSuspenseQuery({

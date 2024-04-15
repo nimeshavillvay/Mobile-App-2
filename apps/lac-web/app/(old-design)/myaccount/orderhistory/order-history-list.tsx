@@ -19,6 +19,7 @@ import {
   INIT_PAGE_NUMBER,
   INIT_PAGE_SIZE,
   INIT_TO_DATE,
+  SORTING_DIRECTION,
 } from "./constants";
 import OrderHistoryListForMobile from "./order-history-list-for-mobile";
 import OrderHistoryListSelectors from "./order-history-list-selectors";
@@ -30,11 +31,14 @@ const OrderHistoryList = ({ token }: { token: string }) => {
   const searchParams = useSearchParams();
   const fromDate = searchParams.get("from") ?? INIT_FROM_DATE;
   const toDate = searchParams.get("to") ?? INIT_TO_DATE;
-  const urlOrderType = searchParams.get("orderType");
   const currentPage = Number(searchParams.get("page") ?? INIT_PAGE_NUMBER);
   const pageSize = Number(searchParams.get("perPage") ?? INIT_PAGE_SIZE);
-  const orderTypes = urlOrderType?.split(",") ?? ALL_ORDER_TYPES;
+  const orderTypes =
+    searchParams.get("orderType")?.split(",") ?? ALL_ORDER_TYPES;
   const orderStatus = searchParams.get("orderStatus")?.split(",") ?? [];
+  const sortBy = searchParams.get("sortBy") ?? "date";
+  const sortDirection =
+    searchParams.get("sortDirection") ?? SORTING_DIRECTION.DESC;
 
   const searchQuery = useSuspenseOrderHistorySearch(
     token,
@@ -44,8 +48,8 @@ const OrderHistoryList = ({ token }: { token: string }) => {
     orderStatus,
     currentPage - 1,
     pageSize,
-    "date",
-    "desc",
+    sortBy,
+    sortDirection,
     "",
   );
 

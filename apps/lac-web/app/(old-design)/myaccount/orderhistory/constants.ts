@@ -64,7 +64,62 @@ export const QUERY_KEYS = {
   ORDER_BY: "orderBy",
   ORDER_TYPE: "orderType",
   ORDER_STATUS: "orderStatus",
+  SORT_TYPE: "sortBy",
+  SORT_DIRECTION: "sortDirection",
 } as const;
+
+export const SORTING_DIRECTION = {
+  ASC: "asc",
+  DESC: "desc",
+} as const;
+
+export const SORTING_FILTERS_FOR_MOBILE = [
+  {
+    title: "Item # / MFR Part #",
+    options: [
+      {
+        title: "Item # / MFR Part # Ascending",
+        type: "orderid",
+        direction: SORTING_DIRECTION.ASC,
+      },
+      {
+        title: "Item# / MFR Part# Descending",
+        type: "orderid",
+        direction: SORTING_DIRECTION.DESC,
+      },
+    ],
+  },
+  {
+    title: "Order Date",
+    options: [
+      {
+        title: "Order Date Ascending",
+        type: "date",
+        direction: SORTING_DIRECTION.ASC,
+      },
+      {
+        title: "Order Date Descending",
+        type: "date",
+        direction: SORTING_DIRECTION.DESC,
+      },
+    ],
+  },
+  {
+    title: "Order Total",
+    options: [
+      {
+        title: "Order Total Ascending",
+        type: "total",
+        direction: SORTING_DIRECTION.ASC,
+      },
+      {
+        title: "Order Total Descending",
+        type: "total",
+        direction: SORTING_DIRECTION.DESC,
+      },
+    ],
+  },
+];
 
 export const PAGE_SIZES = ["10", "20", "30", "40"] as const;
 export const INIT_PAGE_NUMBER = "1" as const;

@@ -9,6 +9,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/old/_components/ui/accordion";
+import { Button } from "@/old/_components/ui/button";
 import { Checkbox } from "@/old/_components/ui/checkbox";
 import {
   Dialog,
@@ -19,13 +20,19 @@ import {
 } from "@/old/_components/ui/dialog";
 import { Label } from "@/old/_components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/old/_components/ui/radio-group";
+import { updateSearchParams } from "@/old/_utils/client-helpers";
 import { cn } from "@/old/_utils/helpers";
 import dayjs from "dayjs";
+import { useSearchParams } from "next/navigation";
 import { useState, type Dispatch, type SetStateAction } from "react";
+import { MdCheck } from "react-icons/md";
+import { changeSearchParams } from "../_utils/client-helpers";
 import {
   DURATIONS,
   INIT_DURATION,
   INIT_FROM_DATE,
+  QUERY_KEYS,
+  SORTING_FILTERS_FOR_MOBILE,
   URL_DATE_FORMAT,
 } from "./constants";
 
@@ -42,6 +49,8 @@ const SelectorsForMobileDialog = ({
   filters,
   onOpenChange,
 }: SelectorsForMobileDialogProps) => {
+  const urlSearchParams = useSearchParams();
+
   const poNoFilter = filterAndMapValues(filters, "PO #");
   const jobNameFilter = filterAndMapValues(filters, "Job Name");
   const statusFilter = filterAndMapValues(filters, "Status");
@@ -54,6 +63,8 @@ const SelectorsForMobileDialog = ({
   const [poNos, setPoNos] = useState<string[]>([]);
   const [jobNames, setJobNames] = useState<string[]>([]);
   const [orderStatuses, setOrderStatuses] = useState<string[]>([]);
+  const [sortDirection, setSortDirection] = useState("");
+  const [sortType, setSortType] = useState("");
 
   const handleDurationChange = (value: string) => {
     const duration = DURATIONS.find((duration) => duration.value === value);
@@ -105,9 +116,94 @@ const SelectorsForMobileDialog = ({
     }
   };
 
+  const handleApplyFilters = () => {
+    const urlFilters: { key: string; value: string }[] = [];
+
+    if (fromDate && toDate) {
+      urlFilters.push({
+        key: QUERY_KEYS.FROM_DATE,
+        value: dayjs(fromDate).format(URL_DATE_FORMAT),
+      });
+
+      urlFilters.push({
+        key: QUERY_KEYS.TO_DATE,
+        value: dayjs(toDate).format(URL_DATE_FORMAT),
+      });
+    } else {
+      urlFilters.push({
+        key: QUERY_KEYS.FROM_DATE,
+        value: "",
+      });
+
+      urlFilters.push({
+        key: QUERY_KEYS.TO_DATE,
+        value: "",
+      });
+    }
+
+    if (orderStatuses.length) {
+      urlFilters.push({
+        key: QUERY_KEYS.ORDER_STATUS,
+        value: orderStatuses.join(","),
+      });
+    } else {
+      urlFilters.push({
+        key: QUERY_KEYS.ORDER_STATUS,
+        value: "",
+      });
+    }
+
+    if (orderTypes.length) {
+      urlFilters.push({
+        key: QUERY_KEYS.ORDER_TYPE,
+        value: orderTypes.join(","),
+      });
+    } else {
+      urlFilters.push({
+        key: QUERY_KEYS.ORDER_TYPE,
+        value: "",
+      });
+    }
+
+    if (sortType && sortDirection) {
+      urlFilters.push({
+        key: QUERY_KEYS.SORT_TYPE,
+        value: sortType,
+      });
+      urlFilters.push({
+        key: QUERY_KEYS.SORT_DIRECTION,
+        value: sortDirection,
+      });
+    } else {
+      urlFilters.push({
+        key: QUERY_KEYS.SORT_TYPE,
+        value: "",
+      });
+      urlFilters.push({
+        key: QUERY_KEYS.SORT_DIRECTION,
+        value: "",
+      });
+    }
+
+    changeSearchParams(urlSearchParams, urlFilters);
+
+    // Close the dialog
+    onOpenChange && onOpenChange(false);
+  };
+
+  const handleResetFilters = () => {
+    setDuration(INIT_DURATION);
+    setFromDate(new Date(INIT_FROM_DATE));
+    setToDate(new Date());
+
+    const params = new URLSearchParams();
+
+    updateSearchParams(params);
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bottom-0 top-auto max-h-[80vh] max-w-[500px] translate-y-[0%] gap-0 overflow-scroll">
+      <DialogContent className="bottom-0 top-auto max-w-[500px] translate-y-[0%] gap-0">
         <DialogHeader>
           <DialogTitle className="text-left  font-wurth md:text-center">
             Sort & Filter
@@ -118,7 +214,7 @@ const SelectorsForMobileDialog = ({
           </DialogDescription>
         </DialogHeader>
 
-        <div>
+        <div className="max-h-[80vh] overflow-y-scroll">
           <Accordion
             type="single"
             collapsible
@@ -284,11 +380,46 @@ const SelectorsForMobileDialog = ({
                 Sort Direction
               </AccordionTrigger>
 
-              <AccordionContent className="grid gap-y-5 px-5 py-3">
-                {/* list of sort directions */}
+              <AccordionContent className="grid">
+                {SORTING_FILTERS_FOR_MOBILE.map((sort) => (
+                  <>
+                    <MobileSortFilterHeading
+                      key={sort.title}
+                      title={sort.title}
+                    />
+                    {sort.options.map((option) => (
+                      <MobileSortFilterOption
+                        key={option.title}
+                        title={option.title}
+                        active={
+                          sortType === option.type &&
+                          sortDirection === option.direction
+                        }
+                        onChecked={() => {
+                          setSortType(option.type);
+                          setSortDirection(option.direction);
+                        }}
+                      />
+                    ))}
+                  </>
+                ))}
               </AccordionContent>
             </AccordionItem>
           </Accordion>
+        </div>
+
+        <div className="grid grid-cols-2 gap-3 p-5">
+          <Button
+            variant="secondary"
+            className="h-12 border-brand-primary text-brand-primary"
+            onClick={() => handleResetFilters()}
+          >
+            Reset
+          </Button>
+
+          <Button className="h-12" onClick={() => handleApplyFilters()}>
+            Apply
+          </Button>
         </div>
       </DialogContent>
     </Dialog>
@@ -325,6 +456,47 @@ const CheckboxWithLabel = ({
       <Label htmlFor={`${flag}-${id}`} className="w-full text-wrap">
         {value}
       </Label>
+    </div>
+  );
+};
+
+const MobileSortFilterHeading = ({ title }: { title: string }) => {
+  return (
+    <div className="bg-brand-gray-200 px-5 py-3 text-base text-brand-gray-500">
+      {title}
+    </div>
+  );
+};
+
+const MobileSortFilterOption = ({
+  title,
+  active,
+  onChecked,
+}: {
+  title: string;
+  active: boolean;
+  onChecked: () => void;
+}) => {
+  return (
+    <div
+      className={cn(
+        "py-2 pl-8 pr-2",
+        active ? "bg-brand-secondary bg-opacity-20 text-brand-secondary" : "",
+      )}
+    >
+      <Button
+        variant="ghost"
+        className="font-base flex w-full items-center justify-between font-bold normal-case"
+        onClick={onChecked}
+      >
+        {title}
+        <MdCheck
+          className={cn(
+            "text-2xl leading-none text-brand-secondary",
+            active ? "block" : "hidden",
+          )}
+        />
+      </Button>
     </div>
   );
 };
