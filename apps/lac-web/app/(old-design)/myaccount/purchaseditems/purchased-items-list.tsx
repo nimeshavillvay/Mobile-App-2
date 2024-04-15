@@ -62,19 +62,19 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
     orderType,
   );
 
-  const skuIds: string[] = [];
+  const productIds: string[] = [];
   if (purchasedItemsList.data) {
-    totalItems = purchasedItemsList.data.purchesOrders.totalElements;
+    totalItems = purchasedItemsList.data.pagination.db_count;
 
-    purchasedItemsList.data.purchesOrders.content.forEach((element) => {
-      const isExist = skuIds.find((e) => e === element.sku);
+    purchasedItemsList.data.products.forEach((element) => {
+      const isExist = productIds.find((id) => id === element.id);
       if (!isExist) {
-        skuIds.push(element.sku);
+        productIds.push(element.id);
       }
     });
   }
 
-  const getItemInfo = useGetItemInfo(token, skuIds);
+  const getItemInfo = useGetItemInfo(token, productIds);
   if (purchasedItemsList && getItemInfo) {
     isLoading = false;
   }
