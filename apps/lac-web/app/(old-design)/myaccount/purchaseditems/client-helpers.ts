@@ -18,9 +18,9 @@ export const changeSearchParams = (
   updateSearchParams(newSearchParams);
 };
 
-export const generateItemUrl = (groupId: string, sku: string) => {
-  if (groupId && sku) {
-    return `/product-item/${groupId}/${sku}`;
+export const generateItemUrl = (productId: number) => {
+  if (productId) {
+    return `/product/${productId}`;
   }
   return "#";
 };

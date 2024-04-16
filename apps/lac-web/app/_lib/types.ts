@@ -9,12 +9,12 @@ export type Attributes = {
   attribute_value: string;
 };
 
-export type ItemInfo = {
+export type OldItemInfo = {
   productid: string;
   item_name: string;
   is_favourite: boolean | null;
   is_comparison: boolean | null;
-  img: ImageInfo[];
+  img: ImageInfo;
   attributes: Attributes[];
   group_id: string;
   is_product_exclude: boolean;
@@ -48,8 +48,84 @@ export type ItemInfo = {
   category_name: string;
 };
 
-export type Pagination = {
+export type OldPagination = {
   db_count: string;
   offset: number;
   perPage: number;
 };
+
+export type ItemInfo = {
+  productId: number;
+  isExcludedProduct: boolean;
+  productSku: string;
+  productName: string;
+  image: ImageInfo;
+  isComparison: boolean;
+  skuAttribute: string;
+  isHazardous: boolean;
+  specialShipping: boolean;
+  productIdOnSap: string;
+  mfrPartNo: string;
+  productDescription: string;
+  productTitle: string;
+  brandCode: number;
+  unitOfMeasure: string;
+  boxQuantity: number;
+  minimumOrderQuantity: number;
+  quantityByIncrements: number;
+  weight: number;
+  prop65MessageOne: string;
+  prop65MessageTwo: string;
+  prop65MessageThree: string;
+  listPrice: number;
+  isSaleItem: boolean;
+  fClassId: number;
+  class: string;
+  attributes: Attributes[];
+  productStatus: string;
+  isDirectlyShippedFromVendor: boolean;
+  productSummary: string;
+  brand: string;
+  productCategory: string;
+};
+
+export type OldPurchasedProduct = {
+  product: string;
+  id: string;
+  isFavourite: boolean;
+  orderDate: string;
+  sku: string;
+  totalItem: string;
+};
+
+export type OldPurchasedItems = {
+  products: OldPurchasedProduct[];
+  pagination: [OldPagination];
+};
+
+export type PurchasedProduct = {
+  productTitle: string;
+  productSku: string;
+  productId: number;
+  totalItem: number;
+  purchaseOrderDate: string;
+  isFavorite: boolean;
+};
+
+export type Pagination = {
+  totalCount: number;
+  offset: number;
+  perPage: number;
+};
+
+export type PurchasedItems = {
+  products: PurchasedProduct[];
+  pagination: Pagination;
+};
+
+export type PriceBreakDownObject = {
+  qty_1: number;
+  price_1: number;
+};
+
+export type PriceBreakDowns = PriceBreakDownObject[];
