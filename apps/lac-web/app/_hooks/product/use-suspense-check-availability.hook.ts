@@ -43,22 +43,28 @@ type CheckAvailability = {
     shippingMethods_1?: string;
     type?: string;
     willCallBackOrder?: Date;
+    backOrderQuantity_1?: string;
+    backOrderDate_1?: Date;
   };
   xplant: string;
 };
 
 const getPlantAvailability = (option: AvailableOptions) => {
   for (let i = 1; i < 6; i++) {
-    const plantAvailable = [];
+    const plantAvailable: {
+      plant: string | null;
+      quantity: number;
+      shippingMethods: string | null;
+    }[] = [];
     const plantKey = `plant_${i}` as keyof AvailableOptions;
     const quantityKey = `quantity_${i}` as keyof AvailableOptions;
     const shippingMethodKey = `shippingMethods_${i}` as keyof AvailableOptions;
 
     if (option[plantKey]) {
       plantAvailable.push({
-        plant: option[plantKey] || null,
-        quantity: Number(option[quantityKey]) || 0,
-        shippingMethods: option[shippingMethodKey] || null,
+        plant: option[plantKey] ?? null,
+        quantity: Number(option[quantityKey]) ?? 0,
+        shippingMethods: option[shippingMethodKey] ?? null,
       });
     }
     return plantAvailable;
@@ -116,8 +122,8 @@ const useSuspenseCheckAvailability = ({
             isBackOrder: item.backOrder == "T",
             type: item.type,
             hash: item.hash,
-            backOrderQuantity: Number(item.backOrderQuantity_1) || null,
-            backOrderDate: item.backOrderDate_1 || null,
+            backOrderQuantity: Number(item.backOrderQuantity_1) ?? 0,
+            backOrderDate: item.backOrderDate_1 ?? null,
             availability: getPlantAvailability(item),
           })),
           price,
@@ -132,10 +138,13 @@ const useSuspenseCheckAvailability = ({
                 willCallQuantity: Number(willcallanywhere.willCallQuantity),
                 hash: willcallanywhere.hash,
                 isBackOrder: willcallanywhere.backOrder == "T",
-                index: willcallanywhere.index || null,
-                plant: willcallanywhere.plant_1 || null,
-                quantity: Number(willcallanywhere.quantity_1) || null,
-                shippingMethods: willcallanywhere.shippingMethods_1 || null,
+                index: willcallanywhere.index ?? null,
+                plant: willcallanywhere.plant_1 ?? null,
+                quantity: Number(willcallanywhere.quantity_1) ?? 0,
+                shippingMethods: willcallanywhere.shippingMethods_1 ?? null,
+                backOrderQuantity:
+                  Number(willcallanywhere.backOrderQuantity_1) ?? 0,
+                backOrderDate: willcallanywhere.backOrderDate_1 ?? null,
               }
             : {},
         }),
