@@ -30,17 +30,25 @@ const useUpdateProfileMutation = () => {
             update_fields: updateFields,
           },
         })
-        .json<{ status: string }>(),
+        .json<{
+          status_code: string;
+          message: string;
+        }>(),
     onMutate: () => {
       toast({ description: "Updating your profile" });
     },
     onSuccess: (data, { updateFields }) => {
+      const transformedData = {
+        statusCode: data.status_code,
+        message: data.message,
+      };
+
       toast({
         description: "Your profile has been successfully updated.",
         variant: "success",
       });
 
-      if (data?.status === "logout") {
+      if (transformedData.statusCode === "logout") {
         // Check if password field also updated
         if (updateFields.some((field) => field?.field === "password")) {
           logout();
