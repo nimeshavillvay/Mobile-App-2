@@ -50,12 +50,13 @@ type CheckAvailability = {
 };
 
 const getPlantAvailability = (option: AvailableOptions) => {
+  const plantAvailable: {
+    plant: string | null;
+    quantity: number;
+    shippingMethods: string | null;
+  }[] = [];
+
   for (let i = 1; i < 6; i++) {
-    const plantAvailable: {
-      plant: string | null;
-      quantity: number;
-      shippingMethods: string | null;
-    }[] = [];
     const plantKey = `plant_${i}` as keyof AvailableOptions;
     const quantityKey = `quantity_${i}` as keyof AvailableOptions;
     const shippingMethodKey = `shippingMethods_${i}` as keyof AvailableOptions;
@@ -63,12 +64,15 @@ const getPlantAvailability = (option: AvailableOptions) => {
     if (option[plantKey]) {
       plantAvailable.push({
         plant: option[plantKey] ?? null,
-        quantity: Number(option[quantityKey]) ?? 0,
+        quantity: isNaN(Number(option[quantityKey]))
+          ? 0
+          : Number(option[quantityKey]),
         shippingMethods: option[shippingMethodKey] ?? null,
       });
     }
-    return plantAvailable;
   }
+
+  return plantAvailable;
 };
 
 const useSuspenseCheckAvailability = ({
@@ -122,7 +126,9 @@ const useSuspenseCheckAvailability = ({
             isBackOrder: item.backOrder == "T",
             type: item.type,
             hash: item.hash,
-            backOrderQuantity: Number(item.backOrderQuantity_1) ?? 0,
+            backOrderQuantity: isNaN(Number(item.backOrderQuantity_1))
+              ? 0
+              : Number(item.backOrderQuantity_1),
             backOrderDate: item.backOrderDate_1 ?? null,
             availability: getPlantAvailability(item),
           })),
@@ -135,18 +141,27 @@ const useSuspenseCheckAvailability = ({
             ? {
                 status: willcallanywhere.status,
                 willCallPlant: willcallanywhere.willCallPlant,
-                willCallQuantity: Number(willcallanywhere.willCallQuantity),
+                willCallQuantity: isNaN(
+                  Number(willcallanywhere.willCallQuantity),
+                )
+                  ? 0
+                  : Number(willcallanywhere.willCallQuantity),
                 hash: willcallanywhere.hash,
                 isBackOrder: willcallanywhere.backOrder == "T",
                 index: willcallanywhere.index ?? null,
                 plant: willcallanywhere.plant_1 ?? null,
-                quantity: Number(willcallanywhere.quantity_1) ?? 0,
+                quantity: isNaN(Number(willcallanywhere.quantity_1))
+                  ? 0
+                  : Number(willcallanywhere.quantity_1),
                 shippingMethods: willcallanywhere.shippingMethods_1 ?? null,
-                backOrderQuantity:
-                  Number(willcallanywhere.backOrderQuantity_1) ?? 0,
+                backOrderQuantity: isNaN(
+                  Number(willcallanywhere.backOrderQuantity_1),
+                )
+                  ? 0
+                  : Number(willcallanywhere.backOrderQuantity_1),
                 backOrderDate: willcallanywhere.backOrderDate_1 ?? null,
               }
-            : {},
+            : undefined,
         }),
       );
     },
