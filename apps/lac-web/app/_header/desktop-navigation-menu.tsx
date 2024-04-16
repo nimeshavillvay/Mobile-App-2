@@ -1,3 +1,6 @@
+"use client";
+
+import { cn } from "@/_lib/utils";
 import ArrowUpRight from "@repo/web-ui/components/icons/arrow-up-right";
 import ChevronRight from "@repo/web-ui/components/icons/chevron-right";
 import {
@@ -10,6 +13,7 @@ import {
   NavigationMenuTrigger,
 } from "@repo/web-ui/components/ui/navigation-menu";
 import Link from "next/link";
+import { useState, type ComponentProps } from "react";
 import { Category } from "./types";
 
 type DesktopNavigationMenuProps = {
@@ -17,27 +21,65 @@ type DesktopNavigationMenuProps = {
 };
 
 const DesktopNavigationMenu = ({ categories }: DesktopNavigationMenuProps) => {
+  const [selectedCategoryId, setSelectedCategoryId] = useState(
+    () => categories[0]?.id ?? "",
+  );
+  const selectedCategory = categories.find(
+    (category) => category.id === selectedCategoryId,
+  );
+
   return (
-    <div className="bg-wurth-red-650">
-      <NavigationMenu className="container hidden justify-start md:flex">
+    <div className="hidden bg-wurth-red-650 md:block">
+      <NavigationMenu className="container justify-start">
         <NavigationMenuList>
-          <NavigationMenuItem value="categories">
+          <NavigationMenuItem>
             <NavigationMenuTrigger>Categories</NavigationMenuTrigger>
 
-            <NavigationMenuContent className="flex flex-col p-4">
-              {categories.map((category) => (
-                <NavigationMenuLink
-                  key={category.id}
-                  asChild
-                  className="flex flex-row items-center justify-between gap-2 text-nowrap rounded px-2 py-1.5 text-sm hover:bg-wurth-gray-150 active:bg-wurth-gray-150"
-                >
-                  <Link href={`/category/${category.id}/${category.slug}`}>
-                    <span>{category.name}</span>
+            <NavigationMenuContent className="flex flex-row">
+              {/* Main Categories */}
+              <ul
+                className={cn(
+                  "p-4",
+                  selectedCategory?.subcategory?.length &&
+                    "border-r border-r-slate-200",
+                )}
+              >
+                {categories.map((category) => (
+                  <li key={category.id}>
+                    <NavigationLink
+                      id={category.id}
+                      slug={category.slug}
+                      name={category.name}
+                      onMouseOver={() => setSelectedCategoryId(category.id)}
+                      showArrow={!!category.subcategory?.length}
+                    />
+                  </li>
+                ))}
+              </ul>
 
-                    <ChevronRight className="size-4" />
-                  </Link>
-                </NavigationMenuLink>
-              ))}
+              {/* Sub Categories */}
+              {!!selectedCategory && !!selectedCategory.subcategory?.length && (
+                <ul className="p-4">
+                  <li>
+                    <NavigationLink
+                      id={selectedCategory.id}
+                      slug={selectedCategory.slug}
+                      name={`Shop all ${selectedCategory.name}`}
+                      primary
+                    />
+                  </li>
+
+                  {selectedCategory.subcategory.map((subCategory) => (
+                    <li key={subCategory.id}>
+                      <NavigationLink
+                        id={subCategory.id}
+                        slug={subCategory.slug}
+                        name={subCategory.name}
+                      />
+                    </li>
+                  ))}
+                </ul>
+              )}
             </NavigationMenuContent>
           </NavigationMenuItem>
 
@@ -56,3 +98,36 @@ const DesktopNavigationMenu = ({ categories }: DesktopNavigationMenuProps) => {
 };
 
 export default DesktopNavigationMenu;
+
+const NavigationLink = ({
+  id,
+  slug,
+  name,
+  primary = false,
+  showArrow = false,
+  onMouseOver,
+}: {
+  id: string;
+  slug: string;
+  name: string;
+  primary?: boolean;
+  showArrow?: boolean;
+  onMouseOver?: ComponentProps<typeof NavigationMenuLink>["onMouseOver"];
+}) => {
+  return (
+    <NavigationMenuLink
+      asChild
+      className={cn(
+        "flex flex-row items-center justify-between gap-2 text-nowrap rounded px-2 py-1.5 text-sm hover:bg-wurth-gray-150 active:bg-wurth-gray-150",
+        primary && "font-semibold text-wurth-red-650",
+      )}
+      onMouseOver={onMouseOver}
+    >
+      <Link href={`/category/${id}/${slug}`}>
+        <span>{name}</span>
+
+        {showArrow && <ChevronRight className="size-4" />}
+      </Link>
+    </NavigationMenuLink>
+  );
+};
