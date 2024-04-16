@@ -113,10 +113,10 @@ const useSuspenseCheckAvailability = ({
         }) => ({
           options: options.map((item) => ({
             index: item.index,
-            isBackOrder: item.index == "T",
+            isBackOrder: item.backOrder == "T",
             type: item.type,
             hash: item.hash,
-            backOrderQuantity: item.backOrderQuantity_1 || null,
+            backOrderQuantity: Number(item.backOrderQuantity_1) || null,
             backOrderDate: item.backOrderDate_1 || null,
             availability: getPlantAvailability(item),
           })),
@@ -129,7 +129,7 @@ const useSuspenseCheckAvailability = ({
             ? {
                 status: willcallanywhere.status,
                 willCallPlant: willcallanywhere.willCallPlant,
-                willCallQuantity: willcallanywhere.willCallQuantity,
+                willCallQuantity: Number(willcallanywhere.willCallQuantity),
                 hash: willcallanywhere.hash,
                 isBackOrder: willcallanywhere.backOrder == "T",
                 index: willcallanywhere.index || null,
