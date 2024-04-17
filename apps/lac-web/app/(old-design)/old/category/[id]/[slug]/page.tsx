@@ -91,7 +91,7 @@ const CategoryPage = async ({ params: { id, slug } }: CategoryPageProps) => {
       };
     }),
   );
-  console.log("breadcrumbs", breadcrumbs);
+
   return (
     <>
       <Breadcrumbs
