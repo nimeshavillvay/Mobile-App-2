@@ -12,8 +12,10 @@ import { useId, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import Balancer from "react-wrap-balancer";
 import { z } from "zod";
+import { EMAIL_COOKIE } from "../constants";
+import type { PasswordPolicies } from "../types";
+import useSignInCookies from "../use-sign-in-cookies.hook";
 import { login } from "./actions";
-import useSignInStore from "./use-sign-in-store.hook";
 
 const emailFormSchema = z.object({
   email: z.string().email(),
@@ -24,11 +26,7 @@ const loginFormSchema = z.object({
 });
 
 type SignInProps = {
-  passwordPolicies: {
-    minimumLength: number;
-    minimumNumbers: number;
-    minimumAlphabets: number;
-  };
+  passwordPolicies: PasswordPolicies;
 };
 
 const SignIn = ({ passwordPolicies }: SignInProps) => {
@@ -36,12 +34,11 @@ const SignIn = ({ passwordPolicies }: SignInProps) => {
   const emailId = `email-${id}`;
   const passwordId = `password-${id}`;
 
-  const email = useSignInStore((state) => state.email);
-  const { setEmail } = useSignInStore((state) => state.actions);
+  const [cookies, setCookies] = useSignInCookies();
 
   const emailForm = useForm<z.infer<typeof emailFormSchema>>({
     values: {
-      email,
+      email: cookies[EMAIL_COOKIE],
     },
     resolver: zodResolver(emailFormSchema),
   });
@@ -68,7 +65,9 @@ const SignIn = ({ passwordPolicies }: SignInProps) => {
           errorResponse.message ===
             "Email address already exists in the database."
         ) {
-          setEmail(email);
+          setCookies(EMAIL_COOKIE, email, {
+            path: "/",
+          });
         }
       }
     },
@@ -115,14 +114,14 @@ const SignIn = ({ passwordPolicies }: SignInProps) => {
   );
   const loginForm = useForm<z.infer<typeof refinedLoginFormSchema>>({
     values: {
-      email,
+      email: cookies[EMAIL_COOKIE],
       password: "",
     },
     resolver: zodResolver(refinedLoginFormSchema),
   });
 
   const clearEmail = () => {
-    setEmail("");
+    setCookies(EMAIL_COOKIE, "", { path: "/" });
   };
 
   const loginMutation = useMutation({
@@ -139,7 +138,7 @@ const SignIn = ({ passwordPolicies }: SignInProps) => {
     loginMutation.mutate(data);
   });
 
-  if (!email) {
+  if (!cookies.email) {
     return (
       <div className="container">
         <form
@@ -186,7 +185,7 @@ const SignIn = ({ passwordPolicies }: SignInProps) => {
         </h1>
 
         <div className="space-y-1 text-center">
-          <h2 className="text-lg">{email}</h2>
+          <h2 className="text-lg">{cookies.email}</h2>
 
           <button
             className="text-sm text-red-800 underline"
