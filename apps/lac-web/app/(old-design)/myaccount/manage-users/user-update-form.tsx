@@ -28,7 +28,7 @@ import {
   UpdateField,
   UserProfile,
 } from "./types";
-import useUpdateOtherUserMutation from "./use-update-other-user-mutation.hook";
+// import useUpdateOtherUserMutation from "./use-update-other-user-mutation.hook";
 
 const USER_PERMISSIONS = [
   { label: "Admin", value: "ADMIN" },
@@ -48,7 +48,7 @@ const PASSWORD_RESET_PENDING_MSG =
 const updateUserSchema = z.object({
   firstName: z.string().trim().min(1, "Please enter first name.").max(40),
   lastName: z.string().trim().min(1, "Please enter last name.").max(40),
-  jobTitle: z.string(),
+  jobTitle: z.string().nullable(),
   email: z
     .string()
     .trim()
@@ -76,8 +76,8 @@ const UserUpdateForm = ({
   const form = useForm<UpdateUserSchema>({
     resolver: zodResolver(updateUserSchema),
     values: {
-      firstName: user?.first_name,
-      lastName: user?.last_name,
+      firstName: user?.firstName,
+      lastName: user?.lastName,
       jobTitle: user?.role,
       email: user?.email,
       permission: user?.permission,
@@ -85,20 +85,20 @@ const UserUpdateForm = ({
     },
   });
 
-  const updateOtherUserMutation = useUpdateOtherUserMutation();
+  // const updateOtherUserMutation = useUpdateOtherUserMutation();
   const forgetPasswordMutation = useForgetPasswordMutation();
 
   const onSubmit = (values: UpdateUserSchema) => {
     const updateFields: UpdateField[] = [];
 
-    if (values?.firstName !== user?.first_name) {
+    if (values?.firstName !== user?.firstName) {
       updateFields.push({
         field: "first_name",
         value: values?.firstName.trim(),
       });
     }
 
-    if (values?.lastName !== user?.last_name) {
+    if (values?.lastName !== user?.lastName) {
       updateFields.push({
         field: "last_name",
         value: values?.lastName.trim(),
@@ -108,7 +108,7 @@ const UserUpdateForm = ({
     if (values?.jobTitle !== user?.role) {
       updateFields.push({
         field: "role",
-        value: values?.jobTitle,
+        value: values?.jobTitle ?? "",
       });
     }
 
@@ -135,10 +135,10 @@ const UserUpdateForm = ({
 
     if (updateFields.length > 0) {
       // Mutate other user update
-      updateOtherUserMutation.mutate({
-        signedData: user?.signed_data,
-        updateFields: updateFields,
-      });
+      // updateOtherUserMutation.mutate({
+      //   signedData: user?.signed_data,
+      //   updateFields: updateFields,
+      // });
     }
   };
 
@@ -245,7 +245,7 @@ const UserUpdateForm = ({
 
                     <Select
                       onValueChange={field.onChange}
-                      defaultValue={field.value}
+                      defaultValue={field.value ?? undefined}
                       disabled={!hasEditPermissions(user?.status)}
                     >
                       <FormControl>

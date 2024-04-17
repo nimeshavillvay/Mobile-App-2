@@ -1,9 +1,10 @@
 import { api } from "@/_lib/api";
 import { useSuspenseQuery } from "@tanstack/react-query";
+import type { Status } from "./types";
 
 type Contact = {
   id: string;
-  status: string;
+  status: Status;
   first_name: string;
   last_name: string;
   email: string;

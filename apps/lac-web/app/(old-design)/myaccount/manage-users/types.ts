@@ -22,17 +22,15 @@ export type Status =
   | "DISABLED";
 
 export type UserProfile = {
-  uuid: string;
-  pimid: string;
+  id: number;
   status: Status;
-  first_name: string;
-  last_name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   role: string;
-  role_description: string;
-  permission: Permission;
-  sold_to_status: Status;
-  signed_data: SignedData;
+  roleDescription: string;
+  permission: string;
+  soldToAccountStatus: string;
 };
 
 export type ManageContact = {

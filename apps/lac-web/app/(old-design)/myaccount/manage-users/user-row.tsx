@@ -1,6 +1,6 @@
 import { Button } from "@/old/_components/ui/button";
 import { TableCell, TableRow } from "@/old/_components/ui/table";
-import { Role } from "@/old/_lib/types";
+import type { Role } from "@/old/_lib/types";
 import { cn } from "@/old/_utils/helpers";
 import { useState } from "react";
 import {
@@ -9,8 +9,8 @@ import {
   MdKeyboardArrowUp,
 } from "react-icons/md";
 import ActionConfirmationDialog from "./action-confirmation-dialog";
-import { Status, UserProfile } from "./types";
-import useDeleteOtherUserMutation from "./use-delete-other-user-mutation.hook";
+import type { Status, UserProfile } from "./types";
+// import useDeleteOtherUserMutation from "./use-delete-other-user-mutation.hook";
 import UserUpdateForm from "./user-update-form";
 
 type UserRowProps = {
@@ -25,7 +25,7 @@ const UserRow = ({ user, index, jobRoles }: UserRowProps) => {
   const [isOpenMessage, setIsOpenMessage] = useState(false);
   const [message, setMessage] = useState("");
 
-  const deleteOtherUserMutation = useDeleteOtherUserMutation();
+  // const deleteOtherUserMutation = useDeleteOtherUserMutation();
 
   const getStatusClass = (status: Status) => {
     switch (status) {
@@ -46,7 +46,7 @@ const UserRow = ({ user, index, jobRoles }: UserRowProps) => {
   return (
     <>
       <TableRow
-        key={user?.uuid}
+        key={user?.id}
         className={index % 2 === 0 ? "bg-white" : "bg-brand-gray-100"}
       >
         <TableCell className="align-middle">{user?.email}</TableCell>
@@ -114,7 +114,8 @@ const UserRow = ({ user, index, jobRoles }: UserRowProps) => {
         onOpenChange={setIsOpenDelete}
         title="Confirm Action"
         text="Do you really want to delete these records?"
-        onConfirm={() => deleteOtherUserMutation.mutate(user?.signed_data)}
+        // onConfirm={() => deleteOtherUserMutation.mutate(user?.signed_data)}
+        onConfirm={() => {}}
         okText="Confirm"
       />
 

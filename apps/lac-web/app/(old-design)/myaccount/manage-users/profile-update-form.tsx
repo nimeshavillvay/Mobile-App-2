@@ -22,8 +22,8 @@ import { base64Encode, encryptString } from "@/old/_utils/helpers";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { SignedData, UpdateField, UserProfile } from "./types";
-import useUpdateProfileMutation from "./use-update-profile-mutation.hook";
+import { UpdateField, UserProfile } from "./types";
+// import useUpdateProfileMutation from "./use-update-profile-mutation.hook";
 
 const USER_PERMISSIONS = [
   { label: "Admin", value: "ADMIN" },
@@ -39,7 +39,7 @@ const USER_STATUSES = [
 ] as const;
 
 type UpdateProfileRequest = {
-  signed_data: SignedData;
+  // signed_data: SignedData;
   update_fields: UpdateField[];
 };
 
@@ -61,8 +61,8 @@ const ProfileUpdateForm = ({
   const form = useForm<UpdateProfileSchema>({
     resolver: zodResolver(updateProfileSchema),
     values: {
-      firstName: user?.first_name,
-      lastName: user?.last_name,
+      firstName: user?.firstName,
+      lastName: user?.lastName,
       jobTitle: user?.role,
       email: user?.email,
       permission: user?.permission,
@@ -72,19 +72,19 @@ const ProfileUpdateForm = ({
     },
   });
 
-  const updateProfileMutation = useUpdateProfileMutation();
+  // const updateProfileMutation = useUpdateProfileMutation();
 
   const onSubmit = (values: UpdateProfileSchema) => {
     const updateFields: UpdateField[] = [];
 
-    if (values?.firstName !== user?.first_name) {
+    if (values?.firstName !== user?.firstName) {
       updateFields.push({
         field: "first_name",
         value: values?.firstName.trim(),
       });
     }
 
-    if (values?.lastName !== user?.last_name) {
+    if (values?.lastName !== user?.lastName) {
       updateFields.push({
         field: "last_name",
         value: values?.lastName.trim(),
@@ -121,7 +121,7 @@ const ProfileUpdateForm = ({
 
     if (values?.password) {
       const dataObj: UpdateProfileRequest = {
-        signed_data: user?.signed_data,
+        // signed_data: user?.signed_data,
         update_fields: updateFields,
       };
       const base64Obj: string = base64Encode(JSON.stringify(dataObj));
@@ -139,10 +139,10 @@ const ProfileUpdateForm = ({
 
     if (updateFields.length > 0) {
       // Mutate your profile update
-      updateProfileMutation.mutate({
-        signedData: user?.signed_data,
-        updateFields: updateFields,
-      });
+      // updateProfileMutation.mutate({
+      //   signedData: user?.signed_data,
+      //   updateFields: updateFields,
+      // });
     }
   };
 
