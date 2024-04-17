@@ -1,76 +1,81 @@
 import { api } from "@/_lib/api";
 import { DEFAULT_REVALIDATE } from "@/_lib/constants";
+import { cva } from "@/_lib/cva.config";
 import { cn } from "@/_lib/utils";
 import Check from "@repo/web-ui/components/icons/check";
 import { buttonVariants } from "@repo/web-ui/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
+import { type ReactNode } from "react";
 import finish from "./finish.png";
 
-type AttributeValue = {
-  id: string;
-  name: string;
-  selected: boolean;
-};
+type ProductSelect =
+  | { productid: number; slug: string }
+  | { productid: false; slug: null }; // If the combination is not allowed
 type ProductVariantsProps = {
   id: string;
   className?: string;
 };
 
 const ProductVariants = async ({ id, className }: ProductVariantsProps) => {
-  const variants = await api
+  const filters = await api
     .get(`rest/groupfilters/${id}`, {
       next: {
         revalidate: DEFAULT_REVALIDATE,
       },
     })
-    .json<{
-      attributes: (
-        | { name: string; type: "text"; values: AttributeValue[] }
+    .json<
+      ({ id: number; name: string } & (
         | {
-            name: string;
-            type: "icon";
-            values: (AttributeValue & { icon: string })[];
+            type: "text";
+            values: ({
+              id: number;
+              name: string;
+              icon: null;
+              selected: boolean;
+            } & ProductSelect)[];
           }
-      )[];
-      products: {
-        productId: number;
-        attributes: string[];
-      }[];
-    }>();
+        | {
+            type: "icon";
+            values: ({
+              id: number;
+              name: string;
+              icon: string;
+              selected: boolean;
+            } & ProductSelect)[];
+          }
+      ))[]
+    >();
 
   return (
     <section className={cn("flex flex-col gap-6", className)}>
-      {variants.attributes.map((attribute) => (
-        <div key={attribute.name} className="space-y-2">
+      {filters.map((filter) => (
+        <div key={filter.id} className="space-y-2">
           <h3 className="text-base text-wurth-gray-800">
-            {attribute.name}:{" "}
+            {filter.name}:{" "}
             <span className="font-semibold">
-              {attribute.values.find((value) => value.selected)?.name}
+              {filter.values.find((value) => value.selected)?.name}
             </span>
           </h3>
 
           <nav className="flex flex-row flex-wrap items-center gap-2">
-            {attribute.values.map((value) => (
-              <Link
+            {filter.values.map((value) => (
+              <VariantLink
                 key={value.id}
-                href={`/product/123/item`}
-                className={cn(
-                  buttonVariants({ variant: "ghost" }),
-                  "h-fit rounded-lg border-2",
-                  value.selected
-                    ? "border-wurth-red-650 bg-red-50 hover:bg-red-100"
-                    : "border-wurth-gray-150 bg-white",
-                  attribute.type === "icon"
-                    ? "relative p-1.5"
-                    : "px-4 py-3 text-sm font-semibold",
-                )}
+                type={filter.type}
+                selected={value.selected}
+                valid={!!value.productid}
+                href={
+                  value.productid
+                    ? `/product/${value.productid}/${value.slug}`
+                    : null
+                }
               >
-                {attribute.type === "icon" ? (
+                {filter.type === "icon" ? (
                   <>
                     <Image
                       src={finish}
-                      alt={`A picture of the ${attribute.name} ${value.name}`}
+                      alt={`A picture of the ${filter.name} ${value.name}`}
                       width={52}
                       height={52}
                     />
@@ -86,7 +91,7 @@ const ProductVariants = async ({ id, className }: ProductVariantsProps) => {
                 ) : (
                   value.name
                 )}
-              </Link>
+              </VariantLink>
             ))}
           </nav>
         </div>
@@ -96,3 +101,57 @@ const ProductVariants = async ({ id, className }: ProductVariantsProps) => {
 };
 
 export default ProductVariants;
+
+const linkStyle = cva({
+  base: [buttonVariants({ variant: "ghost" }), "h-fit rounded-lg border-2"],
+  variants: {
+    selected: {
+      true: "border-wurth-red-650 bg-red-50 hover:bg-red-100",
+      false: "border-wurth-gray-150 bg-white",
+    },
+    type: {
+      icon: "relative p-1.5",
+      text: "px-4 py-3 text-sm font-semibold",
+    },
+  },
+});
+
+const VariantLink = <Valid extends boolean>({
+  children,
+  type,
+  selected,
+  valid,
+  href,
+}: {
+  children: ReactNode;
+  type: "icon" | "text";
+  selected: boolean;
+  valid: Valid;
+  href: Valid extends true ? string : null;
+}) => {
+  if (!valid || !href) {
+    return (
+      <button
+        className={linkStyle({
+          selected: false,
+          type,
+        })}
+        disabled
+      >
+        {children}
+      </button>
+    );
+  }
+
+  return (
+    <Link
+      href={href}
+      className={linkStyle({
+        selected,
+        type,
+      })}
+    >
+      {children}
+    </Link>
+  );
+};
