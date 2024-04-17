@@ -7,7 +7,7 @@ export const getBreadcrumbs = async (
   id: string,
   type: "product" | "category",
 ) => {
-  return await api
+  const response = await api
     .get("pim/webservice/rest/breadcrumbs", {
       searchParams: new URLSearchParams({
         [type === "product" ? "group_id" : "catId"]: id,
@@ -23,6 +23,12 @@ export const getBreadcrumbs = async (
         slug: string;
       }[]
     >();
+
+  return response.map((item) => ({
+    id: Number(item.oo_id),
+    categoryName: item.cat_name,
+    slug: item.slug,
+  }));
 };
 
 export const getSitemapData = async () => {
