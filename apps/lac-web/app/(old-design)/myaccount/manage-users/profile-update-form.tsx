@@ -17,31 +17,13 @@ import {
   SelectValue,
 } from "@/old/_components/ui/select";
 import usePolicySchema from "@/old/_hooks/account/use-policy-schema.hook";
-import { PasswordPolicy, Role } from "@/old/_lib/types";
-import { base64Encode, encryptString } from "@/old/_utils/helpers";
+import type { PasswordPolicy, Role } from "@/old/_lib/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { UpdateField, UserProfile } from "./types";
-// import useUpdateProfileMutation from "./use-update-profile-mutation.hook";
-
-const USER_PERMISSIONS = [
-  { label: "Admin", value: "ADMIN" },
-  { label: "Buyer", value: "BUYER" },
-] as const;
-
-const USER_STATUSES = [
-  { label: "Active", value: "ACTIVE" },
-  { label: "Deactive", value: "DEACTIVE" },
-  { label: "Pending", value: "PENDING" },
-  { label: "Inactive", value: "INACTIVE" },
-  { label: "Disabled", value: "DISABLED" },
-] as const;
-
-type UpdateProfileRequest = {
-  // signed_data: SignedData;
-  update_fields: UpdateField[];
-};
+import { USER_PERMISSIONS, USER_STATUSES } from "./constants";
+import type { UpdateUser, UserProfile } from "./types";
+import useUpdateProfileMutation from "./use-update-profile-mutation.hook";
 
 type UpdateProfileProps = {
   user: UserProfile;
@@ -72,78 +54,25 @@ const ProfileUpdateForm = ({
     },
   });
 
-  // const updateProfileMutation = useUpdateProfileMutation();
+  const updateProfileMutation = useUpdateProfileMutation();
 
   const onSubmit = (values: UpdateProfileSchema) => {
-    const updateFields: UpdateField[] = [];
+    const updateValues: UpdateUser = {
+      userId: user!.id,
+      firstName: values.firstName.trim(),
+      lastName: values.lastName.trim(),
+      jobTitle: values.jobTitle,
+      email: values.email.trim(),
+      permission: values.permission,
+      status: values.status,
+    };
 
-    if (values?.firstName !== user?.firstName) {
-      updateFields.push({
-        field: "first_name",
-        value: values?.firstName.trim(),
-      });
+    if (values.password) {
+      updateValues.password = values.password;
     }
 
-    if (values?.lastName !== user?.lastName) {
-      updateFields.push({
-        field: "last_name",
-        value: values?.lastName.trim(),
-      });
-    }
-
-    if (values?.jobTitle !== user?.role) {
-      updateFields.push({
-        field: "role",
-        value: values?.jobTitle,
-      });
-    }
-
-    if (values?.permission !== user?.permission) {
-      updateFields.push({
-        field: "permission",
-        value: values?.permission,
-      });
-    }
-
-    if (values?.status !== user?.status) {
-      updateFields.push({
-        field: "status",
-        value: values?.status,
-      });
-    }
-
-    if (values?.email !== user?.email) {
-      updateFields.push({
-        field: "email",
-        value: values?.email.trim(),
-      });
-    }
-
-    if (values?.password) {
-      const dataObj: UpdateProfileRequest = {
-        // signed_data: user?.signed_data,
-        update_fields: updateFields,
-      };
-      const base64Obj: string = base64Encode(JSON.stringify(dataObj));
-      const encryptedPass: string | false = encryptString(values?.password);
-      const encryptedKey: string = `${encryptedPass}:${base64Obj}`;
-      const base64Key: string = base64Encode(encryptedKey);
-
-      if (base64Key) {
-        updateFields.push({
-          field: "password",
-          value: base64Key,
-        });
-      }
-    }
-
-    if (updateFields.length > 0) {
-      // Mutate your profile update
-      // updateProfileMutation.mutate({
-      //   signedData: user?.signed_data,
-      //   updateFields: updateFields,
-      // });
-    }
+    // Mutate your profile update
+    updateProfileMutation.mutate(updateValues);
   };
 
   return (

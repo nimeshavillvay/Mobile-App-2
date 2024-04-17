@@ -19,7 +19,8 @@ export type Status =
   | "ACTIVE"
   | "DEACTIVE"
   | "INACTIVE"
-  | "DISABLED";
+  | "DISABLED"
+  | "SUSPENDED";
 
 export type UserProfile = {
   id: number;
@@ -56,4 +57,16 @@ export type UpdateField = {
 
 export type CurrentUser = {
   email: string;
+};
+
+// Types used in new-design
+export type UpdateUser = {
+  userId: number;
+  firstName: string;
+  lastName: string;
+  jobTitle: string;
+  email: string;
+  password?: string;
+  permission: string;
+  status: string;
 };
