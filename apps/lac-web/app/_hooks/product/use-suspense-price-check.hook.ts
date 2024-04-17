@@ -1,25 +1,76 @@
-import type { ItemPricesResult } from "@/_lib/types";
-import { api } from "@/old/_lib/api";
+import { api } from "@/_lib/api";
+import { PriceBreakDowns } from "@/_lib/types";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
+type ItemPrice = {
+  productid: number;
+  price: string;
+  price_unit: string;
+  extended: string;
+  coupon: string | null;
+  price_breakdowns: PriceBreakDowns;
+};
+
+type ItemsPriceResult = {
+  error: true | null; //TODO need to clarify how errors send
+  items: ItemPrice[];
+};
+
+const getPriceBreakDowns = (price_breakdowns: PriceBreakDowns) => {
+  return price_breakdowns.map(
+    (priceObject): { quantity: number; price: number } => {
+      return {
+        quantity: Number(priceObject.qty_1),
+        price: Number(priceObject.price_1),
+      };
+    },
+  );
+};
+
+type Product = {
+  productId: number,
+  qty: number
+};
+
+// TODO: Need to remove usePriceCheck hook and replace it with useSuspensePriceCheck
 const useSuspensePriceCheck = (
   token: string,
-  sku: string,
-  quantity: number,
+  products: Product[]
 ) => {
   return useSuspenseQuery({
-    queryKey: ["user", "price-check", token, sku, quantity],
+    queryKey: ["user", "price-check", token, products],
     queryFn: () =>
       api
-        // TODO Replace with X-Cart route
-        .post("pim/webservice/ecommerce/price-check", {
+        .post("rest/pricecheck", {
           headers: {
             authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
-          json: { skuqty: [{ sku, quantity }] },
+          json: { products: products },
         })
-        .json<ItemPricesResult>(),
+        .json<ItemsPriceResult>(),
+    select: (data) => {
+      const { items, error } = data;
+      const mappedItems = items.map(
+        ({
+          productid,
+          price,
+          price_unit,
+          extended,
+          coupon,
+          price_breakdowns,
+        }) => ({
+          productId: productid,
+          price: Number(price),
+          priceUnit: price_unit,
+          extendedPrice: Number(extended),
+          couponCode: coupon,
+          priceBreakDowns: getPriceBreakDowns(price_breakdowns),
+        }),
+      );
+
+      return { error, productPrices: mappedItems };
+    },
     staleTime: 60000,
   });
 };

@@ -28,9 +28,9 @@ const PurchasedItemsListForMobile = ({
       <div className="grid grid-cols-1 gap-4 bg-brand-gray-200 py-4 md:hidden">
         {items &&
           items.length > 0 &&
-          items.map((item) => (
+          items.map((item, index) => (
             <PurchasedItemRowForMobile
-              key={item.sku}
+              key={`${item.productId}_${index}`}
               item={item}
               onClick={() => {
                 setSelectedItem(item);
@@ -62,14 +62,11 @@ const PurchasedItemRowForMobile = ({
 }) => {
   return (
     <div className="flex min-h-[180px] flex-row justify-between bg-white p-4">
-      <Link
-        href={generateItemUrl(item.group_id, item.sku)}
-        className="min-w-[92px]"
-      >
-        {item.img ? (
+      <Link href={generateItemUrl(item.productId)} className="min-w-[92px]">
+        {item.image ? (
           <Image
-            src={getMediaUrl(item.img)}
-            alt={item.txt_sap_description_name}
+            src={getMediaUrl(item.image.webp)}
+            alt={item.productDescription}
             width={92}
             height={92}
             className="size-[92px] border border-brand-gray-200 object-contain"
@@ -85,25 +82,26 @@ const PurchasedItemRowForMobile = ({
       </Link>
 
       <div className="flex w-full min-w-[200px] flex-col gap-1 px-2 text-brand-gray-500">
-        {item.txt_category && (
-          <div className="text-sm">{item.txt_category}</div>
+        {item.productCategory && (
+          <div className="text-sm">{item.productCategory}</div>
         )}
 
         <h4 className="text-wrap font-bold text-black">
-          {item.txt_sap_description_name}
+          {item.productDescription}
         </h4>
 
         <div className="truncate text-sm">
-          {item.sku !== "" ? item.sku : "N/A"}&nbsp;•&nbsp;MRFP#:&nbsp;
-          {item.txt_mfn !== "" ? item.txt_mfn : "N/A"}
+          {item.productSku !== "" ? item.productSku : "N/A"}
+          &nbsp;•&nbsp;MRFP#:&nbsp;
+          {item.mfrPartNo !== "" ? item.mfrPartNo : "N/A"}
         </div>
 
         <div className="flex flex-row gap-1 rounded-sm bg-brand-gray-100 p-2 text-sm">
           <div className="flex-1">
             <div className="text-nowrap">Last Order Date</div>
             <div className="font-bold">
-              {item.orderDate
-                ? dayjs(item.orderDate).format(DATE_FORMAT)
+              {item.purchaseOrderDate
+                ? dayjs(item.purchaseOrderDate).format(DATE_FORMAT)
                 : "N/A"}
             </div>
           </div>

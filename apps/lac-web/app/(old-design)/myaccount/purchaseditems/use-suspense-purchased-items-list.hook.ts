@@ -1,6 +1,11 @@
 import { api } from "@/_lib/api";
+import type {
+  OldPurchasedItems,
+  Pagination,
+  PurchasedItems,
+  PurchasedProduct,
+} from "@/_lib/types";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import type { PurchasedOrders } from "./types";
 
 const useSuspensePurchasedItemsList = (
   token: string,
@@ -38,7 +43,42 @@ const useSuspensePurchasedItemsList = (
             order: orderType,
           },
         })
-        .json<PurchasedOrders>(),
+        .json<OldPurchasedItems>(),
+    select: (data): PurchasedItems => {
+      const { products, pagination } = data;
+
+      const mappedProducts = products.map(
+        ({
+          product,
+          sku,
+          id,
+          totalItem,
+          orderDate,
+          isFavourite,
+        }): PurchasedProduct => ({
+          productTitle: product,
+          productSku: sku,
+          productId: Number(id),
+          totalItem: Number(totalItem),
+          purchaseOrderDate: orderDate,
+          isFavorite: isFavourite,
+        }),
+      );
+
+      const firstPagination = pagination[0] || {
+        db_count: "0",
+        offset: 0,
+        perPage: 0,
+      };
+
+      const mappedPagination: Pagination = {
+        totalCount: Number(firstPagination.db_count),
+        offset: firstPagination.offset,
+        perPage: firstPagination.perPage,
+      };
+
+      return { products: mappedProducts, pagination: mappedPagination };
+    },
   });
 };
 

@@ -1,5 +1,6 @@
 "use client";
 
+import { ItemInfo } from "@/_lib/types";
 import {
   Select,
   SelectContent,
@@ -32,7 +33,7 @@ import PurchasedItemRow from "./purchased-item-row";
 import PurchasedItemsListForMobile from "./purchased-items-list-for-mobile";
 import PurchasedItemsSelectors from "./purchased-items-selectors";
 import TotalCountAndPagination from "./total-count-and-pagination";
-import { CombinedPurchasedItem, OrderHistoryItem } from "./types";
+import { CombinedPurchasedItem } from "./types";
 import useGetItemInfo from "./use-get-items-info.hook";
 import useSuspensePurchasedItemsList from "./use-suspense-purchased-items-list.hook";
 
@@ -62,19 +63,19 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
     orderType,
   );
 
-  const skuIds: string[] = [];
+  const productIds: number[] = [];
   if (purchasedItemsList.data) {
-    totalItems = purchasedItemsList.data.purchesOrders.totalElements;
+    totalItems = purchasedItemsList.data.pagination.totalCount;
 
-    purchasedItemsList.data.purchesOrders.content.forEach((element) => {
-      const isExist = skuIds.find((e) => e === element.sku);
+    purchasedItemsList.data.products.forEach((product) => {
+      const isExist = productIds.find((id) => id === product.productId);
       if (!isExist) {
-        skuIds.push(element.sku);
+        productIds.push(product.productId);
       }
     });
   }
 
-  const getItemInfo = useGetItemInfo(token, skuIds);
+  const getItemInfo = useGetItemInfo(token, productIds);
   if (purchasedItemsList && getItemInfo) {
     isLoading = false;
   }
@@ -94,34 +95,49 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
 
   const combinedPurchasedItems: CombinedPurchasedItem[] = [];
 
-  if (purchasedItemsList?.data?.purchesOrders?.content?.length > 0) {
-    purchasedItemsList.data.purchesOrders.content.map((item) => {
+  if (purchasedItemsList.data.pagination.totalCount > 0) {
+    purchasedItemsList.data.products.map((item) => {
       const itemInfo = getItemInfo?.data?.find(
-        (info) => info.txt_wurth_lac_item === item.sku,
+        (info) => info.productSku === item.productSku,
       );
 
-      const initialDetails: OrderHistoryItem = {
-        txt_wurth_lac_item: "",
-        txt_sap: null,
-        txt_sap_description_name: "",
-        txt_x_pant_Mat_status: "",
-        sel_assigned_brand: null,
-        txt_CI_number: "",
-        txt_hazardous: "",
-        txt_special_shipping: "",
-        txt_web_direct: "",
-        txt_mfn: "",
-        txt_uom: "",
-        txt_uom_label: "",
-        txt_uom_value: "",
-        txt_min_order_amount: null,
-        txt_order_qty_increments: null,
-        txt_category: "",
-        img: "",
-        brand_name: "",
-        categoryInfo: [],
-        is_product_exclude: null,
-        group_id: "",
+      const initialDetails: ItemInfo = {
+        productId: 0,
+        isExcludedProduct: false,
+        productSku: "",
+        productName: "",
+        image: {
+          original: "",
+          webp: "",
+          jp2: "",
+        },
+        isComparison: false,
+        skuAttribute: "",
+        isHazardous: false,
+        specialShipping: false,
+        productIdOnSap: "",
+        mfrPartNo: "",
+        productDescription: "",
+        productTitle: "",
+        brandCode: 0,
+        unitOfMeasure: "",
+        boxQuantity: 0,
+        minimumOrderQuantity: 0,
+        quantityByIncrements: 0,
+        weight: 0,
+        prop65MessageOne: "",
+        prop65MessageTwo: "",
+        prop65MessageThree: "",
+        listPrice: 0,
+        isSaleItem: false,
+        fClassId: 0,
+        class: "",
+        attributes: [],
+        productStatus: "",
+        isDirectlyShippedFromVendor: false,
+        productSummary: "",
+        brand: "",
+        productCategory: "",
       };
 
       combinedPurchasedItems.push({ ...item, ...(itemInfo || initialDetails) });
@@ -236,15 +252,14 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
           </TableHeader>
 
           <TableBody>
-            {combinedPurchasedItems &&
-              combinedPurchasedItems.map((item, index) => (
-                <PurchasedItemRow
-                  key={item.sku}
-                  token={token}
-                  index={index}
-                  item={item}
-                />
-              ))}
+            {combinedPurchasedItems?.map((item, index) => (
+              <PurchasedItemRow
+                key={`${item.productId}_${index}`}
+                token={token}
+                index={index}
+                item={item}
+              />
+            ))}
           </TableBody>
         </Table>
       </div>
