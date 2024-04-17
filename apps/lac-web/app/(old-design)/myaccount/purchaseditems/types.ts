@@ -1,33 +1,11 @@
-export type Option = {
-  value: string;
-  label: string;
-};
-
-export type Duration = {
-  value: string;
-  label: string;
-};
-
-export type PurchasedOrder = {
-  isFavourite: boolean;
-  orderDate: string;
-  sku: string;
-  totalItem: number;
-};
-
-export type PurchasedOrders = {
-  purchesOrders: {
-    content: PurchasedOrder[];
-    totalElements: number;
-  };
-};
+import { ItemInfo, PurchasedProduct } from "@/_lib/types";
 
 export type CategoryInfo = {
   oo_id: number;
   cat_name: string;
 };
 
-export type OrderHistoryItem = {
+export type OldItemInfo = {
   brand_name: string;
   categoryInfo: CategoryInfo[];
   group_id: string;
@@ -52,6 +30,4 @@ export type OrderHistoryItem = {
   override_price?: string;
 };
 
-export type OrderHistoryItems = OrderHistoryItem[];
-
-export type CombinedPurchasedItem = OrderHistoryItem & PurchasedOrder;
+export type CombinedPurchasedItem = ItemInfo & PurchasedProduct;
