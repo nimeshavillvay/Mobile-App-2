@@ -14,7 +14,7 @@ import UnitPriceRowForMobile from "./unit-price-row-for-mobile";
 
 type ItemPricesProps = {
   token: string;
-  sku: string;
+  productId: number;
   quantity: number;
   uom: string;
   salePrice: number;
@@ -24,14 +24,16 @@ type ItemPricesProps = {
 
 const ItemPrices = ({
   token,
-  sku,
+  productId,
   quantity,
   uom,
   salePrice,
   showUnitPrice = false,
   unitPriceOnly = false,
 }: ItemPricesProps) => {
-  const itemPricesQuery = useSuspensePriceCheck(token, sku, quantity);
+  const itemPricesQuery = useSuspensePriceCheck(token, [
+    { productId: productId, qty: quantity },
+  ]);
   const prices = itemPricesQuery.data.productPrices[0] ?? null;
   const priceUnit = prices?.priceUnit ?? "";
   const priceBreakDownArray = prices?.priceBreakDowns;

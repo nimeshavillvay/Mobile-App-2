@@ -27,14 +27,18 @@ const getPriceBreakDowns = (price_breakdowns: PriceBreakDowns) => {
   );
 };
 
+type Product = {
+  productId: number,
+  qty: number
+};
+
 // TODO: Need to remove usePriceCheck hook and replace it with useSuspensePriceCheck
 const useSuspensePriceCheck = (
   token: string,
-  sku: string,
-  quantity: number,
+  products: Product[]
 ) => {
   return useSuspenseQuery({
-    queryKey: ["user", "price-check", token, sku, quantity],
+    queryKey: ["user", "price-check", token, products],
     queryFn: () =>
       api
         .post("rest/pricecheck", {
@@ -42,7 +46,7 @@ const useSuspensePriceCheck = (
             authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
-          json: { skuqty: [{ sku, quantity }] },
+          json: { products: products },
         })
         .json<ItemsPriceResult>(),
     select: (data) => {

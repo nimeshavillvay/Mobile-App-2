@@ -3,7 +3,6 @@ import AddToCartIcon from "@/old/_components/icons/add-to-cart";
 import AddToFavoritesIcon from "@/old/_components/icons/add-to-favorites";
 import FavoriteIcon from "@/old/_components/icons/favorite";
 import Separator from "@/old/_components/separator";
-import ShippingOptions from "@/old/_components/shipping-options";
 import { Button } from "@/old/_components/ui/button";
 import {
   Collapsible,
@@ -55,7 +54,6 @@ const PurchasedItemDetailedViewDialog = ({
   item,
   token,
 }: ActionConfirmationDialogProps) => {
-  const [showShippingOptions, setShowShippingOptions] = useState(false);
   const [showPriceBreakdown, setShowPriceBreakdown] = useState(false);
   const id = useId();
   const router = useRouter();
@@ -96,7 +94,6 @@ const PurchasedItemDetailedViewDialog = ({
       onOpenChange={(open) => {
         if (!open) {
           setShowPriceBreakdown(false);
-          setShowShippingOptions(false);
         }
         onOpenChange(open);
       }}
@@ -195,7 +192,7 @@ const PurchasedItemDetailedViewDialog = ({
                     >
                       <ItemPrices
                         token={token}
-                        sku={item.productSku}
+                        productId={item.productId}
                         quantity={1}
                         uom={item.unitOfMeasure}
                         salePrice={item.isSaleItem ? Number(item.listPrice) : 0}
@@ -242,28 +239,6 @@ const PurchasedItemDetailedViewDialog = ({
           </div>
 
           <Collapsible
-            open={isValidQuantity && showShippingOptions}
-            onOpenChange={setShowShippingOptions}
-            disabled={!isValidQuantity}
-          >
-            <CollapsibleTrigger
-              className={cn(
-                "group flex w-full flex-row items-center justify-between bg-brand-gray-100 px-6 py-4",
-                !isValidQuantity ? "pointer-events-none opacity-50" : "",
-              )}
-            >
-              <h4 className="font-wurth font-extrabold uppercase">
-                Shipping Options / Stock Availability
-              </h4>
-
-              <MdKeyboardArrowDown className="text-2xl leading-none transition-transform duration-200 ease-out group-data-[state=open]:rotate-180" />
-            </CollapsibleTrigger>
-            <CollapsibleContent className="flex w-full justify-center">
-              <ShippingOptions sku={item.productSku} quantity={quantity} />
-            </CollapsibleContent>
-          </Collapsible>
-
-          <Collapsible
             open={showPriceBreakdown}
             onOpenChange={setShowPriceBreakdown}
             disabled={isItemNotAdded}
@@ -297,7 +272,7 @@ const PurchasedItemDetailedViewDialog = ({
                 >
                   <ItemPrices
                     token={token}
-                    sku={item.productSku}
+                    productId={item.productId}
                     quantity={1}
                     uom={item.unitOfMeasure}
                     salePrice={item.isSaleItem ? Number(item.listPrice) : 0}
@@ -333,13 +308,14 @@ const PurchasedItemDetailedViewDialog = ({
             className="flex flex-row gap-4"
             onSubmit={handleSubmit(onSubmit)}
           >
-            <Button
-              variant="secondary"
-              className="h-12 flex-1 border-brand-primary text-brand-primary"
-              onClick={() => router.push(generateItemUrl(item.productId))}
-            >
-              View Product
-            </Button>
+            <Link href={generateItemUrl(item.productId)} className="flex-1">
+              <Button
+                variant="secondary"
+                className="h-12 w-full border-brand-primary text-brand-primary"
+              >
+                View Product
+              </Button>
+            </Link>
 
             <Button className="h-12 flex-1" disabled={!isValidQuantity}>
               <AddToCartIcon /> Add to Cart

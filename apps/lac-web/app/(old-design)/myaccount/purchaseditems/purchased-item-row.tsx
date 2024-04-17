@@ -1,6 +1,5 @@
 import AlertInline from "@/old/_components/alert-inline";
 import ErrorBoundary from "@/old/_components/error-boundary";
-import ShippingOptions from "@/old/_components/shipping-options";
 import { Button } from "@/old/_components/ui/button";
 import {
   Collapsible,
@@ -44,7 +43,6 @@ type PurchasedItemRowProps = {
 
 const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
   const [showItemAttributes, setShowItemAttributes] = useState(false);
-  const [showShippingOptions, setShowShippingOptions] = useState(false);
   const [showMyPrice, setShowMyPrice] = useState(false);
   const id = useId();
   const router = useRouter();
@@ -211,7 +209,7 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
                 >
                   <ItemPrices
                     token={token}
-                    sku={item.productSku}
+                    productId={item.productId}
                     quantity={1}
                     uom={item.unitOfMeasure}
                     salePrice={item.isSaleItem ? Number(item.listPrice) : 0}
@@ -320,22 +318,6 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
         >
           <TableCell colSpan={7}>
             <div className="flex flex-row items-end justify-end gap-2">
-              <Button
-                variant="ghost"
-                className="text-brand-secondary"
-                onClick={() => setShowShippingOptions(!showShippingOptions)}
-                disabled={!quantity || quantity < 1}
-              >
-                <span>Change Shipping Options</span>
-
-                <MdKeyboardArrowDown
-                  className={cn(
-                    "text-xl leading-none transition-transform duration-200 ease-out",
-                    showShippingOptions ? "rotate-180" : "",
-                  )}
-                />
-              </Button>
-
               <form onSubmit={handleSubmit(onSubmit)}>
                 <Button
                   className="w-[170px]"
@@ -367,23 +349,6 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
           <TableCell colSpan={4} className="pt-0">
             <ErrorAlert item={item} />
           </TableCell>
-        </TableRow>
-      )}
-
-      {showShippingOptions && (
-        <TableRow
-          className={cn(
-            "border-b-0",
-            index % 2 === 0 ? "bg-white" : "bg-brand-gray-100",
-          )}
-        >
-          <TableCell colSpan={5} className="pt-0">
-            <div className="flex justify-end">
-              <ShippingOptions sku={item.productSku} quantity={quantity} />
-            </div>
-          </TableCell>
-          <TableCell></TableCell>
-          <TableCell></TableCell>
         </TableRow>
       )}
     </>
