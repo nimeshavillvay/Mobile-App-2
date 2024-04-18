@@ -12,8 +12,9 @@ import {
   StepContainerClosed,
   StepContainerOpen,
 } from "./step-container";
+import useRegisterExistingUserMutation from "./use-register-existing-user-mutation.hook";
 
-type Steps = "account" | "personal";
+type Step = "account" | "personal";
 
 const accountDetailsSchema = z.object({
   soldToAccount: z.string(),
@@ -42,7 +43,7 @@ const CurrentUserFlow = ({ passwordPolicies }: CurrentUserFlowProps) => {
   const confirmPasswordId = `confirm-password-${id}`;
 
   const [cookies] = useSignInCookies();
-  const [step, setStep] = useState<Steps>("account");
+  const [step, setStep] = useState<Step>("account");
 
   const accountDetailsForm = useForm<z.infer<typeof accountDetailsSchema>>({
     resolver: zodResolver(accountDetailsSchema),
@@ -116,6 +117,7 @@ const CurrentUserFlow = ({ passwordPolicies }: CurrentUserFlowProps) => {
     },
   });
 
+  const createUserMutation = useRegisterExistingUserMutation();
   const onPersonalDetailsSubmit = personalDetailsForm.handleSubmit((data) => {
     console.log(data);
   });
@@ -144,7 +146,7 @@ const CurrentUserFlow = ({ passwordPolicies }: CurrentUserFlowProps) => {
             complete the entire form before submitting.
           </p>
 
-          <div className="flex flex-col gap-8">
+          <div className="flex flex-col gap-8 md:grid md:grid-cols-2">
             <div className="flex flex-col gap-2">
               <Label htmlFor={soldToId}>Sold-to account</Label>
 
@@ -153,6 +155,7 @@ const CurrentUserFlow = ({ passwordPolicies }: CurrentUserFlowProps) => {
                 id={soldToId}
                 required
                 placeholder="XXXXXXXX"
+                disabled={createUserMutation.isPending}
               />
 
               <p className="text-sm text-wurth-gray-500">
@@ -170,6 +173,7 @@ const CurrentUserFlow = ({ passwordPolicies }: CurrentUserFlowProps) => {
                 id={invoiceNoId}
                 required
                 placeholder="XXXXXXXXXX"
+                disabled={createUserMutation.isPending}
               />
 
               <p className="text-sm text-wurth-gray-500">
@@ -193,7 +197,10 @@ const CurrentUserFlow = ({ passwordPolicies }: CurrentUserFlowProps) => {
           </p>
         </StepContainerOpen>
 
-        <StepContainerClosed onClick={() => setStep("account")}>
+        <StepContainerClosed
+          onClick={() => setStep("account")}
+          disabled={createUserMutation.isPending}
+        >
           <div className="grid grid-cols-2 gap-8">
             <div className="space-y-1">
               <h4 className="text-sm font-semibold text-black">
@@ -225,81 +232,90 @@ const CurrentUserFlow = ({ passwordPolicies }: CurrentUserFlowProps) => {
             submitBtnText="Create account"
             onSubmit={onPersonalDetailsSubmit}
           >
-            <div className="sr-only">
-              <Label htmlFor={soldToId}>Sold-to account</Label>
+            <div className="flex flex-col gap-5 md:grid md:grid-cols-2">
+              <div className="sr-only">
+                <Label htmlFor={soldToId}>Sold-to account</Label>
 
-              <Input
-                {...personalDetailsForm.register("soldToAccount")}
-                id={soldToId}
-                type="hidden"
-                required
-              />
-            </div>
+                <Input
+                  {...personalDetailsForm.register("soldToAccount")}
+                  id={soldToId}
+                  type="hidden"
+                  required
+                />
+              </div>
 
-            <div className="sr-only">
-              <Label htmlFor={invoiceNoId}>
-                Invoice, delivery or order number
-              </Label>
+              <div className="sr-only">
+                <Label htmlFor={invoiceNoId}>
+                  Invoice, delivery or order number
+                </Label>
 
-              <Input
-                {...personalDetailsForm.register("invoiceNo")}
-                id={invoiceNoId}
-                type="hidden"
-                required
-              />
-            </div>
+                <Input
+                  {...personalDetailsForm.register("invoiceNo")}
+                  id={invoiceNoId}
+                  type="hidden"
+                  required
+                />
+              </div>
 
-            <div className="flex flex-col gap-2">
-              <Label htmlFor={firstNameId}>First name</Label>
+              <div className="flex flex-col gap-2">
+                <Label htmlFor={firstNameId}>First name</Label>
 
-              <Input
-                {...personalDetailsForm.register("firstName")}
-                id={firstNameId}
-                required
-              />
-            </div>
+                <Input
+                  {...personalDetailsForm.register("firstName")}
+                  id={firstNameId}
+                  type="text"
+                  required
+                  disabled={createUserMutation.isPending}
+                />
+              </div>
 
-            <div className="flex flex-col gap-2">
-              <Label htmlFor={lastNameId}>Last name</Label>
+              <div className="flex flex-col gap-2">
+                <Label htmlFor={lastNameId}>Last name</Label>
 
-              <Input
-                {...personalDetailsForm.register("lastName")}
-                id={lastNameId}
-                required
-              />
-            </div>
+                <Input
+                  {...personalDetailsForm.register("lastName")}
+                  id={lastNameId}
+                  type="text"
+                  required
+                  disabled={createUserMutation.isPending}
+                />
+              </div>
 
-            <div className="flex flex-col gap-2">
-              <Label htmlFor={emailId}>Email address</Label>
+              <div className="flex flex-col gap-2 md:hidden">
+                <Label htmlFor={emailId}>Email address</Label>
 
-              <Input
-                {...personalDetailsForm.register("email")}
-                id={emailId}
-                required
-                disabled
-              />
-            </div>
+                <Input
+                  {...personalDetailsForm.register("email")}
+                  id={emailId}
+                  type="email"
+                  required
+                  disabled
+                />
+              </div>
 
-            <div className="flex flex-col gap-2">
-              <Label htmlFor={passwordId}>Password</Label>
+              <div className="flex flex-col gap-2">
+                <Label htmlFor={passwordId}>Password</Label>
 
-              <Input
-                {...personalDetailsForm.register("password")}
-                id={passwordId}
-                type="password"
-                required
-              />
-            </div>
+                <Input
+                  {...personalDetailsForm.register("password")}
+                  id={passwordId}
+                  type="password"
+                  required
+                  disabled={createUserMutation.isPending}
+                />
+              </div>
 
-            <div className="flex flex-col gap-2">
-              <Label htmlFor={confirmPasswordId}>Confirm password</Label>
+              <div className="flex flex-col gap-2">
+                <Label htmlFor={confirmPasswordId}>Confirm password</Label>
 
-              <Input
-                {...personalDetailsForm.register("confirmPassword")}
-                id={confirmPasswordId}
-                type="password"
-                required
-              />
+                <Input
+                  {...personalDetailsForm.register("confirmPassword")}
+                  id={confirmPasswordId}
+                  type="password"
+                  required
+                  disabled={createUserMutation.isPending}
+                />
+              </div>
             </div>
           </StepContainerOpen>
         </StepContainer>
