@@ -30,7 +30,7 @@ const useUpdateProfileMutation = () => {
             user_id: userId,
             first_name: firstName,
             last_name: lastName,
-            job_title: jobTitle,
+            job_title: jobTitle !== "" ? jobTitle : null,
             email,
             password,
             permission,
@@ -42,7 +42,7 @@ const useUpdateProfileMutation = () => {
           message: string;
         }>(),
     onMutate: () => {
-      toast({ description: "Updating your profile" });
+      toast({ description: "Updating user profile" });
     },
     onSuccess: (data) => {
       const transformedData = {
@@ -52,14 +52,14 @@ const useUpdateProfileMutation = () => {
 
       if (transformedData.statusCode === "OK") {
         toast({
-          description: "Your profile has been successfully updated.",
+          description: "User profile has been successfully updated.",
           variant: "success",
         });
       }
     },
     onError: () => {
       toast({
-        description: "Failed to update your profile",
+        description: "Failed to update the user profile",
         variant: "destructive",
       });
     },

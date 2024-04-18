@@ -1,5 +1,5 @@
+import { api } from "@/_lib/api";
 import { useToast } from "@/old/_components/ui/use-toast";
-import { api } from "@/old/_lib/api";
 import { ACCOUNT_TOKEN_COOKIE } from "@/old/_lib/constants";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import useCookies from "../storage/use-cookies.hook";
@@ -38,17 +38,13 @@ const useForgetPasswordMutation = () => {
   };
 
   return useMutation({
-    mutationFn: ({ email, key }: { email: string; key: string }) => {
-      const data = new FormData();
-      data.append("email", email);
-      data.append("key", key);
-
+    mutationFn: ({ email }: { email: string }) => {
       return api
-        .post("am/auth/password-reset", {
+        .post("rest/register/password-reset", {
           headers: {
             authorization: `Bearer ${cookies[ACCOUNT_TOKEN_COOKIE]}`,
           },
-          body: data,
+          json: { email },
         })
         .json<ForgetPasswordResponse>();
     },
@@ -56,7 +52,7 @@ const useForgetPasswordMutation = () => {
       toast({ description: "Resetting user password" });
     },
     onSuccess: (data) => {
-      if (data?.data?.status) {
+      if (data?.isSuccess && data?.data?.status) {
         handleToast(data?.data?.status);
       }
     },

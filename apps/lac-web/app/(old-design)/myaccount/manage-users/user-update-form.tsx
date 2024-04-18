@@ -22,18 +22,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import {
+import { USER_PERMISSIONS } from "./constants";
+import type {
   ForgetPasswordResponse,
   Status,
-  UpdateField,
+  UpdateUser,
   UserProfile,
 } from "./types";
-// import useUpdateOtherUserMutation from "./use-update-other-user-mutation.hook";
-
-const USER_PERMISSIONS = [
-  { label: "Admin", value: "ADMIN" },
-  { label: "Buyer", value: "BUYER" },
-] as const;
+import useUpdateProfileMutation from "./use-update-profile-mutation.hook";
 
 const USER_STATUSES = [
   { label: "Active", value: "ACTIVE" },
@@ -43,7 +39,7 @@ const USER_STATUSES = [
 const PASSWORD_RESET_INACTIVE_MSG =
   "This User is currently flagged as inactive in the system. please contact web support at websupport@wurthlac.com, or call 800-422-4389 x1014.";
 const PASSWORD_RESET_PENDING_MSG =
-  "An email has been sent to the User to  complete their registration. If they do not receive this email within 15 minutes, please contact web support at websupport@wurthlac.com, or call 800-422-4389 x1014.";
+  "An email has been sent to the User to complete their registration. If they do not receive this email within 15 minutes, please contact web support at websupport@wurthlac.com, or call 800-422-4389 x1014.";
 
 const updateUserSchema = z.object({
   firstName: z.string().trim().min(1, "Please enter first name.").max(40),
@@ -85,61 +81,22 @@ const UserUpdateForm = ({
     },
   });
 
-  // const updateOtherUserMutation = useUpdateOtherUserMutation();
+  const updateProfileMutation = useUpdateProfileMutation();
   const forgetPasswordMutation = useForgetPasswordMutation();
 
   const onSubmit = (values: UpdateUserSchema) => {
-    const updateFields: UpdateField[] = [];
+    const updateValues: UpdateUser = {
+      userId: user?.id,
+      firstName: values.firstName.trim(),
+      lastName: values.lastName.trim(),
+      jobTitle: values.jobTitle ?? "",
+      email: values.email.trim(),
+      permission: values.permission,
+      status: values.status,
+    };
 
-    if (values?.firstName !== user?.firstName) {
-      updateFields.push({
-        field: "first_name",
-        value: values?.firstName.trim(),
-      });
-    }
-
-    if (values?.lastName !== user?.lastName) {
-      updateFields.push({
-        field: "last_name",
-        value: values?.lastName.trim(),
-      });
-    }
-
-    if (values?.jobTitle !== user?.role) {
-      updateFields.push({
-        field: "role",
-        value: values?.jobTitle ?? "",
-      });
-    }
-
-    if (values?.permission !== user?.permission) {
-      updateFields.push({
-        field: "permission",
-        value: values?.permission,
-      });
-    }
-
-    if (values?.status !== user?.status) {
-      updateFields.push({
-        field: "status",
-        value: values?.status,
-      });
-    }
-
-    if (values?.email !== user?.email) {
-      updateFields.push({
-        field: "email",
-        value: values?.email.trim(),
-      });
-    }
-
-    if (updateFields.length > 0) {
-      // Mutate other user update
-      // updateOtherUserMutation.mutate({
-      //   signedData: user?.signed_data,
-      //   updateFields: updateFields,
-      // });
-    }
+    // Mutate other user update
+    updateProfileMutation.mutate(updateValues);
   };
 
   const hasEditPermissions = (status: Status) => {
@@ -151,10 +108,7 @@ const UserUpdateForm = ({
   const handlePasswordReset = () => {
     // Mutate user password reset
     forgetPasswordMutation.mutate(
-      {
-        email: user?.email,
-        key: "user-management",
-      },
+      { email: user?.email },
       {
         onError: async (error) => {
           // Get data for error response body
@@ -384,6 +338,7 @@ const UserUpdateForm = ({
             <div className="flex justify-between">
               <Button
                 className="bg-brand-secondary px-6"
+                type="button"
                 onClick={() => handlePasswordReset()}
               >
                 Reset User Password

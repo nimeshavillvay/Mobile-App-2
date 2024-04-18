@@ -50,11 +50,6 @@ export type ForgetPasswordResponse = {
   isSuccess: boolean;
 };
 
-export type UpdateField = {
-  field: string;
-  value: string;
-};
-
 export type CurrentUser = {
   email: string;
 };
@@ -69,4 +64,11 @@ export type UpdateUser = {
   password?: string;
   permission: string;
   status: string;
+};
+
+// Types used in old-design
+// TODO: Remove these types once old-design is removed
+export type UpdateField = {
+  field: string;
+  value: string;
 };

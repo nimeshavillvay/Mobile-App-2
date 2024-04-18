@@ -41,7 +41,6 @@ const useSuspenseUsersList = (token: string) => {
         .get("rest/my-account/users", {
           headers: {
             authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
           },
         })
         .json<ManageContact>(),

@@ -58,7 +58,7 @@ const ProfileUpdateForm = ({
 
   const onSubmit = (values: UpdateProfileSchema) => {
     const updateValues: UpdateUser = {
-      userId: user!.id,
+      userId: user?.id,
       firstName: values.firstName.trim(),
       lastName: values.lastName.trim(),
       jobTitle: values.jobTitle,
