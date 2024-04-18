@@ -30,7 +30,7 @@ const useUpdateProfileMutation = () => {
             user_id: userId,
             first_name: firstName,
             last_name: lastName,
-            job_title: jobTitle !== "" ? jobTitle : null,
+            job_title: jobTitle,
             email,
             password,
             permission,

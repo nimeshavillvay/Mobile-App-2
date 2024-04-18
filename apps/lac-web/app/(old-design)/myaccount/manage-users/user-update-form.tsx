@@ -22,7 +22,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { USER_PERMISSIONS } from "./constants";
+import { USER_PERMISSIONS, USER_STATUSES } from "./constants";
 import type {
   ForgetPasswordResponse,
   Status,
@@ -31,15 +31,8 @@ import type {
 } from "./types";
 import useUpdateProfileMutation from "./use-update-profile-mutation.hook";
 
-const USER_STATUSES = [
-  { label: "Active", value: "ACTIVE" },
-  { label: "Deactive", value: "DEACTIVE" },
-] as const;
-
 const PASSWORD_RESET_INACTIVE_MSG =
-  "This User is currently flagged as inactive in the system. please contact web support at websupport@wurthlac.com, or call 800-422-4389 x1014.";
-const PASSWORD_RESET_PENDING_MSG =
-  "An email has been sent to the User to complete their registration. If they do not receive this email within 15 minutes, please contact web support at websupport@wurthlac.com, or call 800-422-4389 x1014.";
+  "This User is currently flagged as deactive in the system. please contact web support at websupport@wurthlac.com, or call 800-422-4389 x1014.";
 
 const updateUserSchema = z.object({
   firstName: z.string().trim().min(1, "Please enter first name.").max(40),
@@ -100,8 +93,7 @@ const UserUpdateForm = ({
   };
 
   const hasEditPermissions = (status: Status) => {
-    if (status === "PENDING") return false;
-    if (status === "INACTIVE") return false;
+    if (status === "SUSPENDED") return false;
     return true;
   };
 
@@ -115,17 +107,9 @@ const UserUpdateForm = ({
           const response =
             (await error?.response?.json()) as ForgetPasswordResponse;
 
-          if (response?.data?.status) {
-            switch (response?.data?.status) {
-              case "DEACTIVE":
-                setMessage(PASSWORD_RESET_INACTIVE_MSG);
-                setMessageOpen(true);
-                break;
-              case "PENDING":
-                setMessage(PASSWORD_RESET_PENDING_MSG);
-                setMessageOpen(true);
-                break;
-            }
+          if (response?.data?.status === "SUSPENDED") {
+            setMessage(PASSWORD_RESET_INACTIVE_MSG);
+            setMessageOpen(true);
           }
         },
       },
@@ -149,7 +133,7 @@ const UserUpdateForm = ({
                       <Input
                         placeholder="First Name"
                         className="text-[15px] placeholder:text-brand-gray-400"
-                        disabled={user?.status === "PENDING"}
+                        disabled={user?.status === "SUSPENDED"}
                         {...field}
                       />
                     </FormControl>
@@ -174,7 +158,7 @@ const UserUpdateForm = ({
                       <Input
                         placeholder="Last Name"
                         className="text-[15px] placeholder:text-brand-gray-400"
-                        disabled={user?.status === "PENDING"}
+                        disabled={user?.status === "SUSPENDED"}
                         {...field}
                       />
                     </FormControl>
@@ -319,7 +303,6 @@ const UserUpdateForm = ({
                             {status?.label}
                           </SelectItem>
                         ))}
-                        <StatusOption status={user?.status} />
                       </SelectContent>
                     </Select>
 
@@ -346,7 +329,7 @@ const UserUpdateForm = ({
               <Button
                 type="submit"
                 className="px-6"
-                disabled={user?.status === "PENDING"}
+                disabled={user?.status === "SUSPENDED"}
               >
                 Update
               </Button>
@@ -359,16 +342,3 @@ const UserUpdateForm = ({
 };
 
 export default UserUpdateForm;
-
-const StatusOption = ({ status }: { status: Status }) => {
-  switch (status) {
-    case "PENDING":
-      return <SelectItem value={status}>Pending</SelectItem>;
-    case "INACTIVE":
-      return <SelectItem value={status}>Inactive</SelectItem>;
-    case "DISABLED":
-      return <SelectItem value={status}>Disabled</SelectItem>;
-    default:
-      return null;
-  }
-};

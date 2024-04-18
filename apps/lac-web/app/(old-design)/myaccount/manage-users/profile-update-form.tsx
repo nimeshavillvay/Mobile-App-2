@@ -61,7 +61,7 @@ const ProfileUpdateForm = ({
       userId: user?.id,
       firstName: values.firstName.trim(),
       lastName: values.lastName.trim(),
-      jobTitle: values.jobTitle,
+      jobTitle: values.jobTitle ?? "",
       email: values.email.trim(),
       permission: values.permission,
       status: values.status,
@@ -92,7 +92,7 @@ const ProfileUpdateForm = ({
                       <Input
                         placeholder="First Name"
                         className="text-[15px] placeholder:text-brand-gray-400"
-                        disabled={user?.status === "PENDING"}
+                        disabled={user?.status === "SUSPENDED"}
                         {...field}
                       />
                     </FormControl>
@@ -117,7 +117,7 @@ const ProfileUpdateForm = ({
                       <Input
                         placeholder="Last Name"
                         className="text-[15px] placeholder:text-brand-gray-400"
-                        disabled={user?.status === "PENDING"}
+                        disabled={user?.status === "SUSPENDED"}
                         {...field}
                       />
                     </FormControl>

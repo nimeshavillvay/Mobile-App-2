@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/old/_components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -83,16 +84,18 @@ const AddUserEmailDialog = ({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="old-design-text-base max-w-[360px]">
         <DialogHeader>
-          <DialogTitle>Add User</DialogTitle>
+          <DialogTitle className="text-left font-wurth md:text-center">
+            Add User
+          </DialogTitle>
 
           <DialogDescription className="sr-only">
-            Add a new user by entering the email
+            Add a new user by entering the email address
           </DialogDescription>
         </DialogHeader>
 
         <div className="px-12 pb-12 pt-6">
           <p className="mb-4 text-center">
-            Please enter your new user’s email address to add them
+            Please enter your new user&apos;s email address to add them
           </p>
 
           <Form {...form}>
@@ -102,7 +105,10 @@ const AddUserEmailDialog = ({
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormDescription className="sr-only">Email</FormDescription>
+                    <FormDescription className="sr-only">
+                      Enter email address for the new user
+                    </FormDescription>
+
                     <FormControl>
                       <Input
                         placeholder="Email Address"
@@ -111,20 +117,15 @@ const AddUserEmailDialog = ({
                         {...field}
                       />
                     </FormControl>
-                    <FormDescription className="sr-only">
-                      Enter new user&apos;s email address
-                    </FormDescription>
+
                     <FormMessage />
                   </FormItem>
                 )}
               />
 
-              <button
-                type="submit"
-                className="block h-9 w-full rounded-[3px] bg-brand-primary px-4 text-base font-normal uppercase text-white"
-              >
+              <Button type="submit" className="w-full text-base">
                 Add user
-              </button>
+              </Button>
             </form>
           </Form>
         </div>

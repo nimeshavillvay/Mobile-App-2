@@ -30,6 +30,7 @@ import AddUserEmailDialog from "./add-user-email-dialog";
 import ProfileUpdateForm from "./profile-update-form";
 import useSuspenseUsersList from "./use-suspense-users-list.hook";
 import UserRow from "./user-row";
+import UserStatusBadge from "./user-status-badge";
 
 const UsersList = ({
   token,
@@ -53,18 +54,20 @@ const UsersList = ({
 
   return (
     <>
-      <Button
-        type="submit"
-        className="absolute right-0 top-[-20px] px-6"
-        onClick={() => setOpenAddUserEmailDialog(true)}
-      >
-        <MdPersonAdd className="text-xl leading-none" />
-        Add user
-      </Button>
+      <div className="flex flex-row items-center justify-between">
+        <h2 className="font-wurth text-xl font-medium text-brand-primary">
+          Manage Users
+        </h2>
 
-      <h2 className="relative font-wurth text-xl font-medium text-brand-primary">
-        Manage Users
-      </h2>
+        <Button
+          type="submit"
+          className="mb-2 px-6"
+          onClick={() => setOpenAddUserEmailDialog(true)}
+        >
+          <MdPersonAdd className="text-xl leading-none" />
+          Add user
+        </Button>
+      </div>
 
       <Separator
         orientation="horizontal"
@@ -104,9 +107,9 @@ const UsersList = ({
               </TableCell>
 
               <TableCell className="text-center">
-                <span className="min-w-24 rounded-sm border border-brand-tertiary px-5 py-px font-bold text-brand-tertiary">
-                  {yourProfile?.status}
-                </span>
+                <div className="flex justify-center">
+                  <UserStatusBadge status={yourProfile?.status} />
+                </div>
               </TableCell>
 
               <TableCell className="text-right">

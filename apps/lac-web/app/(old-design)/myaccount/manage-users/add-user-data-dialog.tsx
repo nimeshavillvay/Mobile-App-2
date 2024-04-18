@@ -1,6 +1,6 @@
 "use client";
 
-import { Role } from "@/(old-design)/_lib/types";
+import { Button } from "@/old/_components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -25,6 +25,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/old/_components/ui/select";
+import { Role } from "@/old/_lib/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
@@ -40,7 +41,7 @@ const USER_PERMISSIONS = [
 const addUserDataSchema = z.object({
   firstName: z.string().trim().min(1, "Please enter first name.").max(40),
   lastName: z.string().trim().min(1, "Please enter last name.").max(40),
-  jobTitle: z.string().min(1, "Please enter job title."),
+  jobTitle: z.string(),
   permission: z.string().min(1, "Please enter permission type."),
 });
 type AddUserDataSchema = z.infer<typeof addUserDataSchema>;
@@ -74,9 +75,10 @@ const AddUserDataDialog = ({
     addUserDataMutation.mutate(
       {
         firstName: data.firstName,
-        email: email,
-        jobTitle: data.jobTitle,
         lastName: data.lastName,
+        jobTitle: data.jobTitle,
+        email: email,
+        password: "qwer1234",
         permission: data.permission,
       },
       {
@@ -91,7 +93,9 @@ const AddUserDataDialog = ({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="old-design-text-base max-w-[500px]">
         <DialogHeader>
-          <DialogTitle>Add User</DialogTitle>
+          <DialogTitle className="text-left font-wurth md:text-center">
+            Add User
+          </DialogTitle>
 
           <DialogDescription className="sr-only">
             Add a new user by entering the email
@@ -99,14 +103,16 @@ const AddUserDataDialog = ({
         </DialogHeader>
 
         <div className="px-5 pb-8 pt-2">
-          <div className="m-auto max-w-[300px] text-center">
-            <MdPermIdentity className="m-auto text-8xl leading-none text-brand-gray-500" />
+          <div className="m-auto mb-5 max-w-[300px] text-center text-brand-gray-500">
+            <MdPermIdentity className="m-auto text-8xl leading-none" />
 
             <p className="text-brand-primary">User Not Found!</p>
 
-            <p className="mb-5">
-              Please provide following details to add{" "}
-              <span className="text-[#0056B3]">{email}</span> to this account
+            <p>
+              Please provide following details to add
+              <br />
+              <span className="text-brand-secondary">{email}</span> to this
+              account
             </p>
           </div>
 
@@ -118,53 +124,45 @@ const AddUserDataDialog = ({
                   name="firstName"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="">First Name*</FormLabel>
+                      <FormLabel className="font-bold">First Name*</FormLabel>
                       <FormDescription className="sr-only">
-                        Email
+                        Enter first name for the new user
                       </FormDescription>
 
                       <FormControl>
                         <Input
                           placeholder="First name"
                           type="text"
-                          required
                           {...field}
                         />
                       </FormControl>
 
-                      <FormDescription className="sr-only">
-                        Enter new user&apos;s first name
-                      </FormDescription>
-                      <FormMessage />
+                      <FormMessage className="text-xs dark:text-brand-primary" />
                     </FormItem>
                   )}
                 />
+
                 <FormField
                   control={form.control}
                   name="lastName"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="">Last Name*</FormLabel>
+                      <FormLabel className="font-bold">Last Name*</FormLabel>
+
                       <FormDescription className="sr-only">
-                        Last name
-                      </FormDescription>
-                      <FormControl>
-                        <Input
-                          placeholder="Last name"
-                          type="text"
-                          required
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormDescription className="sr-only">
-                        Enter new user&apos;s last name
+                        Enter last name for the new user
                       </FormDescription>
 
-                      <FormMessage />
+                      <FormControl>
+                        <Input placeholder="Last name" type="text" {...field} />
+                      </FormControl>
+
+                      <FormMessage className="text-xs dark:text-brand-primary" />
                     </FormItem>
                   )}
                 />
               </div>
+
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <FormField
                   control={form.control}
@@ -174,7 +172,7 @@ const AddUserDataDialog = ({
                       <FormLabel className="font-bold">Job Title</FormLabel>
 
                       <FormDescription className="sr-only">
-                        Job Title
+                        Select job title for the new user
                       </FormDescription>
 
                       <Select
@@ -196,14 +194,11 @@ const AddUserDataDialog = ({
                         </SelectContent>
                       </Select>
 
-                      <FormDescription className="sr-only">
-                        This is the job title for selected user
-                      </FormDescription>
-
                       <FormMessage className="text-xs dark:text-brand-primary" />
                     </FormItem>
                   )}
                 />
+
                 <FormField
                   control={form.control}
                   name="permission"
@@ -212,7 +207,7 @@ const AddUserDataDialog = ({
                       <FormLabel className="font-bold">Permission*</FormLabel>
 
                       <FormDescription className="sr-only">
-                        Permission
+                        Select permission for the new user
                       </FormDescription>
 
                       <Select
@@ -237,22 +232,15 @@ const AddUserDataDialog = ({
                         </SelectContent>
                       </Select>
 
-                      <FormDescription className="sr-only">
-                        This is the permission of your profile
-                      </FormDescription>
-
                       <FormMessage className="text-xs dark:text-brand-primary" />
                     </FormItem>
                   )}
                 />
               </div>
 
-              <button
-                type="submit"
-                className="block h-9 w-full rounded-[3px] bg-brand-primary px-4 text-base font-normal uppercase text-white"
-              >
+              <Button type="submit" className="w-full text-base">
                 Add user
-              </button>
+              </Button>
             </form>
           </Form>
         </div>

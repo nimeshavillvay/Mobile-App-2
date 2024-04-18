@@ -1,6 +1,6 @@
+import { api } from "@/_lib/api";
 import { useToast } from "@/old/_components/ui/use-toast";
 import useCookies from "@/old/_hooks/storage/use-cookies.hook";
-import { api } from "@/old/_lib/api";
 import { ACCOUNT_TOKEN_COOKIE } from "@/old/_lib/constants";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
@@ -11,32 +11,35 @@ const useAddUserDataMutation = () => {
 
   return useMutation({
     mutationFn: ({
-      email,
       firstName,
-      jobTitle,
       lastName,
+      jobTitle,
+      email,
+      password,
       permission,
     }: {
-      email: string;
       firstName: string;
-      jobTitle: string;
       lastName: string;
+      jobTitle: string;
+      email: string;
+      password: string;
       permission: string;
     }) =>
       api
-        .post("am/admin/create_user", {
+        .post("rest/my-account/create-user", {
           headers: {
             authorization: `Bearer ${cookies[ACCOUNT_TOKEN_COOKIE]}`,
           },
           json: {
-            email: email,
             first_name: firstName,
-            job_title: jobTitle,
             last_name: lastName,
-            permission: permission,
+            job_title: jobTitle,
+            email,
+            password,
+            permission,
           },
         })
-        .json<unknown>(),
+        .json<{ status_code: string; message: string; user_id: number }>(),
     onSuccess: () => {
       toast({
         description: "New user successfully added.",

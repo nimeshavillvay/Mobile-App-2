@@ -1,26 +1,6 @@
 export type Permission = "ADMIN" | "BUYER";
 
-export type SignedData = {
-  payload: string;
-  sign: string;
-};
-
-export type ApproveContact = {
-  firstName: string;
-  lastName: string;
-  jobTitle: string;
-  email: string;
-  permission: Permission;
-  signedData: SignedData;
-};
-
-export type Status =
-  | "PENDING"
-  | "ACTIVE"
-  | "DEACTIVE"
-  | "INACTIVE"
-  | "DISABLED"
-  | "SUSPENDED";
+export type Status = "ACTIVE" | "SUSPENDED";
 
 export type UserProfile = {
   id: number;
@@ -37,11 +17,6 @@ export type UserProfile = {
 export type ManageContact = {
   your_profile: UserProfile;
   contact_list: UserProfile[];
-};
-
-export type ManageUsers = {
-  approve_contacts: ApproveContact[];
-  manage_contact: ManageContact;
 };
 
 export type ForgetPasswordResponse = {
@@ -71,4 +46,23 @@ export type UpdateUser = {
 export type UpdateField = {
   field: string;
   value: string;
+};
+
+export type SignedData = {
+  payload: string;
+  sign: string;
+};
+
+export type ApproveContact = {
+  firstName: string;
+  lastName: string;
+  jobTitle: string;
+  email: string;
+  permission: Permission;
+  signedData: SignedData;
+};
+
+export type ManageUsers = {
+  approve_contacts: ApproveContact[];
+  manage_contact: ManageContact;
 };
