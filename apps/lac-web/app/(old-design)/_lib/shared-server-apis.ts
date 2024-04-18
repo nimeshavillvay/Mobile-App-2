@@ -1,5 +1,4 @@
 // TODO: To be removed after migration
-
 import { DEFAULT_REVALIDATE } from "@/_lib/constants";
 import "server-only";
 import { api } from "./api";
