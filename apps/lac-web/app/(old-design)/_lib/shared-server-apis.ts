@@ -1,7 +1,8 @@
+// TODO: To be removed after migration
+
 import { DEFAULT_REVALIDATE } from "@/_lib/constants";
 import "server-only";
 import { api } from "./api";
-import type { PasswordPolicy, Role } from "./types";
 
 export const getBreadcrumbs = async (
   id: string,
@@ -46,33 +47,5 @@ export const getSitemapData = async () => {
         subCatName: string;
         catId: number;
       }[];
-    }>();
-};
-
-export const getJobRoles = async () => {
-  return await api
-    .get("am/registration/get-roles", {
-      next: {
-        revalidate: DEFAULT_REVALIDATE,
-      },
-    })
-    .json<{ roles: Role[] }>();
-};
-
-export const getPasswordPolicy = async () => {
-  return await api
-    .get("pim/webservice/rest/passwordpolicy", {
-      searchParams: {
-        requestBy: "FE",
-      },
-      next: {
-        revalidate: DEFAULT_REVALIDATE,
-      },
-    })
-    .json<{
-      success: boolean;
-      message: string;
-      error_code: number;
-      data: { passwordPolicies: PasswordPolicy[] };
     }>();
 };

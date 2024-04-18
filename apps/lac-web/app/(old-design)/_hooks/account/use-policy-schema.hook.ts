@@ -1,7 +1,13 @@
-import { PasswordPolicy } from "@/(old-design)/_lib/types";
+import type { PasswordPolicies } from "@/(auth)/types";
 import * as z from "zod";
 
-const usePolicySchema = (passwordPolicies: PasswordPolicy[]) => {
+const usePolicySchema = ({
+  passwordPolicies,
+  allowEmptyPassword = false,
+}: {
+  passwordPolicies: PasswordPolicies;
+  allowEmptyPassword: boolean;
+}) => {
   return z
     .object({
       firstName: z.string().trim().min(1, "Please enter first name.").max(40),
@@ -14,43 +20,57 @@ const usePolicySchema = (passwordPolicies: PasswordPolicy[]) => {
         .email("Please enter a valid email address."),
       permission: z.string().min(1, "Please enter permission type."),
       status: z.string(),
-      password: z.string().or(z.literal("")),
+      password: z.string(),
       confirmPassword: z.string().or(z.literal("")),
     })
-    .refine(({ password, confirmPassword }) => password === confirmPassword, {
-      message: "Passwords do not match.",
-      path: ["confirmPassword"],
+    .extend({
+      password: z
+        .string()
+        .min(
+          passwordPolicies.minimumLength,
+          `Password must contain at least ${passwordPolicies.minimumLength} characters.`,
+        )
+        .or(z.literal("")),
     })
-    .refine(
-      ({ password }) => {
-        if (password === "") return true; // Allow empty passwords
+    .superRefine(({ password, confirmPassword }, context) => {
+      if (allowEmptyPassword && password === "") {
+        return true; // Allow empty passwords
+      }
 
-        for (const policy of passwordPolicies) {
-          switch (policy.code) {
-            case "MIN_CHAR_LEN":
-              if (password.length < Number(policy.value)) return false;
-              break;
-            case "MIN_NUMBER":
-              if (!new RegExp(`\\d{${Number(policy.value)}}`).test(password))
-                return false;
-              break;
-            case "MIN_CHAR_Cha_LEN":
-              if (
-                !new RegExp(`[a-zA-Z]{${Number(policy.value)}}`).test(password)
-              )
-                return false;
-              break;
-            default:
-              break;
-          }
+      const containsAlphabet = (ch: string) => /[a-z,A-Z]/.test(ch);
+      const containsNumber = (ch: string) => /[0-9]/.test(ch);
+
+      let countOfAlphabets = 0;
+      let countOfNumbers = 0;
+
+      for (const ch of password) {
+        if (containsAlphabet(ch)) {
+          countOfAlphabets++;
+        } else if (containsNumber(ch)) {
+          countOfNumbers++;
         }
-        return true;
-      },
-      {
-        message: "Password does not meet complexity requirements.",
-        path: ["password"],
-      },
-    );
+      }
+
+      // TODO Add better messaging
+      if (
+        countOfAlphabets < passwordPolicies.minimumAlphabets ||
+        countOfNumbers < passwordPolicies.minimumNumbers
+      ) {
+        context.addIssue({
+          path: ["password"],
+          code: "custom",
+          message: "Password does not meet complexity requirements",
+        });
+      }
+
+      if (confirmPassword !== password) {
+        context.addIssue({
+          path: ["confirmPassword"],
+          code: "custom",
+          message: "The passwords did not match",
+        });
+      }
+    });
 };
 
 export default usePolicySchema;

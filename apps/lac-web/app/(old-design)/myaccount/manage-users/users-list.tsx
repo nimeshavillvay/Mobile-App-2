@@ -1,5 +1,6 @@
 "use client";
 
+import type { PasswordPolicies } from "@/(auth)/types";
 import Separator from "@/old/_components/separator";
 import { Button } from "@/old/_components/ui/button";
 import {
@@ -16,7 +17,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/old/_components/ui/table";
-import type { PasswordPolicy, Role } from "@/old/_lib/types";
+import type { Role } from "@/old/_lib/types";
 import { useState } from "react";
 import {
   MdAccountBox,
@@ -35,11 +36,11 @@ import UserStatusBadge from "./user-status-badge";
 const UsersList = ({
   token,
   jobRoles,
-  passwordPolicies = [],
+  passwordPolicies,
 }: {
   token: string;
   jobRoles: Role[];
-  passwordPolicies: PasswordPolicy[];
+  passwordPolicies: PasswordPolicies;
 }) => {
   const [showYourProfile, setShowYourProfile] = useState(false);
   const [showCurrentUsers, setShowCurrentUsers] = useState(false);

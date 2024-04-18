@@ -274,3 +274,18 @@ export const getFeaturedProducts = async () => {
       quick_ship: unknown[];
     }>();
 };
+
+export const getJobRoles = async () => {
+  return await api
+    .get("rest/get-roles", {
+      next: {
+        revalidate: DEFAULT_REVALIDATE,
+      },
+    })
+    .json<{
+      roles: {
+        code: string;
+        description: string;
+      }[];
+    }>();
+};

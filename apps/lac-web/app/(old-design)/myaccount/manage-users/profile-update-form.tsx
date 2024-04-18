@@ -1,3 +1,4 @@
+import type { PasswordPolicies } from "@/(auth)/types";
 import { Button } from "@/old/_components/ui/button";
 import {
   Form,
@@ -17,7 +18,7 @@ import {
   SelectValue,
 } from "@/old/_components/ui/select";
 import usePolicySchema from "@/old/_hooks/account/use-policy-schema.hook";
-import type { PasswordPolicy, Role } from "@/old/_lib/types";
+import type { Role } from "@/old/_lib/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -28,7 +29,7 @@ import useUpdateProfileMutation from "./use-update-profile-mutation.hook";
 type UpdateProfileProps = {
   user: UserProfile;
   jobRoles: Role[];
-  passwordPolicies: PasswordPolicy[];
+  passwordPolicies: PasswordPolicies;
 };
 
 const ProfileUpdateForm = ({
@@ -36,7 +37,10 @@ const ProfileUpdateForm = ({
   jobRoles,
   passwordPolicies,
 }: UpdateProfileProps) => {
-  const updateProfileSchema = usePolicySchema(passwordPolicies);
+  const updateProfileSchema = usePolicySchema({
+    passwordPolicies,
+    allowEmptyPassword: true,
+  });
 
   type UpdateProfileSchema = z.infer<typeof updateProfileSchema>;
 

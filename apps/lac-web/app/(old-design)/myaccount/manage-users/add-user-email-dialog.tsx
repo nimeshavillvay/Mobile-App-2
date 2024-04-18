@@ -1,5 +1,6 @@
 "use client";
 
+import useCheckEmailMutation from "@/_hooks/user/use-check-email-mutation.hook";
 import { Button } from "@/old/_components/ui/button";
 import {
   Dialog,
@@ -21,8 +22,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { CurrentUser } from "./types";
-import useAddUserEmailMutation from "./use-add-user-email-mutation.hook";
+import type { CurrentUser } from "./types";
 
 type AddUserEmailProps = {
   currentUsers: CurrentUser[];
@@ -39,16 +39,16 @@ const AddUserEmailDialog = ({
   setOpenAddUserDataDialog,
   setEmail,
 }: AddUserEmailProps) => {
-  const addUserEmailMutation = useAddUserEmailMutation();
+  const checkEmailMutation = useCheckEmailMutation();
 
   const addUserSchema = z.object({
     email: z
       .string()
-      .email()
+      .email("Please enter a valid email address.")
       .refine(
         (email) => {
           const userExists = currentUsers.find((currentUser) => {
-            return currentUser.email == email;
+            return currentUser.email === email;
           });
           if (userExists) return false;
           return true;
@@ -68,16 +68,15 @@ const AddUserEmailDialog = ({
   });
 
   const onSubmit = (data: AddUserSchema) => {
-    addUserEmailMutation.mutate(
-      { email: data.email },
-      {
-        onSuccess: () => {
+    checkEmailMutation.mutate(data.email, {
+      onSuccess: (data, email) => {
+        if (data.statusCode === "OK") {
           setOpenAddUserDataDialog(true);
-          setEmail(data.email);
+          setEmail(email);
           setOpen(false);
-        },
+        }
       },
-    );
+    });
   };
 
   return (
@@ -111,12 +110,11 @@ const AddUserEmailDialog = ({
                       <Input
                         placeholder="Email Address"
                         type="email"
-                        required
                         {...field}
                       />
                     </FormControl>
 
-                    <FormMessage />
+                    <FormMessage className="text-xs dark:text-brand-primary" />
                   </FormItem>
                 )}
               />

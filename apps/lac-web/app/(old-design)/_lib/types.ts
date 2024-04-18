@@ -154,9 +154,3 @@ export type Product = {
     txt_prop65_message_03: string;
   };
 };
-
-export type PasswordPolicy = {
-  code: string;
-  value: string;
-  desc: string;
-};

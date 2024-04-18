@@ -25,7 +25,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/old/_components/ui/select";
-import { Role } from "@/old/_lib/types";
+import type { Role } from "@/old/_lib/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
