@@ -28,15 +28,12 @@ const getPriceBreakDowns = (price_breakdowns: PriceBreakDowns) => {
 };
 
 type Product = {
-  productId: number,
-  qty: number
+  productId: number;
+  qty: number;
 };
 
 // TODO: Need to remove usePriceCheck hook and replace it with useSuspensePriceCheck
-const useSuspensePriceCheck = (
-  token: string,
-  products: Product[]
-) => {
+const useSuspensePriceCheck = (token: string, products: Product[]) => {
   return useSuspenseQuery({
     queryKey: ["user", "price-check", token, products],
     queryFn: () =>
