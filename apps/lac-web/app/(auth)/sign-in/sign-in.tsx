@@ -1,6 +1,6 @@
 "use client";
 
-import { api } from "@/_lib/api";
+import useCheckEmailMutation from "@/_hooks/user/use-check-email-mutation.hook";
 import { cn, isErrorResponse } from "@/_lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, buttonVariants } from "@repo/web-ui/components/ui/button";
@@ -8,6 +8,7 @@ import { Input } from "@repo/web-ui/components/ui/input";
 import { Label } from "@repo/web-ui/components/ui/label";
 import { useMutation } from "@tanstack/react-query";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useId, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import Balancer from "react-wrap-balancer";
@@ -34,6 +35,8 @@ const SignIn = ({ passwordPolicies }: SignInProps) => {
   const emailId = `email-${id}`;
   const passwordId = `password-${id}`;
 
+  const router = useRouter();
+
   const [cookies, setCookies] = useSignInCookies();
 
   const emailForm = useForm<z.infer<typeof emailFormSchema>>({
@@ -42,39 +45,36 @@ const SignIn = ({ passwordPolicies }: SignInProps) => {
     },
     resolver: zodResolver(emailFormSchema),
   });
-  const checkEmailMutation = useMutation({
-    mutationFn: async (email: string) => {
-      const response = await api
-        .post("rest/register/check-email", {
-          json: { email },
-        })
-        .json<{ status_code: "OK" }>();
+  const checkEmailMutation = useCheckEmailMutation();
 
-      return {
-        statusCode: response.status_code,
-      };
-    },
-    onError: async (error, email) => {
-      if (error?.response?.status === 400) {
-        const errorResponse = await error.response.json();
-
-        // The email already exists
-        if (
-          isErrorResponse(errorResponse) &&
-          errorResponse["status_code"] === "FAILED" &&
-          errorResponse.message ===
-            "Email address already exists in the database."
-        ) {
+  const onSubmitEmail = emailForm.handleSubmit((data) => {
+    checkEmailMutation.mutate(data.email, {
+      onSuccess: (data, email) => {
+        if (data.statusCode === "OK") {
           setCookies(EMAIL_COOKIE, email, {
             path: "/",
           });
+          router.replace("/registration");
         }
-      }
-    },
-  });
+      },
+      onError: async (error, email) => {
+        if (error?.response?.status === 400) {
+          const errorResponse = await error.response.json();
 
-  const onSubmitEmail = emailForm.handleSubmit((data) => {
-    checkEmailMutation.mutate(data.email);
+          // The email already exists
+          if (
+            isErrorResponse(errorResponse) &&
+            errorResponse["status_code"] === "FAILED" &&
+            errorResponse.message ===
+              "Email address already exists in the database."
+          ) {
+            setCookies(EMAIL_COOKIE, email, {
+              path: "/",
+            });
+          }
+        }
+      },
+    });
   });
 
   const refinedLoginFormSchema = useMemo(

@@ -1,3 +1,4 @@
+import CheckCircle from "@repo/web-ui/components/icons/check-circle";
 import { Button } from "@repo/web-ui/components/ui/button";
 import {
   createContext,
@@ -101,9 +102,11 @@ export const StepContainerOpen = ({
 export const StepContainerClosed = ({
   children,
   onClick,
+  disabled = false,
 }: {
   children: ReactNode;
   onClick?: ComponentProps<typeof Button>["onClick"];
+  disabled?: boolean;
 }) => {
   const { state, title } = useStepContext();
 
@@ -113,10 +116,19 @@ export const StepContainerClosed = ({
 
   return (
     <section className="flex flex-col gap-4 rounded-lg border border-wurth-gray-250 p-6 shadow-lg">
-      <div className="flex flex-row items-start justify-between">
-        <h3 className="text-base font-semibold text-wurth-gray-800">{title}</h3>
+      <div className="flex flex-row items-center gap-3">
+        <CheckCircle className="stroke-green-700 size-5" />
 
-        <Button variant="subtle" className="font-bold" onClick={onClick}>
+        <h3 className="text-base font-semibold text-wurth-gray-800 flex-1">
+          {title}
+        </h3>
+
+        <Button
+          variant="subtle"
+          className="font-bold"
+          onClick={onClick}
+          disabled={disabled}
+        >
           Edit
         </Button>
       </div>
