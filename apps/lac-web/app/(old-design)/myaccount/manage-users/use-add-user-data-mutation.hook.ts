@@ -1,4 +1,5 @@
 import { api } from "@/_lib/api";
+import { isErrorResponse } from "@/_lib/utils";
 import { useToast } from "@/old/_components/ui/use-toast";
 import useCookies from "@/old/_hooks/storage/use-cookies.hook";
 import { ACCOUNT_TOKEN_COOKIE } from "@/old/_lib/constants";
@@ -40,17 +41,40 @@ const useAddUserDataMutation = () => {
           },
         })
         .json<{ status_code: string; message: string; user_id: number }>(),
-    onSuccess: () => {
-      toast({
-        description: "New user successfully added.",
-        variant: "success",
-      });
+    onSuccess: (data) => {
+      const transformedData = {
+        statusCode: data.status_code,
+        message: data.message,
+        userId: data.user_id,
+      };
+
+      if (transformedData.statusCode === "OK") {
+        toast({
+          description: "New user successfully added.",
+          variant: "success",
+        });
+      }
     },
-    onError: () => {
-      toast({
-        description: "New user creation failed.",
-        variant: "destructive",
-      });
+    onError: async (error) => {
+      if (error?.response?.status === 400) {
+        const errorResponse = await error.response.json();
+
+        if (
+          isErrorResponse(errorResponse) &&
+          errorResponse["status_code"] === "FAILED" &&
+          errorResponse.message
+        ) {
+          toast({
+            description: errorResponse.message,
+            variant: "destructive",
+          });
+        } else {
+          toast({
+            description: "New user creation failed.",
+            variant: "destructive",
+          });
+        }
+      }
     },
     onSettled: () => {
       queryClient.invalidateQueries({

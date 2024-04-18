@@ -84,9 +84,7 @@ const AddUserEmailDialog = ({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="old-design-text-base max-w-[360px]">
         <DialogHeader>
-          <DialogTitle className="text-left font-wurth md:text-center">
-            Add User
-          </DialogTitle>
+          <DialogTitle className="text-left font-wurth">Add User</DialogTitle>
 
           <DialogDescription className="sr-only">
             Add a new user by entering the email address
