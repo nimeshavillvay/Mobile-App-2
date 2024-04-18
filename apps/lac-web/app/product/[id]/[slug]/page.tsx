@@ -45,13 +45,13 @@ export const generateMetadata = async ({
   const product = await getProduct(id);
 
   // Check if the slug matches the product's slug
-  if (slug !== product.selected_item.url) {
+  if (slug !== product.selectedProduct.slug) {
     return notFound();
   }
 
   return {
-    title: product.selected_item.item_name,
-    description: product.selected_item.txt_sub_description,
+    title: product.selectedProduct.productName,
+    description: product.selectedProduct.productDescription,
   };
 };
 
@@ -59,7 +59,7 @@ const ProductPage = async ({ params: { id, slug } }: ProductPageProps) => {
   const product = await getProduct(id);
 
   // Check if the slug matches the product's slug
-  if (slug !== product.selected_item.url) {
+  if (slug !== product.selectedProduct.slug) {
     return notFound();
   }
 
@@ -149,15 +149,13 @@ const ProductPage = async ({ params: { id, slug } }: ProductPageProps) => {
           </BreadcrumbItem>
 
           {breadcrumbs.map((breadcrumb) => (
-            <Fragment key={breadcrumb.oo_id}>
+            <Fragment key={breadcrumb.id}>
               <BreadcrumbSeparator />
 
               <BreadcrumbItem>
                 <BreadcrumbLink asChild>
-                  <Link
-                    href={`/category/${breadcrumb.oo_id}/${breadcrumb.slug}`}
-                  >
-                    {breadcrumb.cat_name}
+                  <Link href={`/category/${breadcrumb.id}/${breadcrumb.slug}`}>
+                    {breadcrumb.categoryName}
                   </Link>
                 </BreadcrumbLink>
               </BreadcrumbItem>
