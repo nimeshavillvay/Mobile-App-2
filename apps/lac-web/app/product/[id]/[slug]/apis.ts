@@ -20,6 +20,7 @@ type Product = {
     url: string;
     is_favourite: boolean | null;
     is_comparison: boolean | null;
+    is_directly_shipped_from_vendor?: boolean;
     txt_hazardous: string;
     txt_special_shipping: string;
     txt_sap: string;
@@ -83,6 +84,8 @@ export const getProduct = async (id: string) => {
       slug: selected_item.url,
       isFavourite: !!selected_item.is_favourite,
       isComparison: !!selected_item.is_comparison,
+      isDirectlyShippedFromVendor:
+        selected_item.is_directly_shipped_from_vendor ?? false,
       isHazardous: selected_item.txt_hazardous === "Y",
       specialShipping: SPECIAL_SHIPPING_FLAG.includes(
         selected_item.txt_special_shipping,
