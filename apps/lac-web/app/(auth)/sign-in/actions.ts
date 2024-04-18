@@ -3,7 +3,9 @@
 import { api } from "@/_lib/api";
 import { isErrorResponse } from "@/_lib/utils";
 import { HTTPError } from "ky";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { EMAIL_COOKIE } from "../constants";
 
 export const login = async (email: string, password: string) => {
   try {
@@ -42,6 +44,10 @@ export const login = async (email: string, password: string) => {
       };
     }
   }
+
+  // Clear email cookie
+  const cookieStore = cookies();
+  cookieStore.delete(EMAIL_COOKIE);
 
   // Redirect after successful login
   redirect("/");
