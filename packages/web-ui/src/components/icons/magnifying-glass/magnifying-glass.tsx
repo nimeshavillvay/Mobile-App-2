@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import { type ComponentProps } from "react";
 
-const MagnifyingGlass = ({
+export const MagnifyingGlass = ({
   className,
   ...delegated
 }: ComponentProps<"svg">) => {
@@ -22,5 +22,3 @@ const MagnifyingGlass = ({
     </svg>
   );
 };
-
-export default MagnifyingGlass;

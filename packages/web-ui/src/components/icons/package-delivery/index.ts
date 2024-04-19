@@ -1,1 +1,1 @@
-export { default } from "./package-delivery";
+export * from "./package-delivery";

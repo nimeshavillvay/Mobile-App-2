@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import { type ComponentProps } from "react";
 
-const PackageDelivery = ({
+export const PackageDelivery = ({
   className,
   ...delegated
 }: ComponentProps<"svg">) => {
@@ -22,5 +22,3 @@ const PackageDelivery = ({
     </svg>
   );
 };
-
-export default PackageDelivery;

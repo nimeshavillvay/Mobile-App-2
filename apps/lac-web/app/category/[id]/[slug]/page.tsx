@@ -4,7 +4,7 @@ import { api } from "@/_lib/api";
 import { getBreadcrumbs } from "@/_lib/apis/server";
 import { getFilters } from "@/_lib/apis/shared";
 import { DEFAULT_REVALIDATE } from "@/_lib/constants";
-import ChevronLeft from "@repo/web-ui/components/icons/chevron-left";
+import { ChevronLeft } from "@repo/web-ui/components/icons/chevron-left";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -32,36 +32,57 @@ import TopSubCategories from "./top-sub-categories";
 
 const VISIBLE_SUB_CATEGORIES_LENGTH = 6;
 
+type ProductLandingCategory = {
+  main: {
+    catId: string;
+    type: string;
+    catTitle: string;
+    description: string;
+    additional_description: string;
+    Image: string;
+    slug: string;
+    subCatgores: {
+      SubCatId: string;
+      SubCatTitle: string;
+      slug: string;
+      Image: string;
+    }[];
+  };
+};
+
 const getCategory = async (id: string, slug: string) => {
   try {
-    const category = await api
+    const response = await api
       .get(`rest/productlandingcategory/${id}`, {
         next: { revalidate: DEFAULT_REVALIDATE },
       })
-      .json<{
-        main: {
-          catId: string;
-          type: string;
-          catTitle: string;
-          description: string;
-          additional_description: string;
-          Image: string;
-          slug: string;
-          subCatgores: {
-            SubCatId: string;
-            SubCatTitle: string;
-            slug: string;
-            Image: string;
-          }[];
-        };
-      }>();
+      .json<ProductLandingCategory>();
 
+    const transformResponse = {
+      mainCategory: {
+        id: Number(response.main.catId),
+        type: response.main.type,
+        title: response.main.catTitle,
+        description: response.main.description,
+        additionalDescription: response.main.additional_description,
+        image: response.main.Image,
+        slug: response.main.slug,
+        subCategories: response.main.subCatgores.map(
+          ({ SubCatId, SubCatTitle, slug, Image }) => ({
+            id: Number(SubCatId),
+            title: SubCatTitle,
+            slug: slug,
+            image: Image ?? null,
+          }),
+        ),
+      },
+    };
     // Compare slug
-    if (slug !== category.main.slug) {
+    if (slug !== transformResponse.mainCategory.slug) {
       notFound();
     }
 
-    return category.main;
+    return transformResponse.mainCategory;
   } catch {
     notFound();
   }
@@ -74,7 +95,7 @@ type CategoryPageProps = {
   };
 };
 type SubCategory = {
-  id: string;
+  id: number;
   slug: string;
   title: string;
   image: string;
@@ -86,7 +107,7 @@ export const generateMetadata = async ({
   const category = await getCategory(id, slug);
 
   return {
-    title: category.catTitle,
+    title: category.title,
     description: category.description,
   };
 };
@@ -103,13 +124,13 @@ const CategoryPage = async ({ params: { id, slug } }: CategoryPageProps) => {
     }),
   ]);
 
-  const subCategories = category.subCatgores.map(
+  const subCategories = category.subCategories.map(
     (subCategory) =>
       ({
-        id: subCategory.SubCatId,
+        id: subCategory.id,
         slug: subCategory.slug,
-        title: subCategory.SubCatTitle,
-        image: subCategory.Image,
+        title: subCategory.title,
+        image: subCategory.image,
       }) satisfies SubCategory,
   );
   const visibleSubCategories = subCategories.slice(
@@ -118,7 +139,7 @@ const CategoryPage = async ({ params: { id, slug } }: CategoryPageProps) => {
   );
   const hiddenSubCategories = subCategories.slice(
     VISIBLE_SUB_CATEGORIES_LENGTH,
-    VISIBLE_SUB_CATEGORIES_LENGTH + category.subCatgores.length,
+    VISIBLE_SUB_CATEGORIES_LENGTH + category.subCategories.length,
   );
 
   return (
@@ -145,20 +166,20 @@ const CategoryPage = async ({ params: { id, slug } }: CategoryPageProps) => {
           </BreadcrumbItem>
 
           {breadcrumbs.map((breadcrumb, index) => (
-            <Fragment key={breadcrumb.oo_id}>
+            <Fragment key={breadcrumb.id}>
               <BreadcrumbSeparator />
 
               <BreadcrumbItem>
                 {index < breadcrumbs.length - 1 ? (
                   <BreadcrumbLink asChild>
                     <Link
-                      href={`/category/${breadcrumb.oo_id}/${breadcrumb.slug}`}
+                      href={`/category/${breadcrumb.id}/${breadcrumb.slug}`}
                     >
-                      {breadcrumb.cat_name}
+                      {breadcrumb.categoryName}
                     </Link>
                   </BreadcrumbLink>
                 ) : (
-                  <BreadcrumbPage>{breadcrumb.cat_name}</BreadcrumbPage>
+                  <BreadcrumbPage>{breadcrumb.categoryName}</BreadcrumbPage>
                 )}
               </BreadcrumbItem>
             </Fragment>
@@ -179,7 +200,7 @@ const CategoryPage = async ({ params: { id, slug } }: CategoryPageProps) => {
 
           <div className="space-y-3 p-6 md:flex-1 md:space-y-5 md:p-10">
             <h1 className="line-clamp-3 text-balance font-title text-4xl font-medium tracking-tight text-wurth-gray-800 md:text-5xl md:leading-[3.5rem] md:tracking-[-0.036rem]">
-              {category.catTitle}
+              {category.title}
             </h1>
 
             <p className="text-base text-wurth-gray-800 md:line-clamp-3 md:text-lg">
@@ -210,7 +231,7 @@ const CategoryPage = async ({ params: { id, slug } }: CategoryPageProps) => {
         )}
       </section>
 
-      <TopSubCategories title={category.catTitle} />
+      <TopSubCategories title={category.title} />
 
       <PopularBrands />
 

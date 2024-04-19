@@ -8,7 +8,7 @@ export const getBreadcrumbs = async (
 ) => {
   // TODO Remove try/catch block and placeholder data when real API is ready
   try {
-    return await api
+    const response = await api
       .get("rest/breadcrumbs", {
         searchParams: new URLSearchParams({
           [type === "product" ? "productId" : "catId"]: id,
@@ -24,26 +24,32 @@ export const getBreadcrumbs = async (
           slug: string;
         }[]
       >();
+
+    return response.map((item) => ({
+      id: Number(item.oo_id),
+      categoryName: item.cat_name,
+      slug: item.slug,
+    }));
   } catch {
     return [
       {
-        oo_id: "113",
-        cat_name: "Woodworking and Shop Supplies",
+        id: "113",
+        categoryName: "Woodworking and Shop Supplies",
         slug: "woodworking-and-shop-supplies",
       },
       {
-        oo_id: "183",
-        cat_name: "Drawer Slides & Systems",
+        id: "183",
+        categoryName: "Drawer Slides & Systems",
         slug: "drawer-slides-and-systems",
       },
       {
-        oo_id: "184",
-        cat_name: "Drawer Slides",
+        id: "184",
+        categoryName: "Drawer Slides",
         slug: "drawer-slides-c-696",
       },
       {
-        oo_id: "185",
-        cat_name: "Ball Bearing Slides",
+        id: "185",
+        categoryName: "Ball Bearing Slides",
         slug: "ball-bearing-slides",
       },
     ];

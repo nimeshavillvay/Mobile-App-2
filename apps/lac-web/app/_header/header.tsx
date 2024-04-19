@@ -1,15 +1,15 @@
 import { api } from "@/_lib/api";
 import { DEFAULT_REVALIDATE } from "@/_lib/constants";
 import { cn } from "@/_lib/utils";
-import Profile from "@repo/web-ui/components/icons/profile";
-import ShoppingCart from "@repo/web-ui/components/icons/shopping-cart";
-import WurthFullBlack from "@repo/web-ui/components/logos/wurth-full-black";
+import { Profile } from "@repo/web-ui/components/icons/profile";
+import { ShoppingCart } from "@repo/web-ui/components/icons/shopping-cart";
+import { WurthFullBlack } from "@repo/web-ui/components/logos/wurth-full-black";
 import {
   SearchBox,
   SearchBoxButton,
   SearchBoxInput,
 } from "@repo/web-ui/components/search-box";
-import { Button, buttonVariants } from "@repo/web-ui/components/ui/button";
+import { buttonVariants } from "@repo/web-ui/components/ui/button";
 import Link from "next/link";
 import DesktopNavigationMenu from "./desktop-navigation-menu";
 import MobileNavigationMenu from "./mobile-navigation-menu";
@@ -47,11 +47,20 @@ const Header = async () => {
 
         <div className="ml-auto flex flex-row items-center gap-4 md:ml-0 md:gap-6">
           {/* Mobile */}
-          <Button variant="ghost" size="icon" className="size-6 md:hidden">
+          <Link
+            href="/sign-in"
+            className={cn(
+              buttonVariants({
+                variant: "ghost",
+                size: "icon",
+              }),
+              "size-6 md:hidden",
+            )}
+          >
             <Profile />
 
             <span className="sr-only">User Profile</span>
-          </Button>
+          </Link>
 
           <Link
             href="/cart"
@@ -69,14 +78,19 @@ const Header = async () => {
           </Link>
 
           {/* Desktop */}
-          <Button
-            variant="ghost"
-            className="hidden shrink-0 md:flex md:h-min md:flex-row md:items-center md:gap-2 md:p-0"
+          <Link
+            href="/sign-in"
+            className={cn(
+              buttonVariants({
+                variant: "ghost",
+              }),
+              "hidden shrink-0 md:flex md:h-min md:flex-row md:items-center md:gap-2 md:p-0",
+            )}
           >
             <Profile className="size-7" />
 
             <span className="text-base font-semibold">Sign in / Register</span>
-          </Button>
+          </Link>
 
           <Link
             href="/cart"

@@ -4,7 +4,6 @@ import productItemImage from "@/_assets/images/product-item-image.png";
 import {
   ProductCard,
   ProductCardActions,
-  ProductCardCompare,
   ProductCardContent,
   ProductCardDetails,
   ProductCardDiscount,
@@ -37,8 +36,6 @@ const FlashSaleProduct = ({
         />
 
         <ProductCardLabel>Label</ProductCardLabel>
-
-        <ProductCardCompare />
       </ProductCardHero>
 
       <ProductCardContent>

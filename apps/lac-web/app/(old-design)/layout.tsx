@@ -1,6 +1,8 @@
 import { type ReactNode } from "react";
-import { Toaster } from "./_components/ui/toaster";
 import Header from "./_header";
+
+// TODO Remove when the old APIs have been removed
+export const dynamic = "force-dynamic";
 
 const OldDesignRootLayout = ({ children }: { children: ReactNode }) => {
   return (
@@ -8,8 +10,6 @@ const OldDesignRootLayout = ({ children }: { children: ReactNode }) => {
       <Header />
 
       <div className="old-design-text-base">{children}</div>
-
-      <Toaster />
     </>
   );
 };

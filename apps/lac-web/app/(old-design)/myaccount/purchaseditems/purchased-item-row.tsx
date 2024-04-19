@@ -1,6 +1,5 @@
 import AlertInline from "@/old/_components/alert-inline";
 import ErrorBoundary from "@/old/_components/error-boundary";
-import ShippingOptions from "@/old/_components/shipping-options";
 import { Button } from "@/old/_components/ui/button";
 import {
   Collapsible,
@@ -11,10 +10,9 @@ import { Input } from "@/old/_components/ui/input";
 import { Label } from "@/old/_components/ui/label";
 import { TableCell, TableRow } from "@/old/_components/ui/table";
 import useAddToCartMutation from "@/old/_hooks/cart/use-add-to-cart-mutation.hook";
-import useAddToFavoritesMutation from "@/old/_hooks/product/use-add-to-favorites-mutation.hook";
 import { cn, getMediaUrl } from "@/old/_utils/helpers";
 import { zodResolver } from "@hookform/resolvers/zod";
-import WurthFullBlack from "@repo/web-ui/components/logos/wurth-full-black";
+import { WurthFullBlack } from "@repo/web-ui/components/logos/wurth-full-black";
 import dayjs from "dayjs";
 import Image from "next/image";
 import Link from "next/link";
@@ -44,15 +42,11 @@ type PurchasedItemRowProps = {
 
 const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
   const [showItemAttributes, setShowItemAttributes] = useState(false);
-  const [showShippingOptions, setShowShippingOptions] = useState(false);
   const [showMyPrice, setShowMyPrice] = useState(false);
   const id = useId();
   const router = useRouter();
   const quantityId = `quantity-${id}`;
-  const category = item?.categoryInfo[0] ?? null;
-  const subCategory = item?.categoryInfo[1] ?? null;
   const addToCartMutation = useAddToCartMutation();
-  const addToFavoritesMutation = useAddToFavoritesMutation();
 
   const { register, watch, handleSubmit } = useForm<Schema>({
     resolver: zodResolver(schema),
@@ -62,7 +56,7 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
 
   const onSubmit = (values: Schema) => {
     addToCartMutation.mutate(
-      { sku: item.sku, quantity: values.quantity },
+      { sku: item.productSku, quantity: values.quantity },
       {
         onSuccess: () => {
           // TODO: handle add to cart popup here
@@ -72,29 +66,19 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
   };
 
   const onAddToFavorites = () => {
-    if (item.isFavourite) {
+    if (item.isFavorite) {
       router.push("/myaccount/myfavorites");
     } else {
-      if (category && subCategory) {
-        addToFavoritesMutation.mutate({
-          brandId: item.sel_assigned_brand as number,
-          brandName: item.brand_name,
-          categoryId: category.oo_id,
-          categoryName: category.cat_name,
-          sku: item.sku,
-          subCategoryId: subCategory.oo_id,
-          subCategoryName: subCategory.cat_name,
-        });
-      }
+      // TODO: Logic needs to be finalized.
     }
   };
 
   const isEligible = (item: CombinedPurchasedItem) => {
     return (
       item &&
-      item.txt_wurth_lac_item &&
-      !item.is_product_exclude &&
-      item.txt_x_pant_Mat_status !== "DL"
+      item.productSku &&
+      !item.isExcludedProduct &&
+      item.productStatus !== "DL"
     );
   };
 
@@ -106,19 +90,20 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
   const isItemError = (item: CombinedPurchasedItem) => {
     return (
       !item ||
-      !item.txt_wurth_lac_item ||
-      item.is_product_exclude ||
-      item.txt_x_pant_Mat_status === "DL" ||
-      item.txt_x_pant_Mat_status === "DU" ||
-      item.txt_x_pant_Mat_status === "DV"
+      !item.productSku ||
+      item.isExcludedProduct ||
+      item.productStatus === "DL" ||
+      item.productStatus === "DU" ||
+      item.productStatus === "DV"
     );
   };
 
-  const isItemNotAdded = !item.txt_wurth_lac_item;
+  const isItemNotAdded = !item.productSku;
 
   return (
     <>
       <TableRow
+        key={`${index}_0`}
         className={cn(
           "border-b-0",
           index % 2 === 0 ? "bg-white" : "bg-brand-gray-100",
@@ -126,15 +111,15 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
       >
         <TableCell className="min-w-[76px]">
           <Link
-            href={generateItemUrl(item.group_id, item.sku)}
+            href={generateItemUrl(item.productId)}
             className={
               isItemNotAdded ? "pointer-events-none" : "pointer-events-auto"
             }
           >
-            {item.img ? (
+            {item.image ? (
               <Image
-                src={getMediaUrl(item.img)}
-                alt={item.txt_sap_description_name}
+                src={getMediaUrl(item.image.original)}
+                alt={item.productDescription}
                 width={76}
                 height={76}
                 className="border border-brand-gray-200 object-contain"
@@ -151,35 +136,35 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
 
         <TableCell className="flex flex-col gap-0.5">
           <Link
-            href={generateItemUrl(item.group_id, item.sku)}
+            href={generateItemUrl(item.productId)}
             className={cn(
               "text-sm text-brand-gray-500",
               isItemNotAdded ? "pointer-events-none" : "pointer-events-auto",
             )}
           >
-            Item# : {item.sku !== "" ? item.sku : "N/A"}
+            Item# : {item.productSku !== "" ? item.productSku : "N/A"}
           </Link>
 
           {!isItemNotAdded && (
             <>
               <div className="text-sm text-brand-gray-500">
-                MRF Part# : {item.txt_mfn !== "" ? item.txt_mfn : "N/A"}
+                MRF Part# : {item.mfrPartNo !== "" ? item.mfrPartNo : "N/A"}
               </div>
 
-              <h4 className="text-wrap font-bold">
-                {item.txt_sap_description_name}
-              </h4>
+              <h4 className="text-wrap font-bold">{item.productDescription}</h4>
 
               <div className="text-sm text-brand-gray-500">
                 Category :{" "}
-                {item.txt_category !== "" ? item.txt_category : "N/A"}
+                {item.productCategory !== "" ? item.productCategory : "N/A"}
               </div>
             </>
           )}
         </TableCell>
 
         <TableCell className="text-center text-sm text-brand-gray-500">
-          {item.orderDate ? dayjs(item.orderDate).format(DATE_FORMAT) : "N/A"}
+          {item.purchaseOrderDate
+            ? dayjs(item.purchaseOrderDate).format(DATE_FORMAT)
+            : "N/A"}
         </TableCell>
 
         <TableCell className="text-center text-sm text-brand-gray-500">
@@ -223,12 +208,10 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
                 >
                   <ItemPrices
                     token={token}
-                    sku={item.sku}
+                    productId={item.productId}
                     quantity={1}
-                    uom={item.txt_uom}
-                    salePrice={
-                      item.override_price ? Number(item.override_price) : 0
-                    }
+                    uom={item.unitOfMeasure}
+                    salePrice={item.isSaleItem ? Number(item.listPrice) : 0}
                     showUnitPrice={true}
                   />
                 </Suspense>
@@ -254,23 +237,24 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
             <>
               <div className="text-nowrap">
                 <span className="font-bold text-black">Min: </span>
-                {item.txt_min_order_amount}
+                {item.minimumOrderQuantity}
               </div>
 
               <div className="text-nowrap">
                 <span className="font-bold text-black">Multiples: </span>
-                {item.txt_order_qty_increments}
+                {item.quantityByIncrements}
               </div>
             </>
           )}
         </TableCell>
 
         <TableCell className="text-sm text-brand-gray-500">
-          {item.txt_uom !== "" ? item.txt_uom : "N/A"}
+          {item.unitOfMeasure !== "" ? item.unitOfMeasure : "N/A"}
         </TableCell>
       </TableRow>
 
       <TableRow
+        key={`${index}_1`}
         className={cn(
           "border-b-0",
           index % 2 === 0 ? "bg-white" : "bg-brand-gray-100",
@@ -313,7 +297,7 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
                     </div>
                   }
                 >
-                  <ItemAttributes token={token} sku={item.sku} />
+                  <ItemAttributes token={token} sku={item.productSku} />
                 </Suspense>
               </ErrorBoundary>
             </CollapsibleContent>
@@ -333,22 +317,6 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
         >
           <TableCell colSpan={7}>
             <div className="flex flex-row items-end justify-end gap-2">
-              <Button
-                variant="ghost"
-                className="text-brand-secondary"
-                onClick={() => setShowShippingOptions(!showShippingOptions)}
-                disabled={!quantity || quantity < 1}
-              >
-                <span>Change Shipping Options</span>
-
-                <MdKeyboardArrowDown
-                  className={cn(
-                    "text-xl leading-none transition-transform duration-200 ease-out",
-                    showShippingOptions ? "rotate-180" : "",
-                  )}
-                />
-              </Button>
-
               <form onSubmit={handleSubmit(onSubmit)}>
                 <Button
                   className="w-[170px]"
@@ -359,7 +327,7 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
               </form>
 
               <Button variant="ghost" onClick={() => onAddToFavorites()}>
-                {item?.isFavourite ? (
+                {item?.isFavorite ? (
                   <IoMdHeart className="text-2xl text-brand-primary" />
                 ) : (
                   <IoMdHeartEmpty className="text-2xl text-brand-gray-500" />
@@ -382,23 +350,6 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
           </TableCell>
         </TableRow>
       )}
-
-      {showShippingOptions && (
-        <TableRow
-          className={cn(
-            "border-b-0",
-            index % 2 === 0 ? "bg-white" : "bg-brand-gray-100",
-          )}
-        >
-          <TableCell colSpan={5} className="pt-0">
-            <div className="flex justify-end">
-              <ShippingOptions sku={item.sku} quantity={quantity} />
-            </div>
-          </TableCell>
-          <TableCell></TableCell>
-          <TableCell></TableCell>
-        </TableRow>
-      )}
     </>
   );
 };
@@ -406,7 +357,7 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
 export default PurchasedItemRow;
 
 const ErrorAlert = ({ item }: { item: CombinedPurchasedItem }) => {
-  if (!item?.txt_wurth_lac_item) {
+  if (!item?.productSku) {
     return (
       <AlertInline
         variant="destructive"
@@ -416,7 +367,7 @@ const ErrorAlert = ({ item }: { item: CombinedPurchasedItem }) => {
     );
   }
 
-  if (item?.is_product_exclude) {
+  if (item?.isExcludedProduct) {
     return (
       <AlertInline
         variant="destructive"
@@ -426,7 +377,7 @@ const ErrorAlert = ({ item }: { item: CombinedPurchasedItem }) => {
     );
   }
 
-  if (item?.txt_x_pant_Mat_status === "DL") {
+  if (item?.productStatus === "DL") {
     return (
       <AlertInline
         variant="destructive"
@@ -436,10 +387,7 @@ const ErrorAlert = ({ item }: { item: CombinedPurchasedItem }) => {
     );
   }
 
-  if (
-    item?.txt_x_pant_Mat_status === "DU" ||
-    item?.txt_x_pant_Mat_status === "DV"
-  ) {
+  if (item?.productStatus === "DU" || item?.productStatus === "DV") {
     return (
       <AlertInline
         variant="destructive"

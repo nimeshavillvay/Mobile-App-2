@@ -3,11 +3,10 @@ import RelatedSearches from "@/_components/related-searches";
 import { api } from "@/_lib/api";
 import { getBreadcrumbs } from "@/_lib/apis/server";
 import { DEFAULT_REVALIDATE } from "@/_lib/constants";
-import ChevronLeft from "@repo/web-ui/components/icons/chevron-left";
+import { ChevronLeft } from "@repo/web-ui/components/icons/chevron-left";
 import {
   ProductCard,
   ProductCardActions,
-  ProductCardCompare,
   ProductCardContent,
   ProductCardDetails,
   ProductCardDiscount,
@@ -45,13 +44,13 @@ export const generateMetadata = async ({
   const product = await getProduct(id);
 
   // Check if the slug matches the product's slug
-  if (slug !== product.selected_item.url) {
+  if (slug !== product.selectedProduct.slug) {
     return notFound();
   }
 
   return {
-    title: product.selected_item.item_name,
-    description: product.selected_item.txt_sub_description,
+    title: product.selectedProduct.productName,
+    description: product.selectedProduct.productDescription,
   };
 };
 
@@ -59,7 +58,7 @@ const ProductPage = async ({ params: { id, slug } }: ProductPageProps) => {
   const product = await getProduct(id);
 
   // Check if the slug matches the product's slug
-  if (slug !== product.selected_item.url) {
+  if (slug !== product.selectedProduct.slug) {
     return notFound();
   }
 
@@ -149,15 +148,13 @@ const ProductPage = async ({ params: { id, slug } }: ProductPageProps) => {
           </BreadcrumbItem>
 
           {breadcrumbs.map((breadcrumb) => (
-            <Fragment key={breadcrumb.oo_id}>
+            <Fragment key={breadcrumb.id}>
               <BreadcrumbSeparator />
 
               <BreadcrumbItem>
                 <BreadcrumbLink asChild>
-                  <Link
-                    href={`/category/${breadcrumb.oo_id}/${breadcrumb.slug}`}
-                  >
-                    {breadcrumb.cat_name}
+                  <Link href={`/category/${breadcrumb.id}/${breadcrumb.slug}`}>
+                    {breadcrumb.categoryName}
                   </Link>
                 </BreadcrumbLink>
               </BreadcrumbItem>
@@ -195,8 +192,6 @@ const ProductPage = async ({ params: { id, slug } }: ProductPageProps) => {
                       href={`/product/${item.productid}/${item.url}`}
                       title={item.item_name}
                     />
-
-                    <ProductCardCompare />
                   </ProductCardHero>
 
                   <ProductCardContent>
@@ -244,8 +239,6 @@ const ProductPage = async ({ params: { id, slug } }: ProductPageProps) => {
                 />
 
                 <ProductCardLabel>Label</ProductCardLabel>
-
-                <ProductCardCompare />
               </ProductCardHero>
 
               <ProductCardContent>

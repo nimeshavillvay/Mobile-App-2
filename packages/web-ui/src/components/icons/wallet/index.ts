@@ -1,1 +1,1 @@
-export { default } from "./wallet";
+export * from "./wallet";

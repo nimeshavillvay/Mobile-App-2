@@ -1,10 +1,8 @@
 "use client";
 
-import HeartOutline from "@/components/icons/heart-outline";
+import { HeartOutline } from "@/components/icons/heart-outline";
 import { Badge, BadgeProps } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -13,11 +11,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Skeleton } from "@/components/ui/skeleton";
+// import { Skeleton } from "@/components/ui/skeleton";
 import { cn, formatNumberToPrice } from "@/lib/utils";
 import Image, { type ImageProps } from "next/image";
 import Link, { type LinkProps } from "next/link";
-import { createContext, useContext, useId, type ComponentProps } from "react";
+import { createContext, useContext, type ComponentProps } from "react";
 
 type Orientation = "vertical" | "horizontal";
 
@@ -150,32 +148,6 @@ export const ProductCardLabel = ({
       )}
       {...delegated}
     />
-  );
-};
-
-export const ProductCardCompare = ({
-  className,
-  ...delegated
-}: Omit<ComponentProps<typeof Checkbox>, "id">) => {
-  const id = useId();
-  const orientation = useOrientation();
-
-  return (
-    <div
-      className={cn(
-        "ui-flex ui-flex-row ui-items-center ui-gap-1 ui-rounded ui-bg-wurth-gray-50 ui-px-2 ui-py-1.5",
-        orientation === "vertical" && "ui-absolute ui-bottom-0 ui-left-0",
-        orientation === "horizontal" && "ui-mt-auto ui-max-w-fit",
-      )}
-    >
-      <Checkbox
-        id={id}
-        className={cn("ui-bg-white", className)}
-        {...delegated}
-      />
-
-      <Label htmlFor={id}>Compare</Label>
-    </div>
   );
 };
 
@@ -314,23 +286,23 @@ export const ProductCardActions = () => {
   );
 };
 
-export const ProductCardSkeleton = ({
-  className,
-  orientation = "vertical",
-  ...delegated
-}: Omit<ComponentProps<typeof Skeleton>, "children"> & {
-  orientation?: Orientation;
-}) => {
-  return (
-    <Skeleton
-      className={cn(
-        "ui-rounded-lg ui-shadow-[0px_1px_2px_-1px_rgba(0,0,0,0.06),0px_1px_3px_0px_rgba(0,0,0,0.08)]",
-        orientation === "vertical" &&
-          "ui-h-[23.25rem] ui-w-[17.5rem] md:ui-h-[25.75rem] md:ui-w-64",
-        orientation === "horizontal" && "ui-h-48 ui-w-[24.75rem]",
-        className,
-      )}
-      {...delegated}
-    />
-  );
-};
+// export const ProductCardSkeleton = ({
+//   className,
+//   orientation = "vertical",
+//   ...delegated
+// }: Omit<ComponentProps<typeof Skeleton>, "children"> & {
+//   orientation?: Orientation;
+// }) => {
+//   return (
+//     <Skeleton
+//       className={cn(
+//         "ui-rounded-lg ui-shadow-[0px_1px_2px_-1px_rgba(0,0,0,0.06),0px_1px_3px_0px_rgba(0,0,0,0.08)]",
+//         orientation === "vertical" &&
+//           "ui-h-[23.25rem] ui-w-[17.5rem] md:ui-h-[25.75rem] md:ui-w-64",
+//         orientation === "horizontal" && "ui-h-48 ui-w-[24.75rem]",
+//         className,
+//       )}
+//       {...delegated}
+//     />
+//   );
+// };

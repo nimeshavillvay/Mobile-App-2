@@ -1,6 +1,6 @@
 "use client";
 
-import ChevronDown from "@/components/icons/chevron-down";
+import { ChevronDown } from "@/components/icons/chevron-down";
 import { cn } from "@/lib/utils";
 import * as AccordionPrimitive from "@radix-ui/react-accordion";
 import {

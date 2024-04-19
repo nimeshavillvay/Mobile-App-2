@@ -3,7 +3,6 @@ import AddToCartIcon from "@/old/_components/icons/add-to-cart";
 import AddToFavoritesIcon from "@/old/_components/icons/add-to-favorites";
 import FavoriteIcon from "@/old/_components/icons/favorite";
 import Separator from "@/old/_components/separator";
-import ShippingOptions from "@/old/_components/shipping-options";
 import { Button } from "@/old/_components/ui/button";
 import {
   Collapsible,
@@ -14,10 +13,9 @@ import { Dialog, DialogContent } from "@/old/_components/ui/dialog";
 import { Input } from "@/old/_components/ui/input";
 import { Label } from "@/old/_components/ui/label";
 import useAddToCartMutation from "@/old/_hooks/cart/use-add-to-cart-mutation.hook";
-import useAddToFavoritesMutation from "@/old/_hooks/product/use-add-to-favorites-mutation.hook";
 import { cn, getMediaUrl } from "@/old/_utils/helpers";
 import { zodResolver } from "@hookform/resolvers/zod";
-import WurthFullBlack from "@repo/web-ui/components/logos/wurth-full-black";
+import { WurthFullBlack } from "@repo/web-ui/components/logos/wurth-full-black";
 import dayjs from "dayjs";
 import Image from "next/image";
 import Link from "next/link";
@@ -56,15 +54,11 @@ const PurchasedItemDetailedViewDialog = ({
   item,
   token,
 }: ActionConfirmationDialogProps) => {
-  const [showShippingOptions, setShowShippingOptions] = useState(false);
   const [showPriceBreakdown, setShowPriceBreakdown] = useState(false);
   const id = useId();
   const router = useRouter();
   const quantityId = `quantity-${id}`;
-  const category = item?.categoryInfo[0] ?? null;
-  const subCategory = item?.categoryInfo[1] ?? null;
   const addToCartMutation = useAddToCartMutation();
-  const addToFavoritesMutation = useAddToFavoritesMutation();
 
   const { register, handleSubmit, watch } = useForm<Schema>({
     resolver: zodResolver(schema),
@@ -74,7 +68,7 @@ const PurchasedItemDetailedViewDialog = ({
 
   const onSubmit = (values: Schema) => {
     addToCartMutation.mutate(
-      { sku: item.sku, quantity: values.quantity },
+      { sku: item.productSku, quantity: values.quantity },
       {
         onSuccess: () => {
           // TODO: handle add to cart popup here
@@ -84,24 +78,14 @@ const PurchasedItemDetailedViewDialog = ({
   };
 
   const onAddToFavorites = () => {
-    if (item.isFavourite) {
+    if (item.isFavorite) {
       router.push("/myaccount/myfavorites");
     } else {
-      if (category && subCategory) {
-        addToFavoritesMutation.mutate({
-          brandId: item.sel_assigned_brand as number,
-          brandName: item.brand_name,
-          categoryId: category.oo_id,
-          categoryName: category.cat_name,
-          sku: item.sku,
-          subCategoryId: subCategory.oo_id,
-          subCategoryName: subCategory.cat_name,
-        });
-      }
+      // TODO: Logic needs to be finalized.
     }
   };
 
-  const isItemNotAdded = !item.txt_wurth_lac_item;
+  const isItemNotAdded = !item.productSku;
   const isValidQuantity = !!(quantity && quantity >= 1);
 
   return (
@@ -110,7 +94,6 @@ const PurchasedItemDetailedViewDialog = ({
       onOpenChange={(open) => {
         if (!open) {
           setShowPriceBreakdown(false);
-          setShowShippingOptions(false);
         }
         onOpenChange(open);
       }}
@@ -119,13 +102,13 @@ const PurchasedItemDetailedViewDialog = ({
         <div className="flex flex-col gap-4 px-6 text-brand-gray-500">
           <div className="flex flex-row gap-4">
             <Link
-              href={generateItemUrl(item.group_id, item.sku)}
+              href={generateItemUrl(item.productId)}
               className="min-w-[92px]"
             >
-              {item.img ? (
+              {item.image ? (
                 <Image
-                  src={getMediaUrl(item.img)}
-                  alt={item.txt_sap_description_name}
+                  src={getMediaUrl(item.image.webp)}
+                  alt={item.productDescription}
                   width={92}
                   height={92}
                   className="size-[92px] border border-brand-gray-200 object-contain"
@@ -140,12 +123,12 @@ const PurchasedItemDetailedViewDialog = ({
             </Link>
 
             <div className="flex flex-col">
-              {item.txt_category && (
-                <div className="text-base">{item.txt_category}</div>
+              {item.productCategory && (
+                <div className="text-base">{item.productCategory}</div>
               )}
 
               <h4 className="text-wrap font-bold text-black">
-                {item.txt_sap_description_name}
+                {item.productDescription}
               </h4>
             </div>
           </div>
@@ -154,8 +137,8 @@ const PurchasedItemDetailedViewDialog = ({
             <div className="flex-1">
               <div className="text-nowrap text-sm">Last Order Date</div>
               <div className="font-bold">
-                {item.orderDate
-                  ? dayjs(item.orderDate).format(DATE_FORMAT)
+                {item.purchaseOrderDate
+                  ? dayjs(item.purchaseOrderDate).format(DATE_FORMAT)
                   : "N/A"}
               </div>
             </div>
@@ -170,14 +153,14 @@ const PurchasedItemDetailedViewDialog = ({
             <div className="flex-1">
               <div className="text-sm">Item #</div>
               <div className="font-bold">
-                {item.sku !== "" ? item.sku : "N/A"}
+                {item.productSku !== "" ? item.productSku : "N/A"}
               </div>
             </div>
 
             <div className="flex-1">
               <div className="text-sm">Manufacture Part #</div>
               <div className="font-bold">
-                {item.txt_mfn !== "" ? item.txt_mfn : "N/A"}
+                {item.mfrPartNo !== "" ? item.mfrPartNo : "N/A"}
               </div>
             </div>
           </div>
@@ -209,12 +192,10 @@ const PurchasedItemDetailedViewDialog = ({
                     >
                       <ItemPrices
                         token={token}
-                        sku={item.sku}
+                        productId={item.productId}
                         quantity={1}
-                        uom={item.txt_uom}
-                        salePrice={
-                          item.override_price ? Number(item.override_price) : 0
-                        }
+                        uom={item.unitOfMeasure}
+                        salePrice={item.isSaleItem ? Number(item.listPrice) : 0}
                         unitPriceOnly
                       />
                     </Suspense>
@@ -258,28 +239,6 @@ const PurchasedItemDetailedViewDialog = ({
           </div>
 
           <Collapsible
-            open={isValidQuantity && showShippingOptions}
-            onOpenChange={setShowShippingOptions}
-            disabled={!isValidQuantity}
-          >
-            <CollapsibleTrigger
-              className={cn(
-                "group flex w-full flex-row items-center justify-between bg-brand-gray-100 px-6 py-4",
-                !isValidQuantity ? "pointer-events-none opacity-50" : "",
-              )}
-            >
-              <h4 className="font-wurth font-extrabold uppercase">
-                Shipping Options / Stock Availability
-              </h4>
-
-              <MdKeyboardArrowDown className="text-2xl leading-none transition-transform duration-200 ease-out group-data-[state=open]:rotate-180" />
-            </CollapsibleTrigger>
-            <CollapsibleContent className="flex w-full justify-center">
-              <ShippingOptions sku={item.sku} quantity={quantity} />
-            </CollapsibleContent>
-          </Collapsible>
-
-          <Collapsible
             open={showPriceBreakdown}
             onOpenChange={setShowPriceBreakdown}
             disabled={isItemNotAdded}
@@ -313,12 +272,10 @@ const PurchasedItemDetailedViewDialog = ({
                 >
                   <ItemPrices
                     token={token}
-                    sku={item.sku}
+                    productId={item.productId}
                     quantity={1}
-                    uom={item.txt_uom}
-                    salePrice={
-                      item.override_price ? Number(item.override_price) : 0
-                    }
+                    uom={item.unitOfMeasure}
+                    salePrice={item.isSaleItem ? Number(item.listPrice) : 0}
                   />
                 </Suspense>
               </ErrorBoundary>
@@ -332,11 +289,11 @@ const PurchasedItemDetailedViewDialog = ({
             variant="secondary"
             className={cn(
               "h-12",
-              item.isFavourite ? "border-brand-success text-brand-success" : "",
+              item.isFavorite ? "border-brand-success text-brand-success" : "",
             )}
             onClick={() => onAddToFavorites()}
           >
-            {item.isFavourite ? (
+            {item.isFavorite ? (
               <>
                 <FavoriteIcon /> In My Favorites
               </>
@@ -351,15 +308,14 @@ const PurchasedItemDetailedViewDialog = ({
             className="flex flex-row gap-4"
             onSubmit={handleSubmit(onSubmit)}
           >
-            <Button
-              variant="secondary"
-              className="h-12 flex-1 border-brand-primary text-brand-primary"
-              onClick={() =>
-                router.push(generateItemUrl(item.group_id, item.sku))
-              }
-            >
-              View Product
-            </Button>
+            <Link href={generateItemUrl(item.productId)} className="flex-1">
+              <Button
+                variant="secondary"
+                className="h-12 w-full border-brand-primary text-brand-primary"
+              >
+                View Product
+              </Button>
+            </Link>
 
             <Button className="h-12 flex-1" disabled={!isValidQuantity}>
               <AddToCartIcon /> Add to Cart

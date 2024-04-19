@@ -1,6 +1,7 @@
 import { cn } from "@/_lib/utils";
 import AccountSelectorDialog from "@/old/account-selector-dialog";
 import LoginDialog from "@/old/login-dialog";
+import { Toaster } from "@repo/web-ui/components/ui/toast";
 import { type Metadata } from "next";
 import localFont from "next/font/local";
 import NextTopLoader from "nextjs-toploader";
@@ -72,6 +73,8 @@ const RootLayout = ({ children }: { children: ReactNode }) => {
           <main className="flex-1">{children}</main>
 
           <Footer />
+
+          <Toaster />
 
           <LoginDialog />
           <AccountSelectorDialog />

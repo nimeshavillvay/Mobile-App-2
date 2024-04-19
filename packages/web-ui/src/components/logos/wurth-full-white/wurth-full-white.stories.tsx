@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import WurthFullWhite from "./wurth-full-white";
+import { WurthFullWhite } from "./wurth-full-white";
 
 const meta: Meta<typeof WurthFullWhite> = {
   title: "Components/Logos/Wurth Full White",

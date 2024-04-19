@@ -8,7 +8,8 @@
     "Pinterest",
     "sku",
     "turborepo",
-    "wurth"
+    "wurth",
+    "zustand"
   ],
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"

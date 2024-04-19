@@ -1,4 +1,4 @@
-import ChevronRight from "@/components/icons/chevron-right";
+import { ChevronRight } from "@/components/icons/chevron-right";
 import { cn } from "@/lib/utils";
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { Slot } from "@radix-ui/react-slot";

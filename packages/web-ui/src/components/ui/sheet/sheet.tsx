@@ -1,6 +1,6 @@
 "use client";
 
-import Close from "@/components/icons/close";
+import { Close } from "@/components/icons/close";
 import { cva, type VariantProps } from "@/lib/cva.config";
 import { cn } from "@/lib/utils";
 import * as SheetPrimitive from "@radix-ui/react-dialog";
@@ -25,7 +25,7 @@ const SheetOverlay = forwardRef<
 >(({ className, ...props }, ref) => (
   <SheetPrimitive.Overlay
     className={cn(
-      "ui- ui-fixed ui-inset-0 ui-z-50 ui-bg-black/80 data-[state=open]:ui-animate-in data-[state=closed]:ui-animate-out data-[state=closed]:ui-fade-out-0 data-[state=open]:ui-fade-in-0",
+      "data-[state=open]:ui-animate-in data-[state=closed]:ui-animate-out data-[state=closed]:ui-fade-out-0 data-[state=open]:ui-fade-in-0 ui-fixed ui-inset-0 ui-z-50 ui-bg-black/80",
       className,
     )}
     {...props}
@@ -35,15 +35,15 @@ const SheetOverlay = forwardRef<
 SheetOverlay.displayName = SheetPrimitive.Overlay.displayName;
 
 const sheetVariants = cva({
-  base: "ui-fixed ui-z-50 ui-gap-4 ui-bg-white ui-shadow-lg ui-transition ui-ease-in-out data-[state=closed]:ui-duration-300 data-[state=open]:ui-duration-500 data-[state=open]:ui-animate-in data-[state=closed]:ui-animate-out",
+  base: "data-[state=open]:ui-animate-in data-[state=closed]:ui-animate-out ui-fixed ui-z-50 ui-gap-4 ui-bg-white ui-shadow-lg ui-transition ui-ease-in-out data-[state=closed]:ui-duration-300 data-[state=open]:ui-duration-500",
   variants: {
     side: {
-      top: "ui-inset-x-0 ui-top-0 data-[state=closed]:ui-slide-out-to-top data-[state=open]:ui-slide-in-from-top",
+      top: "data-[state=closed]:ui-slide-out-to-top data-[state=open]:ui-slide-in-from-top ui-inset-x-0 ui-top-0",
       bottom:
-        "ui-inset-x-0 ui-bottom-0 data-[state=closed]:ui-slide-out-to-bottom data-[state=open]:ui-slide-in-from-bottom",
-      left: "ui-inset-y-0 ui-left-0 ui-h-full ui-w-3/4 data-[state=closed]:ui-slide-out-to-left data-[state=open]:ui-slide-in-from-left sm:ui-max-w-sm",
+        "data-[state=closed]:ui-slide-out-to-bottom data-[state=open]:ui-slide-in-from-bottom ui-inset-x-0 ui-bottom-0",
+      left: "data-[state=closed]:ui-slide-out-to-left data-[state=open]:ui-slide-in-from-left ui-inset-y-0 ui-left-0 ui-h-full ui-w-3/4 sm:ui-max-w-sm",
       right:
-        "ui-inset-y-0 ui-right-0 ui-h-full ui-w-3/4 data-[state=closed]:ui-slide-out-to-right data-[state=open]:ui-slide-in-from-right sm:ui-max-w-sm",
+        "data-[state=closed]:ui-slide-out-to-right data-[state=open]:ui-slide-in-from-right ui-inset-y-0 ui-right-0 ui-h-full ui-w-3/4 sm:ui-max-w-sm",
     },
   },
   defaultVariants: {

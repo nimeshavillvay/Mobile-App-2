@@ -1,1 +1,1 @@
-export { default } from "./heart-outline";
+export * from "./heart-outline";

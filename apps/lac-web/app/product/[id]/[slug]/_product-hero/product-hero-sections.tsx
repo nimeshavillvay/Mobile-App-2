@@ -1,8 +1,8 @@
 import { api } from "@/_lib/api";
 import { DEFAULT_REVALIDATE } from "@/_lib/constants";
 import { cn } from "@/_lib/utils";
-import Save from "@repo/web-ui/components/icons/save";
-import Truck from "@repo/web-ui/components/icons/truck";
+import { Save } from "@repo/web-ui/components/icons/save";
+import { Truck } from "@repo/web-ui/components/icons/truck";
 import { Button } from "@repo/web-ui/components/ui/button";
 import { type ReactNode } from "react";
 import Balancer from "react-wrap-balancer";
@@ -192,14 +192,14 @@ export const ProductDetails = async ({
   ]);
 
   const prop65Warnings: string[] = [];
-  if (product.selected_item.txt_prop65_message_01) {
-    prop65Warnings.push(product.selected_item.txt_prop65_message_01);
+  if (product.selectedProduct.prop65MessageOne) {
+    prop65Warnings.push(product.selectedProduct.prop65MessageOne);
   }
-  if (product.selected_item.txt_prop65_message_02) {
-    prop65Warnings.push(product.selected_item.txt_prop65_message_02);
+  if (product.selectedProduct.prop65MessageTwo) {
+    prop65Warnings.push(product.selectedProduct.prop65MessageTwo);
   }
-  if (product.selected_item.txt_prop65_message_03) {
-    prop65Warnings.push(product.selected_item.txt_prop65_message_03);
+  if (product.selectedProduct.prop65MessageThree) {
+    prop65Warnings.push(product.selectedProduct.prop65MessageThree);
   }
 
   return (
@@ -211,7 +211,7 @@ export const ProductDetails = async ({
       <div
         className="mb-6 space-y-7 text-base font-normal leading-7"
         dangerouslySetInnerHTML={{
-          __html: product.selected_item.txt_description_name,
+          __html: product.selectedProduct.productSummary,
         }}
       />
 
