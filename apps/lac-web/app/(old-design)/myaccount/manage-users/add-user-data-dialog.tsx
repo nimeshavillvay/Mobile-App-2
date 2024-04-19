@@ -266,7 +266,7 @@ const AddUserDataDialog = ({
 
                         <FormControl>
                           <Input
-                            placeholder="First name"
+                            placeholder="Password"
                             type="password"
                             {...field}
                           />
