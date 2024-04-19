@@ -11,6 +11,7 @@ import { EMAIL_COOKIE } from "../constants";
 import type { PasswordPolicies } from "../types";
 import useSignInCookies from "../use-sign-in-cookies.hook";
 import CurrentUserFlow from "./current-user-flow";
+import NewUserFlow from "./new-user-flow";
 
 const IS_CURRENT_USER = ["Yes", "No"] as const;
 
@@ -98,6 +99,10 @@ const Register = ({ passwordPolicies }: RegisterProps) => {
 
         {isCurrentUser === "Yes" && (
           <CurrentUserFlow passwordPolicies={passwordPolicies} />
+        )}
+
+        {isCurrentUser === "No" && (
+          <NewUserFlow passwordPolicies={passwordPolicies} />
         )}
       </div>
     </div>

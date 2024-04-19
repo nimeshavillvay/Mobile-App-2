@@ -104,7 +104,7 @@ export const StepContainerClosed = ({
   onClick,
   disabled = false,
 }: {
-  children: ReactNode;
+  children?: ReactNode;
   onClick?: ComponentProps<typeof Button>["onClick"];
   disabled?: boolean;
 }) => {
