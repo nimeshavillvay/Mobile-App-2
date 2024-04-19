@@ -1,7 +1,7 @@
 import { api } from "@/_lib/api";
-import { useToast } from "@/old/_components/ui/use-toast";
 import useCookies from "@/old/_hooks/storage/use-cookies.hook";
 import { ACCOUNT_TOKEN_COOKIE } from "@/old/_lib/constants";
+import { useToast } from "@repo/web-ui/components/ui/toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { UpdateUser } from "./types";
 
@@ -53,7 +53,6 @@ const useUpdateProfileMutation = () => {
       if (transformedData.statusCode === "OK") {
         toast({
           description: "User profile has been successfully updated.",
-          variant: "success",
         });
       }
     },

@@ -1,6 +1,6 @@
 import { api } from "@/_lib/api";
-import { useToast } from "@/old/_components/ui/use-toast";
 import { ACCOUNT_TOKEN_COOKIE } from "@/old/_lib/constants";
+import { useToast } from "@repo/web-ui/components/ui/toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import useCookies from "../storage/use-cookies.hook";
 
@@ -26,13 +26,11 @@ const useForgetPasswordMutation = () => {
     if (status === "ACTIVE") {
       toast({
         description: PASSWORD_RESET_ACTIVE_MSG,
-        variant: "success",
       });
     }
     if (status === "INACTIVE") {
       toast({
         description: PASSWORD_RESET_INACTIVE_MSG,
-        variant: "success",
       });
     }
   };

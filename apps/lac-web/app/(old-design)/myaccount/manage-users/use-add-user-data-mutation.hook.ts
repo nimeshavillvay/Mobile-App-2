@@ -1,8 +1,8 @@
 import { api } from "@/_lib/api";
 import { isErrorResponse } from "@/_lib/utils";
-import { useToast } from "@/old/_components/ui/use-toast";
 import useCookies from "@/old/_hooks/storage/use-cookies.hook";
 import { ACCOUNT_TOKEN_COOKIE } from "@/old/_lib/constants";
+import { useToast } from "@repo/web-ui/components/ui/toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const useAddUserDataMutation = () => {
@@ -51,7 +51,6 @@ const useAddUserDataMutation = () => {
       if (transformedData.statusCode === "OK") {
         toast({
           description: "New user successfully added.",
-          variant: "success",
         });
       }
     },
