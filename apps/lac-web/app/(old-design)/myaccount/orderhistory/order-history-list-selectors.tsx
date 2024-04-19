@@ -111,6 +111,8 @@ const OrderHistoryListSelectors = ({
     setDuration(INIT_DURATION);
     setFromDate(new Date(INIT_FROM_DATE));
     setToDate(new Date(INIT_TO_DATE));
+    setOrderStatuses([]);
+    setOrderTypes([]);
 
     const params = new URLSearchParams();
 
@@ -204,7 +206,7 @@ const OrderHistoryListSelectors = ({
           <div className="flex min-h-[186px] min-w-[170px] flex-col gap-2 rounded-sm border bg-white p-3">
             {typesFilter.map((orderType) => (
               <OrderTypeCheckbox
-                key={orderType.id}
+                key={`type-${orderType.id}`}
                 onCheckedChanged={(checked) =>
                   handleOrderTypeCheckedChanged(orderType.id, checked)
                 }
@@ -219,10 +221,11 @@ const OrderHistoryListSelectors = ({
           <Label className="text-nowrap font-bold">Filter By</Label>
 
           <div className="flex flex-col gap-2">
-            <MultiSelect label="PO No." data={poNoFilter} />
-            <MultiSelect label="Job Name" data={jobNameFilter} />
+            <MultiSelect label="PO No." flag="po" data={poNoFilter} />
+            <MultiSelect label="Job Name" flag="job" data={jobNameFilter} />
             <MultiSelect
               label="Order Status"
+              flag="status"
               data={statusFilter}
               onValuesChange={(values) => handleOrderStatusChange(values)}
               onClear={() => setOrderStatuses([])}
@@ -291,12 +294,12 @@ const OrderTypeCheckbox = ({
   return (
     <div className="flex flex-row items-center gap-2">
       <Checkbox
-        id={`order-type-${id}`}
+        id={`type-${id}`}
         disabled={!active}
         onCheckedChange={onCheckedChanged}
       />
 
-      <Label htmlFor={`order-type-${id}`} className="text-wrap">
+      <Label htmlFor={`type-${id}`} className="text-wrap">
         {value}
       </Label>
     </div>
