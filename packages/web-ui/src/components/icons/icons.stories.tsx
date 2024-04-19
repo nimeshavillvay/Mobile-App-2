@@ -9,6 +9,8 @@ import ArrowUp from "./arrow-up";
 import ArrowUpRight from "./arrow-up-right";
 import Bell from "./bell";
 import Check from "./check";
+import CheckCircle from "./check-circle";
+import CheckCircleFilled from "./check-circle-filled";
 import ChevronDown from "./chevron-down";
 import ChevronLeft from "./chevron-left";
 import ChevronRight from "./chevron-right";
@@ -159,6 +161,14 @@ export const Showcase: Story = {
 
         <IconContainer name="Check">
           <Check />
+        </IconContainer>
+
+        <IconContainer name="CheckCircle">
+          <CheckCircle />
+        </IconContainer>
+
+        <IconContainer name="CheckCircleFilled">
+          <CheckCircleFilled />
         </IconContainer>
 
         <IconContainer name="ArrowUpRight">

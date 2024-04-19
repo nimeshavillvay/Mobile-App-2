@@ -47,7 +47,6 @@ const config: Omit<Config, "content"> = {
     },
   },
   plugins: [
-    require("@tailwindcss/forms"),
     require("tailwindcss-animate"),
     require("@tailwindcss/aspect-ratio"),
     require("@tailwindcss/container-queries"),
