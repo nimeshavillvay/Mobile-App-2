@@ -1,4 +1,4 @@
-import MagnifyingGlass from "@/components/icons/magnifying-glass";
+import { MagnifyingGlass } from "@/components/icons/magnifying-glass";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { type ComponentProps } from "react";

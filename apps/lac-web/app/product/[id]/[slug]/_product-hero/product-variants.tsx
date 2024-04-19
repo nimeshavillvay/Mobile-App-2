@@ -2,7 +2,7 @@ import { api } from "@/_lib/api";
 import { DEFAULT_REVALIDATE } from "@/_lib/constants";
 import { cva } from "@/_lib/cva.config";
 import { cn } from "@/_lib/utils";
-import Check from "@repo/web-ui/components/icons/check";
+import { Check } from "@repo/web-ui/components/icons/check";
 import { buttonVariants } from "@repo/web-ui/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";

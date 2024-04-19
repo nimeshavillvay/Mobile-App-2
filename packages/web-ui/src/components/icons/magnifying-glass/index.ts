@@ -1,1 +1,1 @@
-export { default } from "./magnifying-glass";
+export * from "./magnifying-glass";

@@ -1,8 +1,8 @@
 "use client";
 
 import { cn } from "@/_lib/utils";
-import ArrowUpRight from "@repo/web-ui/components/icons/arrow-up-right";
-import ChevronRight from "@repo/web-ui/components/icons/chevron-right";
+import { ArrowUpRight } from "@repo/web-ui/components/icons/arrow-up-right";
+import { ChevronRight } from "@repo/web-ui/components/icons/chevron-right";
 import {
   NavigationMenu,
   NavigationMenuContent,

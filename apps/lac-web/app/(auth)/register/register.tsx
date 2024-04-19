@@ -1,8 +1,8 @@
 "use client";
 
 import { cn } from "@/_lib/utils";
-import CheckCircle from "@repo/web-ui/components/icons/check-circle";
-import CheckCircleFilled from "@repo/web-ui/components/icons/check-circle-filled";
+import { CheckCircle } from "@repo/web-ui/components/icons/check-circle";
+import { CheckCircleFilled } from "@repo/web-ui/components/icons/check-circle-filled";
 import { Button, buttonVariants } from "@repo/web-ui/components/ui/button";
 import Link from "next/link";
 import { useEffect, useState } from "react";

@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { zodResolver } from "@hookform/resolvers/zod";
+import { type CheckedState } from "@radix-ui/react-checkbox";
 import { Checkbox } from "@repo/web-ui/components/ui/checkbox";
 import { Input } from "@repo/web-ui/components/ui/input";
 import { Label } from "@repo/web-ui/components/ui/label";
@@ -309,7 +310,7 @@ const NewUserFlow = ({ passwordPolicies }: NewUserFlowProps) => {
 
             <RadioGroup
               value={type}
-              onValueChange={(value) =>
+              onValueChange={(value: string) =>
                 personalDetailsForm.setValue("type", value as RegistrationType)
               }
               className="item-center flex flex-col gap-2 md:flex-row"
@@ -453,7 +454,7 @@ const NewUserFlow = ({ passwordPolicies }: NewUserFlowProps) => {
                 <Checkbox
                   id={sameAddressId}
                   checked={sameAddress}
-                  onCheckedChange={(value) => {
+                  onCheckedChange={(value: CheckedState) => {
                     if (typeof value === "boolean") {
                       setSameAddress(value);
                     }

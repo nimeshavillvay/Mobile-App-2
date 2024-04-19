@@ -1,1 +1,1 @@
-export { default } from "./zap";
+export * from "./zap";

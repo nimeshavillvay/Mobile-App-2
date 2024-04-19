@@ -1,4 +1,4 @@
-import Zap from "@/components/icons/zap";
+import { Zap } from "@/components/icons/zap";
 import { cn } from "@/lib/utils";
 import type { Meta, StoryObj } from "@storybook/react";
 import {

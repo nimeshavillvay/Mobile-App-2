@@ -1,1 +1,1 @@
-export { default } from "./chevron-right";
+export * from "./chevron-right";

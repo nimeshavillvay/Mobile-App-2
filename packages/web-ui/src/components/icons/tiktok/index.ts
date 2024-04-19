@@ -1,1 +1,1 @@
-export { default } from "./tiktok";
+export * from "./tiktok";

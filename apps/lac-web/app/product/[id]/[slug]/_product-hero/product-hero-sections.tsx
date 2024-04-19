@@ -1,8 +1,8 @@
 import { api } from "@/_lib/api";
 import { DEFAULT_REVALIDATE } from "@/_lib/constants";
 import { cn } from "@/_lib/utils";
-import Save from "@repo/web-ui/components/icons/save";
-import Truck from "@repo/web-ui/components/icons/truck";
+import { Save } from "@repo/web-ui/components/icons/save";
+import { Truck } from "@repo/web-ui/components/icons/truck";
 import { Button } from "@repo/web-ui/components/ui/button";
 import { type ReactNode } from "react";
 import Balancer from "react-wrap-balancer";

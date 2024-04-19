@@ -1,1 +1,1 @@
-export { default } from "./pinterest";
+export * from "./pinterest";

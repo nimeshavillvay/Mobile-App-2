@@ -1,4 +1,4 @@
-import CheckCircle from "@repo/web-ui/components/icons/check-circle";
+import { CheckCircle } from "@repo/web-ui/components/icons/check-circle";
 import { Button } from "@repo/web-ui/components/ui/button";
 import {
   createContext,

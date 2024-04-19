@@ -1,7 +1,10 @@
 import { cn } from "@/lib/utils";
 import { type ComponentProps } from "react";
 
-const ArrowUpRight = ({ className, ...delegated }: ComponentProps<"svg">) => {
+export const ArrowUpRight = ({
+  className,
+  ...delegated
+}: ComponentProps<"svg">) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -16,5 +19,3 @@ const ArrowUpRight = ({ className, ...delegated }: ComponentProps<"svg">) => {
     </svg>
   );
 };
-
-export default ArrowUpRight;

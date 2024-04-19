@@ -3,7 +3,6 @@ import { useState } from "react";
 import {
   ProductCard,
   ProductCardActions,
-  ProductCardCompare,
   ProductCardContent,
   ProductCardDetails,
   ProductCardDiscount,
@@ -42,8 +41,6 @@ export const WithDiscount: Story = {
           />
 
           <ProductCardLabel>Label</ProductCardLabel>
-
-          <ProductCardCompare />
         </ProductCardHero>
 
         <ProductCardContent>
@@ -75,8 +72,6 @@ export const WithoutDiscount: Story = {
           />
 
           <ProductCardLabel>Label</ProductCardLabel>
-
-          <ProductCardCompare />
         </ProductCardHero>
 
         <ProductCardContent>
@@ -108,8 +103,6 @@ export const Horizontal: Story = {
             href="/product/771770/PROMD3-MB"
             title="The product title"
           />
-
-          <ProductCardCompare />
         </ProductCardHero>
 
         <ProductCardContent>
@@ -152,8 +145,6 @@ export const WithVariantSelector: Story = {
           />
 
           <ProductCardLabel>Label</ProductCardLabel>
-
-          <ProductCardCompare />
         </ProductCardHero>
 
         <ProductCardContent>
