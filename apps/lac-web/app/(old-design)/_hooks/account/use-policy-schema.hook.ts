@@ -1,28 +1,16 @@
-import type { PasswordPolicies } from "@/(auth)/types";
+import type { PasswordPolicies } from "@/_lib/types";
 import * as z from "zod";
 
 const usePolicySchema = ({
+  schema,
   passwordPolicies,
   allowEmptyPassword = false,
 }: {
+  schema: z.AnyZodObject;
   passwordPolicies: PasswordPolicies;
   allowEmptyPassword: boolean;
 }) => {
-  return z
-    .object({
-      firstName: z.string().trim().min(1, "Please enter first name.").max(40),
-      lastName: z.string().trim().min(1, "Please enter last name.").max(40),
-      jobTitle: z.string().min(1, "Please enter job title."),
-      email: z
-        .string()
-        .trim()
-        .min(1, "Please enter email address.")
-        .email("Please enter a valid email address."),
-      permission: z.string().min(1, "Please enter permission type."),
-      status: z.string(),
-      password: z.string(),
-      confirmPassword: z.string().or(z.literal("")),
-    })
+  return schema
     .extend({
       password: z
         .string()
@@ -43,11 +31,13 @@ const usePolicySchema = ({
       let countOfAlphabets = 0;
       let countOfNumbers = 0;
 
-      for (const ch of password) {
-        if (containsAlphabet(ch)) {
-          countOfAlphabets++;
-        } else if (containsNumber(ch)) {
-          countOfNumbers++;
+      if (password) {
+        for (const ch of password) {
+          if (containsAlphabet(ch)) {
+            countOfAlphabets++;
+          } else if (containsNumber(ch)) {
+            countOfNumbers++;
+          }
         }
       }
 

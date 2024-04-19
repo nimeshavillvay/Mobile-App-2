@@ -1,4 +1,4 @@
-import type { PasswordPolicies } from "@/(auth)/types";
+import type { PasswordPolicies } from "@/_lib/types";
 import { Button } from "@/old/_components/ui/button";
 import {
   Form,
@@ -26,6 +26,21 @@ import { USER_PERMISSIONS, USER_STATUSES } from "./constants";
 import type { UpdateUser, UserProfile } from "./types";
 import useUpdateProfileMutation from "./use-update-profile-mutation.hook";
 
+const updateProfileSchema = z.object({
+  firstName: z.string().trim().min(1, "Please enter first name.").max(40),
+  lastName: z.string().trim().min(1, "Please enter last name.").max(40),
+  jobTitle: z.string().optional(),
+  email: z
+    .string()
+    .trim()
+    .min(1, "Please enter email address.")
+    .email("Please enter a valid email address."),
+  permission: z.string().min(1, "Please enter permission type."),
+  status: z.string(),
+  password: z.string(),
+  confirmPassword: z.string().or(z.literal("")),
+});
+
 type UpdateProfileProps = {
   user: UserProfile;
   jobRoles: Role[];
@@ -37,15 +52,16 @@ const ProfileUpdateForm = ({
   jobRoles,
   passwordPolicies,
 }: UpdateProfileProps) => {
-  const updateProfileSchema = usePolicySchema({
+  const refinedSchema = usePolicySchema({
+    schema: updateProfileSchema,
     passwordPolicies,
     allowEmptyPassword: true,
   });
 
-  type UpdateProfileSchema = z.infer<typeof updateProfileSchema>;
+  type UpdateProfileSchema = z.infer<typeof refinedSchema>;
 
   const form = useForm<UpdateProfileSchema>({
-    resolver: zodResolver(updateProfileSchema),
+    resolver: zodResolver(refinedSchema),
     values: {
       firstName: user?.firstName,
       lastName: user?.lastName,

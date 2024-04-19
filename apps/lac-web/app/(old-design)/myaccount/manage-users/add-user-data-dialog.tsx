@@ -1,5 +1,6 @@
 "use client";
 
+import type { PasswordPolicies } from "@/_lib/types";
 import { Button } from "@/old/_components/ui/button";
 import {
   Dialog,
@@ -25,6 +26,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/old/_components/ui/select";
+import usePolicySchema from "@/old/_hooks/account/use-policy-schema.hook";
 import type { Role } from "@/old/_lib/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Dispatch, SetStateAction } from "react";
@@ -38,29 +40,23 @@ const USER_PERMISSIONS = [
   { label: "Buyer", value: "BUYER" },
 ] as const;
 
-const addUserDataSchema = z
-  .object({
-    firstName: z.string().trim().min(1, "Please enter first name.").max(40),
-    lastName: z.string().trim().min(1, "Please enter last name.").max(40),
-    jobTitle: z.string(),
-    password: z.string().min(8, "Password must be at least 8 characters."),
-    confirmPassword: z
-      .string()
-      .min(8, "Password must be at least 8 characters."),
-    permission: z.string().min(1, "Please enter permission type."),
-  })
-  .refine(({ password, confirmPassword }) => password === confirmPassword, {
-    message: "Passwords do not match.",
-    path: ["confirmPassword"],
-  });
+const addUserDataSchema = z.object({
+  firstName: z.string().trim().min(1, "Please enter first name.").max(40),
+  lastName: z.string().trim().min(1, "Please enter last name.").max(40),
+  jobTitle: z.string(),
+  password: z.string(),
+  confirmPassword: z.string(),
+  permission: z.string().min(1, "Please enter permission type."),
+});
 
-type AddUserDataSchema = z.infer<typeof addUserDataSchema>;
+// type AddUserDataSchema = z.infer<typeof addUserDataSchema>;
 
 type AddUserDataProps = {
   jobRoles: Role[];
   open: boolean;
   email: string;
   setOpen: Dispatch<SetStateAction<boolean>>;
+  passwordPolicies: PasswordPolicies;
 };
 
 const AddUserDataDialog = ({
@@ -68,11 +64,20 @@ const AddUserDataDialog = ({
   open,
   email,
   setOpen,
+  passwordPolicies,
 }: AddUserDataProps) => {
+  const refinedSchema = usePolicySchema({
+    schema: addUserDataSchema,
+    passwordPolicies,
+    allowEmptyPassword: false,
+  });
+
+  type AddUserDataSchema = z.infer<typeof refinedSchema>;
+
   const addUserDataMutation = useAddUserDataMutation();
 
   const form = useForm<AddUserDataSchema>({
-    resolver: zodResolver(addUserDataSchema),
+    resolver: zodResolver(refinedSchema),
     defaultValues: {
       firstName: "",
       lastName: "",
@@ -90,7 +95,7 @@ const AddUserDataDialog = ({
         lastName: data.lastName,
         jobTitle: data.jobTitle,
         email: email,
-        password: data.password,
+        password: data.password ?? "",
         permission: data.permission,
       },
       {

@@ -1,7 +1,7 @@
+import { getPasswordPolicies } from "@/_lib/apis/server";
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { getPasswordPolicies } from "../apis";
 import { EMAIL_COOKIE } from "../constants";
 import Register from "./register";
 

@@ -1,6 +1,7 @@
 "use client";
 
 import useCheckEmailMutation from "@/_hooks/user/use-check-email-mutation.hook";
+import type { PasswordPolicies } from "@/_lib/types";
 import { cn, isErrorResponse } from "@/_lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, buttonVariants } from "@repo/web-ui/components/ui/button";
@@ -14,7 +15,6 @@ import { useForm } from "react-hook-form";
 import Balancer from "react-wrap-balancer";
 import { z } from "zod";
 import { EMAIL_COOKIE } from "../constants";
-import type { PasswordPolicies } from "../types";
 import useSignInCookies from "../use-sign-in-cookies.hook";
 import { login } from "./actions";
 

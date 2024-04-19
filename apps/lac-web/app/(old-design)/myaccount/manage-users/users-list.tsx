@@ -1,6 +1,6 @@
 "use client";
 
-import type { PasswordPolicies } from "@/(auth)/types";
+import type { PasswordPolicies } from "@/_lib/types";
 import Separator from "@/old/_components/separator";
 import { Button } from "@/old/_components/ui/button";
 import {
@@ -224,11 +224,13 @@ const UsersList = ({
         setEmail={setAddUserDataDialogEmail}
         currentUsers={currentUsers}
       />
+
       <AddUserDataDialog
         jobRoles={jobRoles}
         open={openAddUserDataDialog}
         email={addUserDataDialogEmail}
         setOpen={setOpenAddUserDataDialog}
+        passwordPolicies={passwordPolicies}
       />
     </>
   );
