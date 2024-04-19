@@ -96,8 +96,8 @@ const CategoryPage = async ({ params: { id, slug } }: CategoryPageProps) => {
     <>
       <Breadcrumbs
         links={breadcrumbs.map((breadcrumb) => ({
-          href: `/old/category/${breadcrumb.oo_id}/${breadcrumb.slug}`,
-          label: breadcrumb.cat_name,
+          href: `/old/category/${breadcrumb.id}/${breadcrumb.slug}`,
+          label: breadcrumb.categoryName,
         }))}
       />
 

@@ -33,10 +33,7 @@ const ProductHero = async ({ id }: ProductHeroProps) => {
     <>
       <div className="container my-2 flex flex-row items-center gap-2 md:my-1">
         <div className="text-sm font-normal text-black">
-          Shop{" "}
-          <span className="font-semibold">
-            {product.selected_item.brand_name}
-          </span>
+          Shop <span className="font-semibold">{product.brand}</span>
         </div>
 
         <div className="flex flex-row items-center gap-1 rounded bg-sky-50 px-2 py-1.5 text-sm font-semibold leading-4 text-wurth-blue-450">
@@ -50,7 +47,7 @@ const ProductHero = async ({ id }: ProductHeroProps) => {
       </div>
 
       <h1 className="container my-2 font-title text-2xl font-medium tracking-[-0.009rem] text-wurth-gray-800 md:mb-7 md:mt-1 md:tracking-[-0.144px]">
-        <Balancer>{product.selected_item.item_name}</Balancer>
+        <Balancer>{product.selectedProduct.productName}</Balancer>
       </h1>
 
       {/* Desktop view */}
@@ -60,12 +57,12 @@ const ProductHero = async ({ id }: ProductHeroProps) => {
         <div className="space-y-6">
           <div className="space-y-2">
             <ProductNumbers
-              groupId={product.group_id}
-              productId={product.selected_item.productid}
+              groupId={product.groupId}
+              productId={product.selectedProduct.productId}
             />
 
             <ProductDescription>
-              {product.selected_item.txt_sub_description}
+              {product.selectedProduct.productDescription}
             </ProductDescription>
           </div>
 
@@ -74,8 +71,8 @@ const ProductHero = async ({ id }: ProductHeroProps) => {
           <ProductVariants id={id} />
 
           <AddToCart
-            minQty={parseInt(product.selected_item.txt_min_order_amount)}
-            incQty={parseInt(product.selected_item.txt_order_qty_increments)}
+            minQty={product.selectedProduct.minimumOrderQuantity}
+            incQty={product.selectedProduct.quantityByIncrements}
           />
 
           <DropShipItemNotice />
@@ -84,9 +81,9 @@ const ProductHero = async ({ id }: ProductHeroProps) => {
         <ProductDetails id={id} />
 
         <ProductSpecifications
-          attributes={product.selected_item.attributes.map((attribute) => ({
-            name: attribute.attribute_name,
-            value: attribute.attribute_value,
+          attributes={product.selectedProduct.attributes.map((attribute) => ({
+            name: attribute.name,
+            value: attribute.value,
           }))}
         />
       </div>
@@ -94,13 +91,13 @@ const ProductHero = async ({ id }: ProductHeroProps) => {
       {/* Mobile view */}
       <>
         <ProductNumbers
-          groupId={product.group_id}
-          productId={product.selected_item.productid}
+          groupId={product.groupId}
+          productId={product.selectedProduct.productId}
           className="container my-2 md:hidden"
         />
 
         <ProductDescription className="container my-2 md:hidden">
-          {product.selected_item.txt_sub_description}
+          {product.selectedProduct.productDescription}
         </ProductDescription>
 
         <Carousel className="mb-10 mt-5 md:hidden">
@@ -125,8 +122,8 @@ const ProductHero = async ({ id }: ProductHeroProps) => {
         <ProductVariants id={id} className="container my-6 md:hidden" />
 
         <AddToCart
-          minQty={parseInt(product.selected_item.txt_min_order_amount)}
-          incQty={parseInt(product.selected_item.txt_order_qty_increments)}
+          minQty={product.selectedProduct.minimumOrderQuantity}
+          incQty={product.selectedProduct.quantityByIncrements}
           className="container my-6 md:hidden"
         />
 
@@ -135,9 +132,9 @@ const ProductHero = async ({ id }: ProductHeroProps) => {
         <ProductDetails id={id} className="container my-10 md:hidden" />
 
         <ProductSpecifications
-          attributes={product.selected_item.attributes.map((attribute) => ({
-            name: attribute.attribute_name,
-            value: attribute.attribute_value,
+          attributes={product.selectedProduct.attributes.map((attribute) => ({
+            name: attribute.name,
+            value: attribute.value,
           }))}
           className="container my-10 md:hidden"
         />

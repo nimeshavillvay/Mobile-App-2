@@ -320,7 +320,7 @@ const SelectorsForMobileDialog = ({
               <AccordionContent className="grid gap-y-5 px-5 py-3">
                 {poNoFilter.map((item) => (
                   <CheckboxWithLabel
-                    key={item.id}
+                    key={`po-${item.id}`}
                     flag="po"
                     checked={poNos.includes(item.id)}
                     onCheckedChanged={(checked) =>
@@ -341,7 +341,7 @@ const SelectorsForMobileDialog = ({
               <AccordionContent className="grid gap-y-5 px-5 py-3">
                 {jobNameFilter.map((item) => (
                   <CheckboxWithLabel
-                    key={item.id}
+                    key={`job-${item.id}`}
                     flag="job"
                     checked={jobNames.includes(item.id)}
                     onCheckedChanged={(checked) =>
@@ -362,7 +362,7 @@ const SelectorsForMobileDialog = ({
               <AccordionContent className="grid gap-y-5 px-5 py-3">
                 {statusFilter.map((item) => (
                   <CheckboxWithLabel
-                    key={item.id}
+                    key={`status-${item.id}`}
                     flag="status"
                     checked={orderStatuses.includes(item.id)}
                     onCheckedChanged={(checked) =>

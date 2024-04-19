@@ -1,8 +1,6 @@
 "use client";
 
 import useSuspenseFilters from "@/_hooks/search/use-suspense-filters.hook";
-import { Button } from "@/old/_components/ui/button";
-import { Input } from "@/old/_components/ui/input";
 import {
   Table,
   TableBody,
@@ -12,7 +10,6 @@ import {
 } from "@/old/_components/ui/table";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { MdSearch } from "react-icons/md";
 import {
   ALL_ORDER_TYPES,
   INIT_FROM_DATE,
@@ -64,19 +61,7 @@ const OrderHistoryList = ({ token }: { token: string }) => {
 
   return (
     <>
-      <div className="flex flex-row items-center py-4 md:justify-between">
-        <div className="flex w-full flex-row">
-          <Input
-            className="h-9 rounded-l-full border-r-0 border-brand-gray-200 text-sm md:w-[270px]"
-            placeholder="Search by order number"
-          />
-          <Button
-            variant="ghost"
-            className="gap-0 rounded-r-full border border-l-0 px-2"
-          >
-            <MdSearch className="text-xl leading-none text-brand-gray-400" />
-          </Button>
-        </div>
+      <div className="flex flex-row items-center py-4 md:justify-end">
         <Link
           className="hidden text-nowrap rounded-sm bg-brand-secondary px-4 py-2 text-center font-wurth font-extrabold uppercase text-white md:block"
           href="https://wurthlac.billtrust.com/"

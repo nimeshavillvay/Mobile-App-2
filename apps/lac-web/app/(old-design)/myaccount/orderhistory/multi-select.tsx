@@ -15,6 +15,7 @@ type MultiSelectProps = {
   label: string;
   data: Option[];
   placeholder?: string;
+  flag?: string;
   onValuesChange?: (selectedItems: Option[]) => void;
   onClear?: () => void;
 };
@@ -24,6 +25,7 @@ const MultiSelect = ({
   label,
   data,
   placeholder = "Select item",
+  flag = "multiselect",
   onValuesChange,
   onClear,
 }: MultiSelectProps) => {
@@ -155,19 +157,19 @@ const MultiSelect = ({
         {isOpen &&
           filteredItems.map((item, index) => (
             <li
+              key={`${flag}-${item.id}`}
               className={cn(
                 "flex cursor-pointer flex-row items-center gap-2 px-3 py-2 shadow-sm hover:bg-brand-secondary/10",
                 isItemSelected(item) ? "bg-brand-gray-200" : "",
               )}
-              key={item.id}
               {...getItemProps({ item, index })}
             >
               <Checkbox
-                id={`${item.id}${item.value}`}
+                id={`${flag}-${item.id}`}
                 disabled={!item.active}
                 checked={isItemSelected(item)}
               />
-              <Label htmlFor={`${item.id}${item.value}`}>{item.value}</Label>
+              <Label htmlFor={`${flag}-${item.id}`}>{item.value}</Label>
             </li>
           ))}
       </ul>

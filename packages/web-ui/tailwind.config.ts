@@ -31,7 +31,10 @@ const config: Config = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    // TODO Move to base config after Tailwind CSS V4 releases
+    require("@tailwindcss/forms"), // Added here and not in the base config due to conflicts
+  ],
   presets: [require("@repo/tailwindcss-config")],
 };
 
