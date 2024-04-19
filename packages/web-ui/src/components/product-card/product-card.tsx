@@ -11,7 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-// import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from "@/components/ui/skeleton";
 import { cn, formatNumberToPrice } from "@/lib/utils";
 import Image, { type ImageProps } from "next/image";
 import Link, { type LinkProps } from "next/link";
@@ -24,7 +24,7 @@ const useOrientation = () => {
   return useContext(OrientationContext);
 };
 
-export const ProductCard = ({
+const ProductCard = ({
   className,
   orientation = "vertical",
   ...delegated
@@ -46,7 +46,7 @@ export const ProductCard = ({
   );
 };
 
-export const ProductCardHero = ({
+const ProductCardHero = ({
   className,
   ...delegated
 }: ComponentProps<"div">) => {
@@ -65,7 +65,7 @@ export const ProductCardHero = ({
   );
 };
 
-export const ProductCardImage = ({
+const ProductCardImage = ({
   src,
   alt,
   width = 224,
@@ -104,7 +104,7 @@ export const ProductCardImage = ({
   );
 };
 
-export const ProductCardDiscount = ({
+const ProductCardDiscount = ({
   className,
   children,
   ...delegated
@@ -130,7 +130,7 @@ export const ProductCardDiscount = ({
  * of `ProductCardHero`. If the orientation is "horizontal", the parent
  * component should be `ProductCardContent`.
  */
-export const ProductCardLabel = ({
+const ProductCardLabel = ({
   variant = "success",
   className,
   ...delegated
@@ -151,7 +151,7 @@ export const ProductCardLabel = ({
   );
 };
 
-export const ProductCardContent = ({
+const ProductCardContent = ({
   className,
   ...delegated
 }: ComponentProps<"div">) => {
@@ -163,7 +163,7 @@ export const ProductCardContent = ({
   );
 };
 
-export const ProductCardDetails = ({
+const ProductCardDetails = ({
   title,
   sku,
   href,
@@ -193,7 +193,7 @@ export const ProductCardDetails = ({
   );
 };
 
-export const ProductCardPrice = ({
+const ProductCardPrice = ({
   price,
   uom,
   actualPrice,
@@ -225,7 +225,7 @@ export const ProductCardPrice = ({
   );
 };
 
-export const ProductCardVariantSelector = ({
+const ProductCardVariantSelector = ({
   href,
   variants,
   value,
@@ -267,7 +267,7 @@ export const ProductCardVariantSelector = ({
   );
 };
 
-export const ProductCardActions = () => {
+const ProductCardActions = () => {
   return (
     <div className="ui-mt-auto ui-flex ui-flex-row ui-items-center ui-gap-1 md:ui-gap-2">
       <Button className="ui-h-10 ui-max-h-full ui-flex-1 ui-px-4 ui-text-[0.875rem] ui-leading-5">
@@ -286,23 +286,37 @@ export const ProductCardActions = () => {
   );
 };
 
-// export const ProductCardSkeleton = ({
-//   className,
-//   orientation = "vertical",
-//   ...delegated
-// }: Omit<ComponentProps<typeof Skeleton>, "children"> & {
-//   orientation?: Orientation;
-// }) => {
-//   return (
-//     <Skeleton
-//       className={cn(
-//         "ui-rounded-lg ui-shadow-[0px_1px_2px_-1px_rgba(0,0,0,0.06),0px_1px_3px_0px_rgba(0,0,0,0.08)]",
-//         orientation === "vertical" &&
-//           "ui-h-[23.25rem] ui-w-[17.5rem] md:ui-h-[25.75rem] md:ui-w-64",
-//         orientation === "horizontal" && "ui-h-48 ui-w-[24.75rem]",
-//         className,
-//       )}
-//       {...delegated}
-//     />
-//   );
-// };
+const ProductCardSkeleton = ({
+  className = "",
+  orientation = "vertical",
+  ...delegated
+}: Omit<ComponentProps<"div">, "children"> & {
+  orientation?: Orientation;
+}) => {
+  return (
+    <Skeleton
+      className={cn(
+        "ui-rounded-lg ui-shadow-[0px_1px_2px_-1px_rgba(0,0,0,0.06),0px_1px_3px_0px_rgba(0,0,0,0.08)]",
+        orientation === "vertical" &&
+          "ui-h-[23.25rem] ui-w-[17.5rem] md:ui-h-[25.75rem] md:ui-w-64",
+        orientation === "horizontal" && "ui-h-48 ui-w-[24.75rem]",
+        className,
+      )}
+      {...delegated}
+    />
+  );
+};
+
+export {
+  ProductCard,
+  ProductCardActions,
+  ProductCardContent,
+  ProductCardDetails,
+  ProductCardDiscount,
+  ProductCardHero,
+  ProductCardImage,
+  ProductCardLabel,
+  ProductCardPrice,
+  ProductCardSkeleton,
+  ProductCardVariantSelector,
+};
