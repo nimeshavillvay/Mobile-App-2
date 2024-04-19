@@ -1,6 +1,7 @@
 "use client";
 
 import type { PasswordPolicies } from "@/_lib/types";
+import { checkPasswordComplexity } from "@/_lib/utils";
 import { Button } from "@/old/_components/ui/button";
 import {
   Dialog,
@@ -26,7 +27,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/old/_components/ui/select";
-import usePolicySchema from "@/old/_hooks/account/use-policy-schema.hook";
 import type { Role } from "@/old/_lib/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Dispatch, SetStateAction } from "react";
@@ -40,16 +40,19 @@ const USER_PERMISSIONS = [
   { label: "Buyer", value: "BUYER" },
 ] as const;
 
-const addUserDataSchema = z.object({
-  firstName: z.string().trim().min(1, "Please enter first name.").max(40),
-  lastName: z.string().trim().min(1, "Please enter last name.").max(40),
-  jobTitle: z.string(),
-  password: z.string(),
-  confirmPassword: z.string(),
-  permission: z.string().min(1, "Please enter permission type."),
-});
-
-// type AddUserDataSchema = z.infer<typeof addUserDataSchema>;
+const addUserDataSchema = z
+  .object({
+    firstName: z.string().trim().min(1, "Please enter first name.").max(40),
+    lastName: z.string().trim().min(1, "Please enter last name.").max(40),
+    jobTitle: z.string(),
+    permission: z.string().min(1, "Please enter permission type."),
+    password: z.string(),
+    confirmPassword: z.string(),
+  })
+  .refine(({ password, confirmPassword }) => password === confirmPassword, {
+    message: "The passwords did not match",
+    path: ["confirmPassword"],
+  });
 
 type AddUserDataProps = {
   jobRoles: Role[];
@@ -66,11 +69,13 @@ const AddUserDataDialog = ({
   setOpen,
   passwordPolicies,
 }: AddUserDataProps) => {
-  const refinedSchema = usePolicySchema({
-    schema: addUserDataSchema,
-    passwordPolicies,
-    allowEmptyPassword: false,
-  });
+  const refinedSchema = addUserDataSchema.superRefine(({ password }, context) =>
+    checkPasswordComplexity({
+      password,
+      passwordPolicies,
+      context,
+    }),
+  );
 
   type AddUserDataSchema = z.infer<typeof refinedSchema>;
 

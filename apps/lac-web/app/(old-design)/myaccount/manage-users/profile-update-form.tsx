@@ -1,4 +1,5 @@
 import type { PasswordPolicies } from "@/_lib/types";
+import { checkPasswordComplexity } from "@/_lib/utils";
 import { Button } from "@/old/_components/ui/button";
 import {
   Form,
@@ -17,7 +18,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/old/_components/ui/select";
-import usePolicySchema from "@/old/_hooks/account/use-policy-schema.hook";
 import type { Role } from "@/old/_lib/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -26,20 +26,25 @@ import { USER_PERMISSIONS, USER_STATUSES } from "./constants";
 import type { UpdateUser, UserProfile } from "./types";
 import useUpdateProfileMutation from "./use-update-profile-mutation.hook";
 
-const updateProfileSchema = z.object({
-  firstName: z.string().trim().min(1, "Please enter first name.").max(40),
-  lastName: z.string().trim().min(1, "Please enter last name.").max(40),
-  jobTitle: z.string().optional(),
-  email: z
-    .string()
-    .trim()
-    .min(1, "Please enter email address.")
-    .email("Please enter a valid email address."),
-  permission: z.string().min(1, "Please enter permission type."),
-  status: z.string(),
-  password: z.string(),
-  confirmPassword: z.string().or(z.literal("")),
-});
+const updateProfileSchema = z
+  .object({
+    firstName: z.string().trim().min(1, "Please enter first name.").max(40),
+    lastName: z.string().trim().min(1, "Please enter last name.").max(40),
+    jobTitle: z.string().optional(),
+    email: z
+      .string()
+      .trim()
+      .min(1, "Please enter email address.")
+      .email("Please enter a valid email address."),
+    permission: z.string().min(1, "Please enter permission type."),
+    status: z.string(),
+    password: z.string(),
+    confirmPassword: z.string().or(z.literal("")),
+  })
+  .refine(({ password, confirmPassword }) => password === confirmPassword, {
+    message: "The passwords did not match",
+    path: ["confirmPassword"],
+  });
 
 type UpdateProfileProps = {
   user: UserProfile;
@@ -52,11 +57,15 @@ const ProfileUpdateForm = ({
   jobRoles,
   passwordPolicies,
 }: UpdateProfileProps) => {
-  const refinedSchema = usePolicySchema({
-    schema: updateProfileSchema,
-    passwordPolicies,
-    allowEmptyPassword: true,
-  });
+  const refinedSchema = updateProfileSchema.superRefine(
+    ({ password }, context) =>
+      checkPasswordComplexity({
+        password,
+        passwordPolicies,
+        context,
+        allowEmptyPassword: true,
+      }),
+  );
 
   type UpdateProfileSchema = z.infer<typeof refinedSchema>;
 
