@@ -1,7 +1,9 @@
 import { cn } from "@/lib/utils";
 import { type ComponentProps } from "react";
 
-const Skeleton = ({ className = "", ...delegated }: ComponentProps<"div">) => {
+export type SkeletonProps = ComponentProps<"div">;
+
+const Skeleton = ({ className = "", ...delegated }: SkeletonProps) => {
   return (
     <div
       className={cn(

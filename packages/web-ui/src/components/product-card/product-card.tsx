@@ -11,6 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import type { SkeletonProps } from "@/components/ui/skeleton";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn, formatNumberToPrice } from "@/lib/utils";
 import Image, { type ImageProps } from "next/image";
@@ -290,7 +291,7 @@ const ProductCardSkeleton = ({
   className = "",
   orientation = "vertical",
   ...delegated
-}: Omit<ComponentProps<"div">, "children"> & {
+}: Omit<SkeletonProps, "children"> & {
   orientation?: Orientation;
 }) => {
   return (
