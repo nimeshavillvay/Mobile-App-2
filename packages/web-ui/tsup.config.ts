@@ -41,10 +41,7 @@ export default defineConfig([
   },
   {
     ...baseConfig,
-    entry: [
-      "src/components/product-card/index.ts",
-      "src/components/search-box/index.ts",
-    ],
+    entry: ["src/components/*/index.ts"],
     outDir: "dist/components",
   },
 ]);
