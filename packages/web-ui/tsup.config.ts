@@ -10,8 +10,7 @@ export default defineConfig({
   entry: ["src/styles.css", "src/components/**/*/index.ts"],
   // Enable TypeScript type definitions to be generated in the output.
   // This provides type-definitions to consumers.
-  // dts: true,
-  experimentalDts: true,
+  dts: true,
   // Clean the `dist` directory before building.
   // This is useful to ensure the output is only the latest.
   clean: true,

@@ -7,7 +7,7 @@
     "./styles.css": "./dist/styles.css",
     "./components/*": {
       "import": "./dist/components/*/index.mjs",
-      "types": "./dist/_tsup-dts-rollup.d.mts"
+      "types": "./dist/components/*/index.d.mts"
     }
   },
   "scripts": {
@@ -17,7 +17,6 @@
     "build-storybook": "storybook build"
   },
   "devDependencies": {
-    "@microsoft/api-extractor": "7.43.1",
     "@radix-ui/react-accordion": "^1.1.2",
     "@radix-ui/react-checkbox": "^1.0.4",
     "@radix-ui/react-collapsible": "^1.0.3",
