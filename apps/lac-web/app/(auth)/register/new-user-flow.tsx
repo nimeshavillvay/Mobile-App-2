@@ -100,26 +100,7 @@ const NewUserFlow = ({ passwordPolicies }: NewUserFlowProps) => {
 
   const [billingSuggestions, setBillingSuggestions] = useState<
     ResponseAddress[]
-  >([
-    {
-      "country-name": "US",
-      county: null,
-      locality: "BUFFALO GROVE",
-      region: "CA",
-      "street-address": "1255 RANCHVIEW CT",
-      "postal-code": "60089",
-      zip4: "1189",
-    },
-    {
-      "country-name": "US",
-      county: null,
-      locality: "BUFFALO GROVE",
-      region: "IL",
-      "street-address": "1255 RANCHVIEW CT",
-      "postal-code": "60089",
-      zip4: "1189",
-    },
-  ]);
+  >([]);
   const [shippingSuggestions, setShippingSuggestions] = useState<
     ResponseAddress[]
   >([]);
