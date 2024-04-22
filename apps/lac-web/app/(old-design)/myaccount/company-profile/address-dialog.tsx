@@ -80,10 +80,6 @@ const AddressDialog = ({
   const form = useForm<AddressDataSchema>({
     resolver: zodResolver(addressDataSchema),
     defaultValues: {
-      // xcAddressId: address.xcAddressId,
-      // shipTo: address.shipTo,
-      // soldTo: address.soldTo,
-      // default: address.default,
       company: address.organization,
       addressLineOne: address.streetAddress,
       city: address.locality,
@@ -115,33 +111,35 @@ const AddressDialog = ({
 
     if (isShippingAddress) {
       if (isShippingAddressUpdate) {
-        updateShippingAddressMutation.mutate(
-          {
-            xcAddressId: address.xcAddressId,
-            shipTo: address.shipTo,
-            default: address.default,
-            ...addressData,
+        const requestData = {
+          xcAddressId: address.xcAddressId,
+          shipTo: address.shipTo,
+          ...addressData,
+        };
+
+        updateShippingAddressMutation.mutate(requestData, {
+          onSuccess: () => {
+            setOpenAddressDialog(false);
+
+            //TODO: you must pass the response received by the mutation request as the argument for the following method
+            setAddressCheckSuggestions(UPS_ADDRESS_CHECK_RESPONSE);
+
+            setAddress(requestData);
+            setOpenAddressSuggestionDialog(true);
           },
-          {
-            onSuccess: () => {
-              setOpenAddressDialog(false);
-              setOpenAddressSuggestionDialog(true);
-            },
-          },
-        );
+        });
       } else {
-        addShippingAddressMutation.mutate(
-          {
-            default: address.default,
-            ...addressData,
+        addShippingAddressMutation.mutate(addressData, {
+          onSuccess: () => {
+            setOpenAddressDialog(false);
+
+            //TODO: you must pass the response received by the mutation request as the argument for the following method
+            setAddressCheckSuggestions(UPS_ADDRESS_CHECK_RESPONSE);
+
+            setAddress(addressData);
+            setOpenAddressSuggestionDialog(true);
           },
-          {
-            onSuccess: () => {
-              setOpenAddressDialog(false);
-              setOpenAddressSuggestionDialog(true);
-            },
-          },
-        );
+        });
       }
     } else {
       updateBillingAddressMutation.mutate(addressData, {
@@ -151,9 +149,8 @@ const AddressDialog = ({
 
           //TODO: you must pass the response received by the mutation request as the argument for the following method
           setAddressCheckSuggestions(UPS_ADDRESS_CHECK_RESPONSE);
-          // setAddressCheckSuggestions(EMPTY_SUGGESTIONS_RESPONSE);
-          setAddress(addressData);
 
+          setAddress(addressData);
           setOpenAddressSuggestionDialog(true);
         },
       });

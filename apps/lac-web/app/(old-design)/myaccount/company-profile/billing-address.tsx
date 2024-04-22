@@ -77,7 +77,7 @@ const BillingAddress = ({ token }: { token: string }) => {
         addressCheckSuggestions={addressCheckSuggestions}
         isShippingAddress={false}
         isShippingAddressUpdate={false}
-        address={billingAddress}
+        address={address}
       />
     </>
   );

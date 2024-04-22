@@ -16,15 +16,21 @@ const useUpdateShippingAddressMutation = () => {
           headers: {
             authorization: `Bearer ${cookies[ACCOUNT_TOKEN_COOKIE]}`,
           },
-          json: {
-            region: shippingAddressFormData.state,
-            locality: shippingAddressFormData.city,
-            organization: shippingAddressFormData.attn,
-            "postal-code": shippingAddressFormData.zipCode,
-            "phone-number": shippingAddressFormData.phoneNumber,
-            "street-address": shippingAddressFormData.addressLineOne,
-            default: shippingAddressFormData.default,
-          },
+          json: shippingAddressFormData.default
+            ? {
+                "ship-to": shippingAddressFormData.shipTo,
+                default: true,
+              }
+            : {
+                "ship-to": shippingAddressFormData.shipTo,
+                region: shippingAddressFormData.state,
+                locality: shippingAddressFormData.city,
+                organization: shippingAddressFormData.attn,
+                "postal-code": shippingAddressFormData.zipCode,
+                "phone-number": shippingAddressFormData.phoneNumber,
+                "street-address": shippingAddressFormData.addressLineOne,
+                default: shippingAddressFormData.default,
+              },
         })
         .json<unknown>(),
     onMutate: () => {

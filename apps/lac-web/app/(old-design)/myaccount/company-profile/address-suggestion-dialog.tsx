@@ -55,9 +55,8 @@ const AddressSuggestionDialog = ({
   isShippingAddressUpdate,
   address,
 }: AddressDialogProps) => {
-  const [selectedAddressSuggestion, setSelectedAddressSuggestion] = useState(
-    {} as any,
-  );
+  const [selectedAddressSuggestion, setSelectedAddressSuggestion] =
+    useState(null);
 
   const onAddressSuggestionChange = (addressSuggestion: any) => {
     setSelectedAddressSuggestion(addressSuggestion);
@@ -72,8 +71,25 @@ const AddressSuggestionDialog = ({
   const updateShippingAddressMutation = useUpdateShippingAddressMutation();
   const updateBillingAddressMutation = useUpdateBillingAddressMutation();
 
-  const onContinueButtonClicked = () => {
-    selectedAddressSuggestion.skipAddressCheck = true;
+  const convertAddressSuggestionToFormDataFormat = (suggestion: any): any => {
+    return {
+      country: suggestion.countryName,
+      county: suggestion.county,
+      city: suggestion.locality,
+      state: suggestion.region,
+      addressLineOne: suggestion.streetAddress,
+      zipCode: suggestion.postalCode,
+      zip4: suggestion.zip4,
+    };
+  };
+
+  const onContinueOrSubmitButtonClicked = () => {
+    console.log(selectedAddressSuggestion);
+
+    const selectedAddress = convertAddressSuggestionToFormDataFormat(
+      selectedAddressSuggestion,
+    );
+    selectedAddress.skipAddressCheck = true;
 
     if (isShippingAddress) {
       if (isShippingAddressUpdate) {
@@ -81,36 +97,48 @@ const AddressSuggestionDialog = ({
           {
             xcAddressId: address.xcAddressId,
             shipTo: address.shipTo,
-            default: address.default,
             company: address.company,
             phoneNumber: address.phoneNumber,
-            ...selectedAddressSuggestion,
+            ...selectedAddress,
           },
           {
             onSuccess: () => {
               setOpenAddressDialog(false);
               setOpenAddressSuggestionDialog(false);
+
               //TODO: you must pass the response received by the mutation request as the argument for the following method
-              setAddressCheckSuggestions(SAP_ADDRESS_CHECK_RESPONSE);
-              setOpenAddressSuggestionDialog(true);
+              const response = SAP_ADDRESS_CHECK_RESPONSE;
+
+              if (!response?.checkType) {
+                setOpenAddressSuggestionDialog(false);
+              } else {
+                setAddressCheckSuggestions(response);
+                setOpenAddressSuggestionDialog(true);
+              }
             },
           },
         );
       } else {
         addShippingAddressMutation.mutate(
           {
-            default: address.default,
             company: address.company,
             phoneNumber: address.phoneNumber,
-            ...selectedAddressSuggestion,
+            ...selectedAddress,
           },
           {
             onSuccess: () => {
               setOpenAddressDialog(false);
               setOpenAddressSuggestionDialog(false);
+
               //TODO: you must pass the response received by the mutation request as the argument for the following method
-              setAddressCheckSuggestions(SAP_ADDRESS_CHECK_RESPONSE);
-              setOpenAddressSuggestionDialog(true);
+              const response = SAP_ADDRESS_CHECK_RESPONSE;
+
+              if (!response?.checkType) {
+                setOpenAddressSuggestionDialog(false);
+              } else {
+                setAddressCheckSuggestions(response);
+                setOpenAddressSuggestionDialog(true);
+              }
             },
           },
         );
@@ -120,71 +148,24 @@ const AddressSuggestionDialog = ({
         {
           company: address.company,
           phoneNumber: address.phoneNumber,
-          ...selectedAddressSuggestion,
+          ...selectedAddress,
         },
         {
           // TODO: the following should be as onSuccess: () => {
-          onError: () => {
+          onSuccess: () => {
             setOpenAddressDialog(false);
             setOpenAddressSuggestionDialog(false);
 
             //TODO: you must pass the response received by the mutation request as the argument for the following method
             // setAddressCheckSuggestions(UPS_ADDRESS_CHECK_RESPONSE);
-            setAddressCheckSuggestions(SAP_ADDRESS_CHECK_RESPONSE);
-            setOpenAddressSuggestionDialog(true);
-          },
-        },
-      );
-    }
-  };
+            const response = SAP_ADDRESS_CHECK_RESPONSE;
 
-  const onSubmitButtonClicked = () => {
-    if (isShippingAddress) {
-      if (isShippingAddressUpdate) {
-        updateShippingAddressMutation.mutate(
-          {
-            xcAddressId: address.xcAddressId,
-            shipTo: address.shipTo,
-            default: address.default,
-            company: address.company,
-            phoneNumber: address.phoneNumber,
-            ...selectedAddressSuggestion,
-          },
-          {
-            onSuccess: () => {
-              setOpenAddressDialog(false);
+            if (!response?.checkType) {
               setOpenAddressSuggestionDialog(false);
-            },
-          },
-        );
-      } else {
-        addShippingAddressMutation.mutate(
-          {
-            default: address.default,
-            company: address.company,
-            phoneNumber: address.phoneNumber,
-            ...selectedAddressSuggestion,
-          },
-          {
-            onSuccess: () => {
-              setOpenAddressDialog(false);
-              setOpenAddressSuggestionDialog(false);
-            },
-          },
-        );
-      }
-    } else {
-      updateBillingAddressMutation.mutate(
-        {
-          company: address.company,
-          phoneNumber: address.phoneNumber,
-          ...selectedAddressSuggestion,
-        },
-        {
-          // TODO: the following should be as onSuccess: () => {
-          onError: () => {
-            setOpenAddressDialog(false);
-            setOpenAddressSuggestionDialog(false);
+            } else {
+              setAddressCheckSuggestions(response);
+              setOpenAddressSuggestionDialog(true);
+            }
           },
         },
       );
@@ -238,19 +219,14 @@ const AddressSuggestionDialog = ({
             >
               BACK
             </button>
-          ) : addressCheckSuggestions?.checkType == "ADDRESS" ? (
-            <button
-              onClick={onContinueButtonClicked}
-              className="mx-2 rounded-[3px] bg-black px-6 py-2 text-base font-normal uppercase text-white"
-            >
-              CONTINUE
-            </button>
           ) : (
             <button
-              onClick={onSubmitButtonClicked}
+              onClick={onContinueOrSubmitButtonClicked}
               className="mx-2 rounded-[3px] bg-black px-6 py-2 text-base font-normal uppercase text-white"
             >
-              SUBMIT
+              {addressCheckSuggestions?.checkType == "ADDRESS"
+                ? "CONTINUE"
+                : "SUBMIT"}
             </button>
           )}
         </div>

@@ -2,8 +2,10 @@ import { Button } from "@/(old-design)/_components/ui/button";
 import { useState } from "react";
 import { MdOutlineDelete, MdOutlineEdit } from "react-icons/md";
 import AddressDialog from "./address-dialog";
+import AddressSuggestionDialog from "./address-suggestion-dialog";
 import { ShippingAddress } from "./types";
 import useDeleteShippingAddressMutation from "./use-delete-shipping-address-mutation.hook";
+import useUpdateShippingAddressMutation from "./use-update-shipping-address-mutation.hook";
 
 const ShippingAddressCard = ({
   shippingAddress,
@@ -11,14 +13,18 @@ const ShippingAddressCard = ({
   shippingAddress: ShippingAddress;
   index: number;
 }) => {
-  const [openAddressDialog, setOpenAddressDialog] = useState(false);
-
-  const [openAddressSuggestionDialog, setOpenAddressSuggestionDialog] =
+  const [openShippingAddressDialog, setOpenShippingAddressDialog] =
     useState(false);
+
+  const [
+    openShippingAddressSuggestionDialog,
+    setOpenShippingAddressSuggestionDialog,
+  ] = useState(false);
 
   const [address, setAddress] = useState(null);
   const [addressCheckSuggestions, setAddressCheckSuggestions] = useState(null);
 
+  const updateShippingAddressMutation = useUpdateShippingAddressMutation();
   const deleteShippingAddressMutation = useDeleteShippingAddressMutation();
 
   return (
@@ -36,7 +42,15 @@ const ShippingAddressCard = ({
             {shippingAddress.phoneNumber}
           </p>
           {!shippingAddress?.default ? (
-            <Button variant="ghost">
+            <Button
+              variant="ghost"
+              onClick={() =>
+                updateShippingAddressMutation.mutate({
+                  ...shippingAddress,
+                  default: true,
+                })
+              }
+            >
               <span className="p-1 font-bold hover:bg-gray-200">
                 Set Default
               </span>
@@ -49,7 +63,7 @@ const ShippingAddressCard = ({
           <Button
             variant="ghost"
             className="hover:bg-gray-200"
-            onClick={() => setOpenAddressDialog(true)}
+            onClick={() => setOpenShippingAddressDialog(true)}
           >
             <MdOutlineEdit className="text-2xl" />
           </Button>
@@ -67,14 +81,25 @@ const ShippingAddressCard = ({
       </div>
 
       <AddressDialog
-        open={openAddressDialog}
-        setOpenAddressDialog={setOpenAddressDialog}
-        setOpenAddressSuggestionDialog={setOpenAddressSuggestionDialog}
+        open={openShippingAddressDialog}
+        setOpenAddressDialog={setOpenShippingAddressDialog}
+        setOpenAddressSuggestionDialog={setOpenShippingAddressSuggestionDialog}
         setAddress={setAddress}
         setAddressCheckSuggestions={setAddressCheckSuggestions}
         isShippingAddress={true}
         isShippingAddressUpdate={true}
         address={shippingAddress}
+      />
+
+      <AddressSuggestionDialog
+        open={openShippingAddressSuggestionDialog}
+        setOpenAddressSuggestionDialog={setOpenShippingAddressSuggestionDialog}
+        setOpenAddressDialog={setOpenShippingAddressDialog}
+        setAddressCheckSuggestions={setAddressCheckSuggestions}
+        addressCheckSuggestions={addressCheckSuggestions}
+        isShippingAddress={true}
+        isShippingAddressUpdate={true}
+        address={address}
       />
     </>
   );
