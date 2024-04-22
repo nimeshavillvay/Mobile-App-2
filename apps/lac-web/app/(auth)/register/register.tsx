@@ -2,8 +2,8 @@
 
 import type { PasswordPolicies } from "@/_lib/types";
 import { cn } from "@/_lib/utils";
-import CheckCircle from "@repo/web-ui/components/icons/check-circle";
-import CheckCircleFilled from "@repo/web-ui/components/icons/check-circle-filled";
+import { CheckCircle } from "@repo/web-ui/components/icons/check-circle";
+import { CheckCircleFilled } from "@repo/web-ui/components/icons/check-circle-filled";
 import { Button, buttonVariants } from "@repo/web-ui/components/ui/button";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -11,6 +11,7 @@ import Balancer from "react-wrap-balancer";
 import { EMAIL_COOKIE } from "../constants";
 import useSignInCookies from "../use-sign-in-cookies.hook";
 import CurrentUserFlow from "./current-user-flow";
+import NewUserFlow from "./new-user-flow";
 
 const IS_CURRENT_USER = ["Yes", "No"] as const;
 
@@ -24,7 +25,7 @@ const Register = ({ passwordPolicies }: RegisterProps) => {
   const [email, setEmail] = useState("");
 
   useEffect(() => {
-    // TODO Find out a better way of doing this and removing the `useEffect`.
+    // TODO Find out a better way of doing this and remove the `useEffect`.
     // Using `useEffect` to sync state is a bit no-no but I couldn't
     // find a better way of preventing the hydration mismatch because
     // of the email.
@@ -98,6 +99,10 @@ const Register = ({ passwordPolicies }: RegisterProps) => {
 
         {isCurrentUser === "Yes" && (
           <CurrentUserFlow passwordPolicies={passwordPolicies} />
+        )}
+
+        {isCurrentUser === "No" && (
+          <NewUserFlow passwordPolicies={passwordPolicies} />
         )}
       </div>
     </div>

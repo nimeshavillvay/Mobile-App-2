@@ -1,1 +1,1 @@
-export { default } from "./heart-filled";
+export * from "./heart-filled";

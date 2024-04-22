@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useId, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import InputHelperDescription from "../input-helper-description";
 import useSignInCookies from "../use-sign-in-cookies.hook";
 import {
   StepContainer,
@@ -158,9 +159,9 @@ const CurrentUserFlow = ({ passwordPolicies }: CurrentUserFlowProps) => {
                 disabled={createUserMutation.isPending}
               />
 
-              <p className="text-sm text-wurth-gray-500">
+              <InputHelperDescription>
                 Lorem ipsum dolor sit amet consectetur.
-              </p>
+              </InputHelperDescription>
             </div>
 
             <div className="flex flex-col gap-2">
@@ -176,10 +177,10 @@ const CurrentUserFlow = ({ passwordPolicies }: CurrentUserFlowProps) => {
                 disabled={createUserMutation.isPending}
               />
 
-              <p className="text-sm text-wurth-gray-500">
+              <InputHelperDescription>
                 Recent invoice, delivery or order number from within the last 12
                 months
-              </p>
+              </InputHelperDescription>
             </div>
           </div>
 

@@ -1,6 +1,6 @@
 "use client";
 
-import Close from "@/components/icons/close";
+import { Close } from "@/components/icons/close";
 import { cva, type VariantProps } from "@/lib/cva.config";
 import { cn } from "@/lib/utils";
 import * as SheetPrimitive from "@radix-ui/react-dialog";

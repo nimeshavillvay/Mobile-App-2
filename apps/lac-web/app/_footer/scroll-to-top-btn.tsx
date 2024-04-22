@@ -1,6 +1,6 @@
 "use client";
 
-import ArrowPathUp from "@repo/web-ui/components/icons/arrow-path-up";
+import { ArrowPathUp } from "@repo/web-ui/components/icons/arrow-path-up";
 import { Button } from "@repo/web-ui/components/ui/button";
 
 const ScrollToTopBtn = () => {

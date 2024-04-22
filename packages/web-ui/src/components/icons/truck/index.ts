@@ -1,1 +1,1 @@
-export { default } from "./truck";
+export * from "./truck";

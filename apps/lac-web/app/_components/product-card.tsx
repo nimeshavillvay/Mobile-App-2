@@ -4,7 +4,6 @@ import productItemImage from "@/_assets/images/product-item-image.png";
 import { cn } from "@/_lib/utils";
 import {
   ProductCardActions,
-  ProductCardCompare,
   ProductCardContent,
   ProductCardDetails,
   ProductCardDiscount,
@@ -90,8 +89,6 @@ const ProductCard = ({ orientation, product }: ProductProps) => {
         />
 
         <ProductCardLabel>Label</ProductCardLabel>
-
-        <ProductCardCompare />
       </ProductCardHero>
 
       <ProductCardContent>

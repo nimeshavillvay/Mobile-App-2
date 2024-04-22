@@ -1,6 +1,6 @@
 import { Button } from "@/(old-design)/_components/ui/button";
 import { getMediaUrl } from "@/old/_utils/helpers";
-import WurthFullBlack from "@repo/web-ui/components/logos/wurth-full-black";
+import { WurthFullBlack } from "@repo/web-ui/components/logos/wurth-full-black";
 import dayjs from "dayjs";
 import Image from "next/image";
 import Link from "next/link";

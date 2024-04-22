@@ -1,1 +1,1 @@
-export { default } from "./arrow-up";
+export * from "./arrow-up";

@@ -1,10 +1,8 @@
 "use client";
 
-import HeartOutline from "@/components/icons/heart-outline";
+import { HeartOutline } from "@/components/icons/heart-outline";
 import { Badge, BadgeProps } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -13,11 +11,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import type { SkeletonProps } from "@/components/ui/skeleton";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn, formatNumberToPrice } from "@/lib/utils";
 import Image, { type ImageProps } from "next/image";
 import Link, { type LinkProps } from "next/link";
-import { createContext, useContext, useId, type ComponentProps } from "react";
+import { createContext, useContext, type ComponentProps } from "react";
 
 type Orientation = "vertical" | "horizontal";
 
@@ -26,7 +25,7 @@ const useOrientation = () => {
   return useContext(OrientationContext);
 };
 
-export const ProductCard = ({
+const ProductCard = ({
   className,
   orientation = "vertical",
   ...delegated
@@ -48,7 +47,7 @@ export const ProductCard = ({
   );
 };
 
-export const ProductCardHero = ({
+const ProductCardHero = ({
   className,
   ...delegated
 }: ComponentProps<"div">) => {
@@ -67,7 +66,7 @@ export const ProductCardHero = ({
   );
 };
 
-export const ProductCardImage = ({
+const ProductCardImage = ({
   src,
   alt,
   width = 224,
@@ -106,7 +105,7 @@ export const ProductCardImage = ({
   );
 };
 
-export const ProductCardDiscount = ({
+const ProductCardDiscount = ({
   className,
   children,
   ...delegated
@@ -132,7 +131,7 @@ export const ProductCardDiscount = ({
  * of `ProductCardHero`. If the orientation is "horizontal", the parent
  * component should be `ProductCardContent`.
  */
-export const ProductCardLabel = ({
+const ProductCardLabel = ({
   variant = "success",
   className,
   ...delegated
@@ -153,33 +152,7 @@ export const ProductCardLabel = ({
   );
 };
 
-export const ProductCardCompare = ({
-  className,
-  ...delegated
-}: Omit<ComponentProps<typeof Checkbox>, "id">) => {
-  const id = useId();
-  const orientation = useOrientation();
-
-  return (
-    <div
-      className={cn(
-        "ui-flex ui-flex-row ui-items-center ui-gap-1 ui-rounded ui-bg-wurth-gray-50 ui-px-2 ui-py-1.5",
-        orientation === "vertical" && "ui-absolute ui-bottom-0 ui-left-0",
-        orientation === "horizontal" && "ui-mt-auto ui-max-w-fit",
-      )}
-    >
-      <Checkbox
-        id={id}
-        className={cn("ui-bg-white", className)}
-        {...delegated}
-      />
-
-      <Label htmlFor={id}>Compare</Label>
-    </div>
-  );
-};
-
-export const ProductCardContent = ({
+const ProductCardContent = ({
   className,
   ...delegated
 }: ComponentProps<"div">) => {
@@ -191,7 +164,7 @@ export const ProductCardContent = ({
   );
 };
 
-export const ProductCardDetails = ({
+const ProductCardDetails = ({
   title,
   sku,
   href,
@@ -221,7 +194,7 @@ export const ProductCardDetails = ({
   );
 };
 
-export const ProductCardPrice = ({
+const ProductCardPrice = ({
   price,
   uom,
   actualPrice,
@@ -253,7 +226,7 @@ export const ProductCardPrice = ({
   );
 };
 
-export const ProductCardVariantSelector = ({
+const ProductCardVariantSelector = ({
   href,
   variants,
   value,
@@ -295,7 +268,7 @@ export const ProductCardVariantSelector = ({
   );
 };
 
-export const ProductCardActions = () => {
+const ProductCardActions = () => {
   return (
     <div className="ui-mt-auto ui-flex ui-flex-row ui-items-center ui-gap-1 md:ui-gap-2">
       <Button className="ui-h-10 ui-max-h-full ui-flex-1 ui-px-4 ui-text-[0.875rem] ui-leading-5">
@@ -314,11 +287,11 @@ export const ProductCardActions = () => {
   );
 };
 
-export const ProductCardSkeleton = ({
-  className,
+const ProductCardSkeleton = ({
+  className = "",
   orientation = "vertical",
   ...delegated
-}: Omit<ComponentProps<typeof Skeleton>, "children"> & {
+}: Omit<SkeletonProps, "children"> & {
   orientation?: Orientation;
 }) => {
   return (
@@ -333,4 +306,18 @@ export const ProductCardSkeleton = ({
       {...delegated}
     />
   );
+};
+
+export {
+  ProductCard,
+  ProductCardActions,
+  ProductCardContent,
+  ProductCardDetails,
+  ProductCardDiscount,
+  ProductCardHero,
+  ProductCardImage,
+  ProductCardLabel,
+  ProductCardPrice,
+  ProductCardSkeleton,
+  ProductCardVariantSelector,
 };
