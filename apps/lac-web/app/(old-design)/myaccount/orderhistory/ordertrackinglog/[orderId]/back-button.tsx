@@ -10,7 +10,7 @@ const BackButton = ({ orderId }: { orderId: string }) => {
   return (
     <Button
       variant="ghost"
-      className="my-4 text-black"
+      className="my-4 text-base text-black"
       onClick={() => router.back()}
     >
       <FaArrowLeft /> Back to Order #{orderId}

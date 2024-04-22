@@ -2,6 +2,16 @@ import { api } from "@/_lib/api";
 import { DEFAULT_REVALIDATE } from "@/_lib/constants";
 import "server-only";
 
+type TrackingInfo = {
+  plant: string;
+  deliveries: {
+    deliveryNo: string;
+    shipDate: string;
+    shippingMethod: string;
+    tracker: string[];
+  }[];
+};
+
 type OrderTracker = {
   orderNo: string;
   shipToAddress: {
@@ -13,7 +23,7 @@ type OrderTracker = {
     shipToRegion: string;
     shipToPhone: string;
   };
-  tracking_info: unknown[];
+  tracking_info: TrackingInfo[];
   driverNotes: string;
 };
 
