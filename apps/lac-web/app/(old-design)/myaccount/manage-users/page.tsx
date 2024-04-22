@@ -1,5 +1,5 @@
+import { getJobRoles, getPasswordPolicies } from "@/_lib/apis/server";
 import { ACCOUNT_TOKEN_COOKIE } from "@/old/_lib/constants";
-import { getJobRoles, getPasswordPolicy } from "@/old/_lib/shared-server-apis";
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -17,13 +17,13 @@ const UserManagementPage = async () => {
   }
 
   const jobRoles = await getJobRoles();
-  const passwordPolicy = await getPasswordPolicy();
+  const passwordPolicies = await getPasswordPolicies();
 
   return (
     <UsersList
       token={accountTokenCookie?.value}
       jobRoles={jobRoles?.roles}
-      passwordPolicies={passwordPolicy?.data?.passwordPolicies}
+      passwordPolicies={passwordPolicies}
     />
   );
 };

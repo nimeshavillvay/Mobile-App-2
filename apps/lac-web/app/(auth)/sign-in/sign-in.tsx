@@ -1,7 +1,8 @@
 "use client";
 
 import useCheckEmailMutation from "@/_hooks/user/use-check-email-mutation.hook";
-import { cn, isErrorResponse } from "@/_lib/utils";
+import type { PasswordPolicies } from "@/_lib/types";
+import { checkPasswordComplexity, cn, isErrorResponse } from "@/_lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, buttonVariants } from "@repo/web-ui/components/ui/button";
 import { Input } from "@repo/web-ui/components/ui/input";
@@ -14,7 +15,6 @@ import { useForm } from "react-hook-form";
 import Balancer from "react-wrap-balancer";
 import { z } from "zod";
 import { EMAIL_COOKIE } from "../constants";
-import type { PasswordPolicies } from "../types";
 import useSignInCookies from "../use-sign-in-cookies.hook";
 import { login } from "./actions";
 
@@ -23,7 +23,7 @@ const emailFormSchema = z.object({
 });
 const loginFormSchema = z.object({
   email: z.string().email(),
-  password: z.string().min(6),
+  password: z.string(),
 });
 
 type SignInProps = {
@@ -79,37 +79,9 @@ const SignIn = ({ passwordPolicies }: SignInProps) => {
 
   const refinedLoginFormSchema = useMemo(
     () =>
-      loginFormSchema
-        .extend({
-          password: z.string().min(passwordPolicies.minimumLength),
-        })
-        .superRefine(({ password }, checkPassComplexity) => {
-          const containsAlphabet = (ch: string) => /[a-z,A-Z]/.test(ch);
-          const containsNumber = (ch: string) => /[0-9]/.test(ch);
-
-          let countOfAlphabets = 0;
-          let countOfNumbers = 0;
-
-          for (const ch of password) {
-            if (containsAlphabet(ch)) {
-              countOfAlphabets++;
-            } else if (containsNumber(ch)) {
-              countOfNumbers++;
-            }
-          }
-
-          // TODO Add better messaging
-          if (
-            countOfAlphabets < passwordPolicies.minimumAlphabets ||
-            countOfNumbers < passwordPolicies.minimumNumbers
-          ) {
-            checkPassComplexity.addIssue({
-              path: ["password"],
-              code: "custom",
-              message: "Password does not meet complexity requirements",
-            });
-          }
-        }),
+      loginFormSchema.superRefine(({ password }, context) =>
+        checkPasswordComplexity({ password, passwordPolicies, context }),
+      ),
     [passwordPolicies],
   );
   const loginForm = useForm<z.infer<typeof refinedLoginFormSchema>>({

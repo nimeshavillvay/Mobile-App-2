@@ -34,9 +34,9 @@ const ActionConfirmationDialog = ({
 }: ActionConfirmationDialogProps) => {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bottom-0 top-auto max-w-[490px] translate-y-[0%] xs:bottom-auto xs:top-[50%] xs:translate-y-[-50%]">
+      <DialogContent className="bottom-0 top-auto max-w-[490px] translate-y-[0%] md:bottom-auto md:top-[50%] md:translate-y-[-50%]">
         <DialogHeader>
-          <DialogTitle className="text-left font-wurth xs:text-center">
+          <DialogTitle className="text-left font-wurth md:text-center">
             {title}
           </DialogTitle>
         </DialogHeader>
@@ -55,18 +55,18 @@ const ActionConfirmationDialog = ({
 
           <div
             className={cn(
-              "mb-7 flex flex-row items-center gap-2 font-wurth font-extrabold text-white xs:justify-end",
+              "mb-7 flex flex-row items-center gap-2 font-wurth font-extrabold text-white md:justify-end",
               showCancelBtn ? "justify-between" : "justify-end",
             )}
           >
             {showCancelBtn && (
-              <DialogClose className="w-1/2 rounded-sm border border-brand-primary px-8 py-1.5 uppercase text-brand-primary xs:w-[120px]">
+              <DialogClose className="w-1/2 rounded-sm border border-brand-primary px-8 py-1.5 uppercase text-brand-primary md:w-[120px]">
                 {cancelText}
               </DialogClose>
             )}
 
             <Button
-              className="w-1/2 rounded-sm bg-brand-primary px-8 py-1.5 uppercase xs:w-[120px]"
+              className="w-1/2 rounded-sm bg-brand-primary px-8 py-1.5 uppercase md:w-[120px]"
               onClick={onConfirm}
             >
               {okText}
