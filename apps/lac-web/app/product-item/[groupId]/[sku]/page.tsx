@@ -1,4 +1,6 @@
-import { permanentRedirect } from "next/navigation";
+import { api } from "@/_lib/api";
+import { DEFAULT_REVALIDATE } from "@/_lib/constants";
+import { notFound, permanentRedirect } from "next/navigation";
 
 type OldProductPageProps = {
   params: {
@@ -7,11 +9,29 @@ type OldProductPageProps = {
   };
 };
 
-const OldProductPage = ({ params: { sku } }: OldProductPageProps) => {
-  // TODO Fetch the product and use its slug for the new route
-  // TODO Also make sure to check if the group ID is still valid
+const OldProductPage = async ({
+  params: { groupId, sku },
+}: OldProductPageProps) => {
+  const response = await api
+    .get("rest/getproductid", {
+      searchParams: {
+        sku,
+      },
+      next: {
+        revalidate: DEFAULT_REVALIDATE,
+      },
+    })
+    .json<{
+      productid: string;
+      groupid: string;
+      slug: string;
+    }>();
 
-  return permanentRedirect(`/item/${sku}/slug`);
+  if (response.groupid !== groupId) {
+    return notFound();
+  }
+
+  return permanentRedirect(`/product/${response.productid}/${response.slug}`);
 };
 
 export default OldProductPage;
