@@ -1,7 +1,8 @@
-import { useToast } from "@/old/_components/ui/use-toast";
+import { api } from "@/_lib/api";
+import { isErrorResponse } from "@/_lib/utils";
 import useCookies from "@/old/_hooks/storage/use-cookies.hook";
-import { api } from "@/old/_lib/api";
 import { ACCOUNT_TOKEN_COOKIE } from "@/old/_lib/constants";
+import { useToast } from "@repo/web-ui/components/ui/toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const useAddUserDataMutation = () => {
@@ -11,43 +12,68 @@ const useAddUserDataMutation = () => {
 
   return useMutation({
     mutationFn: ({
-      email,
       firstName,
-      jobTitle,
       lastName,
+      jobTitle,
+      email,
+      password,
       permission,
     }: {
-      email: string;
       firstName: string;
-      jobTitle: string;
       lastName: string;
+      jobTitle: string;
+      email: string;
+      password: string;
       permission: string;
     }) =>
       api
-        .post("am/admin/create_user", {
+        .post("rest/my-account/create-user", {
           headers: {
             authorization: `Bearer ${cookies[ACCOUNT_TOKEN_COOKIE]}`,
           },
           json: {
-            email: email,
             first_name: firstName,
-            job_title: jobTitle,
             last_name: lastName,
-            permission: permission,
+            job_title: jobTitle,
+            email,
+            password,
+            permission,
           },
         })
-        .json<unknown>(),
-    onSuccess: () => {
-      toast({
-        description: "New user successfully added.",
-        variant: "success",
-      });
+        .json<{ status_code: string; message: string; user_id: number }>(),
+    onSuccess: (data) => {
+      const transformedData = {
+        statusCode: data.status_code,
+        message: data.message,
+        userId: data.user_id,
+      };
+
+      if (transformedData.statusCode === "OK") {
+        toast({
+          description: "New user successfully added.",
+        });
+      }
     },
-    onError: () => {
-      toast({
-        description: "New user creation failed.",
-        variant: "destructive",
-      });
+    onError: async (error) => {
+      if (error?.response?.status === 400) {
+        const errorResponse = await error.response.json();
+
+        if (
+          isErrorResponse(errorResponse) &&
+          errorResponse["status_code"] === "FAILED" &&
+          errorResponse.message
+        ) {
+          toast({
+            description: errorResponse.message,
+            variant: "destructive",
+          });
+        } else {
+          toast({
+            description: "New user creation failed.",
+            variant: "destructive",
+          });
+        }
+      }
     },
     onSettled: () => {
       queryClient.invalidateQueries({

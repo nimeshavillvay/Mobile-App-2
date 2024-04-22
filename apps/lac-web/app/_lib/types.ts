@@ -129,3 +129,9 @@ export type PriceBreakDownObject = {
 };
 
 export type PriceBreakDowns = PriceBreakDownObject[];
+
+export type PasswordPolicies = {
+  minimumLength: number;
+  minimumNumbers: number;
+  minimumAlphabets: number;
+};

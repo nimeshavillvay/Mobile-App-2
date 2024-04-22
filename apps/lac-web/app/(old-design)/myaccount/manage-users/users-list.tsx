@@ -1,5 +1,6 @@
 "use client";
 
+import type { PasswordPolicies } from "@/_lib/types";
 import Separator from "@/old/_components/separator";
 import { Button } from "@/old/_components/ui/button";
 import {
@@ -16,7 +17,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/old/_components/ui/table";
-import type { PasswordPolicy, Role } from "@/old/_lib/types";
+import type { Role } from "@/old/_lib/types";
 import { useState } from "react";
 import {
   MdAccountBox,
@@ -24,53 +25,50 @@ import {
   MdKeyboardArrowUp,
   MdPersonAdd,
   MdSupervisorAccount,
-  MdSwitchAccount,
 } from "react-icons/md";
 import AddUserDataDialog from "./add-user-data-dialog";
 import AddUserEmailDialog from "./add-user-email-dialog";
-import PendingUserRow from "./pending-user-row";
 import ProfileUpdateForm from "./profile-update-form";
 import useSuspenseUsersList from "./use-suspense-users-list.hook";
 import UserRow from "./user-row";
+import UserStatusBadge from "./user-status-badge";
 
 const UsersList = ({
   token,
   jobRoles,
-  passwordPolicies = [],
+  passwordPolicies,
 }: {
   token: string;
   jobRoles: Role[];
-  passwordPolicies: PasswordPolicy[];
+  passwordPolicies: PasswordPolicies;
 }) => {
   const [showYourProfile, setShowYourProfile] = useState(false);
   const [showCurrentUsers, setShowCurrentUsers] = useState(false);
-  const [showPendingUsers, setShowPendingUsers] = useState(false);
   const [openAddUserEmailDialog, setOpenAddUserEmailDialog] = useState(false);
   const [openAddUserDataDialog, setOpenAddUserDataDialog] = useState(false);
   const [addUserDataDialogEmail, setAddUserDataDialogEmail] = useState("");
 
   const usersListQuery = useSuspenseUsersList(token);
 
-  const pendingUsers = usersListQuery?.data?.approve_contacts ?? null;
-  const yourProfile =
-    usersListQuery?.data?.manage_contact?.your_profile ?? null;
-  const currentUsers =
-    usersListQuery?.data?.manage_contact?.contact_list ?? null;
+  const yourProfile = usersListQuery?.data?.manageContact?.yourProfile ?? null;
+  const currentUsers = usersListQuery?.data?.manageContact?.contactList ?? null;
 
   return (
     <>
-      <Button
-        type="submit"
-        className="absolute right-0 top-[-20px] px-6"
-        onClick={() => setOpenAddUserEmailDialog(true)}
-      >
-        <MdPersonAdd className="text-xl leading-none" />
-        Add user
-      </Button>
+      <div className="flex flex-row items-center justify-between">
+        <h2 className="font-wurth text-xl font-medium text-brand-primary">
+          Manage Users
+        </h2>
 
-      <h2 className="relative font-wurth text-xl font-medium text-brand-primary">
-        Manage Users
-      </h2>
+        <Button
+          type="submit"
+          className="mb-2 px-6"
+          onClick={() => setOpenAddUserEmailDialog(true)}
+        >
+          <MdPersonAdd className="text-xl leading-none" />
+          Add user
+        </Button>
+      </div>
 
       <Separator
         orientation="horizontal"
@@ -110,9 +108,9 @@ const UsersList = ({
               </TableCell>
 
               <TableCell className="text-center">
-                <span className="min-w-24 rounded-sm border border-brand-tertiary px-5 py-px font-bold text-brand-tertiary">
-                  {yourProfile?.status}
-                </span>
+                <div className="flex justify-center">
+                  <UserStatusBadge status={yourProfile?.status} />
+                </div>
               </TableCell>
 
               <TableCell className="text-right">
@@ -150,70 +148,6 @@ const UsersList = ({
           </TableBody>
         </Table>
       </Collapsible>
-
-      {/* New And Pending Users Section */}
-      <Collapsible open={showPendingUsers} onOpenChange={setShowPendingUsers}>
-        <div className="my-5 flex justify-between">
-          <h6 className="flex font-wurth text-base font-medium capitalize text-brand-gray-500">
-            <MdSwitchAccount className="self-center text-2xl leading-none" />
-            &nbsp;New And Pending Users
-          </h6>
-
-          <CollapsibleTrigger asChild>
-            <Button className="flex h-6 min-w-20 flex-row items-center justify-center gap-0.5 bg-brand-secondary px-2 font-wurth text-base leading-6 text-white">
-              {showPendingUsers ? (
-                <>
-                  Hide
-                  <MdKeyboardArrowUp className="text-xl leading-none" />
-                </>
-              ) : (
-                <>
-                  Show
-                  <MdKeyboardArrowDown className="text-xl leading-none" />
-                </>
-              )}
-            </Button>
-          </CollapsibleTrigger>
-        </div>
-
-        <CollapsibleContent>
-          <Table>
-            <TableCaption className="sr-only">
-              New and pending users section.
-            </TableCaption>
-
-            <TableHeader className="border border-brand-gray-200 bg-brand-gray-200">
-              <TableRow>
-                <TableHead>Email</TableHead>
-
-                <TableHead className="capitalize">
-                  First and Last Name
-                </TableHead>
-
-                <TableHead className="capitalize">Job Title</TableHead>
-
-                <TableHead></TableHead>
-              </TableRow>
-            </TableHeader>
-
-            <TableBody className="border border-brand-gray-200 text-brand-gray-500">
-              {pendingUsers.map((user, index) => (
-                <PendingUserRow
-                  key={user?.email}
-                  user={user}
-                  index={index}
-                  jobRoles={jobRoles}
-                />
-              ))}
-            </TableBody>
-          </Table>
-        </CollapsibleContent>
-      </Collapsible>
-
-      <Separator
-        orientation="horizontal"
-        className="h-px flex-1 bg-brand-gray-200"
-      />
 
       {/* Current Users Section */}
       <Collapsible open={showCurrentUsers} onOpenChange={setShowCurrentUsers}>
@@ -262,7 +196,7 @@ const UsersList = ({
               <TableBody className="border border-brand-gray-200 text-brand-gray-500">
                 {currentUsers.map((user, index) => (
                   <UserRow
-                    key={user?.uuid}
+                    key={user?.id}
                     user={user}
                     index={index}
                     jobRoles={jobRoles}
@@ -290,11 +224,13 @@ const UsersList = ({
         setEmail={setAddUserDataDialogEmail}
         currentUsers={currentUsers}
       />
+
       <AddUserDataDialog
         jobRoles={jobRoles}
         open={openAddUserDataDialog}
         email={addUserDataDialogEmail}
         setOpen={setOpenAddUserDataDialog}
+        passwordPolicies={passwordPolicies}
       />
     </>
   );

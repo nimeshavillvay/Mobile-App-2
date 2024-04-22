@@ -117,9 +117,9 @@ export const StepContainerClosed = ({
   return (
     <section className="flex flex-col gap-4 rounded-lg border border-wurth-gray-250 p-6 shadow-lg">
       <div className="flex flex-row items-center gap-3">
-        <CheckCircle className="stroke-green-700 size-5" />
+        <CheckCircle className="size-5 stroke-green-700" />
 
-        <h3 className="text-base font-semibold text-wurth-gray-800 flex-1">
+        <h3 className="flex-1 text-base font-semibold text-wurth-gray-800">
           {title}
         </h3>
 

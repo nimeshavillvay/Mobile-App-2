@@ -1,3 +1,4 @@
+import type { PasswordPolicies } from "@/_lib/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@repo/web-ui/components/ui/input";
 import { Label } from "@repo/web-ui/components/ui/label";
@@ -6,7 +7,6 @@ import { useId, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import InputHelperDescription from "../input-helper-description";
-import type { PasswordPolicies } from "../types";
 import useSignInCookies from "../use-sign-in-cookies.hook";
 import {
   StepContainer,
