@@ -1,31 +1,7 @@
 import { api } from "@/_lib/api";
 import { DEFAULT_REVALIDATE } from "@/_lib/constants";
 import "server-only";
-
-type TrackingInfo = {
-  plant: string;
-  deliveries: {
-    deliveryNo: string;
-    shipDate: string;
-    shippingMethod: string;
-    tracker: string[];
-  }[];
-};
-
-type OrderTracker = {
-  orderNo: string;
-  shipToAddress: {
-    attention: string;
-    shipToStreet: string;
-    shipToCity: string;
-    shipToZip: string;
-    shipToCountry: string;
-    shipToRegion: string;
-    shipToPhone: string;
-  };
-  tracking_info: TrackingInfo[];
-  driverNotes: string;
-};
+import type { OrderTracker } from "./types";
 
 export const getOrderTrackingLog = async (orderId: string) => {
   const { orderNo, shipToAddress, tracking_info, driverNotes } = await api
