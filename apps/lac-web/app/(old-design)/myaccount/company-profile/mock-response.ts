@@ -24,6 +24,32 @@ export const UPS_ADDRESS_CHECK_RESPONSE = {
   ],
 };
 
+export const SAP_ADDRESS_CHECK_RESPONSE = {
+  checkType: "SAP",
+  message:
+    "Multiple options for your billing address found. Please select the correct one!",
+  suggestions: [
+    {
+      countryName: "US",
+      county: "COOK",
+      locality: "BUFFALO GROVE",
+      region: "IL",
+      streetAddress: "1255 RANCHVIEW CT",
+      postalCode: "60089",
+      zip4: "1189",
+    },
+    {
+      countryName: "US",
+      county: "LAKE",
+      locality: "BUFFALO GROVE",
+      region: "IL",
+      streetAddress: "1255 RANCHVIEW CT",
+      postalCode: "60089",
+      zip4: "1189",
+    },
+  ],
+};
+
 export const EMPTY_SUGGESTIONS_RESPONSE = {
   checkType: "SAP",
   message:

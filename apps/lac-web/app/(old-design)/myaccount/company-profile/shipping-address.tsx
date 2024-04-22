@@ -33,6 +33,7 @@ const ShippingAddress = ({ token }: { token: string }) => {
     setOpenShippingAddressSuggestionDialog,
   ] = useState(false);
 
+  const [address, setAddress] = useState(null);
   const [addressCheckSuggestions, setAddressCheckSuggestions] = useState(null);
 
   const shippingAddressQuery = useSuspenseShippingAddressList(token);
@@ -73,6 +74,7 @@ const ShippingAddress = ({ token }: { token: string }) => {
         open={openShippingAddressDialog}
         setOpenAddressDialog={setOpenShippingAddressDialog}
         setOpenAddressSuggestionDialog={setOpenShippingAddressSuggestionDialog}
+        setAddress={setAddress}
         setAddressCheckSuggestions={setAddressCheckSuggestions}
         isShippingAddress={true}
         isShippingAddressUpdate={false}
@@ -83,7 +85,11 @@ const ShippingAddress = ({ token }: { token: string }) => {
         open={openShippingAddressSuggestionDialog}
         setOpenAddressSuggestionDialog={setOpenShippingAddressSuggestionDialog}
         setOpenAddressDialog={setOpenShippingAddressDialog}
+        setAddressCheckSuggestions={setAddressCheckSuggestions}
         addressCheckSuggestions={addressCheckSuggestions}
+        isShippingAddress={true}
+        isShippingAddressUpdate={false}
+        address={address}
       />
     </>
   );

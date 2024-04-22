@@ -38,6 +38,7 @@ type AddressDialogProps = {
   open: boolean;
   setOpenAddressDialog: Dispatch<SetStateAction<boolean>>;
   setOpenAddressSuggestionDialog: Dispatch<SetStateAction<boolean>>;
+  setAddress: Dispatch<SetStateAction<any>>;
   setAddressCheckSuggestions: Dispatch<SetStateAction<any>>;
   isShippingAddress: boolean;
   isShippingAddressUpdate: boolean;
@@ -48,6 +49,7 @@ const AddressDialog = ({
   open,
   setOpenAddressDialog,
   setOpenAddressSuggestionDialog,
+  setAddress,
   setAddressCheckSuggestions,
   isShippingAddress,
   isShippingAddressUpdate,
@@ -99,6 +101,18 @@ const AddressDialog = ({
   const updateBillingAddressMutation = useUpdateBillingAddressMutation();
 
   const onAddressSubmit = (data: AddressDataSchema) => {
+    const addressData = {
+      company: data.company,
+      addressLineOne: data.addressLineOne,
+      city: data.city,
+      state: data.state,
+      zipCode: data.zipCode,
+      phoneNumber: data.phoneNumber,
+      zip4: data.zip4,
+      country: data.country,
+      county: data.county,
+    };
+
     if (isShippingAddress) {
       if (isShippingAddressUpdate) {
         updateShippingAddressMutation.mutate(
@@ -106,15 +120,7 @@ const AddressDialog = ({
             xcAddressId: address.xcAddressId,
             shipTo: address.shipTo,
             default: address.default,
-            company: data.company,
-            addressLineOne: data.addressLineOne,
-            city: data.city,
-            state: data.state,
-            zipCode: data.zipCode,
-            phoneNumber: data.phoneNumber,
-            zip4: data.zip4,
-            country: data.country,
-            county: data.county,
+            ...addressData,
           },
           {
             onSuccess: () => {
@@ -127,15 +133,7 @@ const AddressDialog = ({
         addShippingAddressMutation.mutate(
           {
             default: address.default,
-            company: data.company,
-            addressLineOne: data.addressLineOne,
-            city: data.city,
-            state: data.state,
-            zipCode: data.zipCode,
-            phoneNumber: data.phoneNumber,
-            zip4: data.zip4,
-            country: data.country,
-            county: data.county,
+            ...addressData,
           },
           {
             onSuccess: () => {
@@ -146,30 +144,19 @@ const AddressDialog = ({
         );
       }
     } else {
-      updateBillingAddressMutation.mutate(
-        {
-          country: data.country,
-          county: data.county,
-          city: data.city,
-          company: data.company,
-          phoneNumber: data.phoneNumber,
-          state: data.state,
-          addressLineOne: data.addressLineOne,
-          zipCode: data.zipCode,
-          zip4: data.zip4,
-        },
-        {
-          // TODO: the following should be as onSuccess: () => {
-          onError: () => {
-            setOpenAddressDialog(false);
-            setOpenAddressSuggestionDialog(true);
+      updateBillingAddressMutation.mutate(addressData, {
+        // TODO: the following should be as onSuccess: () => {
+        onError: () => {
+          setOpenAddressDialog(false);
 
-            //TODO: you must pass the response received by the mutation request as the argument for the following method
-            // setAddressCheckSuggestions(UPS_ADDRESS_CHECK_RESPONSE);
-            setAddressCheckSuggestions(EMPTY_SUGGESTIONS_RESPONSE);
-          },
+          //TODO: you must pass the response received by the mutation request as the argument for the following method
+          setAddressCheckSuggestions(UPS_ADDRESS_CHECK_RESPONSE);
+          // setAddressCheckSuggestions(EMPTY_SUGGESTIONS_RESPONSE);
+          setAddress(addressData);
+
+          setOpenAddressSuggestionDialog(true);
         },
-      );
+      });
     }
   };
 

@@ -16,6 +16,7 @@ const ShippingAddressCard = ({
   const [openAddressSuggestionDialog, setOpenAddressSuggestionDialog] =
     useState(false);
 
+  const [address, setAddress] = useState(null);
   const [addressCheckSuggestions, setAddressCheckSuggestions] = useState(null);
 
   const deleteShippingAddressMutation = useDeleteShippingAddressMutation();
@@ -69,6 +70,7 @@ const ShippingAddressCard = ({
         open={openAddressDialog}
         setOpenAddressDialog={setOpenAddressDialog}
         setOpenAddressSuggestionDialog={setOpenAddressSuggestionDialog}
+        setAddress={setAddress}
         setAddressCheckSuggestions={setAddressCheckSuggestions}
         isShippingAddress={true}
         isShippingAddressUpdate={true}

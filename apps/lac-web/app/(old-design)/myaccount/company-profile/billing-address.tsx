@@ -17,6 +17,7 @@ const BillingAddress = ({ token }: { token: string }) => {
     setOpenBillingAddressSuggestionDialog,
   ] = useState(false);
 
+  const [address, setAddress] = useState(null);
   const [addressCheckSuggestions, setAddressCheckSuggestions] = useState(null);
 
   const billingAddressQuery = useSuspenseBillingAddressList(token);
@@ -61,6 +62,7 @@ const BillingAddress = ({ token }: { token: string }) => {
         open={openBillingAddressDialog}
         setOpenAddressDialog={setOpenBillingAddressDialog}
         setOpenAddressSuggestionDialog={setOpenBillingAddressSuggestionDialog}
+        setAddress={setAddress}
         setAddressCheckSuggestions={setAddressCheckSuggestions}
         isShippingAddress={false}
         isShippingAddressUpdate={false}
@@ -71,7 +73,11 @@ const BillingAddress = ({ token }: { token: string }) => {
         open={openBillingAddressSuggestionDialog}
         setOpenAddressSuggestionDialog={setOpenBillingAddressSuggestionDialog}
         setOpenAddressDialog={setOpenBillingAddressDialog}
+        setAddressCheckSuggestions={setAddressCheckSuggestions}
         addressCheckSuggestions={addressCheckSuggestions}
+        isShippingAddress={false}
+        isShippingAddressUpdate={false}
+        address={billingAddress}
       />
     </>
   );

@@ -29,19 +29,31 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Dispatch, SetStateAction, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import { SAP_ADDRESS_CHECK_RESPONSE } from "./mock-response";
+import useAddShippingAddressMutation from "./use-add-shipping-address-mutation.hook";
+import useUpdateBillingAddressMutation from "./use-update-billing-address-mutation.hook";
+import useUpdateShippingAddressMutation from "./use-update-shipping-address-mutation.hook";
 
 type AddressDialogProps = {
   open: boolean;
   setOpenAddressSuggestionDialog: Dispatch<SetStateAction<boolean>>;
   setOpenAddressDialog: Dispatch<SetStateAction<boolean>>;
+  setAddressCheckSuggestions: Dispatch<SetStateAction<any>>;
   addressCheckSuggestions: any;
+  isShippingAddress: boolean;
+  isShippingAddressUpdate: boolean;
+  address: any;
 };
 
 const AddressSuggestionDialog = ({
   open,
   setOpenAddressSuggestionDialog,
   setOpenAddressDialog,
+  setAddressCheckSuggestions,
   addressCheckSuggestions,
+  isShippingAddress,
+  isShippingAddressUpdate,
+  address,
 }: AddressDialogProps) => {
   const [selectedAddressSuggestion, setSelectedAddressSuggestion] = useState(
     {} as any,
@@ -56,11 +68,128 @@ const AddressSuggestionDialog = ({
     setOpenAddressDialog(true);
   };
 
+  const addShippingAddressMutation = useAddShippingAddressMutation();
+  const updateShippingAddressMutation = useUpdateShippingAddressMutation();
+  const updateBillingAddressMutation = useUpdateBillingAddressMutation();
+
   const onContinueButtonClicked = () => {
-    console.log(selectedAddressSuggestion);
+    selectedAddressSuggestion.skipAddressCheck = true;
+
+    if (isShippingAddress) {
+      if (isShippingAddressUpdate) {
+        updateShippingAddressMutation.mutate(
+          {
+            xcAddressId: address.xcAddressId,
+            shipTo: address.shipTo,
+            default: address.default,
+            company: address.company,
+            phoneNumber: address.phoneNumber,
+            ...selectedAddressSuggestion,
+          },
+          {
+            onSuccess: () => {
+              setOpenAddressDialog(false);
+              setOpenAddressSuggestionDialog(false);
+              //TODO: you must pass the response received by the mutation request as the argument for the following method
+              setAddressCheckSuggestions(SAP_ADDRESS_CHECK_RESPONSE);
+              setOpenAddressSuggestionDialog(true);
+            },
+          },
+        );
+      } else {
+        addShippingAddressMutation.mutate(
+          {
+            default: address.default,
+            company: address.company,
+            phoneNumber: address.phoneNumber,
+            ...selectedAddressSuggestion,
+          },
+          {
+            onSuccess: () => {
+              setOpenAddressDialog(false);
+              setOpenAddressSuggestionDialog(false);
+              //TODO: you must pass the response received by the mutation request as the argument for the following method
+              setAddressCheckSuggestions(SAP_ADDRESS_CHECK_RESPONSE);
+              setOpenAddressSuggestionDialog(true);
+            },
+          },
+        );
+      }
+    } else {
+      updateBillingAddressMutation.mutate(
+        {
+          company: address.company,
+          phoneNumber: address.phoneNumber,
+          ...selectedAddressSuggestion,
+        },
+        {
+          // TODO: the following should be as onSuccess: () => {
+          onError: () => {
+            setOpenAddressDialog(false);
+            setOpenAddressSuggestionDialog(false);
+
+            //TODO: you must pass the response received by the mutation request as the argument for the following method
+            // setAddressCheckSuggestions(UPS_ADDRESS_CHECK_RESPONSE);
+            setAddressCheckSuggestions(SAP_ADDRESS_CHECK_RESPONSE);
+            setOpenAddressSuggestionDialog(true);
+          },
+        },
+      );
+    }
   };
 
-  const onSubmitButtonClicked = () => {};
+  const onSubmitButtonClicked = () => {
+    if (isShippingAddress) {
+      if (isShippingAddressUpdate) {
+        updateShippingAddressMutation.mutate(
+          {
+            xcAddressId: address.xcAddressId,
+            shipTo: address.shipTo,
+            default: address.default,
+            company: address.company,
+            phoneNumber: address.phoneNumber,
+            ...selectedAddressSuggestion,
+          },
+          {
+            onSuccess: () => {
+              setOpenAddressDialog(false);
+              setOpenAddressSuggestionDialog(false);
+            },
+          },
+        );
+      } else {
+        addShippingAddressMutation.mutate(
+          {
+            default: address.default,
+            company: address.company,
+            phoneNumber: address.phoneNumber,
+            ...selectedAddressSuggestion,
+          },
+          {
+            onSuccess: () => {
+              setOpenAddressDialog(false);
+              setOpenAddressSuggestionDialog(false);
+            },
+          },
+        );
+      }
+    } else {
+      updateBillingAddressMutation.mutate(
+        {
+          company: address.company,
+          phoneNumber: address.phoneNumber,
+          ...selectedAddressSuggestion,
+        },
+        {
+          // TODO: the following should be as onSuccess: () => {
+          onError: () => {
+            setOpenAddressDialog(false);
+            setOpenAddressSuggestionDialog(false);
+          },
+        },
+      );
+    }
+  };
 
   return (
     <Dialog open={open} onOpenChange={setOpenAddressSuggestionDialog}>
