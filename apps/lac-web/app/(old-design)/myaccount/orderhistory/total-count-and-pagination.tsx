@@ -10,7 +10,6 @@ import {
 } from "@/old/_components/ui/select";
 import { ChevronDown } from "lucide-react"; // Need to remove this line
 import { useSearchParams } from "next/navigation";
-// import { useState } from "react";
 import { MdArrowBack, MdArrowForward } from "react-icons/md";
 import { changeSearchParams } from "../_utils/client-helpers";
 import {
@@ -103,10 +102,7 @@ const TotalCountAndPagination = ({
             <MdArrowBack className="mr-[5px] text-2xl leading-none" />
             Back
           </button>
-          <button
-            className="text-brand-[#000] flex w-full max-w-28 flex-row items-center justify-center rounded-sm border-2 border-black bg-gray-100 px-3 py-3 text-base font-bold uppercase"
-            // onClick={() => setMobilePagination(true)}
-          >
+          <button className="text-brand-[#000] flex w-full max-w-28 flex-row items-center justify-center rounded-sm border-2 border-black bg-gray-100 px-3 py-3 text-base font-bold uppercase">
             {page}/{totalPagesCount}
             <ChevronDown className="h-5 w-8 shrink-0" />
           </button>
@@ -115,12 +111,6 @@ const TotalCountAndPagination = ({
             <MdArrowForward className="ml-[5px] text-2xl leading-none" />
           </button>
         </div>
-
-        {/* <PurchasedItemsMobilePagination
-          open={openMobilePagination}
-          setOpen={setMobilePagination}
-          totalPagesCount={totalPagesCount}
-        /> */}
       </div>
     </>
   );

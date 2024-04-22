@@ -2,6 +2,12 @@ import { api } from "@/_lib/api";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import type { MyOrders } from "./types";
 
+type RFData = {
+  rf_data: {
+    [filterId: string]: string[];
+  };
+};
+
 const useSuspenseOrderHistorySearch = (
   token: string,
   fromDate: string,
@@ -12,7 +18,7 @@ const useSuspenseOrderHistorySearch = (
   pageSize: number,
   sortBy: string,
   sortDirection: string,
-  rfData: string,
+  rfData?: RFData,
 ) => {
   return useSuspenseQuery({
     queryKey: [
@@ -42,7 +48,6 @@ const useSuspenseOrderHistorySearch = (
             perpage: pageSize,
             sort: sortBy,
             sort_direction: sortDirection,
-            rf_data: rfData,
           },
         })
         .json<MyOrders>(),
