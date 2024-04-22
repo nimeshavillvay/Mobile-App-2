@@ -10,17 +10,20 @@ import {
 } from "@repo/web-ui/components/ui/radio-group";
 import { useToast } from "@repo/web-ui/components/ui/toast";
 import Link from "next/link";
-import { useId, useMemo, useState } from "react";
+import { ComponentProps, useId, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import InputHelperDescription from "../input-helper-description";
 import type { PasswordPolicies } from "../types";
 import useSignInCookies from "../use-sign-in-cookies.hook";
+import AddressSelector from "./address-selector";
 import {
   StepContainer,
   StepContainerClosed,
   StepContainerOpen,
 } from "./step-container";
 import useRegisterNewUserMutation, {
+  ResponseAddress,
   isVerifyAddressResponse,
 } from "./use-register-new-user-mutation.hook";
 
@@ -95,7 +98,12 @@ const NewUserFlow = ({ passwordPolicies }: NewUserFlowProps) => {
 
   const toast = useToast();
 
-  const billingSuggestions = useState();
+  const [billingSuggestions, setBillingSuggestions] = useState<
+    ResponseAddress[]
+  >([]);
+  const [shippingSuggestions, setShippingSuggestions] = useState<
+    ResponseAddress[]
+  >([]);
 
   const refinedPersonalDetailsSchema = useMemo(
     () =>
@@ -224,12 +232,63 @@ const NewUserFlow = ({ passwordPolicies }: NewUserFlowProps) => {
       {
         onSuccess: (data) => {
           if (isVerifyAddressResponse(data)) {
-            data.suggestions;
+            if (Array.isArray(data.suggestions["billing-address"])) {
+              setBillingSuggestions(data.suggestions["billing-address"]);
+            }
+
+            if (Array.isArray(data.suggestions["shipping-address"])) {
+              setShippingSuggestions(data.suggestions["shipping-address"]);
+            }
           }
         },
       },
     );
   });
+
+  const updateAddress: ComponentProps<
+    typeof AddressSelector
+  >["updateAddress"] = ({ billing, shipping }) => {
+    if (billing) {
+      addressForm.setValue("billingAddress", billing["street-address"]);
+      addressForm.setValue("billingCity", billing.locality);
+      addressForm.setValue("billingState", billing.region);
+      addressForm.setValue("billingCountry", billing["country-name"]);
+      addressForm.setValue("billingPostCode", billing["postal-code"]);
+      addressForm.setValue("billingZipCode", billing.zip4);
+    }
+
+    if (shipping) {
+      addressForm.setValue("shippingAddress", shipping["street-address"]);
+      addressForm.setValue("shippingCity", shipping.locality);
+      addressForm.setValue("shippingState", shipping.region);
+      addressForm.setValue("shippingCountry", shipping["country-name"]);
+      addressForm.setValue("shippingPostCode", shipping["postal-code"]);
+      addressForm.setValue("shippingZipCode", shipping.zip4);
+    }
+
+    // Clear all suggestions
+    setBillingSuggestions([]);
+    setShippingSuggestions([]);
+  };
+
+  // Hide the forms when there is an address conflict.
+  // During this time, suggestions will be returned from either UPS or
+  // SAP. Once the user selected the correct address, the suggestions arrays
+  // should be cleared.
+  if (billingSuggestions.length > 0 || shippingSuggestions.length > 0) {
+    return (
+      <AddressSelector
+        billingAddresses={billingSuggestions}
+        shippingAddresses={billingSuggestions}
+        updateAddressManually={() => {
+          // Clear all suggestions
+          setBillingSuggestions([]);
+          setShippingSuggestions([]);
+        }}
+        updateAddress={updateAddress}
+      />
+    );
+  }
 
   return (
     <>
@@ -252,6 +311,12 @@ const NewUserFlow = ({ passwordPolicies }: NewUserFlowProps) => {
                 required
                 disabled={registerNewUserMutation.isPending}
               />
+
+              {!!personalDetailsForm.formState.errors.firstName?.message && (
+                <InputHelperDescription isError>
+                  {personalDetailsForm.formState.errors.firstName.message}
+                </InputHelperDescription>
+              )}
             </div>
 
             <div className="flex flex-col gap-2">
@@ -264,6 +329,12 @@ const NewUserFlow = ({ passwordPolicies }: NewUserFlowProps) => {
                 required
                 disabled={registerNewUserMutation.isPending}
               />
+
+              {!!personalDetailsForm.formState.errors.lastName?.message && (
+                <InputHelperDescription isError>
+                  {personalDetailsForm.formState.errors.lastName.message}
+                </InputHelperDescription>
+              )}
             </div>
 
             <div className="flex flex-col gap-2 md:hidden">
@@ -276,6 +347,12 @@ const NewUserFlow = ({ passwordPolicies }: NewUserFlowProps) => {
                 required
                 disabled
               />
+
+              {!!personalDetailsForm.formState.errors.email?.message && (
+                <InputHelperDescription isError>
+                  {personalDetailsForm.formState.errors.email.message}
+                </InputHelperDescription>
+              )}
             </div>
 
             <div className="flex flex-col gap-2">
@@ -288,6 +365,12 @@ const NewUserFlow = ({ passwordPolicies }: NewUserFlowProps) => {
                 required
                 disabled={registerNewUserMutation.isPending}
               />
+
+              {!!personalDetailsForm.formState.errors.password?.message && (
+                <InputHelperDescription isError>
+                  {personalDetailsForm.formState.errors.password.message}
+                </InputHelperDescription>
+              )}
             </div>
 
             <div className="flex flex-col gap-2">
@@ -300,6 +383,13 @@ const NewUserFlow = ({ passwordPolicies }: NewUserFlowProps) => {
                 required
                 disabled={registerNewUserMutation.isPending}
               />
+
+              {!!personalDetailsForm.formState.errors.confirmPassword
+                ?.message && (
+                <InputHelperDescription isError>
+                  {personalDetailsForm.formState.errors.confirmPassword.message}
+                </InputHelperDescription>
+              )}
             </div>
           </div>
 
@@ -331,6 +421,12 @@ const NewUserFlow = ({ passwordPolicies }: NewUserFlowProps) => {
                 </div>
               ))}
             </RadioGroup>
+
+            {!!personalDetailsForm.formState.errors.type?.message && (
+              <InputHelperDescription isError>
+                {personalDetailsForm.formState.errors.type.message}
+              </InputHelperDescription>
+            )}
           </div>
 
           <p className="text-sm text-wurth-gray-800">
@@ -367,6 +463,12 @@ const NewUserFlow = ({ passwordPolicies }: NewUserFlowProps) => {
                   required
                   disabled={registerNewUserMutation.isPending}
                 />
+
+                {!!addressForm.formState.errors.billingAddress?.message && (
+                  <InputHelperDescription isError>
+                    {addressForm.formState.errors.billingAddress.message}
+                  </InputHelperDescription>
+                )}
               </div>
 
               <div className="col-span-3 flex flex-col gap-2 md:col-span-6">
@@ -378,6 +480,16 @@ const NewUserFlow = ({ passwordPolicies }: NewUserFlowProps) => {
                   type="text"
                   disabled={registerNewUserMutation.isPending}
                 />
+
+                {!!addressForm.formState.errors.billingOptionalAddress
+                  ?.message && (
+                  <InputHelperDescription isError>
+                    {
+                      addressForm.formState.errors.billingOptionalAddress
+                        .message
+                    }
+                  </InputHelperDescription>
+                )}
               </div>
 
               <div className="col-span-3 flex flex-col gap-2">
@@ -390,6 +502,12 @@ const NewUserFlow = ({ passwordPolicies }: NewUserFlowProps) => {
                   required
                   disabled={registerNewUserMutation.isPending}
                 />
+
+                {!!addressForm.formState.errors.billingCity?.message && (
+                  <InputHelperDescription isError>
+                    {addressForm.formState.errors.billingCity.message}
+                  </InputHelperDescription>
+                )}
               </div>
 
               <div className="col-span-3 flex flex-col gap-2">
@@ -402,6 +520,12 @@ const NewUserFlow = ({ passwordPolicies }: NewUserFlowProps) => {
                   required
                   disabled={registerNewUserMutation.isPending}
                 />
+
+                {!!addressForm.formState.errors.billingState?.message && (
+                  <InputHelperDescription isError>
+                    {addressForm.formState.errors.billingState.message}
+                  </InputHelperDescription>
+                )}
               </div>
 
               <div className="col-span-3 flex flex-col gap-2">
@@ -414,6 +538,12 @@ const NewUserFlow = ({ passwordPolicies }: NewUserFlowProps) => {
                   required
                   disabled={registerNewUserMutation.isPending}
                 />
+
+                {!!addressForm.formState.errors.billingCountry?.message && (
+                  <InputHelperDescription isError>
+                    {addressForm.formState.errors.billingCountry.message}
+                  </InputHelperDescription>
+                )}
               </div>
 
               <div className="col-span-2 flex flex-col gap-2">
@@ -426,6 +556,12 @@ const NewUserFlow = ({ passwordPolicies }: NewUserFlowProps) => {
                   required
                   disabled={registerNewUserMutation.isPending}
                 />
+
+                {!!addressForm.formState.errors.billingPostCode?.message && (
+                  <InputHelperDescription isError>
+                    {addressForm.formState.errors.billingPostCode.message}
+                  </InputHelperDescription>
+                )}
               </div>
 
               <div className="col-span-1 flex flex-col gap-2">
@@ -442,6 +578,12 @@ const NewUserFlow = ({ passwordPolicies }: NewUserFlowProps) => {
                   type="text"
                   disabled={registerNewUserMutation.isPending}
                 />
+
+                {!!addressForm.formState.errors.billingZipCode?.message && (
+                  <InputHelperDescription isError>
+                    {addressForm.formState.errors.billingZipCode.message}
+                  </InputHelperDescription>
+                )}
               </div>
             </div>
 
@@ -477,6 +619,12 @@ const NewUserFlow = ({ passwordPolicies }: NewUserFlowProps) => {
                     required={!sameAddress}
                     disabled={registerNewUserMutation.isPending}
                   />
+
+                  {!!addressForm.formState.errors.shippingAddress?.message && (
+                    <InputHelperDescription isError>
+                      {addressForm.formState.errors.shippingAddress.message}
+                    </InputHelperDescription>
+                  )}
                 </div>
 
                 <div className="col-span-3 flex flex-col gap-2 md:col-span-6">
@@ -490,6 +638,16 @@ const NewUserFlow = ({ passwordPolicies }: NewUserFlowProps) => {
                     type="text"
                     disabled={registerNewUserMutation.isPending}
                   />
+
+                  {!!addressForm.formState.errors.shippingOptionalAddress
+                    ?.message && (
+                    <InputHelperDescription isError>
+                      {
+                        addressForm.formState.errors.shippingOptionalAddress
+                          .message
+                      }
+                    </InputHelperDescription>
+                  )}
                 </div>
 
                 <div className="col-span-3 flex flex-col gap-2">
@@ -502,6 +660,12 @@ const NewUserFlow = ({ passwordPolicies }: NewUserFlowProps) => {
                     required={!sameAddress}
                     disabled={registerNewUserMutation.isPending}
                   />
+
+                  {!!addressForm.formState.errors.shippingCity?.message && (
+                    <InputHelperDescription isError>
+                      {addressForm.formState.errors.shippingCity.message}
+                    </InputHelperDescription>
+                  )}
                 </div>
 
                 <div className="col-span-3 flex flex-col gap-2">
@@ -514,6 +678,12 @@ const NewUserFlow = ({ passwordPolicies }: NewUserFlowProps) => {
                     required={!sameAddress}
                     disabled={registerNewUserMutation.isPending}
                   />
+
+                  {!!addressForm.formState.errors.shippingState?.message && (
+                    <InputHelperDescription isError>
+                      {addressForm.formState.errors.shippingState.message}
+                    </InputHelperDescription>
+                  )}
                 </div>
 
                 <div className="col-span-3 flex flex-col gap-2">
@@ -526,6 +696,12 @@ const NewUserFlow = ({ passwordPolicies }: NewUserFlowProps) => {
                     required={!sameAddress}
                     disabled={registerNewUserMutation.isPending}
                   />
+
+                  {!!addressForm.formState.errors.shippingCountry?.message && (
+                    <InputHelperDescription isError>
+                      {addressForm.formState.errors.shippingCountry.message}
+                    </InputHelperDescription>
+                  )}
                 </div>
 
                 <div className="col-span-2 flex flex-col gap-2">
@@ -538,6 +714,12 @@ const NewUserFlow = ({ passwordPolicies }: NewUserFlowProps) => {
                     required={!sameAddress}
                     disabled={registerNewUserMutation.isPending}
                   />
+
+                  {!!addressForm.formState.errors.shippingPostCode?.message && (
+                    <InputHelperDescription isError>
+                      {addressForm.formState.errors.shippingPostCode.message}
+                    </InputHelperDescription>
+                  )}
                 </div>
 
                 <div className="col-span-1 flex flex-col gap-2">
@@ -554,6 +736,12 @@ const NewUserFlow = ({ passwordPolicies }: NewUserFlowProps) => {
                     type="text"
                     disabled={registerNewUserMutation.isPending}
                   />
+
+                  {!!addressForm.formState.errors.shippingZipCode?.message && (
+                    <InputHelperDescription isError>
+                      {addressForm.formState.errors.shippingZipCode.message}
+                    </InputHelperDescription>
+                  )}
                 </div>
               </div>
             )}

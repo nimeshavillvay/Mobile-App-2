@@ -25,7 +25,7 @@ const Register = ({ passwordPolicies }: RegisterProps) => {
   const [email, setEmail] = useState("");
 
   useEffect(() => {
-    // TODO Find out a better way of doing this and removing the `useEffect`.
+    // TODO Find out a better way of doing this and remove the `useEffect`.
     // Using `useEffect` to sync state is a bit no-no but I couldn't
     // find a better way of preventing the hydration mismatch because
     // of the email.

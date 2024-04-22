@@ -1,19 +1,12 @@
 import react18Plugin from "esbuild-plugin-react18";
-import { defineConfig } from "tsup";
+import { defineConfig, Options } from "tsup";
 
 // To get rid of the `Error [ERR_WORKER_OUT_OF_MEMORY]: Worker terminated due to reaching memory limit: JS heap out of memory`
 // error, putting `NODE_OPTIONS='--max-old-space-size=16384'` seems to work
 // https://github.com/egoist/tsup/issues/920#issuecomment-1791496481
 
-export default defineConfig({
-  // The file we created above that will be the entrypoint to the library.
-  entry: ["src/styles.css", "src/components/**/*/index.ts"],
-  // Enable TypeScript type definitions to be generated in the output.
-  // This provides type-definitions to consumers.
-  // dts: true,
-  experimentalDts: true,
-  // Clean the `dist` directory before building.
-  // This is useful to ensure the output is only the latest.
+const baseConfig: Options = {
+  dts: true,
   clean: true,
   format: ["esm"],
   external: [
@@ -26,7 +19,29 @@ export default defineConfig({
     "cva",
     /^@radix-ui\/react-/g,
   ],
-  // treeshake: true, // Disabled because "use client" directive gets removed
-  // splitting: true, // Disabled because "use client" directive gets removed
   esbuildPlugins: [react18Plugin()],
-});
+};
+
+export default defineConfig([
+  { ...baseConfig, entry: ["src/styles.css"] },
+  {
+    ...baseConfig,
+    entry: ["src/components/icons/**/*/index.ts"],
+    outDir: "dist/components/icons",
+  },
+  {
+    ...baseConfig,
+    entry: ["src/components/logos/**/*/index.ts"],
+    outDir: "dist/components/logos",
+  },
+  {
+    ...baseConfig,
+    entry: ["src/components/ui/**/*/index.ts"],
+    outDir: "dist/components/ui",
+  },
+  {
+    ...baseConfig,
+    entry: ["src/components/*/index.ts"],
+    outDir: "dist/components",
+  },
+]);
