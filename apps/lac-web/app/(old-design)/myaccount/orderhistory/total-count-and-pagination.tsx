@@ -34,8 +34,6 @@ const TotalCountAndPagination = ({
 
   const totalPagesCount = Math.ceil(totalItems / perPage);
 
-  // const [openMobilePagination, setMobilePagination] = useState(false);
-
   const handlePerPageChange = (value: string) => {
     changeSearchParams(urlSearchParams, [
       {
