@@ -4,7 +4,7 @@ import { api } from "@/_lib/api";
 import { getBreadcrumbs } from "@/_lib/apis/server";
 import { getFilters } from "@/_lib/apis/shared";
 import { DEFAULT_REVALIDATE } from "@/_lib/constants";
-import ChevronLeft from "@repo/web-ui/components/icons/chevron-left";
+import { ChevronLeft } from "@repo/web-ui/components/icons/chevron-left";
 import {
   Breadcrumb,
   BreadcrumbItem,

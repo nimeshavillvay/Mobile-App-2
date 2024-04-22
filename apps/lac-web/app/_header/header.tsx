@@ -1,9 +1,9 @@
 import { api } from "@/_lib/api";
 import { DEFAULT_REVALIDATE } from "@/_lib/constants";
 import { cn } from "@/_lib/utils";
-import Profile from "@repo/web-ui/components/icons/profile";
-import ShoppingCart from "@repo/web-ui/components/icons/shopping-cart";
-import WurthFullBlack from "@repo/web-ui/components/logos/wurth-full-black";
+import { Profile } from "@repo/web-ui/components/icons/profile";
+import { ShoppingCart } from "@repo/web-ui/components/icons/shopping-cart";
+import { WurthFullBlack } from "@repo/web-ui/components/logos/wurth-full-black";
 import {
   SearchBox,
   SearchBoxButton,

@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import { type ComponentProps } from "react";
 
-const Alert = ({ className, ...delegated }: ComponentProps<"svg">) => {
+export const Alert = ({ className, ...delegated }: ComponentProps<"svg">) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -19,5 +19,3 @@ const Alert = ({ className, ...delegated }: ComponentProps<"svg">) => {
     </svg>
   );
 };
-
-export default Alert;

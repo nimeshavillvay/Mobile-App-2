@@ -1,7 +1,7 @@
 import Banner from "@/_components/banner";
 import SubHeading from "@/_components/sub-heading";
 import { getBanners } from "@/_lib/apis/server";
-import ArrowRight from "@repo/web-ui/components/icons/arrow-right";
+import { ArrowRight } from "@repo/web-ui/components/icons/arrow-right";
 import Image, { type StaticImageData } from "next/image";
 import { type CSSProperties } from "react";
 import Balancer from "react-wrap-balancer";

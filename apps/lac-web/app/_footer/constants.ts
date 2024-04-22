@@ -1,16 +1,14 @@
-import Facebook from "@repo/web-ui/components/icons/facebook";
-import Instagram from "@repo/web-ui/components/icons/instagram";
-import LinkedIn from "@repo/web-ui/components/icons/linkedin";
-import PackageDelivery from "@repo/web-ui/components/icons/package-delivery";
-import Pinterest from "@repo/web-ui/components/icons/pinterest";
-import TikTok from "@repo/web-ui/components/icons/tiktok";
-import TruckWithClock from "@repo/web-ui/components/icons/truck-with-clock";
-import Twitter from "@repo/web-ui/components/icons/twitter";
-import {
-  default as Headset,
-  default as Wallet,
-} from "@repo/web-ui/components/icons/wallet";
-import YouTube from "@repo/web-ui/components/icons/youtube";
+import { Facebook } from "@repo/web-ui/components/icons/facebook";
+import { Headset } from "@repo/web-ui/components/icons/headset";
+import { Instagram } from "@repo/web-ui/components/icons/instagram";
+import { LinkedIn } from "@repo/web-ui/components/icons/linkedin";
+import { PackageDelivery } from "@repo/web-ui/components/icons/package-delivery";
+import { Pinterest } from "@repo/web-ui/components/icons/pinterest";
+import { TikTok } from "@repo/web-ui/components/icons/tiktok";
+import { TruckWithClock } from "@repo/web-ui/components/icons/truck-with-clock";
+import { Twitter } from "@repo/web-ui/components/icons/twitter";
+import { Wallet } from "@repo/web-ui/components/icons/wallet";
+import { YouTube } from "@repo/web-ui/components/icons/youtube";
 
 export const REASONS = [
   {

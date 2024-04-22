@@ -1,1 +1,1 @@
-export { default } from "./truck-with-clock";
+export * from "./truck-with-clock";

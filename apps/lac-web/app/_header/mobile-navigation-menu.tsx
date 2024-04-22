@@ -2,10 +2,10 @@
 
 import { cva } from "@/_lib/cva.config";
 import { cn } from "@/_lib/utils";
-import ArrowLeft from "@repo/web-ui/components/icons/arrow-left";
-import ArrowUpRight from "@repo/web-ui/components/icons/arrow-up-right";
-import ChevronRight from "@repo/web-ui/components/icons/chevron-right";
-import Menu from "@repo/web-ui/components/icons/menu";
+import { ArrowLeft } from "@repo/web-ui/components/icons/arrow-left";
+import { ArrowUpRight } from "@repo/web-ui/components/icons/arrow-up-right";
+import { ChevronRight } from "@repo/web-ui/components/icons/chevron-right";
+import { Menu } from "@repo/web-ui/components/icons/menu";
 import { Button } from "@repo/web-ui/components/ui/button";
 import {
   Sheet,

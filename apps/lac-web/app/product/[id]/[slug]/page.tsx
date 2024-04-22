@@ -3,11 +3,10 @@ import RelatedSearches from "@/_components/related-searches";
 import { api } from "@/_lib/api";
 import { getBreadcrumbs } from "@/_lib/apis/server";
 import { DEFAULT_REVALIDATE } from "@/_lib/constants";
-import ChevronLeft from "@repo/web-ui/components/icons/chevron-left";
+import { ChevronLeft } from "@repo/web-ui/components/icons/chevron-left";
 import {
   ProductCard,
   ProductCardActions,
-  ProductCardCompare,
   ProductCardContent,
   ProductCardDetails,
   ProductCardDiscount,
@@ -193,8 +192,6 @@ const ProductPage = async ({ params: { id, slug } }: ProductPageProps) => {
                       href={`/product/${item.productid}/${item.url}`}
                       title={item.item_name}
                     />
-
-                    <ProductCardCompare />
                   </ProductCardHero>
 
                   <ProductCardContent>
@@ -242,8 +239,6 @@ const ProductPage = async ({ params: { id, slug } }: ProductPageProps) => {
                 />
 
                 <ProductCardLabel>Label</ProductCardLabel>
-
-                <ProductCardCompare />
               </ProductCardHero>
 
               <ProductCardContent>

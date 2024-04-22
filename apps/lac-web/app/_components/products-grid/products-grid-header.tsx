@@ -1,6 +1,6 @@
-import ChevronDown from "@repo/web-ui/components/icons/chevron-down";
-import CloseIcon from "@repo/web-ui/components/icons/close";
-import Settings from "@repo/web-ui/components/icons/settings";
+import { ChevronDown } from "@repo/web-ui/components/icons/chevron-down";
+import { Close as CloseIcon } from "@repo/web-ui/components/icons/close";
+import { Settings } from "@repo/web-ui/components/icons/settings";
 import { Button } from "@repo/web-ui/components/ui/button";
 import { Separator } from "@repo/web-ui/components/ui/separator";
 import { type ReactNode } from "react";
