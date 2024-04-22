@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import type { PasswordPolicies } from "@/_lib/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type CheckedState } from "@radix-ui/react-checkbox";
 import { Checkbox } from "@repo/web-ui/components/ui/checkbox";
@@ -14,7 +15,6 @@ import { ComponentProps, useId, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import InputHelperDescription from "../input-helper-description";
-import type { PasswordPolicies } from "../types";
 import useSignInCookies from "../use-sign-in-cookies.hook";
 import AddressSelector from "./address-selector";
 import {
