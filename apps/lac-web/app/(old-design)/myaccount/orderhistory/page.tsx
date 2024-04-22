@@ -18,14 +18,16 @@ const OrderHistoryPage = () => {
 
   return (
     <>
-      <h2 className="relative font-wurth text-xl font-medium text-brand-primary">
-        My Orders
-      </h2>
+      <div className="container py-4 md:px-0 md:py-0">
+        <h2 className="relative font-wurth text-xl font-medium text-brand-primary">
+          My Orders
+        </h2>
 
-      <Separator
-        orientation="horizontal"
-        className="h-px flex-1 bg-brand-primary"
-      />
+        <Separator
+          orientation="horizontal"
+          className="h-px flex-1 bg-brand-primary"
+        />
+      </div>
 
       <OrderHistoryList token={accountTokenCookie?.value} />
     </>

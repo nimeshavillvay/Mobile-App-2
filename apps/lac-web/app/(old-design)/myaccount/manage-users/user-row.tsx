@@ -1,7 +1,6 @@
 import { Button } from "@/old/_components/ui/button";
 import { TableCell, TableRow } from "@/old/_components/ui/table";
-import { Role } from "@/old/_lib/types";
-import { cn } from "@/old/_utils/helpers";
+import type { Role } from "@/old/_lib/types";
 import { useState } from "react";
 import {
   MdDeleteOutline,
@@ -9,8 +8,9 @@ import {
   MdKeyboardArrowUp,
 } from "react-icons/md";
 import ActionConfirmationDialog from "./action-confirmation-dialog";
-import { Status, UserProfile } from "./types";
+import type { UserProfile } from "./types";
 import useDeleteOtherUserMutation from "./use-delete-other-user-mutation.hook";
+import UserStatusBadge from "./user-status-badge";
 import UserUpdateForm from "./user-update-form";
 
 type UserRowProps = {
@@ -27,26 +27,10 @@ const UserRow = ({ user, index, jobRoles }: UserRowProps) => {
 
   const deleteOtherUserMutation = useDeleteOtherUserMutation();
 
-  const getStatusClass = (status: Status) => {
-    switch (status) {
-      case "ACTIVE":
-        return "border-brand-tertiary text-brand-tertiary";
-
-      case "DEACTIVE":
-        return "border-brand-gray-400 text-brand-gray-200";
-
-      case "PENDING":
-        return "border-brand-secondary text-brand-secondary";
-
-      default:
-        return "border-brand-gray-400 text-brand-gray-400";
-    }
-  };
-
   return (
     <>
       <TableRow
-        key={user?.uuid}
+        key={user?.id}
         className={index % 2 === 0 ? "bg-white" : "bg-brand-gray-100"}
       >
         <TableCell className="align-middle">{user?.email}</TableCell>
@@ -57,14 +41,7 @@ const UserRow = ({ user, index, jobRoles }: UserRowProps) => {
 
         <TableCell className="text-center">
           <div className="flex justify-center">
-            <div
-              className={cn(
-                "py px w-[90px] rounded-sm border font-bold capitalize",
-                getStatusClass(user?.status),
-              )}
-            >
-              {user?.status?.toLowerCase()}
-            </div>
+            <UserStatusBadge status={user?.status} />
           </div>
         </TableCell>
 
@@ -114,7 +91,10 @@ const UserRow = ({ user, index, jobRoles }: UserRowProps) => {
         onOpenChange={setIsOpenDelete}
         title="Confirm Action"
         text="Do you really want to delete these records?"
-        onConfirm={() => deleteOtherUserMutation.mutate(user?.signed_data)}
+        onConfirm={() => {
+          deleteOtherUserMutation.mutate({ userId: user?.id });
+          setIsOpenDelete(false);
+        }}
         okText="Confirm"
       />
 

@@ -235,7 +235,7 @@ const OrderHistoryListSelectors = ({
       </div>
 
       {/* Mobile Filters */}
-      <div className="block md:hidden">
+      <div className="container block md:hidden">
         <div className="flex flex-row items-center justify-between">
           <Button
             variant="ghost"

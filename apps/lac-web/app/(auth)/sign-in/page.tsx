@@ -1,5 +1,5 @@
+import { getPasswordPolicies } from "@/_lib/apis/server";
 import type { Metadata } from "next";
-import { getPasswordPolicies } from "../apis";
 import SignIn from "./sign-in";
 
 export const metadata: Metadata = {

@@ -1,6 +1,7 @@
 "use client";
 
 import Pagination from "@/old/_components/pagination";
+import { Button } from "@/old/_components/ui/button";
 import {
   Select,
   SelectContent,
@@ -8,10 +9,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/old/_components/ui/select";
-import { ChevronDown } from "lucide-react"; // Need to remove this line
 import { useSearchParams } from "next/navigation";
-// import { useState } from "react";
-import { MdArrowBack, MdArrowForward } from "react-icons/md";
+import {
+  MdArrowBack,
+  MdArrowForward,
+  MdKeyboardArrowDown,
+} from "react-icons/md";
 import { changeSearchParams } from "../_utils/client-helpers";
 import {
   INIT_PAGE_NUMBER,
@@ -34,8 +37,6 @@ const TotalCountAndPagination = ({
   const perPage = Number(urlSearchParams.get("perPage") ?? INIT_PAGE_SIZE);
 
   const totalPagesCount = Math.ceil(totalItems / perPage);
-
-  // const [openMobilePagination, setMobilePagination] = useState(false);
 
   const handlePerPageChange = (value: string) => {
     changeSearchParams(urlSearchParams, [
@@ -97,30 +98,21 @@ const TotalCountAndPagination = ({
       </div>
 
       {/* For Mobile View */}
-      <div className="overflow-hidden py-3 md:hidden">
-        <div className="flex flex-row justify-center gap-1 font-bold">
-          <button className="flex flex-row items-center bg-gray-100 px-3 py-3 text-base uppercase text-brand-gray-400">
-            <MdArrowBack className="mr-[5px] text-2xl leading-none" />
-            Back
-          </button>
-          <button
-            className="text-brand-[#000] flex w-full max-w-28 flex-row items-center justify-center rounded-sm border-2 border-black bg-gray-100 px-3 py-3 text-base font-bold uppercase"
-            // onClick={() => setMobilePagination(true)}
-          >
-            {page}/{totalPagesCount}
-            <ChevronDown className="h-5 w-8 shrink-0" />
-          </button>
-          <button className="flex flex-row items-center bg-gray-100 px-3 py-3 uppercase text-brand-gray-400">
-            Next
-            <MdArrowForward className="ml-[5px] text-2xl leading-none" />
-          </button>
-        </div>
+      <div className="container flex flex-row gap-2 py-3 md:hidden">
+        <Button className="h-12 flex-1 bg-gray-100 text-base text-brand-gray-400">
+          <MdArrowBack className="text-xl leading-none" />
+          Back
+        </Button>
 
-        {/* <PurchasedItemsMobilePagination
-          open={openMobilePagination}
-          setOpen={setMobilePagination}
-          totalPagesCount={totalPagesCount}
-        /> */}
+        <Button className="h-12 flex-1 gap-3 border-2 border-black bg-gray-100 text-base text-black">
+          {page}/{totalPagesCount}
+          <MdKeyboardArrowDown className="text-xl leading-none" />
+        </Button>
+
+        <Button className="h-12 flex-1 bg-gray-100 text-base text-brand-gray-400">
+          Next
+          <MdArrowForward className="text-xl leading-none" />
+        </Button>
       </div>
     </>
   );

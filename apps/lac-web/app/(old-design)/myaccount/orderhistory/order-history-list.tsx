@@ -11,7 +11,6 @@ import {
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import {
-  ALL_ORDER_TYPES,
   INIT_FROM_DATE,
   INIT_PAGE_NUMBER,
   INIT_PAGE_SIZE,
@@ -30,12 +29,17 @@ const OrderHistoryList = ({ token }: { token: string }) => {
   const toDate = searchParams.get("to") ?? INIT_TO_DATE;
   const currentPage = Number(searchParams.get("page") ?? INIT_PAGE_NUMBER);
   const pageSize = Number(searchParams.get("perPage") ?? INIT_PAGE_SIZE);
-  const orderTypes =
-    searchParams.get("orderType")?.split(",") ?? ALL_ORDER_TYPES;
+  const orderTypes = searchParams.get("orderType")?.split(",") ?? [];
   const orderStatus = searchParams.get("orderStatus")?.split(",") ?? [];
   const sortBy = searchParams.get("sortBy") ?? "date";
   const sortDirection =
     searchParams.get("sortDirection") ?? SORTING_DIRECTION.DESC;
+
+  const filterQuery = useSuspenseFilters({
+    type: "Order History",
+    from: fromDate,
+    to: toDate,
+  });
 
   const searchQuery = useSuspenseOrderHistorySearch(
     token,
@@ -47,21 +51,20 @@ const OrderHistoryList = ({ token }: { token: string }) => {
     pageSize,
     sortBy,
     sortDirection,
-    "",
+    {
+      rf_data: {
+        "16712": orderTypes,
+        "16715": orderStatus,
+      },
+    },
   );
-
-  const filterQuery = useSuspenseFilters({
-    type: "Order History",
-    from: fromDate,
-    to: toDate,
-  });
 
   const orderHistoryItems = searchQuery?.data?.orders ?? null;
   const totalItems = searchQuery?.data?.pagination[0]?.db_count ?? 0;
 
   return (
     <>
-      <div className="flex flex-row items-center py-4 md:justify-end">
+      <div className="flex flex-row items-center md:justify-end md:py-4">
         <Link
           className="hidden text-nowrap rounded-sm bg-brand-secondary px-4 py-2 text-center font-wurth font-extrabold uppercase text-white md:block"
           href="https://wurthlac.billtrust.com/"
