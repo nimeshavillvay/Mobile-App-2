@@ -1,6 +1,6 @@
 "use client";
 
-import ChevronDown from "@/components/icons/chevron-down";
+import { ChevronDown } from "@/components/icons/chevron-down";
 import { cva } from "@/lib/cva.config";
 import { cn } from "@/lib/utils";
 import * as NavigationMenuPrimitive from "@radix-ui/react-navigation-menu";

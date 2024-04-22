@@ -1,4 +1,4 @@
-import CheckCircle from "@repo/web-ui/components/icons/check-circle";
+import { CheckCircle } from "@repo/web-ui/components/icons/check-circle";
 import { Button } from "@repo/web-ui/components/ui/button";
 import {
   createContext,
@@ -104,7 +104,7 @@ export const StepContainerClosed = ({
   onClick,
   disabled = false,
 }: {
-  children: ReactNode;
+  children?: ReactNode;
   onClick?: ComponentProps<typeof Button>["onClick"];
   disabled?: boolean;
 }) => {

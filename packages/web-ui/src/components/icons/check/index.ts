@@ -1,1 +1,1 @@
-export { default } from "./check";
+export * from "./check";

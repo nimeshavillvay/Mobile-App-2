@@ -1,1 +1,1 @@
-export { default } from "./headset";
+export * from "./headset";

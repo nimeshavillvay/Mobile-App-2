@@ -1,1 +1,1 @@
-export { default } from "./wurth";
+export * from "./wurth";

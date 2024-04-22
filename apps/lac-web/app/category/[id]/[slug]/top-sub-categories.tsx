@@ -3,7 +3,6 @@ import SubHeading from "@/_components/sub-heading";
 import {
   ProductCard,
   ProductCardActions,
-  ProductCardCompare,
   ProductCardContent,
   ProductCardDetails,
   ProductCardDiscount,
@@ -61,8 +60,6 @@ const TopSubCategories = ({ title }: TopSubCategoriesProps) => {
               />
 
               <ProductCardLabel>Label</ProductCardLabel>
-
-              <ProductCardCompare />
             </ProductCardHero>
 
             <ProductCardContent>

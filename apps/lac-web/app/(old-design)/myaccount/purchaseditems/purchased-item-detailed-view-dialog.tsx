@@ -15,7 +15,7 @@ import { Label } from "@/old/_components/ui/label";
 import useAddToCartMutation from "@/old/_hooks/cart/use-add-to-cart-mutation.hook";
 import { cn, getMediaUrl } from "@/old/_utils/helpers";
 import { zodResolver } from "@hookform/resolvers/zod";
-import WurthFullBlack from "@repo/web-ui/components/logos/wurth-full-black";
+import { WurthFullBlack } from "@repo/web-ui/components/logos/wurth-full-black";
 import dayjs from "dayjs";
 import Image from "next/image";
 import Link from "next/link";

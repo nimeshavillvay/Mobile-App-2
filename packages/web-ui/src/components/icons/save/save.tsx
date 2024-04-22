@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import { type ComponentProps } from "react";
 
-const Save = ({ className, ...delegated }: ComponentProps<"svg">) => {
+export const Save = ({ className, ...delegated }: ComponentProps<"svg">) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -19,5 +19,3 @@ const Save = ({ className, ...delegated }: ComponentProps<"svg">) => {
     </svg>
   );
 };
-
-export default Save;

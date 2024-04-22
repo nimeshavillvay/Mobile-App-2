@@ -1,5 +1,5 @@
 import productItemImage from "@/_assets/images/product-item-image.png";
-import Zap from "@repo/web-ui/components/icons/zap";
+import { Zap } from "@repo/web-ui/components/icons/zap";
 import {
   Carousel,
   CarouselContent,

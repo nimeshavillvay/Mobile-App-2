@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import { type ComponentProps } from "react";
 
-const Menu = ({ className, ...delegated }: ComponentProps<"svg">) => {
+export const Menu = ({ className, ...delegated }: ComponentProps<"svg">) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -20,5 +20,3 @@ const Menu = ({ className, ...delegated }: ComponentProps<"svg">) => {
     </svg>
   );
 };
-
-export default Menu;

@@ -1,15 +1,15 @@
 "use client";
 
 import { cn } from "@/_lib/utils";
-import AddToCartIcon from "@repo/web-ui/components/icons/add-to-cart";
-import Check from "@repo/web-ui/components/icons/check";
-import ChevronRight from "@repo/web-ui/components/icons/chevron-right";
-import HeartOutline from "@repo/web-ui/components/icons/heart-outline";
-import Minus from "@repo/web-ui/components/icons/minus";
-import Plus from "@repo/web-ui/components/icons/plus";
+import { AddToCart as AddToCartIcon } from "@repo/web-ui/components/icons/add-to-cart";
+import { Check } from "@repo/web-ui/components/icons/check";
+import { ChevronRight } from "@repo/web-ui/components/icons/chevron-right";
+import { HeartOutline } from "@repo/web-ui/components/icons/heart-outline";
+import { Minus } from "@repo/web-ui/components/icons/minus";
+import { Plus } from "@repo/web-ui/components/icons/plus";
 import { Button } from "@repo/web-ui/components/ui/button";
 import { Input } from "@repo/web-ui/components/ui/input";
-import { useState } from "react";
+import { useState, type ChangeEvent } from "react";
 
 type AddToCartProps = {
   minQty: number;
@@ -73,7 +73,9 @@ const AddToCart = ({ minQty, incQty, className }: AddToCartProps) => {
               min={minQty}
               step={incQty}
               value={quantity}
-              onChange={(e) => setQuantity(Number(e.target.value))}
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                setQuantity(Number(e.target.value))
+              }
               className="flex-1 rounded-sm border-0 p-0 text-center text-lg font-semibold text-wurth-gray-800 shadow-none"
             />
 

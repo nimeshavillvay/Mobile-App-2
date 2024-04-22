@@ -1,1 +1,1 @@
-export { default } from "./plus";
+export * from "./plus";
