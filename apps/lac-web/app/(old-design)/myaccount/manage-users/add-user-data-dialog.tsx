@@ -1,6 +1,8 @@
 "use client";
 
-import { Role } from "@/(old-design)/_lib/types";
+import type { PasswordPolicies } from "@/_lib/types";
+import { checkPasswordComplexity } from "@/_lib/utils";
+import { Button } from "@/old/_components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -25,6 +27,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/old/_components/ui/select";
+import type { Role } from "@/old/_lib/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
@@ -37,19 +40,26 @@ const USER_PERMISSIONS = [
   { label: "Buyer", value: "BUYER" },
 ] as const;
 
-const addUserDataSchema = z.object({
-  firstName: z.string().trim().min(1, "Please enter first name.").max(40),
-  lastName: z.string().trim().min(1, "Please enter last name.").max(40),
-  jobTitle: z.string().min(1, "Please enter job title."),
-  permission: z.string().min(1, "Please enter permission type."),
-});
-type AddUserDataSchema = z.infer<typeof addUserDataSchema>;
+const addUserDataSchema = z
+  .object({
+    firstName: z.string().trim().min(1, "Please enter first name.").max(40),
+    lastName: z.string().trim().min(1, "Please enter last name.").max(40),
+    jobTitle: z.string(),
+    permission: z.string().min(1, "Please enter permission type."),
+    password: z.string(),
+    confirmPassword: z.string(),
+  })
+  .refine(({ password, confirmPassword }) => password === confirmPassword, {
+    message: "The passwords did not match",
+    path: ["confirmPassword"],
+  });
 
 type AddUserDataProps = {
   jobRoles: Role[];
   open: boolean;
   email: string;
   setOpen: Dispatch<SetStateAction<boolean>>;
+  passwordPolicies: PasswordPolicies;
 };
 
 const AddUserDataDialog = ({
@@ -57,15 +67,28 @@ const AddUserDataDialog = ({
   open,
   email,
   setOpen,
+  passwordPolicies,
 }: AddUserDataProps) => {
+  const refinedSchema = addUserDataSchema.superRefine(({ password }, context) =>
+    checkPasswordComplexity({
+      password,
+      passwordPolicies,
+      context,
+    }),
+  );
+
+  type AddUserDataSchema = z.infer<typeof refinedSchema>;
+
   const addUserDataMutation = useAddUserDataMutation();
 
   const form = useForm<AddUserDataSchema>({
-    resolver: zodResolver(addUserDataSchema),
+    resolver: zodResolver(refinedSchema),
     defaultValues: {
       firstName: "",
       lastName: "",
       jobTitle: "",
+      password: "",
+      confirmPassword: "",
       permission: "",
     },
   });
@@ -74,9 +97,10 @@ const AddUserDataDialog = ({
     addUserDataMutation.mutate(
       {
         firstName: data.firstName,
-        email: email,
-        jobTitle: data.jobTitle,
         lastName: data.lastName,
+        jobTitle: data.jobTitle,
+        email: email,
+        password: data.password ?? "",
         permission: data.permission,
       },
       {
@@ -89,170 +113,211 @@ const AddUserDataDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="old-design-text-base max-w-[500px]">
+      <DialogContent className="old-design-text-base max-w-[500px] gap-0">
         <DialogHeader>
-          <DialogTitle>Add User</DialogTitle>
+          <DialogTitle className="text-left font-wurth">Add User</DialogTitle>
 
           <DialogDescription className="sr-only">
             Add a new user by entering the email
           </DialogDescription>
         </DialogHeader>
 
-        <div className="px-5 pb-8 pt-2">
-          <div className="m-auto max-w-[300px] text-center">
-            <MdPermIdentity className="m-auto text-8xl leading-none text-brand-gray-500" />
+        <div className="space-y-4 p-5">
+          <div className="flex flex-col items-center justify-center text-center text-brand-gray-500">
+            <MdPermIdentity className="m-auto text-4xl leading-none" />
 
             <p className="text-brand-primary">User Not Found!</p>
 
-            <p className="mb-5">
-              Please provide following details to add{" "}
-              <span className="text-[#0056B3]">{email}</span> to this account
+            <p className="text-wrap">
+              Please provide following details to add
+              <br />
+              <span className="text-brand-secondary">{email}</span> to this
+              account
             </p>
           </div>
 
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                <FormField
-                  control={form.control}
-                  name="firstName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="">First Name*</FormLabel>
-                      <FormDescription className="sr-only">
-                        Email
-                      </FormDescription>
+            <form onSubmit={form.handleSubmit(onSubmit)}>
+              <div className="mb-4 space-y-2">
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                  <FormField
+                    control={form.control}
+                    name="firstName"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="font-bold">First Name*</FormLabel>
+                        <FormDescription className="sr-only">
+                          Enter first name for the new user
+                        </FormDescription>
 
-                      <FormControl>
-                        <Input
-                          placeholder="First name"
-                          type="text"
-                          required
-                          {...field}
-                        />
-                      </FormControl>
-
-                      <FormDescription className="sr-only">
-                        Enter new user&apos;s first name
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="lastName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="">Last Name*</FormLabel>
-                      <FormDescription className="sr-only">
-                        Last name
-                      </FormDescription>
-                      <FormControl>
-                        <Input
-                          placeholder="Last name"
-                          type="text"
-                          required
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormDescription className="sr-only">
-                        Enter new user&apos;s last name
-                      </FormDescription>
-
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                <FormField
-                  control={form.control}
-                  name="jobTitle"
-                  render={({ field }) => (
-                    <FormItem className="flex-1 space-y-0.5">
-                      <FormLabel className="font-bold">Job Title</FormLabel>
-
-                      <FormDescription className="sr-only">
-                        Job Title
-                      </FormDescription>
-
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
                         <FormControl>
-                          <SelectTrigger className="h-8 rounded-sm py-0 focus:ring-brand-gray-500">
-                            <SelectValue placeholder="Job Title" />
-                          </SelectTrigger>
+                          <Input
+                            placeholder="First Name"
+                            type="text"
+                            {...field}
+                          />
                         </FormControl>
 
-                        <SelectContent>
-                          {jobRoles.map((role) => (
-                            <SelectItem key={role?.code} value={role?.code}>
-                              {role?.description}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                        <FormMessage className="text-xs dark:text-brand-primary" />
+                      </FormItem>
+                    )}
+                  />
 
-                      <FormDescription className="sr-only">
-                        This is the job title for selected user
-                      </FormDescription>
+                  <FormField
+                    control={form.control}
+                    name="lastName"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="font-bold">Last Name*</FormLabel>
 
-                      <FormMessage className="text-xs dark:text-brand-primary" />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="permission"
-                  render={({ field }) => (
-                    <FormItem className="mb-2 flex-1 space-y-0.5">
-                      <FormLabel className="font-bold">Permission*</FormLabel>
+                        <FormDescription className="sr-only">
+                          Enter last name for the new user
+                        </FormDescription>
 
-                      <FormDescription className="sr-only">
-                        Permission
-                      </FormDescription>
-
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
                         <FormControl>
-                          <SelectTrigger className="h-8 rounded-sm py-0 focus:ring-brand-gray-500">
-                            <SelectValue placeholder="Permission" />
-                          </SelectTrigger>
+                          <Input
+                            placeholder="Last Name"
+                            type="text"
+                            {...field}
+                          />
                         </FormControl>
 
-                        <SelectContent>
-                          {USER_PERMISSIONS.map((permission) => (
-                            <SelectItem
-                              value={permission?.value}
-                              key={permission?.value}
-                            >
-                              {permission?.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                        <FormMessage className="text-xs dark:text-brand-primary" />
+                      </FormItem>
+                    )}
+                  />
+                </div>
 
-                      <FormDescription className="sr-only">
-                        This is the permission of your profile
-                      </FormDescription>
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                  <FormField
+                    control={form.control}
+                    name="jobTitle"
+                    render={({ field }) => (
+                      <FormItem className="flex-1 space-y-0.5">
+                        <FormLabel className="font-bold">Job Title</FormLabel>
 
-                      <FormMessage className="text-xs dark:text-brand-primary" />
-                    </FormItem>
-                  )}
-                />
+                        <FormDescription className="sr-only">
+                          Select job title for the new user
+                        </FormDescription>
+
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                        >
+                          <FormControl>
+                            <SelectTrigger className="h-8 rounded-sm py-0 focus:ring-brand-gray-500">
+                              <SelectValue placeholder="Job Title" />
+                            </SelectTrigger>
+                          </FormControl>
+
+                          <SelectContent>
+                            {jobRoles.map((role) => (
+                              <SelectItem key={role?.code} value={role?.code}>
+                                {role?.description}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+
+                        <FormMessage className="text-xs dark:text-brand-primary" />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="permission"
+                    render={({ field }) => (
+                      <FormItem className="mb-2 flex-1 space-y-0.5">
+                        <FormLabel className="font-bold">Permission*</FormLabel>
+
+                        <FormDescription className="sr-only">
+                          Select permission for the new user
+                        </FormDescription>
+
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                        >
+                          <FormControl>
+                            <SelectTrigger className="h-8 rounded-sm py-0 focus:ring-brand-gray-500">
+                              <SelectValue placeholder="Permission" />
+                            </SelectTrigger>
+                          </FormControl>
+
+                          <SelectContent>
+                            {USER_PERMISSIONS.map((permission) => (
+                              <SelectItem
+                                value={permission?.value}
+                                key={permission?.value}
+                              >
+                                {permission?.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+
+                        <FormMessage className="text-xs dark:text-brand-primary" />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                  <FormField
+                    control={form.control}
+                    name="password"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="font-bold">Password*</FormLabel>
+                        <FormDescription className="sr-only">
+                          Enter password for the new user
+                        </FormDescription>
+
+                        <FormControl>
+                          <Input
+                            placeholder="Password"
+                            type="password"
+                            {...field}
+                          />
+                        </FormControl>
+
+                        <FormMessage className="text-xs dark:text-brand-primary" />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="confirmPassword"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="font-bold">
+                          Confirm Password*
+                        </FormLabel>
+
+                        <FormDescription className="sr-only">
+                          Enter password confirmation for the new user
+                        </FormDescription>
+
+                        <FormControl>
+                          <Input
+                            placeholder="Confirm Password"
+                            type="password"
+                            {...field}
+                          />
+                        </FormControl>
+
+                        <FormMessage className="text-xs dark:text-brand-primary" />
+                      </FormItem>
+                    )}
+                  />
+                </div>
               </div>
 
-              <button
-                type="submit"
-                className="block h-9 w-full rounded-[3px] bg-brand-primary px-4 text-base font-normal uppercase text-white"
-              >
+              <Button type="submit" className="w-full text-base">
                 Add user
-              </button>
+              </Button>
             </form>
           </Form>
         </div>
