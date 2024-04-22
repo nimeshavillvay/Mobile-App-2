@@ -98,7 +98,7 @@ const TotalCountAndPagination = ({
       </div>
 
       {/* For Mobile View */}
-      <div className="flex flex-row gap-2 py-3 md:hidden">
+      <div className="container flex flex-row gap-2 py-3 md:hidden">
         <Button className="h-12 flex-1 bg-gray-100 text-base text-brand-gray-400">
           <MdArrowBack className="text-xl leading-none" />
           Back
