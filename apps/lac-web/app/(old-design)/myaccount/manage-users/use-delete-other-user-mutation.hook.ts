@@ -1,9 +1,8 @@
-import { useToast } from "@/old/_components/ui/use-toast";
+import { api } from "@/_lib/api";
 import useCookies from "@/old/_hooks/storage/use-cookies.hook";
-import { api } from "@/old/_lib/api";
 import { ACCOUNT_TOKEN_COOKIE } from "@/old/_lib/constants";
+import { useToast } from "@repo/web-ui/components/ui/toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { SignedData } from "./types";
 
 const useDeleteOtherUserMutation = () => {
   const queryClient = useQueryClient();
@@ -11,29 +10,47 @@ const useDeleteOtherUserMutation = () => {
   const { toast } = useToast();
 
   return useMutation({
-    mutationFn: (data: SignedData) =>
+    mutationFn: ({ userId }: { userId: number }) =>
       api
-        .delete("am/admin/delete_user", {
+        .delete("rest/my-account/delete-user", {
           headers: {
             authorization: `Bearer ${cookies[ACCOUNT_TOKEN_COOKIE]}`,
           },
-          json: data,
+          json: { user_id: userId },
         })
-        .json<unknown>(),
+        .json<{ status_code: string; message: string }>(),
     onMutate: () => {
       toast({ description: "Deleting user" });
     },
-    onSuccess: () => {
-      toast({
-        description: "User deleted",
-        variant: "success",
-      });
+    onSuccess: (data) => {
+      const transformedData = {
+        statusCode: data.status_code,
+        message: data.message,
+      };
+
+      if (transformedData.statusCode === "OK") {
+        toast({
+          description: "User deleted",
+        });
+      }
     },
-    onError: () => {
-      toast({
-        description: "Failed to delete the user",
-        variant: "destructive",
-      });
+    onError: async (error) => {
+      const response = (await error?.response?.json()) as {
+        status_code: string;
+        message: string;
+      };
+
+      if (response?.status_code === "FAILED") {
+        toast({
+          description: response?.message,
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          description: "Failed to delete the user",
+          variant: "destructive",
+        });
+      }
     },
     onSettled: () => {
       queryClient.invalidateQueries({
