@@ -1,8 +1,8 @@
 import Separator from "@/old/_components/separator";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import BackButton from "../../back-button";
 import { getOrderTrackingLog } from "./api";
-import BackButton from "./back-button";
 import OrderTrackingCard from "./order-tracking-card";
 import SelectedShippingName from "./selected-shipping-name";
 
@@ -34,7 +34,7 @@ const OrderTrackingLogPage = async ({
 
   return (
     <>
-      <BackButton orderId={trackingLog.orderNo.toString()} />
+      <BackButton title={`Back to Order #${trackingLog.orderNo.toString()}`} />
 
       <Separator
         orientation="horizontal"
