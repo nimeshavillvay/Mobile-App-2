@@ -34,7 +34,10 @@ const OrderTrackingLogPage = async ({
 
   return (
     <>
-      <BackButton title={`Back to Order #${trackingLog.orderNo.toString()}`} />
+      <BackButton
+        title={`Back to Order #${trackingLog.orderNo.toString()}`}
+        className="my-4"
+      />
 
       <Separator
         orientation="horizontal"
