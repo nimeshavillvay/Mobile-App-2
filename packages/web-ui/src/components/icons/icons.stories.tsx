@@ -101,7 +101,7 @@ export const Showcase: Story = {
           <Settings />
         </IconContainer>
 
-        <IconContainer name="Save">
+        <IconContainer name="Download">
           <Download />
         </IconContainer>
 
