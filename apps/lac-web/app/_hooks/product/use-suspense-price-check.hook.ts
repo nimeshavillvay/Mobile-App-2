@@ -41,7 +41,6 @@ const useSuspensePriceCheck = (token: string, products: Product[]) => {
         .post("rest/pricecheck", {
           headers: {
             authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
           },
           json: { products: products },
         })

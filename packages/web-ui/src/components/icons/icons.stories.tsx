@@ -16,6 +16,7 @@ import { ChevronLeft } from "./chevron-left";
 import { ChevronRight } from "./chevron-right";
 import { ChevronUp } from "./chevron-up";
 import { Close } from "./close";
+import { Download } from "./download";
 import { Facebook } from "./facebook";
 import { Headset } from "./headset";
 import { HeartFilled } from "./heart-filled";
@@ -33,6 +34,7 @@ import { Save } from "./save";
 import { Settings } from "./settings";
 import { ShoppingCart } from "./shopping-cart";
 import { TikTok } from "./tiktok";
+import { Trash } from "./trash";
 import { Truck } from "./truck";
 import { TruckWithClock } from "./truck-with-clock";
 import { Twitter } from "./twitter";
@@ -100,7 +102,7 @@ export const Showcase: Story = {
         </IconContainer>
 
         <IconContainer name="Save">
-          <Save />
+          <Download />
         </IconContainer>
 
         <IconContainer name="Alert">
@@ -141,6 +143,14 @@ export const Showcase: Story = {
 
         <IconContainer name="Profile">
           <Profile />
+        </IconContainer>
+
+        <IconContainer name="Save">
+          <Save />
+        </IconContainer>
+
+        <IconContainer name="Trash">
+          <Trash />
         </IconContainer>
 
         <IconContainer name="Bell">
