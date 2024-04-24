@@ -76,7 +76,7 @@ export const getFilters = async (
     .json<Filters[]>();
 
   return response.map((item) => ({
-    id: Number(item.id),
+    id: item.id,
     filter: item.filter,
     values: item.values.map(({ id, value, icon, tooltip, active }) => ({
       id: Number(id),
