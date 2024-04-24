@@ -12,6 +12,18 @@ const FILTER_TYPES = {
   [CATEGORIES]: "C",
 } as const;
 
+type Filters = {
+  id: string;
+  filter: string;
+  values: {
+    id: number;
+    value: string;
+    icon: string | null;
+    tooltip: string | null;
+    active: boolean;
+  }[];
+};
+
 export const getFilters = async (
   args:
     | {
@@ -51,7 +63,7 @@ export const getFilters = async (
     searchParams.append("to", args.to);
   }
 
-  return api
+  const response = await api
     .post(
       `rest/filters/${FILTER_TYPES[args.type]}${args.type !== "Order History" ? `/${args.id}` : ""}`,
       {
@@ -61,17 +73,17 @@ export const getFilters = async (
         },
       },
     )
-    .json<
-      {
-        id: string;
-        filter: string;
-        values: {
-          id: number;
-          value: string;
-          icon: string;
-          tooltip: string;
-          active: boolean;
-        }[];
-      }[]
-    >();
+    .json<Filters[]>();
+
+  return response.map((item) => ({
+    id: Number(item.id),
+    filter: item.filter,
+    values: item.values.map(({ id, value, icon, tooltip, active }) => ({
+      id: Number(id),
+      value: value,
+      icon: icon,
+      tooltip: tooltip,
+      active: active,
+    })),
+  }));
 };
