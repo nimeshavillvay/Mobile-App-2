@@ -51,12 +51,14 @@ const OrderTrackingCard = ({ trackingInfo }: OrderTrackingCardProps) => {
               </div>
               {delivery &&
                 delivery.tracker?.length &&
-                delivery.tracker.map((trackingNumber) => (
+                delivery.tracker.map((tracker) => (
                   <div
-                    key={`${delivery.deliveryNo}-${trackingNumber}`}
+                    key={`${delivery.deliveryNo}-${tracker.code}`}
                     className="font-bold text-black"
                   >
-                    <Link href="#">Tracking#: {trackingNumber ?? "N/A"}</Link>
+                    <Link href={tracker.url ?? "#"} target="_blank">
+                      Tracking#: {tracker.code ?? "N/A"}
+                    </Link>
                   </div>
                 ))}
             </>

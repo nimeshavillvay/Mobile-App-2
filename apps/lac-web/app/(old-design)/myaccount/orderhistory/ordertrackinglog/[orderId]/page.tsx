@@ -32,8 +32,6 @@ const OrderTrackingLogPage = async ({
   const trackingLog = await getOrderTrackingLog(orderId);
   const trackingInfo = trackingLog.trackingInfo;
 
-  console.log(trackingLog);
-
   return (
     <>
       <BackButton orderId={trackingLog.orderNo.toString()} />
@@ -85,8 +83,11 @@ const OrderTrackingLogPage = async ({
         </div>
 
         {trackingInfo?.length &&
-          trackingInfo.map((info) => (
-            <OrderTrackingCard key={info?.plant} trackingInfo={info} />
+          trackingInfo.map((info, index) => (
+            <OrderTrackingCard
+              key={`${info?.plant}-${index}`}
+              trackingInfo={info}
+            />
           ))}
       </div>
     </>
