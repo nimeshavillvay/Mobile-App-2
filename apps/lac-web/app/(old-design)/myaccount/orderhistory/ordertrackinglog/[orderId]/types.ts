@@ -4,7 +4,7 @@ export type TrackingInfo = {
     deliveryNo: string;
     shipDate: string;
     shippingMethod: string;
-    tracker: string[];
+    tracker: { code: string; url: string }[];
   }[];
 };
 

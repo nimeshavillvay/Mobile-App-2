@@ -84,13 +84,14 @@ const OrderTrackingCardForMobile = ({
                     <div className="text-[13px]">Tracking#</div>
                     {delivery &&
                       delivery.tracker?.length &&
-                      delivery.tracker.map((trackingNumber) => (
+                      delivery.tracker.map((tracker) => (
                         <Link
-                          key={`${delivery.deliveryNo}-${trackingNumber}`}
-                          href="#"
+                          key={`${delivery.deliveryNo}-${tracker.code}`}
+                          href={tracker.url ?? "#"}
+                          target="_blank"
                           className="text-sm font-bold"
                         >
-                          {trackingNumber ?? "N/A"}
+                          {tracker.code ?? "N/A"}
                         </Link>
                       ))}
                   </div>

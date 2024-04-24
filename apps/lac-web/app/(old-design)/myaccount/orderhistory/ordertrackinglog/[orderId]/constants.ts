@@ -127,4 +127,4 @@ export const SHIPPING_METHODS = {
   YF: "YRC-Yellow-Freight",
 } as const;
 
-export const UI_DATE_FORMAT = "MM/DD/YYYY";
+export const UI_DATE_FORMAT = "MM/DD/YYYY" as const;
