@@ -70,18 +70,18 @@ const CartItem = ({ product }: CartItemProps) => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row gap-6">
-      <div className="flex flex-row items-start gap-3">
-        <div className="flex w-[4.5rem] shrink-0 flex-col gap-2">
+    <div className="flex flex-col gap-6 md:flex-row">
+      <div className="flex flex-row items-start gap-3 md:flex-1">
+        <div className="flex w-[4.5rem] shrink-0 flex-col gap-2 md:w-[7.5rem]">
           <Image
             src={productItemImage}
             alt={`A picture of ${product.title}`}
-            width={72}
-            height={72}
-            className="rounded border border-wurth-gray-250 object-contain shadow-sm"
+            width={120}
+            height={120}
+            className="size-[4.5rem] rounded border border-wurth-gray-250 object-contain shadow-sm md:size-[7.5rem]"
           />
 
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col gap-1 md:hidden">
             <Button variant="subtle" className="w-full">
               <HeartOutline className="size-4" />
 
@@ -105,26 +105,26 @@ const CartItem = ({ product }: CartItemProps) => {
           </div>
         </div>
 
-        <form className="flex-1 space-y-2">
-          <div className="flex flex-row items-center">
-            <div className="text-green-700 text-lg">
+        <form className="flex-1 space-y-2 md:space-y-1">
+          <div className="flex flex-row items-center md:hidden">
+            <div className="text-lg text-green-700">
               ${price?.extendedPrice}
             </div>
 
-            <div className="text-wurth-gray-500 text-sm font-medium ml-2">
+            <div className="ml-2 text-sm font-medium text-wurth-gray-500">
               $34.11/{price?.priceUnit}
             </div>
 
-            <div className="line-through text-wurth-gray-500 text-[13px] leading-5 ml-1">
+            <div className="ml-1 text-[13px] leading-5 text-wurth-gray-500 line-through">
               $38.11/{price?.priceUnit}
             </div>
           </div>
 
-          <h2 className="text-black text-sm font-medium line-clamp-3">
+          <h2 className="line-clamp-3 text-sm font-medium text-black">
             <Balancer>{product.title}</Balancer>
           </h2>
 
-          <div className="flex flex-row gap-1 text-wurth-gray-500 text-sm">
+          <div className="flex flex-row gap-1 text-sm text-wurth-gray-500">
             <div>Item # {product.sku}</div>
 
             <div>&#x2022;</div>
@@ -132,30 +132,32 @@ const CartItem = ({ product }: CartItemProps) => {
             <div>Mfr # {product.manufacturerId}</div>
           </div>
 
-          <div>
-            <Label htmlFor={quantityId} className="sr-only">
-              Quantity
-            </Label>
+          <div className="flex flex-col gap-2 md:flex-row md:items-center">
+            <div>
+              <Label htmlFor={quantityId} className="sr-only">
+                Quantity
+              </Label>
 
-            <Input
-              {...register("quantity", {
-                onBlur: handleSave,
-              })}
-              id={quantityId}
-              type="number"
-              className="rounded px-2.5 py-1 h-fit text-base"
-              required
-              min={product.minAmount}
-              step={product.increment}
-            />
+              <Input
+                {...register("quantity", {
+                  onBlur: handleSave,
+                })}
+                id={quantityId}
+                type="number"
+                className="h-fit rounded px-2.5 py-1 text-base md:w-24"
+                required
+                min={product.minAmount}
+                step={product.increment}
+              />
+            </div>
+
+            <div className="text-sm text-wurth-gray-800">
+              <span className="text-yellow-700">Only 150 in stock</span> at
+              Brea, CA
+            </div>
           </div>
 
-          <div className="text-wurth-gray-800 text-sm">
-            <span className="text-yellow-700">Only 150 in stock</span> at Brea,
-            CA
-          </div>
-
-          <div>
+          <div className="pt-2">
             <Label htmlFor={poId} className="sr-only">
               PO #/ Job Name
             </Label>
@@ -165,10 +167,55 @@ const CartItem = ({ product }: CartItemProps) => {
               id={poId}
               type="text"
               placeholder="PO #/ Job Name"
-              className="rounded px-2.5 py-1 h-fit text-base"
+              className="h-fit rounded px-2.5 py-1 text-base"
             />
           </div>
         </form>
+      </div>
+
+      <div className="bg-red-300 md:w-80">Shipping options</div>
+
+      <div className="hidden space-y-3 md:block md:shrink-0">
+        <div className="flex flex-col items-end text-right">
+          <div className="text-lg text-green-700">${price?.extendedPrice}</div>
+
+          <div className="ml-2 text-sm font-medium text-wurth-gray-500">
+            $34.11/{price?.priceUnit}
+          </div>
+
+          <div className="ml-1 text-[13px] leading-5 text-wurth-gray-500 line-through">
+            $38.11/{price?.priceUnit}
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <Button
+            variant="ghost"
+            className="h-fit w-full justify-end px-0 py-0 text-wurth-red-650"
+          >
+            <span className="text-[13px] leading-5">Delete</span>
+
+            <Trash className="size-4 fill-wurth-red-650" />
+          </Button>
+
+          <Button
+            variant="ghost"
+            className="h-fit w-full justify-end px-0 py-0"
+          >
+            <span className="text-[13px] leading-5">Save for later</span>
+
+            <Save className="size-4" />
+          </Button>
+
+          <Button
+            variant="ghost"
+            className="h-fit w-full justify-end px-0 py-0"
+          >
+            <span className="text-[13px] leading-5">Add to favorite</span>
+
+            <HeartOutline className="size-4" />
+          </Button>
+        </div>
       </div>
     </div>
   );

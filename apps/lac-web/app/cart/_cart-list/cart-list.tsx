@@ -15,7 +15,7 @@ const CartList = ({ shippingMethods }: CartListProps) => {
 
   return (
     <section>
-      <h1 className="mb-6 mt-4 md:mb-7 md:mt-6 text-2xl font-light tracking-[-0.144px] text-wurth-gray-800 mx-4 md:mx-0 md:text-5xl md:leading-[3.5rem] md:tracking-[-0.576px]">
+      <h1 className="mx-4 mb-6 mt-4 text-2xl font-light tracking-[-0.144px] text-wurth-gray-800 md:mx-0 md:mb-7 md:mt-6 md:text-5xl md:leading-[3.5rem] md:tracking-[-0.576px]">
         <span className="font-medium">Cart</span> ({data["total-quantity"]}{" "}
         {data["total-quantity"] === 1 ? "item" : "items"})
       </h1>
@@ -24,7 +24,7 @@ const CartList = ({ shippingMethods }: CartListProps) => {
         {data.cartItems.map((item) => (
           <li
             key={item.itemInfo.productid}
-            className="px-4 md:px-0 pb-7 [&:not(:first-child)]:pt-7 border-b border-b-wurth-gray-250"
+            className="border-b border-b-wurth-gray-250 px-4 pb-7 md:px-0 [&:not(:first-child)]:pt-7"
           >
             <Suspense fallback={<CartItemFallback />}>
               <CartItem

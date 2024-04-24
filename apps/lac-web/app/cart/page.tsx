@@ -13,18 +13,18 @@ const CartPage = async () => {
   const shippingMethods = await getShippingMethods();
 
   return (
-    <div className="flex flex-col md:flex-row md:gap-12 md:container">
+    <div className="flex flex-col md:container md:flex-row md:gap-12">
       <div className="flex-1">
         <Suspense
           fallback={
             <section>
-              <Skeleton className="mb-6 mt-4 h-8 w-40 mx-4 md:mx-0 md:h-14 md:mb-7 md:mt-6" />
+              <Skeleton className="mx-4 mb-6 mt-4 h-8 w-40 md:mx-0 md:mb-7 md:mt-6 md:h-14" />
 
               <ul className="flex flex-col">
                 {Array.from({ length: 3 }).map((_, index) => (
                   <li
                     key={index}
-                    className="px-4 md:px-0 pb-7 [&:not(:first-child)]:pt-7 border-b border-b-wurth-gray-250"
+                    className="border-b border-b-wurth-gray-250 px-4 pb-7 md:px-0 [&:not(:first-child)]:pt-7"
                   >
                     <CartItemFallback />
                   </li>
@@ -37,7 +37,7 @@ const CartPage = async () => {
         </Suspense>
       </div>
 
-      <aside className="md:w-[19.75rem]"></aside>
+      <aside className="px-6 py-4 md:w-[19.75rem] md:px-0 md:py-0"></aside>
     </div>
   );
 };
