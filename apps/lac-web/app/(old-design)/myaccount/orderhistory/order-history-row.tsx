@@ -1,11 +1,11 @@
 import { TableCell, TableRow } from "@/old/_components/ui/table";
-import { cn, formatNumberToPrice } from "@/old/_utils/helpers";
+import { formatNumberToPrice } from "@/old/_utils/helpers";
 import dayjs from "dayjs";
 import Link from "next/link";
 import { MdInsertDriveFile } from "react-icons/md";
 import { getTableRowBgColor } from "../_utils/client-helpers";
-import { ORDER_TYPES, STATUS_COLOR_CLASSES, UI_DATE_FORMAT } from "./constants";
-import type { Order, OrderStatus } from "./types";
+import { UI_DATE_FORMAT } from "./constants";
+import type { Order } from "./types";
 
 type OrderHistoryRowProps = {
   index: number;
@@ -28,7 +28,7 @@ const OrderHistoryRow = ({ index, order }: OrderHistoryRowProps) => {
             className="flex flex-col items-center justify-center gap-2"
             href={orderDetailHref}
           >
-            <div>{ORDER_TYPES[order.orderType]}</div>
+            <div>{order.orderType ?? "N/A"}</div>
             <MdInsertDriveFile className="text-2xl text-brand-gray-400" />
           </Link>
         </TableCell>
@@ -47,7 +47,10 @@ const OrderHistoryRow = ({ index, order }: OrderHistoryRowProps) => {
 
         <TableCell className="text-center" rowSpan={2}>
           <div className="flex flex-col items-center justify-center gap-2 ">
-            <OrderStatusBadge status={order.status} />
+            <div className="px-4 py-2 font-bold text-brand-gray-500">
+              {order.status ?? "N/A"}
+            </div>
+
             <Link
               className="block rounded-sm bg-brand-gray-200 px-4 py-2 text-center font-wurth font-extrabold uppercase text-brand-gray-500"
               href={orderTrackingHref}
@@ -79,14 +82,3 @@ const OrderHistoryRow = ({ index, order }: OrderHistoryRowProps) => {
 };
 
 export default OrderHistoryRow;
-
-const OrderStatusBadge = ({ status }: { status: OrderStatus }) => {
-  const colorClass =
-    STATUS_COLOR_CLASSES[status] || STATUS_COLOR_CLASSES.default;
-
-  return (
-    <div className={cn("px-4 py-2 font-bold", colorClass)}>
-      {status || "N/A"}
-    </div>
-  );
-};
