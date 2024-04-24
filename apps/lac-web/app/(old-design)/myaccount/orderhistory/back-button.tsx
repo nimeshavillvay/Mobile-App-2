@@ -4,16 +4,16 @@ import { Button } from "@/old/_components/ui/button";
 import { useRouter } from "next/navigation";
 import { FaArrowLeft } from "react-icons/fa";
 
-const BackButton = ({ orderId }: { orderId: string }) => {
+const BackButton = ({ title = "Back" }: { title: string }) => {
   const router = useRouter();
 
   return (
     <Button
       variant="ghost"
-      className="my-4 text-base text-black"
+      className="my-4 px-0 text-base text-black"
       onClick={() => router.back()}
     >
-      <FaArrowLeft /> Back to Order #{orderId}
+      <FaArrowLeft /> {title}
     </Button>
   );
 };
