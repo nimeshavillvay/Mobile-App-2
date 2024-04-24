@@ -1,6 +1,23 @@
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+
 type DetailedOrderPageProps = {
   params: {
     orderId: string;
+  };
+};
+
+export const generateMetadata = async ({
+  params: { orderId },
+}: DetailedOrderPageProps): Promise<Metadata> => {
+  // Check if the orderId exists
+  if (!orderId) {
+    return notFound();
+  }
+
+  return {
+    title: orderId,
+    description: orderId,
   };
 };
 
