@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import BackButton from "../back-button";
 
 type DetailedOrderPageProps = {
   params: {
@@ -23,10 +24,11 @@ export const generateMetadata = async ({
 
 const DetailedOrderPage = ({ params: { orderId } }: DetailedOrderPageProps) => {
   return (
-    <div>
+    <>
+      <BackButton title="Back to My Orders" />
       <h1>Order Details {orderId}</h1>
       <p>This is the detailed order page</p>
-    </div>
+    </>
   );
 };
 
