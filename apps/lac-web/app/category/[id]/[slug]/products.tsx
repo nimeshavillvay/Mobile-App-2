@@ -13,18 +13,18 @@ const Products = ({ filters }: ProductsProps) => {
 
   return (
     <ProductsGrid
-      total={parseInt(searchQuery.data.pagination[0].db_count)}
+      total={searchQuery.data.pagination.totalCount}
       page={{
         current: 1,
         total: 15,
       }}
-      products={searchQuery.data.group_list.map((product) => ({
-        groupId: product.groupid,
-        groupName: product.item_group_name,
-        variants: product.itemSkuList.map((variant) => ({
-          id: variant.productid,
+      products={searchQuery.data.groupList.map((product) => ({
+        groupId: product.groupId,
+        groupName: product.productGroupName,
+        variants: product.productSkuList.map((variant) => ({
+          id: variant.productId,
           slug: variant.slug,
-          title: variant.item_name,
+          title: variant.productName,
         })),
       }))}
       filters={filters}

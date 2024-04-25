@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import { type ComponentProps } from "react";
 
-export const Save = ({ className, ...delegated }: ComponentProps<"svg">) => {
+export const Shield = ({ className, ...delegated }: ComponentProps<"svg">) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -14,7 +14,7 @@ export const Save = ({ className, ...delegated }: ComponentProps<"svg">) => {
     >
       <path
         strokeLinecap="square"
-        d="M7.5 3.5v5h9v-5m-9 17v-8h9v8m-13-17v17h17v-14l-3-3h-14z"
+        d="M9 11.25l2 2 4-4M12 2.5l8.5 2.75v6.662c0 4.973-4.5 7.588-8.5 9.746-4-2.158-8.5-4.773-8.5-9.746V5.25L12 2.5z"
       />
     </svg>
   );

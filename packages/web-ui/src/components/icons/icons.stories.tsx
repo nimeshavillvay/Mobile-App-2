@@ -16,6 +16,7 @@ import { ChevronLeft } from "./chevron-left";
 import { ChevronRight } from "./chevron-right";
 import { ChevronUp } from "./chevron-up";
 import { Close } from "./close";
+import { Download } from "./download";
 import { Facebook } from "./facebook";
 import { Headset } from "./headset";
 import { HeartFilled } from "./heart-filled";
@@ -31,8 +32,10 @@ import { Plus } from "./plus";
 import { Profile } from "./profile";
 import { Save } from "./save";
 import { Settings } from "./settings";
+import { Shield } from "./shield";
 import { ShoppingCart } from "./shopping-cart";
 import { TikTok } from "./tiktok";
+import { Trash } from "./trash";
 import { Truck } from "./truck";
 import { TruckWithClock } from "./truck-with-clock";
 import { Twitter } from "./twitter";
@@ -99,8 +102,8 @@ export const Showcase: Story = {
           <Settings />
         </IconContainer>
 
-        <IconContainer name="Save">
-          <Save />
+        <IconContainer name="Download">
+          <Download />
         </IconContainer>
 
         <IconContainer name="Alert">
@@ -143,6 +146,14 @@ export const Showcase: Story = {
           <Profile />
         </IconContainer>
 
+        <IconContainer name="Save">
+          <Save />
+        </IconContainer>
+
+        <IconContainer name="Trash">
+          <Trash />
+        </IconContainer>
+
         <IconContainer name="Bell">
           <Bell />
         </IconContainer>
@@ -169,6 +180,10 @@ export const Showcase: Story = {
 
         <IconContainer name="CheckCircleFilled">
           <CheckCircleFilled />
+        </IconContainer>
+
+        <IconContainer name="Shield">
+          <Shield />
         </IconContainer>
 
         <IconContainer name="ArrowUpRight">
