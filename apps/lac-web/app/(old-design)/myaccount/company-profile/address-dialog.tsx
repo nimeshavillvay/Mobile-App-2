@@ -56,13 +56,11 @@ const AddressDialog = ({
   address,
 }: AddressDialogProps) => {
   const addressDataSchema = z.object({
-    // xcAddressId: z.string(),
-    // shipTo: z.string(),
-    // soldTo: z.string(),
-    // default: z.boolean(),
     county: z.string(),
-    zip4: z.string(),
-    company: z.string().trim().min(1, "Please enter Company Name").max(40),
+    zip4: z.string().refine((value) => /^\d{0,10}$/.test(value), {
+      message: "Please enter a valid ZIP4",
+    }),
+    company: z.string(),
     addressLineOne: z
       .string()
       .trim()
@@ -70,8 +68,12 @@ const AddressDialog = ({
       .max(40),
     city: z.string().trim().min(1, "Please enter city").max(40),
     state: z.string().trim().min(1, "Please select a state").max(40),
-    zipCode: z.string().trim().min(1, "Please enter zip code").max(40),
-    phoneNumber: z.string().trim().min(1, "Please enter phone number").max(40),
+    zipCode: z.string().refine((value) => /^\d+$/.test(value), {
+      message: "Please enter a valid ZIP4",
+    }),
+    phoneNumber: z.string().refine((value) => /^\d{10}$/.test(value), {
+      message: "Please enter a valid phone number",
+    }),
     country: z.string().trim().min(1, "Please enter country").max(40),
   });
 

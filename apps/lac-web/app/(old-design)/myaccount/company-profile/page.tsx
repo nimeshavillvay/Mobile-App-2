@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import BillingAddress from "./billing-address";
+import CompanyProfileImage from "./company-profile-image";
 import ShippingAddress from "./shipping-address";
 
 export const metadata: Metadata = {
@@ -30,6 +31,8 @@ const CompanyProfilePage = () => {
           className="h-px flex-1 bg-brand-primary"
         />
       </div>
+
+      <CompanyProfileImage token={accountTokenCookie?.value} />
 
       <BillingAddress token={accountTokenCookie?.value} />
 
