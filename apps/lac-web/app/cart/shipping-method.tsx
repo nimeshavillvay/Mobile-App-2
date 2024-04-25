@@ -6,6 +6,7 @@ type ShippingMethodProps = {
   options: ShippingMethod[];
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const ShippingMethod = ({ options }: ShippingMethodProps) => {
   return (
     <div className="space-y-3 rounded-lg border border-wurth-gray-150 px-5 py-4 shadow-md">
