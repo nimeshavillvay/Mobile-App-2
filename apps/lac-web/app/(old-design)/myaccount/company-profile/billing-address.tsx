@@ -26,7 +26,7 @@ const BillingAddress = ({ token }: { token: string }) => {
   return (
     <>
       <div className="grid grid-cols-3">
-        <div className="mb-5 border-gray-100 bg-transparent p-3 shadow hover:shadow-lg">
+        <div className="mb-5 border-gray-100 bg-transparent p-3 text-gray-500 shadow hover:shadow-lg">
           <h3 className="font-title text-xl font-bold">Billing Address</h3>
           <div className="flex flex-row gap-5 pt-2">
             <div className="my-auto flex-auto text-gray-500">

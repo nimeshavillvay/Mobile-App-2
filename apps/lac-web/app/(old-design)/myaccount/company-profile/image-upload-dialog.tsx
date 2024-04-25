@@ -6,11 +6,13 @@ import {
   DialogTitle,
 } from "@/old/_components/ui/dialog";
 import Image from "next/image";
-import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
+import React, { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
+import { useDropzone } from "react-dropzone";
 import fileUpload from "../upload_icon.svg";
+import useUpdateCompanyProfileImageMutation from "./use-update-company-profile-image-mutation.hook";
 
 type ImageUploadDialogProps = {
-  open: boolean;
+  openDialog: boolean;
   setOpenImageUploadDialog: Dispatch<SetStateAction<boolean>>;
   maxFileSize: number;
   maxFileSizeErrorMsg: string;
@@ -19,106 +21,96 @@ type ImageUploadDialogProps = {
 };
 
 const ImageUploadDialog = ({
-  open,
+  openDialog,
   setOpenImageUploadDialog,
   maxFileSize,
   maxFileSizeErrorMsg,
   acceptableImageTypes,
   acceptableImageTypesErrorMsg,
 }: ImageUploadDialogProps) => {
-  const [image, setImage] = useState({} as File);
+  const { getRootProps, getInputProps, open, acceptedFiles } = useDropzone({
+    // Disable click and keydown behavior
+    noClick: true,
+    noKeyboard: true,
+  });
 
-  const [errorMsg, setErrorMsg] = useState("");
+  let errorMsg = "";
+  let fileAccepted = false;
 
-  const handleImageUpload = async (e: ChangeEvent<HTMLInputElement>) => {
-    setErrorMsg("");
-    const file = e.target.files ? e.target.files[0] : null;
-    console.log(file);
-    if (!file) {
-      return;
-    }
-
+  const files = acceptedFiles.map((file: File) => {
     if (!acceptableImageTypes.includes(file.type)) {
-      setErrorMsg(acceptableImageTypesErrorMsg);
-      setImage({} as File);
-      return;
+      errorMsg = acceptableImageTypesErrorMsg;
     } else if (file.size > maxFileSize) {
-      setErrorMsg(maxFileSizeErrorMsg);
-      setImage({} as File);
-      return;
+      errorMsg = maxFileSizeErrorMsg;
+    } else {
+      fileAccepted = true;
+      return (
+        <li key={file.name} className="text-sm font-medium text-gray-500">
+          {file.name}
+        </li>
+      );
     }
+  });
 
-    setImage(file);
+  const updateCompanyProfileImageMutation =
+    useUpdateCompanyProfileImageMutation();
+
+  const submitImage = () => {
+    const formData = new FormData();
+    formData.append("File", acceptedFiles[0] as File);
+
+    updateCompanyProfileImageMutation.mutate(formData, {
+      onSuccess: () => {
+        setOpenImageUploadDialog(false);
+      },
+      onError: () => {
+        errorMsg = "File upload error";
+      },
+    });
   };
 
-  const submitImage = async () => {};
-
   return (
-    <Dialog open={open} onOpenChange={setOpenImageUploadDialog}>
+    <Dialog open={openDialog} onOpenChange={setOpenImageUploadDialog}>
       <DialogContent className="old-design-text-base max-w-[500px]">
         <DialogHeader>
           <DialogTitle>Upload Image</DialogTitle>
         </DialogHeader>
 
-        <div className="p-10">
-          {errorMsg.length > 0 && <p>{errorMsg} </p>}
-          <div className="mb-10">
-            <Image className="mx-auto" src={fileUpload} alt="" />
-          </div>
-          <div className="text-center">
-            <p className="text-base font-medium text-gray-500">
-              Maximum file size 5MB and allowed file types are jpg, jpeg, png
-            </p>
-          </div>
-          <div className="text-center">
-            <p className="text-base font-medium text-gray-500">
-              Please upload 1:1 square images (eg. 100px * 100px)
-            </p>
-          </div>
-          <div className="text-center">
-            <p className="text-sm font-semibold text-black">
-              Drag file to upload,
-              <br /> or
-            </p>
-          </div>
-
-          <div>
-            <label htmlFor="companyProfileUpload">Choose File</label>
-            <input
-              className=" choose-file-btn appearance-none"
-              type="file"
-              name="image"
-              id="companyProfileUpload"
-              accept="image/jpg, image/jpeg, image/png"
-              onChange={handleImageUpload}
-            />
-          </div>
-
-          <Button
-            variant="ghost"
-            title="Upload Image"
-            className="btn red-btn"
-            onClick={submitImage}
-          >
-            <input
-              type="file"
-              name="image"
-              id="companyProfileUpload"
-              accept="image/jpg, image/jpeg, image/png"
-              onChange={handleImageUpload}
-            />
-          </Button>
-
-          <div>{image && image.name}</div>
-          {image.name && (
-            <button
-              title="Upload Image"
-              className="btn red-btn"
-              onClick={submitImage}
-            >
-              Upload Image
-            </button>
+        <div className="px-5 pb-7 pt-3">
+          {errorMsg.length > 0 && (
+            <div className="border-1 mb-7 border border-red-500 p-2 text-red-500">
+              <p>{errorMsg} </p>
+            </div>
           )}
+          <div {...getRootProps({ className: "dropzone" })}>
+            <input {...getInputProps()} />
+            <div className="mb-10">
+              <Image className="mx-auto" src={fileUpload} alt="" />
+            </div>
+            <div className="text-center">
+              <p className="text-sm font-medium text-gray-500">
+                Maximum file size 5MB and allowed file types are jpg, jpeg, png
+              </p>
+            </div>
+            <div className="text-center">
+              <p className="text-sm font-medium text-gray-500">
+                Please upload 1:1 square images (eg. 100px * 100px)
+              </p>
+            </div>
+            <div className="p-2 text-center">
+              <p className="text-xs font-semibold text-black">
+                Drag file to upload,
+                <br /> or
+              </p>
+            </div>
+            <div className="text-center">
+              <Button onClick={open}>Choose File</Button>
+              <ul>{files}</ul>
+              {fileAccepted && (
+                <Button onClick={submitImage}>Upload Image</Button>
+              )}
+            </div>
+          </div>
         </div>
       </DialogContent>
     </Dialog>

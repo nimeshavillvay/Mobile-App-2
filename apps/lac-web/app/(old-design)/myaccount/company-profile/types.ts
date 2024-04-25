@@ -52,3 +52,13 @@ export type AddressCheckSuggestions = {
   message: string;
   suggestions: Address[];
 };
+
+export type CompanyDetailsResponse = {
+  company_name: string;
+  image: string;
+};
+
+export type CompanyDetails = {
+  companyName: string;
+  image: string;
+};
