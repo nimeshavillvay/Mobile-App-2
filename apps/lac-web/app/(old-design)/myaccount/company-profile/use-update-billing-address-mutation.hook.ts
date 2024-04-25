@@ -19,6 +19,7 @@ type Suggestions = {
   "postal-code": string;
   zip4: string | null;
 };
+
 const useUpdateBillingAddressMutation = () => {
   const queryClient = useQueryClient();
   const [cookies] = useCookies();
