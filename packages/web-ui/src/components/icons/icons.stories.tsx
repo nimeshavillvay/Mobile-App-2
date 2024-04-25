@@ -32,6 +32,7 @@ import { Plus } from "./plus";
 import { Profile } from "./profile";
 import { Save } from "./save";
 import { Settings } from "./settings";
+import { Shield } from "./shield";
 import { ShoppingCart } from "./shopping-cart";
 import { TikTok } from "./tiktok";
 import { Trash } from "./trash";
@@ -179,6 +180,10 @@ export const Showcase: Story = {
 
         <IconContainer name="CheckCircleFilled">
           <CheckCircleFilled />
+        </IconContainer>
+
+        <IconContainer name="Shield">
+          <Shield />
         </IconContainer>
 
         <IconContainer name="ArrowUpRight">

@@ -6,25 +6,21 @@ const useUpdateCartItemMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({
-      quantity,
-      productId,
-      config,
-    }: {
-      quantity: number;
-      productId: number;
-      config: CartItemConfiguration;
-    }) => {
+    mutationFn: async (
+      products: {
+        quantity: number;
+        productId: number;
+        config: CartItemConfiguration;
+      }[],
+    ) => {
       return await api
         .put("rest/cart", {
           json: {
-            cartitembatchconfiguration: [
-              {
-                quantity,
-                cartid: productId,
-                cartitemconfiguration: config,
-              },
-            ],
+            cartitembatchconfiguration: products.map((product) => ({
+              quantity: product.quantity,
+              cartid: product.productId,
+              cartitemconfiguration: product.config,
+            })),
           },
         })
         .json<unknown>();

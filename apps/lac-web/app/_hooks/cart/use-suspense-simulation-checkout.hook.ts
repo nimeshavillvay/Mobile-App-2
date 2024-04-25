@@ -1,9 +1,9 @@
 import { api } from "@/_lib/api";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
-const useSuspenseSimulatedCheckout = () => {
+const useSuspenseSimulationCheckout = () => {
   return useSuspenseQuery({
-    queryKey: ["cart", "simulated-checkout"],
+    queryKey: ["cart", "simulation-checkout"],
     queryFn: async () => {
       return await api
         .get("rest/simulation-checkout", {
@@ -64,4 +64,4 @@ const useSuspenseSimulatedCheckout = () => {
   });
 };
 
-export default useSuspenseSimulatedCheckout;
+export default useSuspenseSimulationCheckout;

@@ -59,14 +59,16 @@ const CartItem = ({ product }: CartItemProps) => {
   const handleSave = () => {
     const data = getValues();
 
-    updateCartConfigMutation.mutate({
-      productId: product.id,
-      quantity: data.quantity,
-      config: {
-        ...product.configuration,
-        poOrJobName: data.po,
+    updateCartConfigMutation.mutate([
+      {
+        productId: product.id,
+        quantity: data.quantity,
+        config: {
+          ...product.configuration,
+          poOrJobName: data.po,
+        },
       },
-    });
+    ]);
   };
 
   return (

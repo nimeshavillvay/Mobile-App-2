@@ -1,5 +1,5 @@
 import { api } from "@/_lib/api";
-import type { CartItemConfiguration } from "@/_lib/types";
+import type { CartConfiguration, CartItemConfiguration } from "@/_lib/types";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
 const useSuspenseCart = () => {
@@ -64,33 +64,7 @@ const useSuspenseCart = () => {
               is_directly_shipped_from_vendor: boolean;
             };
           }[];
-          configuration: {
-            po_job: null;
-            jobName: null;
-            coupon: null;
-            po: null;
-            sold_to: null;
-            ship_to: null;
-            user_email: null;
-            is_overridden: null;
-            overridden_email: null;
-            osr: null;
-            "first-name": null;
-            delivering_plant: null;
-            avail_payment_options: null;
-            attnName: null;
-            pickDate: null;
-            driverNote: null;
-            orderEmail: null;
-            completeDelivery: null;
-            paymentToken: null;
-            cardName: null;
-            cardType: null;
-            expireDate: null;
-            paymentMethod: null;
-            isAPrimaryShippingAddress: null;
-            shippingAddressId: null;
-          };
+          configuration: CartConfiguration;
           "total-quantity": number;
         }>();
     },

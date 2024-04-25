@@ -159,3 +159,31 @@ export type CartItemConfiguration = {
   selectedOption: string;
   backorder_all: string;
 };
+
+export type CartConfiguration = {
+  po_job: null;
+  jobName: string | null;
+  coupon: string | null;
+  po: string | null;
+  sold_to: null;
+  ship_to: null;
+  user_email: null;
+  is_overridden: null;
+  overridden_email: null;
+  osr: null;
+  "first-name": null;
+  delivering_plant: null;
+  avail_payment_options: null;
+  attnName: null;
+  pickDate: null;
+  driverNote: null;
+  orderEmail: null;
+  completeDelivery: null;
+  paymentToken: null;
+  cardName: null;
+  cardType: null;
+  expireDate: null;
+  paymentMethod: null;
+  isAPrimaryShippingAddress: null;
+  shippingAddressId: null;
+};
