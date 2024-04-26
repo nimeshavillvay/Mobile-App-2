@@ -28,7 +28,7 @@ const OrderSummary = () => {
   const savingsAmount =
     simulationCheckoutQuery.data.total -
     simulationCheckoutQuery.data.net -
-    simulationCheckoutQuery.data.shippingcost -
+    simulationCheckoutQuery.data.shippingCost -
     simulationCheckoutQuery.data.tax;
 
   const { register, handleSubmit } = useForm<z.infer<typeof promoSchema>>({
@@ -45,7 +45,7 @@ const OrderSummary = () => {
   });
 
   return (
-    <div className="gap-3 flex flex-col rounded-lg border border-wurth-gray-150 px-5 py-4 shadow-md">
+    <div className="flex flex-col gap-3 rounded-lg border border-wurth-gray-150 px-5 py-4 shadow-md">
       <h3 className=" font-title text-xl font-medium tracking-[-0.1px] text-wurth-gray-800">
         Order Summary
       </h3>
@@ -54,7 +54,7 @@ const OrderSummary = () => {
         <tbody>
           <tr>
             <td className="pb-1">
-              Subtotal ({simulationCheckoutQuery.data["total-quantity"]} items)
+              Subtotal ({simulationCheckoutQuery.data.totalQuantity} items)
             </td>
 
             <td className="pb-1 text-right">
@@ -76,8 +76,8 @@ const OrderSummary = () => {
             <td className="py-1">Shipping</td>
 
             <td className="py-1 text-right">
-              {simulationCheckoutQuery.data.shippingcost > 0
-                ? `$${simulationCheckoutQuery.data.shippingcost.toFixed(2)}`
+              {simulationCheckoutQuery.data.shippingCost > 0
+                ? `$${simulationCheckoutQuery.data.shippingCost.toFixed(2)}`
                 : "Free"}
             </td>
           </tr>
@@ -155,7 +155,7 @@ const OrderSummary = () => {
       <Button
         variant="secondary"
         size="lg"
-        className="h-fit px-5 py-4 text-lg font-normal gap-2 w-full shadow-md rounded-lg"
+        className="h-fit w-full gap-2 rounded-lg px-5 py-4 text-lg font-normal shadow-md"
       >
         <Shield className="size-5 stroke-white" />
 
