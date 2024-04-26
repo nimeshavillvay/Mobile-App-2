@@ -18,6 +18,7 @@ const baseConfig: Options = {
     "embla-carousel-react",
     "cva",
     /^@radix-ui\/react-/g,
+    "downshift",
   ],
   esbuildPlugins: [react18Plugin()],
 };
