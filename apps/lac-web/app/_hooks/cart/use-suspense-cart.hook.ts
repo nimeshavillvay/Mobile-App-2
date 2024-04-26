@@ -127,11 +127,11 @@ const useSuspenseCart = () => {
             productDescription: item.itemInfo.txt_sub_description,
             brandCode: item.itemInfo.sel_assigned_brand,
             unitOfMeasure: item.itemInfo.txt_uom_label,
-            boxQuantity: Number(item.itemInfo.txt_box_qt) || 1,
+            boxQuantity: Number(item.itemInfo.txt_box_qt) ?? 1,
             minimumOrderQuantity:
-              Number(item.itemInfo.txt_min_order_amount) || 1,
+              Number(item.itemInfo.txt_min_order_amount) ?? 1,
             quantityByIncrements:
-              Number(item.itemInfo.txt_order_qty_increments) || 1,
+              Number(item.itemInfo.txt_order_qty_increments) ?? 1,
             weight: Number(item.itemInfo.txt_weight_value),
             prop65MessageOne: item.itemInfo.txt_prop65_message_01,
             prop65MessageTwo: item.itemInfo.txt_prop65_message_02,

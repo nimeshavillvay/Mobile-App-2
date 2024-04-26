@@ -112,7 +112,7 @@ const useSuspenseCheckAvailability = ({
           isBackOrder: item.backOrder,
           type: item.type,
           hash: item.hash,
-          backOrderQuantity: Number(item.backOrderQuantity_1) || 0,
+          backOrderQuantity: Number(item.backOrderQuantity_1) ?? 0,
           availability: getPlantAvailability(item),
         })),
       };
