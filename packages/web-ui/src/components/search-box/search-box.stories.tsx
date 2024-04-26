@@ -41,28 +41,28 @@ const items = {
         title: "29OZ ADH - ICE WHITE ",
       },
       {
-        id: "se901",
+        id: "se904",
         description: "Harper Lee",
         img: "https://cdn.pixabay.com/photo/2014/09/12/18/20/can-443123_960_720.png%201x,%20https://cdn.pixabay.com/photo/2014/09/12/18/20/can-443123_1280.png",
         code: "12453",
         title: "9OZ ADH - ICE WHITE",
       },
       {
-        id: "se902",
+        id: "se905",
         description: "Lev Tolstoy",
         img: "https://cdn.pixabay.com/photo/2014/09/12/18/20/can-443123_960_720.png%201x,%20https://cdn.pixabay.com/photo/2014/09/12/18/20/can-443123_1280.png",
         code: "12453",
         title: "19OZ ADH - ICE WHITE",
       },
       {
-        id: "se903",
+        id: "se906",
         description: "Fyodor Dostoyevsky",
         img: "https://cdn.pixabay.com/photo/2014/09/12/18/20/can-443123_960_720.png%201x,%20https://cdn.pixabay.com/photo/2014/09/12/18/20/can-443123_1280.png",
         code: "12453",
         title: "29OZ ADH - ICE WHITE",
       },
       {
-        id: "se901",
+        id: "se907",
         description: "Harper Lee",
         img: "https://cdn.pixabay.com/photo/2014/09/12/18/20/can-443123_960_720.png%201x,%20https://cdn.pixabay.com/photo/2014/09/12/18/20/can-443123_1280.png",
         code: "12453",
@@ -143,6 +143,7 @@ export const Default: Story = {
   render: () => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const [value, setValue] = useState("");
+
     const filterItems = (value: string) => {
       const lowerCasedValue = value.toLowerCase();
       const filteredProducts = items.products.results.filter((product) =>

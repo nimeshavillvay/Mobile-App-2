@@ -8,6 +8,7 @@ const nextConfig = {
         protocol: "http",
         hostname: "webdev.wurthlac.com",
       },
+      // TODO Remove this domain
       {
         protocol: "https",
         hostname: "cdn.pixabay.com",

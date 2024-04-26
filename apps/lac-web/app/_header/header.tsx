@@ -10,6 +10,7 @@ import DesktopNavigationMenu from "./desktop-navigation-menu";
 import MobileNavigationMenu from "./mobile-navigation-menu";
 import SearchBar from "./search-bar";
 import type { Category } from "./types";
+
 const Header = async () => {
   const categories = await api
     .get("rest/getcategorylist/0", {
@@ -35,6 +36,7 @@ const Header = async () => {
         </Link>
 
         <SearchBar />
+
         <div className="ml-auto flex flex-row items-center gap-4 md:ml-0 md:gap-6">
           {/* Mobile */}
           <Link

@@ -12,15 +12,13 @@ type SearchData = {
     page_no: number;
     plp: boolean;
   };
-  results: SearchResult[];
-};
-
-type SearchResult = {
-  id: string;
-  title: string;
-  img: string;
-  code: string;
-  description: string;
+  results: {
+    id: string;
+    title: string;
+    img: string;
+    code: string;
+    description: string;
+  }[];
 };
 
 export const SearchBox = ({
@@ -44,15 +42,14 @@ export const SearchBoxInput = ({
     categories: SearchData;
     brands: SearchData;
   };
+  value: string;
   setValue: (value: string) => void;
 }) => {
   const { products, categories, brands } = data;
   const { isOpen, getMenuProps, getInputProps, getItemProps } = useCombobox({
-    inputValue: value?.toString() ?? "",
-    onInputValueChange({ inputValue }) {
+    onInputValueChange: ({ inputValue }) => {
       setValue(inputValue);
     },
-
     items: [...products.results, ...categories.results, ...brands.results],
     itemToString(item) {
       return item ? item.title : "";
