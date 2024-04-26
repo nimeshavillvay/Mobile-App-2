@@ -4,8 +4,8 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 const useSuspenseSimulationCheckout = () => {
   return useSuspenseQuery({
     queryKey: ["cart", "simulation-checkout"],
-    queryFn: async () =>
-      await api
+    queryFn: async () => {
+      return await api
         .get("rest/simulation-checkout", {
           cache: "no-cache",
         })
@@ -59,20 +59,23 @@ const useSuspenseSimulationCheckout = () => {
             overrideprice: string;
             originalprice: number | null;
           }[];
-        }>(),
+        }>();
+    },
     select: (data) => {
       return {
-        net: data.net,
-        shippingCost: data.shippingcost,
-        tax: data.tax,
-        total: data.total,
-        totalQuantity: data["total-quantity"],
-        cartItemsCount: data.cartItemsCount,
-        delivery: {
-          home: data.delivery.home,
-          multi: data.delivery.multi,
-          truck: data.delivery.truck,
-        },
+        net: Number(data.net),
+        shippingCost: Number(data.shippingcost),
+        tax: Number(data.tax),
+        total: Number(data.total),
+        totalQuantity: Number(data["total-quantity"]),
+        cartItemsCount: Number(data.cartItemsCount),
+        delivery: data.delivery
+          ? {
+              home: Number(data.delivery.home),
+              multi: Number(data.delivery.multi),
+              truck: data.delivery.truck,
+            }
+          : undefined,
         configuration: {
           soldTo: data.configuration.sold_to,
           shipTo: data.configuration.ship_to,
@@ -96,19 +99,20 @@ const useSuspenseSimulationCheckout = () => {
           cardName: data.configuration.cardName,
           cardType: data.configuration.cardType,
           expireDate: data.configuration.expireDate,
-          shippingAddressId: data.configuration.shippingAddressId,
+          shippingAddressId: Number(data.configuration.shippingAddressId),
           paymentToken: data.configuration.paymentToken,
         },
         productslist: data.productslist.map((item) => ({
-          extendedPrice: item.extendedprice,
-          price: item.price,
+          extendedPrice: Number(item.extendedprice),
+          price: Number(item.price),
           productSku: item.sku,
-          productId: item.productid,
-          cartId: item.cartid,
+          productId: Number(item.productid),
+          cartId: Number(item.cartid),
           coupon: item.coupon,
-          quantity: item.quantity,
+          quantity: Number(item.quantity),
           overridePrice: Number(item.overrideprice),
-          originalPrice: item.originalprice,
+          originalPrice:
+            item.originalprice != null ? Number(item.originalprice) : null,
         })),
       };
     },
