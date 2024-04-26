@@ -4,17 +4,12 @@ import { cn } from "@/_lib/utils";
 import { Profile } from "@repo/web-ui/components/icons/profile";
 import { ShoppingCart } from "@repo/web-ui/components/icons/shopping-cart";
 import { WurthFullBlack } from "@repo/web-ui/components/logos/wurth-full-black";
-import {
-  SearchBox,
-  SearchBoxButton,
-  SearchBoxInput,
-} from "@repo/web-ui/components/search-box";
 import { buttonVariants } from "@repo/web-ui/components/ui/button";
 import Link from "next/link";
 import DesktopNavigationMenu from "./desktop-navigation-menu";
 import MobileNavigationMenu from "./mobile-navigation-menu";
+import SearchBar from "./search-bar";
 import type { Category } from "./types";
-
 const Header = async () => {
   const categories = await api
     .get("rest/getcategorylist/0", {
@@ -39,12 +34,7 @@ const Header = async () => {
           <span className="sr-only">Home</span>
         </Link>
 
-        <SearchBox className="mx-auto hidden min-w-0 max-w-[35rem] flex-1 md:flex">
-          <SearchBoxInput placeholder="What are you looking for?" />
-
-          <SearchBoxButton />
-        </SearchBox>
-
+        <SearchBar />
         <div className="ml-auto flex flex-row items-center gap-4 md:ml-0 md:gap-6">
           {/* Mobile */}
           <Link
@@ -107,11 +97,7 @@ const Header = async () => {
       </div>
 
       <div className="container w-full md:hidden">
-        <SearchBox>
-          <SearchBoxInput placeholder="What are you looking for?" />
-
-          <SearchBoxButton />
-        </SearchBox>
+        <SearchBar />
       </div>
 
       <DesktopNavigationMenu categories={categories} />

@@ -44,11 +44,11 @@ export const SearchBoxInput = ({
     categories: SearchData;
     brands: SearchData;
   };
-  value: string;
   setValue: (value: string) => void;
 }) => {
   const { products, categories, brands } = data;
   const { isOpen, getMenuProps, getInputProps, getItemProps } = useCombobox({
+    inputValue: value?.toString() ?? "",
     onInputValueChange({ inputValue }) {
       setValue(inputValue);
     },

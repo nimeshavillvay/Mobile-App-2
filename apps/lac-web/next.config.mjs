@@ -8,6 +8,10 @@ const nextConfig = {
         protocol: "http",
         hostname: "webdev.wurthlac.com",
       },
+      {
+        protocol: "https",
+        hostname: "cdn.pixabay.com",
+      },
     ],
   },
   eslint: {
