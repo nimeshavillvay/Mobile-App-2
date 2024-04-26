@@ -17,21 +17,21 @@ const CartList = ({ shippingMethods }: CartListProps) => {
     <ul className="flex flex-col">
       {data.cartItems.map((item) => (
         <li
-          key={item.itemInfo.productid}
+          key={item.itemInfo.productId}
           className="border-b border-b-wurth-gray-250 px-4 pb-7 md:px-0 [&:not(:first-child)]:pt-7"
         >
           <Suspense fallback={<CartItemFallback />}>
             <CartItem
-              key={item.itemInfo.productid}
+              key={item.itemInfo.productId}
               product={{
-                id: parseInt(item.itemInfo.productid),
-                title: item.itemInfo.txt_meta_title,
-                sku: item.itemInfo.txt_wurth_lac_item,
-                manufacturerId: item.itemInfo.txt_mfn,
+                id: item.itemInfo.productId,
+                title: item.itemInfo.metaTitle,
+                sku: item.itemInfo.productSku,
+                manufacturerId: item.itemInfo.mfrPartNo,
                 quantity: item.quantity,
                 configuration: item.configuration,
-                minAmount: parseInt(item.itemInfo.txt_min_order_amount),
-                increment: parseInt(item.itemInfo.txt_order_qty_increments),
+                minAmount: item.itemInfo.minimumOrderQuantity,
+                increment: item.itemInfo.quantityByIncrements,
               }}
               shippingMethods={shippingMethods}
             />
