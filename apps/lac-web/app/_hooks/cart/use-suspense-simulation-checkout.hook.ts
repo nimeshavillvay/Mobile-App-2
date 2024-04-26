@@ -63,16 +63,16 @@ const useSuspenseSimulationCheckout = () => {
     },
     select: (data) => {
       return {
-        net: Number(data.net),
-        shippingCost: Number(data.shippingcost),
-        tax: Number(data.tax),
-        total: Number(data.total),
-        totalQuantity: Number(data["total-quantity"]),
-        cartItemsCount: Number(data.cartItemsCount),
+        net: data.net,
+        shippingCost: data.shippingcost,
+        tax: data.tax,
+        total: data.total,
+        totalQuantity: data["total-quantity"],
+        cartItemsCount: data.cartItemsCount,
         delivery: data.delivery
           ? {
-              home: Number(data.delivery.home),
-              multi: Number(data.delivery.multi),
+              home: data.delivery.home,
+              multi: data.delivery.multi,
               truck: data.delivery.truck,
             }
           : undefined,
@@ -99,20 +99,19 @@ const useSuspenseSimulationCheckout = () => {
           cardName: data.configuration.cardName,
           cardType: data.configuration.cardType,
           expireDate: data.configuration.expireDate,
-          shippingAddressId: Number(data.configuration.shippingAddressId),
+          shippingAddressId: data.configuration.shippingAddressId,
           paymentToken: data.configuration.paymentToken,
         },
         productslist: data.productslist.map((item) => ({
-          extendedPrice: Number(item.extendedprice),
-          price: Number(item.price),
+          extendedPrice: item.extendedprice,
+          price: item.price,
           productSku: item.sku,
-          productId: Number(item.productid),
-          cartId: Number(item.cartid),
+          productId: item.productid,
+          cartId: item.cartid,
           coupon: item.coupon,
-          quantity: Number(item.quantity),
-          overridePrice: Number(item.overrideprice),
-          originalPrice:
-            item.originalprice != null ? Number(item.originalprice) : null,
+          quantity: item.quantity,
+          overridePrice: item.overrideprice,
+          originalPrice: item.originalprice != null ? item.originalprice : null,
         })),
       };
     },
