@@ -1,35 +1,36 @@
 "use client";
 
 import useSuspenseSimulationCheckout from "@/_hooks/cart/use-suspense-simulation-checkout.hook";
+import useUpdateCartConfigMutation from "@/_hooks/cart/use-update-cart-config-mutation.hook";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as Collapsible from "@radix-ui/react-collapsible";
 import { Label } from "@radix-ui/react-label";
 import { Plus } from "@repo/web-ui/components/icons/plus";
-import { Shield } from "@repo/web-ui/components/icons/shield";
 import { Button } from "@repo/web-ui/components/ui/button";
 import { Input } from "@repo/web-ui/components/ui/input";
 import Link from "next/link";
-import { useId, useState } from "react";
+import { useId, useState, type ReactNode } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import useUpdateCartConfigMutation from "./use-update-cart-config-mutation.hook";
 
 const promoSchema = z.object({
   promo: z.string(),
 });
 
-const OrderSummary = () => {
+type OrderSummaryProps = {
+  children?: ReactNode;
+};
+
+/**
+ * Always wrap this component in a Suspense boundary
+ * to avoid blocking the rendering of the parent component.
+ */
+const OrderSummary = ({ children }: OrderSummaryProps) => {
   const id = useId();
   const promoId = `promo-${id}`;
 
   const [openPromo, setOpenPromo] = useState(false);
   const simulationCheckoutQuery = useSuspenseSimulationCheckout();
-
-  const savingsAmount =
-    simulationCheckoutQuery.data.total -
-    simulationCheckoutQuery.data.net -
-    simulationCheckoutQuery.data.shippingCost -
-    simulationCheckoutQuery.data.tax;
 
   const { register, handleSubmit } = useForm<z.infer<typeof promoSchema>>({
     resolver: zodResolver(promoSchema),
@@ -62,12 +63,12 @@ const OrderSummary = () => {
             </td>
           </tr>
 
-          {savingsAmount > 0 && (
+          {simulationCheckoutQuery.data.discount > 0 && (
             <tr>
               <td className="py-1">Savings</td>
 
               <td className="py-1 text-right font-medium text-green-700">
-                -${savingsAmount.toFixed(2)}
+                -${simulationCheckoutQuery.data.discount.toFixed(2)}
               </td>
             </tr>
           )}
@@ -152,15 +153,7 @@ const OrderSummary = () => {
         </tbody>
       </table>
 
-      <Button
-        variant="secondary"
-        size="lg"
-        className="h-fit w-full gap-2 rounded-lg px-5 py-4 text-lg font-normal shadow-md"
-      >
-        <Shield className="size-5 stroke-white" />
-
-        <span>Secure Checkout</span>
-      </Button>
+      {children}
     </div>
   );
 };

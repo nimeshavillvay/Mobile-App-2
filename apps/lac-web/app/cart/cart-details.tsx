@@ -1,6 +1,7 @@
 "use client";
 
 import useSuspenseCart from "@/_hooks/cart/use-suspense-cart.hook";
+import useUpdateCartConfigMutation from "@/_hooks/cart/use-update-cart-config-mutation.hook";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@repo/web-ui/components/ui/input";
 import { Label } from "@repo/web-ui/components/ui/label";
@@ -8,7 +9,6 @@ import { useToast } from "@repo/web-ui/components/ui/toast";
 import { useId } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import useUpdateCartConfigMutation from "./use-update-cart-config-mutation.hook";
 
 const detailsSchema = z.object({
   po: z.string(),
@@ -54,7 +54,7 @@ const CartDetails = () => {
   };
 
   return (
-    <div className="px-5 py-4 border border-wurth-gray-150 rounded-lg shadow-md space-y-3">
+    <div className="space-y-3 rounded-lg border border-wurth-gray-150 px-5 py-4 shadow-md">
       <div className="space-y-2">
         <Label htmlFor={poId}>PO Number (Required)</Label>
 

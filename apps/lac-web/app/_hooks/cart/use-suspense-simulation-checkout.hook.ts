@@ -13,10 +13,11 @@ const useSuspenseSimulationCheckout = () => {
           net: number;
           shippingcost: number;
           tax: number;
+          discount: number;
           total: number;
           "total-quantity": number;
           cartItemsCount: number;
-          delivery: {
+          delivery?: {
             home: number;
             multi: number;
             truck: string;
@@ -66,6 +67,7 @@ const useSuspenseSimulationCheckout = () => {
         net: data.net,
         shippingCost: data.shippingcost,
         tax: data.tax,
+        discount: data.discount,
         total: data.total,
         totalQuantity: data["total-quantity"],
         cartItemsCount: data.cartItemsCount,

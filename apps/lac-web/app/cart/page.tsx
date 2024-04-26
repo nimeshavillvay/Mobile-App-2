@@ -1,3 +1,4 @@
+import OrderSummary from "@/_components/order-summary";
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import type { Metadata } from "next";
 import { Suspense } from "react";
@@ -6,7 +7,7 @@ import { getShippingMethods } from "./apis";
 import CartDetails from "./cart-details";
 import CartHeading from "./cart-heading";
 import CartItemFallback from "./cart-item-fallback";
-import OrderSummary from "./order-summary";
+import CheckoutButton from "./checkout-button";
 import ShippingMethod from "./shipping-method";
 
 export const metadata: Metadata = {
@@ -48,19 +49,25 @@ const CartPage = async () => {
           </Suspense>
         </div>
 
-        <aside className="gap-5 flex flex-col px-6 py-4 md:w-[19.75rem] md:px-0 md:py-0">
+        <aside className="flex flex-col gap-5 px-6 py-4 md:w-[19.75rem] md:px-0 md:py-0">
           <Suspense
             fallback={<Skeleton className="h-[182px] rounded-lg shadow-md" />}
           >
             <CartDetails />
           </Suspense>
 
-          <ShippingMethod options={shippingMethods} />
+          <Suspense
+            fallback={<Skeleton className="h-[158px] rounded-lg shadow-md" />}
+          >
+            <ShippingMethod options={shippingMethods} />
+          </Suspense>
 
           <Suspense
-            fallback={<Skeleton className="h-[344px] rounded-lg shadow-md" />}
+            fallback={<Skeleton className="h-[316px] rounded-lg shadow-md" />}
           >
-            <OrderSummary />
+            <OrderSummary>
+              <CheckoutButton />
+            </OrderSummary>
           </Suspense>
         </aside>
       </div>
