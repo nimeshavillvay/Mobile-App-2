@@ -184,6 +184,6 @@ export type CartConfiguration = {
   cardType: null;
   expireDate: null;
   paymentMethod: null;
-  isAPrimaryShippingAddress: null;
+  isAPrimaryShippingAddress?: null;
   shippingAddressId: null;
 };
