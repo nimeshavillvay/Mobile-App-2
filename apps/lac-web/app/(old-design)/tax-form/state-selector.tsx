@@ -27,7 +27,7 @@ const StateSelector = ({
 
   return (
     <Select onValueChange={onSelectState}>
-      <SelectTrigger className="ui-w-full">
+      <SelectTrigger className="w-full">
         <SelectValue placeholder="Select a State" />
       </SelectTrigger>
       <SelectContent>

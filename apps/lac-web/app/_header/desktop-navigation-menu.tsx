@@ -30,7 +30,7 @@ const DesktopNavigationMenu = ({ categories }: DesktopNavigationMenuProps) => {
 
   return (
     <div className="hidden bg-wurth-red-650 md:block">
-      <NavigationMenu className="container justify-start">
+      <NavigationMenu className="container max-w-full justify-start">
         <NavigationMenuList>
           <NavigationMenuItem>
             <NavigationMenuTrigger>Categories</NavigationMenuTrigger>

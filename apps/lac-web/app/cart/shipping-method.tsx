@@ -35,7 +35,7 @@ const ShippingMethod = ({ options }: ShippingMethodProps) => {
   const handleSelectValueChange = (value: string) => {
     updateCartItemMutation.mutate(
       cartQuery.data.cartItems.map((item) => ({
-        productId: Number(item.itemInfo.productid),
+        productId: item.itemInfo.productId,
         quantity: item.quantity,
         config: {
           ...item.configuration,

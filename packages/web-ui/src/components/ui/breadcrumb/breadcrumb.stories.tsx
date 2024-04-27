@@ -43,9 +43,9 @@ export const Demo: Story = {
           <BreadcrumbSeparator />
           <BreadcrumbItem>
             <DropdownMenu>
-              <DropdownMenuTrigger className="ui-flex ui-items-center ui-gap-1">
-                <BreadcrumbEllipsis className="ui-size-4" />
-                <span className="ui-sr-only">Toggle menu</span>
+              <DropdownMenuTrigger className="flex items-center gap-1">
+                <BreadcrumbEllipsis className="size-4" />
+                <span className="sr-only">Toggle menu</span>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start">
                 <DropdownMenuItem>Documentation</DropdownMenuItem>
@@ -107,7 +107,7 @@ export const WithDropdown: Story = {
           </BreadcrumbSeparator>
           <BreadcrumbItem>
             <DropdownMenu>
-              <DropdownMenuTrigger className="ui-flex ui-items-center ui-gap-1">
+              <DropdownMenuTrigger className="flex items-center gap-1">
                 Components
                 <ChevronDownIcon />
               </DropdownMenuTrigger>

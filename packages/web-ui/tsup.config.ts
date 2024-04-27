@@ -23,7 +23,6 @@ const baseConfig: Options = {
 };
 
 export default defineConfig([
-  { ...baseConfig, entry: ["src/styles.css"] },
   {
     ...baseConfig,
     entry: ["src/components/icons/**/*/index.ts"],

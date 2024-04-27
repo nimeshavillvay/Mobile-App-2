@@ -3,10 +3,12 @@
   "editor.formatOnSave": true,
   "cSpell.words": [
     "_tsup",
+    "clsx",
     "embla",
     "localstorage",
     "Pinterest",
     "sku",
+    "tsup",
     "turborepo",
     "wurth",
     "zustand"
