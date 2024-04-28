@@ -9,7 +9,7 @@ import { EMAIL_COOKIE } from "../constants";
 
 export const login = async (email: string, password: string) => {
   try {
-    await api
+    const response = await api
       .post("rest/auth/login", {
         json: {
           userName: email,
@@ -24,8 +24,32 @@ export const login = async (email: string, password: string) => {
             authority: string;
           }[];
           name: string;
+          change_password?: boolean;
+          is_sales_rep?: boolean;
         };
+        change_password?: boolean;
       }>();
+
+    const { status_code, user_id, authentication, change_password } = response;
+
+    const authorities = authentication?.authorities;
+    const authority = authorities?.[0]?.authority;
+
+    const transformData = {
+      statusCode: status_code,
+      userId: user_id,
+      authentication: {
+        authorities: {
+          authority: authority,
+        },
+        name: authentication?.name,
+        isPasswordChanged: authentication?.change_password,
+        isSalesRep: authentication?.is_sales_rep,
+      },
+      isPasswordChanged: change_password,
+    };
+
+    return transformData;
   } catch (error) {
     if (error instanceof HTTPError && error.response.status === 401) {
       const errorResponse = await error.response.json();
