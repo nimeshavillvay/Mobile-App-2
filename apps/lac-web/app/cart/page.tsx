@@ -10,6 +10,8 @@ import CartItemFallback from "./cart-item-fallback";
 import CheckoutButton from "./checkout-button";
 import ShippingMethod from "./shipping-method";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Cart",
 };
