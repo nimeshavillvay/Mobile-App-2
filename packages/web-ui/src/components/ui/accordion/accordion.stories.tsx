@@ -20,11 +20,7 @@ type Story = StoryObj<typeof Accordion>;
 export const Showcase: Story = {
   render: () => {
     return (
-      <Accordion
-        type="single"
-        collapsible
-        className="ui-w-[32rem] ui-max-w-full"
-      >
+      <Accordion type="single" collapsible className="w-[32rem] max-w-full">
         <AccordionItem value="item-1">
           <AccordionTrigger>Is it accessible?</AccordionTrigger>
           <AccordionContent>

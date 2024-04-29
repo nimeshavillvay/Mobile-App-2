@@ -3,10 +3,12 @@
   "editor.formatOnSave": true,
   "cSpell.words": [
     "_tsup",
+    "clsx",
     "embla",
     "localstorage",
     "Pinterest",
     "sku",
+    "tsup",
     "turborepo",
     "wurth",
     "zustand"
@@ -27,5 +29,6 @@
     "className",
     "ngClass",
     "buttonClassName"
-  ]
+  ],
+  "turbo.path": "/Users/akhila/Documents/Villvay/wurth-frontend-monorepo/node_modules/turbo-darwin-arm64/bin/turbo"
 }

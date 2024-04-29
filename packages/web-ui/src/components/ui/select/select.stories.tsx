@@ -24,7 +24,7 @@ export const Showcase: Story = {
   render: () => {
     return (
       <Select>
-        <SelectTrigger className="ui-w-[180px]">
+        <SelectTrigger className="w-[180px]">
           <SelectValue placeholder="Select a fruit" />
         </SelectTrigger>
         <SelectContent>

@@ -12,7 +12,7 @@ export const CheckCircleFilled = ({
       height="24"
       fill="none"
       viewBox="0 0 24 24"
-      className={cn("ui-fill-black", className)}
+      className={cn("fill-black", className)}
       {...delegated}
     >
       <path

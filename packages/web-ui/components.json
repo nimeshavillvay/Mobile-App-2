@@ -8,7 +8,7 @@
     "css": "src/styles.css",
     "baseColor": "zinc",
     "cssVariables": false,
-    "prefix": "ui-"
+    "prefix": ""
   },
   "aliases": {
     "components": "@/components",

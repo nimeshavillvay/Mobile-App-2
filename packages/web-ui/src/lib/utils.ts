@@ -2,7 +2,7 @@ import { clsx, type ClassValue } from "clsx";
 import { extendTailwindMerge } from "tailwind-merge";
 
 export const twMerge = extendTailwindMerge({
-  prefix: "ui-",
+  prefix: "",
 });
 
 export const cn = (...inputs: ClassValue[]) => {
