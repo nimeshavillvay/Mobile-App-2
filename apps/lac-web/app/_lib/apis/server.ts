@@ -1,3 +1,4 @@
+import { SPECIAL_SHIPPING_FLAG } from "@/_lib/constants";
 import "server-only";
 import { api } from "../api";
 import { DEFAULT_REVALIDATE } from "../constants";
@@ -238,42 +239,82 @@ export const getBanners = async (categoryId: string) => {
   }
 };
 
+type FeatureProduct = {
+  productTitle: string;
+  txt_description_name: string;
+  txt_mfn: string;
+  txt_hazardous: string;
+  txt_web_direct: string;
+  txt_special_shipping: string;
+  groupId: string;
+  productId: string;
+  group_img: string;
+  product_img: string;
+  sku: string;
+  txt_uom: string;
+  txt_uom_label: string;
+  is_sale: boolean;
+  is_new: boolean;
+  min_order_amount: string;
+  order_qty_increments: string;
+  brandId: string;
+  brandName: string;
+  categoryId: string;
+  categoryName: string;
+  subCategoryId: string;
+  subCategoryName: string;
+};
+
 export const getFeaturedProducts = async () => {
-  return await api
+  const response = await api
     .get("rest/getfeatureproducts", {
       next: { revalidate: DEFAULT_REVALIDATE },
     })
     .json<{
-      bestsellers: unknown[];
-      featured: unknown[];
-      new: unknown[];
-      on_sale: {
-        productTitle: string;
-        txt_description_name: string;
-        txt_mfn: string;
-        txt_hazardous: "Y" | "N";
-        txt_web_direct: "Y" | "N";
-        txt_special_shipping: string;
-        groupId: number | string;
-        productId: string;
-        group_img: string;
-        product_img: string;
-        sku: string;
-        txt_uom: "Pair" | "Each";
-        txt_uom_label: "Pair" | "Each";
-        is_sale: boolean;
-        is_new: boolean;
-        min_order_amount: string;
-        order_qty_increments: string;
-        brandId: string;
-        brandName: string;
-        categoryId: string;
-        categoryName: string;
-        subCategoryId: string;
-        subCategoryName: string;
-      }[];
-      quick_ship: unknown[];
+      bestsellers: FeatureProduct[];
+      featured: FeatureProduct[];
+      new: FeatureProduct[];
+      on_sale: FeatureProduct[];
+      quick_ship: FeatureProduct[];
     }>();
+
+  const transformProduct = (data: FeatureProduct) => ({
+    productTitle: data.productTitle,
+    productDescription: data.txt_description_name,
+    mfrPartNo: data.txt_mfn,
+    isHazardous: data.txt_hazardous === "Y",
+    isDirectlyShippedFromVendor: data.txt_web_direct === "Y",
+    specialShipping: !!SPECIAL_SHIPPING_FLAG.find(
+      (flag) => flag === data.txt_special_shipping,
+    ),
+    groupId: Number(data.groupId),
+    productId: data.productId,
+    groupImage: data.group_img,
+    productImage: data.product_img,
+    productSku: data.productTitle,
+    unitOfMeasure: data.txt_uom_label,
+    isSaleItem: data.is_sale,
+    isNewItem: data.is_new,
+    minimumOrderQuantity: Number(data.min_order_amount) ?? 1,
+    quantityByIncrements: Number(data.order_qty_increments) ?? 1,
+    brandId: Number(data.brandId),
+    brandName: data.brandName,
+    categoryId: Number(data.categoryId),
+    categoryName: data.categoryName,
+    subCategoryId: Number(data.subCategoryId),
+    subCategoryName: data.subCategoryName,
+  });
+
+  const transformDataArray = (dataArray: FeatureProduct[]) =>
+    dataArray.length ? dataArray.map(transformProduct) : [];
+
+  return {
+    bestSellers: transformDataArray(response.bestsellers),
+    featured: transformDataArray(response.featured),
+    new: transformDataArray(response.new),
+    onSale: transformDataArray(response.on_sale),
+    quickShip: transformDataArray(response.quick_ship),
+  };
 };
 
 export const getJobRoles = async () => {
