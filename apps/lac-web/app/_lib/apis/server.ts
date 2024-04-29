@@ -80,162 +80,19 @@ type Banner = {
   }[];
 };
 export const getBanners = async (categoryId: string) => {
-  // TODO Remove try/catch block and placeholder data when real API is ready
-  try {
-    return await api
-      .get("rest/banners", {
-        searchParams: {
-          categoryid: categoryId,
-        },
-        next: {
-          revalidate: DEFAULT_REVALIDATE,
-        },
-      })
-      .json<{
-        B: Banner[];
-        H: Banner[];
-        T: Banner[];
-      }>();
-  } catch {
-    return {
-      B: [
-        {
-          "banner-id": "4",
-          priority: "0",
-          banners: [
-            {
-              id: "161",
-              slot: "mainSlot",
-              class: "",
-              "data-descr": "",
-              active: 1,
-              alt_tag: "SAM Approved",
-              priority: "10",
-              html_content: "",
-              pdf_file_name: "",
-              pdf_file_path: "",
-              use_custom_link: 1,
-              custom_url: "/sam-gov/",
-              file_name: "default_image.gif",
-              file_path: "https://wurthlac.local/default_image.gif",
-              mobile_file_name: "default_image.gif",
-              mobile_file_path: "/default_image.gif",
-            },
-          ],
-        },
-      ],
-      H: [
-        {
-          "banner-id": "7",
-          priority: "0",
-          banners: [
-            {
-              id: "35",
-              slot: "mainSlot",
-              class: "",
-              "data-descr": "",
-              active: 1,
-              alt_tag: "",
-              priority: "0",
-              html_content: "werwerwerwe",
-              pdf_file_name: "",
-              pdf_file_path: "",
-              use_custom_link: 0,
-              custom_url: "",
-              file_name: "",
-              file_path: null,
-              mobile_file_name: "",
-              mobile_file_path: null,
-            },
-          ],
-        },
-      ],
-      T: [
-        {
-          "banner-id": "2",
-          priority: "1",
-          banners: [
-            {
-              id: "162",
-              slot: "mainSlot",
-              class: "test-class",
-              "data-descr": "this is for GTM",
-              active: 1,
-              alt_tag: "",
-              priority: "10",
-              html_content: "",
-              pdf_file_name: "",
-              pdf_file_path: "",
-              use_custom_link: 0,
-              custom_url: "",
-              file_name: "default_image.gif",
-              file_path: "https://wurthlac.local/default_image.gif",
-              mobile_file_name: "default_image.gif",
-              mobile_file_path: "/default_image.gif",
-            },
-            {
-              id: "34",
-              slot: "mainSlot",
-              class: "",
-              "data-descr": "",
-              active: 1,
-              alt_tag: "",
-              priority: "30",
-              html_content:
-                '<div style="text-align: center;width: 100%;">\r\n<picture class="promo_free_shipping">\r\n<source srcset="https://www.wurthmachinery.com/images/A/July-2023-Free-Shipping-2.webp" type="image/webp">\r\n<source srcset="https://www.wurthmachinery.com/images/A/July-2023-Free-Shipping-2.jp2" type="image/jp2">\r\n<img src="https://www.wurthmachinery.com/images/A/July-2023-Free-Shipping-2.jpg" alt="" usemap="#freeShipMap"> \r\n <map name="freeShipMap">\r\n <area shape="rect" coords="506,167,722,372" href="https://www.wurthmachinery.com/JET-TOOLS/" class="banner-promo" data-promo-slider="Free Shipping" data-promo-offer="Free Shipping" data-promo-brand="Jet Tools" alt="Free Shipping on Jet Tools!">\r\n <area shape="rect" coords="754,168,1145,320" href="https://www.wurthmachinery.com/maksiwa-usa/" class="banner-promo" data-promo-slider="Free Shipping" data-promo-offer="Free Shipping" data-promo-brand="Maksiwa" alt="Free Shipping on Maksiwa!">\r\n <area shape="rect" coords="1190,171,1431,365" href="https://www.wurthmachinery.com/powermatic/" class="banner-promo" data-promo-slider="Free Shipping" data-promo-offer="Free Shipping" data-promo-brand="Powermatic" alt="Free Shipping on Powermatic!">\r\n <area shape="rect" coords="752,335,1166,484" href="https://www.wurthmachinery.com/powermatic/" class="banner-promo" data-promo-slider="Free Shipping" data-promo-offer="Free Shipping" data-promo-brand="Shop All Sale Brands" alt="Free Shipping Shop Now!">\r\n </map> \r\n\t</picture>\t\r\n</div>',
-              pdf_file_name: "",
-              pdf_file_path: "",
-              use_custom_link: 0,
-              custom_url: "",
-              file_name: "",
-              file_path: null,
-              mobile_file_name: "",
-              mobile_file_path: null,
-            },
-            {
-              id: "204",
-              slot: "mainSlot",
-              class: "",
-              "data-descr": "",
-              active: 1,
-              alt_tag: "New Surteco UniverSOL Edgebanding Release Agent",
-              priority: "40",
-              html_content: "",
-              pdf_file_name: "LP1922-Surteco-promo.pdf",
-              pdf_file_path:
-                "/skin/common_files/documents/LP1922-Surteco-promo.pdf",
-              use_custom_link: 0,
-              custom_url: "",
-              file_name: "default_image.gif",
-              file_path: "https://wurthlac.local/default_image.gif",
-              mobile_file_name: "default_image.gif",
-              mobile_file_path: "/default_image.gif",
-            },
-            {
-              id: "206",
-              slot: "mainSlot",
-              class: "",
-              "data-descr": "",
-              active: 1,
-              alt_tag: "",
-              priority: "50",
-              html_content: "",
-              pdf_file_name: "",
-              pdf_file_path: "",
-              use_custom_link: 0,
-              custom_url: "",
-              file_name: "contact_us_banner.png",
-              file_path:
-                "https://wurthlac.local/images/A/contact_us_banner.png",
-              mobile_file_name: "banner_wurth.png",
-              mobile_file_path:
-                "https://wurthlac.local/images/AM/banner_wurth.png",
-            },
-          ],
-        },
-      ],
-    };
-  }
+  return await api
+    .get("rest/banners", {
+      searchParams: {
+        categoryid: categoryId,
+      },
+      next: {
+        revalidate: DEFAULT_REVALIDATE,
+      },
+    })
+    .json<{
+      B: Banner[];
+      T: Banner[];
+    }>();
 };
 
 export const getFeaturedProducts = async () => {
