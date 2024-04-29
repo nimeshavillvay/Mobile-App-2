@@ -6,10 +6,7 @@ export type SkeletonProps = ComponentProps<"div">;
 const Skeleton = ({ className = "", ...delegated }: SkeletonProps) => {
   return (
     <div
-      className={cn(
-        "ui-animate-pulse ui-rounded-md ui-bg-zinc-900/10",
-        className,
-      )}
+      className={cn("animate-pulse rounded-md bg-zinc-900/10", className)}
       {...delegated}
     />
   );

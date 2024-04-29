@@ -4,6 +4,7 @@ const nextConfig = {
   images: {
     formats: ["image/avif", "image/webp"],
     remotePatterns: [
+      // TODO Remove old domain
       {
         protocol: "http",
         hostname: "webdev.wurthlac.com",
@@ -12,6 +13,10 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "cdn.pixabay.com",
+      },
+      {
+        protocol: "https",
+        hostname: "wurthlac.x-shops.com",
       },
     ],
   },

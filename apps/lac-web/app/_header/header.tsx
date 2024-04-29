@@ -35,7 +35,9 @@ const Header = async () => {
           <span className="sr-only">Home</span>
         </Link>
 
-        <SearchBar />
+        <div className="container w-full relative">
+          <SearchBar />
+        </div>
 
         <div className="ml-auto flex flex-row items-center gap-4 md:ml-0 md:gap-6">
           {/* Mobile */}

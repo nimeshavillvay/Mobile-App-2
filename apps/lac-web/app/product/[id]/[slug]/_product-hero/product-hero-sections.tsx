@@ -223,29 +223,31 @@ export const ProductDetails = async ({
         </ul>
       )}
 
-      <div className="space-y-2">
-        <h3 className="text-lg font-semibold">Downloads</h3>
+      {attachments.group_assets_doc.length > 0 && (
+        <div className="space-y-2">
+          <h3 className="text-lg font-semibold">Downloads</h3>
 
-        <div className="grid grid-cols-2 gap-2">
-          {attachments.group_assets_doc.map((attachment) => (
-            <Button
-              key={attachment.file_path}
-              variant="outline"
-              className="flex h-fit max-w-full flex-col items-start gap-2 rounded-lg border-wurth-gray-250 p-3 shadow-sm"
-            >
-              <Save className="mt-1 size-5 shrink-0" />
+          <div className="grid grid-cols-2 gap-2">
+            {attachments.group_assets_doc.map((attachment) => (
+              <Button
+                key={attachment.file_path}
+                variant="outline"
+                className="flex h-fit max-w-full flex-col items-start gap-2 rounded-lg border-wurth-gray-250 p-3 shadow-sm"
+              >
+                <Save className="mt-1 size-5 shrink-0" />
 
-              <span className="text-wrap text-left text-sm font-semibold text-wurth-gray-800">
-                {attachment.title}
-              </span>
-            </Button>
-          ))}
+                <span className="text-wrap text-left text-sm font-semibold text-wurth-gray-800">
+                  {attachment.title}
+                </span>
+              </Button>
+            ))}
+          </div>
+
+          <Button variant="link" className="h-fit p-0 text-sm font-medium">
+            View all downloads
+          </Button>
         </div>
-
-        <Button variant="link" className="h-fit p-0 text-sm font-medium">
-          View all downloads
-        </Button>
-      </div>
+      )}
     </section>
   );
 };

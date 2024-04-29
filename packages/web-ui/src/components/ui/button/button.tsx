@@ -5,25 +5,23 @@ import { type VariantProps } from "cva";
 import { forwardRef } from "react";
 
 const buttonVariants = cva({
-  base: "ui-inline-flex ui-items-center ui-justify-center ui-gap-2 ui-whitespace-nowrap ui-rounded ui-text-sm ui-font-medium ui-transition-colors focus-visible:ui-outline-none focus-visible:ui-ring-1 focus-visible:ui-ring-zinc-950 disabled:ui-pointer-events-none disabled:ui-opacity-50",
+  base: "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-zinc-950 disabled:pointer-events-none disabled:opacity-50",
   variants: {
     variant: {
-      default: "ui-bg-black ui-text-white ui-shadow hover:ui-bg-wurth-gray-800",
-      secondary:
-        "ui-bg-wurth-red-650 ui-text-white ui-shadow-sm hover:ui-bg-red-800",
-      destructive:
-        "ui-bg-orange-600 ui-text-white ui-shadow-sm hover:ui-bg-orange-700",
+      default: "bg-black text-white shadow hover:bg-wurth-gray-800",
+      secondary: "bg-wurth-red-650 text-white shadow-sm hover:bg-red-800",
+      destructive: "bg-orange-600 text-white shadow-sm hover:bg-orange-700",
       outline:
-        "ui-border ui-border-wurth-gray-400 ui-bg-white ui-text-wurth-gray-800 hover:ui-border-wurth-gray-800 hover:ui-bg-wurth-gray-50",
-      subtle: "ui-bg-wurth-gray-50 ui-text-black hover:ui-bg-wurth-gray-150",
-      ghost: "ui-text-black hover:ui-bg-wurth-gray-50",
-      link: "ui-text-black hover:ui-text-red-800 hover:ui-underline",
+        "border border-wurth-gray-400 bg-white text-wurth-gray-800 hover:border-wurth-gray-800 hover:bg-wurth-gray-50",
+      subtle: "bg-wurth-gray-50 text-black hover:bg-wurth-gray-150",
+      ghost: "text-black hover:bg-wurth-gray-50",
+      link: "text-black hover:text-red-800 hover:underline",
     },
     size: {
-      default: "ui-h-9 ui-px-4 ui-py-2",
-      sm: "ui-h-8 ui-rounded ui-px-3 ui-text-xs",
-      lg: "ui-h-10 ui-rounded ui-px-8",
-      icon: "ui-h-9 ui-w-9",
+      default: "h-9 px-4 py-2",
+      sm: "h-8 rounded px-3 text-xs",
+      lg: "h-10 rounded px-8",
+      icon: "h-9 w-9",
     },
   },
   defaultVariants: {

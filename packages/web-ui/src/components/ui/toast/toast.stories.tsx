@@ -24,7 +24,7 @@ export const Showcase: Story = {
       <>
         <Toaster />
 
-        <div className="ui-grid ui-grid-cols-2 ui-gap-4">
+        <div className="grid grid-cols-2 gap-4">
           <Button
             onClick={() => {
               toast({

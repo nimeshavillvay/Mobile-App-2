@@ -1,6 +1,5 @@
 "use client";
 
-import productItemImage from "@/_assets/images/product-item-image.png";
 import {
   ProductCard,
   ProductCardActions,
@@ -17,11 +16,13 @@ type FlashSaleProductProps = {
   product: {
     id: string;
     title: string;
+    sku: string;
+    image: string;
   };
 };
 
 const FlashSaleProduct = ({
-  product: { id, title },
+  product: { id, title, sku, image },
 }: FlashSaleProductProps) => {
   return (
     <ProductCard className="shrink-0 snap-start">
@@ -29,9 +30,10 @@ const FlashSaleProduct = ({
         <ProductCardDiscount>30</ProductCardDiscount>
 
         <ProductCardImage
-          src={productItemImage}
+          src={image}
           alt={`A picture of the product ${title}`}
-          href={`/product/12345`}
+          // TODO Add slug to route
+          href={`/product/${id}/`}
           title={title}
         />
 
@@ -41,8 +43,9 @@ const FlashSaleProduct = ({
       <ProductCardContent>
         <ProductCardDetails
           title={title}
-          sku={id}
-          href="/product/771770/PROMD3-MB"
+          sku={sku}
+          // TODO Add slug to route
+          href={`/product/${id}/`}
         />
 
         <ProductCardPrice price={2.05} uom="pair" actualPrice={4.11} />

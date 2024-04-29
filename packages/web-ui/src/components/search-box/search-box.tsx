@@ -26,7 +26,13 @@ export const SearchBox = ({
   ...delegated
 }: ComponentProps<"div">) => {
   return (
-    <div className={cn("ui-relative ui-flex", className)} {...delegated} />
+    <div
+      className={cn(
+        "flex flex-row items-center rounded-full border border-wurth-gray-250",
+        className,
+      )}
+      {...delegated}
+    />
   );
 };
 
@@ -57,12 +63,12 @@ export const SearchBoxInput = ({
   });
 
   return (
-    <div className="ui-relative ui-rounded-md">
-      <div className="ui-flex ui-w-72 ui-flex-col ui-gap-1">
-        <div className="flex shadow-sm bg-white gap-0.5">
+    <div className="relative rounded-md">
+      <div className="flex min-w-[776px] flex-col gap-1">
+        <div>
           <input
             className={cn(
-              "ui-w-full ui-min-w-0 ui-flex-1 ui-shrink ui-rounded-l-full ui-border-0 ui-py-2.5 ui-pl-3.5 ui-text-sm placeholder:ui-text-wurth-gray-400",
+              "w-full min-w-0 flex-1 shrink rounded-l-full border-0 py-2.5 pl-3.5 text-sm placeholder-text-wurth-gray-400",
               className,
             )}
             {...delegated}
@@ -73,26 +79,24 @@ export const SearchBoxInput = ({
       <ul
         className={`${
           isOpen ? "block" : "hidden"
-        } absolute w-72 bg-white mt-4 shadow-sm max-h-80 overflow-y-auto p-0 z-10 rounded-md`}
+        } shadow-right shadow-bottom shadow-left le absolute z-50 mt-4 min-w-[776px] rounded-b-lg bg-white p-0 pl-4 shadow-sm`}
         {...getMenuProps()}
       >
         {isOpen && value && (
           <>
             {categories.results.length > 0 && (
               <>
-                <li className="ui-text-black-500 ui-px-3 ui-py-1 ui-font-semibold">
+                <li className="text-black-500 px-3 py-1 font-semibold">
                   Categories for &quot;{value}&quot;
                 </li>
-                <br />
                 {categories.results.map((category, index) => (
                   <li
-                    className={cn("py-2 px-3 shadow-sm flex flex-col")}
                     key={category.id}
                     {...getItemProps({ item: category, index })}
                   >
-                    <span className="bg-red-100">
-                      <span className="ui-text-gray-500">&#8627;</span>{" "}
-                      <b className="ui-text-red-500">{category.title}</b>
+                    <span>
+                      <span className="text-gray-500">&#8627;</span>{" "}
+                      <b className="text-red-500">{category.title}</b>
                     </span>
                   </li>
                 ))}
@@ -101,29 +105,27 @@ export const SearchBoxInput = ({
             )}
             {brands.results.length > 0 && (
               <>
-                <li className="ui-text-black-500 ui-px-3 ui-py-1 ui-font-semibold">
+                <li className="text-black-500 px-3 py-1 font-semibold">
                   Brands for &quot;{value}&quot;
                 </li>
-                <br />
-                <li className="ui-flex ui-flex-row ui-flex-wrap">
+                <li className="flex flex-row flex-wrap">
                   {brands.results.map((brand, index) => (
                     <div
                       key={brand.id}
                       className={cn(
-                        "ui-mb-2 ui-mr-2 ui-flex ui-items-center ui-rounded-md ui-p-2",
-
-                        "ui-m-2 ui-rounded-lg ui-border-2 ui-p-4 ui-shadow-sm",
+                        "mb-2 mr-2 flex items-center rounded-md p-2",
+                        "m-2 rounded-lg border-2 p-4 shadow-sm",
                       )}
                       {...getItemProps({ item: brand, index })}
                     >
                       <Image
                         src={brand.img}
                         alt={brand.title}
-                        className="ui-mr-2 ui-h-10 ui-w-10"
+                        className="mr-2 min-h-10 min-w-10"
                         width={40}
                         height={40}
                       />
-                      <span className="ui-flex-grow">{brand.title}</span>
+                      <span className="flex-grow">{brand.title}</span>
                     </div>
                   ))}
                 </li>
@@ -132,30 +134,29 @@ export const SearchBoxInput = ({
             )}
             {products.results.length > 0 && (
               <>
-                <li className="ui-text-black-500 ui-px-3 ui-py-1 ui-font-semibold">
+                <li className="text-black-500 px-3 py-1 font-semibold">
                   Products for &quot;{value}&quot;
                 </li>
-                <br />
-                <div className="ui-flex">
-                  <div className="ui-w-1/2">
+                <div className="flex">
+                  <div className="w-1/2">
                     {products.results.slice(0, 5).map((product, index) => (
                       <li
-                        className={cn("ui-flex ui-px-3 ui-py-2")}
+                        className={cn("flex px-3 py-2")}
                         key={product.id}
                         {...getItemProps({ item: product, index })}
                       >
-                        <div className="ui-flex">
+                        <div className="flex">
                           <Image
                             src={product.img}
                             alt={product.title}
-                            className="ui-mr-2 ui-h-20 ui-w-20  ui-border ui-border-gray-300"
+                            className="mr-2 min-h-20 min-w-20 rounded-md border border-gray-300"
                             width={80}
                             height={80}
                             priority={true}
                           />
-                          <div className="ui-flex ui-flex-col ui-justify-between">
+                          <div className="flex flex-col justify-between">
                             <span>{product.title}</span>
-                            <span className="ui-text-gray-500">
+                            <span className="text-gray-500">
                               Item# {product.code}
                             </span>
                           </div>
@@ -163,24 +164,24 @@ export const SearchBoxInput = ({
                       </li>
                     ))}
                   </div>
-                  <div className="ui-w-1/2">
+                  <div className="w-1/2">
                     {products.results.slice(5).map((product, index) => (
                       <li
-                        className={cn("ui-flex ui-px-3 ui-py-2")}
+                        className={cn("flex px-3 py-2")}
                         key={product.id}
                         {...getItemProps({ item: product, index: index + 5 })}
                       >
-                        <div className="ui-flex">
+                        <div className="flex">
                           <Image
                             src={product.img}
                             alt={product.title}
-                            className="ui-mr-2 ui-h-20 ui-w-20  ui-border ui-border-gray-300"
+                            className="mr-2 min-h-20 min-w-20 rounded-md border border-gray-300"
                             width={80}
                             height={80}
                           />
-                          <div className="ui-flex ui-flex-col ui-justify-between">
+                          <div className="flex flex-col justify-between">
                             <span>{product.title}</span>
-                            <span className="ui-text-gray-500">
+                            <span className="text-gray-500">
                               Item# {product.code}
                             </span>
                           </div>
@@ -209,10 +210,10 @@ export const SearchBoxButton = ({
       type={type}
       variant="ghost"
       size="icon"
-      className={cn("ui-mx-0.5 ui-rounded-full ui-px-2", className)}
+      className={cn("mx-0.5 rounded-full px-2", className)}
       {...delegated}
     >
-      <MagnifyingGlass className="ui-size-5" />
+      <MagnifyingGlass className="size-5" />
     </Button>
   );
 };

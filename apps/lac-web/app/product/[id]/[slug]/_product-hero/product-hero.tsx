@@ -80,12 +80,14 @@ const ProductHero = async ({ id }: ProductHeroProps) => {
 
         <ProductDetails id={id} />
 
-        <ProductSpecifications
-          attributes={product.selectedProduct.attributes.map((attribute) => ({
-            name: attribute.name,
-            value: attribute.value,
-          }))}
-        />
+        {!!product.selectedProduct.attributes && (
+          <ProductSpecifications
+            attributes={product.selectedProduct.attributes.map((attribute) => ({
+              name: attribute.name,
+              value: attribute.value,
+            }))}
+          />
+        )}
       </div>
 
       {/* Mobile view */}
@@ -131,13 +133,15 @@ const ProductHero = async ({ id }: ProductHeroProps) => {
 
         <ProductDetails id={id} className="container my-10 md:hidden" />
 
-        <ProductSpecifications
-          attributes={product.selectedProduct.attributes.map((attribute) => ({
-            name: attribute.name,
-            value: attribute.value,
-          }))}
-          className="container my-10 md:hidden"
-        />
+        {!!product.selectedProduct.attributes && (
+          <ProductSpecifications
+            attributes={product.selectedProduct.attributes.map((attribute) => ({
+              name: attribute.name,
+              value: attribute.value,
+            }))}
+            className="container my-10 md:hidden"
+          />
+        )}
       </>
     </>
   );

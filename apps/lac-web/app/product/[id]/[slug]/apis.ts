@@ -59,7 +59,7 @@ type Product = {
     txt_x_pant_Mat_status: string;
     thumbnail_img: string;
     class: string;
-    attributes: {
+    attributes?: {
       attribute_name: string;
       attribute_value: string;
     }[];
@@ -84,6 +84,8 @@ export const getProduct = async (id: string) => {
 
   const { selected_item } = response;
 
+  console.log("> selected_item: ", selected_item);
+
   return {
     pageTitle: response.page_title,
     groupId: response.group_id,
@@ -94,7 +96,7 @@ export const getProduct = async (id: string) => {
     groupThumbnail: response.group_thumbnail,
     groupImage: response.group_img,
     selectedProduct: {
-      productId: Number(selected_item.productid),
+      productId: selected_item.productid,
       isExcludedProduct: selected_item.is_product_exclude,
       productSku: selected_item.txt_wurth_lac_item,
       productName: selected_item.item_name,
@@ -113,9 +115,17 @@ export const getProduct = async (id: string) => {
       productSummary: selected_item.txt_description_name,
       productDescription: selected_item.txt_sub_description,
       unitOfMeasure: selected_item.txt_uom_label,
-      boxQuantity: Number(selected_item.txt_box_qt) || 1,
-      minimumOrderQuantity: Number(selected_item.txt_min_order_amount) || 1,
-      quantityByIncrements: Number(selected_item.txt_order_qty_increments) || 1,
+      boxQuantity: !isNaN(parseInt(selected_item.txt_box_qt))
+        ? parseInt(selected_item.txt_box_qt)
+        : 1,
+      minimumOrderQuantity: !isNaN(parseInt(selected_item.txt_min_order_amount))
+        ? parseInt(selected_item.txt_min_order_amount)
+        : 1,
+      quantityByIncrements: !isNaN(
+        parseInt(selected_item.txt_order_qty_increments),
+      )
+        ? parseInt(selected_item.txt_order_qty_increments)
+        : 1,
       weight: Number(selected_item.txt_weight_value),
       prop65MessageOne: selected_item.txt_prop65_message_01,
       prop65MessageTwo: selected_item.txt_prop65_message_02,
@@ -126,7 +136,7 @@ export const getProduct = async (id: string) => {
       productStatus: selected_item.txt_x_pant_Mat_status,
       productThumbnail: selected_item.thumbnail_img,
       class: selected_item.class,
-      attributes: selected_item.attributes.map(
+      attributes: selected_item.attributes?.map(
         ({ attribute_name, attribute_value }) => ({
           name: attribute_name,
           value: attribute_value,
