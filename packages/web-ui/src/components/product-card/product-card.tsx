@@ -34,11 +34,10 @@ const ProductCard = ({
     <OrientationContext.Provider value={orientation}>
       <article
         className={cn(
-          "ui-flex ui-rounded-lg ui-border ui-border-solid ui-border-wurth-gray-250 ui-bg-white ui-p-3 ui-shadow-[0px_1px_2px_-1px_rgba(0,0,0,0.06),0px_1px_3px_0px_rgba(0,0,0,0.08)]",
+          "flex rounded-lg border border-solid border-wurth-gray-250 bg-white p-3 shadow-[0px_1px_2px_-1px_rgba(0,0,0,0.06),0px_1px_3px_0px_rgba(0,0,0,0.08)]",
           orientation === "vertical" &&
-            "ui-w-[12.5rem] ui-flex-col ui-gap-2 md:ui-w-64 md:ui-p-4",
-          orientation === "horizontal" &&
-            "ui-w-[24.75rem] ui-flex-row ui-gap-3",
+            "w-[12.5rem] flex-col gap-2 md:w-64 md:p-4",
+          orientation === "horizontal" && "w-[24.75rem] flex-row gap-3",
           className,
         )}
         {...delegated}
@@ -56,9 +55,8 @@ const ProductCardHero = ({
   return (
     <div
       className={cn(
-        "ui-relative ui-shrink-0 ui-overflow-hidden ui-rounded",
-        orientation === "horizontal" &&
-          "ui-flex ui-flex-col ui-justify-between",
+        "relative shrink-0 overflow-hidden rounded",
+        orientation === "horizontal" && "flex flex-col justify-between",
         className,
       )}
       {...delegated}
@@ -92,15 +90,15 @@ const ProductCardImage = ({
         width={width}
         height={height}
         className={cn(
-          "ui-aspect-1 ui-object-contain",
-          orientation === "vertical" && "ui-size-44 md:ui-size-56",
-          orientation === "horizontal" && "ui-size-[8.5rem]",
+          "aspect-1 object-contain",
+          orientation === "vertical" && "size-44 md:size-56",
+          orientation === "horizontal" && "size-[8.5rem]",
           className,
         )}
         {...delegated}
       />
 
-      <span className="ui-sr-only">{title}</span>
+      <span className="sr-only">{title}</span>
     </Link>
   );
 };
@@ -115,13 +113,13 @@ const ProductCardDiscount = ({
   return (
     <div
       className={cn(
-        "ui-absolute ui-left-0 ui-top-0 ui-flex ui-flex-row ui-items-center ui-gap-0.5 ui-bg-green-50 ui-px-1.5 ui-text-base ui-text-green-600",
-        orientation === "vertical" && "md:ui-px-2 md:ui-text-lg",
+        "absolute left-0 top-0 flex flex-row items-center gap-0.5 bg-green-50 px-1.5 text-base text-green-600",
+        orientation === "vertical" && "md:px-2 md:text-lg",
         className,
       )}
       {...delegated}
     >
-      <span className="ui-font-semibold">{children}%</span> <span>off</span>
+      <span className="font-semibold">{children}%</span> <span>off</span>
     </div>
   );
 };
@@ -142,9 +140,9 @@ const ProductCardLabel = ({
     <Badge
       variant={variant}
       className={cn(
-        "ui-bg-wurth-gray-50 ui-text-wurth-gray-800 ui-shadow-none hover:ui-bg-wurth-gray-150",
-        orientation === "vertical" && "ui-absolute ui-right-0 ui-top-0",
-        orientation === "horizontal" && "-ui-mb-1 ui-self-end",
+        "bg-wurth-gray-50 text-wurth-gray-800 shadow-none hover:bg-wurth-gray-150",
+        orientation === "vertical" && "absolute right-0 top-0",
+        orientation === "horizontal" && "-mb-1 self-end",
         className,
       )}
       {...delegated}
@@ -158,7 +156,7 @@ const ProductCardContent = ({
 }: ComponentProps<"div">) => {
   return (
     <div
-      className={cn("ui-flex ui-flex-1 ui-flex-col ui-gap-2", className)}
+      className={cn("flex flex-1 flex-col gap-2", className)}
       {...delegated}
     />
   );
@@ -176,20 +174,18 @@ const ProductCardDetails = ({
   const orientation = useOrientation();
 
   return (
-    <div className="ui-space-y-1 ui-text-sm">
+    <div className="space-y-1 text-sm">
       <h3
         className={cn(
-          "ui-font-medium ui-text-black",
-          orientation === "vertical" && "ui-line-clamp-3",
-          orientation === "horizontal" && "ui-line-clamp-2",
+          "font-medium text-black",
+          orientation === "vertical" && "line-clamp-3",
+          orientation === "horizontal" && "line-clamp-2",
         )}
       >
         <Link href={href}>{title}</Link>
       </h3>
 
-      <div className="ui-font-normal ui-leading-none ui-text-wurth-gray-400">
-        {sku}
-      </div>
+      <div className="font-normal leading-none text-wurth-gray-400">{sku}</div>
     </div>
   );
 };
@@ -204,20 +200,20 @@ const ProductCardPrice = ({
   actualPrice?: number;
 }) => {
   return (
-    <div className="ui-text-xs ui-font-normal ui-text-wurth-gray-800 md:ui-text-sm md:ui-leading-none">
+    <div className="text-xs font-normal text-wurth-gray-800 md:text-sm md:leading-none">
       <span
         className={cn(
-          "ui-font-bold",
-          actualPrice ? "ui-text-green-600" : "ui-text-wurth-gray-800",
+          "font-bold",
+          actualPrice ? "text-green-600" : "text-wurth-gray-800",
         )}
       >
         $
-        <span className="ui-text-base md:ui-text-lg">
+        <span className="text-base md:text-lg">
           {formatNumberToPrice(price)}
         </span>
       </span>
       {!!actualPrice && (
-        <span className="ui-ml-1 ui-text-base ui-font-normal ui-text-wurth-gray-400 ui-line-through md:ui-text-lg">
+        <span className="ml-1 text-base font-normal text-wurth-gray-400 line-through md:text-lg">
           {formatNumberToPrice(actualPrice)}
         </span>
       )}
@@ -238,13 +234,13 @@ const ProductCardVariantSelector = ({
   onValueChange: (value: string) => void;
 }) => {
   return (
-    <div className="ui-mt-auto ui-space-y-1">
-      <h4 className="ui-text-sm ui-font-normal ui-text-wurth-gray-800">
+    <div className="mt-auto space-y-1">
+      <h4 className="text-sm font-normal text-wurth-gray-800">
         {variants.length} variations
       </h4>
 
       <Select value={value} onValueChange={onValueChange}>
-        <SelectTrigger className="ui-w-full">
+        <SelectTrigger className="w-full">
           <SelectValue placeholder="Select a variation" />
         </SelectTrigger>
         <SelectContent>
@@ -260,7 +256,7 @@ const ProductCardVariantSelector = ({
 
       <Link
         href={href}
-        className={cn(buttonVariants({ variant: "default" }), "ui-w-full")}
+        className={cn(buttonVariants({ variant: "default" }), "w-full")}
       >
         View item
       </Link>
@@ -270,18 +266,18 @@ const ProductCardVariantSelector = ({
 
 const ProductCardActions = () => {
   return (
-    <div className="ui-mt-auto ui-flex ui-flex-row ui-items-center ui-gap-1 md:ui-gap-2">
-      <Button className="ui-h-10 ui-max-h-full ui-flex-1 ui-px-4 ui-text-[0.875rem] ui-leading-5">
+    <div className="mt-auto flex flex-row items-center gap-1 md:gap-2">
+      <Button className="h-10 max-h-full flex-1 px-4 text-[0.875rem] leading-5">
         Add to cart
       </Button>
 
       <Button
         variant="outline"
         size="icon"
-        className="ui-size-10"
+        className="size-10"
         aria-label="Add to favorites"
       >
-        <HeartOutline className="ui-size-4 ui-fill-black" />
+        <HeartOutline className="size-4 fill-black" />
       </Button>
     </div>
   );
@@ -297,10 +293,10 @@ const ProductCardSkeleton = ({
   return (
     <Skeleton
       className={cn(
-        "ui-rounded-lg ui-shadow-[0px_1px_2px_-1px_rgba(0,0,0,0.06),0px_1px_3px_0px_rgba(0,0,0,0.08)]",
+        "rounded-lg shadow-[0px_1px_2px_-1px_rgba(0,0,0,0.06),0px_1px_3px_0px_rgba(0,0,0,0.08)]",
         orientation === "vertical" &&
-          "ui-h-[23.25rem] ui-w-[17.5rem] md:ui-h-[25.75rem] md:ui-w-64",
-        orientation === "horizontal" && "ui-h-48 ui-w-[24.75rem]",
+          "h-[23.25rem] w-[17.5rem] md:h-[25.75rem] md:w-64",
+        orientation === "horizontal" && "h-48 w-[24.75rem]",
         className,
       )}
       {...delegated}

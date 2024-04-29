@@ -9,7 +9,7 @@ export const Check = ({ className, ...delegated }: ComponentProps<"svg">) => {
       height="24"
       fill="none"
       viewBox="0 0 24 24"
-      className={cn("ui-stroke-black", className)}
+      className={cn("stroke-black", className)}
       {...delegated}
     >
       <path strokeLinecap="square" d="M4.5 12.5l5.5 6.75L19.5 4.5" />

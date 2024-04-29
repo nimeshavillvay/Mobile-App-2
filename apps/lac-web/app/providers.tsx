@@ -2,7 +2,7 @@
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-// import { ReactQueryStreamedHydration } from "@tanstack/react-query-next-experimental";
+import { ReactQueryStreamedHydration } from "@tanstack/react-query-next-experimental";
 import { type ReactNode } from "react";
 import { CookiesProvider } from "react-cookie";
 import { Provider as WrapBalancer } from "react-wrap-balancer";
@@ -54,11 +54,9 @@ const ReactQueryProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* TODO Reactivate when old APIs are completely removed */}
-      {/* <ReactQueryStreamedHydration>
+      <ReactQueryStreamedHydration>
         <WrapBalancer>{children}</WrapBalancer>
-      </ReactQueryStreamedHydration> */}
-      <WrapBalancer>{children}</WrapBalancer>
+      </ReactQueryStreamedHydration>
 
       <ReactQueryDevtools />
     </QueryClientProvider>

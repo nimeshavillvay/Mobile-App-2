@@ -1,1 +1,1 @@
-export * from "./save";
+export { Save } from "./save";

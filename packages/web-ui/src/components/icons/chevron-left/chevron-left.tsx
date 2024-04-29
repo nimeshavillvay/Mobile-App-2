@@ -12,7 +12,7 @@ export const ChevronLeft = ({
       height="24"
       fill="none"
       viewBox="0 0 24 24"
-      className={cn("ui-stroke-black", className)}
+      className={cn("stroke-black", className)}
       {...delegated}
     >
       <path strokeLinecap="square" d="M15 20l-8-8 8-8"></path>
