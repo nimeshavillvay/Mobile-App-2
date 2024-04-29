@@ -148,3 +148,55 @@ export type PasswordPolicies = {
   minimumNumbers: number;
   minimumAlphabets: number;
 };
+
+export type CartItemConfiguration = {
+  avail_1: string;
+  avail_2: string;
+  avail_3: string;
+  avail_4: string;
+  avail_5: string;
+  plant_1: string;
+  plant_2: string;
+  plant_3: string;
+  plant_4: string;
+  plant_5: string;
+  poOrJobName?: string;
+  shipping_method_1: string;
+  shipping_method_2: string;
+  shipping_method_3: string;
+  shipping_method_4: string;
+  shipping_method_5: string;
+  will_call_avail: string;
+  will_call_plant: string;
+  hashvalue: string;
+  selectedOption: string;
+  backorder_all: string;
+};
+
+export type CartConfiguration = {
+  po_job: null;
+  jobName: string | null;
+  coupon: string | null;
+  po: string | null;
+  sold_to: null;
+  ship_to: null;
+  user_email: null;
+  is_overridden: null;
+  overridden_email: null;
+  osr: null;
+  "first-name": null;
+  delivering_plant: null;
+  avail_payment_options: null;
+  attnName: null;
+  pickDate: null;
+  driverNote: null;
+  orderEmail: null;
+  completeDelivery: null;
+  paymentToken: null;
+  cardName: null;
+  cardType: null;
+  expireDate: null;
+  paymentMethod: null;
+  isAPrimaryShippingAddress?: null;
+  shippingAddressId: null;
+};

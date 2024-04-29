@@ -21,7 +21,7 @@ export const Default: Story = {
   render: () => {
     return (
       <Alert>
-        <Zap className="ui-size-4" />
+        <Zap className="size-4" />
 
         <AlertContent>
           <AlertTitle>Heads up!</AlertTitle>
@@ -38,7 +38,7 @@ export const Destructive: Story = {
   render: () => {
     return (
       <Alert variant="destructive">
-        <AlertIcon className="ui-size-4" />
+        <AlertIcon className="size-4" />
 
         <AlertContent>
           <AlertTitle>Error</AlertTitle>
@@ -55,7 +55,7 @@ export const DefaultWithoutDescription: Story = {
   render: () => {
     return (
       <Alert>
-        <Zap className="ui-size-4" />
+        <Zap className="size-4" />
 
         <AlertContent>
           <AlertTitle>Heads up!</AlertTitle>
@@ -69,7 +69,7 @@ export const DestructiveWithoutDescription: Story = {
   render: () => {
     return (
       <Alert variant="destructive">
-        <AlertIcon className="ui-size-4" />
+        <AlertIcon className="size-4" />
 
         <AlertContent>
           <AlertTitle>Error</AlertTitle>

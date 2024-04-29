@@ -12,7 +12,7 @@ export const HeartOutline = ({
       height="24"
       fill="none"
       viewBox="0 0 24 24"
-      className={cn("ui-stroke-black", className)}
+      className={cn("stroke-black", className)}
       {...delegated}
     >
       <path d="M12 5.376c6.504-6.63 17.654 5.681 0 15.624-17.654-9.942-6.504-22.253 0-15.624z" />
