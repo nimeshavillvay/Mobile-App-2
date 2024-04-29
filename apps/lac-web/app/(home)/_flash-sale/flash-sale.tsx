@@ -20,7 +20,12 @@ const FlashSale = async () => {
         {featuredProducts.on_sale.map((product) => (
           <FlashSaleProduct
             key={product.productId}
-            product={{ id: product.productId, title: product.productTitle }}
+            product={{
+              id: product.productId,
+              title: product.productTitle,
+              sku: product.sku,
+              image: product.product_img,
+            }}
           />
         ))}
       </div>

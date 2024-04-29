@@ -1,6 +1,5 @@
 "use client";
 
-import productItemImage from "@/_assets/images/product-item-image.png";
 import { cn } from "@/_lib/utils";
 import {
   ProductCardActions,
@@ -20,10 +19,12 @@ type ProductProps = {
   orientation?: ComponentProps<typeof ProductCardRoot>["orientation"];
   product: {
     groupName: string;
+    groupImage: string;
     variants: {
       id: string;
       slug: string;
       title: string;
+      image: string;
     }[];
   };
 };
@@ -37,6 +38,7 @@ const ProductCard = ({ orientation, product }: ProductProps) => {
   );
 
   let href = "";
+  let image = product.groupImage;
   if (
     (product.variants.length === 1 ||
       (product.variants.length > 1 && !selectedVariant)) &&
@@ -45,8 +47,10 @@ const ProductCard = ({ orientation, product }: ProductProps) => {
     // If there is only one variant or if there are multiple variants and
     // none of them have been selected
     href = `/product/${defaultVariant.id}/${defaultVariant.slug}`;
+    image = defaultVariant.image;
   } else if (selectedVariant) {
     href = `/product/${selectedVariant.id}/${selectedVariant.slug}`;
+    image = selectedVariant.image;
   }
 
   let sku = "";
@@ -82,7 +86,7 @@ const ProductCard = ({ orientation, product }: ProductProps) => {
         <ProductCardDiscount>30</ProductCardDiscount>
 
         <ProductCardImage
-          src={productItemImage}
+          src={image}
           alt="A placeholder product"
           href={href}
           title={title}

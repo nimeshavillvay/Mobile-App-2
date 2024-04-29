@@ -145,10 +145,12 @@ const FeaturedBrand = async () => {
             key={product.groupid}
             product={{
               groupName: product.item_group_name,
+              groupImage: product.group_img,
               variants: product.itemSkuList.map((item) => ({
                 id: item.productid,
                 slug: item.slug,
                 title: item.item_name,
+                image: item.img,
               })),
             }}
           />
