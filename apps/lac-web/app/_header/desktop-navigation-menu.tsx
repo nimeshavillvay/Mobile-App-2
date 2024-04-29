@@ -14,10 +14,10 @@ import {
 } from "@repo/web-ui/components/ui/navigation-menu";
 import Link from "next/link";
 import { useState, type ComponentProps } from "react";
-import { Category } from "./types";
+import { TransformedCategory } from "./types";
 
 type DesktopNavigationMenuProps = {
-  categories: Category[];
+  categories: TransformedCategory[];
 };
 
 const DesktopNavigationMenu = ({ categories }: DesktopNavigationMenuProps) => {
@@ -41,7 +41,7 @@ const DesktopNavigationMenu = ({ categories }: DesktopNavigationMenuProps) => {
                 <ul
                   className={cn(
                     "p-4",
-                    selectedCategory?.subcategory?.length &&
+                    selectedCategory?.subCategory?.length &&
                       "border-r border-r-slate-200",
                   )}
                 >
@@ -52,7 +52,7 @@ const DesktopNavigationMenu = ({ categories }: DesktopNavigationMenuProps) => {
                         slug={category.slug}
                         name={category.name}
                         onMouseOver={() => setSelectedCategoryId(category.id)}
-                        showArrow={!!category.subcategory?.length}
+                        showArrow={!!category.subCategory?.length}
                       />
                     </li>
                   ))}
@@ -60,7 +60,7 @@ const DesktopNavigationMenu = ({ categories }: DesktopNavigationMenuProps) => {
 
                 {/* Sub Categories */}
                 {!!selectedCategory &&
-                  !!selectedCategory.subcategory?.length && (
+                  !!selectedCategory.subCategory?.length && (
                     <ul className="p-4">
                       <li>
                         <NavigationLink
@@ -71,7 +71,7 @@ const DesktopNavigationMenu = ({ categories }: DesktopNavigationMenuProps) => {
                         />
                       </li>
 
-                      {selectedCategory.subcategory.map((subCategory) => (
+                      {selectedCategory.subCategory.map((subCategory) => (
                         <li key={subCategory.id}>
                           <NavigationLink
                             id={subCategory.id}
@@ -110,7 +110,7 @@ const NavigationLink = ({
   showArrow = false,
   onMouseOver,
 }: {
-  id: string;
+  id: number;
   slug: string;
   name: string;
   primary?: boolean;
