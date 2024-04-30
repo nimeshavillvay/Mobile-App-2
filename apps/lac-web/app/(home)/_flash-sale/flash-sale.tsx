@@ -17,14 +17,14 @@ const FlashSale = async () => {
       </header>
 
       <div className="container flex w-full snap-x scroll-pl-4 flex-row gap-4 overflow-x-auto md:scroll-pl-8 md:gap-5">
-        {featuredProducts.on_sale.map((product) => (
+        {featuredProducts.onSale.map((product) => (
           <FlashSaleProduct
             key={product.productId}
             product={{
               id: product.productId,
               title: product.productTitle,
-              sku: product.sku,
-              image: product.product_img,
+              sku: product.productSku,
+              image: product.productImage,
             }}
           />
         ))}
