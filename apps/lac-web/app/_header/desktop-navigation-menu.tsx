@@ -14,7 +14,7 @@ import {
 } from "@repo/web-ui/components/ui/navigation-menu";
 import Link from "next/link";
 import { useState, type ComponentProps } from "react";
-import { TransformedCategory } from "./types";
+import type { TransformedCategory } from "./types";
 
 type DesktopNavigationMenuProps = {
   categories: TransformedCategory[];
