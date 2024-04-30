@@ -80,7 +80,7 @@ export const SearchBoxInput = ({
       <ul
         className={`${
           isOpen ? "block" : "hidden"
-        } shadow-right shadow-bottom shadow-left le absolute z-50 mt-4 w-full rounded-b-lg bg-white p-0 pl-4 shadow-sm`}
+        } shadow-right shadow-bottom shadow-left le absolute z-50 ml-3 mt-4 w-full rounded-b-lg bg-white p-0 pl-4 shadow-sm`}
         {...getMenuProps()}
       >
         {isOpen && value && (
