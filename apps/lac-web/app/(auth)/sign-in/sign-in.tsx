@@ -54,7 +54,7 @@ const SignIn = ({ passwordPolicies }: SignInProps) => {
           setCookies(EMAIL_COOKIE, email, {
             path: "/",
           });
-          router.replace("/registration");
+          router.replace("/register");
         }
       },
       onError: async (error, email) => {
