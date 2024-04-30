@@ -13,7 +13,7 @@ import { buttonVariants } from "@repo/web-ui/components/ui/button";
 import Link from "next/link";
 import DesktopNavigationMenu from "./desktop-navigation-menu";
 import MobileNavigationMenu from "./mobile-navigation-menu";
-import type { Category } from "./types";
+import type { Category, TransformedCategory } from "./types";
 
 const Header = async () => {
   const categories = await api
@@ -28,10 +28,49 @@ const Header = async () => {
     })
     .json<Category[]>();
 
+  const transformCategory = (category: Category): TransformedCategory => {
+    const {
+      id,
+      name,
+      slug,
+      shortcode,
+      item_count,
+      direct_item_count,
+      img,
+      subcategory,
+    } = category;
+
+    const transformSubcategory = (data: Category): TransformedCategory => ({
+      id: Number(data.id),
+      name: data.name,
+      slug: data.slug,
+      shortCode: data.shortcode,
+      itemCount: Number(data.item_count),
+      directItemCount: Number(data.direct_item_count),
+      image: data.img,
+      subCategory: data.subcategory
+        ? data.subcategory.map(transformSubcategory)
+        : [],
+    });
+
+    return {
+      id: Number(id),
+      name,
+      slug,
+      shortCode: shortcode,
+      itemCount: Number(item_count),
+      directItemCount: Number(direct_item_count),
+      image: img,
+      subCategory: subcategory ? subcategory.map(transformSubcategory) : [],
+    };
+  };
+
+  const transformedCategory = categories.map(transformCategory);
+
   return (
     <header className="flex flex-col gap-4 border-b border-b-wurth-gray-250 py-5 shadow-[0px_1px_5px_0px_rgba(0,0,0,0.05),0px_1px_2px_-1px_rgba(0,0,0,0.05)] md:border-0 md:pb-0">
       <div className="container flex w-full flex-row items-center gap-7">
-        <MobileNavigationMenu categories={categories} />
+        <MobileNavigationMenu categories={transformedCategory} />
 
         <Link href="/" className="flex-shrink-0">
           <WurthFullBlack className="h-[24px] w-[114px] md:h-[28px] md:w-[133px]" />
@@ -114,7 +153,7 @@ const Header = async () => {
         </SearchBox>
       </div>
 
-      <DesktopNavigationMenu categories={categories} />
+      <DesktopNavigationMenu categories={transformedCategory} />
     </header>
   );
 };

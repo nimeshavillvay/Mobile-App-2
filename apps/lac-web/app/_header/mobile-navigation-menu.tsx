@@ -18,7 +18,7 @@ import {
 } from "@repo/web-ui/components/ui/sheet";
 import Link from "next/link";
 import { useState } from "react";
-import type { Category } from "./types";
+import type { TransformedCategory } from "./types";
 
 const sectionHeadingStyles = cva({
   base: "pb-2 pl-4 pr-2 pt-5 text-sm font-semibold text-wurth-gray-800",
@@ -31,7 +31,7 @@ const dividerStyles = cva({
 });
 
 type MobileNavigationMenuProps = {
-  categories: Category[];
+  categories: TransformedCategory[];
 };
 
 const MobileNavigationMenu = ({ categories }: MobileNavigationMenuProps) => {
@@ -67,7 +67,7 @@ const MobileNavigationMenu = ({ categories }: MobileNavigationMenuProps) => {
             <ul className={dividerStyles()}>
               {categories.map((category) => (
                 <li key={category.id}>
-                  {!!category.subcategory && category.subcategory.length > 0 ? (
+                  {!!category.subCategory && category.subCategory.length > 0 ? (
                     <Sheet>
                       <SheetTrigger
                         asChild
@@ -118,7 +118,7 @@ const MobileNavigationMenu = ({ categories }: MobileNavigationMenuProps) => {
                             </SheetClose>
                           </li>
 
-                          {category.subcategory.map((subcategory) => (
+                          {category.subCategory.map((subcategory) => (
                             <li
                               key={subcategory.id}
                               className="last:!border-b last:!border-b-wurth-gray-250"

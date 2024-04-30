@@ -1,6 +1,7 @@
 import ProductCard from "@/_components/product-card";
 import { api } from "@/_lib/api";
 import { DEFAULT_REVALIDATE } from "@/_lib/constants";
+import type { GroupList } from "@/_lib/types";
 import fontColorContrast from "font-color-contrast";
 import Image from "next/image";
 import { type CSSProperties } from "react";
@@ -27,72 +28,68 @@ const FeaturedBrand = async () => {
           };
         },
         {
-          groups: {
-            groupid: string;
-            type: string;
-            item_group_name: string;
-            slug: string;
-            brandName: string;
-            brandid: string;
-            group_img: string;
-            compliance_flags: null;
-            fclassid: null | string;
-            txt_meta_title: string;
-            itemSkuList: {
-              productid: string;
-              is_product_exclude: boolean;
-              txt_wurth_lac_item: string;
-              item_name: string;
-              img: string;
-              slug: string;
-              is_favourite: null;
-              is_comparison: null;
-              "SKU-attribute": string;
-              txt_hazardous: string;
-              txt_sap: string;
-              txt_mfn: string;
-              txt_description_name: string;
-              txt_sub_description: string;
-              sel_assigned_brand: string;
-              txt_uom: string;
-              txt_uom_label: string;
-              txt_uom_value: null;
-              txt_rounding: null;
-              txt_box_qt: string;
-              txt_min_order_amount: string;
-              txt_order_qty_increments: string;
-              txt_weight_value: string;
-              txt_wight: string;
-              txt_weight_label: string;
-              date: Date;
-              txt_chemical_carncengen: null;
-              txt_chemical_reproduction: null;
-              txt_contains_wood: null;
-              txt_prop65_message_01: null | string;
-              txt_prop65_message_02: null;
-              txt_prop65_message_03: null;
-              txt_meta_title: string;
-              txt_upc1: string;
-              txt_seo_meta_description: string;
-              txt_keywords: string;
-              list_price: string;
-              on_sale: string;
-            }[];
-            variationsCount: number;
-          }[];
+          groups: GroupList[];
         },
       ]
     >();
 
-  const details = featuredBrand[0].details;
-  const products = featuredBrand[1].groups;
+  const transformedDetails = {
+    name: featuredBrand[0].details.name,
+    descr: featuredBrand[0].details.descr,
+    color: featuredBrand[0].details.color,
+    logo: featuredBrand[0].details.logo,
+    background: featuredBrand[0].details.background,
+    link: featuredBrand[0].details.link,
+    linkName: featuredBrand[0].details.link_name,
+  };
+
+  const transformedGroups = featuredBrand[1].groups.map((group) => ({
+    groupId: Number(group.groupid),
+    type: group.type,
+    groupName: group.item_group_name,
+    slug: group.slug,
+    brandName: group.brandName,
+    brandId: group.brandid,
+    groupImage: group.group_img,
+    complianceFlags: group.compliance_flags,
+    fClassId: group.fclassid,
+    metaTitle: group.txt_meta_title,
+    itemSkuList: group.itemSkuList.map((item) => ({
+      productId: item.productid,
+      isExcludedProduct: item.is_product_exclude,
+      productSku: item.txt_wurth_lac_item,
+      productName: item.item_name,
+      image: item.img,
+      slug: item.slug,
+      isFavourite: !!item.is_favourite,
+      isComparison: !!item.is_comparison,
+      skuAttribute: item["SKU-attribute"],
+      isHazardous: item.txt_hazardous === "Y",
+      productIdOnSap: item.txt_sap,
+      mfrPartNo: item.txt_mfn,
+      productDescription: item.txt_description_name,
+      productSubDescription: item.txt_sub_description,
+      brandCode: Number(item.sel_assigned_brand),
+      unitOfMeasure: item.txt_uom_label,
+      boxQuantity: Number(item.txt_box_qt) ?? 1,
+      minimumOrderQuantity: Number(item.txt_min_order_amount) ?? 1,
+      quantityByIncrements: Number(item.txt_box_qt) ?? 1,
+      weight: Number(item.txt_weight_value),
+      prop65MessageOne: item.txt_prop65_message_01,
+      prop65MessageTwo: item.txt_prop65_message_02,
+      prop65MessageThree: item.txt_prop65_message_03,
+      listPrice: Number(item.list_price),
+      isSaleItem: item.on_sale === "Y",
+    })),
+    variationsCount: group.variationsCount,
+  }));
 
   return (
     <section
       style={
         {
-          "--brand-color": details.color,
-          "--text-color": fontColorContrast(details.color),
+          "--brand-color": transformedDetails.color,
+          "--text-color": fontColorContrast(transformedDetails.color),
           // TODO Try to convert to a Tailwind CSS class
           background:
             "linear-gradient(0deg, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0.15) 100%), var(--brand-color)",
@@ -129,28 +126,28 @@ const FeaturedBrand = async () => {
             </svg>
 
             <h2 className="mb-2 mt-4 font-title text-3xl font-medium tracking-[-0.01406rem] md:mt-14 md:text-5xl md:tracking-[-0.036rem]">
-              {details.name}
+              {transformedDetails.name}
             </h2>
 
-            {!!details.descr && (
-              <p className="text-base md:text-lg">{details.descr}</p>
+            {!!transformedDetails.descr && (
+              <p className="text-base md:text-lg">{transformedDetails.descr}</p>
             )}
           </div>
         </div>
       </div>
 
       <div className="container flex snap-x scroll-pl-4 flex-row gap-4 overflow-x-auto md:scroll-pl-8 md:gap-6">
-        {products.map((product) => (
+        {transformedGroups.map((product) => (
           <ProductCard
-            key={product.groupid}
+            key={product.groupId}
             product={{
-              groupName: product.item_group_name,
-              groupImage: product.group_img,
+              groupName: product.groupName,
+              groupImage: product.groupImage,
               variants: product.itemSkuList.map((item) => ({
-                id: item.productid,
+                id: item.productId,
                 slug: item.slug,
-                title: item.item_name,
-                image: item.img,
+                title: item.productName,
+                image: item.image,
               })),
             }}
           />
