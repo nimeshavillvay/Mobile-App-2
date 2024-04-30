@@ -1,5 +1,6 @@
 import { api } from "@/_lib/api";
-import { DEFAULT_REVALIDATE } from "@/_lib/constants";
+import type { OldItemInfo } from "@/_lib/types";
+import { mapGetItemInfoResponse } from "@/_mappers/get-item-info.mapper";
 import "server-only";
 
 export const getOrderDetail = async (orderId: string) => {
@@ -8,9 +9,7 @@ export const getOrderDetail = async (orderId: string) => {
       searchParams: {
         orderNo: orderId,
       },
-      next: {
-        revalidate: DEFAULT_REVALIDATE,
-      },
+      cache: "no-store",
     })
     .json<{
       orderNo: string;
@@ -142,11 +141,11 @@ export const getOrderDetail = async (orderId: string) => {
       shipTo: response.billToAddress["ship-to"],
       default: response.billToAddress.default,
     },
-    item: response?.item?.length
+    items: response?.item?.length
       ? response.item.map((item) => ({
           sku: item.sku,
           productId: Number(item.productid),
-          totalQuantity: item.totalQuantity,
+          totalQuantity: Number(item.totalQuantity),
           lineItems: item?.lineItems?.length
             ? item.lineItems.map((lineItem) => ({
                 itemNo: lineItem.itemNo,
@@ -185,6 +184,19 @@ export const getOrderDetail = async (orderId: string) => {
         }))
       : [],
   };
+
+  return transformedData;
+};
+
+export const getItemInfo = async (productIdList: number[]) => {
+  const response = await api
+    .get("rest/getiteminfo", {
+      searchParams: { productids: productIdList.toString() },
+      cache: "no-store",
+    })
+    .json<OldItemInfo[]>();
+
+  const transformedData = mapGetItemInfoResponse(response);
 
   return transformedData;
 };

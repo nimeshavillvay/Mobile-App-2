@@ -7,7 +7,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import BackButton from "../back-button";
-import { getOrderDetail } from "./api";
+import { getItemInfo, getOrderDetail } from "./api";
+import OrderItem from "./order-item";
 
 type DetailedOrderPageProps = {
   params: {
@@ -34,11 +35,33 @@ const DetailedOrderPage = async ({
 }: DetailedOrderPageProps) => {
   const orderDetail = await getOrderDetail(orderId);
 
+  if (orderDetail?.items?.length) {
+    const productIds = orderDetail.items.map((item) => item.productId);
+
+    if (productIds.length) {
+      const itemInfo = await getItemInfo(productIds);
+
+      if (itemInfo?.length) {
+        orderDetail.items = orderDetail.items.map((item) => {
+          const details =
+            itemInfo.find(
+              (infoItem) => infoItem.productId === item.productId,
+            ) ?? undefined;
+
+          return {
+            ...item,
+            ...details,
+          };
+        });
+      }
+    }
+  }
+
   const orderTrackingHref = orderDetail.orderNo
     ? `/myaccount/orderhistory/ordertrackinglog/${orderDetail.orderNo}`
     : "#";
 
-  console.log(orderDetail);
+  // console.log(orderDetail);
 
   return (
     <>
@@ -198,13 +221,18 @@ const DetailedOrderPage = async ({
           Order Tracking Log
         </Link>
 
-        {!orderDetail.completeDelivery && (
+        {orderDetail.completeDelivery && (
           <AlertInline
             variant="destructive"
             title="Important!"
             description="This order will not ship until back order item(s) are in stock."
           />
         )}
+
+        {orderDetail.items.length > 0 &&
+          orderDetail.items.map((item, index) => (
+            <OrderItem key={item.productId} orderItem={item} index={index} />
+          ))}
       </div>
     </>
   );
