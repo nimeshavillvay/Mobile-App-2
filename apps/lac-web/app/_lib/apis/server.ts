@@ -2,7 +2,12 @@ import { SPECIAL_SHIPPING_FLAG } from "@/_lib/constants";
 import "server-only";
 import { api } from "../api";
 import { DEFAULT_REVALIDATE } from "../constants";
-import type { PasswordPolicies } from "../types";
+import type {
+  PasswordPolicies,
+  PaymentMethod,
+  Plant,
+  ShippingMethod,
+} from "../types";
 
 export const getBreadcrumbs = async (
   id: string,
@@ -231,4 +236,44 @@ export const getPasswordPolicies = async (): Promise<PasswordPolicies> => {
       ? parseInt(minimumNumbers)
       : 0,
   };
+};
+
+export const getShippingMethods = async () => {
+  return await api
+    .get("rest/shipping-methods", {
+      next: {
+        revalidate: DEFAULT_REVALIDATE,
+      },
+    })
+    .json<ShippingMethod[]>();
+};
+
+export const getPaymentMethods = async () => {
+  const response = await api
+    .get("rest/payment_methods", {
+      next: {
+        revalidate: DEFAULT_REVALIDATE,
+      },
+    })
+    .json<PaymentMethod[]>();
+
+  const transformedData = response?.length
+    ? response.map((data) => ({
+        code: data.code,
+        name: data.name,
+        isCreditCard: data.is_credit_card,
+      }))
+    : [];
+
+  return transformedData;
+};
+
+export const getPlants = async () => {
+  return api
+    .get("rest/plants", {
+      next: {
+        revalidate: DEFAULT_REVALIDATE,
+      },
+    })
+    .json<Plant[]>();
 };

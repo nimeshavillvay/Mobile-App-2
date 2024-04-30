@@ -232,3 +232,19 @@ export type GroupList = {
   }[];
   variationsCount: number;
 };
+
+export type ShippingMethod = {
+  code: string;
+  name: string;
+};
+
+export type PaymentMethod = {
+  code: string;
+  name: string;
+  is_credit_card: boolean;
+};
+
+export type Plant = {
+  code: string;
+  name: string;
+};
