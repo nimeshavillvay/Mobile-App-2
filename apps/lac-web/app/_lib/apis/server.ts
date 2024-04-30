@@ -269,7 +269,7 @@ export const getPaymentMethods = async () => {
 };
 
 export const getPlants = async () => {
-  return api
+  return await api
     .get("rest/plants", {
       next: {
         revalidate: DEFAULT_REVALIDATE,
