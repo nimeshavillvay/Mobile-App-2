@@ -1,4 +1,5 @@
 import { api } from "@/_lib/api";
+import type { GroupList, OldPagination } from "@/_lib/types";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
 type useSuspenseSearchArgs = {
@@ -12,57 +13,9 @@ type useSuspenseSearchArgs = {
   page: number;
 };
 
-type GroupList = {
-  group_list: {
-    groupid: string;
-    type: string;
-    item_group_name: string;
-    slug: string;
-    brandName: string;
-    brandid: string;
-    group_img: string;
-    compliance_flags: string;
-    fclassid: null;
-    itemSkuList: {
-      productid: string;
-      is_product_exclude: boolean;
-      txt_wurth_lac_item: string;
-      item_name: string;
-      img: string;
-      slug: string;
-      is_favourite: null;
-      is_comparison: null;
-      "SKU-attribute": string;
-      txt_hazardous: string;
-      txt_sap: string;
-      txt_mfn: string;
-      txt_description_name: string;
-      txt_sub_description: string;
-      sel_assigned_brand: string;
-
-      txt_uom_label: string;
-
-      txt_box_qt: string;
-      txt_min_order_amount: string;
-      txt_order_qty_increments: string;
-      txt_weight_value: string;
-      txt_prop65_message_01: string;
-      txt_prop65_message_02: null;
-      txt_prop65_message_03: null;
-
-      list_price: string;
-      on_sale: string;
-      is_directly_shipped_from_vendor: boolean;
-    }[];
-    variationsCount: number;
-  }[];
-  pagination: [
-    {
-      db_count: number;
-      offset: number;
-      perPage: number;
-    },
-  ];
+type GroupsList = {
+  group_list: GroupList[];
+  pagination: [OldPagination];
 };
 
 const useSuspenseSearch = ({
@@ -90,7 +43,7 @@ const useSuspenseSearch = ({
           },
           cache: "no-store",
         })
-        .json<GroupList>(),
+        .json<GroupsList>(),
     select: (data) => {
       const { group_list, pagination } = data;
 
@@ -156,7 +109,7 @@ const useSuspenseSearch = ({
       };
 
       const mappedPagination = {
-        totalCount: firstPagination.db_count,
+        totalCount: Number(firstPagination.db_count),
         offset: firstPagination.offset,
         perPage: firstPagination.perPage,
       };
