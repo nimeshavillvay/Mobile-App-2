@@ -165,60 +165,62 @@ const ProductPage = async ({ params: { id, slug } }: ProductPageProps) => {
 
       <ProductHero id={id} />
 
-      <section className="my-10 space-y-4 md:my-[3.75rem] md:space-y-9">
-        <h2 className="container font-title text-2xl font-medium tracking-[-0.144px] text-wurth-gray-800">
-          <Balancer>Accessories and Related Products</Balancer>
-        </h2>
+      {relatedProducts.length > 0 && (
+        <section className="my-10 space-y-4 md:my-[3.75rem] md:space-y-9">
+          <h2 className="container font-title text-2xl font-medium tracking-[-0.144px] text-wurth-gray-800">
+            <Balancer>Accessories and Related Products</Balancer>
+          </h2>
 
-        {relatedProducts.map((relatedSection) => (
-          <div key={relatedSection.heading} className="space-y-3 bg-white">
-            <h3 className="container text-lg font-semibold text-wurth-gray-800">
-              <Balancer>{relatedSection.heading}</Balancer>
-            </h3>
+          {relatedProducts.map((relatedSection) => (
+            <div key={relatedSection.heading} className="space-y-3 bg-white">
+              <h3 className="container text-lg font-semibold text-wurth-gray-800">
+                <Balancer>{relatedSection.heading}</Balancer>
+              </h3>
 
-            <div className="container grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-4 xl:grid-cols-3 2xl:grid-cols-4">
-              {relatedSection.items.map((item) => (
-                <ProductCard
-                  key={item.productid}
-                  orientation="horizontal"
-                  className="w-full"
-                >
-                  <ProductCardHero>
-                    <ProductCardDiscount>30</ProductCardDiscount>
+              <div className="container grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-4 xl:grid-cols-3 2xl:grid-cols-4">
+                {relatedSection.items.map((item) => (
+                  <ProductCard
+                    key={item.productid}
+                    orientation="horizontal"
+                    className="w-full"
+                  >
+                    <ProductCardHero>
+                      <ProductCardDiscount>30</ProductCardDiscount>
 
-                    <ProductCardImage
-                      src={productItemImage}
-                      alt={`A picture if the item ${item.item_name}`}
-                      href={`/product/${item.productid}/${item.url}`}
-                      title={item.item_name}
-                    />
-                  </ProductCardHero>
+                      <ProductCardImage
+                        src={productItemImage}
+                        alt={`A picture if the item ${item.item_name}`}
+                        href={`/product/${item.productid}/${item.url}`}
+                        title={item.item_name}
+                      />
+                    </ProductCardHero>
 
-                  <ProductCardContent>
-                    <ProductCardDetails
-                      title={item.item_name}
-                      sku={item.productid}
-                      href={`/product/${item.productid}/${item.url}`}
-                    />
+                    <ProductCardContent>
+                      <ProductCardDetails
+                        title={item.item_name}
+                        sku={item.productid}
+                        href={`/product/${item.productid}/${item.url}`}
+                      />
 
-                    <ProductCardPrice
-                      price={2.05}
-                      uom="pair"
-                      actualPrice={4.11}
-                    />
+                      <ProductCardPrice
+                        price={2.05}
+                        uom="pair"
+                        actualPrice={4.11}
+                      />
 
-                    <ProductCardActions />
-                  </ProductCardContent>
-                </ProductCard>
-              ))}
+                      <ProductCardActions />
+                    </ProductCardContent>
+                  </ProductCard>
+                ))}
+              </div>
+
+              <div className="container md:hidden">
+                <Button className="w-full font-bold">Load 4 more</Button>
+              </div>
             </div>
-
-            <div className="container md:hidden">
-              <Button className="w-full font-bold">Load 4 more</Button>
-            </div>
-          </div>
-        ))}
-      </section>
+          ))}
+        </section>
+      )}
 
       <section className="my-10 space-y-6 bg-wurth-gray-50 py-10 md:space-y-5">
         <h2 className="container text-center font-title text-2xl font-medium tracking-[-0.144px] text-wurth-gray-800">

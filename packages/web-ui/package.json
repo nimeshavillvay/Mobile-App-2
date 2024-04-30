@@ -2,8 +2,8 @@
   "name": "@repo/web-ui",
   "exports": {
     "./components/*": {
-      "import": "./dist/components/*/index.mjs",
-      "types": "./dist/components/*/index.d.mts"
+      "import": "./dist/*/index.mjs",
+      "types": "./dist/*/index.d.mts"
     }
   },
   "scripts": {
