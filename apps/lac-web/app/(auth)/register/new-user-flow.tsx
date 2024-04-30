@@ -1,4 +1,6 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+import useCounties from "@/_hooks/registration/use-counties.hook";
+import useCountries from "@/_hooks/registration/use-countries.hook";
+import useStates from "@/_hooks/registration/use-states.hook";
 import type { PasswordPolicies } from "@/_lib/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type CheckedState } from "@radix-ui/react-checkbox";
@@ -9,13 +11,20 @@ import {
   RadioGroup,
   RadioGroupItem,
 } from "@repo/web-ui/components/ui/radio-group";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@repo/web-ui/components/ui/select";
 import { useToast } from "@repo/web-ui/components/ui/toast";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ComponentProps, useId, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import InputHelperDescription from "../input-helper-description";
-import useSignInCookies from "../use-sign-in-cookies.hook";
 import AddressSelector from "./address-selector";
 import {
   StepContainer,
@@ -47,20 +56,20 @@ const personalDetailsSchema = z.object({
 });
 const addressSchema = z.object({
   billingAddress: z.string(),
-  billingOptionalAddress: z.string().optional(),
   billingCity: z.string(),
-  billingState: z.string(),
   billingCountry: z.string(),
+  billingState: z.string(),
+  billingCounty: z.string(),
   billingPostCode: z.string(),
   billingZipCode: z.string().optional(),
 
   same: z.boolean(),
 
   shippingAddress: z.string(),
-  shippingOptionalAddress: z.string().optional(),
   shippingCity: z.string(),
-  shippingState: z.string(),
   shippingCountry: z.string(),
+  shippingState: z.string(),
+  shippingCounty: z.string(),
   shippingPostCode: z.string(),
   shippingZipCode: z.string().optional(),
 });
@@ -77,26 +86,29 @@ const NewUserFlow = ({ passwordPolicies }: NewUserFlowProps) => {
   const passwordId = `password-${id}`;
   const confirmPasswordId = `confirm-password-${id}`;
   const billingAddressId = `billing-address-${id}`;
-  const billingOptionalAddressId = `billing-optional-address-${id}`;
   const billingCityId = `billing-city-${id}`;
   const billingStateId = `billing-state-${id}`;
   const billingCountryId = `billing-country-${id}`;
+  const billingCountyId = `billing-county-${id}`;
   const billingPostCodeId = `billing-post-code-${id}`;
   const billingZipCodeId = `billing-zip-code-${id}`;
   const sameAddressId = `confirm-address-${id}`;
   const shippingAddressId = `shipping-address-${id}`;
-  const shippingOptionalAddressId = `shipping-optional-address-${id}`;
   const shippingCityId = `shipping-city-${id}`;
   const shippingStateId = `shipping-state-${id}`;
   const shippingCountryId = `shipping-country-${id}`;
+  const shippingCountyId = `shipping-county-${id}`;
   const shippingPostCodeId = `shipping-post-code-${id}`;
   const shippingZipCodeId = `shipping-zip-code-${id}`;
 
-  const [cookies] = useSignInCookies();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const email = searchParams.get("email");
+
   const [step, setStep] = useState<Step>("personal");
   const [sameAddress, setSameAddress] = useState(true);
 
-  const toast = useToast();
+  const { toast } = useToast();
 
   const [billingSuggestions, setBillingSuggestions] = useState<
     ResponseAddress[]
@@ -163,7 +175,7 @@ const NewUserFlow = ({ passwordPolicies }: NewUserFlowProps) => {
     values: {
       firstName: "",
       lastName: "",
-      email: cookies.email ?? "",
+      email: email ?? "",
       password: "",
       confirmPassword: "",
       type: "unselected",
@@ -179,22 +191,36 @@ const NewUserFlow = ({ passwordPolicies }: NewUserFlowProps) => {
     resolver: zodResolver(addressSchema),
     values: {
       billingAddress: "",
-      billingOptionalAddress: "",
       billingCity: "",
-      billingState: "",
       billingCountry: "",
+      billingState: "",
+      billingCounty: "",
       billingPostCode: "",
       billingZipCode: "",
       same: sameAddress,
       shippingAddress: "",
-      shippingOptionalAddress: "",
       shippingCity: "",
-      shippingState: "",
       shippingCountry: "",
+      shippingState: "",
+      shippingCounty: "",
       shippingPostCode: "",
       shippingZipCode: "",
     },
   });
+
+  const billingCountry = addressForm.watch("billingCountry");
+  const billingState = addressForm.watch("billingState");
+  const billingCounty = addressForm.watch("billingCounty");
+  const shippingCountry = addressForm.watch("shippingCountry");
+  const shippingState = addressForm.watch("shippingState");
+  const shippingCounty = addressForm.watch("shippingCounty");
+
+  const billingCountryQuery = useCountries();
+  const billingStateQuery = useStates(billingCountry);
+  const billingCountyQuery = useCounties(billingState);
+  const shippingCountryQuery = useCountries();
+  const shippingStateQuery = useStates(shippingCountry);
+  const shippingCountyQuery = useCounties(shippingState);
 
   const registerNewUserMutation = useRegisterNewUserMutation();
   const handleAddressOnSubmit = addressForm.handleSubmit((values) => {
@@ -209,20 +235,20 @@ const NewUserFlow = ({ passwordPolicies }: NewUserFlowProps) => {
         password,
         type,
         billingAddress: {
-          address: `${values.billingAddress}${values.billingOptionalAddress ? ` ${values.billingOptionalAddress}` : ""}`,
+          address: values.billingAddress,
           city: values.billingCity,
-          state: values.billingState,
           country: values.billingCountry,
+          state: values.billingState,
+          county: values.billingCounty,
           postalCode: values.billingPostCode,
           zipCode: values.billingZipCode,
         },
         shippingAddress: {
-          address: sameAddress
-            ? `${values.billingAddress}${values.billingOptionalAddress ? ` ${values.billingOptionalAddress}` : ""}`
-            : `${values.shippingAddress}${values.shippingOptionalAddress ? ` ${values.shippingOptionalAddress}` : ""}`,
+          address: sameAddress ? values.billingAddress : values.shippingAddress,
           city: sameAddress ? values.billingCity : values.shippingCity,
-          state: sameAddress ? values.billingState : values.shippingState,
           country: sameAddress ? values.billingCountry : values.shippingCountry,
+          state: sameAddress ? values.billingState : values.shippingState,
+          county: sameAddress ? values.billingCounty : values.shippingCounty,
           postalCode: sameAddress
             ? values.billingPostCode
             : values.shippingPostCode,
@@ -239,6 +265,11 @@ const NewUserFlow = ({ passwordPolicies }: NewUserFlowProps) => {
             if (Array.isArray(data.suggestions["shipping-address"])) {
               setShippingSuggestions(data.suggestions["shipping-address"]);
             }
+          } else {
+            toast({
+              title: "Registered successfully",
+            });
+            router.replace("/");
           }
         },
       },
@@ -472,27 +503,6 @@ const NewUserFlow = ({ passwordPolicies }: NewUserFlowProps) => {
               </div>
 
               <div className="col-span-3 flex flex-col gap-2 md:col-span-6">
-                <Label htmlFor={billingOptionalAddressId}>Address line 2</Label>
-
-                <Input
-                  {...addressForm.register("billingOptionalAddress")}
-                  id={billingOptionalAddressId}
-                  type="text"
-                  disabled={registerNewUserMutation.isPending}
-                />
-
-                {!!addressForm.formState.errors.billingOptionalAddress
-                  ?.message && (
-                  <InputHelperDescription isError>
-                    {
-                      addressForm.formState.errors.billingOptionalAddress
-                        .message
-                    }
-                  </InputHelperDescription>
-                )}
-              </div>
-
-              <div className="col-span-3 flex flex-col gap-2">
                 <Label htmlFor={billingCityId}>City</Label>
 
                 <Input
@@ -511,15 +521,59 @@ const NewUserFlow = ({ passwordPolicies }: NewUserFlowProps) => {
               </div>
 
               <div className="col-span-3 flex flex-col gap-2">
+                <Label htmlFor={billingCountryId}>Country</Label>
+
+                <Select
+                  value={billingCountry}
+                  onValueChange={(value) => {
+                    addressForm.setValue("billingCountry", value);
+                    addressForm.setValue("billingState", "");
+                    addressForm.setValue("billingCounty", "");
+                  }}
+                >
+                  <SelectTrigger id={billingCountryId}>
+                    <SelectValue />
+                  </SelectTrigger>
+
+                  <SelectContent>
+                    {billingCountryQuery.data?.map((country) => (
+                      <SelectItem key={country.code} value={country.code}>
+                        {country.country}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                {!!addressForm.formState.errors.billingCountry?.message && (
+                  <InputHelperDescription isError>
+                    {addressForm.formState.errors.billingCountry.message}
+                  </InputHelperDescription>
+                )}
+              </div>
+
+              <div className="col-span-3 flex flex-col gap-2">
                 <Label htmlFor={billingStateId}>State</Label>
 
-                <Input
-                  {...addressForm.register("billingState")}
-                  id={billingStateId}
-                  type="text"
-                  required
-                  disabled={registerNewUserMutation.isPending}
-                />
+                <Select
+                  value={billingState}
+                  onValueChange={(value) => {
+                    addressForm.setValue("billingState", value);
+                    addressForm.setValue("billingCounty", "");
+                  }}
+                  disabled={!billingCountry}
+                >
+                  <SelectTrigger id={billingStateId}>
+                    <SelectValue />
+                  </SelectTrigger>
+
+                  <SelectContent>
+                    {billingStateQuery.data?.map((state) => (
+                      <SelectItem key={state.code} value={state.code}>
+                        {state.country}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
 
                 {!!addressForm.formState.errors.billingState?.message && (
                   <InputHelperDescription isError>
@@ -529,19 +583,31 @@ const NewUserFlow = ({ passwordPolicies }: NewUserFlowProps) => {
               </div>
 
               <div className="col-span-3 flex flex-col gap-2">
-                <Label htmlFor={billingCountryId}>Country</Label>
+                <Label htmlFor={billingCountyId}>County</Label>
 
-                <Input
-                  {...addressForm.register("billingCountry")}
-                  id={billingCountryId}
-                  type="text"
-                  required
-                  disabled={registerNewUserMutation.isPending}
-                />
+                <Select
+                  value={billingCounty}
+                  onValueChange={(value) =>
+                    addressForm.setValue("billingCounty", value)
+                  }
+                  disabled={!billingState}
+                >
+                  <SelectTrigger id={billingCountyId}>
+                    <SelectValue />
+                  </SelectTrigger>
 
-                {!!addressForm.formState.errors.billingCountry?.message && (
+                  <SelectContent>
+                    {billingCountyQuery.data?.map(({ county }) => (
+                      <SelectItem key={county} value={county}>
+                        {county}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                {!!addressForm.formState.errors.billingCounty?.message && (
                   <InputHelperDescription isError>
-                    {addressForm.formState.errors.billingCountry.message}
+                    {addressForm.formState.errors.billingCounty.message}
                   </InputHelperDescription>
                 )}
               </div>
@@ -628,29 +694,6 @@ const NewUserFlow = ({ passwordPolicies }: NewUserFlowProps) => {
                 </div>
 
                 <div className="col-span-3 flex flex-col gap-2 md:col-span-6">
-                  <Label htmlFor={shippingOptionalAddressId}>
-                    Address line 2
-                  </Label>
-
-                  <Input
-                    {...addressForm.register("shippingOptionalAddress")}
-                    id={shippingOptionalAddressId}
-                    type="text"
-                    disabled={registerNewUserMutation.isPending}
-                  />
-
-                  {!!addressForm.formState.errors.shippingOptionalAddress
-                    ?.message && (
-                    <InputHelperDescription isError>
-                      {
-                        addressForm.formState.errors.shippingOptionalAddress
-                          .message
-                      }
-                    </InputHelperDescription>
-                  )}
-                </div>
-
-                <div className="col-span-3 flex flex-col gap-2">
                   <Label htmlFor={shippingCityId}>City</Label>
 
                   <Input
@@ -669,15 +712,58 @@ const NewUserFlow = ({ passwordPolicies }: NewUserFlowProps) => {
                 </div>
 
                 <div className="col-span-3 flex flex-col gap-2">
+                  <Label htmlFor={shippingCountryId}>Country</Label>
+
+                  <Select
+                    value={shippingCountry}
+                    onValueChange={(value) => {
+                      addressForm.setValue("shippingCountry", value);
+                      addressForm.setValue("shippingState", "");
+                      addressForm.setValue("shippingCounty", "");
+                    }}
+                  >
+                    <SelectTrigger id={shippingCountryId}>
+                      <SelectValue />
+                    </SelectTrigger>
+
+                    <SelectContent>
+                      {shippingCountryQuery.data?.map((country) => (
+                        <SelectItem key={country.code} value={country.code}>
+                          {country.country}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+
+                  {!!addressForm.formState.errors.shippingCountry?.message && (
+                    <InputHelperDescription isError>
+                      {addressForm.formState.errors.shippingCountry.message}
+                    </InputHelperDescription>
+                  )}
+                </div>
+
+                <div className="col-span-3 flex flex-col gap-2">
                   <Label htmlFor={shippingStateId}>State</Label>
 
-                  <Input
-                    {...addressForm.register("shippingState")}
-                    id={shippingStateId}
-                    type="text"
-                    required={!sameAddress}
-                    disabled={registerNewUserMutation.isPending}
-                  />
+                  <Select
+                    value={shippingState}
+                    onValueChange={(value) => {
+                      addressForm.setValue("shippingState", value);
+                      addressForm.setValue("shippingCounty", "");
+                    }}
+                  >
+                    <SelectTrigger id={shippingStateId}>
+                      <SelectValue />
+                    </SelectTrigger>
+
+                    <SelectContent>
+                      {shippingStateQuery.data?.map((state) => (
+                        <SelectItem key={state.code} value={state.code}>
+                          {state.country}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
 
                   {!!addressForm.formState.errors.shippingState?.message && (
                     <InputHelperDescription isError>
@@ -687,19 +773,30 @@ const NewUserFlow = ({ passwordPolicies }: NewUserFlowProps) => {
                 </div>
 
                 <div className="col-span-3 flex flex-col gap-2">
-                  <Label htmlFor={shippingCountryId}>Country</Label>
+                  <Label htmlFor={shippingCountyId}>County</Label>
 
-                  <Input
-                    {...addressForm.register("shippingCountry")}
-                    id={shippingCountryId}
-                    type="text"
-                    required={!sameAddress}
-                    disabled={registerNewUserMutation.isPending}
-                  />
+                  <Select
+                    value={shippingCounty}
+                    onValueChange={(value) =>
+                      addressForm.setValue("shippingCounty", value)
+                    }
+                  >
+                    <SelectTrigger id={shippingCountyId}>
+                      <SelectValue />
+                    </SelectTrigger>
 
-                  {!!addressForm.formState.errors.shippingCountry?.message && (
+                    <SelectContent>
+                      {shippingCountyQuery.data?.map(({ county }) => (
+                        <SelectItem key={county} value={county}>
+                          {county}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+
+                  {!!addressForm.formState.errors.shippingCounty?.message && (
                     <InputHelperDescription isError>
-                      {addressForm.formState.errors.shippingCountry.message}
+                      {addressForm.formState.errors.shippingCounty.message}
                     </InputHelperDescription>
                   )}
                 </div>

@@ -232,3 +232,5 @@ export type GroupList = {
   }[];
   variationsCount: number;
 };
+
+export type Status = "ACTIVE" | "SUSPENDED";
