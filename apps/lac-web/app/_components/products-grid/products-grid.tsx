@@ -39,6 +39,7 @@ const ProductsGrid = ({
   }[] = products.map((product) => ({
     prop: {
       groupName: product.groupName,
+      groupImage: product.groupImage,
       variants: product.variants,
     },
     info: {

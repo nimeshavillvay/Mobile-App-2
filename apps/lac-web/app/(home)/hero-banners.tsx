@@ -8,10 +8,9 @@ import {
 } from "@repo/web-ui/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 import Image from "next/image";
-import productImage from "./product-image.png";
 
 type HeroBannersProps = {
-  banners: { id: string; alt: string }[];
+  banners: { id: string; alt: string; image: string }[];
 };
 
 const HeroBanners = ({ banners }: HeroBannersProps) => {
@@ -26,7 +25,7 @@ const HeroBanners = ({ banners }: HeroBannersProps) => {
             <CarouselItem key={banner.id}>
               <div className="relative h-96 overflow-hidden rounded-lg">
                 <Image
-                  src={productImage}
+                  src={banner.image}
                   alt={banner.alt}
                   fill
                   priority={index === 0}

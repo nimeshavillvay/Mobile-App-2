@@ -21,10 +21,12 @@ const Products = ({ filters }: ProductsProps) => {
       products={searchQuery.data.groupList.map((product) => ({
         groupId: product.groupId,
         groupName: product.productGroupName,
+        groupImage: product.groupImage,
         variants: product.productSkuList.map((variant) => ({
           id: variant.productId,
           slug: variant.slug,
           title: variant.productName,
+          image: variant.image,
         })),
       }))}
       filters={filters}

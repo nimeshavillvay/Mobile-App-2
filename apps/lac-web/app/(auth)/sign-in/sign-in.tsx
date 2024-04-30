@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, buttonVariants } from "@repo/web-ui/components/ui/button";
 import { Input } from "@repo/web-ui/components/ui/input";
 import { Label } from "@repo/web-ui/components/ui/label";
-import { useMutation } from "@tanstack/react-query";
+import { HTTPError } from "ky";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useId, useMemo } from "react";
@@ -16,7 +16,7 @@ import Balancer from "react-wrap-balancer";
 import { z } from "zod";
 import { EMAIL_COOKIE } from "../constants";
 import useSignInCookies from "../use-sign-in-cookies.hook";
-import { login } from "./actions";
+import useSignInMutation from "./use-sign-in-mutation.hook";
 
 const emailFormSchema = z.object({
   email: z.string().email(),
@@ -54,7 +54,7 @@ const SignIn = ({ passwordPolicies }: SignInProps) => {
           setCookies(EMAIL_COOKIE, email, {
             path: "/",
           });
-          router.replace("/registration");
+          router.replace("/register");
         }
       },
       onError: async (error, email) => {
@@ -96,18 +96,30 @@ const SignIn = ({ passwordPolicies }: SignInProps) => {
     setCookies(EMAIL_COOKIE, "", { path: "/" });
   };
 
-  const loginMutation = useMutation({
-    mutationFn: ({ email, password }: { email: string; password: string }) =>
-      login(email, password),
-    onSuccess: (data) => {
-      loginForm.setError("password", {
-        type: "custom",
-        message: data.error,
-      });
-    },
-  });
+  const signInMutation = useSignInMutation();
   const onSubmitLogin = loginForm.handleSubmit((data) => {
-    loginMutation.mutate(data);
+    signInMutation.mutate(data, {
+      onError: async (error) => {
+        if (error instanceof HTTPError && error.response.status === 401) {
+          const errorResponse = await error.response.json();
+
+          if (
+            isErrorResponse(errorResponse) &&
+            errorResponse.status_code === "FAILED"
+          ) {
+            loginForm.setError("password", {
+              type: "custom",
+              message: errorResponse.message,
+            });
+          }
+        } else {
+          loginForm.setError("password", {
+            type: "custom",
+            message: "An unexpected error occurred. Please try again later.",
+          });
+        }
+      },
+    });
   });
 
   if (!cookies.email) {
@@ -190,7 +202,7 @@ const SignIn = ({ passwordPolicies }: SignInProps) => {
               type="password"
               required
               className="rounded border-wurth-gray-250 px-3 py-2 text-base shadow-sm"
-              disabled={loginMutation.isPending}
+              disabled={signInMutation.isPending}
             />
 
             {!!loginForm?.formState?.errors?.password?.message && (
@@ -205,7 +217,7 @@ const SignIn = ({ passwordPolicies }: SignInProps) => {
               type="submit"
               variant="secondary"
               className="w-full p-2.5 font-bold"
-              disabled={loginMutation.isPending}
+              disabled={signInMutation.isPending}
             >
               Sign in
             </Button>
