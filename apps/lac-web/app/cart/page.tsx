@@ -1,14 +1,16 @@
 import OrderSummary from "@/_components/order-summary";
+import { getShippingMethods } from "@/_lib/apis/server";
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import CartList from "./_cart-list";
-import { getShippingMethods } from "./apis";
 import CartDetails from "./cart-details";
 import CartHeading from "./cart-heading";
 import CartItemFallback from "./cart-item-fallback";
 import CheckoutButton from "./checkout-button";
 import ShippingMethod from "./shipping-method";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Cart",

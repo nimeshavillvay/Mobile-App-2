@@ -200,3 +200,64 @@ export type CartConfiguration = {
   isAPrimaryShippingAddress?: null;
   shippingAddressId: null;
 };
+
+export type GroupList = {
+  groupid: string;
+  type: string;
+  item_group_name: string;
+  slug: string;
+  brandName: string;
+  brandid: string;
+  group_img: string;
+  compliance_flags: string;
+  fclassid: null;
+  txt_meta_title?: string;
+  itemSkuList: {
+    productid: string;
+    is_product_exclude: boolean;
+    txt_wurth_lac_item: string;
+    item_name: string;
+    img: string;
+    slug: string;
+    is_favourite: null;
+    is_comparison: null;
+    "SKU-attribute": string;
+    txt_hazardous: string;
+    txt_sap: string;
+    txt_mfn: string;
+    txt_description_name: string;
+    txt_sub_description: string;
+    sel_assigned_brand: string;
+
+    txt_uom_label: string;
+
+    txt_box_qt: string;
+    txt_min_order_amount: string;
+    txt_order_qty_increments: string;
+    txt_weight_value: string;
+    txt_prop65_message_01: string;
+    txt_prop65_message_02: null;
+    txt_prop65_message_03: null;
+
+    list_price: string;
+    on_sale: string;
+    is_directly_shipped_from_vendor: boolean;
+  }[];
+  variationsCount: number;
+};
+
+export type ShippingMethod = {
+  code: string;
+  name: string;
+};
+
+export type PaymentMethod = {
+  code: string;
+  name: string;
+  is_credit_card: boolean;
+};
+
+export type Plant = {
+  code: string;
+  name: string;
+};

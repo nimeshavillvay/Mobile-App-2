@@ -3,7 +3,7 @@ import SubHeading from "@/_components/sub-heading";
 import { getBanners } from "@/_lib/apis/server";
 import { ArrowRight } from "@repo/web-ui/components/icons/arrow-right";
 import Image, { type StaticImageData } from "next/image";
-import { type CSSProperties } from "react";
+import { type CSSProperties, type ComponentProps } from "react";
 import Balancer from "react-wrap-balancer";
 import FlashSale from "./_flash-sale";
 import ad1 from "./ad-1.png";
@@ -67,16 +67,22 @@ const ADS: (
 const HomePage = async () => {
   const banners = await getBanners("0");
 
+  const heroBanner: ComponentProps<typeof HeroBanners>["banners"] = [];
+  banners.T.flatMap((topBanner) => topBanner.banners)
+    .filter((banner) => banner.file_path?.endsWith(".jpg"))
+    .forEach((banner) => {
+      if (banner.file_path) {
+        heroBanner.push({
+          id: banner.id,
+          alt: banner.alt_tag,
+          image: banner.file_path,
+        });
+      }
+    });
+
   return (
     <>
-      <HeroBanners
-        banners={banners.T.flatMap((topBanner) => topBanner.banners).map(
-          (banner) => ({
-            id: banner.id,
-            alt: banner.alt_tag,
-          }),
-        )}
-      />
+      <HeroBanners banners={heroBanner} />
 
       <section className="container my-3 flex w-full snap-x scroll-pl-4 flex-row  items-stretch gap-4 overflow-x-auto md:my-6 md:grid md:snap-none md:scroll-pl-0 md:grid-cols-3 md:gap-5">
         {ADS.map((ad) => (

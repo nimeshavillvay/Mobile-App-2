@@ -14,10 +14,10 @@ import {
 } from "@repo/web-ui/components/ui/navigation-menu";
 import Link from "next/link";
 import { useState, type ComponentProps } from "react";
-import { Category } from "./types";
+import type { TransformedCategory } from "./types";
 
 type DesktopNavigationMenuProps = {
-  categories: Category[];
+  categories: TransformedCategory[];
 };
 
 const DesktopNavigationMenu = ({ categories }: DesktopNavigationMenuProps) => {
@@ -30,69 +30,72 @@ const DesktopNavigationMenu = ({ categories }: DesktopNavigationMenuProps) => {
 
   return (
     <div className="hidden bg-wurth-red-650 md:block">
-      <NavigationMenu className="container max-w-full justify-start">
-        <NavigationMenuList>
-          <NavigationMenuItem>
-            <NavigationMenuTrigger>Categories</NavigationMenuTrigger>
+      <div className="container">
+        <NavigationMenu className="justify-start">
+          <NavigationMenuList>
+            <NavigationMenuItem>
+              <NavigationMenuTrigger>Categories</NavigationMenuTrigger>
 
-            <NavigationMenuContent className="flex flex-row">
-              {/* Main Categories */}
-              <ul
-                className={cn(
-                  "p-4",
-                  selectedCategory?.subcategory?.length &&
-                    "border-r border-r-slate-200",
-                )}
-              >
-                {categories.map((category) => (
-                  <li key={category.id}>
-                    <NavigationLink
-                      id={category.id}
-                      slug={category.slug}
-                      name={category.name}
-                      onMouseOver={() => setSelectedCategoryId(category.id)}
-                      showArrow={!!category.subcategory?.length}
-                    />
-                  </li>
-                ))}
-              </ul>
-
-              {/* Sub Categories */}
-              {!!selectedCategory && !!selectedCategory.subcategory?.length && (
-                <ul className="p-4">
-                  <li>
-                    <NavigationLink
-                      id={selectedCategory.id}
-                      slug={selectedCategory.slug}
-                      name={`Shop all ${selectedCategory.name}`}
-                      primary
-                    />
-                  </li>
-
-                  {selectedCategory.subcategory.map((subCategory) => (
-                    <li key={subCategory.id}>
+              <NavigationMenuContent className="flex flex-row">
+                {/* Main Categories */}
+                <ul
+                  className={cn(
+                    "p-4",
+                    selectedCategory?.subCategory?.length &&
+                      "border-r border-r-slate-200",
+                  )}
+                >
+                  {categories.map((category) => (
+                    <li key={category.id}>
                       <NavigationLink
-                        id={subCategory.id}
-                        slug={subCategory.slug}
-                        name={subCategory.name}
+                        id={category.id}
+                        slug={category.slug}
+                        name={category.name}
+                        onMouseOver={() => setSelectedCategoryId(category.id)}
+                        showArrow={!!category.subCategory?.length}
                       />
                     </li>
                   ))}
                 </ul>
-              )}
-            </NavigationMenuContent>
-          </NavigationMenuItem>
 
-          <NavigationMenuItemLink
-            href="https://www.wurthmachinery.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <span>Wurth Machinery</span>
-            <ArrowUpRight className="size-4 stroke-white" />
-          </NavigationMenuItemLink>
-        </NavigationMenuList>
-      </NavigationMenu>
+                {/* Sub Categories */}
+                {!!selectedCategory &&
+                  !!selectedCategory.subCategory?.length && (
+                    <ul className="p-4">
+                      <li>
+                        <NavigationLink
+                          id={selectedCategory.id}
+                          slug={selectedCategory.slug}
+                          name={`Shop all ${selectedCategory.name}`}
+                          primary
+                        />
+                      </li>
+
+                      {selectedCategory.subCategory.map((subCategory) => (
+                        <li key={subCategory.id}>
+                          <NavigationLink
+                            id={subCategory.id}
+                            slug={subCategory.slug}
+                            name={subCategory.name}
+                          />
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+              </NavigationMenuContent>
+            </NavigationMenuItem>
+
+            <NavigationMenuItemLink
+              href="https://www.wurthmachinery.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <span>Wurth Machinery</span>
+              <ArrowUpRight className="size-4 stroke-white" />
+            </NavigationMenuItemLink>
+          </NavigationMenuList>
+        </NavigationMenu>
+      </div>
     </div>
   );
 };
@@ -107,7 +110,7 @@ const NavigationLink = ({
   showArrow = false,
   onMouseOver,
 }: {
-  id: string;
+  id: number;
   slug: string;
   name: string;
   primary?: boolean;
