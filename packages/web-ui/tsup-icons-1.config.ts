@@ -24,6 +24,7 @@ const baseConfig: Options = {
 // Get paths of all icon components
 const iconComponents = globSync("src/components/icons/**/[a-m]*/index.ts");
 
+// TODO Try moving back to the main tsup config if the memory issues in tsup are fixed
 export default defineConfig([
   ...iconComponents.map((iconPath) => ({
     ...baseConfig,
