@@ -1,5 +1,4 @@
 import react18Plugin from "esbuild-plugin-react18";
-import { globSync } from "glob";
 import { defineConfig, Options } from "tsup";
 
 // To get rid of the `Error [ERR_WORKER_OUT_OF_MEMORY]: Worker terminated due to reaching memory limit: JS heap out of memory`
@@ -20,9 +19,6 @@ const baseConfig: Options = {
   ],
   esbuildPlugins: [react18Plugin()],
 };
-
-// Get paths of all icon components
-const iconComponents = globSync("src/components/icons/**/*/index.ts");
 
 export default defineConfig([
   // Bundle JS together, to make sure code is shared as much as possible
@@ -63,12 +59,6 @@ export default defineConfig([
       only: true,
     },
   },
-  ...iconComponents.map((iconPath) => ({
-    ...baseConfig,
-    entry: [iconPath],
-    outDir: iconPath.replace("src/components", "dist").replace("/index.ts", ""),
-    dts: {
-      only: true,
-    },
-  })),
+  // Build types for all icons separately in the "tsup-icons.config.ts"
+  // to avoid running out of memory in CI/CD
 ]);
