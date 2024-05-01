@@ -22,7 +22,7 @@ const baseConfig: Options = {
 };
 
 // Get paths of all icon components
-const iconComponents = globSync("src/components/icons/**/*/index.ts");
+const iconComponents = globSync("src/components/icons/**/[a-m]*/index.ts");
 
 export default defineConfig([
   ...iconComponents.map((iconPath) => ({

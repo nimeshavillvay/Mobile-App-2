@@ -8,9 +8,10 @@
   },
   "scripts": {
     "dev": "storybook dev -p 6006 --no-open",
-    "build": "pnpm build:all && pnpm build:icon-types",
+    "build": "pnpm build:all && pnpm build:icon-types-1 && pnpm build:icon-types-2",
     "build:all": "cross-env NODE_OPTIONS='--max-old-space-size=16384' tsup",
-    "build:icon-types": "cross-env NODE_OPTIONS='--max-old-space-size=16384' tsup --config tsup-icons.config.ts",
+    "build:icon-types-1": "cross-env NODE_OPTIONS='--max-old-space-size=16384' tsup --config tsup-icons-1.config.ts",
+    "build:icon-types-2": "cross-env NODE_OPTIONS='--max-old-space-size=16384' tsup --config tsup-icons-2.config.ts",
     "lint": "eslint src/ --max-warnings 0",
     "build-storybook": "storybook build"
   },
