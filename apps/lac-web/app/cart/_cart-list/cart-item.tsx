@@ -14,7 +14,7 @@ import { useForm } from "react-hook-form";
 import Balancer from "react-wrap-balancer";
 import { z } from "zod";
 import { ShippingMethod } from "../types";
-import useUpdateCartConfigMutation from "./use-update-cart-item-mutation.hook";
+import useUpdateCartConfigMutation from "../use-update-cart-item-mutation.hook";
 
 const cartItemSchema = z.object({
   quantity: z.number(),

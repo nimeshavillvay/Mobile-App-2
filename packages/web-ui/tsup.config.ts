@@ -6,7 +6,6 @@ import { defineConfig, Options } from "tsup";
 // https://github.com/egoist/tsup/issues/920#issuecomment-1791496481
 
 const baseConfig: Options = {
-  dts: true,
   clean: true,
   format: ["esm"],
   external: [
@@ -23,25 +22,49 @@ const baseConfig: Options = {
 };
 
 export default defineConfig([
-  { ...baseConfig, entry: ["src/styles.css"] },
+  // Bundle JS together, to make sure code is shared as much as possible
+  {
+    ...baseConfig,
+    entry: [
+      "src/components/icons/**/*/index.ts",
+      "src/components/logos/**/*/index.ts",
+      "src/components/ui/**/*/index.ts",
+      "src/components/*/index.ts",
+    ],
+  },
+  // Generate types separately as generating for everything requires too much
+  // compute and memory resulting in our developer machines freezing and failing
+  // on CI/CD.
   {
     ...baseConfig,
     entry: ["src/components/icons/**/*/index.ts"],
-    outDir: "dist/components/icons",
+    outDir: "dist/icons",
+    dts: {
+      only: true,
+    },
   },
   {
     ...baseConfig,
     entry: ["src/components/logos/**/*/index.ts"],
-    outDir: "dist/components/logos",
+    outDir: "dist/logos",
+    dts: {
+      only: true,
+    },
   },
   {
     ...baseConfig,
     entry: ["src/components/ui/**/*/index.ts"],
-    outDir: "dist/components/ui",
+    outDir: "dist/ui",
+    dts: {
+      only: true,
+    },
   },
   {
     ...baseConfig,
     entry: ["src/components/*/index.ts"],
-    outDir: "dist/components",
+    outDir: "dist",
+    dts: {
+      only: true,
+    },
   },
 ]);

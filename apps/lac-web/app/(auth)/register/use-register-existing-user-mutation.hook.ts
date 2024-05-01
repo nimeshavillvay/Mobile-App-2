@@ -1,15 +1,13 @@
 import { api } from "@/_lib/api";
 import { isErrorResponse } from "@/_lib/utils";
 import { useToast } from "@repo/web-ui/components/ui/toast";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { EMAIL_COOKIE } from "../constants";
-import useSignInCookies from "../use-sign-in-cookies.hook";
 
 const useRegisterExistingUserMutation = () => {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const { toast } = useToast();
-  const [, , deleteCookie] = useSignInCookies();
 
   return useMutation({
     mutationFn: async (data: {
@@ -37,7 +35,7 @@ const useRegisterExistingUserMutation = () => {
       };
     },
     onSuccess: () => {
-      deleteCookie(EMAIL_COOKIE);
+      queryClient.invalidateQueries();
       router.replace("/");
     },
     onError: async (error) => {

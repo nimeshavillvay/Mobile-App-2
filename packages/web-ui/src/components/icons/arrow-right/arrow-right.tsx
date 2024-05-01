@@ -12,7 +12,7 @@ export const ArrowRight = ({
       height="24"
       fill="none"
       viewBox="0 0 24 24"
-      className={cn("ui-stroke-black", className)}
+      className={cn("stroke-black", className)}
       {...delegated}
     >
       <path strokeLinecap="square" d="M14 5.5l6.5 6.5-6.5 6.5m6-6.5H3.5" />

@@ -11,7 +11,7 @@ const RadioGroup = ({
 }: ComponentProps<typeof RadioGroupPrimitive.Root>) => {
   return (
     <RadioGroupPrimitive.Root
-      className={cn("ui-grid ui-gap-2", className)}
+      className={cn("grid gap-2", className)}
       {...delegated}
     />
   );
@@ -24,13 +24,13 @@ const RadioGroupItem = ({
   return (
     <RadioGroupPrimitive.Item
       className={cn(
-        "ui-aspect-square ui-size-4 ui-rounded-full ui-border ui-border-wurth-gray-250 ui-shadow-sm focus:ui-outline-none focus-visible:ui-ring-1 focus-visible:ui-ring-zinc-950 disabled:ui-cursor-not-allowed disabled:ui-opacity-50 data-[state=checked]:ui-border-wurth-red-650",
+        "aspect-square size-4 rounded-full border border-wurth-gray-250 shadow-sm focus:outline-none focus-visible:ring-1 focus-visible:ring-zinc-950 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:border-wurth-red-650",
         className,
       )}
       {...delegated}
     >
-      <RadioGroupPrimitive.Indicator className="ui-flex ui-items-center ui-justify-center">
-        <Circle className="ui-size-2 ui-fill-wurth-red-650 ui-stroke-wurth-red-650" />
+      <RadioGroupPrimitive.Indicator className="flex items-center justify-center">
+        <Circle className="size-2 fill-wurth-red-650 stroke-wurth-red-650" />
       </RadioGroupPrimitive.Indicator>
     </RadioGroupPrimitive.Item>
   );

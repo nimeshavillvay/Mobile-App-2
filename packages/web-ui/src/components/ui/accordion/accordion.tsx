@@ -17,16 +17,16 @@ const AccordionTrigger = forwardRef<
   ElementRef<typeof AccordionPrimitive.Trigger>,
   ComponentPropsWithoutRef<typeof AccordionPrimitive.Trigger>
 >(({ className, children, ...props }, ref) => (
-  <AccordionPrimitive.Header className="ui-flex">
+  <AccordionPrimitive.Header className="flex">
     <AccordionPrimitive.Trigger
       ref={ref}
       className={cn(
-        "ui-flex ui-flex-1 ui-items-center ui-gap-2 ui-p-2 ui-text-left ui-text-sm ui-font-semibold ui-text-black ui-transition-all hover:ui-underline [&[data-state=open]>svg]:ui-rotate-180",
+        "flex flex-1 items-center gap-2 p-2 text-left text-sm font-semibold text-black transition-all hover:underline [&[data-state=open]>svg]:rotate-180",
         className,
       )}
       {...props}
     >
-      <ChevronDown className="ui-h-4 ui-w-4 ui-shrink-0 ui-transition-transform ui-duration-200" />
+      <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200" />
       <span>{children}</span>
     </AccordionPrimitive.Trigger>
   </AccordionPrimitive.Header>
@@ -39,10 +39,10 @@ const AccordionContent = forwardRef<
 >(({ className, children, ...props }, ref) => (
   <AccordionPrimitive.Content
     ref={ref}
-    className="ui-overflow-hidden ui-text-sm data-[state=closed]:ui-animate-accordion-up data-[state=open]:ui-animate-accordion-down"
+    className="overflow-hidden text-sm data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down"
     {...props}
   >
-    <div className={cn("ui-px-1 ui-pb-4 ui-pt-3", className)}>{children}</div>
+    <div className={cn("px-1 pb-4 pt-3", className)}>{children}</div>
   </AccordionPrimitive.Content>
 ));
 AccordionContent.displayName = AccordionPrimitive.Content.displayName;

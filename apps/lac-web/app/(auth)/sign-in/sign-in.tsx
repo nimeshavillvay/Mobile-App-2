@@ -7,16 +7,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, buttonVariants } from "@repo/web-ui/components/ui/button";
 import { Input } from "@repo/web-ui/components/ui/input";
 import { Label } from "@repo/web-ui/components/ui/label";
-import { useMutation } from "@tanstack/react-query";
+import { HTTPError } from "ky";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useId, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import Balancer from "react-wrap-balancer";
 import { z } from "zod";
-import { EMAIL_COOKIE } from "../constants";
-import useSignInCookies from "../use-sign-in-cookies.hook";
-import { login } from "./actions";
+import useSignInMutation from "./use-sign-in-mutation.hook";
 
 const emailFormSchema = z.object({
   email: z.string().email(),
@@ -35,13 +33,14 @@ const SignIn = ({ passwordPolicies }: SignInProps) => {
   const emailId = `email-${id}`;
   const passwordId = `password-${id}`;
 
-  const router = useRouter();
+  const searchParams = useSearchParams();
+  const email = searchParams.get("email");
 
-  const [cookies, setCookies] = useSignInCookies();
+  const router = useRouter();
 
   const emailForm = useForm<z.infer<typeof emailFormSchema>>({
     values: {
-      email: cookies[EMAIL_COOKIE],
+      email: email ?? "",
     },
     resolver: zodResolver(emailFormSchema),
   });
@@ -51,10 +50,11 @@ const SignIn = ({ passwordPolicies }: SignInProps) => {
     checkEmailMutation.mutate(data.email, {
       onSuccess: (data, email) => {
         if (data.statusCode === "OK") {
-          setCookies(EMAIL_COOKIE, email, {
-            path: "/",
+          const newURLSearchParams = new URLSearchParams({
+            email,
           });
-          router.replace("/registration");
+
+          router.replace(`/register?${newURLSearchParams.toString()}`);
         }
       },
       onError: async (error, email) => {
@@ -68,9 +68,11 @@ const SignIn = ({ passwordPolicies }: SignInProps) => {
             errorResponse.message ===
               "Email address already exists in the database."
           ) {
-            setCookies(EMAIL_COOKIE, email, {
-              path: "/",
+            const newURLSearchParams = new URLSearchParams({
+              email,
             });
+
+            router.replace(`/sign-in?${newURLSearchParams.toString()}`);
           }
         }
       },
@@ -86,31 +88,43 @@ const SignIn = ({ passwordPolicies }: SignInProps) => {
   );
   const loginForm = useForm<z.infer<typeof refinedLoginFormSchema>>({
     values: {
-      email: cookies[EMAIL_COOKIE],
+      email: email ?? "",
       password: "",
     },
     resolver: zodResolver(refinedLoginFormSchema),
   });
 
   const clearEmail = () => {
-    setCookies(EMAIL_COOKIE, "", { path: "/" });
+    router.replace("/sign-in");
   };
 
-  const loginMutation = useMutation({
-    mutationFn: ({ email, password }: { email: string; password: string }) =>
-      login(email, password),
-    onSuccess: (data) => {
-      loginForm.setError("password", {
-        type: "custom",
-        message: data.error,
-      });
-    },
-  });
+  const signInMutation = useSignInMutation();
   const onSubmitLogin = loginForm.handleSubmit((data) => {
-    loginMutation.mutate(data);
+    signInMutation.mutate(data, {
+      onError: async (error) => {
+        if (error instanceof HTTPError && error.response.status === 401) {
+          const errorResponse = await error.response.json();
+
+          if (
+            isErrorResponse(errorResponse) &&
+            errorResponse.status_code === "FAILED"
+          ) {
+            loginForm.setError("password", {
+              type: "custom",
+              message: errorResponse.message,
+            });
+          }
+        } else {
+          loginForm.setError("password", {
+            type: "custom",
+            message: "An unexpected error occurred. Please try again later.",
+          });
+        }
+      },
+    });
   });
 
-  if (!cookies.email) {
+  if (!email) {
     return (
       <div className="container">
         <form
@@ -157,7 +171,7 @@ const SignIn = ({ passwordPolicies }: SignInProps) => {
         </h1>
 
         <div className="space-y-1 text-center">
-          <h2 className="text-lg">{cookies.email}</h2>
+          <h2 className="text-lg">{email}</h2>
 
           <button
             className="text-sm text-red-800 underline"
@@ -190,7 +204,7 @@ const SignIn = ({ passwordPolicies }: SignInProps) => {
               type="password"
               required
               className="rounded border-wurth-gray-250 px-3 py-2 text-base shadow-sm"
-              disabled={loginMutation.isPending}
+              disabled={signInMutation.isPending}
             />
 
             {!!loginForm?.formState?.errors?.password?.message && (
@@ -205,7 +219,7 @@ const SignIn = ({ passwordPolicies }: SignInProps) => {
               type="submit"
               variant="secondary"
               className="w-full p-2.5 font-bold"
-              disabled={loginMutation.isPending}
+              disabled={signInMutation.isPending}
             >
               Sign in
             </Button>

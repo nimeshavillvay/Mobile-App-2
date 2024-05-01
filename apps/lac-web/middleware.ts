@@ -1,88 +1,63 @@
-import {
-  ACCOUNT_NO_COOKIE,
-  ACCOUNT_TOKEN_COOKIE,
-  ADDRESS_ID_COOKIE,
-  TOKEN_COOKIE,
-} from "@/old/_lib/constants";
-import {
-  getAccountList,
-  selectAccount,
-  verifyAccountToken,
-} from "@/old/_lib/shared-apis";
+import { api } from "@/_lib/api";
+import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
+import dayjs from "dayjs";
+import type { ResponseCookie } from "next/dist/compiled/@edge-runtime/cookies";
 import { NextResponse, type NextRequest } from "next/server";
 
-const redirectToHome = (request: NextRequest) => {
-  // Delete all cookies
-  request.cookies.delete([
-    TOKEN_COOKIE,
-    ACCOUNT_TOKEN_COOKIE,
-    ACCOUNT_NO_COOKIE,
-    ADDRESS_ID_COOKIE,
-  ]);
-
-  return NextResponse.redirect(new URL("/", request.url));
-};
-
 export const middleware = async (request: NextRequest) => {
-  // Check validity of token before accessing private routes
-  if (
-    request.nextUrl.pathname.startsWith("/myaccount") ||
-    request.nextUrl.pathname.startsWith("/shopping-cart")
-  ) {
-    const tokenCookie = request.cookies.get(TOKEN_COOKIE);
+  const response = NextResponse.next();
+  const sessionToken = request.cookies.get(SESSION_TOKEN_COOKIE);
 
-    // If there is no token
-    if (!tokenCookie?.value) {
-      return redirectToHome(request);
-    }
+  // Create new session token if it doesn't exist
+  if (!sessionToken) {
+    const sessionResponse = await api.get("rest/session", {
+      cache: "no-cache",
+      credentials: "include",
+    });
 
-    // Check validity
-    try {
-      await getAccountList(tokenCookie.value);
-
-      // Additional check for pages that need the account token
+    // Check for the session token cookie
+    for (const header of sessionResponse.headers.entries()) {
       if (
-        request.nextUrl.pathname.startsWith("/myaccount") ||
-        request.nextUrl.pathname.startsWith("/shopping-cart")
+        header[0] === "set-cookie" &&
+        header[1].includes(`${SESSION_TOKEN_COOKIE}=`)
       ) {
-        const accountTokenCookie = request.cookies.get(ACCOUNT_TOKEN_COOKIE);
-        const accountNoCookie = request.cookies.get(ACCOUNT_NO_COOKIE);
-        const addressIdCookie = request.cookies.get(ADDRESS_ID_COOKIE);
+        const keyValuePairs = header[1].split("; ");
+        let tokenValue = "";
+        const cookieConfig: Partial<ResponseCookie> = {
+          path: "/",
+        };
 
-        if (accountTokenCookie?.value) {
-          try {
-            // Verify token
-            await verifyAccountToken(accountTokenCookie.value);
-          } catch {
-            // If it fails try to refresh it
-            if (accountNoCookie?.value && addressIdCookie?.value) {
-              const { token } = await selectAccount(
-                tokenCookie.value,
-                accountNoCookie.value,
-                addressIdCookie.value,
-              );
-              request.cookies.set(ACCOUNT_TOKEN_COOKIE, token);
-            } else {
-              return redirectToHome(request);
+        for (const pair of keyValuePairs) {
+          const [key, value] = pair.split("=");
+
+          if (key && value) {
+            if (key === SESSION_TOKEN_COOKIE) {
+              tokenValue = value;
+            } else if (key === "expires") {
+              cookieConfig.expires = dayjs(value).toDate();
+            } else if (key === "Max-Age") {
+              cookieConfig.maxAge = parseInt(value);
             }
           }
-        } else if (accountNoCookie?.value && addressIdCookie?.value) {
-          // If the account token doesn't exist but the Account No and
-          // Address ID do, try to get a new account token
-          const { token } = await selectAccount(
-            tokenCookie.value,
-            accountNoCookie.value,
-            addressIdCookie.value,
-          );
-          request.cookies.set(ACCOUNT_TOKEN_COOKIE, token);
-        } else {
-          return redirectToHome(request);
         }
+
+        response.cookies.set(SESSION_TOKEN_COOKIE, tokenValue, cookieConfig);
       }
-    } catch {
-      return redirectToHome(request);
     }
   }
 
-  return NextResponse.next();
+  return response;
+};
+
+export const config = {
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - api (API routes)
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     */
+    "/((?!api|_next/static|_next/image|favicon.ico).*)",
+  ],
 };

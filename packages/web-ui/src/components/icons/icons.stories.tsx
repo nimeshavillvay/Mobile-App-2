@@ -17,6 +17,7 @@ import { ChevronRight } from "./chevron-right";
 import { ChevronUp } from "./chevron-up";
 import { Close } from "./close";
 import { Download } from "./download";
+import { Exit } from "./exit";
 import { Facebook } from "./facebook";
 import { Headset } from "./headset";
 import { HeartFilled } from "./heart-filled";
@@ -65,11 +66,9 @@ const IconContainer = ({
   children: ReactNode;
 }) => {
   return (
-    <li className="ui-flex ui-flex-col ui-items-center">
+    <li className="flex flex-col items-center">
       {children}{" "}
-      <div className="ui-text-center ui-text-sm ui-text-wurth-gray-800">
-        {name}
-      </div>
+      <div className="text-center text-sm text-wurth-gray-800">{name}</div>
     </li>
   );
 };
@@ -77,7 +76,7 @@ const IconContainer = ({
 export const Showcase: Story = {
   render: () => {
     return (
-      <ul className="ui-grid ui-grid-cols-6 ui-gap-4">
+      <ul className="grid grid-cols-6 gap-4">
         <IconContainer name="Menu">
           <Menu />
         </IconContainer>
@@ -136,6 +135,10 @@ export const Showcase: Story = {
 
         <IconContainer name="HeartOutline">
           <HeartOutline />
+        </IconContainer>
+
+        <IconContainer name="Exit">
+          <Exit />
         </IconContainer>
 
         <IconContainer name="Zap">
