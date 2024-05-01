@@ -3,6 +3,7 @@ import type { GroupList, OldPagination } from "@/_lib/types";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
 type useSuspenseSearchArgs = {
+  categoryId?: string;
   /**
    * Group items together such as multiple variations of the same product
    */
@@ -18,32 +19,42 @@ type GroupsList = {
   pagination: [OldPagination];
 };
 
-const useSuspenseSearch = ({
-  groupResults = false,
-  page,
-}: useSuspenseSearchArgs) => {
+const useSuspenseSearch = (
+  token: string,
+  { categoryId, groupResults = false, page }: useSuspenseSearchArgs,
+) => {
   return useSuspenseQuery({
     queryKey: [
       "search",
       {
+        categoryId,
         groupResults,
         page,
       },
+      token,
     ],
-    queryFn: () =>
-      api
+    queryFn: () => {
+      const searchParams = new URLSearchParams({
+        sort_direction: "asc",
+        page: page.toString(),
+        perpage: "20",
+        group_result: groupResults ? "true" : "false",
+      });
+
+      if (categoryId) {
+        searchParams.set("categoryid", categoryId);
+      }
+
+      return api
         .post("rest/search", {
-          searchParams: {
-            substring: "se901",
-            sort: "search_rank",
-            sort_direction: "asc",
-            page,
-            perpage: 20,
-            groupResults,
+          searchParams,
+          headers: {
+            Authorization: `Bearer ${token}`,
           },
           cache: "no-store",
         })
-        .json<GroupsList>(),
+        .json<GroupsList>();
+    },
     select: (data) => {
       const { group_list, pagination } = data;
 
