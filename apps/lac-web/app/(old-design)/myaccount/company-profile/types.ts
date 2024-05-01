@@ -1,46 +1,33 @@
 export type Address = {
-  xcAddressId: string;
+  xcAddressId?: string;
   countryName: string;
-  county: string;
+  county: string | null;
   locality: string;
-  organization: string;
-  phoneNumber: string;
+  organization?: string;
+  phoneNumber?: string;
   region: string;
   streetAddress: string;
   postalCode: string;
   zip4: string;
-  shipTo: string;
-  soldTo: string;
-  default: boolean;
+  shipTo?: string;
+  soldTo?: string;
+  default?: boolean;
 };
 
-export type ShippingAddress = {
-  xcAddressId: string;
-  countryName: string;
-  county: string;
-  locality: string;
-  organization: string;
-  phoneNumber: string;
-  region: string;
-  streetAddress: string;
-  postalCode: string;
+export type AddressFormData = {
+  company?: string;
+  addressLineOne: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  phoneNumber?: string;
   zip4: string;
-  shipTo: string;
-  default: boolean;
-};
-
-export type BillingAddress = {
-  xcAddressId: string;
-  countryName: string;
+  country: string;
   county: string;
-  locality: string;
-  organization: string;
-  phoneNumber: string;
-  region: string;
-  streetAddress: string;
-  postalCode: string;
-  zip4: string;
-  soldTo: string;
+  xcAddressId?: string;
+  shipTo?: string;
+  default?: boolean;
+  skipAddressCheck?: boolean;
 };
 
 export type ShippingAddressId = {
@@ -51,11 +38,6 @@ export type AddressCheckSuggestions = {
   checkType: string;
   message: string;
   suggestions: Address[];
-};
-
-export type CompanyDetailsResponse = {
-  company_name: string;
-  image: string;
 };
 
 export type CompanyDetails = {

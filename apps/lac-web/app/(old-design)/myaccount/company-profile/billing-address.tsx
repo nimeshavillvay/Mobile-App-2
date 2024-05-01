@@ -5,7 +5,7 @@ import { useState } from "react";
 import { MdOutlineEdit } from "react-icons/md";
 import AddressDialog from "./address-dialog";
 import AddressSuggestionDialog from "./address-suggestion-dialog";
-import { BillingAddress } from "./types";
+import { Address, AddressCheckSuggestions, AddressFormData } from "./types";
 import useSuspenseBillingAddressList from "./use-suspense-billing-address-list.hook";
 
 const BillingAddress = ({ token }: { token: string }) => {
@@ -17,11 +17,13 @@ const BillingAddress = ({ token }: { token: string }) => {
     setOpenBillingAddressSuggestionDialog,
   ] = useState(false);
 
-  const [address, setAddress] = useState(null);
-  const [addressCheckSuggestions, setAddressCheckSuggestions] = useState(null);
+  const [address, setAddress] = useState({} as AddressFormData);
+  const [addressCheckSuggestions, setAddressCheckSuggestions] = useState(
+    {} as AddressCheckSuggestions,
+  );
 
   const billingAddressQuery = useSuspenseBillingAddressList(token);
-  const billingAddress: BillingAddress = billingAddressQuery?.data;
+  const billingAddress: Address = billingAddressQuery?.data;
 
   return (
     <>
@@ -36,7 +38,7 @@ const BillingAddress = ({ token }: { token: string }) => {
               <p className="text-sm font-medium md:text-base">
                 {billingAddress?.streetAddress}, {billingAddress?.locality},{" "}
                 {billingAddress?.region},{" "}
-                {billingAddress?.county?.length > 0
+                {billingAddress?.county?.length ?? 0 > 0
                   ? billingAddress?.county + ","
                   : ""}
                 {billingAddress?.countryName}, {billingAddress?.postalCode}

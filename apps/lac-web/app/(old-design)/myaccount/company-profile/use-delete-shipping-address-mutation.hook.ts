@@ -10,7 +10,7 @@ const useDeleteShippingAddressMutation = () => {
   const { toast } = useToast();
 
   return useMutation({
-    mutationFn: (shipToId: any) =>
+    mutationFn: (shipToId: string) =>
       api
         .delete("rest/my-account/shipping-address", {
           headers: {
@@ -20,7 +20,7 @@ const useDeleteShippingAddressMutation = () => {
             "ship-to": shipToId,
           },
         })
-        .json<unknown>(),
+        .json(),
     onMutate: () => {
       toast({ description: "Deleting shipping address" });
     },

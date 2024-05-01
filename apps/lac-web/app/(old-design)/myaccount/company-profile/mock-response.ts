@@ -1,4 +1,6 @@
-export const UPS_ADDRESS_CHECK_RESPONSE = {
+import { AddressCheckSuggestions } from "./types";
+
+export const UPS_ADDRESS_CHECK_RESPONSE: AddressCheckSuggestions = {
   checkType: "ADDRESS",
   message:
     "Multiple options for your billing address found. Please select the correct one!",
@@ -24,7 +26,7 @@ export const UPS_ADDRESS_CHECK_RESPONSE = {
   ],
 };
 
-export const SAP_ADDRESS_CHECK_RESPONSE = {
+export const SAP_ADDRESS_CHECK_RESPONSE: AddressCheckSuggestions = {
   checkType: "SAP",
   message:
     "Multiple options for your billing address found. Please select the correct one!",
@@ -50,9 +52,9 @@ export const SAP_ADDRESS_CHECK_RESPONSE = {
   ],
 };
 
-export const EMPTY_SUGGESTIONS_RESPONSE = {
-  checkType: "SAP",
-  message:
-    "No valid tax jurisdiction found. Please correct your shipping address!",
-  suggestions: [],
-};
+// export const EMPTY_SUGGESTIONS_RESPONSE: AddressCheckSuggestions = {
+//   checkType: "SAP",
+//   message:
+//     "No valid tax jurisdiction found. Please correct your shipping address!",
+//   suggestions: [],
+// };

@@ -1,8 +1,23 @@
 import { api } from "@/_lib/api";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { ShippingAddress } from "./types";
+import { Address } from "./types";
 
-const transformAddress = (address: any): ShippingAddress => ({
+type AddressResponse = {
+  "xc-addressid": string;
+  "country-name": string;
+  county: string;
+  locality: string;
+  organization: string;
+  "phone-number": string;
+  region: string;
+  "street-address": string;
+  "postal-code": string;
+  zip4: string;
+  "ship-to": string;
+  default: boolean;
+};
+
+const transformAddress = (address: AddressResponse): Address => ({
   xcAddressId: address["xc-addressid"],
   countryName: address["country-name"],
   county: address["county"],
@@ -28,9 +43,9 @@ const useSuspenseShippingAddressList = (token: string) => {
             "Content-Type": "application/json",
           },
         })
-        .json(),
+        .json<AddressResponse[]>(),
 
-    select: (addresses: any) => {
+    select: (addresses: AddressResponse[]) => {
       const mappedAddresses = addresses.map(transformAddress);
       return mappedAddresses;
     },

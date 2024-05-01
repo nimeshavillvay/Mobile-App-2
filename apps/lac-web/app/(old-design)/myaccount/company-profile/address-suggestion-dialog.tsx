@@ -1,35 +1,14 @@
-import { STATE } from "@/(old-design)/_lib/constants";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/old/_components/ui/dialog";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/old/_components/ui/form";
-import { Input } from "@/old/_components/ui/input";
 import { Label } from "@/old/_components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/old/_components/ui/radio-group";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/old/_components/ui/select";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Dispatch, SetStateAction, useState } from "react";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
 import { SAP_ADDRESS_CHECK_RESPONSE } from "./mock-response";
+import { Address, AddressCheckSuggestions, AddressFormData } from "./types";
 import useAddShippingAddressMutation from "./use-add-shipping-address-mutation.hook";
 import useUpdateBillingAddressMutation from "./use-update-billing-address-mutation.hook";
 import useUpdateShippingAddressMutation from "./use-update-shipping-address-mutation.hook";
@@ -38,11 +17,11 @@ type AddressDialogProps = {
   open: boolean;
   setOpenAddressSuggestionDialog: Dispatch<SetStateAction<boolean>>;
   setOpenAddressDialog: Dispatch<SetStateAction<boolean>>;
-  setAddressCheckSuggestions: Dispatch<SetStateAction<any>>;
-  addressCheckSuggestions: any;
+  setAddressCheckSuggestions: Dispatch<SetStateAction<AddressCheckSuggestions>>;
+  addressCheckSuggestions: AddressCheckSuggestions;
   isShippingAddress: boolean;
   isShippingAddressUpdate: boolean;
-  address: any;
+  address: AddressFormData;
 };
 
 const AddressSuggestionDialog = ({
@@ -55,11 +34,12 @@ const AddressSuggestionDialog = ({
   isShippingAddressUpdate,
   address,
 }: AddressDialogProps) => {
-  const [selectedAddressSuggestion, setSelectedAddressSuggestion] =
-    useState(null);
+  const [selectedAddressSuggestion, setSelectedAddressSuggestion] = useState(
+    {} as Address,
+  );
 
-  const onAddressSuggestionChange = (addressSuggestion: any) => {
-    setSelectedAddressSuggestion(addressSuggestion);
+  const onAddressSuggestionChange = (addressSuggestion: string) => {
+    setSelectedAddressSuggestion(JSON.parse(addressSuggestion) as Address);
   };
 
   const onBackButtonClicked = () => {
@@ -71,10 +51,12 @@ const AddressSuggestionDialog = ({
   const updateShippingAddressMutation = useUpdateShippingAddressMutation();
   const updateBillingAddressMutation = useUpdateBillingAddressMutation();
 
-  const convertAddressSuggestionToFormDataFormat = (suggestion: any): any => {
+  const convertAddressSuggestionToFormDataFormat = (
+    suggestion: Address,
+  ): AddressFormData => {
     return {
       country: suggestion.countryName,
-      county: suggestion.county,
+      county: suggestion.county ?? "",
       city: suggestion.locality,
       state: suggestion.region,
       addressLineOne: suggestion.streetAddress,
@@ -185,18 +167,18 @@ const AddressSuggestionDialog = ({
 
         <RadioGroup onValueChange={onAddressSuggestionChange}>
           {addressCheckSuggestions?.suggestions?.map(
-            (addressSuggestion: any, index: number) => (
+            (addressSuggestion: Address, index: number) => (
               <div
                 key={index}
                 className="mx-5 mt-1 flex cursor-default flex-row items-start gap-3 rounded border-2 border-gray-100 py-3 pl-5 shadow"
               >
-                <RadioGroupItem value={addressSuggestion} />
+                <RadioGroupItem value={JSON.stringify(addressSuggestion)} />
 
                 <div className="flex flex-col font-bold text-brand-gray-500">
                   <Label className="font-bold text-brand-gray-500">
                     {addressSuggestion?.streetAddress},{" "}
                     {addressSuggestion?.locality}, {addressSuggestion?.region},{" "}
-                    {addressSuggestion?.county?.length > 0
+                    {addressSuggestion?.county?.length ?? 0 > 0
                       ? addressSuggestion?.county + ","
                       : ""}
                     {addressSuggestion?.countryName},{" "}

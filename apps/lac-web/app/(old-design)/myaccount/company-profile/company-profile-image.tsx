@@ -1,10 +1,6 @@
 "use client";
 
 import { Button } from "@/(old-design)/_components/ui/button";
-import {
-  ImageLoader,
-  ImageLoaderProps,
-} from "next/dist/client/image-component";
 import Image from "next/image";
 import { useState } from "react";
 import { MdOutlineModeEdit } from "react-icons/md";

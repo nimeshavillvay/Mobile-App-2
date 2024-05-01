@@ -6,7 +6,7 @@ import {
   DialogTitle,
 } from "@/old/_components/ui/dialog";
 import Image from "next/image";
-import React, { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import { useDropzone } from "react-dropzone";
 import fileUpload from "../upload_icon.svg";
 import useUpdateCompanyProfileImageMutation from "./use-update-company-profile-image-mutation.hook";

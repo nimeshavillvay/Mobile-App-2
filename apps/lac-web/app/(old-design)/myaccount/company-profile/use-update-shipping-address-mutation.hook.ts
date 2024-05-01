@@ -3,6 +3,7 @@ import { useToast } from "@/old/_components/ui/use-toast";
 import useCookies from "@/old/_hooks/storage/use-cookies.hook";
 import { ACCOUNT_TOKEN_COOKIE } from "@/old/_lib/constants";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { AddressFormData } from "./types";
 
 const useUpdateShippingAddressMutation = () => {
   const queryClient = useQueryClient();
@@ -10,7 +11,7 @@ const useUpdateShippingAddressMutation = () => {
   const { toast } = useToast();
 
   return useMutation({
-    mutationFn: (shippingAddressFormData: any) =>
+    mutationFn: (shippingAddressFormData: AddressFormData) =>
       api
         .put("rest/my-account/shipping-address", {
           headers: {
@@ -25,7 +26,7 @@ const useUpdateShippingAddressMutation = () => {
                 "ship-to": shippingAddressFormData.shipTo,
                 region: shippingAddressFormData.state,
                 locality: shippingAddressFormData.city,
-                organization: shippingAddressFormData.attn,
+                organization: shippingAddressFormData.company,
                 "postal-code": shippingAddressFormData.zipCode,
                 "phone-number": shippingAddressFormData.phoneNumber,
                 "street-address": shippingAddressFormData.addressLineOne,

@@ -26,10 +26,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import {
-  EMPTY_SUGGESTIONS_RESPONSE,
-  UPS_ADDRESS_CHECK_RESPONSE,
-} from "./mock-response";
+import { UPS_ADDRESS_CHECK_RESPONSE } from "./mock-response";
+import { Address, AddressCheckSuggestions, AddressFormData } from "./types";
 import useAddShippingAddressMutation from "./use-add-shipping-address-mutation.hook";
 import useUpdateBillingAddressMutation from "./use-update-billing-address-mutation.hook";
 import useUpdateShippingAddressMutation from "./use-update-shipping-address-mutation.hook";
@@ -38,11 +36,11 @@ type AddressDialogProps = {
   open: boolean;
   setOpenAddressDialog: Dispatch<SetStateAction<boolean>>;
   setOpenAddressSuggestionDialog: Dispatch<SetStateAction<boolean>>;
-  setAddress: Dispatch<SetStateAction<any>>;
-  setAddressCheckSuggestions: Dispatch<SetStateAction<any>>;
+  setAddress: Dispatch<SetStateAction<AddressFormData>>;
+  setAddressCheckSuggestions: Dispatch<SetStateAction<AddressCheckSuggestions>>;
   isShippingAddress: boolean;
   isShippingAddressUpdate: boolean;
-  address: any;
+  address: Address;
 };
 
 const AddressDialog = ({
@@ -90,7 +88,7 @@ const AddressDialog = ({
       phoneNumber: address.phoneNumber,
       zip4: address.zip4,
       country: address.countryName,
-      county: address.county,
+      county: address.county ?? undefined,
     },
   });
 
@@ -99,7 +97,7 @@ const AddressDialog = ({
   const updateBillingAddressMutation = useUpdateBillingAddressMutation();
 
   const onAddressSubmit = (data: AddressDataSchema) => {
-    const addressData = {
+    const addressData: AddressFormData = {
       company: data.company,
       addressLineOne: data.addressLineOne,
       city: data.city,
@@ -113,7 +111,7 @@ const AddressDialog = ({
 
     if (isShippingAddress) {
       if (isShippingAddressUpdate) {
-        const requestData = {
+        const requestData: AddressFormData = {
           xcAddressId: address.xcAddressId,
           shipTo: address.shipTo,
           ...addressData,

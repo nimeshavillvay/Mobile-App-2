@@ -3,14 +3,14 @@ import { useState } from "react";
 import { MdOutlineDelete, MdOutlineEdit } from "react-icons/md";
 import AddressDialog from "./address-dialog";
 import AddressSuggestionDialog from "./address-suggestion-dialog";
-import { ShippingAddress } from "./types";
+import { Address, AddressCheckSuggestions, AddressFormData } from "./types";
 import useDeleteShippingAddressMutation from "./use-delete-shipping-address-mutation.hook";
 import useUpdateShippingAddressMutation from "./use-update-shipping-address-mutation.hook";
 
 const ShippingAddressCard = ({
   shippingAddress,
 }: {
-  shippingAddress: ShippingAddress;
+  shippingAddress: Address;
   index: number;
 }) => {
   const [openShippingAddressDialog, setOpenShippingAddressDialog] =
@@ -21,8 +21,10 @@ const ShippingAddressCard = ({
     setOpenShippingAddressSuggestionDialog,
   ] = useState(false);
 
-  const [address, setAddress] = useState(null);
-  const [addressCheckSuggestions, setAddressCheckSuggestions] = useState(null);
+  const [address, setAddress] = useState({} as AddressFormData);
+  const [addressCheckSuggestions, setAddressCheckSuggestions] = useState(
+    {} as AddressCheckSuggestions,
+  );
 
   const updateShippingAddressMutation = useUpdateShippingAddressMutation();
   const deleteShippingAddressMutation = useDeleteShippingAddressMutation();
@@ -46,9 +48,9 @@ const ShippingAddressCard = ({
               variant="ghost"
               onClick={() =>
                 updateShippingAddressMutation.mutate({
-                  ...shippingAddress,
+                  shipTo: shippingAddress.shipTo,
                   default: true,
-                })
+                } as AddressFormData)
               }
             >
               <span className="p-1 font-bold hover:bg-gray-200">
@@ -72,7 +74,9 @@ const ShippingAddressCard = ({
             variant="ghost"
             className="hover:bg-gray-200"
             onClick={() =>
-              deleteShippingAddressMutation.mutate(shippingAddress.shipTo)
+              deleteShippingAddressMutation.mutate(
+                shippingAddress.shipTo as string,
+              )
             }
           >
             <MdOutlineDelete className="text-2xl" />

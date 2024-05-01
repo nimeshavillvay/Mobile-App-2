@@ -3,22 +3,7 @@ import { useToast } from "@/old/_components/ui/use-toast";
 import useCookies from "@/old/_hooks/storage/use-cookies.hook";
 import { ACCOUNT_TOKEN_COOKIE } from "@/old/_lib/constants";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-
-type BillingAddress = {
-  check_type: string;
-  message: string;
-  suggestions: [Suggestions];
-};
-
-type Suggestions = {
-  "country-name": string;
-  county: string;
-  locality: string;
-  region: boolean;
-  "street-address": string;
-  "postal-code": string;
-  zip4: string | null;
-};
+import { AddressFormData } from "./types";
 
 const useUpdateBillingAddressMutation = () => {
   const queryClient = useQueryClient();
@@ -26,8 +11,8 @@ const useUpdateBillingAddressMutation = () => {
   const { toast } = useToast();
 
   return useMutation({
-    mutationFn: async (billingAddressFormData: any) => {
-      const response = await api
+    mutationFn: (billingAddressFormData: AddressFormData) =>
+      api
         .put("rest/my-account/billing-address", {
           headers: {
             authorization: `Bearer ${cookies[ACCOUNT_TOKEN_COOKIE]}`,
@@ -47,24 +32,7 @@ const useUpdateBillingAddressMutation = () => {
             }),
           },
         })
-        .json<BillingAddress>();
-
-      const transformData = {
-        checkType: response.check_type,
-        message: response.message,
-        suggestions: response.suggestions.map((address) => ({
-          country: address["country-name"],
-          county: address.county,
-          locality: address.locality,
-          region: address.region,
-          streetAddress: address["street-address"],
-          postalCode: address["postal-code"],
-          zipCode: address.zip4 ?? null,
-        })),
-      };
-
-      return transformData;
-    },
+        .json<unknown>(),
     onMutate: () => {
       toast({ description: "Updating billing address" });
     },

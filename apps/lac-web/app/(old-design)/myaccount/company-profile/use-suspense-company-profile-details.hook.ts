@@ -1,6 +1,11 @@
 import { api } from "@/_lib/api";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { CompanyDetails, CompanyDetailsResponse } from "./types";
+import { CompanyDetails } from "./types";
+
+type CompanyDetailsResponse = {
+  company_name: string;
+  image: string;
+};
 
 const transformCompanyDetails = (
   address: CompanyDetailsResponse,
@@ -20,8 +25,9 @@ const useSuspenseCompanyProfileDetails = (token: string) => {
             "Content-Type": "application/json",
           },
         })
-        .json(),
-    select: (companyDetails: any) => transformCompanyDetails(companyDetails),
+        .json<CompanyDetailsResponse>(),
+    select: (companyDetails: CompanyDetailsResponse) =>
+      transformCompanyDetails(companyDetails),
   });
 };
 

@@ -6,10 +6,10 @@ import { useState } from "react";
 import AddressDialog from "./address-dialog";
 import AddressSuggestionDialog from "./address-suggestion-dialog";
 import ShippingAddressCard from "./shipping-address-card";
-import { ShippingAddress } from "./types";
+import { Address, AddressCheckSuggestions, AddressFormData } from "./types";
 import useSuspenseShippingAddressList from "./use-suspense-shipping-address-list.hook";
 
-const emptyShippingAddress: ShippingAddress = {
+const emptyShippingAddress: Address = {
   xcAddressId: "",
   countryName: "",
   county: "",
@@ -33,11 +33,13 @@ const ShippingAddress = ({ token }: { token: string }) => {
     setOpenShippingAddressSuggestionDialog,
   ] = useState(false);
 
-  const [address, setAddress] = useState(null);
-  const [addressCheckSuggestions, setAddressCheckSuggestions] = useState(null);
+  const [address, setAddress] = useState({} as AddressFormData);
+  const [addressCheckSuggestions, setAddressCheckSuggestions] = useState(
+    {} as AddressCheckSuggestions,
+  );
 
   const shippingAddressQuery = useSuspenseShippingAddressList(token);
-  const shippingAddresses: ShippingAddress[] = shippingAddressQuery?.data;
+  const shippingAddresses: Address[] = shippingAddressQuery?.data;
 
   return (
     <>
