@@ -57,7 +57,7 @@ export const SearchBoxInput = ({
     onInputValueChange: ({ inputValue }) => {
       setValue(inputValue);
     },
-    items: [...products.results, ...categories.results, ...brands.results],
+    items: [...categories.results, ...brands.results, ...products.results],
     itemToString(item) {
       return item ? item.title : "";
     },
@@ -119,7 +119,10 @@ export const SearchBoxInput = ({
                         "mb-2 mr-2 flex items-center rounded-md p-2 ",
                         "m-2 rounded-lg border-2 p-4 shadow-sm",
                       )}
-                      {...getItemProps({ item: brand, index })}
+                      {...getItemProps({
+                        item: brand,
+                        index: index + categories.results.length,
+                      })}
                     >
                       <Image
                         src={brand.img}
@@ -149,7 +152,13 @@ export const SearchBoxInput = ({
                         <li
                           className={cn("flex px-3 py-2")}
                           key={product.id}
-                          {...getItemProps({ item: product, index })}
+                          {...getItemProps({
+                            item: product,
+                            index:
+                              index +
+                              categories.results.length +
+                              brands.results.length,
+                          })}
                         >
                           <div className="flex">
                             <Image
@@ -179,7 +188,11 @@ export const SearchBoxInput = ({
                           key={product.id}
                           {...getItemProps({
                             item: product,
-                            index: index + 5,
+                            index:
+                              index +
+                              categories.results.length +
+                              brands.results.length +
+                              5,
                           })}
                         >
                           <div className="flex">
