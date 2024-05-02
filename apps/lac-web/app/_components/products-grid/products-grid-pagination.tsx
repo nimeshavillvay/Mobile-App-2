@@ -85,7 +85,7 @@ export const ProductsGridPagination = ({
 
 export const ProductsGridPaginationSkeleton = () => {
   return (
-    <div className="flex flex-row items-center gap-1">
+    <div className="flex flex-row items-center justify-center gap-1 pt-4">
       <Skeleton className="h-9 w-28" />
 
       <Skeleton className="size-9" />
