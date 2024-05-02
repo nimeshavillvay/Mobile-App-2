@@ -45,9 +45,16 @@ type OrderItemProps = {
     image?: { original: string; webp: string; jp2: string };
     productTitle?: string;
   };
+  getShippingMethodName: (shippingCode: string) => string;
+  getPlantName: (plantId: string) => string;
 };
 
-const OrderItem = ({ index, orderItem }: OrderItemProps) => {
+const OrderItem = ({
+  index,
+  orderItem,
+  getShippingMethodName,
+  getPlantName,
+}: OrderItemProps) => {
   const {
     productId,
     sku,
@@ -181,13 +188,13 @@ const OrderItem = ({ index, orderItem }: OrderItemProps) => {
                   </TableCell>
 
                   <TableCell className="py-2 text-center">
-                    {lineItem?.shippingCondition !== ""
-                      ? lineItem.shippingCondition
+                    {lineItem?.shippingCondition
+                      ? getShippingMethodName(lineItem.shippingCondition)
                       : "N/A"}
                   </TableCell>
 
                   <TableCell className="py-2 text-center">
-                    {lineItem?.plant !== "" ? lineItem.plant : "N/A"}
+                    {lineItem?.plant ? getPlantName(lineItem.plant) : "N/A"}
                   </TableCell>
                 </TableRow>
 

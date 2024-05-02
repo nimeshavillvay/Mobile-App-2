@@ -1,3 +1,8 @@
+import {
+  getPaymentMethods,
+  getPlants,
+  getShippingMethods,
+} from "@/_lib/apis/server";
 import AlertInline from "@/old/_components/alert-inline";
 import Separator from "@/old/_components/separator";
 import { Badge } from "@/old/_components/ui/badge";
@@ -34,6 +39,9 @@ const DetailedOrderPage = async ({
   params: { orderId },
 }: DetailedOrderPageProps) => {
   const orderDetail = await getOrderDetail(orderId);
+  const paymentMethods = await getPaymentMethods();
+  const shippingMethods = await getShippingMethods();
+  const plants = await getPlants();
 
   if (orderDetail?.items?.length) {
     const productIds = orderDetail.items.map((item) => item.productId);
@@ -61,7 +69,27 @@ const DetailedOrderPage = async ({
     ? `/myaccount/orderhistory/ordertrackinglog/${orderDetail.orderNo}`
     : "#";
 
-  // console.log(orderDetail);
+  const getPaymentMethodName = (paymentCode: string) => {
+    const paymentMethod = paymentMethods.find(
+      (method) => method.code === paymentCode,
+    );
+
+    return paymentMethod?.name ?? "N/A";
+  };
+
+  const getShippingMethodName = (shippingCode: string) => {
+    const shippingMethod = shippingMethods.find(
+      (method) => method.code === shippingCode,
+    );
+
+    return shippingMethod?.name ?? "N/A";
+  };
+
+  const getPlantName = (plantCode: string) => {
+    const plant = plants.find((plant) => plant.code === plantCode);
+
+    return plant?.name ?? "N/A";
+  };
 
   return (
     <>
@@ -160,7 +188,7 @@ const DetailedOrderPage = async ({
             <div className="flex flex-row">
               <div className="flex-1 font-bold">Payment Method:</div>
               <div className="flex-1">
-                {orderDetail?.paymentMethod ?? "N/A"}
+                {getPaymentMethodName(orderDetail?.paymentMethod)}
               </div>
             </div>
 
@@ -231,7 +259,13 @@ const DetailedOrderPage = async ({
 
         {orderDetail.items.length > 0 &&
           orderDetail.items.map((item, index) => (
-            <OrderItem key={item.productId} orderItem={item} index={index} />
+            <OrderItem
+              key={item.productId}
+              orderItem={item}
+              index={index}
+              getShippingMethodName={getShippingMethodName}
+              getPlantName={getPlantName}
+            />
           ))}
       </div>
     </>
