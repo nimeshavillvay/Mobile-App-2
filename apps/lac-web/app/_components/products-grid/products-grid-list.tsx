@@ -1,9 +1,9 @@
 "use client";
 
 import ProductCard from "@/_components/product-card";
-import useSuspenseSearch from "@/_hooks/search/use-suspense-search.hook";
 import { cn } from "@/_lib/utils";
 import { type ComponentProps } from "react";
+import useSuspenseSearchProductList from "./use-suspense-search-products-list.hook";
 
 type ProductsGridListProps = {
   token: string;
@@ -16,11 +16,7 @@ export const ProductsGridList = ({
   categoryId,
   type,
 }: ProductsGridListProps) => {
-  const searchQuery = useSuspenseSearch(token, {
-    categoryId,
-    groupResults: true,
-    page: 1,
-  });
+  const searchQuery = useSuspenseSearchProductList(token, categoryId);
 
   const products: {
     prop: ComponentProps<typeof ProductCard>["product"];

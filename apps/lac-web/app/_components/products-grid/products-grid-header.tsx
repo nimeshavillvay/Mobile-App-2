@@ -1,12 +1,13 @@
 "use client";
 
-import useSuspenseSearch from "@/_hooks/search/use-suspense-search.hook";
 import { ChevronDown } from "@repo/web-ui/components/icons/chevron-down";
 import { Close as CloseIcon } from "@repo/web-ui/components/icons/close";
 import { Settings } from "@repo/web-ui/components/icons/settings";
 import { Button } from "@repo/web-ui/components/ui/button";
 import { Separator } from "@repo/web-ui/components/ui/separator";
 import { type ReactNode } from "react";
+import useFilterParams, { type SelectedValues } from "./use-filter-params.hook";
+import useSuspenseSearchProductList from "./use-suspense-search-products-list.hook";
 
 export const ProductsGridHeader = ({
   token,
@@ -15,11 +16,34 @@ export const ProductsGridHeader = ({
   token: string;
   categoryId: string;
 }) => {
-  const searchQuery = useSuspenseSearch(token, {
+  const { pageNo, selectedValues, searchParams } = useFilterParams(
+    token,
     categoryId,
-    groupResults: true,
-    page: 1,
-  });
+  );
+  const mappedSelectedValues: (SelectedValues[string] & { id: string })[] = [];
+  for (const [key, value] of Object.entries(selectedValues)) {
+    mappedSelectedValues.push({ ...value, id: key });
+  }
+
+  const searchQuery = useSuspenseSearchProductList(token, categoryId);
+
+  const totalPages = Math.ceil(searchQuery.data.pagination.totalCount / 20);
+
+  const clear = (attributeId: string, valueId?: string) => {
+    const newParams = new URLSearchParams(searchParams);
+    newParams.delete(attributeId, valueId);
+    window.history.pushState(null, "", `?${newParams.toString()}`);
+  };
+
+  const clearAll = () => {
+    const newParams = new URLSearchParams(searchParams);
+
+    mappedSelectedValues.forEach((selectedValue) => {
+      newParams.delete(selectedValue.id);
+    });
+
+    window.history.pushState(null, "", `?${newParams.toString()}`);
+  };
 
   return (
     <header className="space-y-3">
@@ -52,34 +76,34 @@ export const ProductsGridHeader = ({
         </div>
 
         <div className="text-sm font-normal md:text-base">
-          Page {1} of {searchQuery.data.pagination.totalCount}
+          Page {pageNo} of {totalPages}
         </div>
       </div>
 
       {/* Desktop selected attributes viewer */}
-      <div className="container hidden md:flex md:flex-row md:items-center md:gap-2">
-        <DesktopAttributePill
-          name="Brands"
-          values={[
-            { name: "Amerock", id: 1 },
-            { name: "Advance Affiliates Inc", id: 2 },
-          ]}
-        />
+      {mappedSelectedValues.length > 0 && (
+        <div className="container hidden md:flex md:flex-row md:items-center md:gap-2">
+          {mappedSelectedValues.map((selectedValue) => (
+            <DesktopAttributePill
+              key={selectedValue.id}
+              id={selectedValue.id}
+              name={selectedValue.name}
+              values={selectedValue.values}
+              clear={clear}
+            />
+          ))}
 
-        <DesktopAttributePill
-          name="Wood Species"
-          values={[{ name: "4 selected", id: 3 }]}
-        />
+          <Button
+            variant="ghost"
+            className="flex h-fit flex-row items-center gap-2.5 rounded-full px-4 py-2.5"
+            onClick={clearAll}
+          >
+            <span className="text-sm font-bold">Clear all</span>
 
-        <Button
-          variant="ghost"
-          className="flex h-fit flex-row items-center gap-2.5 rounded-full px-4 py-2.5"
-        >
-          <span className="text-sm font-bold">Clear all</span>
-
-          <CloseIcon width={16} height={16} />
-        </Button>
-      </div>
+            <CloseIcon width={16} height={16} />
+          </Button>
+        </div>
+      )}
     </header>
   );
 };
@@ -93,11 +117,15 @@ const MobileAttributePill = ({ children }: { children: ReactNode }) => {
 };
 
 const DesktopAttributePill = ({
+  id,
   name,
   values,
+  clear,
 }: {
+  id: string;
   name: string;
-  values: { name: string; id: number }[];
+  values: { name: string; id: string }[];
+  clear: (attributeId: string, valueId?: string) => void;
 }) => {
   return (
     <div className="flex flex-row items-center gap-2 rounded-full border border-wurth-gray-250 bg-white px-4 py-2.5 shadow-sm">
@@ -106,20 +134,37 @@ const DesktopAttributePill = ({
       <Separator orientation="vertical" className="h-5" />
 
       <ul className="flex flex-row items-center gap-1">
-        {values.map((value) => (
-          <li key={value.id}>
+        {values.length < 3 ? (
+          values.map((value) => (
+            <li key={value.id}>
+              <Button
+                variant="subtle"
+                className="flex h-fit flex-row items-center gap-2 rounded-sm px-1 py-0.5"
+                onClick={() => clear(id, value.id)}
+              >
+                <span className="text-xs font-normal text-wurth-gray-800">
+                  {value.name}
+                </span>
+
+                <CloseIcon width={12} height={12} />
+              </Button>
+            </li>
+          ))
+        ) : (
+          <li>
             <Button
               variant="subtle"
               className="flex h-fit flex-row items-center gap-2 rounded-sm px-1 py-0.5"
+              onClick={() => clear(id)}
             >
               <span className="text-xs font-normal text-wurth-gray-800">
-                {value.name}
+                {values.length} selected
               </span>
 
               <CloseIcon width={12} height={12} />
             </Button>
           </li>
-        ))}
+        )}
       </ul>
     </div>
   );
