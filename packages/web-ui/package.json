@@ -8,7 +8,10 @@
   },
   "scripts": {
     "dev": "storybook dev -p 6006 --no-open",
-    "build": "cross-env NODE_OPTIONS='--max-old-space-size=16384' tsup",
+    "build": "pnpm build:all && pnpm build:icon-types-1 && pnpm build:icon-types-2",
+    "build:all": "cross-env NODE_OPTIONS='--max-old-space-size=16384' tsup",
+    "build:icon-types-1": "cross-env NODE_OPTIONS='--max-old-space-size=16384' tsup --config tsup-icons-1.config.ts",
+    "build:icon-types-2": "cross-env NODE_OPTIONS='--max-old-space-size=16384' tsup --config tsup-icons-2.config.ts",
     "lint": "eslint src/ --max-warnings 0",
     "build-storybook": "storybook build"
   },
@@ -45,6 +48,7 @@
     "cva": "1.0.0-beta.1",
     "embla-carousel-react": "^8.0.2",
     "esbuild-plugin-react18": "^0.1.0",
+    "glob": "10.3.12",
     "lodash": "^4.17.21",
     "lucide-react": "^0.373.0",
     "next": "^14.2.3",

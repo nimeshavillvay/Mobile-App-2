@@ -6,7 +6,6 @@ import { defineConfig, Options } from "tsup";
 // https://github.com/egoist/tsup/issues/920#issuecomment-1791496481
 
 const baseConfig: Options = {
-  clean: true,
   format: ["esm"],
   external: [
     "react",
@@ -25,6 +24,7 @@ export default defineConfig([
   // Bundle JS together, to make sure code is shared as much as possible
   {
     ...baseConfig,
+    clean: true,
     entry: [
       "src/components/icons/**/*/index.ts",
       "src/components/logos/**/*/index.ts",
@@ -35,14 +35,6 @@ export default defineConfig([
   // Generate types separately as generating for everything requires too much
   // compute and memory resulting in our developer machines freezing and failing
   // on CI/CD.
-  {
-    ...baseConfig,
-    entry: ["src/components/icons/**/*/index.ts"],
-    outDir: "dist/icons",
-    dts: {
-      only: true,
-    },
-  },
   {
     ...baseConfig,
     entry: ["src/components/logos/**/*/index.ts"],
@@ -67,4 +59,6 @@ export default defineConfig([
       only: true,
     },
   },
+  // Build types for all icons separately in the "tsup-icons.config.ts"
+  // to avoid running out of memory in CI/CD
 ]);

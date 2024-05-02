@@ -1,3 +1,6 @@
+"use client";
+
+import useSuspenseSearch from "@/_hooks/search/use-suspense-search.hook";
 import { ChevronDown } from "@repo/web-ui/components/icons/chevron-down";
 import { Close as CloseIcon } from "@repo/web-ui/components/icons/close";
 import { Settings } from "@repo/web-ui/components/icons/settings";
@@ -5,15 +8,19 @@ import { Button } from "@repo/web-ui/components/ui/button";
 import { Separator } from "@repo/web-ui/components/ui/separator";
 import { type ReactNode } from "react";
 
-type ProductsGridHeaderProps = {
-  total: number;
-  page: {
-    current: number;
-    total: number;
-  };
-};
+export const ProductsGridHeader = ({
+  token,
+  categoryId,
+}: {
+  token: string;
+  categoryId: string;
+}) => {
+  const searchQuery = useSuspenseSearch(token, {
+    categoryId,
+    groupResults: true,
+    page: 1,
+  });
 
-const ProductsGridHeader = ({ total, page }: ProductsGridHeaderProps) => {
   return (
     <header className="space-y-3">
       {/* Mobile filters selector */}
@@ -40,11 +47,12 @@ const ProductsGridHeader = ({ total, page }: ProductsGridHeaderProps) => {
 
       <div className="container flex flex-row items-end justify-between text-wurth-gray-800">
         <div className="font-title text-lg font-medium tracking-normal md:text-3xl md:tracking-[-0.01406rem]">
-          {total} {total === 1 ? "item" : "items"}
+          {searchQuery.data.pagination.totalCount}{" "}
+          {searchQuery.data.pagination.totalCount === 1 ? "item" : "items"}
         </div>
 
         <div className="text-sm font-normal md:text-base">
-          Page {page.current} of {page.total}
+          Page {1} of {searchQuery.data.pagination.totalCount}
         </div>
       </div>
 
@@ -75,8 +83,6 @@ const ProductsGridHeader = ({ total, page }: ProductsGridHeaderProps) => {
     </header>
   );
 };
-
-export default ProductsGridHeader;
 
 const MobileAttributePill = ({ children }: { children: ReactNode }) => {
   return (
