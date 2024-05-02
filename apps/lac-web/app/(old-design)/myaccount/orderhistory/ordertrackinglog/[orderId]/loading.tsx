@@ -1,3 +1,4 @@
+// TODO: Skeleton need to be implemented after new API is available
 const OrderTrackingLoading = () => {
   return (
     <div>

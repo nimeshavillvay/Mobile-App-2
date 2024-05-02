@@ -37,7 +37,7 @@ const OrderTrackingLogPage = async ({
   const trackingInfo = trackingLog.trackingInfo;
 
   return (
-    <>
+    <div className="container md:px-0">
       <BackButton
         title={`Back to Order #${trackingLog.orderNo}`}
         className="my-4"
@@ -99,7 +99,7 @@ const OrderTrackingLogPage = async ({
             />
           ))}
       </div>
-    </>
+    </div>
   );
 };
 export default OrderTrackingLogPage;
