@@ -103,6 +103,19 @@ export type OldPurchasedItems = {
   pagination: [OldPagination];
 };
 
+// Shared types for new design
+export type Filter = {
+  id: string;
+  title: string;
+  values: {
+    id: string;
+    value: string;
+    active: boolean;
+  }[];
+};
+
+export type FilterTitle = "PO #" | "Job Name" | "Status" | "Transaction Type";
+
 export type PurchasedProduct = {
   productTitle: string;
   productSku: string;
