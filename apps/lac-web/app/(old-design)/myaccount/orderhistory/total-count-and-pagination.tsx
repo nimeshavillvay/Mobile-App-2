@@ -53,48 +53,46 @@ const TotalCountAndPagination = ({
 
   return (
     <>
-      <div className="hidden md:block">
-        <div className="hidden flex-row items-center justify-between py-4 text-brand-gray-500 md:flex">
-          {!isLoading && (
-            <div>
-              {(page - 1) * perPage + 1}
-              {" - "}
-              {Math.min(page * perPage, totalItems)} of {totalItems}
-            </div>
-          )}
-
-          <div className="flex items-center gap-2">
-            <div>Per Page:</div>
-
-            <Select
-              value={perPage.toString()}
-              onValueChange={handlePerPageChange}
-            >
-              <SelectTrigger className="h-8 w-[70px] py-0">
-                <SelectValue>{perPage.toString()}</SelectValue>
-              </SelectTrigger>
-
-              <SelectContent>
-                {PAGE_SIZES.map((size) => (
-                  <SelectItem key={size} value={size}>
-                    {size}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+      <div className="hidden flex-row items-center justify-between py-4 text-brand-gray-500 md:flex">
+        {!isLoading && (
+          <div>
+            {(page - 1) * perPage + 1}
+            {" - "}
+            {Math.min(page * perPage, totalItems)} of {totalItems}
           </div>
+        )}
 
-          {totalItems > 0 ? (
-            <Pagination
-              pageSize={perPage}
-              totalSize={totalItems}
-              currentPage={page}
-              searchParams={urlSearchParams}
-            />
-          ) : (
-            <div></div>
-          )}
+        <div className="flex items-center gap-2">
+          <div>Per Page:</div>
+
+          <Select
+            value={perPage.toString()}
+            onValueChange={handlePerPageChange}
+          >
+            <SelectTrigger className="h-8 w-[70px] py-0">
+              <SelectValue>{perPage.toString()}</SelectValue>
+            </SelectTrigger>
+
+            <SelectContent>
+              {PAGE_SIZES.map((size) => (
+                <SelectItem key={size} value={size}>
+                  {size}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
+
+        {totalItems > 0 ? (
+          <Pagination
+            pageSize={perPage}
+            totalSize={totalItems}
+            currentPage={page}
+            searchParams={urlSearchParams}
+          />
+        ) : (
+          <div></div>
+        )}
       </div>
 
       {/* For Mobile View */}

@@ -12,7 +12,7 @@ export const changeSearchParams = (
 ) => {
   const newSearchParams = new URLSearchParams(searchParams);
 
-  params.map((param) => newSearchParams.set(param.key, param.value));
+  params.forEach((param) => newSearchParams.set(param.key, param.value));
 
   updateSearchParams(newSearchParams);
 };
@@ -23,7 +23,7 @@ export const deleteSearchParams = (
 ) => {
   const newSearchParams = new URLSearchParams(searchParams);
 
-  keys.map((key) => newSearchParams.delete(key));
+  keys.forEach((key) => newSearchParams.delete(key));
 
   updateSearchParams(newSearchParams);
 };

@@ -18,15 +18,13 @@ const OrderHistoryListForMobile = ({
   items,
 }: OrderHistoryListForMobileProps) => {
   return (
-    <>
-      <div className="grid grid-cols-1 gap-4 bg-brand-gray-200 py-4 md:hidden">
-        {items &&
-          items.length > 0 &&
-          items.map((order) => (
-            <OrderHistoryRowForMobile key={order.orderNo} order={order} />
-          ))}
-      </div>
-    </>
+    <div className="grid grid-cols-1 gap-4 bg-brand-gray-200 py-4 md:hidden">
+      {items &&
+        items.length > 0 &&
+        items.map((order) => (
+          <OrderHistoryRowForMobile key={order.orderNo} order={order} />
+        ))}
+    </div>
   );
 };
 
