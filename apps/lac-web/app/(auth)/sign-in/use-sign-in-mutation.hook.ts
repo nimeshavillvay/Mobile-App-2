@@ -1,12 +1,15 @@
+import useCookies from "@/_hooks/storage/use-cookies.hook";
 import { api } from "@/_lib/api";
-import { useMutation } from "@tanstack/react-query";
+import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
+import { useToast } from "@repo/web-ui/components/ui/toast";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { EMAIL_COOKIE } from "../constants";
-import useSignInCookies from "../use-sign-in-cookies.hook";
 
 const useSignInMutation = () => {
+  const [cookies] = useCookies();
   const router = useRouter();
-  const [, , deleteCookies] = useSignInCookies();
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
 
   return useMutation({
     mutationFn: async ({
@@ -18,6 +21,9 @@ const useSignInMutation = () => {
     }) => {
       const response = await api
         .post("rest/auth/login", {
+          headers: {
+            Authorization: `Bearer ${cookies[SESSION_TOKEN_COOKIE]}`,
+          },
           json: {
             userName: email,
             password,
@@ -60,7 +66,10 @@ const useSignInMutation = () => {
       return transformData;
     },
     onSuccess: () => {
-      deleteCookies(EMAIL_COOKIE);
+      toast({
+        title: "Sign in successful",
+      });
+      queryClient.invalidateQueries();
       router.replace("/");
     },
   });

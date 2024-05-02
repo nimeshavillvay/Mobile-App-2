@@ -1,7 +1,7 @@
-import { MagnifyingGlass } from "@/components/icons/magnifying-glass";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import { type ComponentProps } from "react";
+import { MagnifyingGlass } from "~/components/icons/magnifying-glass";
+import { Button } from "~/components/ui/button";
+import { cn } from "~/lib/utils";
 
 export const SearchBox = ({
   className,

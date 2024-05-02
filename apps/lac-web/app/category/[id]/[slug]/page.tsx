@@ -1,8 +1,6 @@
-import Banner from "@/_components/banner";
 import RelatedSearches from "@/_components/related-searches";
 import { api } from "@/_lib/api";
 import { getBreadcrumbs } from "@/_lib/apis/server";
-// import { getFilters } from "@/_lib/apis/shared";
 import { DEFAULT_REVALIDATE } from "@/_lib/constants";
 import { ChevronLeft } from "@repo/web-ui/components/icons/chevron-left";
 import {
@@ -23,12 +21,10 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Fragment } from "react";
+import { Fragment, Suspense } from "react";
 import Balancer from "react-wrap-balancer";
+import ProductsList from "./_products-list";
 import categoryImage from "./category.jpeg";
-import PopularBrands from "./popular-brands";
-// import Products from "./products";
-import TopSubCategories from "./top-sub-categories";
 
 const VISIBLE_SUB_CATEGORIES_LENGTH = 6;
 
@@ -114,15 +110,7 @@ export const generateMetadata = async ({
 
 const CategoryPage = async ({ params: { id, slug } }: CategoryPageProps) => {
   const category = await getCategory(id, slug);
-
-  const [breadcrumbs] = await Promise.all([
-    getBreadcrumbs(id, "category"),
-    // getFilters({
-    //   type: "Categories",
-    //   id: id,
-    //   membershipId: 1,
-    // }),
-  ]);
+  const breadcrumbs = await getBreadcrumbs(id, "category");
 
   const subCategories = category.subCategories.map(
     (subCategory) =>
@@ -233,25 +221,9 @@ const CategoryPage = async ({ params: { id, slug } }: CategoryPageProps) => {
         )}
       </section>
 
-      <TopSubCategories title={category.title} />
-
-      <PopularBrands />
-
-      <Banner />
-
-      {/* <Suspense fallback={<div>Loading...</div>}>
-        <Products
-          filters={filters.map((filter) => ({
-            id: filter.id,
-            title: filter.filter,
-            values: filter.values.map((value) => ({
-              id: value.id.toString(),
-              value: value.value,
-              active: value.active,
-            })),
-          }))}
-        />
-      </Suspense> */}
+      <Suspense fallback={<div>Loading...</div>}>
+        <ProductsList categoryId={id} />
+      </Suspense>
 
       <RelatedSearches />
     </>

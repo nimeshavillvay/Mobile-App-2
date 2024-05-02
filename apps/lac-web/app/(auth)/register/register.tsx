@@ -6,10 +6,9 @@ import { CheckCircle } from "@repo/web-ui/components/icons/check-circle";
 import { CheckCircleFilled } from "@repo/web-ui/components/icons/check-circle-filled";
 import { Button, buttonVariants } from "@repo/web-ui/components/ui/button";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { useState } from "react";
 import Balancer from "react-wrap-balancer";
-import { EMAIL_COOKIE } from "../constants";
-import useSignInCookies from "../use-sign-in-cookies.hook";
 import CurrentUserFlow from "./current-user-flow";
 import NewUserFlow from "./new-user-flow";
 
@@ -20,17 +19,10 @@ type RegisterProps = {
 };
 
 const Register = ({ passwordPolicies }: RegisterProps) => {
-  const [cookies, , removeCookies] = useSignInCookies();
   const [isCurrentUser, setIsCurrentUser] = useState<string>();
-  const [email, setEmail] = useState("");
 
-  useEffect(() => {
-    // TODO Find out a better way of doing this and remove the `useEffect`.
-    // Using `useEffect` to sync state is a bit no-no but I couldn't
-    // find a better way of preventing the hydration mismatch because
-    // of the email.
-    setEmail(cookies[EMAIL_COOKIE]);
-  }, [cookies]);
+  const searchParams = useSearchParams();
+  const email = searchParams.get("email");
 
   return (
     <div className="container max-w-[41.5rem] space-y-5 pb-14 pt-4 md:mt-6">
@@ -44,7 +36,6 @@ const Register = ({ passwordPolicies }: RegisterProps) => {
           <Link
             href="/sign-in"
             className="font-semibold hover:underline focus:underline"
-            onClick={() => removeCookies(EMAIL_COOKIE)}
           >
             Log in
           </Link>
@@ -59,7 +50,6 @@ const Register = ({ passwordPolicies }: RegisterProps) => {
               buttonVariants({ variant: "outline" }),
               "font-bold text-black",
             )}
-            onClick={() => removeCookies(EMAIL_COOKIE)}
           >
             Change email
           </Link>

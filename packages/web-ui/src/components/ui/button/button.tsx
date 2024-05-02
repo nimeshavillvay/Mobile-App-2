@@ -1,8 +1,8 @@
-import { cva } from "@/lib/cva.config";
-import { cn } from "@/lib/utils";
 import { Slot } from "@radix-ui/react-slot";
 import { type VariantProps } from "cva";
 import { forwardRef } from "react";
+import { cva } from "~/lib/cva.config";
+import { cn } from "~/lib/utils";
 
 const buttonVariants = cva({
   base: "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-zinc-950 disabled:pointer-events-none disabled:opacity-50",

@@ -1,6 +1,6 @@
+import type { Status } from "@/_lib/types";
 import { Badge } from "@/old/_components/ui/badge";
 import { cn } from "@/old/_utils/helpers";
-import type { Status } from "./types";
 
 const getStatusClass = (status: Status) => {
   switch (status) {

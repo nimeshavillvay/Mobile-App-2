@@ -1,5 +1,6 @@
 "use client";
 
+import useSuspenseUsersList from "@/_hooks/user/use-suspense-users-list.hook";
 import type { PasswordPolicies } from "@/_lib/types";
 import Separator from "@/old/_components/separator";
 import { Button } from "@/old/_components/ui/button";
@@ -29,7 +30,6 @@ import {
 import AddUserDataDialog from "./add-user-data-dialog";
 import AddUserEmailDialog from "./add-user-email-dialog";
 import ProfileUpdateForm from "./profile-update-form";
-import useSuspenseUsersList from "./use-suspense-users-list.hook";
 import UserRow from "./user-row";
 import UserStatusBadge from "./user-status-badge";
 

@@ -1,6 +1,6 @@
-import { cva, type VariantProps } from "@/lib/cva.config";
-import { cn } from "@/lib/utils";
 import { forwardRef, type HTMLAttributes } from "react";
+import { cva, type VariantProps } from "~/lib/cva.config";
+import { cn } from "~/lib/utils";
 
 const alertVariants = cva({
   base: "relative flex w-full flex-row items-center gap-2 rounded px-3 py-2.5 text-sm",

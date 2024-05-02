@@ -1,5 +1,6 @@
 "use client";
 
+import type { Plant, ShippingMethod } from "@/_lib/types";
 import {
   Collapsible,
   CollapsibleContent,
@@ -9,26 +10,32 @@ import dayjs from "dayjs";
 import Link from "next/link";
 import { useState } from "react";
 import { MdAssignment, MdKeyboardArrowDown } from "react-icons/md";
-import { PLANTS, SHIPPING_METHODS, UI_DATE_FORMAT } from "./constants";
+import { UI_DATE_FORMAT } from "./constants";
 import type { TrackingInfo } from "./types";
 
 type OrderTrackingCardProps = {
   trackingInfo: TrackingInfo;
+  shippingMethods: ShippingMethod[];
+  plants: Plant[];
 };
 
 const OrderTrackingCardForMobile = ({
   trackingInfo,
+  shippingMethods,
+  plants,
 }: OrderTrackingCardProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const getPlantName = (plant: string) => {
-    // use keyof to ensure that the plant is a valid key
-    return PLANTS[plant as keyof typeof PLANTS];
+  const getShippingMethodName = (shippingCode: string) => {
+    const shippingMethod = shippingMethods.find(
+      (method) => method.code === shippingCode,
+    );
+    return shippingMethod?.name ?? "N/A";
   };
 
-  const getShippingMethod = (method: string) => {
-    // use keyof to ensure that the method is a valid key
-    return SHIPPING_METHODS[method as keyof typeof SHIPPING_METHODS];
+  const getPlantName = (plantCode: string) => {
+    const plant = plants.find((plant) => plant.code === plantCode);
+    return plant?.name ?? "N/A";
   };
 
   return (
@@ -75,7 +82,7 @@ const OrderTrackingCardForMobile = ({
                     <div className="text-[13px]">Shipper</div>
                     <div className="text-sm font-bold">
                       {delivery?.shippingMethod
-                        ? getShippingMethod(delivery.shippingMethod)
+                        ? getShippingMethodName(delivery.shippingMethod)
                         : "N/A"}
                     </div>
                   </div>

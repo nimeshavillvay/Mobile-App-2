@@ -1,6 +1,5 @@
 "use client";
 
-import { cn } from "@/lib/utils";
 import {
   CaretSortIcon,
   CheckIcon,
@@ -13,6 +12,7 @@ import {
   type ComponentPropsWithoutRef,
   type ElementRef,
 } from "react";
+import { cn } from "~/lib/utils";
 
 const Select = SelectPrimitive.Root;
 

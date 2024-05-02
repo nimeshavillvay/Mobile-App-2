@@ -48,9 +48,11 @@ const DatePicker = ({
         <Calendar
           mode="single"
           selected={date}
-          onSelect={(selectedDate) =>
-            selectedDate && onSelectDate(selectedDate)
-          }
+          onSelect={(selectedDate) => {
+            if (selectedDate) {
+              onSelectDate(selectedDate);
+            }
+          }}
           initialFocus
         />
       </PopoverContent>

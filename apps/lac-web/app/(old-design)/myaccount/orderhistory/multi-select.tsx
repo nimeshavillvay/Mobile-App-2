@@ -40,7 +40,9 @@ const MultiSelect = ({
 
   const filteredItems = data;
 
-  const isItemSelected = (item: Option) => !!selectedItems?.includes(item);
+  const isItemSelected = (item: Option) => {
+    return selectedItems?.includes(item);
+  };
 
   const {
     isOpen,
@@ -100,7 +102,9 @@ const MultiSelect = ({
   });
 
   const removeAllSelectedItems = () => {
-    onClear && onClear();
+    if (onClear) {
+      onClear();
+    }
     selectedItems.forEach(removeSelectedItem);
   };
 

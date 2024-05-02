@@ -3,11 +3,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@repo/web-ui/components/ui/input";
 import { Label } from "@repo/web-ui/components/ui/label";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useId, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import InputHelperDescription from "../input-helper-description";
-import useSignInCookies from "../use-sign-in-cookies.hook";
 import {
   StepContainer,
   StepContainerClosed,
@@ -43,7 +43,9 @@ const CurrentUserFlow = ({ passwordPolicies }: CurrentUserFlowProps) => {
   const passwordId = `password-${id}`;
   const confirmPasswordId = `confirm-password-${id}`;
 
-  const [cookies] = useSignInCookies();
+  const searchParams = useSearchParams();
+  const email = searchParams.get("email");
+
   const [step, setStep] = useState<Step>("account");
 
   const accountDetailsForm = useForm<z.infer<typeof accountDetailsSchema>>({
@@ -112,7 +114,7 @@ const CurrentUserFlow = ({ passwordPolicies }: CurrentUserFlowProps) => {
       invoiceNo,
       firstName: "",
       lastName: "",
-      email: cookies.email ?? "",
+      email: email ?? "",
       password: "",
       confirmPassword: "",
     },
