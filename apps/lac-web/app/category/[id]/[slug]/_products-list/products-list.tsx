@@ -3,17 +3,10 @@ import {
   ProductsGridFilters,
   ProductsGridHeader,
   ProductsGridList,
-} from "@/_components/new-products-grid";
+  ProductsGridPagination,
+} from "@/_components/products-grid";
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@repo/web-ui/components/ui/pagination";
+
 import { cookies } from "next/headers";
 
 type ProductsListProps = {
@@ -53,30 +46,10 @@ const ProductsList = ({ categoryId }: ProductsListProps) => {
         />
       </div>
 
-      <Pagination className="pt-4">
-        <PaginationContent>
-          <PaginationItem>
-            <PaginationPrevious href="#" />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href="#">1</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href="#" isActive>
-              2
-            </PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href="#">3</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationEllipsis />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationNext href="#" />
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
+      <ProductsGridPagination
+        token={tokenCookie.value}
+        categoryId={categoryId}
+      />
     </ProductsGrid>
   );
 };

@@ -22,6 +22,9 @@ type GroupsList = {
 const useSuspenseSearch = (
   token: string,
   { categoryId, groupResults = false, page }: useSuspenseSearchArgs,
+  selectedFilters?: {
+    [attributeId: string]: string[];
+  },
 ) => {
   return useSuspenseQuery({
     queryKey: [
@@ -31,6 +34,7 @@ const useSuspenseSearch = (
         groupResults,
         page,
       },
+      selectedFilters,
       token,
     ],
     queryFn: () => {
@@ -45,6 +49,22 @@ const useSuspenseSearch = (
         searchParams.set("categoryid", categoryId);
       }
 
+      const body: {
+        [attributeId: string]: {
+          [valueId: string]: "Y";
+        };
+      } = {};
+      if (selectedFilters) {
+        for (const [key, values] of Object.entries(selectedFilters)) {
+          values.forEach((value) => {
+            body[key] = {
+              ...body[key],
+              [value]: "Y",
+            };
+          });
+        }
+      }
+
       return api
         .post("rest/search", {
           searchParams,
@@ -52,6 +72,9 @@ const useSuspenseSearch = (
             Authorization: `Bearer ${token}`,
           },
           cache: "no-store",
+          json: {
+            rf_data: body,
+          },
         })
         .json<GroupsList>();
     },

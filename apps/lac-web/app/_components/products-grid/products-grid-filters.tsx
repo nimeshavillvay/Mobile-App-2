@@ -1,6 +1,7 @@
 "use client";
 
 import useSuspenseFilters from "@/_hooks/search/use-suspense-filters.hook";
+import { type CheckedState } from "@radix-ui/react-checkbox";
 import {
   Accordion,
   AccordionContent,
@@ -10,6 +11,7 @@ import {
 import { Checkbox } from "@repo/web-ui/components/ui/checkbox";
 import { Label } from "@repo/web-ui/components/ui/label";
 import { useId } from "react";
+import useFilterParams from "./use-filter-params.hook";
 
 type ProductsGridFiltersProps = {
   token: string;
@@ -21,16 +23,39 @@ export const ProductsGridFilters = ({
   categoryId,
 }: ProductsGridFiltersProps) => {
   const id = useId();
-
   const getCheckboxId = (filterId: string, valueId: number) => {
     return `${id}-checkbox-${filterId}-${valueId}`;
   };
+
+  const { selectedValues, searchParams } = useFilterParams(token, categoryId);
 
   const filtersQuery = useSuspenseFilters(token, {
     type: "Categories",
     id: categoryId,
     membershipId: 0,
   });
+
+  const checkIsChecked = (attributeId: string, valueId: number) => {
+    return !!selectedValues[attributeId]?.values.find(
+      (value) => value.id === valueId.toString(),
+    );
+  };
+
+  const toggleCheck = (
+    attributeId: string,
+    valueId: number,
+    checked: CheckedState,
+  ) => {
+    const newUrlSearchParams = new URLSearchParams(searchParams);
+
+    if (checked === true) {
+      newUrlSearchParams.append(attributeId, valueId.toString());
+    } else {
+      newUrlSearchParams.delete(attributeId, valueId.toString());
+    }
+
+    window.history.pushState(null, "", `?${newUrlSearchParams.toString()}`);
+  };
 
   return (
     <aside className="w-[14.75rem] space-y-1">
@@ -48,7 +73,13 @@ export const ProductsGridFilters = ({
                     key={value.id}
                     className="flex flex-row items-center gap-2 p-1"
                   >
-                    <Checkbox id={getCheckboxId(filter.id, value.id)} />
+                    <Checkbox
+                      id={getCheckboxId(filter.id, value.id)}
+                      checked={checkIsChecked(filter.id, value.id)}
+                      onCheckedChange={(checked) =>
+                        toggleCheck(filter.id, value.id, checked)
+                      }
+                    />
 
                     <Label htmlFor={getCheckboxId(filter.id, value.id)}>
                       {value.value}
