@@ -1,11 +1,11 @@
-import { Zap } from "@/components/icons/zap";
-import { cn } from "@/lib/utils";
 import type { Meta, StoryObj } from "@storybook/react";
 import {
   forwardRef,
   type ComponentPropsWithoutRef,
   type ElementRef,
 } from "react";
+import { Zap } from "~/components/icons/zap";
+import { cn } from "~/lib/utils";
 import {
   NavigationMenu,
   NavigationMenuContent,

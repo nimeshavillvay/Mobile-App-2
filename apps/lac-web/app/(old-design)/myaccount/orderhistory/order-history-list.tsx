@@ -35,7 +35,7 @@ const OrderHistoryList = ({ token }: { token: string }) => {
   const sortDirection =
     searchParams.get("sortDirection") ?? SORTING_DIRECTION.DESC;
 
-  const filterQuery = useSuspenseFilters({
+  const filterQuery = useSuspenseFilters(token, {
     type: "Order History",
     from: fromDate,
     to: toDate,

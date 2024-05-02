@@ -1,12 +1,12 @@
+import { ChevronDownIcon, SlashIcon } from "@radix-ui/react-icons";
+import type { Meta, StoryObj } from "@storybook/react";
+import Link from "next/link";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { ChevronDownIcon, SlashIcon } from "@radix-ui/react-icons";
-import type { Meta, StoryObj } from "@storybook/react";
-import Link from "next/link";
+} from "~/components/ui/dropdown-menu";
 import {
   Breadcrumb,
   BreadcrumbEllipsis,

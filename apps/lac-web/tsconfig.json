@@ -22,7 +22,8 @@
     ],
     "paths": {
       "@/*": ["./app/*"],
-      "@/old/*": ["./app/(old-design)/*"]
+      "@/old/*": ["./app/(old-design)/*"],
+      "~/*": ["../../packages/web-ui/src/*"]
     }
   },
   "include": [

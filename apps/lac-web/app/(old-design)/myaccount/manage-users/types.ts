@@ -1,6 +1,6 @@
-export type Permission = "ADMIN" | "BUYER";
+import type { Status } from "@/_lib/types";
 
-export type Status = "ACTIVE" | "SUSPENDED";
+export type Permission = "ADMIN" | "BUYER";
 
 export type UserProfile = {
   id: number;

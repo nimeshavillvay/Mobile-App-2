@@ -246,6 +246,8 @@ export type GroupList = {
   variationsCount: number;
 };
 
+export type Status = "ACTIVE" | "SUSPENDED";
+
 export type ShippingMethod = {
   code: string;
   name: string;
