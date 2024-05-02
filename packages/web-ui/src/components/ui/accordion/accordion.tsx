@@ -1,13 +1,13 @@
 "use client";
 
-import { ChevronDown } from "@/components/icons/chevron-down";
-import { cn } from "@/lib/utils";
 import * as AccordionPrimitive from "@radix-ui/react-accordion";
 import {
   forwardRef,
   type ComponentPropsWithoutRef,
   type ElementRef,
 } from "react";
+import { ChevronDown } from "~/components/icons/chevron-down";
+import { cn } from "~/lib/utils";
 
 const Accordion = AccordionPrimitive.Root;
 

@@ -1,20 +1,21 @@
 import { getPasswordPolicies } from "@/_lib/apis/server";
 import type { Metadata } from "next";
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { EMAIL_COOKIE } from "../constants";
 import Register from "./register";
 
 export const metadata: Metadata = {
   title: "Register",
 };
 
-const RegisterPage = async () => {
-  const cookieStore = cookies();
-  const emailCookie = cookieStore.get(EMAIL_COOKIE);
+type RegisterPageProps = {
+  searchParams: { [key: string]: string | string[] | undefined };
+};
+
+const RegisterPage = async ({ searchParams }: RegisterPageProps) => {
+  const email = searchParams.email?.toString();
 
   // If there is not email, redirect to the sign in page
-  if (!emailCookie?.value) {
+  if (!email) {
     redirect("/sign-in");
   }
 

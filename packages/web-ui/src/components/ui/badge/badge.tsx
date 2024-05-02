@@ -1,8 +1,8 @@
-import { cva } from "@/lib/cva.config";
 import { type VariantProps } from "cva";
 import { type HTMLAttributes } from "react";
+import { cva } from "~/lib/cva.config";
 
-import { cn } from "@/lib/utils";
+import { cn } from "~/lib/utils";
 
 const badgeVariants = cva({
   base: "inline-flex items-center rounded border border-transparent px-2.5 py-0.5 text-xs font-semibold shadow-md transition-colors focus:outline-none focus:ring-2 focus:ring-zinc-950 focus:ring-offset-2",

@@ -1,7 +1,7 @@
-import { Button } from "@/components/ui/button";
 import { CaretSortIcon } from "@radix-ui/react-icons";
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
+import { Button } from "~/components/ui/button";
 import {
   Collapsible,
   CollapsibleContent,

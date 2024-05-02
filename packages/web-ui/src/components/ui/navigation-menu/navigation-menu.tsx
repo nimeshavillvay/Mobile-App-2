@@ -1,14 +1,14 @@
 "use client";
 
-import { ChevronDown } from "@/components/icons/chevron-down";
-import { cva } from "@/lib/cva.config";
-import { cn } from "@/lib/utils";
 import * as NavigationMenuPrimitive from "@radix-ui/react-navigation-menu";
 import {
   forwardRef,
   type ComponentPropsWithoutRef,
   type ElementRef,
 } from "react";
+import { ChevronDown } from "~/components/icons/chevron-down";
+import { cva } from "~/lib/cva.config";
+import { cn } from "~/lib/utils";
 
 const NavigationMenu = forwardRef<
   ElementRef<typeof NavigationMenuPrimitive.Root>,

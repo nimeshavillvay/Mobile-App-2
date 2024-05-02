@@ -84,8 +84,6 @@ export const getProduct = async (id: string) => {
 
   const { selected_item } = response;
 
-  console.log("> selected_item: ", selected_item);
-
   return {
     pageTitle: response.page_title,
     groupId: response.group_id,

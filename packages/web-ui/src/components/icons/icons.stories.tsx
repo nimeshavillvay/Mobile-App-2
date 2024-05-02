@@ -17,6 +17,7 @@ import { ChevronRight } from "./chevron-right";
 import { ChevronUp } from "./chevron-up";
 import { Close } from "./close";
 import { Download } from "./download";
+import { Exit } from "./exit";
 import { Facebook } from "./facebook";
 import { Headset } from "./headset";
 import { HeartFilled } from "./heart-filled";
@@ -134,6 +135,10 @@ export const Showcase: Story = {
 
         <IconContainer name="HeartOutline">
           <HeartOutline />
+        </IconContainer>
+
+        <IconContainer name="Exit">
+          <Exit />
         </IconContainer>
 
         <IconContainer name="Zap">

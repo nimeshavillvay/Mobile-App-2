@@ -1,10 +1,10 @@
-import { MagnifyingGlass } from "@/components/icons/magnifying-glass";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import { useCombobox } from "downshift";
 import Image from "next/image";
 import Link from "next/link";
 import { type ComponentProps } from "react";
+import { MagnifyingGlass } from "~/components/icons/magnifying-glass";
+import { Button } from "~/components/ui/button";
+import { cn } from "~/lib/utils";
 
 type SearchData = {
   meta: {

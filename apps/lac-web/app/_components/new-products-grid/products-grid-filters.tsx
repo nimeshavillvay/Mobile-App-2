@@ -1,3 +1,6 @@
+"use client";
+
+import useSuspenseFilters from "@/_hooks/search/use-suspense-filters.hook";
 import {
   Accordion,
   AccordionContent,
@@ -7,27 +10,36 @@ import {
 import { Checkbox } from "@repo/web-ui/components/ui/checkbox";
 import { Label } from "@repo/web-ui/components/ui/label";
 import { useId } from "react";
-import type { Filter } from "./types";
 
-type AttributesSelectorProps = {
-  filters: Filter[];
+type ProductsGridFiltersProps = {
+  token: string;
+  categoryId: string;
 };
 
-const AttributesSelector = ({ filters }: AttributesSelectorProps) => {
+export const ProductsGridFilters = ({
+  token,
+  categoryId,
+}: ProductsGridFiltersProps) => {
   const id = useId();
 
-  const getCheckboxId = (filterId: string, valueId: string) => {
+  const getCheckboxId = (filterId: string, valueId: number) => {
     return `${id}-checkbox-${filterId}-${valueId}`;
   };
+
+  const filtersQuery = useSuspenseFilters(token, {
+    type: "Categories",
+    id: categoryId,
+    membershipId: 0,
+  });
 
   return (
     <aside className="w-[14.75rem] space-y-1">
       <h4 className="px-3 text-sm text-wurth-gray-800">Filters</h4>
 
       <Accordion type="single" collapsible className="space-y-1">
-        {filters.map((filter) => (
+        {filtersQuery.data.map((filter) => (
           <AccordionItem key={filter.id} value={filter.id}>
-            <AccordionTrigger>{filter.title}</AccordionTrigger>
+            <AccordionTrigger>{filter.filter}</AccordionTrigger>
 
             <AccordionContent>
               <ul>
@@ -51,5 +63,3 @@ const AttributesSelector = ({ filters }: AttributesSelectorProps) => {
     </aside>
   );
 };
-
-export default AttributesSelector;
