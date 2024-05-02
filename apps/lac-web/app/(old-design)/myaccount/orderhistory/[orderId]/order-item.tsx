@@ -10,8 +10,10 @@ import {
 } from "@/old/_components/ui/table";
 import { cn, formatNumberToPrice } from "@/old/_utils/helpers";
 import { WurthFullBlack } from "@repo/web-ui/components/logos/wurth-full-black";
+import dayjs from "dayjs";
 import Image from "next/image";
 import Link from "next/link";
+import { UI_DATE_FORMAT } from "../constants";
 
 type OrderItemProps = {
   index: number;
@@ -171,7 +173,7 @@ const OrderItem = ({
 
                   <TableCell className="py-2 text-center">
                     {lineItem?.deliveryDate !== ""
-                      ? lineItem.deliveryDate
+                      ? dayjs(lineItem.deliveryDate).format(UI_DATE_FORMAT)
                       : "N/A"}
                   </TableCell>
 
@@ -184,7 +186,9 @@ const OrderItem = ({
                   </TableCell>
 
                   <TableCell className="py-2 text-center">
-                    {lineItem?.boDate !== "" ? lineItem.boDate : "N/A"}
+                    {lineItem?.boDate !== ""
+                      ? dayjs(lineItem.boDate).format(UI_DATE_FORMAT)
+                      : "N/A"}
                   </TableCell>
 
                   <TableCell className="py-2 text-center">
