@@ -9,7 +9,7 @@ import { MdKeyboardArrowRight } from "react-icons/md";
 import { generateItemUrl } from "./client-helpers";
 import { DATE_FORMAT } from "./constants";
 import PurchasedItemDetailedViewDialog from "./purchased-item-detailed-view-dialog";
-import { CombinedPurchasedItem } from "./types";
+import type { CombinedPurchasedItem } from "./types";
 
 type PurchasedItemsListForMobileProps = {
   items: CombinedPurchasedItem[];
