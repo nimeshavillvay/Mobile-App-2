@@ -1,15 +1,33 @@
+import type { Plant, ShippingMethod } from "@/_lib/types";
 import dayjs from "dayjs";
 import Link from "next/link";
-import { getPlantName, getShippingMethodName } from "../../client-helpers";
 import { UI_DATE_FORMAT } from "./constants";
 import OrderTrackingCardForMobile from "./order-tracking-card-for-mobile";
 import type { TrackingInfo } from "./types";
 
 type OrderTrackingCardProps = {
   trackingInfo: TrackingInfo;
+  shippingMethods: ShippingMethod[];
+  plants: Plant[];
 };
 
-const OrderTrackingCard = ({ trackingInfo }: OrderTrackingCardProps) => {
+const OrderTrackingCard = ({
+  trackingInfo,
+  shippingMethods,
+  plants,
+}: OrderTrackingCardProps) => {
+  const getShippingMethodName = (shippingCode: string) => {
+    const shippingMethod = shippingMethods.find(
+      (method) => method.code === shippingCode,
+    );
+    return shippingMethod?.name ?? "N/A";
+  };
+
+  const getPlantName = (plantCode: string) => {
+    const plant = plants.find((plant) => plant.code === plantCode);
+    return plant?.name ?? "N/A";
+  };
+
   return (
     <>
       <div className="hidden p-[30px] shadow-[0_1px_6px_rgba(0,0,0,.148324)] md:block">
@@ -56,7 +74,11 @@ const OrderTrackingCard = ({ trackingInfo }: OrderTrackingCardProps) => {
           ))}
       </div>
 
-      <OrderTrackingCardForMobile trackingInfo={trackingInfo} />
+      <OrderTrackingCardForMobile
+        trackingInfo={trackingInfo}
+        shippingMethods={shippingMethods}
+        plants={plants}
+      />
     </>
   );
 };

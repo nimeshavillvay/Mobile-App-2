@@ -1,5 +1,6 @@
 "use client";
 
+import type { Plant, ShippingMethod } from "@/_lib/types";
 import {
   Collapsible,
   CollapsibleContent,
@@ -9,18 +10,33 @@ import dayjs from "dayjs";
 import Link from "next/link";
 import { useState } from "react";
 import { MdAssignment, MdKeyboardArrowDown } from "react-icons/md";
-import { getPlantName, getShippingMethodName } from "../../client-helpers";
 import { UI_DATE_FORMAT } from "./constants";
 import type { TrackingInfo } from "./types";
 
 type OrderTrackingCardProps = {
   trackingInfo: TrackingInfo;
+  shippingMethods: ShippingMethod[];
+  plants: Plant[];
 };
 
 const OrderTrackingCardForMobile = ({
   trackingInfo,
+  shippingMethods,
+  plants,
 }: OrderTrackingCardProps) => {
   const [isOpen, setIsOpen] = useState(false);
+
+  const getShippingMethodName = (shippingCode: string) => {
+    const shippingMethod = shippingMethods.find(
+      (method) => method.code === shippingCode,
+    );
+    return shippingMethod?.name ?? "N/A";
+  };
+
+  const getPlantName = (plantCode: string) => {
+    const plant = plants.find((plant) => plant.code === plantCode);
+    return plant?.name ?? "N/A";
+  };
 
   return (
     <>

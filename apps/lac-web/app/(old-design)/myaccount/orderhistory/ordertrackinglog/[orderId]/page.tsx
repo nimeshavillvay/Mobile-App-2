@@ -1,3 +1,4 @@
+import { getPlants, getShippingMethods } from "@/_lib/apis/server";
 import Separator from "@/old/_components/separator";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -30,12 +31,15 @@ const OrderTrackingLogPage = async ({
   params: { orderId },
 }: OrderTrackingLogPageProps) => {
   const trackingLog = await getOrderTrackingLog(orderId);
+  const shippingMethods = await getShippingMethods();
+  const plants = await getPlants();
+
   const trackingInfo = trackingLog.trackingInfo;
 
   return (
     <>
       <BackButton
-        title={`Back to Order #${trackingLog.orderNo.toString()}`}
+        title={`Back to Order #${trackingLog.orderNo}`}
         className="my-4"
       />
 
@@ -90,6 +94,8 @@ const OrderTrackingLogPage = async ({
             <OrderTrackingCard
               key={`${info?.plant}-${index}`}
               trackingInfo={info}
+              shippingMethods={shippingMethods}
+              plants={plants}
             />
           ))}
       </div>
