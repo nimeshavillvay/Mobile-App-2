@@ -1,6 +1,7 @@
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import { cookies } from "next/headers";
 import { type ComponentProps } from "react";
+import SignInLink from "./signin-link";
 import UserProfileButton from "./user-profile-button";
 
 type UserProfileProps = {
@@ -12,7 +13,7 @@ const UserProfile = ({ type }: UserProfileProps) => {
   const sessionCookie = cookieStore.get(SESSION_TOKEN_COOKIE);
 
   if (!sessionCookie?.value) {
-    return null;
+    return <SignInLink type={type} />;
   }
 
   return <UserProfileButton token={sessionCookie.value} type={type} />;
