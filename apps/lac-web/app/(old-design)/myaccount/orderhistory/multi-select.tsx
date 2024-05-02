@@ -41,11 +41,7 @@ const MultiSelect = ({
   const filteredItems = data;
 
   const isItemSelected = (item: Option) => {
-    if (selectedItems?.includes(item)) {
-      return true;
-    } else {
-      return false;
-    }
+    return selectedItems?.includes(item);
   };
 
   const {
