@@ -1,33 +1,29 @@
 "use client";
 
+import type { Filters } from "@/_lib/types";
 import { ChevronDown } from "@repo/web-ui/components/icons/chevron-down";
 import { Close as CloseIcon } from "@repo/web-ui/components/icons/close";
 import { Settings } from "@repo/web-ui/components/icons/settings";
 import { Button } from "@repo/web-ui/components/ui/button";
 import { Separator } from "@repo/web-ui/components/ui/separator";
+import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import { type ReactNode } from "react";
-import useFilterParams, { type SelectedValues } from "./use-filter-params.hook";
-import useSuspenseSearchProductList from "./use-suspense-search-products-list.hook";
+import { useFilterParams, type SelectedValues } from "./use-filter-params.hook";
 
 export const ProductsGridHeader = ({
-  token,
-  categoryId,
+  filters,
+  totalCount,
+  totalPages,
 }: {
-  token: string;
-  categoryId: string;
+  filters: Filters[];
+  totalCount: number;
+  totalPages: number;
 }) => {
-  const { pageNo, selectedValues, searchParams } = useFilterParams(
-    token,
-    categoryId,
-  );
+  const { pageNo, selectedValues, searchParams } = useFilterParams(filters);
   const mappedSelectedValues: (SelectedValues[string] & { id: string })[] = [];
   for (const [key, value] of Object.entries(selectedValues)) {
     mappedSelectedValues.push({ ...value, id: key });
   }
-
-  const searchQuery = useSuspenseSearchProductList(token, categoryId);
-
-  const totalPages = Math.ceil(searchQuery.data.pagination.totalCount / 20);
 
   const clear = (attributeId: string, valueId?: string) => {
     const newParams = new URLSearchParams(searchParams);
@@ -46,9 +42,9 @@ export const ProductsGridHeader = ({
   };
 
   return (
-    <header className="space-y-3">
+    <header className="flex flex-col gap-3">
       {/* Mobile filters selector */}
-      <div className="container flex w-full snap-x scroll-pl-4 flex-row items-center gap-2 overflow-x-auto md:hidden">
+      <div className="flex w-full snap-x scroll-pl-4 flex-row items-center gap-2 overflow-x-auto md:hidden">
         <MobileAttributePill>
           <Settings className="size-5" />
 
@@ -69,10 +65,9 @@ export const ProductsGridHeader = ({
         </MobileAttributePill>
       </div>
 
-      <div className="container flex flex-row items-end justify-between text-wurth-gray-800">
+      <div className="flex flex-row items-end justify-between text-wurth-gray-800">
         <div className="font-title text-lg font-medium tracking-normal md:text-3xl md:tracking-[-0.01406rem]">
-          {searchQuery.data.pagination.totalCount}{" "}
-          {searchQuery.data.pagination.totalCount === 1 ? "item" : "items"}
+          {totalCount} {totalCount === 1 ? "item" : "items"}
         </div>
 
         <div className="text-sm font-normal md:text-base">
@@ -82,7 +77,7 @@ export const ProductsGridHeader = ({
 
       {/* Desktop selected attributes viewer */}
       {mappedSelectedValues.length > 0 && (
-        <div className="container hidden md:flex md:flex-row md:items-center md:gap-2">
+        <div className="hidden md:flex md:flex-row md:items-center md:gap-2">
           {mappedSelectedValues.map((selectedValue) => (
             <DesktopAttributePill
               key={selectedValue.id}
@@ -166,6 +161,16 @@ const DesktopAttributePill = ({
           </li>
         )}
       </ul>
+    </div>
+  );
+};
+
+export const ProductsGridHeaderSkeleton = () => {
+  return (
+    <div className="flex flex-row items-end justify-between">
+      <Skeleton className="h-7 w-24 md:h-9 md:w-36" />
+
+      <Skeleton className="h-5 w-20 md:h-6 md:w-24" />
     </div>
   );
 };

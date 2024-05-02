@@ -1,4 +1,6 @@
-import useSuspenseFilters from "@/_hooks/search/use-suspense-filters.hook";
+"use client";
+
+import { Filters } from "@/_lib/types";
 import { useSearchParams } from "next/navigation";
 import { QUERY_KEYS } from "./constants";
 
@@ -9,21 +11,15 @@ export type SelectedValues = {
   };
 };
 
-const useFilterParams = (token: string, categoryId: string) => {
+export const useFilterParams = (filters: Filters[] = []) => {
   const searchParams = useSearchParams();
-
-  const filtersQuery = useSuspenseFilters(token, {
-    type: "Categories",
-    id: categoryId,
-    membershipId: 0,
-  });
 
   const pageNoValue = searchParams.get(QUERY_KEYS.page) ?? "1";
   const pageNo = !isNaN(parseInt(pageNoValue)) ? parseInt(pageNoValue) : 1;
 
   // Check for selected values
   const selectedValues: SelectedValues = {};
-  filtersQuery.data.forEach((attribute) => {
+  filters.forEach((attribute) => {
     const paramsValues = searchParams.getAll(attribute.id);
     if (paramsValues.length) {
       const values: { id: string; name: string }[] = [];
@@ -49,5 +45,3 @@ const useFilterParams = (token: string, categoryId: string) => {
 
   return { pageNo, selectedValues, searchParams };
 };
-
-export default useFilterParams;

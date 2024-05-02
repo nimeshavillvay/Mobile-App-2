@@ -1,3 +1,11 @@
+import {
+  ProductsGrid,
+  ProductsGridDesktopContainer,
+  ProductsGridFiltersSkeleton,
+  ProductsGridHeaderSkeleton,
+  ProductsGridListSkeleton,
+  ProductsGridPaginationSkeleton,
+} from "@/_components/products-grid";
 import RelatedSearches from "@/_components/related-searches";
 import { api } from "@/_lib/api";
 import { getBreadcrumbs } from "@/_lib/apis/server";
@@ -221,7 +229,23 @@ const CategoryPage = async ({ params: { id, slug } }: CategoryPageProps) => {
         )}
       </section>
 
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense
+        fallback={
+          <ProductsGrid>
+            <ProductsGridHeaderSkeleton />
+
+            <ProductsGridListSkeleton type="mobile" />
+
+            <ProductsGridDesktopContainer>
+              <ProductsGridFiltersSkeleton />
+
+              <ProductsGridListSkeleton type="desktop" />
+            </ProductsGridDesktopContainer>
+
+            <ProductsGridPaginationSkeleton />
+          </ProductsGrid>
+        }
+      >
         <ProductsList categoryId={id} />
       </Suspense>
 

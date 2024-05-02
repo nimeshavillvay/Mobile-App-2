@@ -1,8 +1,13 @@
+import { useFilterParams } from "@/_components/products-grid";
 import useSuspenseSearch from "@/_hooks/search/use-suspense-search.hook";
-import useFilterParams from "./use-filter-params.hook";
+import type { Filters } from "@/_lib/types";
 
-const useSuspenseSearchProductList = (token: string, categoryId: string) => {
-  const { pageNo, selectedValues } = useFilterParams(token, categoryId);
+const useSuspenseSearchProductList = (
+  token: string,
+  categoryId: string,
+  filters: Filters[],
+) => {
+  const { pageNo, selectedValues } = useFilterParams(filters);
 
   const selectedFilters: {
     [attributeId: string]: string[];
@@ -11,6 +16,7 @@ const useSuspenseSearchProductList = (token: string, categoryId: string) => {
   for (const [key, value] of Object.entries(selectedValues)) {
     selectedFilters[key] = value.values.map((v) => v.id);
   }
+
   return useSuspenseSearch(
     token,
     {
