@@ -1,7 +1,5 @@
 "use client";
 
-import { cva, type VariantProps } from "@/lib/cva.config";
-import { cn } from "@/lib/utils";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import * as ToastPrimitives from "@radix-ui/react-toast";
 import {
@@ -10,6 +8,8 @@ import {
   type ElementRef,
   type ReactElement,
 } from "react";
+import { cva, type VariantProps } from "~/lib/cva.config";
+import { cn } from "~/lib/utils";
 
 const ToastProvider = ToastPrimitives.Provider;
 

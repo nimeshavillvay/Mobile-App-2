@@ -22,14 +22,23 @@ const config: Config = {
 export default config;
 ```
 
-## Optimizing the bundle
+Also add the TypeScript absolute path to the project that is importing this package
 
-When bundling this package, certain dependencies will be excluded, such as `react`, `react-dom`, and `next`, as the expectation is they will always be installed in the main package.
+```json
+{
+  "compilerOptions": {
+    "paths": {
+      // ...
+      "~/*": ["../../packages/web-ui/src/*"]
+    }
+  }
+}
+```
 
-These packages should be installed in this package with the `--save-peer` flag.
+## Shared dependencies
+
+These packages that are shared between the project such as `react` and `clsx` should be installed in this package with the `--save-peer` flag.
 
 ```shell
 pnpm install react --save-peer
 ```
-
-Then they need to be specified in **tsup** configuration file to be excluded by the bundler through the `external` field.

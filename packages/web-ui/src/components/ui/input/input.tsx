@@ -1,5 +1,5 @@
-import { cn } from "@/lib/utils";
 import { ComponentPropsWithoutRef, forwardRef } from "react";
+import { cn } from "~/lib/utils";
 
 export type InputProps = ComponentPropsWithoutRef<"input">;
 
