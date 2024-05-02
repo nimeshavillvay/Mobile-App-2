@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
 import Link from "next/link";
-import { PLANTS, SHIPPING_METHODS, UI_DATE_FORMAT } from "./constants";
+import { getPlantName, getShippingMethodName } from "../../client-helpers";
+import { UI_DATE_FORMAT } from "./constants";
 import OrderTrackingCardForMobile from "./order-tracking-card-for-mobile";
 import type { TrackingInfo } from "./types";
 
@@ -9,21 +10,11 @@ type OrderTrackingCardProps = {
 };
 
 const OrderTrackingCard = ({ trackingInfo }: OrderTrackingCardProps) => {
-  const getPlantName = (plant: string) => {
-    // use keyof to ensure that the plant is a valid key
-    return PLANTS[plant as keyof typeof PLANTS];
-  };
-
-  const getShippingMethod = (method: string) => {
-    // use keyof to ensure that the method is a valid key
-    return SHIPPING_METHODS[method as keyof typeof SHIPPING_METHODS];
-  };
-
   return (
     <>
       <div className="hidden p-[30px] shadow-[0_1px_6px_rgba(0,0,0,.148324)] md:block">
         <div className="mb-5 font-bold text-brand-primary">
-          Shipped from{" "}
+          Shipped from&nbsp;
           {trackingInfo?.plant ? getPlantName(trackingInfo.plant) : "N/A"}
         </div>
         {trackingInfo?.deliveries?.length &&
@@ -34,7 +25,7 @@ const OrderTrackingCard = ({ trackingInfo }: OrderTrackingCardProps) => {
                 className="mb-4 grid grid-cols-1 text-brand-gray-500 md:grid-cols-3"
               >
                 <div className="font-bold">
-                  Ship Date:{" "}
+                  Ship Date:&nbsp;
                   {delivery?.shipDate
                     ? dayjs(delivery?.shipDate).format(UI_DATE_FORMAT)
                     : "N/A"}
@@ -43,9 +34,9 @@ const OrderTrackingCard = ({ trackingInfo }: OrderTrackingCardProps) => {
                   Delivery#: {delivery?.deliveryNo ?? "N/A"}
                 </div>
                 <div className="font-bold">
-                  Shipper:{" "}
+                  Shipper:&nbsp;
                   {delivery?.shippingMethod
-                    ? getShippingMethod(delivery.shippingMethod)
+                    ? getShippingMethodName(delivery.shippingMethod)
                     : "N/A"}
                 </div>
               </div>
