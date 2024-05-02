@@ -1,5 +1,5 @@
+import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import Separator from "@/old/_components/separator";
-import { ACCOUNT_TOKEN_COOKIE } from "@/old/_lib/constants";
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -10,9 +10,10 @@ export const metadata: Metadata = {
 };
 
 const OrderHistoryPage = () => {
-  const accountTokenCookie = cookies().get(ACCOUNT_TOKEN_COOKIE);
+  const cookieStore = cookies();
+  const tokenCookie = cookieStore.get(SESSION_TOKEN_COOKIE);
 
-  if (!accountTokenCookie?.value) {
+  if (!tokenCookie) {
     return redirect("/");
   }
 
@@ -29,7 +30,7 @@ const OrderHistoryPage = () => {
         />
       </div>
 
-      <OrderHistoryList token={accountTokenCookie?.value} />
+      <OrderHistoryList token={tokenCookie.value} />
     </>
   );
 };
