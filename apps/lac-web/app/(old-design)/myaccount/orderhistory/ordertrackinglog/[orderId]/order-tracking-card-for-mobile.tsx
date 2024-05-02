@@ -9,7 +9,8 @@ import dayjs from "dayjs";
 import Link from "next/link";
 import { useState } from "react";
 import { MdAssignment, MdKeyboardArrowDown } from "react-icons/md";
-import { PLANTS, SHIPPING_METHODS, UI_DATE_FORMAT } from "./constants";
+import { getPlantName, getShippingMethodName } from "../../client-helpers";
+import { UI_DATE_FORMAT } from "./constants";
 import type { TrackingInfo } from "./types";
 
 type OrderTrackingCardProps = {
@@ -20,16 +21,6 @@ const OrderTrackingCardForMobile = ({
   trackingInfo,
 }: OrderTrackingCardProps) => {
   const [isOpen, setIsOpen] = useState(false);
-
-  const getPlantName = (plant: string) => {
-    // use keyof to ensure that the plant is a valid key
-    return PLANTS[plant as keyof typeof PLANTS];
-  };
-
-  const getShippingMethod = (method: string) => {
-    // use keyof to ensure that the method is a valid key
-    return SHIPPING_METHODS[method as keyof typeof SHIPPING_METHODS];
-  };
 
   return (
     <>
@@ -75,7 +66,7 @@ const OrderTrackingCardForMobile = ({
                     <div className="text-[13px]">Shipper</div>
                     <div className="text-sm font-bold">
                       {delivery?.shippingMethod
-                        ? getShippingMethod(delivery.shippingMethod)
+                        ? getShippingMethodName(delivery.shippingMethod)
                         : "N/A"}
                     </div>
                   </div>
