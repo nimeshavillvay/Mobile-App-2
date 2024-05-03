@@ -25,7 +25,6 @@ const ProductsListHeader = ({ token, categoryId }: ProductsListHeaderProps) => {
 
   return (
     <ProductsGridHeader
-      filters={filtersQuery.data}
       totalCount={searchQuery.data.pagination.totalCount}
       totalPages={totalPages}
     />
