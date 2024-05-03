@@ -17,7 +17,9 @@ type AddressDialogProps = {
   open: boolean;
   setOpenAddressSuggestionDialog: Dispatch<SetStateAction<boolean>>;
   setOpenAddressDialog: Dispatch<SetStateAction<boolean>>;
-  setAddressCheckSuggestions: Dispatch<SetStateAction<AddressCheckSuggestions>>;
+  setAddressCheckSuggestions: (
+    addressCheckSuggestions?: AddressCheckSuggestions,
+  ) => void;
   addressCheckSuggestions: AddressCheckSuggestions;
   isShippingAddress: boolean;
   isShippingAddressUpdate: boolean;
@@ -66,8 +68,6 @@ const AddressSuggestionDialog = ({
   };
 
   const onContinueOrSubmitButtonClicked = () => {
-    console.log(selectedAddressSuggestion);
-
     const selectedAddress = convertAddressSuggestionToFormDataFormat(
       selectedAddressSuggestion,
     );
@@ -89,6 +89,7 @@ const AddressSuggestionDialog = ({
               setOpenAddressSuggestionDialog(false);
 
               //TODO: you must pass the response received by the mutation request as the argument for the following method
+              // you must add mutate the response in such a way that each and every suggestion have a unique id. use nanoid package
               const response = SAP_ADDRESS_CHECK_RESPONSE;
 
               if (!response?.checkType) {
@@ -161,13 +162,11 @@ const AddressSuggestionDialog = ({
           <DialogTitle>Address Suggestions</DialogTitle>
         </DialogHeader>
 
-        <div className="mx-5">
-          <p className="mb-1">{addressCheckSuggestions?.message}</p>
-        </div>
+        <p className="mx-5 mb-1">{addressCheckSuggestions?.message}</p>
 
         <RadioGroup onValueChange={onAddressSuggestionChange}>
           {addressCheckSuggestions?.suggestions?.map(
-            (addressSuggestion: Address, index: number) => (
+            (addressSuggestion, index) => (
               <div
                 key={index}
                 className="mx-5 mt-1 flex cursor-default flex-row items-start gap-3 rounded border-2 border-gray-100 py-3 pl-5 shadow"

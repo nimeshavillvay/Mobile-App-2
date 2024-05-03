@@ -27,7 +27,11 @@ import { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { UPS_ADDRESS_CHECK_RESPONSE } from "./mock-response";
-import { Address, AddressCheckSuggestions, AddressFormData } from "./types";
+import type {
+  Address,
+  AddressCheckSuggestions,
+  AddressFormData,
+} from "./types";
 import useAddShippingAddressMutation from "./use-add-shipping-address-mutation.hook";
 import useUpdateBillingAddressMutation from "./use-update-billing-address-mutation.hook";
 import useUpdateShippingAddressMutation from "./use-update-shipping-address-mutation.hook";
@@ -36,8 +40,10 @@ type AddressDialogProps = {
   open: boolean;
   setOpenAddressDialog: Dispatch<SetStateAction<boolean>>;
   setOpenAddressSuggestionDialog: Dispatch<SetStateAction<boolean>>;
-  setAddress: Dispatch<SetStateAction<AddressFormData>>;
-  setAddressCheckSuggestions: Dispatch<SetStateAction<AddressCheckSuggestions>>;
+  setAddress: (address?: AddressFormData) => void;
+  setAddressCheckSuggestions: (
+    addressCheckSuggestions?: AddressCheckSuggestions,
+  ) => void;
   isShippingAddress: boolean;
   isShippingAddressUpdate: boolean;
   address: Address;

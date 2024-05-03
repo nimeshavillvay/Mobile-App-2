@@ -6,21 +6,21 @@ import { useState } from "react";
 import { MdOutlineModeEdit } from "react-icons/md";
 import defaultAvatar from "../default-avatar.png";
 import ImageUploadDialog from "./image-upload-dialog";
-import { CompanyDetails } from "./types";
+import type { CompanyDetails } from "./types";
 import useSuspenseCompanyProfileDetails from "./use-suspense-company-profile-details.hook";
 
 const CompanyProfileImage = ({ token }: { token: string }) => {
   const [openImageUploadDialog, setOpenImageUploadDialog] = useState(false);
 
   const companyDetailsQuery = useSuspenseCompanyProfileDetails(token);
-  const companyDetails: CompanyDetails = companyDetailsQuery?.data;
+  const companyDetails = companyDetailsQuery?.data;
 
   const imageSrc = companyDetails?.image ? companyDetails.image : defaultAvatar;
 
   return (
     <>
-      <div className="flex flex-row">
-        <div className="relative mb-5 mr-10">
+      <div className="flex flex-row gap-10">
+        <div className="mb-5">
           <Image
             loader={() => `${imageSrc}`}
             src={imageSrc}
@@ -34,26 +34,19 @@ const CompanyProfileImage = ({ token }: { token: string }) => {
             aria-label="Edit profile picture"
             onClick={() => setOpenImageUploadDialog(true)}
           >
+            <span className="sr-only">Upload Image</span>
             <MdOutlineModeEdit />
           </Button>
         </div>
 
-        <div className="relative">
-          <h3 className="font-title text-xl font-bold text-gray-500">
-            {companyDetails?.companyName}
-          </h3>
-        </div>
+        <h3 className="font-title text-xl font-bold text-gray-500">
+          {companyDetails?.companyName}
+        </h3>
       </div>
 
       <ImageUploadDialog
         openDialog={openImageUploadDialog}
         setOpenImageUploadDialog={setOpenImageUploadDialog}
-        maxFileSize={5242880}
-        maxFileSizeErrorMsg={"Maximum file size is 5MB."}
-        acceptableImageTypes={["image/png", "image/jpg", "image/jpeg"]}
-        acceptableImageTypesErrorMsg={
-          "Invalid file type. Only JPG, JPEG and PNG types are accepted."
-        }
       />
     </>
   );

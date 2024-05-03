@@ -3,7 +3,11 @@ import { useState } from "react";
 import { MdOutlineDelete, MdOutlineEdit } from "react-icons/md";
 import AddressDialog from "./address-dialog";
 import AddressSuggestionDialog from "./address-suggestion-dialog";
-import { Address, AddressCheckSuggestions, AddressFormData } from "./types";
+import type {
+  Address,
+  AddressCheckSuggestions,
+  AddressFormData,
+} from "./types";
 import useDeleteShippingAddressMutation from "./use-delete-shipping-address-mutation.hook";
 import useUpdateShippingAddressMutation from "./use-update-shipping-address-mutation.hook";
 
@@ -11,7 +15,6 @@ const ShippingAddressCard = ({
   shippingAddress,
 }: {
   shippingAddress: Address;
-  index: number;
 }) => {
   const [openShippingAddressDialog, setOpenShippingAddressDialog] =
     useState(false);
@@ -21,10 +24,9 @@ const ShippingAddressCard = ({
     setOpenShippingAddressSuggestionDialog,
   ] = useState(false);
 
-  const [address, setAddress] = useState({} as AddressFormData);
-  const [addressCheckSuggestions, setAddressCheckSuggestions] = useState(
-    {} as AddressCheckSuggestions,
-  );
+  const [address, setAddress] = useState<AddressFormData>();
+  const [addressCheckSuggestions, setAddressCheckSuggestions] =
+    useState<AddressCheckSuggestions>();
 
   const updateShippingAddressMutation = useUpdateShippingAddressMutation();
   const deleteShippingAddressMutation = useDeleteShippingAddressMutation();
@@ -67,6 +69,7 @@ const ShippingAddressCard = ({
             className="hover:bg-gray-200"
             onClick={() => setOpenShippingAddressDialog(true)}
           >
+            <span className="sr-only">Edit shipping address</span>
             <MdOutlineEdit className="text-2xl" />
           </Button>
 
@@ -79,6 +82,7 @@ const ShippingAddressCard = ({
               )
             }
           >
+            <span className="sr-only">Delete shipping address</span>
             <MdOutlineDelete className="text-2xl" />
           </Button>
         </div>
@@ -95,16 +99,20 @@ const ShippingAddressCard = ({
         address={shippingAddress}
       />
 
-      <AddressSuggestionDialog
-        open={openShippingAddressSuggestionDialog}
-        setOpenAddressSuggestionDialog={setOpenShippingAddressSuggestionDialog}
-        setOpenAddressDialog={setOpenShippingAddressDialog}
-        setAddressCheckSuggestions={setAddressCheckSuggestions}
-        addressCheckSuggestions={addressCheckSuggestions}
-        isShippingAddress={true}
-        isShippingAddressUpdate={true}
-        address={address}
-      />
+      {!!addressCheckSuggestions && !!address && (
+        <AddressSuggestionDialog
+          open={openShippingAddressSuggestionDialog}
+          setOpenAddressSuggestionDialog={
+            setOpenShippingAddressSuggestionDialog
+          }
+          setOpenAddressDialog={setOpenShippingAddressDialog}
+          setAddressCheckSuggestions={setAddressCheckSuggestions}
+          addressCheckSuggestions={addressCheckSuggestions}
+          isShippingAddress={true}
+          isShippingAddressUpdate={true}
+          address={address}
+        />
+      )}
     </>
   );
 };

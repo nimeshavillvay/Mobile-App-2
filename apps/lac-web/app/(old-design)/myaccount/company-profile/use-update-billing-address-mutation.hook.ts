@@ -26,7 +26,8 @@ const useUpdateBillingAddressMutation = () => {
             region: billingAddressFormData.state,
             "street-address": billingAddressFormData.addressLineOne,
             "postal-code": billingAddressFormData.zipCode,
-            // zip4: billingAddressFormData.zip4, // i think we should pass zip4, but if we pass zip 4, the UPS check will not take place
+            // TODO: i think we should pass zip4, but if we pass zip 4, the UPS check will not take place
+            // zip4: billingAddressFormData.zip4,
             ...(billingAddressFormData.skipAddressCheck !== undefined && {
               skip_address_check: billingAddressFormData.skipAddressCheck,
             }),

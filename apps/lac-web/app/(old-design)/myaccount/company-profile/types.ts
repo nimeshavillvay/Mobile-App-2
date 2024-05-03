@@ -30,10 +30,6 @@ export type AddressFormData = {
   skipAddressCheck?: boolean;
 };
 
-export type ShippingAddressId = {
-  shipTo: string;
-};
-
 export type AddressCheckSuggestions = {
   checkType: string;
   message: string;

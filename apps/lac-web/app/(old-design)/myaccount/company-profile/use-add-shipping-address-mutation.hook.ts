@@ -3,7 +3,7 @@ import { useToast } from "@/old/_components/ui/use-toast";
 import useCookies from "@/old/_hooks/storage/use-cookies.hook";
 import { ACCOUNT_TOKEN_COOKIE } from "@/old/_lib/constants";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { AddressFormData } from "./types";
+import type { AddressFormData } from "./types";
 
 const useAddShippingAddressMutation = () => {
   const queryClient = useQueryClient();

@@ -1,6 +1,6 @@
 import { api } from "@/_lib/api";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { CompanyDetails } from "./types";
+import type { CompanyDetails } from "./types";
 
 type CompanyDetailsResponse = {
   company_name: string;
@@ -22,7 +22,6 @@ const useSuspenseCompanyProfileDetails = (token: string) => {
         .get("rest/osrdetails", {
           headers: {
             authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
           },
         })
         .json<CompanyDetailsResponse>(),

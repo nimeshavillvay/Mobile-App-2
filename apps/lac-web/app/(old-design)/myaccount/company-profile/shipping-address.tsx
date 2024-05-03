@@ -6,7 +6,11 @@ import { useState } from "react";
 import AddressDialog from "./address-dialog";
 import AddressSuggestionDialog from "./address-suggestion-dialog";
 import ShippingAddressCard from "./shipping-address-card";
-import { Address, AddressCheckSuggestions, AddressFormData } from "./types";
+import type {
+  Address,
+  AddressCheckSuggestions,
+  AddressFormData,
+} from "./types";
 import useSuspenseShippingAddressList from "./use-suspense-shipping-address-list.hook";
 
 const emptyShippingAddress: Address = {
@@ -33,13 +37,12 @@ const ShippingAddress = ({ token }: { token: string }) => {
     setOpenShippingAddressSuggestionDialog,
   ] = useState(false);
 
-  const [address, setAddress] = useState({} as AddressFormData);
-  const [addressCheckSuggestions, setAddressCheckSuggestions] = useState(
-    {} as AddressCheckSuggestions,
-  );
+  const [address, setAddress] = useState<AddressFormData>();
+  const [addressCheckSuggestions, setAddressCheckSuggestions] =
+    useState<AddressCheckSuggestions>();
 
   const shippingAddressQuery = useSuspenseShippingAddressList(token);
-  const shippingAddresses: Address[] = shippingAddressQuery?.data;
+  const shippingAddresses = shippingAddressQuery?.data;
 
   return (
     <>
@@ -59,17 +62,14 @@ const ShippingAddress = ({ token }: { token: string }) => {
           <ShippingAddressCard
             key={address.xcAddressId}
             shippingAddress={address}
-            index={index}
-          ></ShippingAddressCard>
+          />
         ))}
-        <div
-          className="flex cursor-pointer flex-row space-y-3 border-gray-100 bg-transparent p-5 shadow hover:shadow-lg md:space-y-5 md:p-6"
+        <button
+          className="flex flex-row space-y-3 border-gray-100 bg-transparent p-10 text-center font-bold shadow hover:shadow-lg md:space-y-5 md:p-6"
           onClick={() => setOpenShippingAddressDialog(true)}
         >
-          <div className="flex-auto p-10 text-center font-bold">
-            + Add new shipping address
-          </div>
-        </div>
+          + Add new shipping address
+        </button>
       </div>
 
       <AddressDialog
@@ -83,16 +83,20 @@ const ShippingAddress = ({ token }: { token: string }) => {
         address={emptyShippingAddress}
       />
 
-      <AddressSuggestionDialog
-        open={openShippingAddressSuggestionDialog}
-        setOpenAddressSuggestionDialog={setOpenShippingAddressSuggestionDialog}
-        setOpenAddressDialog={setOpenShippingAddressDialog}
-        setAddressCheckSuggestions={setAddressCheckSuggestions}
-        addressCheckSuggestions={addressCheckSuggestions}
-        isShippingAddress={true}
-        isShippingAddressUpdate={false}
-        address={address}
-      />
+      {!!addressCheckSuggestions && !!address && (
+        <AddressSuggestionDialog
+          open={openShippingAddressSuggestionDialog}
+          setOpenAddressSuggestionDialog={
+            setOpenShippingAddressSuggestionDialog
+          }
+          setOpenAddressDialog={setOpenShippingAddressDialog}
+          setAddressCheckSuggestions={setAddressCheckSuggestions}
+          addressCheckSuggestions={addressCheckSuggestions}
+          isShippingAddress={true}
+          isShippingAddressUpdate={false}
+          address={address}
+        />
+      )}
     </>
   );
 };

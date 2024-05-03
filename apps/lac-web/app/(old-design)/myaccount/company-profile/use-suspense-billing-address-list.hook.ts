@@ -1,6 +1,6 @@
 import { api } from "@/_lib/api";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { Address } from "./types";
+import type { Address } from "./types";
 
 type AddressResponse = {
   "xc-addressid": string;
@@ -38,7 +38,6 @@ const useSuspenseBillingAddressList = (token: string) => {
         .get("rest/my-account/billing-address", {
           headers: {
             authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
           },
         })
         .json<AddressResponse>(),
