@@ -31,16 +31,23 @@ export const generateMetadata = async ({
     return notFound();
   }
 
+  const orderDetail = await getOrderDetail(orderId);
+
   return {
-    title: orderId,
-    description: orderId,
+    title: `Order - ${orderDetail.orderNo}`,
+    description: `Order details - ${orderDetail.orderNo}`,
   };
 };
 
 const DetailedOrderPage = async ({
   params: { orderId },
 }: DetailedOrderPageProps) => {
+  if (!orderId) {
+    return notFound();
+  }
+
   const orderDetail = await getOrderDetail(orderId);
+
   const [paymentMethods, shippingMethods, plants] = await Promise.all([
     getPaymentMethods(),
     getShippingMethods(),
