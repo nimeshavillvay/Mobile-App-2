@@ -1,3 +1,4 @@
+// TODO: Implement Loading Skeleton after real API integration
 const DetailedOrderLoading = () => {
   return (
     <div>

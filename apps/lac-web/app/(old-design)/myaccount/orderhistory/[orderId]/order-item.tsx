@@ -123,6 +123,7 @@ const OrderItem = ({
             </div>
           </div>
         </div>
+
         <div className="flex flex-1 flex-row justify-between gap-4">
           <div className="flex flex-col">
             <div className="text-wrap">
@@ -135,6 +136,7 @@ const OrderItem = ({
               </span>
             </div>
           </div>
+
           <Button className="w-[170px] text-base">Buy Again</Button>
         </div>
       </div>
