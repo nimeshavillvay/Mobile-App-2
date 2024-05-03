@@ -1,6 +1,6 @@
-import { Alert as AlertIcon } from "@/components/icons/alert";
-import { Zap } from "@/components/icons/zap";
 import type { Meta, StoryObj } from "@storybook/react";
+import { Alert as AlertIcon } from "~/components/icons/alert";
+import { Zap } from "~/components/icons/zap";
 import { Alert, AlertContent, AlertDescription, AlertTitle } from "./alert";
 
 const meta: Meta<typeof Alert> = {

@@ -1,6 +1,6 @@
-import "@/styles.css";
 import type { Preview } from "@storybook/react";
 import { fn } from "@storybook/test";
+import "~/styles.css";
 
 const preview: Preview = {
   args: { onClick: fn() },

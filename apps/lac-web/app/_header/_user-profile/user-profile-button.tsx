@@ -2,10 +2,7 @@
 
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
 import useSuspenseUsersList from "@/_hooks/user/use-suspense-users-list.hook";
-import { cn } from "@/_lib/utils";
 import { Exit } from "@repo/web-ui/components/icons/exit";
-import { Profile } from "@repo/web-ui/components/icons/profile";
-import { Button } from "@repo/web-ui/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,37 +11,22 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@repo/web-ui/components/ui/dropdown-menu";
-import Link from "next/link";
+import SignInLink from "./signin-link";
+import type { ViewportTypes } from "./types";
 import useLogoutMutation from "./use-logout-mutation.hook";
-
-const mobileClasses = cn("size-6 md:hidden");
-const desktopClasses = cn(
-  "hidden shrink-0 md:flex md:h-min md:flex-row md:items-center md:gap-2 md:p-0",
-);
 
 const UserProfileButton = ({
   token,
   type,
 }: {
   token: string;
-  type: "desktop" | "mobile";
+  type: ViewportTypes;
 }) => {
   const checkLoginQuery = useSuspenseCheckLogin(token);
 
   // User isn't logged in
   if (checkLoginQuery.data.status_code === "NOT_LOGGED_IN") {
-    return (
-      <Button
-        variant="ghost"
-        size={type === "mobile" ? "icon" : "default"}
-        className={type === "mobile" ? mobileClasses : desktopClasses}
-        asChild
-      >
-        <Link href="/sign-in">
-          <ButtonContent text="Sign in / Register" />
-        </Link>
-      </Button>
-    );
+    return <SignInLink type={type} />;
   }
 
   return <UserProfileDropdown token={token} type={type} />;
@@ -57,7 +39,7 @@ const UserProfileDropdown = ({
   type,
 }: {
   token: string;
-  type: "desktop" | "mobile";
+  type: ViewportTypes;
 }) => {
   const usersListQuery = useSuspenseUsersList(token);
   const userProfile = usersListQuery.data.manageContact.yourProfile;
@@ -67,13 +49,7 @@ const UserProfileDropdown = ({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button
-          variant="ghost"
-          size={type === "mobile" ? "icon" : "default"}
-          className={type === "mobile" ? mobileClasses : desktopClasses}
-        >
-          <ButtonContent text={`Hi, ${userProfile.firstName}`} />
-        </Button>
+        <SignInLink type={type} text={`Hi, ${userProfile.firstName}`} />
       </DropdownMenuTrigger>
 
       <DropdownMenuContent className="w-56">
@@ -91,17 +67,5 @@ const UserProfileDropdown = ({
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  );
-};
-
-const ButtonContent = ({ text }: { text: string }) => {
-  return (
-    <>
-      <Profile className="md:size-7" />
-
-      <span className="sr-only md:not-sr-only md:text-base md:font-semibold">
-        {text}
-      </span>
-    </>
   );
 };

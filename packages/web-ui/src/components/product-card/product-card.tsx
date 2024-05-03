@@ -1,8 +1,11 @@
 "use client";
 
-import { HeartOutline } from "@/components/icons/heart-outline";
-import { Badge, BadgeProps } from "@/components/ui/badge";
-import { Button, buttonVariants } from "@/components/ui/button";
+import Image, { type ImageProps } from "next/image";
+import Link, { type LinkProps } from "next/link";
+import { createContext, useContext, type ComponentProps } from "react";
+import { HeartOutline } from "~/components/icons/heart-outline";
+import { Badge, BadgeProps } from "~/components/ui/badge";
+import { Button, buttonVariants } from "~/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -10,13 +13,10 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import type { SkeletonProps } from "@/components/ui/skeleton";
-import { Skeleton } from "@/components/ui/skeleton";
-import { cn, formatNumberToPrice } from "@/lib/utils";
-import Image, { type ImageProps } from "next/image";
-import Link, { type LinkProps } from "next/link";
-import { createContext, useContext, type ComponentProps } from "react";
+} from "~/components/ui/select";
+import type { SkeletonProps } from "~/components/ui/skeleton";
+import { Skeleton } from "~/components/ui/skeleton";
+import { cn, formatNumberToPrice } from "~/lib/utils";
 
 type Orientation = "vertical" | "horizontal";
 
