@@ -30,6 +30,7 @@ type OrderItemForMobileProps = {
     unitOfMeasure?: string;
     image?: { original: string; webp: string; jp2: string };
     productTitle?: string;
+    isExcludedProduct?: boolean;
   };
   shippingMethods: ShippingMethod[];
   plants: Plant[];
@@ -49,6 +50,8 @@ const OrderItemForMobile = ({
     unitOfMeasure,
     image,
     productTitle,
+    lineItems,
+    isExcludedProduct,
   } = orderItem;
 
   const generateProductUrl = (productId: number) => {
@@ -91,7 +94,9 @@ const OrderItemForMobile = ({
             <div className="font-bold text-black">
               {itemDescription ?? productTitle ?? "Description N/A"}
             </div>
-            <div className="font-bold text-brand-secondary">Cancelled</div>
+            <div className="font-bold text-brand-secondary">
+              {lineItems?.length ? lineItems[0]?.itemStatus : "N/A"}
+            </div>
             <div className="flex items-center justify-between">
               <div>
                 Qty: {totalQuantity} {unitOfMeasure ?? "Unit"}
@@ -107,6 +112,7 @@ const OrderItemForMobile = ({
           lineItems={orderItem.lineItems}
           shippingMethods={shippingMethods}
           plants={plants}
+          isExcludedProduct={isExcludedProduct}
         />
       </div>
     </div>

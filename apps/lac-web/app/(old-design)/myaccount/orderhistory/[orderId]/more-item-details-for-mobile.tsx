@@ -1,6 +1,7 @@
 "use client";
 
 import type { Plant, ShippingMethod } from "@/_lib/types";
+import AlertInline from "@/old/_components/alert-inline";
 import { Button } from "@/old/_components/ui/button";
 import {
   Collapsible,
@@ -31,12 +32,14 @@ type MoreItemDetailsForMobileProps = {
   }[];
   shippingMethods: ShippingMethod[];
   plants: Plant[];
+  isExcludedProduct?: boolean;
 };
 
 const MoreItemDetailsForMobile = ({
   lineItems,
   shippingMethods,
   plants,
+  isExcludedProduct = false,
 }: MoreItemDetailsForMobileProps) => {
   const [showMoreDetails, setShowMoreDetails] = useState(false);
 
@@ -64,17 +67,19 @@ const MoreItemDetailsForMobile = ({
           </Button>
         </CollapsibleTrigger>
 
-        <Button className="h-12 w-[170px] text-base">Buy Again</Button>
+        <Button
+          className="h-12 w-[170px] text-base"
+          disabled={isExcludedProduct}
+        >
+          Buy Again
+        </Button>
       </div>
 
       <CollapsibleContent className="py-2">
         {lineItems?.length &&
           lineItems.map((lineItem) => (
-            <>
-              <div
-                key={lineItem.itemNo}
-                className="flex flex-col rounded bg-brand-gray-100 px-3"
-              >
+            <div className="space-y-2" key={lineItem.itemNo}>
+              <div className="flex flex-col rounded bg-brand-gray-100 px-3">
                 <DetailedLine
                   title="Item No"
                   value={lineItem?.itemNo ?? "N/A"}
@@ -119,7 +124,14 @@ const MoreItemDetailsForMobile = ({
                   isLastItem
                 />
               </div>
-            </>
+
+              {lineItem?.boDate !== "" && (
+                <AlertInline
+                  variant="destructive"
+                  description="Back order dates are subject to change by suppliers without notice."
+                />
+              )}
+            </div>
           ))}
       </CollapsibleContent>
     </Collapsible>

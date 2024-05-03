@@ -98,7 +98,7 @@ const DetailedOrderPage = async ({
   return (
     <>
       <div className="container pb-6 md:px-0">
-        <BackButton title="Back to My Orders" className="mb-2" />
+        <BackButton title="Back to My Orders" className="mb-2 mt-2 md:mt-0" />
 
         <h2 className="relative font-wurth text-xl font-medium text-brand-primary">
           Order #{orderId}
@@ -106,7 +106,7 @@ const DetailedOrderPage = async ({
 
         <Separator
           orientation="horizontal"
-          className="mb-2.5 h-px flex-1 bg-brand-primary"
+          className="mb-6 mt-2 h-px flex-1 bg-brand-primary"
         />
 
         {/* Desktop View for Order Details */}
