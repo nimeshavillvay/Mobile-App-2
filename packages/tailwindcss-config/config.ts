@@ -12,6 +12,7 @@ const config: Omit<Config, "content"> = {
     screens: {
       xs: "480px",
       ...defaultTheme.screens,
+      "3xl": "1700px",
     },
     extend: {
       fontFamily: {

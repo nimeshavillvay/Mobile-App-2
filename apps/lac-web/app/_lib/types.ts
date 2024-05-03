@@ -263,3 +263,15 @@ export type Plant = {
   code: string;
   name: string;
 };
+
+export type Filters = {
+  id: string;
+  filter: string;
+  values: {
+    id: number;
+    value: string;
+    icon: string | null;
+    tooltip: string | null;
+    active: boolean;
+  }[];
+};

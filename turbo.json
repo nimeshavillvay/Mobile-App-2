@@ -23,8 +23,6 @@
         ".next/**",
         "!.next/cache/**",
         "node_modules/.cache/metro/**",
-        ".tsup/**",
-        "dist/**",
         "storybook-static/**"
       ]
     },

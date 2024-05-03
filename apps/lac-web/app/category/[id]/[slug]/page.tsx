@@ -1,4 +1,11 @@
-import Banner from "@/_components/banner";
+import {
+  ProductsGrid,
+  ProductsGridDesktopContainer,
+  ProductsGridFiltersSkeleton,
+  ProductsGridHeaderSkeleton,
+  ProductsGridListSkeleton,
+  ProductsGridPaginationSkeleton,
+} from "@/_components/products-grid";
 import RelatedSearches from "@/_components/related-searches";
 import { api } from "@/_lib/api";
 import { getBreadcrumbs } from "@/_lib/apis/server";
@@ -26,8 +33,6 @@ import { Fragment, Suspense } from "react";
 import Balancer from "react-wrap-balancer";
 import ProductsList from "./_products-list";
 import categoryImage from "./category.jpeg";
-import PopularBrands from "./popular-brands";
-import TopSubCategories from "./top-sub-categories";
 
 const VISIBLE_SUB_CATEGORIES_LENGTH = 6;
 
@@ -224,29 +229,25 @@ const CategoryPage = async ({ params: { id, slug } }: CategoryPageProps) => {
         )}
       </section>
 
-      <TopSubCategories title={category.title} />
+      <Suspense
+        fallback={
+          <ProductsGrid>
+            <ProductsGridHeaderSkeleton />
 
-      <PopularBrands />
+            <ProductsGridListSkeleton type="mobile" />
 
-      <Banner />
+            <ProductsGridDesktopContainer>
+              <ProductsGridFiltersSkeleton />
 
-      <Suspense fallback={<div>Loading...</div>}>
+              <ProductsGridListSkeleton type="desktop" />
+            </ProductsGridDesktopContainer>
+
+            <ProductsGridPaginationSkeleton />
+          </ProductsGrid>
+        }
+      >
         <ProductsList categoryId={id} />
       </Suspense>
-
-      {/* <Suspense fallback={<div>Loading...</div>}>
-        <Products
-          filters={filters.map((filter) => ({
-            id: filter.id,
-            title: filter.filter,
-            values: filter.values.map((value) => ({
-              id: value.id.toString(),
-              value: value.value,
-              active: value.active,
-            })),
-          }))}
-        />
-      </Suspense> */}
 
       <RelatedSearches />
     </>
