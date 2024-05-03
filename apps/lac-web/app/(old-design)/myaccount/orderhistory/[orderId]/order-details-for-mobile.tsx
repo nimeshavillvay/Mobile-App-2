@@ -64,7 +64,7 @@ const OrderDetailsForMobile = ({
   };
 
   return (
-    <>
+    <div className="block md:hidden">
       <div className="mb-4 flex flex-row">
         <div className="flex-1">
           <div>Status</div>
@@ -86,7 +86,7 @@ const OrderDetailsForMobile = ({
 
       <div className="space-y-6">
         {/* Details Card for Mobile */}
-        <div className="flex flex-col rounded border text-brand-gray-500 md:hidden">
+        <div className="flex flex-col rounded border text-brand-gray-500">
           <div className="flex flex-row border-b p-[15px]">
             <div className="flex-1">
               <div className="text-sm">Order Date</div>
@@ -223,7 +223,7 @@ const OrderDetailsForMobile = ({
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

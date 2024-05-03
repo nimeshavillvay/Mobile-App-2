@@ -46,6 +46,7 @@ type OrderItemProps = {
     unitOfMeasure?: string;
     image?: { original: string; webp: string; jp2: string };
     productTitle?: string;
+    isExcludedProduct?: boolean;
   };
   getShippingMethodName: (shippingCode: string) => string;
   getPlantName: (plantId: string) => string;
@@ -69,6 +70,7 @@ const OrderItem = ({
     promoCode,
     itemPo,
     lineItems,
+    isExcludedProduct = false,
   } = orderItem;
 
   const generateProductUrl = (productId: number) => {
@@ -137,7 +139,9 @@ const OrderItem = ({
             </div>
           </div>
 
-          <Button className="w-[170px] text-base">Buy Again</Button>
+          <Button className="w-[170px] text-base" disabled={isExcludedProduct}>
+            Buy Again
+          </Button>
         </div>
       </div>
 
