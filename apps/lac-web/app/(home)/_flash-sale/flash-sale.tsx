@@ -1,9 +1,9 @@
 import SubHeading from "@/_components/sub-heading";
-import { getFeaturedProducts } from "@/_lib/apis/server";
+import { getSaleItems } from "./apis";
 import FlashSaleProduct from "./flash-sale-product";
 
 const FlashSale = async () => {
-  const featuredProducts = await getFeaturedProducts();
+  const saleItems = await getSaleItems();
 
   return (
     <section className="my-14 space-y-6 md:my-20 md:space-y-10">
@@ -17,7 +17,7 @@ const FlashSale = async () => {
       </header>
 
       <div className="container flex w-full snap-x scroll-pl-4 flex-row gap-4 overflow-x-auto md:scroll-pl-8 md:gap-5">
-        {featuredProducts.onSale.map((product) => (
+        {saleItems.map((product) => (
           <FlashSaleProduct
             key={product.productId}
             product={{
