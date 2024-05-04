@@ -51,7 +51,11 @@ export const metadata: Metadata = {
     default: "Wurth Louis and Company",
     template: "%s | Wurth Louis and Company",
   },
-  metadataBase: new URL(process.env.VERCEL_URL ?? "http://localhost:3000"),
+  metadataBase: new URL(
+    process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}`
+      : "http://localhost:3000",
+  ),
 };
 
 const RootLayout = ({ children }: { children: ReactNode }) => {
