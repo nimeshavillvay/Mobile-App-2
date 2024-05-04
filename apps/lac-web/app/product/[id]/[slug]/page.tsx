@@ -1,5 +1,4 @@
 import productItemImage from "@/_assets/images/product-item-image.png";
-import RelatedSearches from "@/_components/related-searches";
 import { api } from "@/_lib/api";
 import { getBreadcrumbs } from "@/_lib/apis/server";
 import { DEFAULT_REVALIDATE } from "@/_lib/constants";
@@ -258,8 +257,6 @@ const ProductPage = async ({ params: { id, slug } }: ProductPageProps) => {
           ))}
         </div>
       </section>
-
-      <RelatedSearches />
     </>
   );
 };

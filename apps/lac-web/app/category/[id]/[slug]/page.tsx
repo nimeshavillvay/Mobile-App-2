@@ -6,7 +6,6 @@ import {
   ProductsGridListSkeleton,
   ProductsGridPaginationSkeleton,
 } from "@/_components/products-grid";
-import RelatedSearches from "@/_components/related-searches";
 import { api } from "@/_lib/api";
 import { getBreadcrumbs } from "@/_lib/apis/server";
 import { DEFAULT_REVALIDATE } from "@/_lib/constants";
@@ -248,8 +247,6 @@ const CategoryPage = async ({ params: { id, slug } }: CategoryPageProps) => {
       >
         <ProductsList categoryId={id} />
       </Suspense>
-
-      <RelatedSearches />
     </>
   );
 };
