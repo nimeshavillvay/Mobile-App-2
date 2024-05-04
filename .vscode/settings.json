@@ -28,7 +28,8 @@
     "class",
     "className",
     "ngClass",
-    "buttonClassName"
+    "buttonClassName",
+    "tw"
   ],
   "turbo.path": "/Users/akhila/Documents/Villvay/wurth-frontend-monorepo/node_modules/turbo-darwin-arm64/bin/turbo"
 }

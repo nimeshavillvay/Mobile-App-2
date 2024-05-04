@@ -30,7 +30,7 @@ const wurth = localFont({
 const titleFont = localFont({
   src: [
     {
-      path: "./_fonts/Jost-VariableFont_wght.ttf",
+      path: "./_fonts/Jost.ttf",
     },
   ],
   variable: "--font-title",
@@ -39,7 +39,7 @@ const titleFont = localFont({
 const bodyFont = localFont({
   src: [
     {
-      path: "./_fonts/DMSans-VariableFont_opsz,wght.ttf",
+      path: "./_fonts/DMSans.ttf",
     },
   ],
   variable: "--font-body",
@@ -51,6 +51,7 @@ export const metadata: Metadata = {
     default: "Wurth Louis and Company",
     template: "%s | Wurth Louis and Company",
   },
+  metadataBase: new URL(process.env.VERCEL_URL ?? "http://localhost:3000"),
 };
 
 const RootLayout = ({ children }: { children: ReactNode }) => {

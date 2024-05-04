@@ -24,28 +24,16 @@ import {
 import { Button, buttonVariants } from "@repo/web-ui/components/ui/button";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
 import { Fragment } from "react";
 import Balancer from "react-wrap-balancer";
 import ProductHero from "./_product-hero";
 import { getProduct } from "./apis";
-
-type ProductPageProps = {
-  params: {
-    id: string;
-    slug: string;
-  };
-};
+import type { ProductPageProps } from "./types";
 
 export const generateMetadata = async ({
   params: { id, slug },
 }: ProductPageProps): Promise<Metadata> => {
-  const product = await getProduct(id);
-
-  // Check if the slug matches the product's slug
-  if (slug !== product.selectedProduct.slug) {
-    return notFound();
-  }
+  const product = await getProduct(id, slug);
 
   return {
     title: product.selectedProduct.productName,
@@ -54,12 +42,8 @@ export const generateMetadata = async ({
 };
 
 const ProductPage = async ({ params: { id, slug } }: ProductPageProps) => {
-  const product = await getProduct(id);
-
-  // Check if the slug matches the product's slug
-  if (slug !== product.selectedProduct.slug) {
-    return notFound();
-  }
+  // Just to check if the product exists
+  await getProduct(id, slug);
 
   const [breadcrumbs, relatedProducts] = await Promise.all([
     getBreadcrumbs(id, "product"),
@@ -162,7 +146,7 @@ const ProductPage = async ({ params: { id, slug } }: ProductPageProps) => {
         </BreadcrumbList>
       </Breadcrumb>
 
-      <ProductHero id={id} />
+      <ProductHero id={id} slug={slug} />
 
       {relatedProducts.length > 0 && (
         <section className="my-10 space-y-4 md:my-[3.75rem] md:space-y-9">
