@@ -48,6 +48,7 @@ const ShippingAddressCard = ({
           {!shippingAddress?.default ? (
             <Button
               variant="ghost"
+              className="p-1 font-bold hover:bg-gray-200"
               onClick={() =>
                 updateShippingAddressMutation.mutate({
                   shipTo: shippingAddress.shipTo,
@@ -55,9 +56,8 @@ const ShippingAddressCard = ({
                 } as AddressFormData)
               }
             >
-              <span className="p-1 font-bold hover:bg-gray-200">
-                Set Default
-              </span>
+              <span className="sr-only">Set Default</span>
+              Set Default
             </Button>
           ) : (
             <p className="p-1 font-bold text-brand-secondary">Default</p>

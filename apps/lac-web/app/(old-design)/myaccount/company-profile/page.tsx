@@ -1,4 +1,4 @@
-import { ACCOUNT_TOKEN_COOKIE } from "@/(old-design)/_lib/constants";
+import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import Separator from "@/old/_components/separator";
 import Title from "@/old/_components/title";
 import type { Metadata } from "next";
@@ -13,9 +13,10 @@ export const metadata: Metadata = {
 };
 
 const CompanyProfilePage = () => {
-  const accountTokenCookie = cookies().get(ACCOUNT_TOKEN_COOKIE);
+  const cookieStore = cookies();
+  const accountTokenCookie = cookieStore.get(SESSION_TOKEN_COOKIE);
 
-  if (!accountTokenCookie?.value) {
+  if (!accountTokenCookie) {
     return redirect("/");
   }
 

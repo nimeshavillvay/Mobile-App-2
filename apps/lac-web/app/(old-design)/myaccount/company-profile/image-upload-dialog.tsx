@@ -5,10 +5,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/old/_components/ui/dialog";
-import Image from "next/image";
-import { Dispatch, SetStateAction } from "react";
 import { useDropzone } from "react-dropzone";
-import fileUpload from "../upload_icon.svg";
 import useUpdateCompanyProfileImageMutation from "./use-update-company-profile-image-mutation.hook";
 
 type ImageUploadDialogProps = {
@@ -16,7 +13,6 @@ type ImageUploadDialogProps = {
   setOpenImageUploadDialog: (state: boolean) => void;
 };
 
-//  TODO: remove type, size and messages
 const ImageUploadDialog = ({
   openDialog,
   setOpenImageUploadDialog,

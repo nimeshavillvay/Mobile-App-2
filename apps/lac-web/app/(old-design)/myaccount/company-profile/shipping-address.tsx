@@ -58,17 +58,18 @@ const ShippingAddress = ({ token }: { token: string }) => {
       </div>
 
       <div className="grid grid-cols-3 gap-4">
-        {shippingAddresses.map((address, index) => (
+        {shippingAddresses.map((address) => (
           <ShippingAddressCard
             key={address.xcAddressId}
             shippingAddress={address}
           />
         ))}
         <button
-          className="flex flex-row space-y-3 border-gray-100 bg-transparent p-10 text-center font-bold shadow hover:shadow-lg md:space-y-5 md:p-6"
+          className="flex cursor-pointer flex-row items-center justify-center space-y-3 border-gray-100 bg-transparent p-5 text-center font-bold shadow hover:shadow-lg md:space-y-5 md:p-6"
           onClick={() => setOpenShippingAddressDialog(true)}
         >
-          + Add new shipping address
+          <span className="sr-only">Add shipping address</span>+ Add new
+          shipping address
         </button>
       </div>
 

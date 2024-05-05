@@ -6,7 +6,6 @@ import { useState } from "react";
 import { MdOutlineModeEdit } from "react-icons/md";
 import defaultAvatar from "../default-avatar.png";
 import ImageUploadDialog from "./image-upload-dialog";
-import type { CompanyDetails } from "./types";
 import useSuspenseCompanyProfileDetails from "./use-suspense-company-profile-details.hook";
 
 const CompanyProfileImage = ({ token }: { token: string }) => {
@@ -20,9 +19,8 @@ const CompanyProfileImage = ({ token }: { token: string }) => {
   return (
     <>
       <div className="flex flex-row gap-10">
-        <div className="mb-5">
+        <div className="relative mb-5">
           <Image
-            loader={() => `${imageSrc}`}
             src={imageSrc}
             alt="company profile image"
             width={117}

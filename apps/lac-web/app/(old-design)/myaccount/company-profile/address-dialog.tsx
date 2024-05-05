@@ -1,4 +1,6 @@
-import { STATE } from "@/(old-design)/_lib/constants";
+import useCounties from "@/_hooks/registration/use-counties.hook";
+import useCountries from "@/_hooks/registration/use-countries.hook";
+import useStates from "@/_hooks/registration/use-states.hook";
 import {
   Dialog,
   DialogContent,
@@ -163,6 +165,13 @@ const AddressDialog = ({
     }
   };
 
+  const selectedCountry = form.watch("country");
+  const selectedState = form.watch("state");
+
+  const countriesQuery = useCountries();
+  const statesQuery = useStates(selectedCountry);
+  const countiesQuery = useCounties(selectedState);
+
   return (
     <Dialog open={open} onOpenChange={setOpenAddressDialog}>
       <DialogContent className="old-design-text-base max-w-[500px]">
@@ -230,27 +239,45 @@ const AddressDialog = ({
             <div className="grid grid-cols-2 gap-4">
               <FormField
                 control={form.control}
-                name="city"
+                name="country"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="font-bold">City*</FormLabel>
-                    <FormDescription className="sr-only">City</FormDescription>
-
-                    <FormControl>
-                      <Input placeholder="City" type="text" {...field} />
-                    </FormControl>
+                    <FormLabel className="font-bold">Country*</FormLabel>
                     <FormDescription className="sr-only">
-                      Enter City
+                      Country
+                    </FormDescription>
+
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger className="h-8 rounded-sm py-0 focus:ring-brand-gray-500">
+                          <SelectValue placeholder="Country" />
+                        </SelectTrigger>
+                      </FormControl>
+
+                      <SelectContent>
+                        {countriesQuery.data?.map((country) => (
+                          <SelectItem key={country?.code} value={country?.code}>
+                            {country?.country}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+
+                    <FormDescription className="sr-only">
+                      Enter Country
                     </FormDescription>
 
                     <FormMessage />
                   </FormItem>
                 )}
               />
-
               <FormField
                 control={form.control}
                 name="state"
+                disabled={!selectedCountry}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="font-bold">State*</FormLabel>
@@ -267,9 +294,9 @@ const AddressDialog = ({
                       </FormControl>
 
                       <SelectContent>
-                        {STATE.map((state) => (
-                          <SelectItem key={state?.id} value={state?.id}>
-                            {state?.label}
+                        {statesQuery.data?.map((state) => (
+                          <SelectItem key={state?.code} value={state?.code}>
+                            {state?.country}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -288,6 +315,7 @@ const AddressDialog = ({
               <FormField
                 control={form.control}
                 name="county"
+                disabled={!selectedState}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="font-bold">County</FormLabel>
@@ -295,9 +323,27 @@ const AddressDialog = ({
                       County
                     </FormDescription>
 
-                    <FormControl>
-                      <Input placeholder="County" type="text" {...field} />
-                    </FormControl>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger className="h-8 rounded-sm py-0 focus:ring-brand-gray-500">
+                          <SelectValue placeholder="State" />
+                        </SelectTrigger>
+                      </FormControl>
+
+                      <SelectContent>
+                        {countiesQuery.data?.map((county) => (
+                          <SelectItem
+                            key={county?.county}
+                            value={county?.county}
+                          >
+                            {county?.county}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                     <FormDescription className="sr-only">
                       Enter County
                     </FormDescription>
@@ -309,19 +355,17 @@ const AddressDialog = ({
 
               <FormField
                 control={form.control}
-                name="country"
+                name="city"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="font-bold">Country*</FormLabel>
-                    <FormDescription className="sr-only">
-                      Country
-                    </FormDescription>
+                    <FormLabel className="font-bold">City*</FormLabel>
+                    <FormDescription className="sr-only">City</FormDescription>
 
                     <FormControl>
-                      <Input placeholder="Country" type="text" {...field} />
+                      <Input placeholder="City" type="text" {...field} />
                     </FormControl>
                     <FormDescription className="sr-only">
-                      Enter Country
+                      Enter City
                     </FormDescription>
 
                     <FormMessage />
@@ -405,6 +449,7 @@ const AddressDialog = ({
                 type="submit"
                 className="h-9 rounded-[3px] bg-brand-primary px-4 text-base font-normal uppercase text-white"
               >
+                <span className="sr-only">Save Address</span>
                 Done
               </button>
             </div>
