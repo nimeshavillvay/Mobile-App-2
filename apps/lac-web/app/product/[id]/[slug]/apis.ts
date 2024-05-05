@@ -71,7 +71,10 @@ type Product = {
   };
 };
 
-export const getProduct = async (id: string, slug: string) => {
+// TODO Make slug mandatory
+// The slug is made optional since the returned slug is different
+// in the OG image file for some reason
+export const getProduct = async (id: string, slug?: string) => {
   const response = await api
     .get("rest/landinginfo", {
       searchParams: {
