@@ -11,9 +11,9 @@ export const size = {
 export const runtime = "edge";
 export const contentType = "image/png";
 
-const Image = async ({ params: { id, slug } }: ProductPageProps) => {
+const Image = async ({ params: { id } }: ProductPageProps) => {
   noStore(); // Added this because the cache gets confused between the product and category pages
-  const product = await getProduct(id, slug);
+  const product = await getProduct(id);
 
   return OGImage({
     title: product.selectedProduct.productName,
