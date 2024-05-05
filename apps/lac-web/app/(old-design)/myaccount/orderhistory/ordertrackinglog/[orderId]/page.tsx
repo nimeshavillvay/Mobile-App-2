@@ -22,17 +22,24 @@ export const generateMetadata = async ({
   }
 
   return {
-    title: orderId,
-    description: orderId,
+    title: `Order Tracking - ${orderId}`,
+    description: `Order tracking log related to order - ${orderId}`,
   };
 };
 
 const OrderTrackingLogPage = async ({
   params: { orderId },
 }: OrderTrackingLogPageProps) => {
+  if (!orderId) {
+    return notFound();
+  }
+
   const trackingLog = await getOrderTrackingLog(orderId);
-  const shippingMethods = await getShippingMethods();
-  const plants = await getPlants();
+
+  const [shippingMethods, plants] = await Promise.all([
+    getShippingMethods(),
+    getPlants(),
+  ]);
 
   const trackingInfo = trackingLog.trackingInfo;
 
@@ -102,4 +109,5 @@ const OrderTrackingLogPage = async ({
     </div>
   );
 };
+
 export default OrderTrackingLogPage;
