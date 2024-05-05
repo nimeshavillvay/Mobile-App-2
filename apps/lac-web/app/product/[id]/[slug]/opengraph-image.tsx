@@ -10,8 +10,8 @@ export const size = {
 export const runtime = "edge";
 export const contentType = "image/png";
 
-const Image = async ({ params: { id } }: ProductPageProps) => {
-  const product = await getProduct(id);
+const Image = async ({ params: { id, slug } }: ProductPageProps) => {
+  const product = await getProduct(id, slug);
 
   return OGImage({
     title: product.selectedProduct.productName,
