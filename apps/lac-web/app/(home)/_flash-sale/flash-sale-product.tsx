@@ -1,5 +1,6 @@
 "use client";
 
+import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import {
   ProductCard,
   ProductCardActions,
@@ -8,7 +9,6 @@ import {
   ProductCardDiscount,
   ProductCardHero,
   ProductCardImage,
-  ProductCardLabel,
   ProductCardPrice,
 } from "@repo/web-ui/components/product-card";
 
@@ -19,16 +19,40 @@ type FlashSaleProductProps = {
     title: string;
     sku: string;
     image: string;
+    uom: string;
   };
+  token: string;
 };
 
 const FlashSaleProduct = ({
-  product: { id, slug, title, sku, image },
+  product: { id, slug, title, sku, image, uom },
+  token,
 }: FlashSaleProductProps) => {
+  const priceCheckQuery = useSuspensePriceCheck(token, [
+    { productId: parseInt(id), qty: 1 },
+  ]);
+
+  let currentPrice = 0;
+  let previousPrice = 0;
+  let discountPercent = 0;
+
+  if (priceCheckQuery.data.productPrices[0]) {
+    currentPrice = priceCheckQuery.data.productPrices[0].price;
+    previousPrice = priceCheckQuery.data.productPrices[0].extendedPrice;
+  }
+
+  if (currentPrice !== previousPrice) {
+    discountPercent = Math.floor(
+      ((currentPrice - previousPrice) / previousPrice) * 100,
+    );
+  }
+
   return (
     <ProductCard className="shrink-0 snap-start">
       <ProductCardHero>
-        <ProductCardDiscount>30</ProductCardDiscount>
+        {discountPercent > 0 && (
+          <ProductCardDiscount>{discountPercent}</ProductCardDiscount>
+        )}
 
         <ProductCardImage
           src={image}
@@ -36,8 +60,6 @@ const FlashSaleProduct = ({
           href={`/product/${id}/${slug}`}
           title={title}
         />
-
-        <ProductCardLabel>Label</ProductCardLabel>
       </ProductCardHero>
 
       <ProductCardContent>
@@ -47,7 +69,11 @@ const FlashSaleProduct = ({
           href={`/product/${id}/${slug}`}
         />
 
-        <ProductCardPrice price={2.05} uom="pair" actualPrice={4.11} />
+        <ProductCardPrice
+          price={currentPrice}
+          uom={uom}
+          actualPrice={previousPrice}
+        />
 
         <ProductCardActions />
       </ProductCardContent>

@@ -42,7 +42,13 @@ const useSuspensePriceCheck = (token: string, products: Product[]) => {
           headers: {
             authorization: `Bearer ${token}`,
           },
-          json: { products: products },
+          json: {
+            products: products.map((product) => ({
+              productid: product.productId,
+              qty: product.qty,
+            })),
+          },
+          cache: "no-store",
         })
         .json<ItemsPriceResult>(),
     select: (data) => {
