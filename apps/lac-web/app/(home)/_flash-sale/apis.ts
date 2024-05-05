@@ -52,6 +52,7 @@ export const getSaleItems = async () => {
     ),
     groupId: Number(data.groupId),
     productId: data.productId,
+    slug: data.slug,
     groupImage: data.group_img,
     productImage: data.product_img,
     productSku: data.productTitle,

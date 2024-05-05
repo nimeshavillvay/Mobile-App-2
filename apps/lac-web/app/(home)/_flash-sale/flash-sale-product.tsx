@@ -15,6 +15,7 @@ import {
 type FlashSaleProductProps = {
   product: {
     id: string;
+    slug: string;
     title: string;
     sku: string;
     image: string;
@@ -22,7 +23,7 @@ type FlashSaleProductProps = {
 };
 
 const FlashSaleProduct = ({
-  product: { id, title, sku, image },
+  product: { id, slug, title, sku, image },
 }: FlashSaleProductProps) => {
   return (
     <ProductCard className="shrink-0 snap-start">
@@ -32,8 +33,7 @@ const FlashSaleProduct = ({
         <ProductCardImage
           src={image}
           alt={`A picture of the product ${title}`}
-          // TODO Add slug to route
-          href={`/product/${id}/`}
+          href={`/product/${id}/${slug}`}
           title={title}
         />
 
@@ -44,8 +44,7 @@ const FlashSaleProduct = ({
         <ProductCardDetails
           title={title}
           sku={sku}
-          // TODO Add slug to route
-          href={`/product/${id}/`}
+          href={`/product/${id}/${slug}`}
         />
 
         <ProductCardPrice price={2.05} uom="pair" actualPrice={4.11} />

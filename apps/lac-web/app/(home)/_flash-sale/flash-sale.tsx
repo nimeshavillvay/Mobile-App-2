@@ -22,6 +22,7 @@ const FlashSale = async () => {
             key={product.productId}
             product={{
               id: product.productId,
+              slug: product.slug,
               title: product.productTitle,
               sku: product.productSku,
               image: product.productImage,
