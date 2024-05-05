@@ -1,4 +1,5 @@
 import { api } from "@/_lib/api";
+import type { Filters } from "@/_lib/types";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
 const ORDER_HISTORY = "Order History";
@@ -11,18 +12,6 @@ const FILTER_TYPES = {
   [FAVORITES]: "F",
   [CATEGORIES]: "C",
 } as const;
-
-type Filters = {
-  id: string;
-  filter: string;
-  values: {
-    id: number;
-    value: string;
-    icon: string | null;
-    tooltip: string | null;
-    active: boolean;
-  }[];
-};
 
 const useSuspenseFilters = (
   token: string,

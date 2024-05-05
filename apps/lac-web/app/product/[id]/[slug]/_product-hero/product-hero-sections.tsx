@@ -169,13 +169,15 @@ type GroupAsset = {
 };
 export const ProductDetails = async ({
   id,
+  slug,
   className,
 }: {
   id: string;
+  slug: string;
   className?: string;
 }) => {
   const [product, attachments] = await Promise.all([
-    getProduct(id),
+    getProduct(id, slug),
     api
       .get(`rest/landingattachment/${id}`, {
         next: {

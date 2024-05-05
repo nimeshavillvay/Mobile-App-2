@@ -1,13 +1,19 @@
 import {
   ProductsGrid,
-  ProductsGridFilters,
-  ProductsGridHeader,
-  ProductsGridList,
-  ProductsGridPagination,
+  ProductsGridDesktopContainer,
+  ProductsGridFiltersSkeleton,
+  ProductsGridHeaderSkeleton,
+  ProductsGridListSkeleton,
+  ProductsGridPaginationSkeleton,
 } from "@/_components/products-grid";
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
-
 import { cookies } from "next/headers";
+import { Suspense } from "react";
+import ProductsListDesktopFiltersHeader from "./products-list-desktop-filters-header";
+import ProductsListFilters from "./products-list-filters";
+import ProductsListGrid from "./products-list-grid";
+import ProductsListHeader from "./products-list-header";
+import ProductsListPagination from "./products-list-pagination";
 
 type ProductsListProps = {
   categoryId: string;
@@ -23,33 +29,48 @@ const ProductsList = ({ categoryId }: ProductsListProps) => {
 
   return (
     <ProductsGrid>
-      <ProductsGridHeader token={tokenCookie.value} categoryId={categoryId} />
+      <Suspense fallback={<ProductsGridHeaderSkeleton />}>
+        <ProductsListHeader token={tokenCookie.value} categoryId={categoryId} />
+      </Suspense>
 
-      {/* Mobile products list */}
-      <ProductsGridList
-        type="mobile"
-        token={tokenCookie.value}
-        categoryId={categoryId}
-      />
-
-      {/* Desktop products grid */}
-      <div className="container hidden flex-row items-start gap-10 md:flex">
-        <ProductsGridFilters
+      <Suspense>
+        <ProductsListDesktopFiltersHeader
           token={tokenCookie.value}
           categoryId={categoryId}
         />
+      </Suspense>
 
-        <ProductsGridList
-          type="desktop"
+      <Suspense fallback={<ProductsGridListSkeleton type="mobile" />}>
+        <ProductsListGrid
+          type="mobile"
           token={tokenCookie.value}
           categoryId={categoryId}
         />
-      </div>
+      </Suspense>
 
-      <ProductsGridPagination
-        token={tokenCookie.value}
-        categoryId={categoryId}
-      />
+      <ProductsGridDesktopContainer>
+        <Suspense fallback={<ProductsGridFiltersSkeleton />}>
+          <ProductsListFilters
+            token={tokenCookie.value}
+            categoryId={categoryId}
+          />
+        </Suspense>
+
+        <Suspense fallback={<ProductsGridListSkeleton type="desktop" />}>
+          <ProductsListGrid
+            type="desktop"
+            token={tokenCookie.value}
+            categoryId={categoryId}
+          />
+        </Suspense>
+      </ProductsGridDesktopContainer>
+
+      <Suspense fallback={<ProductsGridPaginationSkeleton />}>
+        <ProductsListPagination
+          token={tokenCookie.value}
+          categoryId={categoryId}
+        />
+      </Suspense>
     </ProductsGrid>
   );
 };

@@ -2,49 +2,41 @@
 
 import ProductCard from "@/_components/product-card";
 import { cn } from "@/_lib/utils";
-import { type ComponentProps } from "react";
-import useSuspenseSearchProductList from "./use-suspense-search-products-list.hook";
+import { ProductCardSkeleton } from "@repo/web-ui/components/product-card";
+import { type ComponentProps, type ReactNode } from "react";
 
-type ProductsGridListProps = {
-  token: string;
-  categoryId: string;
-  type: "mobile" | "desktop";
-};
-
-export const ProductsGridList = ({
-  token,
-  categoryId,
+const ProductsGridListContainer = ({
   type,
-}: ProductsGridListProps) => {
-  const searchQuery = useSuspenseSearchProductList(token, categoryId);
-
-  const products: {
-    prop: ComponentProps<typeof ProductCard>["product"];
-    info: { groupId: string };
-  }[] = searchQuery.data.groupList.map((product) => ({
-    prop: {
-      groupName: product.productGroupName,
-      groupImage: product.groupImage,
-      variants: product.productSkuList.map((variant) => ({
-        id: variant.productId,
-        slug: variant.slug,
-        title: variant.productName,
-        image: variant.image,
-      })),
-    },
-    info: {
-      groupId: product.groupId,
-    },
-  }));
-
+  children,
+}: {
+  type: "mobile" | "desktop";
+  children: ReactNode;
+}) => {
   return (
     <div
       className={cn(
         type === "mobile"
-          ? "container flex flex-col gap-3 md:hidden"
-          : "grid flex-1 grid-cols-5 gap-5",
+          ? "flex flex-col gap-3 md:hidden"
+          : "grid flex-1 gap-5 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 3xl:grid-cols-5",
       )}
     >
+      {children}
+    </div>
+  );
+};
+
+export const ProductsGridList = ({
+  type,
+  products,
+}: {
+  type: ComponentProps<typeof ProductsGridListContainer>["type"];
+  products: {
+    prop: ComponentProps<typeof ProductCard>["product"];
+    info: { groupId: string };
+  }[];
+}) => {
+  return (
+    <ProductsGridListContainer type={type}>
       {products.map(({ prop, info }) => (
         <ProductCard
           key={info.groupId}
@@ -52,6 +44,23 @@ export const ProductsGridList = ({
           product={prop}
         />
       ))}
-    </div>
+    </ProductsGridListContainer>
+  );
+};
+
+export const ProductsGridListSkeleton = ({
+  type,
+}: {
+  type: ComponentProps<typeof ProductsGridListContainer>["type"];
+}) => {
+  return (
+    <ProductsGridListContainer type={type}>
+      {Array.from({ length: 20 }).map((_, index) => (
+        <ProductCardSkeleton
+          key={index}
+          orientation={type === "mobile" ? "horizontal" : "vertical"}
+        />
+      ))}
+    </ProductsGridListContainer>
   );
 };
