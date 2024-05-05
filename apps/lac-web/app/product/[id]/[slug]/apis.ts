@@ -71,8 +71,7 @@ type Product = {
   };
 };
 
-// TODO Make slug mandatory
-export const getProduct = async (id: string, slug?: string) => {
+export const getProduct = async (id: string, slug: string) => {
   const response = await api
     .get("rest/landinginfo", {
       searchParams: {
@@ -85,7 +84,7 @@ export const getProduct = async (id: string, slug?: string) => {
     .json<Product>();
 
   // Check if the slug matches the product's slug
-  if (slug && slug !== response.selected_item.slug) {
+  if (slug !== response.selected_item.slug) {
     return notFound();
   }
 
