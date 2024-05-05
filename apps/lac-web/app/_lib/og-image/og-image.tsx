@@ -31,21 +31,24 @@ const OGImage = async ({
         tw="flex h-full w-full flex-col bg-white"
         style={{ fontFamily: "DM Sans", fontWeight: 400 }}
       >
-        <div tw="flex-1 flex flex-col justify-between p-10">
+        <div tw="flex flex-1 flex-col justify-between p-10">
           <div
             tw="flex flex-row items-start justify-between"
             style={{ gap: "1rem" }}
           >
-            <div tw="flex flex-col flex-1">
+            <div tw="flex flex-1 flex-col">
               <h1
-                tw="text-7xl text-[#2A2C2E] leading-none"
-                style={{ fontFamily: "Jost", fontWeight: 700 }}
+                tw="text-6xl leading-none text-[#2A2C2E]"
+                style={{
+                  fontFamily: "Jost",
+                  fontWeight: 700,
+                }}
               >
                 {title}
               </h1>
 
               <h2
-                tw="text-4xl text-[#74767B] leading-none"
+                tw="text-4xl leading-none text-[#74767B]"
                 style={{ fontWeight: 500 }}
               >
                 {subtitle}
