@@ -1,14 +1,10 @@
 import Separator from "@/old/_components/separator";
 import Title from "@/old/_components/title";
+import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import type { Metadata } from "next";
 import dynamic from "next/dynamic";
-import { Skeleton } from "~/components/ui/skeleton";
 import { getTaxFormDetails } from "./apis";
 import StateSelector from "./state-selector";
-
-export const metadata: Metadata = {
-  title: "Sales Tax And Exemption",
-};
 
 const DynamicMap = dynamic(() => import("./map"), {
   ssr: false,
@@ -16,6 +12,10 @@ const DynamicMap = dynamic(() => import("./map"), {
     <Skeleton className="w-full md:h-[285px] lg:h-[388px] xl:h-[490px] 2xl:h-[595px]" />
   ),
 });
+
+export const metadata: Metadata = {
+  title: "Sales Tax And Exemption",
+};
 
 const SalesTaxAndExemptionPage = async () => {
   const taxFormDetails = await getTaxFormDetails();
