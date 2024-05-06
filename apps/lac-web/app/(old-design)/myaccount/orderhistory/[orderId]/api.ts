@@ -1,7 +1,5 @@
 import { api } from "@/_lib/api";
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
-import type { OldItemInfo } from "@/_lib/types";
-import { mapGetItemInfoResponse } from "@/_mappers/get-item-info.mapper";
 import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import "server-only";
@@ -202,22 +200,5 @@ export const getOrderDetail = async (orderId: string) => {
     return transformedData;
   } catch {
     return notFound();
-  }
-};
-
-export const getItemInfo = async (productIdList: number[]) => {
-  try {
-    const response = await api
-      .get("rest/getiteminfo", {
-        searchParams: { productids: productIdList.toString() },
-        cache: "no-store",
-      })
-      .json<OldItemInfo[]>();
-
-    const transformedData = mapGetItemInfoResponse(response);
-
-    return transformedData;
-  } catch {
-    return [];
   }
 };

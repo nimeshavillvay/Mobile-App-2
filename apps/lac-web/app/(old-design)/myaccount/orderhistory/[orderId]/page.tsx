@@ -3,6 +3,7 @@ import {
   getPlants,
   getShippingMethods,
 } from "@/_lib/apis/server";
+import { getItemInfo } from "@/_lib/apis/shared";
 import AlertInline from "@/old/_components/alert-inline";
 import Separator from "@/old/_components/separator";
 import { Badge } from "@/old/_components/ui/badge";
@@ -12,7 +13,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import BackButton from "../back-button";
-import { getItemInfo, getOrderDetail } from "./api";
+import { getOrderDetail } from "./api";
 import OrderDetailsForMobile from "./order-details-for-mobile";
 import OrderItem from "./order-item";
 import OrderItemForMobile from "./order-item-for-mobile";
