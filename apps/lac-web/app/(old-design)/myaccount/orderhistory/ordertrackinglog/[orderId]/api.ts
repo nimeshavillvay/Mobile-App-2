@@ -18,9 +18,6 @@ export const getOrderTrackingLog = async (orderId: string) => {
         searchParams: {
           orderNo: orderId,
         },
-        next: {
-          revalidate: DEFAULT_REVALIDATE,
-        },
       })
       .json<OrderTracker>();
 
