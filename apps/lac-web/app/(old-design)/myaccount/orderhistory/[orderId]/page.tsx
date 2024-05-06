@@ -57,10 +57,10 @@ const DetailedOrderPage = async ({
   if (orderDetail?.items?.length) {
     const productIds = orderDetail.items.map((item) => item.productId);
 
-    if (productIds.length) {
+    if (productIds.length > 0) {
       const itemInfo = await getItemInfo(productIds);
 
-      if (itemInfo?.length) {
+      if (itemInfo?.length > 0) {
         orderDetail.items = orderDetail.items.map((item) => {
           const details =
             itemInfo.find(

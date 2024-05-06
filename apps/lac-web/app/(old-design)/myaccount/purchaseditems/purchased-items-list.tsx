@@ -106,11 +106,7 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
         isExcludedProduct: false,
         productSku: "",
         productName: "",
-        image: {
-          original: "",
-          webp: "",
-          jp2: "",
-        },
+        image: "",
         isComparison: false,
         skuAttribute: "",
         isHazardous: false,

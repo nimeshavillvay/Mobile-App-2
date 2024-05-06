@@ -1,9 +1,3 @@
-export type ImageInfo = {
-  original: string;
-  webp: string;
-  jp2: string;
-};
-
 export type Attributes = {
   attribute_name: string;
   attribute_value: string;
@@ -14,7 +8,7 @@ export type OldItemInfo = {
   item_name: string;
   is_favourite: boolean | null;
   is_comparison: boolean | null;
-  img: ImageInfo;
+  img: string;
   attributes: Attributes[];
   group_id: string;
   is_product_exclude: boolean;
@@ -59,7 +53,7 @@ export type ItemInfo = {
   isExcludedProduct: boolean;
   productSku: string;
   productName: string;
-  image: ImageInfo;
+  image: string;
   isComparison: boolean;
   skuAttribute: string;
   isHazardous: boolean;

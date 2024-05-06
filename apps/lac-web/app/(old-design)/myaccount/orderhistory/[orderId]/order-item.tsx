@@ -44,7 +44,7 @@ type OrderItemProps = {
     itemDescription: string;
     descriptionChanged: boolean;
     unitOfMeasure?: string;
-    image?: { original: string; webp: string; jp2: string };
+    image?: string;
     productTitle?: string;
     isExcludedProduct?: boolean;
   };
@@ -96,9 +96,9 @@ const OrderItem = ({
                 productId ? "pointer-events-auto" : "pointer-events-none"
               }
             >
-              {image?.original ? (
+              {image ? (
                 <Image
-                  src={image.original.replace("https:", "http:")}
+                  src={image}
                   alt={itemDescription}
                   width={76}
                   height={76}
