@@ -1,9 +1,17 @@
 import Separator from "@/old/_components/separator";
 import Title from "@/old/_components/title";
+import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import type { Metadata } from "next";
+import dynamic from "next/dynamic";
 import { getTaxFormDetails } from "./apis";
-import Map from "./map";
 import StateSelector from "./state-selector";
+
+const DynamicMap = dynamic(() => import("./map"), {
+  ssr: false,
+  loading: () => (
+    <Skeleton className="w-full md:h-[285px] lg:h-[388px] xl:h-[490px] 2xl:h-[595px]" />
+  ),
+});
 
 export const metadata: Metadata = {
   title: "Sales Tax And Exemption",
@@ -32,16 +40,16 @@ const SalesTaxAndExemptionPage = async () => {
       </div>
 
       <div className="mt-4 grid grid-cols-3 gap-1 md:grid-cols-4">
-        <div className="col-span-1 md:col-span-3">
-          <Map taxFormDetails={taxFormDetails} />
+        <div className="col-span-1 hidden md:col-span-3 md:block">
+          <DynamicMap taxFormDetails={taxFormDetails} />
         </div>
 
-        <div className="col-span-2 md:col-span-1">
+        <div className="col-span-3 md:col-span-1">
           <StateSelector taxFormDetails={taxFormDetails} />
         </div>
       </div>
 
-      <div>
+      <div className="mt-3">
         If your state is not displayed, please call (800) 444-0043 Option 2 for
         more information
       </div>
