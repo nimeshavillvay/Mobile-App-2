@@ -191,7 +191,11 @@ const ProductPage = async ({ params: { id, slug } }: ProductPageProps) => {
                         actualPrice={4.11}
                       />
 
-                      <ProductCardActions />
+                      <ProductCardActions
+                        addToCart={() => {
+                          console.log("> Added to cart");
+                        }}
+                      />
                     </ProductCardContent>
                   </ProductCard>
                 ))}
@@ -235,7 +239,11 @@ const ProductPage = async ({ params: { id, slug } }: ProductPageProps) => {
 
                 <ProductCardPrice price={2.05} uom="pair" actualPrice={4.11} />
 
-                <ProductCardActions />
+                <ProductCardActions
+                  addToCart={() => {
+                    console.log("> Added to cart");
+                  }}
+                />
               </ProductCardContent>
             </ProductCard>
           ))}

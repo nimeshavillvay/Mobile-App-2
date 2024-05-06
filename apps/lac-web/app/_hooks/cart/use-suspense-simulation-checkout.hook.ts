@@ -2,12 +2,15 @@ import { api } from "@/_lib/api";
 import type { CartConfiguration } from "@/_lib/types";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
-const useSuspenseSimulationCheckout = () => {
+const useSuspenseSimulationCheckout = (token: string) => {
   return useSuspenseQuery({
-    queryKey: ["cart", "simulation-checkout"],
+    queryKey: ["cart", "simulation-checkout", token],
     queryFn: async () => {
       return await api
         .get("rest/simulation-checkout", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
           cache: "no-cache",
         })
         .json<{
@@ -29,7 +32,7 @@ const useSuspenseSimulationCheckout = () => {
             price: number;
             priceunit: string;
             sku: string;
-            productid?: number;
+            productid: string;
             cartid?: number;
             coupon: string | null;
             quantity: number;
@@ -84,7 +87,7 @@ const useSuspenseSimulationCheckout = () => {
           extendedPrice: item.extendedprice,
           price: item.price,
           productSku: item.sku,
-          productId: item.productid,
+          productId: parseInt(item.productid),
           cartId: item.cartid,
           coupon: item.coupon,
           quantity: item.quantity,

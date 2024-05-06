@@ -31,6 +31,7 @@ const FeaturedBrandList = async () => {
             title: item.productName,
             image: item.image,
             uom: item.unitOfMeasure,
+            minOrderQty: item.minimumOrderQuantity,
           })),
         }}
         token={sessionToken.value}

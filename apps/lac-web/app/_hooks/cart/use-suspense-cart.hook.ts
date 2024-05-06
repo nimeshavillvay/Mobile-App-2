@@ -26,12 +26,15 @@ const getConfigAvailability = (option: CartItemConfiguration) => {
   return plantAvailable;
 };
 
-const useSuspenseCart = () => {
+const useSuspenseCart = (token: string) => {
   return useSuspenseQuery({
-    queryKey: ["cart"],
+    queryKey: ["cart", token],
     queryFn: async () => {
       return await api
         .get("rest/cart", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
           cache: "no-cache",
         })
         .json<{

@@ -1,5 +1,6 @@
 "use client";
 
+import useAddToCartMutation from "@/_hooks/cart/use-add-to-cart-mutation.hook";
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import { cn } from "@/_lib/utils";
 import {
@@ -27,6 +28,7 @@ type ProductProps = {
       title: string;
       image: string;
       uom: string;
+      minOrderQty: number;
     }[];
   };
   token: string;
@@ -59,14 +61,17 @@ const ProductCard = ({ orientation, product, token }: ProductProps) => {
   let id = "";
   let sku = "";
   let uom = "";
+  let minOrderQty = 0;
   if (selectedVariant) {
     id = selectedVariant.id;
     sku = selectedVariant.sku;
     uom = selectedVariant.uom;
+    minOrderQty = selectedVariant.minOrderQty;
   } else if (defaultVariant) {
     id = defaultVariant.id;
     sku = defaultVariant.sku;
     uom = defaultVariant.uom;
+    minOrderQty = defaultVariant.minOrderQty;
   }
 
   let title = "";
@@ -104,6 +109,15 @@ const ProductCard = ({ orientation, product, token }: ProductProps) => {
       ((currentPrice - previousPrice) / previousPrice) * 100,
     );
   }
+
+  const addToCartMutation = useAddToCartMutation(token, {
+    productId: parseInt(id),
+    quantity: minOrderQty,
+  });
+
+  const addToCart = () => {
+    addToCartMutation.mutate();
+  };
 
   return (
     <ProductCardRoot
@@ -147,7 +161,10 @@ const ProductCard = ({ orientation, product, token }: ProductProps) => {
               actualPrice={previousPrice}
             />
 
-            <ProductCardActions />
+            <ProductCardActions
+              addToCart={addToCart}
+              disabled={addToCartMutation.isPending}
+            />
           </>
         )}
       </ProductCardContent>
