@@ -1,4 +1,5 @@
 import productItemImage from "@/_assets/images/product-item-image.png";
+import useUpdateCartConfigMutation from "@/_hooks/cart/use-update-cart-item-mutation.hook";
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import type { CartItemConfiguration } from "@/_lib/types";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -14,7 +15,6 @@ import { useForm } from "react-hook-form";
 import Balancer from "react-wrap-balancer";
 import { z } from "zod";
 import { ShippingMethod } from "../types";
-import useUpdateCartConfigMutation from "../use-update-cart-item-mutation.hook";
 
 const cartItemSchema = z.object({
   quantity: z.number(),
