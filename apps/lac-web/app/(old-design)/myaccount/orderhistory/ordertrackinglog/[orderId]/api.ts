@@ -1,5 +1,5 @@
 import { api } from "@/_lib/api";
-import { DEFAULT_REVALIDATE, SESSION_TOKEN_COOKIE } from "@/_lib/constants";
+import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import "server-only";
