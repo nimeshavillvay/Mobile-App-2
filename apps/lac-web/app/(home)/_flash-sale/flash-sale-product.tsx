@@ -1,5 +1,6 @@
 "use client";
 
+import useAddToCartMutation from "@/_hooks/cart/use-add-to-cart-mutation.hook";
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import {
   ProductCard,
@@ -20,12 +21,13 @@ type FlashSaleProductProps = {
     sku: string;
     image: string;
     uom: string;
+    minOrder: number;
   };
   token: string;
 };
 
 const FlashSaleProduct = ({
-  product: { id, slug, title, sku, image, uom },
+  product: { id, slug, title, sku, image, uom, minOrder },
   token,
 }: FlashSaleProductProps) => {
   const priceCheckQuery = useSuspensePriceCheck(token, [
@@ -46,6 +48,15 @@ const FlashSaleProduct = ({
       ((currentPrice - previousPrice) / previousPrice) * 100,
     );
   }
+
+  const addToCartMutation = useAddToCartMutation(token, {
+    productId: parseInt(id),
+    quantity: minOrder,
+  });
+
+  const addToCart = () => {
+    addToCartMutation.mutate();
+  };
 
   return (
     <ProductCard className="shrink-0 snap-start">
@@ -75,7 +86,10 @@ const FlashSaleProduct = ({
           actualPrice={previousPrice}
         />
 
-        <ProductCardActions />
+        <ProductCardActions
+          addToCart={addToCart}
+          disabled={addToCartMutation.isPending}
+        />
       </ProductCardContent>
     </ProductCard>
   );

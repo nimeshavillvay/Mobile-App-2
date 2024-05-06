@@ -1,5 +1,6 @@
 "use client";
 
+import useItemInfo from "@/_hooks/product/use-item-info.hook";
 import { ItemInfo } from "@/_lib/types";
 import {
   Select,
@@ -34,7 +35,6 @@ import PurchasedItemsListForMobile from "./purchased-items-list-for-mobile";
 import PurchasedItemsSelectors from "./purchased-items-selectors";
 import TotalCountAndPagination from "./total-count-and-pagination";
 import { CombinedPurchasedItem } from "./types";
-import useGetItemInfo from "./use-get-items-info.hook";
 import useSuspensePurchasedItemsList from "./use-suspense-purchased-items-list.hook";
 
 const PurchasedItemsList = ({ token }: { token: string }) => {
@@ -75,7 +75,7 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
     });
   }
 
-  const getItemInfo = useGetItemInfo(token, productIds);
+  const getItemInfo = useItemInfo(productIds);
   if (purchasedItemsList && getItemInfo) {
     isLoading = false;
   }
@@ -96,7 +96,7 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
   const combinedPurchasedItems: CombinedPurchasedItem[] = [];
 
   if (purchasedItemsList.data.pagination.totalCount > 0) {
-    purchasedItemsList.data.products.map((item) => {
+    purchasedItemsList.data.products.forEach((item) => {
       const itemInfo = getItemInfo?.data?.find(
         (info) => info.productSku === item.productSku,
       );
@@ -136,7 +136,13 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
         productCategory: "",
       };
 
-      combinedPurchasedItems.push({ ...item, ...(itemInfo || initialDetails) });
+      // TODO Fix this
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-expect-error
+      combinedPurchasedItems.push({
+        ...item,
+        ...(itemInfo ?? initialDetails),
+      });
     });
   }
 

@@ -26,6 +26,10 @@ const meta: Meta<typeof ProductCard> = {
 export default meta;
 type Story = StoryObj<typeof ProductCard>;
 
+const addToCart = () => {
+  console.log("Added to cart");
+};
+
 export const WithDiscount: Story = {
   render: () => {
     return (
@@ -52,7 +56,7 @@ export const WithDiscount: Story = {
 
           <ProductCardPrice price={39} uom="pair" actualPrice={49} />
 
-          <ProductCardActions />
+          <ProductCardActions addToCart={addToCart} />
         </ProductCardContent>
       </ProductCard>
     );
@@ -83,7 +87,7 @@ export const WithoutDiscount: Story = {
 
           <ProductCardPrice price={39} uom="pair" />
 
-          <ProductCardActions />
+          <ProductCardActions addToCart={addToCart} />
         </ProductCardContent>
       </ProductCard>
     );
@@ -116,7 +120,7 @@ export const Horizontal: Story = {
 
           <ProductCardPrice price={39} uom="pair" actualPrice={49} />
 
-          <ProductCardActions />
+          <ProductCardActions addToCart={addToCart} />
         </ProductCardContent>
       </ProductCard>
     );

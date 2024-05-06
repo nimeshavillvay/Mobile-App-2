@@ -15,13 +15,17 @@ const detailsSchema = z.object({
   projectName: z.string().optional(),
 });
 
-const CartDetails = () => {
+type CartDetailsProps = {
+  token: string;
+};
+
+const CartDetails = ({ token }: CartDetailsProps) => {
   const id = useId();
   const poId = `po-${id}`;
   const projectNameId = `project-name-${id}`;
 
   const { toast } = useToast();
-  const { data } = useSuspenseCart();
+  const { data } = useSuspenseCart(token);
 
   const { register, getValues } = useForm<z.infer<typeof detailsSchema>>({
     resolver: zodResolver(detailsSchema),

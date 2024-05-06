@@ -68,15 +68,18 @@ const getPlantAvailability = (option: Options) => {
   return plantAvailable;
 };
 
-const useSuspenseCheckAvailability = ({
-  productId,
-  qty,
-  plant,
-}: {
-  productId: number;
-  qty: number;
-  plant?: string;
-}) => {
+const useSuspenseCheckAvailability = (
+  token: string,
+  {
+    productId,
+    qty,
+    plant,
+  }: {
+    productId: number;
+    qty: number;
+    plant?: string;
+  },
+) => {
   return useSuspenseQuery({
     queryKey: [
       "user",
@@ -87,18 +90,18 @@ const useSuspenseCheckAvailability = ({
         qty,
         plant,
       },
+      token,
     ],
     queryFn: () =>
       api
         .post("rest/availability-check", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
           json: {
-            productids: [
-              {
-                productid: productId,
-                qty,
-                plant,
-              },
-            ],
+            productid: productId,
+            qty,
+            plant,
           },
           cache: "no-store",
         })
