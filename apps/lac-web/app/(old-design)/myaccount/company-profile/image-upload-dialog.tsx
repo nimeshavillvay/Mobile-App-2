@@ -107,7 +107,6 @@ const ImageUploadDialog = ({
                 <br /> or
               </p>
             </div>
-            {/* TODO: remove all unnecessary divs here */}
             <div className="text-center">
               <Button onClick={open}>
                 <span className="sr-only">Upload profile image</span>Choose File

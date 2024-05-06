@@ -14,6 +14,10 @@ export type Address = {
   default?: boolean;
 };
 
+export type AddressWithUuid = Address & {
+  uuid: string;
+};
+
 export type AddressFormData = {
   company?: string;
   addressLineOne: string;
@@ -34,6 +38,12 @@ export type AddressCheckSuggestions = {
   checkType: string;
   message: string;
   suggestions: Address[];
+};
+
+export type AddressCheckSuggestionsWithUuid = {
+  checkType: string;
+  message: string;
+  suggestions: AddressWithUuid[];
 };
 
 export type CompanyDetails = {

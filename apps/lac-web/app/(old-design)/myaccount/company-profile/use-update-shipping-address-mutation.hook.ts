@@ -3,7 +3,7 @@ import { useToast } from "@/old/_components/ui/use-toast";
 import useCookies from "@/old/_hooks/storage/use-cookies.hook";
 import { ACCOUNT_TOKEN_COOKIE } from "@/old/_lib/constants";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import type { AddressFormData } from "./types";
+import type { AddressCheckSuggestions, AddressFormData } from "./types";
 
 const useUpdateShippingAddressMutation = () => {
   const queryClient = useQueryClient();
@@ -33,7 +33,7 @@ const useUpdateShippingAddressMutation = () => {
                 default: shippingAddressFormData.default,
               },
         })
-        .json<unknown>(),
+        .json<AddressCheckSuggestions>(),
     onMutate: () => {
       toast({ description: "Updating shipping address" });
     },

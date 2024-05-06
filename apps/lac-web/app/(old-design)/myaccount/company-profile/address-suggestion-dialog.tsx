@@ -6,9 +6,15 @@ import {
 } from "@/old/_components/ui/dialog";
 import { Label } from "@/old/_components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/old/_components/ui/radio-group";
+import { nanoid } from "nanoid";
 import { Dispatch, SetStateAction, useState } from "react";
 import { SAP_ADDRESS_CHECK_RESPONSE } from "./mock-response";
-import { Address, AddressCheckSuggestions, AddressFormData } from "./types";
+import {
+  Address,
+  AddressCheckSuggestions,
+  AddressCheckSuggestionsWithUuid,
+  AddressFormData,
+} from "./types";
 import useAddShippingAddressMutation from "./use-add-shipping-address-mutation.hook";
 import useUpdateBillingAddressMutation from "./use-update-billing-address-mutation.hook";
 import useUpdateShippingAddressMutation from "./use-update-shipping-address-mutation.hook";
@@ -40,8 +46,23 @@ const AddressSuggestionDialog = ({
     {} as Address,
   );
 
-  const onAddressSuggestionChange = (addressSuggestion: string) => {
-    setSelectedAddressSuggestion(JSON.parse(addressSuggestion) as Address);
+  const suggestions = addressCheckSuggestions.suggestions.map((suggestion) => {
+    return { ...suggestion, uuid: nanoid() };
+  });
+
+  const addressSuggestions: AddressCheckSuggestionsWithUuid = {
+    checkType: addressCheckSuggestions.checkType,
+    message: addressCheckSuggestions.message,
+    suggestions,
+  };
+
+  const onAddressSuggestionChange = (addressSuggestionUuid: string) => {
+    const suggestion = addressSuggestions.suggestions.find(
+      (suggestion) => addressSuggestionUuid === suggestion?.uuid,
+    );
+    if (suggestion) {
+      setSelectedAddressSuggestion(suggestion);
+    }
   };
 
   const onBackButtonClicked = () => {
@@ -84,18 +105,14 @@ const AddressSuggestionDialog = ({
             ...selectedAddress,
           },
           {
-            onSuccess: () => {
+            onSuccess: (data) => {
               setOpenAddressDialog(false);
               setOpenAddressSuggestionDialog(false);
 
-              //TODO: you must pass the response received by the mutation request as the argument for the following method
-              // you must add mutate the response in such a way that each and every suggestion have a unique id. use nanoid package
-              const response = SAP_ADDRESS_CHECK_RESPONSE;
-
-              if (!response?.checkType) {
+              if (!data?.checkType) {
                 setOpenAddressSuggestionDialog(false);
               } else {
-                setAddressCheckSuggestions(response);
+                setAddressCheckSuggestions(data);
                 setOpenAddressSuggestionDialog(true);
               }
             },
@@ -109,17 +126,14 @@ const AddressSuggestionDialog = ({
             ...selectedAddress,
           },
           {
-            onSuccess: () => {
+            onSuccess: (data) => {
               setOpenAddressDialog(false);
               setOpenAddressSuggestionDialog(false);
 
-              //TODO: you must pass the response received by the mutation request as the argument for the following method
-              const response = SAP_ADDRESS_CHECK_RESPONSE;
-
-              if (!response?.checkType) {
+              if (!data?.checkType) {
                 setOpenAddressSuggestionDialog(false);
               } else {
-                setAddressCheckSuggestions(response);
+                setAddressCheckSuggestions(data);
                 setOpenAddressSuggestionDialog(true);
               }
             },
@@ -134,19 +148,14 @@ const AddressSuggestionDialog = ({
           ...selectedAddress,
         },
         {
-          // TODO: the following should be as onSuccess: () => {
-          onSuccess: () => {
+          onSuccess: (data) => {
             setOpenAddressDialog(false);
             setOpenAddressSuggestionDialog(false);
 
-            //TODO: you must pass the response received by the mutation request as the argument for the following method
-            // setAddressCheckSuggestions(UPS_ADDRESS_CHECK_RESPONSE);
-            const response = SAP_ADDRESS_CHECK_RESPONSE;
-
-            if (!response?.checkType) {
+            if (!data?.checkType) {
               setOpenAddressSuggestionDialog(false);
             } else {
-              setAddressCheckSuggestions(response);
+              setAddressCheckSuggestions(data);
               setOpenAddressSuggestionDialog(true);
             }
           },
@@ -165,31 +174,29 @@ const AddressSuggestionDialog = ({
         <p className="mx-5 mb-1">{addressCheckSuggestions?.message}</p>
 
         <RadioGroup onValueChange={onAddressSuggestionChange}>
-          {addressCheckSuggestions?.suggestions?.map(
-            (addressSuggestion, index) => (
-              <div
-                key={index}
-                className="mx-5 mt-1 flex cursor-default flex-row items-start gap-3 rounded border-2 border-gray-100 py-3 pl-5 shadow"
-              >
-                <RadioGroupItem value={JSON.stringify(addressSuggestion)} />
+          {addressSuggestions?.suggestions?.map((addressSuggestion, index) => (
+            <div
+              key={index}
+              className="mx-5 mt-1 flex cursor-default flex-row items-start gap-3 rounded border-2 border-gray-100 py-3 pl-5 shadow"
+            >
+              <RadioGroupItem value={addressSuggestion?.uuid} />
 
-                <div className="flex flex-col font-bold text-brand-gray-500">
-                  <Label className="font-bold text-brand-gray-500">
-                    {addressSuggestion?.streetAddress},{" "}
-                    {addressSuggestion?.locality}, {addressSuggestion?.region},{" "}
-                    {addressSuggestion?.county?.length ?? 0 > 0
-                      ? addressSuggestion?.county + ","
-                      : ""}
-                    {addressSuggestion?.countryName},{" "}
-                    {addressSuggestion?.postalCode}
-                    {addressSuggestion?.zip4?.length > 0
-                      ? "- " + addressSuggestion?.zip4
-                      : ""}
-                  </Label>
-                </div>
+              <div className="flex flex-col font-bold text-brand-gray-500">
+                <Label className="font-bold text-brand-gray-500">
+                  {addressSuggestion?.streetAddress},{" "}
+                  {addressSuggestion?.locality}, {addressSuggestion?.region},{" "}
+                  {addressSuggestion?.county?.length ?? 0 > 0
+                    ? addressSuggestion?.county + ","
+                    : ""}
+                  {addressSuggestion?.countryName},{" "}
+                  {addressSuggestion?.postalCode}
+                  {addressSuggestion?.zip4?.length > 0
+                    ? "- " + addressSuggestion?.zip4
+                    : ""}
+                </Label>
               </div>
-            ),
-          )}
+            </div>
+          ))}
         </RadioGroup>
 
         <div className="p-5 text-right">
