@@ -24,26 +24,26 @@ export const getOrderTrackingLog = async (orderId: string) => {
       })
       .json<OrderTracker>();
 
-    const transformedData = {
-      orderNo: Number(orderNo),
-      shipToAddress: {
-        attention: shipToAddress.attention,
-        street: shipToAddress.shipToStreet,
-        city: shipToAddress.shipToCity,
-        zipCode: shipToAddress.shipToZip,
-        country: shipToAddress.shipToCountry,
-        region: shipToAddress.shipToRegion,
-        phoneNumber: shipToAddress.shipToPhone,
-      },
-      trackingInfo: tracking_info,
-      driverNotes: driverNotes,
-    };
+    if (!orderNo) {
+      throw new Error("Order not found");
+    } else {
+      const transformedData = {
+        orderNo: Number(orderNo),
+        shipToAddress: {
+          attention: shipToAddress.attention,
+          street: shipToAddress.shipToStreet,
+          city: shipToAddress.shipToCity,
+          zipCode: shipToAddress.shipToZip,
+          country: shipToAddress.shipToCountry,
+          region: shipToAddress.shipToRegion,
+          phoneNumber: shipToAddress.shipToPhone,
+        },
+        trackingInfo: tracking_info,
+        driverNotes: driverNotes,
+      };
 
-    if (!transformedData.orderNo) {
-      return notFound();
+      return transformedData;
     }
-
-    return transformedData;
   } catch {
     return notFound();
   }
