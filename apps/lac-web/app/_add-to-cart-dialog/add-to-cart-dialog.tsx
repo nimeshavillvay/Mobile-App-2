@@ -104,9 +104,13 @@ const AddToCartDialog = ({ token }: AddToCartDialogProps) => {
                   </span>
                 </div>
 
-                <div className="text-lg text-wurth-gray-800">
-                  ${itemInSimulationCheckout?.price}
-                </div>
+                {itemInSimulationCheckout?.price ? (
+                  <div className="text-lg text-wurth-gray-800">
+                    ${itemInSimulationCheckout?.price}
+                  </div>
+                ) : (
+                  <Skeleton className="h-7 w-16" />
+                )}
               </div>
             </div>
           </div>
