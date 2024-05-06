@@ -2,6 +2,7 @@ import { type ComponentProps } from "react";
 import { MagnifyingGlass } from "~/components/icons/magnifying-glass";
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
+import { BarcodeScan } from "../icons/barcode-scan";
 
 export const SearchBox = ({
   className,
@@ -47,6 +48,24 @@ export const SearchBoxButton = ({
       {...delegated}
     >
       <MagnifyingGlass className="size-5" />
+    </Button>
+  );
+};
+
+export const BarcodeScanButton = ({
+  type = "submit",
+  className,
+  ...delegated
+}: Omit<ComponentProps<"button">, "children">) => {
+  return (
+    <Button
+      type={type}
+      variant="ghost"
+      size="icon"
+      className={cn("mx-0.5 rounded-full px-2", className)}
+      {...delegated}
+    >
+      <BarcodeScan className="size-5" />
     </Button>
   );
 };

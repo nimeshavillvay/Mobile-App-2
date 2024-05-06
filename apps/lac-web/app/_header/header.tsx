@@ -1,6 +1,7 @@
 import { api } from "@/_lib/api";
 import { DEFAULT_REVALIDATE } from "@/_lib/constants";
 import { cn } from "@/_lib/utils";
+import { BarcodeScannerDialog } from "@repo/web-ui/components/barcode-scan-dialog";
 import { Phone } from "@repo/web-ui/components/icons/phone";
 import { Shop } from "@repo/web-ui/components/icons/shop";
 import { ShoppingCart } from "@repo/web-ui/components/icons/shopping-cart";
@@ -123,6 +124,7 @@ const Header = async () => {
           <SearchBoxInput placeholder="What are you looking for?" />
 
           <SearchBoxButton />
+          <BarcodeScannerDialog />
         </SearchBox>
 
         <div className="ml-auto flex flex-row items-center gap-4 md:ml-0 md:min-w-[16.5rem] md:justify-end md:gap-6">
