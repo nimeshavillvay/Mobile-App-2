@@ -41,7 +41,7 @@ const CartItem = ({ product }: CartItemProps) => {
   const poId = `po-${id}`;
 
   const priceCheckQuery = useSuspensePriceCheck("token", [
-    { productId: product.id, qty: product.quantity },
+    { productid: product.id, qty: product.quantity },
   ]);
 
   const price = priceCheckQuery.data.productPrices[0];

@@ -8,6 +8,7 @@ import { checkAvailability } from "@/old/_lib/shared-apis";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import useCookies from "../storage/use-cookies.hook";
 
+// TODO: Remove this function after new cart functionality is implemented
 const useAddToCartMutation = () => {
   const queryClient = useQueryClient();
   const [cookies] = useCookies();
