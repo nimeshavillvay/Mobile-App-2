@@ -1,6 +1,6 @@
 export type Attributes = {
   attribute_name: string;
-  attribute_value: string;
+  attribute_value: string | null;
 };
 
 export type OldPagination = {
@@ -16,7 +16,6 @@ export type ItemInfo = {
   productName: string;
   image: string;
   isComparison: boolean;
-  skuAttribute: string;
   isHazardous: boolean;
   specialShipping: boolean;
   productIdOnSap: string;
@@ -29,15 +28,15 @@ export type ItemInfo = {
   minimumOrderQuantity: number;
   quantityByIncrements: number;
   weight: number;
-  prop65MessageOne: string;
-  prop65MessageTwo: string;
-  prop65MessageThree: string;
+  prop65MessageOne: string | null;
+  prop65MessageTwo: string | null;
+  prop65MessageThree: string | null;
   listPrice: number;
   isSaleItem: boolean;
   fClassId: number;
   class: string;
   attributes: Attributes[];
-  productStatus: string;
+  productStatus: string | null;
   isDirectlyShippedFromVendor: boolean;
   productSummary: string;
   brand: string;

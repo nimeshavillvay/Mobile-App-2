@@ -108,7 +108,6 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
         productName: "",
         image: "",
         isComparison: false,
-        skuAttribute: "",
         isHazardous: false,
         specialShipping: false,
         productIdOnSap: "",
@@ -136,9 +135,6 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
         productCategory: "",
       };
 
-      // TODO Fix this
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-expect-error
       combinedPurchasedItems.push({
         ...item,
         ...(itemInfo ?? initialDetails),
