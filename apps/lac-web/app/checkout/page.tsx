@@ -1,15 +1,22 @@
 import OrderSummary from "@/_components/order-summary";
+import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
 import { Suspense } from "react";
-
-export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Checkout",
 };
 
 const CheckoutPage = () => {
+  const cookiesStore = cookies();
+  const sessionCookie = cookiesStore.get(SESSION_TOKEN_COOKIE);
+
+  if (!sessionCookie?.value) {
+    return null;
+  }
+
   return (
     <>
       <h1 className="container mb-6 mt-4 text-2xl font-medium tracking-[-0.144px] text-wurth-gray-800">
@@ -23,7 +30,7 @@ const CheckoutPage = () => {
           <Suspense
             fallback={<Skeleton className="h-[244px] rounded-lg shadow-md" />}
           >
-            <OrderSummary />
+            <OrderSummary token={sessionCookie.value} />
           </Suspense>
         </aside>
       </div>

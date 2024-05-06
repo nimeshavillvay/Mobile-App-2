@@ -32,6 +32,7 @@ const FlashSaleList = async () => {
           sku: product.productSku,
           image: product.productImage,
           uom: product.unitOfMeasure,
+          minOrder: product.minimumOrderQuantity,
         }}
         token={sessionToken.value}
       />

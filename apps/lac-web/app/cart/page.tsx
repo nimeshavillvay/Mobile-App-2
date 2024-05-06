@@ -1,7 +1,9 @@
 import OrderSummary from "@/_components/order-summary";
 import { getShippingMethods } from "@/_lib/apis/server";
+import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
 import { Suspense } from "react";
 import CartList from "./_cart-list";
 import CartDetails from "./cart-details";
@@ -10,14 +12,19 @@ import CartItemFallback from "./cart-item-fallback";
 import CheckoutButton from "./checkout-button";
 import ShippingMethod from "./shipping-method";
 
-export const dynamic = "force-dynamic";
-
 export const metadata: Metadata = {
   title: "Cart",
 };
 
 const CartPage = async () => {
+  const cookiesStore = cookies();
+  const sessionToken = cookiesStore.get(SESSION_TOKEN_COOKIE);
+
   const shippingMethods = await getShippingMethods();
+
+  if (!sessionToken?.value) {
+    return null;
+  }
 
   return (
     <>
@@ -28,7 +35,7 @@ const CartPage = async () => {
           </div>
         }
       >
-        <CartHeading />
+        <CartHeading token={sessionToken.value} />
       </Suspense>
 
       <div className="flex flex-col md:container md:flex-row md:gap-12">
@@ -47,7 +54,10 @@ const CartPage = async () => {
               </ul>
             }
           >
-            <CartList shippingMethods={shippingMethods} />
+            <CartList
+              token={sessionToken.value}
+              shippingMethods={shippingMethods}
+            />
           </Suspense>
         </div>
 
@@ -55,19 +65,22 @@ const CartPage = async () => {
           <Suspense
             fallback={<Skeleton className="h-[182px] rounded-lg shadow-md" />}
           >
-            <CartDetails />
+            <CartDetails token={sessionToken.value} />
           </Suspense>
 
           <Suspense
             fallback={<Skeleton className="h-[158px] rounded-lg shadow-md" />}
           >
-            <ShippingMethod options={shippingMethods} />
+            <ShippingMethod
+              token={sessionToken.value}
+              options={shippingMethods}
+            />
           </Suspense>
 
           <Suspense
             fallback={<Skeleton className="h-[316px] rounded-lg shadow-md" />}
           >
-            <OrderSummary>
+            <OrderSummary token={sessionToken.value}>
               <CheckoutButton />
             </OrderSummary>
           </Suspense>
