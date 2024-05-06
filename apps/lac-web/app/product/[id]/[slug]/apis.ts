@@ -1,5 +1,6 @@
 import { api } from "@/_lib/api";
 import { DEFAULT_REVALIDATE, SPECIAL_SHIPPING_FLAG } from "@/_lib/constants";
+import { notFound } from "next/navigation";
 import "server-only";
 
 type Product = {
@@ -70,7 +71,7 @@ type Product = {
   };
 };
 
-export const getProduct = async (id: string) => {
+export const getProduct = async (id: string, slug: string) => {
   const response = await api
     .get("rest/landinginfo", {
       searchParams: {
@@ -81,6 +82,11 @@ export const getProduct = async (id: string) => {
       },
     })
     .json<Product>();
+
+  // Check if the slug matches the product's slug
+  if (slug !== response.selected_item.slug) {
+    return notFound();
+  }
 
   const { selected_item } = response;
 

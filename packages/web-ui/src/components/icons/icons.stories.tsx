@@ -28,12 +28,14 @@ import { MagnifyingGlass } from "./magnifying-glass";
 import { Menu } from "./menu";
 import { Minus } from "./minus";
 import { PackageDelivery } from "./package-delivery";
+import { Phone } from "./phone";
 import { Pinterest } from "./pinterest";
 import { Plus } from "./plus";
 import { Profile } from "./profile";
 import { Save } from "./save";
 import { Settings } from "./settings";
 import { Shield } from "./shield";
+import { Shop } from "./shop";
 import { ShoppingCart } from "./shopping-cart";
 import { TikTok } from "./tiktok";
 import { Trash } from "./trash";
@@ -93,6 +95,10 @@ export const Showcase: Story = {
           <Wallet />
         </IconContainer>
 
+        <IconContainer name="Phone">
+          <Phone />
+        </IconContainer>
+
         <IconContainer name="Headset">
           <Headset />
         </IconContainer>
@@ -115,6 +121,10 @@ export const Showcase: Story = {
 
         <IconContainer name="Plus">
           <Plus />
+        </IconContainer>
+
+        <IconContainer name="Shop">
+          <Shop />
         </IconContainer>
 
         <IconContainer name="ShoppingCart">

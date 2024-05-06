@@ -3,10 +3,10 @@ import { ArrowRight } from "@repo/web-ui/components/icons/arrow-right";
 import Image, { type StaticImageData } from "next/image";
 import { type CSSProperties, type ComponentProps } from "react";
 import Balancer from "react-wrap-balancer";
+import FeaturedBrand from "./_featured-brand";
 import FlashSale from "./_flash-sale";
 import ad1 from "./ad-1.png";
 import ad2 from "./ad-2.png";
-import FeaturedBrand from "./featured-brand";
 import FeaturedCategories from "./featured-categories";
 import HeroBanners from "./hero-banners";
 

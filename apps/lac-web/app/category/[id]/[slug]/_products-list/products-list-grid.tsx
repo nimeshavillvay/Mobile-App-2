@@ -31,8 +31,10 @@ const ProductListGrid = ({ token, categoryId, type }: ProductListGridProps) => {
         variants: product.productSkuList.map((variant) => ({
           id: variant.productId,
           slug: variant.slug,
+          sku: variant.productSku,
           title: variant.productName,
           image: variant.image,
+          uom: variant.unitOfMeasure,
         })),
       },
       info: {
@@ -40,7 +42,7 @@ const ProductListGrid = ({ token, categoryId, type }: ProductListGridProps) => {
       },
     }));
 
-  return <ProductsGridList products={products} type={type} />;
+  return <ProductsGridList products={products} type={type} token={token} />;
 };
 
 export default ProductListGrid;
