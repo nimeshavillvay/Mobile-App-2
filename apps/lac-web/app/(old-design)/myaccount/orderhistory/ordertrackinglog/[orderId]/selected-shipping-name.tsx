@@ -3,6 +3,7 @@
 import useSelectedAddress from "@/old/_hooks/account/use-selected-address.hook";
 
 const SelectedShippingName = () => {
+  // TODO: Need to remove old API once company profile is ready
   const address = useSelectedAddress();
 
   return (

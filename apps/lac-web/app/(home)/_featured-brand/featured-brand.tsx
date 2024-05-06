@@ -1,95 +1,53 @@
 import ProductCard from "@/_components/product-card";
-import { api } from "@/_lib/api";
-import { DEFAULT_REVALIDATE } from "@/_lib/constants";
-import type { GroupList } from "@/_lib/types";
+import ProductCardSkeleton from "@/_components/product-card-skeleton";
+import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import fontColorContrast from "font-color-contrast";
+import { cookies } from "next/headers";
 import Image from "next/image";
-import { type CSSProperties } from "react";
+import { Suspense, type CSSProperties } from "react";
+import { getFeaturedBrand } from "./apis";
 import productImage from "./product-image.png";
 
+const FeaturedBrandList = async () => {
+  const cookiesStore = cookies();
+  const sessionToken = cookiesStore.get(SESSION_TOKEN_COOKIE);
+
+  const { groups } = await getFeaturedBrand();
+
+  if (!sessionToken?.value) {
+    return null;
+  }
+
+  return groups.map((product) => (
+    <Suspense key={product.groupId} fallback={<ProductCardSkeleton />}>
+      <ProductCard
+        product={{
+          groupName: product.groupName,
+          groupImage: product.groupImage,
+          variants: product.itemSkuList.map((item) => ({
+            id: item.productId,
+            slug: item.slug,
+            sku: item.productSku,
+            title: item.productName,
+            image: item.image,
+            uom: item.unitOfMeasure,
+          })),
+        }}
+        token={sessionToken.value}
+      />
+    </Suspense>
+  ));
+};
+
 const FeaturedBrand = async () => {
-  const featuredBrand = await api
-    .get("rest/getrandomgroups", {
-      next: {
-        revalidate: DEFAULT_REVALIDATE,
-      },
-    })
-    .json<
-      [
-        {
-          details: {
-            name: string;
-            descr: string;
-            color: string;
-            logo: string;
-            background: string;
-            link: string;
-            link_name: string;
-          };
-        },
-        {
-          groups: GroupList[];
-        },
-      ]
-    >();
-
-  const transformedDetails = {
-    name: featuredBrand[0].details.name,
-    descr: featuredBrand[0].details.descr,
-    color: featuredBrand[0].details.color,
-    logo: featuredBrand[0].details.logo,
-    background: featuredBrand[0].details.background,
-    link: featuredBrand[0].details.link,
-    linkName: featuredBrand[0].details.link_name,
-  };
-
-  const transformedGroups = featuredBrand[1].groups.map((group) => ({
-    groupId: Number(group.groupid),
-    type: group.type,
-    groupName: group.item_group_name,
-    slug: group.slug,
-    brandName: group.brandName,
-    brandId: group.brandid,
-    groupImage: group.group_img,
-    complianceFlags: group.compliance_flags,
-    fClassId: group.fclassid,
-    metaTitle: group.txt_meta_title,
-    itemSkuList: group.itemSkuList.map((item) => ({
-      productId: item.productid,
-      isExcludedProduct: item.is_product_exclude,
-      productSku: item.txt_wurth_lac_item,
-      productName: item.item_name,
-      image: item.img,
-      slug: item.slug,
-      isFavourite: !!item.is_favourite,
-      isComparison: !!item.is_comparison,
-      skuAttribute: item["SKU-attribute"],
-      isHazardous: item.txt_hazardous === "Y",
-      productIdOnSap: item.txt_sap,
-      mfrPartNo: item.txt_mfn,
-      productDescription: item.txt_description_name,
-      productSubDescription: item.txt_sub_description,
-      brandCode: Number(item.sel_assigned_brand),
-      unitOfMeasure: item.txt_uom_label,
-      boxQuantity: Number(item.txt_box_qt) ?? 1,
-      minimumOrderQuantity: Number(item.txt_min_order_amount) ?? 1,
-      quantityByIncrements: Number(item.txt_box_qt) ?? 1,
-      weight: Number(item.txt_weight_value),
-      prop65MessageOne: item.txt_prop65_message_01,
-      prop65MessageTwo: item.txt_prop65_message_02,
-      prop65MessageThree: item.txt_prop65_message_03,
-      listPrice: Number(item.list_price),
-      isSaleItem: item.on_sale === "Y",
-    })),
-    variationsCount: group.variationsCount,
-  }));
+  const { details } = await getFeaturedBrand();
 
   return (
     <section
       style={
         {
-          "--brand-color": transformedDetails.color,
-          "--text-color": fontColorContrast(transformedDetails.color),
+          "--brand-color": details.color,
+          "--text-color": fontColorContrast(details.color),
           // TODO Try to convert to a Tailwind CSS class
           background:
             "linear-gradient(0deg, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0.15) 100%), var(--brand-color)",
@@ -126,32 +84,24 @@ const FeaturedBrand = async () => {
             </svg>
 
             <h2 className="mb-2 mt-4 font-title text-3xl font-medium tracking-[-0.01406rem] md:mt-14 md:text-5xl md:tracking-[-0.036rem]">
-              {transformedDetails.name}
+              {details.name}
             </h2>
 
-            {!!transformedDetails.descr && (
-              <p className="text-base md:text-lg">{transformedDetails.descr}</p>
+            {!!details.descr && (
+              <p className="text-base md:text-lg">{details.descr}</p>
             )}
           </div>
         </div>
       </div>
 
       <div className="container flex snap-x scroll-pl-4 flex-row gap-4 overflow-x-auto md:scroll-pl-8 md:gap-6">
-        {transformedGroups.map((product) => (
-          <ProductCard
-            key={product.groupId}
-            product={{
-              groupName: product.groupName,
-              groupImage: product.groupImage,
-              variants: product.itemSkuList.map((item) => ({
-                id: item.productId,
-                slug: item.slug,
-                title: item.productName,
-                image: item.image,
-              })),
-            }}
-          />
-        ))}
+        <Suspense
+          fallback={Array.from({ length: 7 }).map((_, index) => (
+            <ProductCardSkeleton key={index} />
+          ))}
+        >
+          <FeaturedBrandList />
+        </Suspense>
       </div>
     </section>
   );

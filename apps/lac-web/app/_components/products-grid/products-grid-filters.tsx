@@ -1,6 +1,6 @@
 "use client";
 
-import useSuspenseFilters from "@/_hooks/search/use-suspense-filters.hook";
+import type { Filters } from "@/_lib/types";
 import { type CheckedState } from "@radix-ui/react-checkbox";
 import {
   Accordion,
@@ -10,30 +10,17 @@ import {
 } from "@repo/web-ui/components/ui/accordion";
 import { Checkbox } from "@repo/web-ui/components/ui/checkbox";
 import { Label } from "@repo/web-ui/components/ui/label";
+import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import { useId } from "react";
-import useFilterParams from "./use-filter-params.hook";
+import { useFilterParams } from "./use-filter-params.hook";
 
-type ProductsGridFiltersProps = {
-  token: string;
-  categoryId: string;
-};
-
-export const ProductsGridFilters = ({
-  token,
-  categoryId,
-}: ProductsGridFiltersProps) => {
+export const ProductsGridFilters = ({ filters }: { filters: Filters[] }) => {
   const id = useId();
   const getCheckboxId = (filterId: string, valueId: number) => {
     return `${id}-checkbox-${filterId}-${valueId}`;
   };
 
-  const { selectedValues, searchParams } = useFilterParams(token, categoryId);
-
-  const filtersQuery = useSuspenseFilters(token, {
-    type: "Categories",
-    id: categoryId,
-    membershipId: 0,
-  });
+  const { selectedValues, searchParams } = useFilterParams(filters);
 
   const checkIsChecked = (attributeId: string, valueId: number) => {
     return !!selectedValues[attributeId]?.values.find(
@@ -62,7 +49,7 @@ export const ProductsGridFilters = ({
       <h4 className="px-3 text-sm text-wurth-gray-800">Filters</h4>
 
       <Accordion type="single" collapsible className="space-y-1">
-        {filtersQuery.data.map((filter) => (
+        {filters.map((filter) => (
           <AccordionItem key={filter.id} value={filter.id}>
             <AccordionTrigger>{filter.filter}</AccordionTrigger>
 
@@ -93,4 +80,8 @@ export const ProductsGridFilters = ({
       </Accordion>
     </aside>
   );
+};
+
+export const ProductsGridFiltersSkeleton = () => {
+  return <Skeleton className="h-[109rem] w-[14.75rem]" />;
 };

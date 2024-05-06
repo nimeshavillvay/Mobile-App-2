@@ -24,10 +24,11 @@ import ProductVariants from "./product-variants";
 
 type ProductHeroProps = {
   id: string;
+  slug: string;
 };
 
-const ProductHero = async ({ id }: ProductHeroProps) => {
-  const product = await getProduct(id);
+const ProductHero = async ({ id, slug }: ProductHeroProps) => {
+  const product = await getProduct(id, slug);
 
   return (
     <>
@@ -78,7 +79,7 @@ const ProductHero = async ({ id }: ProductHeroProps) => {
           <DropShipItemNotice />
         </div>
 
-        <ProductDetails id={id} />
+        <ProductDetails id={id} slug={slug} />
 
         {!!product.selectedProduct.attributes && (
           <ProductSpecifications
@@ -131,7 +132,11 @@ const ProductHero = async ({ id }: ProductHeroProps) => {
 
         <DropShipItemNotice className="container my-6 md:hidden" />
 
-        <ProductDetails id={id} className="container my-10 md:hidden" />
+        <ProductDetails
+          id={id}
+          slug={slug}
+          className="container my-10 md:hidden"
+        />
 
         {!!product.selectedProduct.attributes && (
           <ProductSpecifications

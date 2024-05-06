@@ -20,7 +20,6 @@ import { AllStates } from "./all-states";
 import { AvailableStatesList } from "./available-states-list";
 import { downloadFile } from "./helpers";
 import type { TaxFormItems } from "./types";
-const geoUrl = "https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json";
 
 type Offsets = {
   [key: string]: number[];
@@ -93,7 +92,7 @@ const Map = ({ taxFormDetails }: { taxFormDetails: TaxFormItems }) => {
         viewBox="0 0 1000 540"
         height={540}
       >
-        <Geographies geography={geoUrl}>
+        <Geographies geography="https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json">
           {({ geographies }) => (
             <>
               {geographies.map((geo) => {

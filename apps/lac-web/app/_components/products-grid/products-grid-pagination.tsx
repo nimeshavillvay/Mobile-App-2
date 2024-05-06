@@ -1,6 +1,5 @@
 "use client";
 
-import useSuspenseSearch from "@/_hooks/search/use-suspense-search.hook";
 import {
   Pagination,
   PaginationContent,
@@ -10,26 +9,17 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@repo/web-ui/components/ui/pagination";
+import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import { usePathname } from "next/navigation";
-import useFilterParams from "./use-filter-params.hook";
+import { useFilterParams } from "./use-filter-params.hook";
 
 export const ProductsGridPagination = ({
-  token,
-  categoryId,
+  totalPages,
 }: {
-  token: string;
-  categoryId: string;
+  totalPages: number;
 }) => {
   const pathname = usePathname();
-  const { pageNo, searchParams } = useFilterParams(token, categoryId);
-
-  const searchQuery = useSuspenseSearch(token, {
-    categoryId,
-    groupResults: true,
-    page: pageNo,
-  });
-
-  const totalPages = Math.ceil(searchQuery.data.pagination.totalCount / 20);
+  const { pageNo, searchParams } = useFilterParams();
 
   const previousPage = pageNo - 1 < 1 ? 1 : pageNo - 1;
   const nextPage = pageNo + 1 > totalPages ? totalPages : pageNo + 1;
@@ -90,5 +80,21 @@ export const ProductsGridPagination = ({
         </PaginationItem>
       </PaginationContent>
     </Pagination>
+  );
+};
+
+export const ProductsGridPaginationSkeleton = () => {
+  return (
+    <div className="flex flex-row items-center justify-center gap-1 pt-4">
+      <Skeleton className="h-9 w-28" />
+
+      <Skeleton className="size-9" />
+
+      <Skeleton className="size-9" />
+
+      <Skeleton className="size-9" />
+
+      <Skeleton className="h-9 w-20" />
+    </div>
   );
 };

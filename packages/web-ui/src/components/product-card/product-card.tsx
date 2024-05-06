@@ -204,7 +204,9 @@ const ProductCardPrice = ({
       <span
         className={cn(
           "font-bold",
-          actualPrice ? "text-green-600" : "text-wurth-gray-800",
+          actualPrice && price !== actualPrice
+            ? "text-green-600"
+            : "text-wurth-gray-800",
         )}
       >
         $
@@ -212,7 +214,7 @@ const ProductCardPrice = ({
           {formatNumberToPrice(price)}
         </span>
       </span>
-      {!!actualPrice && (
+      {!!actualPrice && price !== actualPrice && (
         <span className="ml-1 text-base font-normal text-wurth-gray-400 line-through md:text-lg">
           {formatNumberToPrice(actualPrice)}
         </span>

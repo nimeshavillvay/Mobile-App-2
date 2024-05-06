@@ -37,11 +37,8 @@ const OrderTrackingCard = ({
         </div>
         {trackingInfo?.deliveries?.length &&
           trackingInfo.deliveries.map((delivery) => (
-            <>
-              <div
-                key={`${delivery?.deliveryNo}-${delivery?.shipDate}`}
-                className="mb-4 grid grid-cols-1 text-brand-gray-500 md:grid-cols-3"
-              >
+            <div key={`${delivery?.deliveryNo}-${delivery?.shipDate}`}>
+              <div className="mb-4 grid grid-cols-1 text-brand-gray-500 md:grid-cols-3">
                 <div className="font-bold">
                   Ship Date:&nbsp;
                   {delivery?.shipDate
@@ -61,16 +58,16 @@ const OrderTrackingCard = ({
               {delivery &&
                 delivery.tracker?.length &&
                 delivery.tracker.map((tracker) => (
-                  <div
+                  <Link
                     key={`${delivery.deliveryNo}-${tracker.code}`}
                     className="font-bold text-black"
+                    href={tracker.url ?? "#"}
+                    target="_blank"
                   >
-                    <Link href={tracker.url ?? "#"} target="_blank">
-                      Tracking#: {tracker.code ?? "N/A"}
-                    </Link>
-                  </div>
+                    Tracking#: {tracker.code ?? "N/A"}
+                  </Link>
                 ))}
-            </>
+            </div>
           ))}
       </div>
 
