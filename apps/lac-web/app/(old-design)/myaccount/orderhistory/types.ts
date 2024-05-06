@@ -90,7 +90,9 @@ export type OrderStatus = keyof typeof ORDER_STATUS;
 export type OrderType = keyof typeof ORDER_TYPES;
 
 export type Option = {
-  id: string;
+  id: number;
   value: string;
+  icon: string | null;
+  tooltip: string | null;
   active: boolean;
 };

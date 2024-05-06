@@ -1,6 +1,6 @@
 "use client";
 
-import type { Filter } from "@/_lib/types";
+import type { Filters } from "@/_lib/types";
 import { filterAndMapValues } from "@/_lib/utils";
 import DatePicker from "@/old/_components/date-picker";
 import {
@@ -24,7 +24,12 @@ import { updateSearchParams } from "@/old/_utils/client-helpers";
 import { cn } from "@/old/_utils/helpers";
 import dayjs from "dayjs";
 import { useSearchParams } from "next/navigation";
-import { useState, type Dispatch, type SetStateAction } from "react";
+import {
+  useState,
+  type ComponentProps,
+  type Dispatch,
+  type SetStateAction,
+} from "react";
 import { MdCheck } from "react-icons/md";
 import { changeSearchParams } from "../_utils/client-helpers";
 import {
@@ -40,7 +45,7 @@ const customDuration = DURATIONS.at(-1);
 
 type SelectorsForMobileDialogProps = {
   open: boolean;
-  filters: Filter[];
+  filters: Filters[];
   onOpenChange: Dispatch<SetStateAction<boolean>>;
 };
 
@@ -59,10 +64,10 @@ const SelectorsForMobileDialog = ({
   const [fromDate, setFromDate] = useState(new Date(INIT_FROM_DATE));
   const [toDate, setToDate] = useState(new Date());
   const [duration, setDuration] = useState(INIT_DURATION);
-  const [orderTypes, setOrderTypes] = useState<string[]>([]);
-  const [poNos, setPoNos] = useState<string[]>([]);
-  const [jobNames, setJobNames] = useState<string[]>([]);
-  const [orderStatuses, setOrderStatuses] = useState<string[]>([]);
+  const [orderTypes, setOrderTypes] = useState<number[]>([]);
+  const [poNos, setPoNos] = useState<number[]>([]);
+  const [jobNames, setJobNames] = useState<number[]>([]);
+  const [orderStatuses, setOrderStatuses] = useState<number[]>([]);
   const [sortDirection, setSortDirection] = useState("");
   const [sortType, setSortType] = useState("");
 
@@ -84,7 +89,7 @@ const SelectorsForMobileDialog = ({
     }
   };
 
-  const handleOrderTypeCheckedChanged = (id: string, checked: boolean) => {
+  const handleOrderTypeCheckedChanged = (id: number, checked: boolean) => {
     if (checked) {
       setOrderTypes((prev) => [...prev, id]);
     } else {
@@ -92,7 +97,7 @@ const SelectorsForMobileDialog = ({
     }
   };
 
-  const handlePoNoCheckedChanged = (id: string, checked: boolean) => {
+  const handlePoNoCheckedChanged = (id: number, checked: boolean) => {
     if (checked) {
       setPoNos((prev) => [...prev, id]);
     } else {
@@ -100,7 +105,7 @@ const SelectorsForMobileDialog = ({
     }
   };
 
-  const handleJobNameCheckedChanged = (id: string, checked: boolean) => {
+  const handleJobNameCheckedChanged = (id: number, checked: boolean) => {
     if (checked) {
       setJobNames((prev) => [...prev, id]);
     } else {
@@ -108,7 +113,7 @@ const SelectorsForMobileDialog = ({
     }
   };
 
-  const handleStatusesCheckedChanged = (id: string, checked: boolean) => {
+  const handleStatusesCheckedChanged = (id: number, checked: boolean) => {
     if (checked) {
       setOrderStatuses((prev) => [...prev, id]);
     } else {
@@ -258,7 +263,7 @@ const SelectorsForMobileDialog = ({
                   >
                     {DURATIONS.map((item) => (
                       <div
-                        key={item.value}
+                        key={`mobile-${item.value}-${item.label}`}
                         className={cn(
                           "flex flex-row items-center space-x-2 rounded border p-2",
                           duration?.value === item.value
@@ -297,17 +302,18 @@ const SelectorsForMobileDialog = ({
               </AccordionTrigger>
 
               <AccordionContent className="grid gap-y-5 px-5 py-3">
-                {typesFilter.map((item) => (
-                  <CheckboxWithLabel
-                    key={item.id}
-                    flag="type"
-                    checked={orderTypes.includes(item.id)}
-                    onCheckedChanged={(checked) =>
-                      handleOrderTypeCheckedChanged(item.id, checked)
-                    }
-                    {...item}
-                  />
-                ))}
+                {typesFilter?.values.length &&
+                  typesFilter.values.map((item) => (
+                    <CheckboxWithLabel
+                      key={`mobile-type-${item.id}`}
+                      flag="type"
+                      checked={orderTypes.includes(item.id)}
+                      onCheckedChanged={(checked) =>
+                        handleOrderTypeCheckedChanged(item.id, checked)
+                      }
+                      {...item}
+                    />
+                  ))}
               </AccordionContent>
             </AccordionItem>
 
@@ -318,17 +324,18 @@ const SelectorsForMobileDialog = ({
               </AccordionTrigger>
 
               <AccordionContent className="grid gap-y-5 px-5 py-3">
-                {poNoFilter.map((item) => (
-                  <CheckboxWithLabel
-                    key={`po-${item.id}`}
-                    flag="po"
-                    checked={poNos.includes(item.id)}
-                    onCheckedChanged={(checked) =>
-                      handlePoNoCheckedChanged(item.id, checked)
-                    }
-                    {...item}
-                  />
-                ))}
+                {poNoFilter?.values?.length &&
+                  poNoFilter.values.map((item) => (
+                    <CheckboxWithLabel
+                      key={`mobile-po-${item.id}`}
+                      flag="po"
+                      checked={poNos.includes(item.id)}
+                      onCheckedChanged={(checked) =>
+                        handlePoNoCheckedChanged(item.id, checked)
+                      }
+                      {...item}
+                    />
+                  ))}
               </AccordionContent>
             </AccordionItem>
 
@@ -339,17 +346,18 @@ const SelectorsForMobileDialog = ({
               </AccordionTrigger>
 
               <AccordionContent className="grid gap-y-5 px-5 py-3">
-                {jobNameFilter.map((item) => (
-                  <CheckboxWithLabel
-                    key={`job-${item.id}`}
-                    flag="job"
-                    checked={jobNames.includes(item.id)}
-                    onCheckedChanged={(checked) =>
-                      handleJobNameCheckedChanged(item.id, checked)
-                    }
-                    {...item}
-                  />
-                ))}
+                {jobNameFilter?.values?.length &&
+                  jobNameFilter.values.map((item) => (
+                    <CheckboxWithLabel
+                      key={`mobile-job-${item.id}`}
+                      flag="job"
+                      checked={jobNames.includes(item.id)}
+                      onCheckedChanged={(checked) =>
+                        handleJobNameCheckedChanged(item.id, checked)
+                      }
+                      {...item}
+                    />
+                  ))}
               </AccordionContent>
             </AccordionItem>
 
@@ -360,17 +368,18 @@ const SelectorsForMobileDialog = ({
               </AccordionTrigger>
 
               <AccordionContent className="grid gap-y-5 px-5 py-3">
-                {statusFilter.map((item) => (
-                  <CheckboxWithLabel
-                    key={`status-${item.id}`}
-                    flag="status"
-                    checked={orderStatuses.includes(item.id)}
-                    onCheckedChanged={(checked) =>
-                      handleStatusesCheckedChanged(item.id, checked)
-                    }
-                    {...item}
-                  />
-                ))}
+                {statusFilter?.values?.length &&
+                  statusFilter.values.map((item) => (
+                    <CheckboxWithLabel
+                      key={`mobile-status-${item.id}`}
+                      flag="status"
+                      checked={orderStatuses.includes(item.id)}
+                      onCheckedChanged={(checked) =>
+                        handleStatusesCheckedChanged(item.id, checked)
+                      }
+                      {...item}
+                    />
+                  ))}
               </AccordionContent>
             </AccordionItem>
 
@@ -382,14 +391,11 @@ const SelectorsForMobileDialog = ({
 
               <AccordionContent className="grid">
                 {SORTING_FILTERS_FOR_MOBILE.map((sort) => (
-                  <>
-                    <MobileSortFilterHeading
-                      key={sort.title}
-                      title={sort.title}
-                    />
+                  <div key={`sort-direction-${sort.title}`}>
+                    <MobileSortFilterHeading title={sort.title} />
                     {sort.options.map((option) => (
                       <MobileSortFilterOption
-                        key={option.title}
+                        key={`${option.type}-${option.title}`}
                         title={option.title}
                         active={
                           sortType === option.type &&
@@ -401,7 +407,7 @@ const SelectorsForMobileDialog = ({
                         }}
                       />
                     ))}
-                  </>
+                  </div>
                 ))}
               </AccordionContent>
             </AccordionItem>
@@ -437,7 +443,7 @@ const CheckboxWithLabel = ({
   checked,
   onCheckedChanged,
 }: {
-  id: string;
+  id: number;
   flag: string;
   value: string;
   active: boolean;
@@ -460,7 +466,12 @@ const CheckboxWithLabel = ({
   );
 };
 
-const MobileSortFilterHeading = ({ title }: { title: string }) => {
+const MobileSortFilterHeading = ({
+  title,
+}: {
+  title: string;
+  children?: ComponentProps<"div">["children"];
+}) => {
   return (
     <div className="bg-brand-gray-200 px-5 py-3 text-base text-brand-gray-500">
       {title}

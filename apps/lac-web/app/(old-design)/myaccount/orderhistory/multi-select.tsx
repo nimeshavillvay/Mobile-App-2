@@ -4,12 +4,7 @@ import { Label } from "@/old/_components/ui/label";
 import { cn } from "@/old/_utils/helpers";
 import { useMultipleSelection, useSelect } from "downshift";
 import { ChevronDown, X } from "lucide-react";
-
-type Option = {
-  id: string;
-  value: string;
-  active: boolean;
-};
+import type { Option } from "./types";
 
 type MultiSelectProps = {
   label: string;

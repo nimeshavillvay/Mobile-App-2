@@ -1,6 +1,5 @@
 "use client";
 
-import useSuspenseFilters from "@/_hooks/search/use-suspense-filters.hook";
 import {
   Table,
   TableBody,
@@ -10,6 +9,7 @@ import {
 } from "@/old/_components/ui/table";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 import {
   INIT_FROM_DATE,
   INIT_PAGE_NUMBER,
@@ -17,8 +17,8 @@ import {
   INIT_TO_DATE,
   SORTING_DIRECTION,
 } from "./constants";
+import OrderHistoryListFilters from "./order-history-list-filters";
 import OrderHistoryListForMobile from "./order-history-list-for-mobile";
-import OrderHistoryListSelectors from "./order-history-list-selectors";
 import OrderHistoryRow from "./order-history-row";
 import TotalCountAndPagination from "./total-count-and-pagination";
 import useSuspenseOrderHistorySearch from "./use-suspense-order-history-search.hook";
@@ -34,12 +34,6 @@ const OrderHistoryList = ({ token }: { token: string }) => {
   const sortBy = searchParams.get("sortBy") ?? "date";
   const sortDirection =
     searchParams.get("sortDirection") ?? SORTING_DIRECTION.DESC;
-
-  const filterQuery = useSuspenseFilters(token, {
-    type: "Order History",
-    from: fromDate,
-    to: toDate,
-  });
 
   const searchQuery = useSuspenseOrderHistorySearch(
     token,
@@ -73,19 +67,14 @@ const OrderHistoryList = ({ token }: { token: string }) => {
         </Link>
       </div>
 
-      <OrderHistoryListSelectors
-        filters={filterQuery.data.map((filter) => ({
-          id: filter.id,
-          title: filter.filter,
-          values: filter.values.map((value) => ({
-            id: value.id.toString(),
-            value: value.value,
-            active: value.active,
-          })),
-        }))}
-        isLoading={searchQuery.isLoading}
-        totalItems={totalItems}
-      />
+      <Suspense fallback={<div>Filters Loading...</div>}>
+        <OrderHistoryListFilters
+          token={token}
+          fromDate={fromDate}
+          toDate={toDate}
+          totalItems={totalItems}
+        />
+      </Suspense>
 
       <TotalCountAndPagination
         isLoading={searchQuery.isLoading}

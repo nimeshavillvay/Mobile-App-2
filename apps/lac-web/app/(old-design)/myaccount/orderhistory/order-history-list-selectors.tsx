@@ -1,4 +1,4 @@
-import type { Filter } from "@/_lib/types";
+import type { Filters } from "@/_lib/types";
 import { filterAndMapValues } from "@/_lib/utils";
 import DatePicker from "@/old/_components/date-picker";
 import { Button } from "@/old/_components/ui/button";
@@ -32,9 +32,10 @@ import {
 import MultiSelect from "./multi-select";
 import SelectorsForMobileDialog from "./selectors-for-mobile-dialog";
 import type { Option } from "./types";
+import { useFilterParams, type SelectedValues } from "./use-filter-params.hook";
 
 type OrderHistoryListSelectorsProps = {
-  filters: Filter[];
+  filters: Filters[];
   isLoading: boolean;
   totalItems: number;
 };
@@ -44,6 +45,14 @@ const OrderHistoryListSelectors = ({
   isLoading,
   totalItems,
 }: OrderHistoryListSelectorsProps) => {
+  const { selectedValues } = useFilterParams(filters);
+  const mappedSelectedValues: (SelectedValues[string] & { id: string })[] = [];
+  for (const [key, value] of Object.entries(selectedValues)) {
+    mappedSelectedValues.push({ ...value, id: key });
+  }
+
+  console.log("selectedValues", mappedSelectedValues);
+
   const poNoFilter = filterAndMapValues(filters, "PO #");
   const jobNameFilter = filterAndMapValues(filters, "Job Name");
   const statusFilter = filterAndMapValues(filters, "Status");
@@ -61,8 +70,8 @@ const OrderHistoryListSelectors = ({
     new Date(urlFromDate ?? INIT_FROM_DATE),
   );
   const [toDate, setToDate] = useState(new Date(urlToDate ?? INIT_TO_DATE));
-  const [orderStatuses, setOrderStatuses] = useState<string[]>([]);
-  const [orderTypes, setOrderTypes] = useState<string[]>([]);
+  const [orderStatuses, setOrderStatuses] = useState<number[]>([]);
+  const [orderTypes, setOrderTypes] = useState<number[]>([]);
 
   const formattedFromDate = dayjs(fromDate).format(URL_DATE_FORMAT);
   const formattedToDate = dayjs(toDate).format(URL_DATE_FORMAT);
@@ -119,11 +128,12 @@ const OrderHistoryListSelectors = ({
     updateSearchParams(params);
   };
 
-  const handleOrderTypeCheckedChanged = (id: string, checked: boolean) => {
+  const handleOrderTypeCheckedChanged = (valueId: number, checked: boolean) => {
+    console.log(typesFilter?.filter);
     if (checked) {
-      setOrderTypes((prev) => [...prev, id]);
+      setOrderTypes((prev) => [...prev, valueId]);
     } else {
-      setOrderTypes((prev) => prev.filter((type) => type !== id));
+      setOrderTypes((prev) => prev.filter((type) => type !== valueId));
     }
   };
 
@@ -204,15 +214,16 @@ const OrderHistoryListSelectors = ({
           <Label className="text-nowrap font-bold">Order Types</Label>
 
           <div className="flex min-h-[186px] min-w-[170px] flex-col gap-2 rounded-sm border bg-white p-3">
-            {typesFilter.map((orderType) => (
-              <OrderTypeCheckbox
-                key={`type-${orderType.id}`}
-                onCheckedChanged={(checked) =>
-                  handleOrderTypeCheckedChanged(orderType.id, checked)
-                }
-                {...orderType}
-              />
-            ))}
+            {typesFilter?.values?.length &&
+              typesFilter.values.map((orderType) => (
+                <OrderTypeCheckbox
+                  key={`type-${orderType.id}`}
+                  onCheckedChanged={(checked) =>
+                    handleOrderTypeCheckedChanged(orderType.id, checked)
+                  }
+                  {...orderType}
+                />
+              ))}
           </div>
         </div>
 
@@ -221,12 +232,20 @@ const OrderHistoryListSelectors = ({
           <Label className="text-nowrap font-bold">Filter By</Label>
 
           <div className="flex flex-col gap-2">
-            <MultiSelect label="PO No." flag="po" data={poNoFilter} />
-            <MultiSelect label="Job Name" flag="job" data={jobNameFilter} />
+            <MultiSelect
+              label="PO No."
+              flag="po"
+              data={poNoFilter?.values ?? []}
+            />
+            <MultiSelect
+              label="Job Name"
+              flag="job"
+              data={jobNameFilter?.values ?? []}
+            />
             <MultiSelect
               label="Order Status"
               flag="status"
-              data={statusFilter}
+              data={statusFilter?.values ?? []}
               onValuesChange={(values) => handleOrderStatusChange(values)}
               onClear={() => setOrderStatuses([])}
             />
@@ -286,7 +305,7 @@ const OrderTypeCheckbox = ({
   active,
   onCheckedChanged,
 }: {
-  id: string;
+  id: number;
   value: string;
   active: boolean;
   onCheckedChanged: (checked: boolean) => void;
