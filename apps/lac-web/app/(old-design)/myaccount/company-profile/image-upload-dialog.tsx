@@ -24,7 +24,6 @@ const ImageUploadDialog = ({
     "Invalid file type. Only JPG, JPEG and PNG types are accepted.";
 
   const { getRootProps, getInputProps, open, acceptedFiles } = useDropzone({
-    // Disable click and keydown behavior
     noClick: true,
     noKeyboard: true,
   });

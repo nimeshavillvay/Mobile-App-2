@@ -1,4 +1,4 @@
-import { Button } from "@/(old-design)/_components/ui/button";
+import { Button } from "@/old/_components/ui/button";
 import { useState } from "react";
 import { MdOutlineDelete, MdOutlineEdit } from "react-icons/md";
 import AddressDialog from "./address-dialog";

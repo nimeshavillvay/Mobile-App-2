@@ -77,9 +77,6 @@ const AddressDialog = ({
       message: "Please enter a valid ZIP4",
     }),
     phoneNumber: z.string(),
-    // phoneNumber: z.string().refine((value) => /^\d{10}$/.test(value), {
-    //   message: "Please enter a valid phone number",
-    // }),
     country: z.string().trim().min(1, "Please enter country").max(40),
   });
 
