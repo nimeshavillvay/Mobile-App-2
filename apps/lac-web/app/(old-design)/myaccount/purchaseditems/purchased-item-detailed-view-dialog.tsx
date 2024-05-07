@@ -13,7 +13,7 @@ import { Dialog, DialogContent } from "@/old/_components/ui/dialog";
 import { Input } from "@/old/_components/ui/input";
 import { Label } from "@/old/_components/ui/label";
 import useAddToCartMutation from "@/old/_hooks/cart/use-add-to-cart-mutation.hook";
-import { cn, getMediaUrl } from "@/old/_utils/helpers";
+import { cn } from "@/old/_utils/helpers";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { WurthFullBlack } from "@repo/web-ui/components/logos/wurth-full-black";
 import dayjs from "dayjs";
@@ -107,7 +107,7 @@ const PurchasedItemDetailedViewDialog = ({
             >
               {item.image ? (
                 <Image
-                  src={getMediaUrl(item.image.webp)}
+                  src={item.image}
                   alt={item.productDescription}
                   width={92}
                   height={92}
