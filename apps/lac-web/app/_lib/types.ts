@@ -1,12 +1,6 @@
-export type ImageInfo = {
-  original: string;
-  webp: string;
-  jp2: string;
-};
-
 export type Attributes = {
   attribute_name: string;
-  attribute_value: string;
+  attribute_value: string | null;
 };
 
 export type OldPagination = {
@@ -20,9 +14,8 @@ export type ItemInfo = {
   isExcludedProduct: boolean;
   productSku: string;
   productName: string;
-  image: ImageInfo;
+  image: string;
   isComparison: boolean;
-  skuAttribute: string;
   isHazardous: boolean;
   specialShipping: boolean;
   productIdOnSap: string;
