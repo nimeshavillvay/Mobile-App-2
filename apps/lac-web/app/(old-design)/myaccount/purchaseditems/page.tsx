@@ -10,9 +10,9 @@ export const metadata: Metadata = {
 };
 
 const PurchasedItemsPage = () => {
-  const accountTokenCookie = cookies().get(SESSION_TOKEN_COOKIE);
+  const sessionTokenCookie = cookies().get(SESSION_TOKEN_COOKIE);
 
-  if (!accountTokenCookie?.value) {
+  if (!sessionTokenCookie?.value) {
     return redirect("/");
   }
 
@@ -29,7 +29,7 @@ const PurchasedItemsPage = () => {
         />
       </div>
 
-      <PurchasedItemsList token={accountTokenCookie?.value} />
+      <PurchasedItemsList token={sessionTokenCookie?.value} />
     </>
   );
 };

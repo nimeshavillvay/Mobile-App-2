@@ -28,7 +28,7 @@ const getPriceBreakDowns = (price_breakdowns: PriceBreakDowns) => {
 };
 
 type Product = {
-  productid: number;
+  productId: number;
   qty: number;
 };
 
@@ -44,7 +44,7 @@ const useSuspensePriceCheck = (token: string, products: Product[]) => {
           },
           json: {
             products: products.map((product) => ({
-              productid: product.productid,
+              productid: product.productId,
               qty: product.qty,
             })),
           },

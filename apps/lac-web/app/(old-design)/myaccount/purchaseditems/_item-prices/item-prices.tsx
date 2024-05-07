@@ -32,7 +32,7 @@ const ItemPrices = ({
   unitPriceOnly = false,
 }: ItemPricesProps) => {
   const itemPricesQuery = useSuspensePriceCheck(token, [
-    { productid: productId, qty: quantity },
+    { productId: productId, qty: quantity },
   ]);
   const prices = itemPricesQuery.data.productPrices[0] ?? null;
   const priceUnit = prices?.priceUnit ?? "";
