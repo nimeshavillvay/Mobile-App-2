@@ -1,7 +1,7 @@
 "use client";
 
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
-import useSuspenseUsersList from "@/_hooks/user/use-suspense-users-list.hook";
+// import useSuspenseUsersList from "@/_hooks/user/use-suspense-users-list.hook";
 import { Exit } from "@repo/web-ui/components/icons/exit";
 import {
   DropdownMenu,
@@ -35,21 +35,23 @@ const UserProfileButton = ({
 export default UserProfileButton;
 
 const UserProfileDropdown = ({
-  token,
+  // token,
   type,
 }: {
   token: string;
   type: ViewportTypes;
 }) => {
-  const usersListQuery = useSuspenseUsersList(token);
-  const userProfile = usersListQuery.data.manageContact.yourProfile;
+  // TODO: Replace with real data
+  const userProfile = { firstName: "John" };
+  // const usersListQuery = useSuspenseUsersList(token);
+  // const userProfile = usersListQuery.data.manageContact.yourProfile;
 
   const logoutMutation = useLogoutMutation();
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <SignInLink type={type} text={`Hi, ${userProfile.firstName}`} />
+        <SignInLink type={type} text={`Hi, ${userProfile?.firstName}`} />
       </DropdownMenuTrigger>
 
       <DropdownMenuContent className="w-56">
