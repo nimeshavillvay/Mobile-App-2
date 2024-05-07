@@ -30,32 +30,28 @@ const BillingAddress = ({ token }: { token: string }) => {
         <div className="mb-5 border-gray-100 bg-transparent p-3 text-gray-500 shadow hover:shadow-lg">
           <h3 className="font-title text-xl font-bold">Billing Address</h3>
           <div className="flex flex-row gap-5 pt-2">
-            <div className="my-auto flex-auto text-gray-500">
-              <p className="text-sm font-bold  md:text-base">Address:</p>
-            </div>
-            <div className="my-auto flex-auto">
-              <p className="text-sm font-medium md:text-base">
-                {billingAddress?.streetAddress}, {billingAddress?.locality},{" "}
-                {billingAddress?.region},{" "}
-                {billingAddress?.county?.length ?? 0 > 0
-                  ? billingAddress?.county + ","
-                  : ""}
-                {billingAddress?.countryName}, {billingAddress?.postalCode}
-                {billingAddress?.zip4?.length > 0
-                  ? "- " + billingAddress?.zip4
-                  : ""}
-              </p>
-            </div>
-            <div className="flex-auto text-center">
-              <Button
-                variant="ghost"
-                className="hover:bg-gray-200"
-                onClick={() => setOpenBillingAddressDialog(true)}
-              >
-                <span className="sr-only">Edit Billing Address</span>
-                <MdOutlineEdit className="text-2xl" />
-              </Button>
-            </div>
+            <p className="my-auto flex-auto text-sm font-bold text-gray-500  md:text-base">
+              Address:
+            </p>
+            <p className="my-auto flex-auto text-sm font-medium md:text-base">
+              {billingAddress?.streetAddress}, {billingAddress?.locality},{" "}
+              {billingAddress?.region},{" "}
+              {billingAddress?.county?.length ?? 0 > 0
+                ? billingAddress?.county + ","
+                : ""}
+              {billingAddress?.countryName}, {billingAddress?.postalCode}
+              {billingAddress?.zip4?.length > 0
+                ? "- " + billingAddress?.zip4
+                : ""}
+            </p>
+            <Button
+              variant="ghost"
+              className="flex-auto text-center hover:bg-gray-200"
+              onClick={() => setOpenBillingAddressDialog(true)}
+            >
+              <span className="sr-only">Edit Billing Address</span>
+              <MdOutlineEdit className="text-2xl" />
+            </Button>
           </div>
         </div>
       </div>

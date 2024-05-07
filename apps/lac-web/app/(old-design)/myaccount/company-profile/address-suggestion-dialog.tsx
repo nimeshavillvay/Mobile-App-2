@@ -8,7 +8,7 @@ import { Label } from "@/old/_components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/old/_components/ui/radio-group";
 import { nanoid } from "nanoid";
 import { Dispatch, SetStateAction, useState } from "react";
-import {
+import type {
   Address,
   AddressCheckSuggestions,
   AddressCheckSuggestionsWithUuid,
@@ -168,9 +168,9 @@ const AddressSuggestionDialog = ({
         <p className="mx-5 mb-1">{addressCheckSuggestions?.message}</p>
 
         <RadioGroup onValueChange={onAddressSuggestionChange}>
-          {addressSuggestions?.suggestions?.map((addressSuggestion, index) => (
+          {addressSuggestions?.suggestions?.map((addressSuggestion) => (
             <div
-              key={index}
+              key={addressSuggestion?.uuid}
               className="mx-5 mt-1 flex cursor-default flex-row items-start gap-3 rounded border-2 border-gray-100 py-3 pl-5 shadow"
             >
               <RadioGroupItem value={addressSuggestion?.uuid} />

@@ -3,7 +3,11 @@ import { api } from "@/_lib/api";
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import { useToast } from "@/old/_components/ui/use-toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Address, AddressCheckSuggestions, AddressFormData } from "./types";
+import type {
+  Address,
+  AddressCheckSuggestions,
+  AddressFormData,
+} from "./types";
 
 type BillingAddressResponse = {
   "xc-addressid": string;

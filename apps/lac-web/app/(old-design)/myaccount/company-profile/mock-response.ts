@@ -1,4 +1,4 @@
-import { AddressCheckSuggestions } from "./types";
+import type { AddressCheckSuggestions } from "./types";
 
 export const UPS_ADDRESS_CHECK_RESPONSE: AddressCheckSuggestions = {
   checkType: "ADDRESS",
