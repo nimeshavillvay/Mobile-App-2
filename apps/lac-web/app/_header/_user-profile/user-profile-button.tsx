@@ -42,7 +42,7 @@ const UserProfileDropdown = ({
   type: ViewportTypes;
 }) => {
   // TODO: Replace with real data
-  const userProfile = { firstName: "John" };
+  const userProfile = { firstName: "User" };
   // const usersListQuery = useSuspenseUsersList(token);
   // const userProfile = usersListQuery.data.manageContact.yourProfile;
 
