@@ -14,9 +14,9 @@ export const metadata: Metadata = {
 
 const CompanyProfilePage = () => {
   const cookieStore = cookies();
-  const accountTokenCookie = cookieStore.get(SESSION_TOKEN_COOKIE);
+  const sessionToken = cookieStore.get(SESSION_TOKEN_COOKIE);
 
-  if (!accountTokenCookie) {
+  if (!sessionToken) {
     return redirect("/");
   }
 
@@ -33,11 +33,11 @@ const CompanyProfilePage = () => {
         />
       </div>
 
-      <CompanyProfileImage token={accountTokenCookie?.value} />
+      <CompanyProfileImage token={sessionToken?.value} />
 
-      <BillingAddress token={accountTokenCookie?.value} />
+      <BillingAddress token={sessionToken?.value} />
 
-      <ShippingAddress token={accountTokenCookie?.value} />
+      <ShippingAddress token={sessionToken?.value} />
     </>
   );
 };

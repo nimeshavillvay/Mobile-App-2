@@ -31,6 +31,12 @@ const ShippingAddressCard = ({
   const updateShippingAddressMutation = useUpdateShippingAddressMutation();
   const deleteShippingAddressMutation = useDeleteShippingAddressMutation();
 
+  const deleteShippingAddress = () => {
+    if (shippingAddress.shipTo) {
+      deleteShippingAddressMutation.mutate(shippingAddress.shipTo as string);
+    }
+  };
+
   return (
     <>
       <div className="flex flex-row space-y-3 border-gray-100 bg-transparent p-5 shadow hover:shadow-lg md:space-y-5 md:p-6">
@@ -53,7 +59,7 @@ const ShippingAddressCard = ({
                 updateShippingAddressMutation.mutate({
                   shipTo: shippingAddress.shipTo,
                   default: true,
-                } as AddressFormData)
+                })
               }
             >
               <span className="sr-only">Set Default</span>
@@ -76,11 +82,7 @@ const ShippingAddressCard = ({
           <Button
             variant="ghost"
             className="hover:bg-gray-200"
-            onClick={() =>
-              deleteShippingAddressMutation.mutate(
-                shippingAddress.shipTo as string,
-              )
-            }
+            onClick={deleteShippingAddress}
           >
             <span className="sr-only">Delete shipping address</span>
             <MdOutlineDelete className="text-2xl" />

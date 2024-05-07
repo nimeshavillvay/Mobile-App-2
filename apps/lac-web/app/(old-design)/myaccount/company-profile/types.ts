@@ -20,14 +20,14 @@ export type AddressWithUuid = Address & {
 
 export type AddressFormData = {
   company?: string;
-  addressLineOne: string;
-  city: string;
-  state: string;
-  zipCode: string;
+  addressLineOne?: string;
+  city?: string;
+  state?: string;
+  zipCode?: string;
   phoneNumber?: string;
-  zip4: string;
-  country: string;
-  county: string;
+  zip4?: string;
+  country?: string;
+  county?: string;
   xcAddressId?: string;
   shipTo?: string;
   default?: boolean;

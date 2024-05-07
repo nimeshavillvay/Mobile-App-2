@@ -28,7 +28,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { UPS_ADDRESS_CHECK_RESPONSE } from "./mock-response";
 import type {
   Address,
   AddressCheckSuggestions,
@@ -127,14 +126,14 @@ const AddressDialog = ({
         };
 
         updateShippingAddressMutation.mutate(requestData, {
-          onSuccess: () => {
+          onSuccess: (data) => {
             setOpenAddressDialog(false);
 
-            //TODO: you must pass the response received by the mutation request as the argument for the following method
-            setAddressCheckSuggestions(UPS_ADDRESS_CHECK_RESPONSE);
-
-            setAddress(requestData);
-            setOpenAddressSuggestionDialog(true);
+            if ("checkType" in data) {
+              setAddressCheckSuggestions(data);
+              setAddress(requestData);
+              setOpenAddressSuggestionDialog(true);
+            }
           },
         });
       } else {
@@ -142,13 +141,11 @@ const AddressDialog = ({
           onSuccess: (data) => {
             setOpenAddressDialog(false);
 
-            console.log(data);
-
-            //TODO: you must pass the response received by the mutation request as the argument for the following method
-            setAddressCheckSuggestions(UPS_ADDRESS_CHECK_RESPONSE);
-
-            setAddress(addressData);
-            setOpenAddressSuggestionDialog(true);
+            if ("checkType" in data) {
+              setAddressCheckSuggestions(data);
+              setAddress(addressData);
+              setOpenAddressSuggestionDialog(true);
+            }
           },
           onError: (error) => {
             console.log("error response");
@@ -158,15 +155,14 @@ const AddressDialog = ({
       }
     } else {
       updateBillingAddressMutation.mutate(addressData, {
-        // TODO: the following should be as onSuccess: () => {
-        onError: () => {
+        onSuccess: (data) => {
           setOpenAddressDialog(false);
 
-          //TODO: you must pass the response received by the mutation request as the argument for the following method
-          setAddressCheckSuggestions(UPS_ADDRESS_CHECK_RESPONSE);
-
-          setAddress(addressData);
-          setOpenAddressSuggestionDialog(true);
+          if ("checkType" in data) {
+            setAddressCheckSuggestions(data);
+            setAddress(addressData);
+            setOpenAddressSuggestionDialog(true);
+          }
         },
       });
     }
