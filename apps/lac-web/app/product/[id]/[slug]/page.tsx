@@ -5,7 +5,6 @@ import { DEFAULT_REVALIDATE } from "@/_lib/constants";
 import { ChevronLeft } from "@repo/web-ui/components/icons/chevron-left";
 import {
   ProductCard,
-  ProductCardActions,
   ProductCardContent,
   ProductCardDetails,
   ProductCardDiscount,
@@ -190,12 +189,6 @@ const ProductPage = async ({ params: { id, slug } }: ProductPageProps) => {
                         uom="pair"
                         actualPrice={4.11}
                       />
-
-                      <ProductCardActions
-                        addToCart={() => {
-                          console.log("> Added to cart");
-                        }}
-                      />
                     </ProductCardContent>
                   </ProductCard>
                 ))}
@@ -238,12 +231,6 @@ const ProductPage = async ({ params: { id, slug } }: ProductPageProps) => {
                 />
 
                 <ProductCardPrice price={2.05} uom="pair" actualPrice={4.11} />
-
-                <ProductCardActions
-                  addToCart={() => {
-                    console.log("> Added to cart");
-                  }}
-                />
               </ProductCardContent>
             </ProductCard>
           ))}

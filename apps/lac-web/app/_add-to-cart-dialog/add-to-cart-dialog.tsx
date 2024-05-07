@@ -2,6 +2,7 @@
 
 import useSuspenseCart from "@/_hooks/cart/use-suspense-cart.hook";
 import useSuspenseSimulationCheckout from "@/_hooks/cart/use-suspense-simulation-checkout.hook";
+import useUpdateCartItemMutation from "@/_hooks/cart/use-update-cart-item-mutation.hook";
 import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
 import useItemInfo from "@/_hooks/product/use-item-info.hook";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -57,12 +58,33 @@ const AddToCartDialog = ({ token }: AddToCartDialogProps) => {
     setOpen(false);
   };
 
-  const { register } = useForm<z.infer<typeof AddToCartDialogSchema>>({
+  const { register, getValues } = useForm<
+    z.infer<typeof AddToCartDialogSchema>
+  >({
     values: {
       poOrJobName: itemInCart?.configuration.poOrJobName ?? "",
     },
     resolver: zodResolver(AddToCartDialogSchema),
   });
+
+  const updateCartItemMutation = useUpdateCartItemMutation();
+
+  const handleSave = () => {
+    const data = getValues();
+
+    if (productId && itemInSimulationCheckout && itemInCart) {
+      updateCartItemMutation.mutate([
+        {
+          productId,
+          quantity: itemInSimulationCheckout.quantity,
+          config: {
+            ...itemInCart.configuration,
+            poOrJobName: data.poOrJobName,
+          },
+        },
+      ]);
+    }
+  };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -104,9 +126,13 @@ const AddToCartDialog = ({ token }: AddToCartDialogProps) => {
                   </span>
                 </div>
 
-                <div className="text-lg text-wurth-gray-800">
-                  ${itemInSimulationCheckout?.price}
-                </div>
+                {itemInSimulationCheckout?.price ? (
+                  <div className="text-lg text-wurth-gray-800">
+                    ${itemInSimulationCheckout?.price}
+                  </div>
+                ) : (
+                  <Skeleton className="h-7 w-16" />
+                )}
               </div>
             </div>
           </div>
@@ -120,7 +146,9 @@ const AddToCartDialog = ({ token }: AddToCartDialogProps) => {
           </Label>
 
           <Input
-            {...register("poOrJobName")}
+            {...register("poOrJobName", {
+              onBlur: handleSave,
+            })}
             id={jobNameId}
             type="text"
             placeholder="PO # / Job Name"
