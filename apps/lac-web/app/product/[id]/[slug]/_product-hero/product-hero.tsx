@@ -1,5 +1,3 @@
-import productItemImage from "@/_assets/images/product-item-image.png";
-import { Zap } from "@repo/web-ui/components/icons/zap";
 import {
   Carousel,
   CarouselContent,
@@ -10,14 +8,16 @@ import Image from "next/image";
 import Balancer from "react-wrap-balancer";
 import "server-only";
 import { getProduct } from "../apis";
+import ProductPrices from "./_product-prices";
+import SaleBadges from "./_sale-badges";
 import AddToCart from "./add-to-cart";
+import AddToCartFormProvider from "./add-to-cart-form-provider";
 import ProductDesktopCarousel from "./product-desktop-carousel";
 import {
   DropShipItemNotice,
   ProductDescription,
   ProductDetails,
   ProductNumbers,
-  ProductPrices,
   ProductSpecifications,
 } from "./product-hero-sections";
 import ProductVariants from "./product-variants";
@@ -30,21 +30,28 @@ type ProductHeroProps = {
 const ProductHero = async ({ id, slug }: ProductHeroProps) => {
   const product = await getProduct(id, slug);
 
+  const images = product.selectedProduct.detailedImages
+    ? product.selectedProduct.detailedImages.map((image) => ({
+        src: image.img,
+        alt: image.alt,
+      }))
+    : [
+        {
+          src: product.selectedProduct.image,
+          alt: product.selectedProduct.productName,
+        },
+      ];
+
   return (
-    <>
+    <AddToCartFormProvider
+      minQuantity={product.selectedProduct.minimumOrderQuantity}
+    >
       <div className="container my-2 flex flex-row items-center gap-2 md:my-1">
         <div className="text-sm font-normal text-black">
           Shop <span className="font-semibold">{product.brand}</span>
         </div>
 
-        <div className="flex flex-row items-center gap-1 rounded bg-sky-50 px-2 py-1.5 text-sm font-semibold leading-4 text-wurth-blue-450">
-          <Zap className="hidden size-4 stroke-wurth-blue-450 md:block" />
-          <span>Flash Deal</span>
-        </div>
-
-        <div className="rounded bg-green-50 px-2 py-0.5 text-base text-green-700">
-          <span className="font-semibold">30%</span> off
-        </div>
+        <SaleBadges productId={parseInt(id)} />
       </div>
 
       <h1 className="container my-2 font-title text-2xl font-medium tracking-[-0.009rem] text-wurth-gray-800 md:mb-7 md:mt-1 md:tracking-[-0.144px]">
@@ -53,7 +60,7 @@ const ProductHero = async ({ id, slug }: ProductHeroProps) => {
 
       {/* Desktop view */}
       <div className="hidden md:container md:grid md:grid-cols-[minmax(0,3fr)_minmax(26rem,2fr)] md:gap-x-8 md:gap-y-[3.75rem]">
-        <ProductDesktopCarousel />
+        <ProductDesktopCarousel images={images} />
 
         <div className="space-y-6">
           <div className="space-y-2">
@@ -67,7 +74,10 @@ const ProductHero = async ({ id, slug }: ProductHeroProps) => {
             </ProductDescription>
           </div>
 
-          <ProductPrices />
+          <ProductPrices
+            productId={parseInt(id)}
+            uom={product.selectedProduct.unitOfMeasure}
+          />
 
           <ProductVariants id={id} />
 
@@ -105,11 +115,13 @@ const ProductHero = async ({ id, slug }: ProductHeroProps) => {
 
         <Carousel className="mb-10 mt-5 md:hidden">
           <CarouselContent>
-            {Array.from({ length: 5 }).map((_, index) => (
-              <CarouselItem key={index}>
+            {images.map((image, index) => (
+              <CarouselItem key={image.src}>
                 <Image
-                  src={productItemImage}
-                  alt="A placeholder image"
+                  src={image.src}
+                  alt={image.alt}
+                  width={770}
+                  height={770}
                   className="aspect-1 object-contain"
                   priority={index === 0}
                 />
@@ -120,7 +132,11 @@ const ProductHero = async ({ id, slug }: ProductHeroProps) => {
           <CarouselDots className="mt-1" />
         </Carousel>
 
-        <ProductPrices className="container my-6 md:hidden" />
+        <ProductPrices
+          productId={parseInt(id)}
+          uom={product.selectedProduct.unitOfMeasure}
+          className="container my-6 md:hidden"
+        />
 
         <ProductVariants id={id} className="container my-6 md:hidden" />
 
@@ -148,7 +164,7 @@ const ProductHero = async ({ id, slug }: ProductHeroProps) => {
           />
         )}
       </>
-    </>
+    </AddToCartFormProvider>
   );
 };
 

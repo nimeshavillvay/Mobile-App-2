@@ -58,6 +58,8 @@ const PurchasedItemDetailedViewDialog = ({
   const id = useId();
   const router = useRouter();
   const quantityId = `quantity-${id}`;
+
+  // TODO: Replace this function with new add to cart function after new cart functionality is implemented
   const addToCartMutation = useAddToCartMutation();
 
   const { register, handleSubmit, watch } = useForm<Schema>({

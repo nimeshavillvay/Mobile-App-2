@@ -46,6 +46,8 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
   const id = useId();
   const router = useRouter();
   const quantityId = `quantity-${id}`;
+
+  // TODO: Replace this function with new add to cart function after new cart functionality is implemented
   const addToCartMutation = useAddToCartMutation();
 
   const { register, watch, handleSubmit } = useForm<Schema>({
@@ -297,7 +299,7 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
                     </div>
                   }
                 >
-                  <ItemAttributes token={token} sku={item.productSku} />
+                  <ItemAttributes productId={item.productId} />
                 </Suspense>
               </ErrorBoundary>
             </CollapsibleContent>
