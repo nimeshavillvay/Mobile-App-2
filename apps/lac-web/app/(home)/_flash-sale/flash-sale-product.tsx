@@ -1,6 +1,6 @@
 "use client";
 
-import useAddToCartMutation from "@/_hooks/cart/use-add-to-cart-mutation.hook";
+import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import {
   ProductCard,
@@ -21,13 +21,12 @@ type FlashSaleProductProps = {
     sku: string;
     image: string;
     uom: string;
-    minOrder: number;
   };
   token: string;
 };
 
 const FlashSaleProduct = ({
-  product: { id, slug, title, sku, image, uom, minOrder },
+  product: { id, slug, title, sku, image, uom },
   token,
 }: FlashSaleProductProps) => {
   const priceCheckQuery = useSuspensePriceCheck(token, [
@@ -49,13 +48,13 @@ const FlashSaleProduct = ({
     );
   }
 
-  const addToCartMutation = useAddToCartMutation(token, {
-    productId: parseInt(id),
-    quantity: minOrder,
-  });
+  const { setOpen, setProductId } = useAddToCartDialog(
+    (state) => state.actions,
+  );
 
   const addToCart = () => {
-    addToCartMutation.mutate();
+    setProductId(parseInt(id));
+    setOpen("verification");
   };
 
   return (
@@ -86,10 +85,7 @@ const FlashSaleProduct = ({
           actualPrice={previousPrice}
         />
 
-        <ProductCardActions
-          addToCart={addToCart}
-          disabled={addToCartMutation.isPending}
-        />
+        <ProductCardActions addToCart={addToCart} />
       </ProductCardContent>
     </ProductCard>
   );

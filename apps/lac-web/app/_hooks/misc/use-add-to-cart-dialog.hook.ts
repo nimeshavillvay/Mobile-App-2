@@ -1,24 +1,23 @@
 import { create } from "zustand";
 
+type DialogOpenState = "closed" | "verification" | "confirmation";
+
 type AddToCartDialogState = {
-  open: boolean;
+  open: DialogOpenState;
   productId?: number;
   actions: {
-    setOpen: (open: boolean) => void;
+    setOpen: (open: DialogOpenState) => void;
     setProductId: (productId?: number) => void;
   };
 };
 
-/**
- * Do not use directly. Meant to be used through the `useAddToCartMutation` hook.
- */
 const useAddToCartDialog = create<AddToCartDialogState>()((set) => ({
-  open: false,
+  open: "closed",
   productId: undefined,
   actions: {
     setOpen: (open) =>
       set(() => {
-        if (open) {
+        if (open !== "closed") {
           return {
             open,
           };
