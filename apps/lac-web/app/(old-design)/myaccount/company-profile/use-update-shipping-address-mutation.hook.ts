@@ -1,9 +1,46 @@
+import useCookies from "@/_hooks/storage/use-cookies.hook";
 import { api } from "@/_lib/api";
+import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import { useToast } from "@/old/_components/ui/use-toast";
-import useCookies from "@/old/_hooks/storage/use-cookies.hook";
-import { ACCOUNT_TOKEN_COOKIE } from "@/old/_lib/constants";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import type { AddressCheckSuggestions, AddressFormData } from "./types";
+import type {
+  Address,
+  AddressCheckSuggestions,
+  AddressFormData,
+} from "./types";
+
+type ShippingAddressResponse = {
+  "xc-addressid": string;
+  "country-name": string;
+  county: string;
+  locality: string;
+  organization: string;
+  "phone-number": string;
+  region: string;
+  "street-address": string;
+  "postal-code": string;
+  zip4: string;
+  "ship-to": string;
+  default: boolean;
+};
+
+type ShippingAddressSuggestions = {
+  "country-name": string;
+  county: string;
+  locality: string;
+  region: string;
+  "street-address": string;
+  "postal-code": string;
+  zip4: string;
+  organization: string;
+  "phone-number": string;
+};
+
+type ShippingAddressSuggestionsResponse = {
+  check_type: string;
+  message: string;
+  suggestions: ShippingAddressSuggestions[];
+};
 
 const useUpdateShippingAddressMutation = () => {
   const queryClient = useQueryClient();
@@ -11,11 +48,11 @@ const useUpdateShippingAddressMutation = () => {
   const { toast } = useToast();
 
   return useMutation({
-    mutationFn: (shippingAddressFormData: AddressFormData) =>
-      api
+    mutationFn: async (shippingAddressFormData: AddressFormData) => {
+      const response = await api
         .put("rest/my-account/shipping-address", {
           headers: {
-            authorization: `Bearer ${cookies[ACCOUNT_TOKEN_COOKIE]}`,
+            authorization: `Bearer ${cookies[SESSION_TOKEN_COOKIE]}`,
           },
           json: shippingAddressFormData.default
             ? {
@@ -33,7 +70,45 @@ const useUpdateShippingAddressMutation = () => {
                 default: shippingAddressFormData.default,
               },
         })
-        .json<AddressCheckSuggestions>(),
+        .json<ShippingAddressSuggestionsResponse | ShippingAddressResponse>();
+
+      if ("check_type" in response) {
+        const suggestionsResponse: AddressCheckSuggestions = {
+          checkType: response.check_type,
+          message: response.message,
+          suggestions: response.suggestions.map((address) => ({
+            countryName: address["country-name"],
+            county: address.county,
+            locality: address.locality,
+            region: address.region,
+            streetAddress: address["street-address"],
+            postalCode: address["postal-code"],
+            zip4: address.zip4 ?? null,
+            organization: address.organization,
+            phoneNumber: address["phone-number"],
+          })),
+        };
+
+        return suggestionsResponse;
+      } else {
+        const shippingResponse: Address = {
+          xcAddressId: response["xc-addressid"],
+          countryName: response["country-name"],
+          county: response.county,
+          locality: response.locality,
+          organization: response.organization,
+          phoneNumber: response["phone-number"],
+          region: response.region,
+          streetAddress: response["street-address"],
+          postalCode: response["postal-code"],
+          zip4: response.zip4 ?? null,
+          shipTo: response["ship-to"],
+          default: response.default,
+        };
+
+        return shippingResponse;
+      }
+    },
     onMutate: () => {
       toast({ description: "Updating shipping address" });
     },

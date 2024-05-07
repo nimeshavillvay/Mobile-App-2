@@ -77,9 +77,10 @@ const AddressDialog = ({
     zipCode: z.string().refine((value) => /^\d+$/.test(value), {
       message: "Please enter a valid ZIP4",
     }),
-    phoneNumber: z.string().refine((value) => /^\d{10}$/.test(value), {
-      message: "Please enter a valid phone number",
-    }),
+    phoneNumber: z.string(),
+    // phoneNumber: z.string().refine((value) => /^\d{10}$/.test(value), {
+    //   message: "Please enter a valid phone number",
+    // }),
     country: z.string().trim().min(1, "Please enter country").max(40),
   });
 
@@ -138,14 +139,20 @@ const AddressDialog = ({
         });
       } else {
         addShippingAddressMutation.mutate(addressData, {
-          onSuccess: () => {
+          onSuccess: (data) => {
             setOpenAddressDialog(false);
+
+            console.log(data);
 
             //TODO: you must pass the response received by the mutation request as the argument for the following method
             setAddressCheckSuggestions(UPS_ADDRESS_CHECK_RESPONSE);
 
             setAddress(addressData);
             setOpenAddressSuggestionDialog(true);
+          },
+          onError: (error) => {
+            console.log("error response");
+            console.log(error);
           },
         });
       }

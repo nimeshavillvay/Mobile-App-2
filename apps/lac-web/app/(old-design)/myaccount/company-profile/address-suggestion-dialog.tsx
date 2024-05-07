@@ -8,7 +8,6 @@ import { Label } from "@/old/_components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/old/_components/ui/radio-group";
 import { nanoid } from "nanoid";
 import { Dispatch, SetStateAction, useState } from "react";
-import { SAP_ADDRESS_CHECK_RESPONSE } from "./mock-response";
 import {
   Address,
   AddressCheckSuggestions,
@@ -42,9 +41,8 @@ const AddressSuggestionDialog = ({
   isShippingAddressUpdate,
   address,
 }: AddressDialogProps) => {
-  const [selectedAddressSuggestion, setSelectedAddressSuggestion] = useState(
-    {} as Address,
-  );
+  const [selectedAddressSuggestion, setSelectedAddressSuggestion] =
+    useState<Address>();
 
   const suggestions = addressCheckSuggestions.suggestions.map((suggestion) => {
     return { ...suggestion, uuid: nanoid() };
@@ -89,37 +87,56 @@ const AddressSuggestionDialog = ({
   };
 
   const onContinueOrSubmitButtonClicked = () => {
-    const selectedAddress = convertAddressSuggestionToFormDataFormat(
-      selectedAddressSuggestion,
-    );
-    selectedAddress.skipAddressCheck = true;
+    if (selectedAddressSuggestion) {
+      const selectedAddress = convertAddressSuggestionToFormDataFormat(
+        selectedAddressSuggestion,
+      );
+      selectedAddress.skipAddressCheck = true;
 
-    if (isShippingAddress) {
-      if (isShippingAddressUpdate) {
-        updateShippingAddressMutation.mutate(
-          {
-            xcAddressId: address.xcAddressId,
-            shipTo: address.shipTo,
-            company: address.company,
-            phoneNumber: address.phoneNumber,
-            ...selectedAddress,
-          },
-          {
-            onSuccess: (data) => {
-              setOpenAddressDialog(false);
-              setOpenAddressSuggestionDialog(false);
-
-              if (!data?.checkType) {
-                setOpenAddressSuggestionDialog(false);
-              } else {
-                setAddressCheckSuggestions(data);
-                setOpenAddressSuggestionDialog(true);
-              }
+      if (isShippingAddress) {
+        if (isShippingAddressUpdate) {
+          updateShippingAddressMutation.mutate(
+            {
+              xcAddressId: address.xcAddressId,
+              shipTo: address.shipTo,
+              company: address.company,
+              phoneNumber: address.phoneNumber,
+              ...selectedAddress,
             },
-          },
-        );
+            {
+              onSuccess: (data) => {
+                setOpenAddressDialog(false);
+                setOpenAddressSuggestionDialog(false);
+
+                if ("checkType" in data) {
+                  setAddressCheckSuggestions(data);
+                  setOpenAddressSuggestionDialog(true);
+                }
+              },
+            },
+          );
+        } else {
+          addShippingAddressMutation.mutate(
+            {
+              company: address.company,
+              phoneNumber: address.phoneNumber,
+              ...selectedAddress,
+            },
+            {
+              onSuccess: (data) => {
+                setOpenAddressDialog(false);
+                setOpenAddressSuggestionDialog(false);
+
+                if ("checkType" in data) {
+                  setAddressCheckSuggestions(data);
+                  setOpenAddressSuggestionDialog(true);
+                }
+              },
+            },
+          );
+        }
       } else {
-        addShippingAddressMutation.mutate(
+        updateBillingAddressMutation.mutate(
           {
             company: address.company,
             phoneNumber: address.phoneNumber,
@@ -130,9 +147,7 @@ const AddressSuggestionDialog = ({
               setOpenAddressDialog(false);
               setOpenAddressSuggestionDialog(false);
 
-              if (!data?.checkType) {
-                setOpenAddressSuggestionDialog(false);
-              } else {
+              if ("checkType" in data) {
                 setAddressCheckSuggestions(data);
                 setOpenAddressSuggestionDialog(true);
               }
@@ -140,27 +155,6 @@ const AddressSuggestionDialog = ({
           },
         );
       }
-    } else {
-      updateBillingAddressMutation.mutate(
-        {
-          company: address.company,
-          phoneNumber: address.phoneNumber,
-          ...selectedAddress,
-        },
-        {
-          onSuccess: (data) => {
-            setOpenAddressDialog(false);
-            setOpenAddressSuggestionDialog(false);
-
-            if (!data?.checkType) {
-              setOpenAddressSuggestionDialog(false);
-            } else {
-              setAddressCheckSuggestions(data);
-              setOpenAddressSuggestionDialog(true);
-            }
-          },
-        },
-      );
     }
   };
 

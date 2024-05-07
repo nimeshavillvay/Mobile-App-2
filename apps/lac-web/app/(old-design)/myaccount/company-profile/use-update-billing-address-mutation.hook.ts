@@ -1,9 +1,39 @@
+import useCookies from "@/_hooks/storage/use-cookies.hook";
 import { api } from "@/_lib/api";
+import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import { useToast } from "@/old/_components/ui/use-toast";
-import useCookies from "@/old/_hooks/storage/use-cookies.hook";
-import { ACCOUNT_TOKEN_COOKIE } from "@/old/_lib/constants";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { AddressCheckSuggestions, AddressFormData } from "./types";
+import { Address, AddressCheckSuggestions, AddressFormData } from "./types";
+
+type BillingAddressResponse = {
+  "xc-addressid": string;
+  soldto: string;
+  "country-name": string;
+  county: string;
+  locality: string;
+  organization: string;
+  "phone-number": string;
+  region: string;
+  "street-address": string;
+  "postal-code": string;
+  zip4: string;
+};
+
+type BillingAddressSuggestions = {
+  "country-name": string;
+  county: string;
+  locality: string;
+  region: string;
+  "street-address": string;
+  "postal-code": string;
+  zip4: string;
+};
+
+type BillingAddressSuggestionsResponse = {
+  check_type: string;
+  message: string;
+  suggestions: BillingAddressSuggestions[];
+};
 
 const useUpdateBillingAddressMutation = () => {
   const queryClient = useQueryClient();
@@ -11,11 +41,11 @@ const useUpdateBillingAddressMutation = () => {
   const { toast } = useToast();
 
   return useMutation({
-    mutationFn: (billingAddressFormData: AddressFormData) =>
-      api
+    mutationFn: async (billingAddressFormData: AddressFormData) => {
+      const response = await api
         .put("rest/my-account/billing-address", {
           headers: {
-            authorization: `Bearer ${cookies[ACCOUNT_TOKEN_COOKIE]}`,
+            authorization: `Bearer ${cookies[SESSION_TOKEN_COOKIE]}`,
           },
           json: {
             "country-name": billingAddressFormData.country,
@@ -26,14 +56,48 @@ const useUpdateBillingAddressMutation = () => {
             region: billingAddressFormData.state,
             "street-address": billingAddressFormData.addressLineOne,
             "postal-code": billingAddressFormData.zipCode,
-            // TODO: i think we should pass zip4, but if we pass zip 4, the UPS check will not take place
-            // zip4: billingAddressFormData.zip4,
+            zip4: billingAddressFormData.zip4,
             ...(billingAddressFormData.skipAddressCheck !== undefined && {
               skip_address_check: billingAddressFormData.skipAddressCheck,
             }),
           },
         })
-        .json<AddressCheckSuggestions>(),
+        .json<BillingAddressSuggestionsResponse | BillingAddressResponse>();
+
+      if ("check_type" in response) {
+        const suggestionsResponse: AddressCheckSuggestions = {
+          checkType: response.check_type,
+          message: response.message,
+          suggestions: response.suggestions.map((address) => ({
+            countryName: address["country-name"],
+            county: address.county,
+            locality: address.locality,
+            region: address.region,
+            streetAddress: address["street-address"],
+            postalCode: address["postal-code"],
+            zip4: address.zip4 ?? null,
+          })),
+        };
+
+        return suggestionsResponse;
+      } else {
+        const shippingResponse: Address = {
+          xcAddressId: response["xc-addressid"],
+          soldTo: response.soldto,
+          countryName: response["country-name"],
+          county: response.county,
+          locality: response.locality,
+          organization: response.organization,
+          phoneNumber: response["phone-number"],
+          region: response.region,
+          streetAddress: response["street-address"],
+          postalCode: response["postal-code"],
+          zip4: response.zip4 ?? null,
+        };
+
+        return shippingResponse;
+      }
+    },
     onMutate: () => {
       toast({ description: "Updating billing address" });
     },

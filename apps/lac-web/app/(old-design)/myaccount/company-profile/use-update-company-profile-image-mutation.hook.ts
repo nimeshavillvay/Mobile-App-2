@@ -1,7 +1,7 @@
+import useCookies from "@/_hooks/storage/use-cookies.hook";
 import { api } from "@/_lib/api";
+import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import { useToast } from "@/old/_components/ui/use-toast";
-import useCookies from "@/old/_hooks/storage/use-cookies.hook";
-import { ACCOUNT_TOKEN_COOKIE } from "@/old/_lib/constants";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const useUpdateCompanyProfileImageMutation = () => {
@@ -13,7 +13,7 @@ const useUpdateCompanyProfileImageMutation = () => {
     mutationFn: (profileImageFormData: FormData) =>
       api.post("rest/osrdetails", {
         headers: {
-          authorization: `Bearer ${cookies[ACCOUNT_TOKEN_COOKIE]}`,
+          authorization: `Bearer ${cookies[SESSION_TOKEN_COOKIE]}`,
         },
         body: profileImageFormData,
       }),
