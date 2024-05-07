@@ -23,7 +23,7 @@ const useUpdateCartItemMutation = () => {
             })),
           },
         })
-        .json<unknown>();
+        .json();
     },
     onSettled: () => {
       queryClient.invalidateQueries({

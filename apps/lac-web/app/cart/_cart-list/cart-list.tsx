@@ -7,11 +7,12 @@ import { ShippingMethod } from "../types";
 import CartItem from "./cart-item";
 
 type CartListProps = {
+  token: string;
   shippingMethods: ShippingMethod[];
 };
 
-const CartList = ({ shippingMethods }: CartListProps) => {
-  const { data } = useSuspenseCart();
+const CartList = ({ token, shippingMethods }: CartListProps) => {
+  const { data } = useSuspenseCart(token);
 
   return (
     <ul className="flex flex-col">

@@ -96,7 +96,7 @@ const OrderTrackingLogPage = async ({
           </div>
         </div>
 
-        {trackingInfo?.length &&
+        {trackingInfo?.length > 0 &&
           trackingInfo.map((info, index) => (
             <OrderTrackingCard
               key={`${info?.plant}-${index}`}

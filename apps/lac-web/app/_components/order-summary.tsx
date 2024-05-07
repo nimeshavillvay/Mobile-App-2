@@ -18,6 +18,7 @@ const promoSchema = z.object({
 });
 
 type OrderSummaryProps = {
+  token: string;
   children?: ReactNode;
 };
 
@@ -25,12 +26,12 @@ type OrderSummaryProps = {
  * Always wrap this component in a Suspense boundary
  * to avoid blocking the rendering of the parent component.
  */
-const OrderSummary = ({ children }: OrderSummaryProps) => {
+const OrderSummary = ({ token, children }: OrderSummaryProps) => {
   const id = useId();
   const promoId = `promo-${id}`;
 
   const [openPromo, setOpenPromo] = useState(false);
-  const simulationCheckoutQuery = useSuspenseSimulationCheckout();
+  const simulationCheckoutQuery = useSuspenseSimulationCheckout(token);
 
   const { register, handleSubmit } = useForm<z.infer<typeof promoSchema>>({
     resolver: zodResolver(promoSchema),

@@ -1,11 +1,10 @@
 import { cn } from "@/_lib/utils";
-import AccountSelectorDialog from "@/old/account-selector-dialog";
-import LoginDialog from "@/old/login-dialog";
 import { Toaster } from "@repo/web-ui/components/ui/toast";
 import { type Metadata } from "next";
 import localFont from "next/font/local";
 import NextTopLoader from "nextjs-toploader";
 import { type ReactNode } from "react";
+import AddToCartDialog from "./_add-to-cart-dialog";
 import Footer from "./_footer";
 import Header from "./_header";
 import "./global.css";
@@ -81,8 +80,7 @@ const RootLayout = ({ children }: { children: ReactNode }) => {
 
           <Toaster />
 
-          <LoginDialog />
-          <AccountSelectorDialog />
+          <AddToCartDialog />
         </Providers>
       </body>
     </html>
