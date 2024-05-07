@@ -84,11 +84,11 @@ const MultiSelect = ({
         type === ItemClick
       ) {
         if (selectedItem && selectedItem.active) {
-          onValuesChange && onValuesChange([...selectedItems, selectedItem]);
-
           if (isItemSelected(selectedItem)) {
+            onValuesChange && onValuesChange(selectedItems);
             removeSelectedItem(selectedItem);
           } else {
+            onValuesChange && onValuesChange([...selectedItems, selectedItem]);
             addSelectedItem(selectedItem);
           }
         }

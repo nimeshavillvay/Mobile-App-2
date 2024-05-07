@@ -16,7 +16,7 @@ import dayjs from "dayjs";
 import { useSearchParams } from "next/navigation";
 import { useId, useState } from "react";
 import { MdKeyboardArrowDown } from "react-icons/md";
-import { changeSearchParams } from "../_utils/client-helpers";
+// import { changeSearchParams } from "../_utils/client-helpers";
 import {
   CUSTOM_DURATION,
   DURATIONS,
@@ -45,13 +45,13 @@ const OrderHistoryListSelectors = ({
   isLoading,
   totalItems,
 }: OrderHistoryListSelectorsProps) => {
-  const { selectedValues } = useFilterParams(filters);
+  const { selectedValues, searchParams } = useFilterParams(filters);
   const mappedSelectedValues: (SelectedValues[string] & { id: string })[] = [];
   for (const [key, value] of Object.entries(selectedValues)) {
     mappedSelectedValues.push({ ...value, id: key });
   }
 
-  console.log("selectedValues", mappedSelectedValues);
+  // console.log("selectedValues", mappedSelectedValues);
 
   const poNoFilter = filterAndMapValues(filters, "PO #");
   const jobNameFilter = filterAndMapValues(filters, "Job Name");
@@ -96,24 +96,49 @@ const OrderHistoryListSelectors = ({
   };
 
   const handleSearch = () => {
-    changeSearchParams(urlSearchParams, [
-      {
-        key: QUERY_KEYS.FROM_DATE,
-        value: dayjs(fromDate).format(URL_DATE_FORMAT),
-      },
-      {
-        key: QUERY_KEYS.TO_DATE,
-        value: dayjs(toDate).format(URL_DATE_FORMAT),
-      },
-      {
-        key: QUERY_KEYS.ORDER_STATUS,
-        value: orderStatuses.join(","),
-      },
-      {
-        key: QUERY_KEYS.ORDER_TYPE,
-        value: orderTypes.join(","),
-      },
-    ]);
+    const newUrlSearchParams = new URLSearchParams(searchParams);
+    const typeAttributeId = typesFilter?.id.toString() ?? "";
+    const statusAttributeId = statusFilter?.id.toString() ?? "";
+
+    if (fromDate) {
+      newUrlSearchParams.set(
+        QUERY_KEYS.FROM_DATE,
+        dayjs(fromDate).format(URL_DATE_FORMAT),
+      );
+    }
+
+    if (toDate) {
+      newUrlSearchParams.set(
+        QUERY_KEYS.TO_DATE,
+        dayjs(toDate).format(URL_DATE_FORMAT),
+      );
+    }
+
+    if (orderTypes.length > 0) {
+      // check if urlSearchParams already has the typeAttributeId
+      if (newUrlSearchParams.has(typeAttributeId)) {
+        newUrlSearchParams.delete(typeAttributeId);
+      }
+      orderTypes.forEach((type) => {
+        newUrlSearchParams.append(typeAttributeId, type.toString());
+      });
+    } else {
+      newUrlSearchParams.delete(typeAttributeId);
+    }
+
+    if (orderStatuses.length > 0) {
+      // check if urlSearchParams already has the statusAttributeId
+      if (newUrlSearchParams.has(statusAttributeId)) {
+        newUrlSearchParams.delete(statusAttributeId);
+      }
+      orderStatuses.forEach((status) => {
+        newUrlSearchParams.append(statusAttributeId, status.toString());
+      });
+    } else {
+      newUrlSearchParams.delete(statusAttributeId);
+    }
+
+    window.history.pushState(null, "", `?${newUrlSearchParams.toString()}`);
   };
 
   const handleReset = () => {
@@ -129,7 +154,6 @@ const OrderHistoryListSelectors = ({
   };
 
   const handleOrderTypeCheckedChanged = (valueId: number, checked: boolean) => {
-    console.log(typesFilter?.filter);
     if (checked) {
       setOrderTypes((prev) => [...prev, valueId]);
     } else {
@@ -138,6 +162,7 @@ const OrderHistoryListSelectors = ({
   };
 
   const handleOrderStatusChange = (values: Option[]) => {
+    console.log("values", values);
     const selectedOrderStatus = values.map((value) => value.id);
     setOrderStatuses(selectedOrderStatus);
   };
