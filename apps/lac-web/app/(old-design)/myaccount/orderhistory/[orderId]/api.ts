@@ -17,7 +17,6 @@ export const getOrderDetail = async (orderId: string) => {
         searchParams: {
           orderNo: orderId,
         },
-        cache: "no-store",
       })
       .json<{
         orderNo: string;

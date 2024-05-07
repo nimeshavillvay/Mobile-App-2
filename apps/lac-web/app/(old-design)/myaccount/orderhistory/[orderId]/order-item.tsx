@@ -13,6 +13,7 @@ import { WurthFullBlack } from "@repo/web-ui/components/logos/wurth-full-black";
 import dayjs from "dayjs";
 import Image from "next/image";
 import Link from "next/link";
+import { Fragment } from "react";
 import { UI_DATE_FORMAT } from "../constants";
 
 type OrderItemProps = {
@@ -163,8 +164,8 @@ const OrderItem = ({
         <TableBody>
           {lineItems?.length &&
             lineItems.map((lineItem) => (
-              <>
-                <TableRow key={lineItem.itemNo}>
+              <Fragment key={lineItem.itemNo}>
+                <TableRow>
                   <TableCell className="py-2">
                     {lineItem?.itemNo ?? "N/A"}
                   </TableCell>
@@ -218,7 +219,7 @@ const OrderItem = ({
                     </TableCell>
                   </TableRow>
                 )}
-              </>
+              </Fragment>
             ))}
         </TableBody>
       </Table>
