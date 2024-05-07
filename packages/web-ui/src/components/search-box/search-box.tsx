@@ -42,6 +42,7 @@ export const SearchBoxInput = ({
   data,
   value,
   setValue,
+  onEnterPressed,
   ...delegated
 }: ComponentProps<"input"> & {
   data: {
@@ -51,17 +52,25 @@ export const SearchBoxInput = ({
   };
   value: string;
   setValue: (value: string) => void;
+  onEnterPressed: () => void;
 }) => {
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      onEnterPressed();
+      closeMenu();
+    }
+  };
   const { products, categories, brands } = data;
-  const { isOpen, getMenuProps, getInputProps, getItemProps } = useCombobox({
-    onInputValueChange: ({ inputValue }) => {
-      setValue(inputValue);
-    },
-    items: [...categories.results, ...brands.results, ...products.results],
-    itemToString(item) {
-      return item ? item.title : "";
-    },
-  });
+  const { isOpen, getMenuProps, getInputProps, getItemProps, closeMenu } =
+    useCombobox({
+      onInputValueChange: ({ inputValue }) => {
+        setValue(inputValue);
+      },
+      items: [...categories.results, ...brands.results, ...products.results],
+      itemToString(item) {
+        return item ? item.title : "";
+      },
+    });
 
   return (
     <div className="relative w-full rounded-md">
@@ -74,6 +83,7 @@ export const SearchBoxInput = ({
             )}
             {...delegated}
             {...getInputProps()}
+            onKeyDown={handleKeyDown}
           />
         </div>
       </div>
@@ -91,17 +101,22 @@ export const SearchBoxInput = ({
                   Categories for &quot;{value}&quot;
                 </li>
                 {categories.results.map((category, index) => (
-                  <li
-                    className="p-2 pl-8"
+                  <Link
+                    href={`/category/${category.id}/${category.title.replace(/ /g, "-")}`}
                     key={category.id}
-                    {...getItemProps({ item: category, index })}
                   >
-                    <span>
-                      <span className="text-gray-500">&#8627;</span>{" "}
-                      <b className="text-red-500">{category.title}</b>
-                      <br />
-                    </span>
-                  </li>
+                    <li
+                      className="p-2 pl-8"
+                      key={category.id}
+                      {...getItemProps({ item: category, index })}
+                    >
+                      <span>
+                        <span className="text-gray-500">&#8627;</span>{" "}
+                        <b className="text-red-500">{category.title}</b>
+                        <br />
+                      </span>
+                    </li>
+                  </Link>
                 ))}
                 <br />
               </>
@@ -113,28 +128,33 @@ export const SearchBoxInput = ({
                 </li>
                 <li className="flex flex-row flex-wrap ">
                   {brands.results.map((brand, index) => (
-                    <div
+                    <Link
+                      href={`/search?query=${brand.title.replace(/ /g, "-")}`}
                       key={brand.id}
-                      className={cn(
-                        "mb-2 mr-2 flex items-center rounded-md p-2 ",
-                        "m-2 rounded-lg border-2 p-4 shadow-sm",
-                      )}
-                      {...getItemProps({
-                        item: brand,
-                        index: index + categories.results.length,
-                      })}
                     >
-                      <Image
-                        src={brand.img}
-                        alt={brand.title}
-                        className="mr-2 min-h-10 min-w-10"
-                        width={40}
-                        height={40}
-                      />
-                      <span className="flex-grow truncate break-all text-center">
-                        {brand.title}
-                      </span>
-                    </div>
+                      <div
+                        key={brand.id}
+                        className={cn(
+                          "mb-2 mr-2 flex items-center rounded-md p-2 ",
+                          "m-2 rounded-lg border-2 p-4 shadow-sm",
+                        )}
+                        {...getItemProps({
+                          item: brand,
+                          index: index + categories.results.length,
+                        })}
+                      >
+                        <Image
+                          src={brand.img}
+                          alt={brand.title}
+                          className="mr-2 min-h-10 min-w-10"
+                          width={40}
+                          height={40}
+                        />
+                        <span className="flex-grow truncate break-all text-center">
+                          {brand.title}
+                        </span>
+                      </div>
+                    </Link>
                   ))}
                 </li>
                 <br />
@@ -148,7 +168,10 @@ export const SearchBoxInput = ({
                 <div className="flex">
                   <div className="w-1/2">
                     {products.results.slice(0, 5).map((product, index) => (
-                      <Link href={`/product/${product.id}/`} key={product.id}>
+                      <Link
+                        href={`/product/${product.id}/${product.title.replace(/ /g, "-")}`}
+                        key={product.id}
+                      >
                         <li
                           className={cn("flex px-3 py-2")}
                           key={product.id}
@@ -182,7 +205,10 @@ export const SearchBoxInput = ({
                   </div>
                   <div className="w-1/2">
                     {products.results.slice(5).map((product, index) => (
-                      <Link href={`/product/${product.id}/`} key={product.id}>
+                      <Link
+                        href={`/product/${product.id}/${product.title.replace(/ /g, "-")}`}
+                        key={product.id}
+                      >
                         <li
                           className={cn("flex px-3 py-2")}
                           key={product.id}
