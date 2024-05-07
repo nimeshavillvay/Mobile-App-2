@@ -51,7 +51,7 @@ const UserProfileDropdown = ({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <SignInLink type={type} text={`Hi, ${userProfile?.firstName}`} />
+        <SignInLink type={type} text={`Hi, ${userProfile.firstName}`} />
       </DropdownMenuTrigger>
 
       <DropdownMenuContent className="w-56">
