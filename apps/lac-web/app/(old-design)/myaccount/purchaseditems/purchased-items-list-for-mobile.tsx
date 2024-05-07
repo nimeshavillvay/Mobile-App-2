@@ -1,5 +1,4 @@
 import { Button } from "@/(old-design)/_components/ui/button";
-import { getMediaUrl } from "@/old/_utils/helpers";
 import { WurthFullBlack } from "@repo/web-ui/components/logos/wurth-full-black";
 import dayjs from "dayjs";
 import Image from "next/image";
@@ -65,7 +64,7 @@ const PurchasedItemRowForMobile = ({
       <Link href={generateItemUrl(item.productId)} className="min-w-[92px]">
         {item.image ? (
           <Image
-            src={getMediaUrl(item.image.webp)}
+            src={item.image}
             alt={item.productDescription}
             width={92}
             height={92}

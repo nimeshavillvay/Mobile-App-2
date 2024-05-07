@@ -1,6 +1,7 @@
 "use client";
 
 import useSuspenseCart from "@/_hooks/cart/use-suspense-cart.hook";
+import useUpdateCartItemMutation from "@/_hooks/cart/use-update-cart-item-mutation.hook";
 import { Checkbox } from "@repo/web-ui/components/ui/checkbox";
 import { Label } from "@repo/web-ui/components/ui/label";
 import {
@@ -12,7 +13,6 @@ import {
 } from "@repo/web-ui/components/ui/select";
 import { useId, useState } from "react";
 import type { ShippingMethod } from "./types";
-import useUpdateCartItemMutation from "./use-update-cart-item-mutation.hook";
 
 const SHIP_TO_ME = "ship-to-me";
 const WILL_CALL = "will-call";
