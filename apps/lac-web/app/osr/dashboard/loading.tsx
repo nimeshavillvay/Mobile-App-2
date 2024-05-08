@@ -1,4 +1,5 @@
 import { cn } from "@/_lib/utils";
+import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import {
   Table,
   TableBody,
@@ -6,9 +7,8 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/old/_components/ui/table";
-import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
-import React from "react";
+} from "@repo/web-ui/components/ui/table";
+import { Fragment } from "react";
 import { columnPrimaryRep } from "./constants";
 
 const OSRDashboardCustomersLoading = ({
@@ -36,7 +36,7 @@ const OSRDashboardCustomersLoading = ({
           <TableRow>
             {columnsChecked &&
               columnsChecked.map((column) => (
-                <React.Fragment key={column}>
+                <Fragment key={column}>
                   {column == columnPrimaryRep && selfOnly ? null : (
                     <TableHead
                       className={cn("cursor-pointer hover:text-wurth-gray-800")}
@@ -44,7 +44,7 @@ const OSRDashboardCustomersLoading = ({
                       <div className="flex items-center">{column}</div>
                     </TableHead>
                   )}
-                </React.Fragment>
+                </Fragment>
               ))}
             <TableHead>Action</TableHead>
           </TableRow>
@@ -55,13 +55,13 @@ const OSRDashboardCustomersLoading = ({
             <TableRow key={`skeleton_${index}`}>
               {columnsChecked &&
                 columnsChecked.map((column) => (
-                  <React.Fragment key={column}>
+                  <Fragment key={column}>
                     {column == columnPrimaryRep && selfOnly ? null : (
                       <TableCell>
                         <Skeleton className="h-10 w-full" />
                       </TableCell>
                     )}
-                  </React.Fragment>
+                  </Fragment>
                 ))}
               <TableCell>
                 <Skeleton className="h-10 w-full" />

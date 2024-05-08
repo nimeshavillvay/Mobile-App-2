@@ -1,14 +1,14 @@
 "use client";
 
-import { Button } from "@/(old-design)/_components/ui/button";
-import { cn } from "@/(old-design)/_utils/helpers";
+import { cn } from "@/_lib/utils";
+import { Button } from "@repo/web-ui/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/old/_components/ui/dialog";
+} from "@repo/web-ui/components/ui/dialog";
 import { useSearchParams } from "next/navigation";
 import { useState, type Dispatch, type SetStateAction } from "react";
 import { MdCheck } from "react-icons/md";

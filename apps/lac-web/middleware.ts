@@ -55,12 +55,6 @@ export const middleware = async (request: NextRequest) => {
     return response;
   }
 
-  await redirectUserIfNotASalesRep(request);
-
-  return NextResponse.next();
-};
-
-const redirectUserIfNotASalesRep = async function (request: NextRequest) {
   if (request.nextUrl.pathname.startsWith("/osr/dashboard")) {
     const sessionToken = request.cookies.get(SESSION_TOKEN_COOKIE);
 
@@ -71,6 +65,8 @@ const redirectUserIfNotASalesRep = async function (request: NextRequest) {
       }
     }
   }
+
+  return NextResponse.next();
 };
 
 export const config = {

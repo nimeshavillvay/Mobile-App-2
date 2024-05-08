@@ -11,9 +11,9 @@ import {
   SearchBoxInput,
 } from "@repo/web-ui/components/search-box";
 import { Button, buttonVariants } from "@repo/web-ui/components/ui/button";
+import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import Link from "next/link";
 import { Suspense } from "react";
-import { Skeleton } from "~/components/ui/skeleton";
 import UserProfile, { UserProfileSkeleton } from "./_user-profile";
 import DesktopNavigationMenu from "./desktop-navigation-menu";
 import MobileNavigationMenu from "./mobile-navigation-menu";

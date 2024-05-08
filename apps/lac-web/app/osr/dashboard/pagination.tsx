@@ -1,6 +1,5 @@
 "use client";
 
-import { QUERY_KEYS } from "@/old/_lib/constants";
 import {
   Pagination as PaginationComponent,
   PaginationLink as PaginationComponentLink,
@@ -11,6 +10,7 @@ import {
   PaginationPrevious,
 } from "@repo/web-ui/components/ui/pagination";
 import { usePathname, useSearchParams } from "next/navigation";
+import { QUERY_KEYS } from "./constants";
 
 type PaginationProps = {
   pageSize: number;
@@ -47,42 +47,40 @@ const Pagination = ({ pageSize, totalSize, currentPage }: PaginationProps) => {
   ].filter((page) => page >= 1 && page <= noOfPages);
 
   return (
-    <div className="flex flex-row items-center gap-1">
-      <PaginationComponent>
-        <PaginationContent>
+    <PaginationComponent className="justify-end">
+      <PaginationContent>
+        <PaginationItem>
+          <PaginationPrevious href={getHref(currentPage - 1)} />
+        </PaginationItem>
+
+        {currentPage - 2 > 1 && (
           <PaginationItem>
-            <PaginationPrevious href={getHref(currentPage - 1)} />
+            <PaginationEllipsis />
           </PaginationItem>
+        )}
 
-          {currentPage - 2 > 1 && (
-            <PaginationItem>
-              <PaginationEllipsis />
-            </PaginationItem>
-          )}
+        {pages.map((page) => (
+          <PaginationItem key={page}>
+            <PaginationComponentLink
+              href={getHref(page)}
+              isActive={page === currentPage}
+            >
+              {page}
+            </PaginationComponentLink>
+          </PaginationItem>
+        ))}
 
-          {pages.map((page) => (
-            <PaginationItem key={page}>
-              <PaginationComponentLink
-                href={getHref(page)}
-                isActive={page === currentPage}
-              >
-                {page}
-              </PaginationComponentLink>
-            </PaginationItem>
-          ))}
-
-          {currentPage + 2 < noOfPages && (
-            <PaginationItem>
-              <PaginationEllipsis />
-            </PaginationItem>
-          )}
-
+        {currentPage + 2 < noOfPages && (
           <PaginationItem>
-            <PaginationNext href={getHref(currentPage + 1)} />
+            <PaginationEllipsis />
           </PaginationItem>
-        </PaginationContent>
-      </PaginationComponent>
-    </div>
+        )}
+
+        <PaginationItem>
+          <PaginationNext href={getHref(currentPage + 1)} />
+        </PaginationItem>
+      </PaginationContent>
+    </PaginationComponent>
   );
 };
 

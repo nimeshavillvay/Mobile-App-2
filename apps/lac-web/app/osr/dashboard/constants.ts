@@ -20,4 +20,4 @@ export const QUERY_KEYS = {
   SORT_DIRECTION: "sortDirection",
   SEARCH_TEXT: "searchText",
   SELF_ONLY: "selfOnly",
-};
+} as const;

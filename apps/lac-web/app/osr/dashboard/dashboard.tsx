@@ -1,18 +1,7 @@
 "use client";
 
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/old/_components/ui/select";
-import {
-  SearchBox,
-  SearchBoxButton,
-  SearchBoxInput,
-} from "@repo/web-ui/components/search-box";
+import { MagnifyingGlass } from "@repo/web-ui/components/icons/magnifying-glass";
+import { Button } from "@repo/web-ui/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -20,8 +9,15 @@ import {
   DropdownMenuTrigger,
 } from "@repo/web-ui/components/ui/dropdown-menu";
 import { Label } from "@repo/web-ui/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@repo/web-ui/components/ui/select";
 import { useSearchParams } from "next/navigation";
-import React, { Suspense, useState } from "react";
+import { Suspense, useId, useState } from "react";
 import { changeSearchParams } from "./client-helpers";
 import {
   INIT_PAGE_NUMBER,
@@ -40,6 +36,9 @@ import OSRDashboardCustomersLoading from "./loading";
 import MyCustomerDetails from "./my-customers-details";
 
 const Dashboard = ({ token }: { token: string }) => {
+  const id = useId();
+  const belongsTo = `belongs-to-${id}`;
+
   const allColumns = [
     columnAccount,
     columnEmailAndPhone,
@@ -63,7 +62,7 @@ const Dashboard = ({ token }: { token: string }) => {
   const searchText = searchParams.get("searchText") ?? "";
   const [searchInput, setSearchInput] = useState(searchText);
 
-  const sortColumnsMatchingToAllColumnsArray = (columns: string[]) => {
+  const sortedColumns = (columns: string[]) => {
     return allColumns.filter((column) => columns.includes(column));
   };
 
@@ -72,7 +71,9 @@ const Dashboard = ({ token }: { token: string }) => {
       <div className="my-2 grid grid-cols-1 gap-y-2 md:grid-cols-3">
         <div className="col-span-1">
           <div className="flex max-w-56 flex-row items-center">
-            <Label className="mr-2">View:</Label>
+            <Label htmlFor={belongsTo} className="mr-2">
+              View:
+            </Label>
 
             <Select
               value={selfOnly ? "self" : "all"}
@@ -89,43 +90,46 @@ const Dashboard = ({ token }: { token: string }) => {
                 ]);
               }}
             >
-              <SelectTrigger className="ui-w-[180px] rounded-md">
+              <SelectTrigger id={belongsTo} className="ui-w-[180px] rounded-md">
                 <SelectValue placeholder="Select an option" />
               </SelectTrigger>
               <SelectContent>
-                <SelectGroup>
-                  <SelectItem value="self">Assigned to me</SelectItem>
-                  <SelectItem value="all">All</SelectItem>
-                </SelectGroup>
+                <SelectItem value="self">Assigned to me</SelectItem>
+                <SelectItem value="all">All</SelectItem>
               </SelectContent>
             </Select>
           </div>
         </div>
 
         <div className="col-span-1">
-          <div>
-            <SearchBox className="rounded">
-              <SearchBoxInput
-                value={searchInput}
-                placeholder="Search all customers"
-                className="rounded text-wurth-gray-500"
-                onChange={(event) => setSearchInput(event.target.value)}
-              />
-              <SearchBoxButton
-                onClick={() => {
-                  changeSearchParams(searchParams, [
-                    {
-                      key: QUERY_KEYS.SEARCH_TEXT,
-                      value: searchInput,
-                    },
-                    {
-                      key: QUERY_KEYS.PAGE,
-                      value: INIT_PAGE_NUMBER,
-                    },
-                  ]);
-                }}
-              />
-            </SearchBox>
+          <div className="flex flex-row items-center rounded border border-wurth-gray-250">
+            <input
+              value={searchInput}
+              placeholder="Search all customers"
+              className="min-w-0 flex-1 shrink rounded border-0 py-2.5 pl-3.5 text-sm placeholder:text-wurth-gray-400"
+              onChange={(event) => setSearchInput(event.target.value)}
+            />
+
+            <Button
+              type="submit"
+              variant="ghost"
+              size="icon"
+              className="mx-0.5 rounded px-2 text-wurth-gray-500"
+              onClick={() => {
+                changeSearchParams(searchParams, [
+                  {
+                    key: QUERY_KEYS.SEARCH_TEXT,
+                    value: searchInput,
+                  },
+                  {
+                    key: QUERY_KEYS.PAGE,
+                    value: INIT_PAGE_NUMBER,
+                  },
+                ]);
+              }}
+            >
+              <MagnifyingGlass className="size-5" />
+            </Button>
           </div>
         </div>
 
@@ -147,9 +151,7 @@ const Dashboard = ({ token }: { token: string }) => {
                     } else {
                       columns = columnsChecked.filter((col) => col !== column);
                     }
-                    setColumnsChecked(
-                      sortColumnsMatchingToAllColumnsArray(columns),
-                    );
+                    setColumnsChecked(sortedColumns(columns));
                   }}
                   className="DropdownMenuItemIndicator1"
                 >

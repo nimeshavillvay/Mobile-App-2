@@ -15,9 +15,9 @@ import {
 } from "@repo/web-ui/components/ui/dropdown-menu";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import useLogoutMutation from "../use-logout-mutation.hook";
 import ButtonContent, { buttonClasses } from "./button-content";
 import type { ViewportTypes } from "./types";
-import useLogoutMutation from "./use-logout-mutation.hook";
 import useOSRLogoutMutation from "./use-osr-logout-mutation.hook";
 
 const UserProfileButton = ({
@@ -33,8 +33,6 @@ const UserProfileButton = ({
   let isOSRLoggedInAsCustomer = false;
   let isOSRUser = false;
   let customerDetails = "";
-
-  console.log(loginCheckData);
 
   if ("sales_rep_id" in loginCheckData) {
     isOSRUser = true;

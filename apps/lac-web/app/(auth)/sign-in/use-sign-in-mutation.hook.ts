@@ -65,15 +65,14 @@ const useSignInMutation = () => {
 
       return transformData;
     },
-    onSuccess: (transformData) => {
+    onSuccess: (data) => {
       toast({
         title: "Sign in successful",
       });
       queryClient.invalidateQueries();
 
-      if (transformData.authentication.isSalesRep) {
-        router.replace("/osr/dashboard");
-        return;
+      if (data.authentication.isSalesRep) {
+        return router.replace("/osr/dashboard");
       }
 
       router.replace("/");

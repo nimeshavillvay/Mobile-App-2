@@ -3,8 +3,8 @@
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
 import { Switch } from "@repo/web-ui/components/icons/switch";
 import { useRouter } from "next/navigation";
-import React from "react";
-import useLogoutMutation from "./_user-profile/use-logout-mutation.hook";
+import { Separator } from "~/components/ui/separator";
+import useLogoutMutation from "./use-logout-mutation.hook";
 
 const OSRDetailsView = ({ token }: { token: string }) => {
   const loginCheckResponse = useSuspenseCheckLogin(token);
@@ -37,10 +37,13 @@ const OSRDetailsView = ({ token }: { token: string }) => {
             )}
           </div>
 
-          <div className="text-wurth-gray-500">|</div>
+          <Separator
+            orientation="vertical"
+            className="h-5 w-px bg-brand-gray-500"
+          />
 
           <button
-            className="cursor-pointer"
+            className="flex items-center gap-2 font-bold"
             onClick={() =>
               logoutMutation.mutate(undefined, {
                 onSuccess: () => {
@@ -49,9 +52,7 @@ const OSRDetailsView = ({ token }: { token: string }) => {
               })
             }
           >
-            <span className="flex items-center gap-2 font-bold">
-              Switch back <Switch width={16} />
-            </span>
+            Switch back <Switch width={16} />
           </button>
         </div>
       )}

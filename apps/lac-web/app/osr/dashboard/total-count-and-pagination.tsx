@@ -36,7 +36,7 @@ const TotalCountAndPagination = ({
       <div className="hidden md:block">
         <div className="my-6 hidden flex-row justify-between text-brand-gray-400 md:flex">
           {!isLoading && (
-            <div>
+            <div className="min-w-32">
               {(page - 1) * PER_PAGE + 1} -{" "}
               {Math.min(page * PER_PAGE, totalItems)} of {totalItems}
             </div>

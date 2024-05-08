@@ -11,7 +11,7 @@ export const changeSearchParams = (
 ) => {
   const newSearchParams = new URLSearchParams(searchParams);
 
-  params.map((param) => {
+  params.forEach((param) => {
     newSearchParams.set(param.key, param.value);
   });
 

@@ -1,8 +1,11 @@
+import useCookies from "@/_hooks/storage/use-cookies.hook";
 import { api } from "@/_lib/api";
+import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import { toast } from "@repo/web-ui/components/ui/toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-const useLoginAsCustomerMutation = (token: string) => {
+const useLoginAsCustomerMutation = () => {
+  const [cookies] = useCookies();
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -10,7 +13,7 @@ const useLoginAsCustomerMutation = (token: string) => {
       return await api
         .post("rest/auth/login-customer", {
           headers: {
-            authorization: `Bearer ${token}`,
+            authorization: `Bearer ${cookies[SESSION_TOKEN_COOKIE]}`,
           },
           json: {
             user_id: userId,
@@ -28,7 +31,7 @@ const useLoginAsCustomerMutation = (token: string) => {
         variant: "default",
       });
     },
-    onError: (error) => {
+    onError: () => {
       toast({
         description: "Failed to login as customer",
         variant: "destructive",

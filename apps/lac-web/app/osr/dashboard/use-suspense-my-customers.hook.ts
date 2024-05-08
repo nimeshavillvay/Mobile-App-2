@@ -10,7 +10,7 @@ import {
   columnStreetAddress,
   columnTotalOrders,
 } from "./constants";
-import { Customer } from "./types";
+import type { Customer } from "./types";
 
 type OldCustomer = {
   "country-name": string;

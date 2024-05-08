@@ -8,11 +8,11 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/old/_components/ui/table";
+} from "@repo/web-ui/components/ui/table";
 import dayjs from "dayjs";
 import { ArrowDownNarrowWide, ArrowDownWideNarrow } from "lucide-react";
 import { useSearchParams } from "next/navigation";
-import React, { useState } from "react";
+import { Fragment, useState } from "react";
 import { changeSearchParams } from "./client-helpers";
 import {
   INIT_PAGE_NUMBER,
@@ -30,7 +30,7 @@ import {
 } from "./constants";
 import SignAsCustomerDialog from "./sign-as-customer-dialog";
 import TotalCountAndPagination from "./total-count-and-pagination";
-import { Customer } from "./types";
+import type { Customer } from "./types";
 import useSuspenseMyCustomers from "./use-suspense-my-customers.hook";
 
 const MyCustomerDetails = ({
@@ -119,7 +119,7 @@ const MyCustomerDetails = ({
             <TableRow>
               {columnsChecked &&
                 columnsChecked.map((column) => (
-                  <React.Fragment key={column}>
+                  <Fragment key={column}>
                     {column == columnPrimaryRep && selfOnly ? null : (
                       <TableHead
                         className={cn(
@@ -149,7 +149,7 @@ const MyCustomerDetails = ({
                         </div>
                       </TableHead>
                     )}
-                  </React.Fragment>
+                  </Fragment>
                 ))}
               <TableHead>Action</TableHead>
             </TableRow>
@@ -160,13 +160,13 @@ const MyCustomerDetails = ({
               myCustomersResponse?.customers.map((customer) => (
                 <TableRow key={customer.userId}>
                   {columnsChecked.map((column) => (
-                    <React.Fragment key={column}>
+                    <Fragment key={column}>
                       {column == columnPrimaryRep && selfOnly ? null : (
                         <TableCell key={column}>
                           {getColumnData(column, customer)}
                         </TableCell>
                       )}
-                    </React.Fragment>
+                    </Fragment>
                   ))}
 
                   <TableCell

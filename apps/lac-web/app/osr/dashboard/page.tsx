@@ -1,6 +1,5 @@
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
-import Separator from "@/old/_components/separator";
-import Title from "@/old/_components/title";
+import { Separator } from "@repo/web-ui/components/ui/separator";
 import { Metadata } from "next";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -20,7 +19,9 @@ const OSRDashboardPage = async () => {
   return (
     <div className="container">
       <div className="mb-4 mt-8 hidden items-center gap-2.5 md:flex md:flex-row">
-        <Title className="text-brand-primary">My Customers</Title>
+        <h1 className="text-[28px] font-medium leading-8 text-brand-primary ">
+          My Customers
+        </h1>
 
         <Separator
           orientation="horizontal"

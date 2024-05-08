@@ -10,7 +10,6 @@ import {
   DialogTitle,
 } from "@repo/web-ui/components/ui/dialog";
 import { LoaderCircle } from "lucide-react";
-
 import { useRouter } from "next/navigation";
 import { type Dispatch, type SetStateAction } from "react";
 import useLoginAsCustomerMutation from "./use-login-as-customer-mutation.hook";
@@ -19,7 +18,6 @@ export const INIT_PAGE_NUMBER = "1";
 export const INIT_PER_PAGE = "10";
 
 type FiltersForMobileProps = {
-  token: string;
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
   userId: string;
@@ -27,13 +25,12 @@ type FiltersForMobileProps = {
 };
 
 const SignAsCustomerDialog = ({
-  token,
   open,
   setOpen,
   userId,
   customerEmail,
 }: FiltersForMobileProps) => {
-  const loginAsCustomerMutation = useLoginAsCustomerMutation(token);
+  const loginAsCustomerMutation = useLoginAsCustomerMutation();
   const router = useRouter();
 
   return (
