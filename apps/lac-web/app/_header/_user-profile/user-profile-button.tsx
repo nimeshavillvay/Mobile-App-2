@@ -11,7 +11,8 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@repo/web-ui/components/ui/dropdown-menu";
-import SignInLink from "./signin-link";
+import Link from "next/link";
+import ButtonContent, { buttonClasses } from "./button-content";
 import type { ViewportTypes } from "./types";
 import useLogoutMutation from "./use-logout-mutation.hook";
 
@@ -26,7 +27,18 @@ const UserProfileButton = ({
 
   // User isn't logged in
   if (checkLoginQuery.data.status_code === "NOT_LOGGED_IN") {
-    return <SignInLink type={type} />;
+    return (
+      <Link
+        href="/sign-in"
+        className={buttonClasses({
+          variant: "ghost",
+          size: type === "mobile" ? "icon" : "default",
+          type,
+        })}
+      >
+        <ButtonContent />
+      </Link>
+    );
   }
 
   return <UserProfileDropdown token={token} type={type} />;
@@ -48,8 +60,14 @@ const UserProfileDropdown = ({
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <SignInLink type={type} text={`Hi, ${userProfile.firstName}`} />
+      <DropdownMenuTrigger
+        className={buttonClasses({
+          variant: "ghost",
+          size: type === "mobile" ? "icon" : "default",
+          type,
+        })}
+      >
+        <ButtonContent>Hi, {userProfile.firstName}</ButtonContent>
       </DropdownMenuTrigger>
 
       <DropdownMenuContent className="w-56">

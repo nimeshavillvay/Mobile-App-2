@@ -1,1 +1,1 @@
-export { default } from "./add-to-cart-dialog-root";
+export { default } from "./add-to-cart-dialog";
