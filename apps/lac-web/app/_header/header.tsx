@@ -86,7 +86,7 @@ const Header = async () => {
               </Button>
             </div>
 
-            <div className="flex flex-row items-center gap-6 md:hidden">
+            <div className="hidden flex-row items-center gap-6 md:flex">
               <Button
                 variant="link"
                 className="group h-fit px-0 py-0 font-medium"

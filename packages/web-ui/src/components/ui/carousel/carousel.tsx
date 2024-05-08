@@ -305,6 +305,7 @@ const CarouselDots = ({
       {scrollSnaps.map((_, index) => (
         <button
           key={index}
+          type="button"
           onClick={() => scrollTo(index)}
           className={cn(
             "size-2 rounded-full border-[0.1rem] border-black/40 data-[selected]:border-transparent data-[selected]:bg-black/40",

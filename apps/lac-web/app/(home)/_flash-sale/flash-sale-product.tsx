@@ -1,5 +1,6 @@
 "use client";
 
+import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import {
   ProductCard,
@@ -47,6 +48,15 @@ const FlashSaleProduct = ({
     );
   }
 
+  const { setOpen, setProductId } = useAddToCartDialog(
+    (state) => state.actions,
+  );
+
+  const addToCart = () => {
+    setProductId(parseInt(id));
+    setOpen("verification");
+  };
+
   return (
     <ProductCard className="shrink-0 snap-start">
       <ProductCardHero>
@@ -75,7 +85,7 @@ const FlashSaleProduct = ({
           actualPrice={previousPrice}
         />
 
-        <ProductCardActions />
+        <ProductCardActions addToCart={addToCart} />
       </ProductCardContent>
     </ProductCard>
   );

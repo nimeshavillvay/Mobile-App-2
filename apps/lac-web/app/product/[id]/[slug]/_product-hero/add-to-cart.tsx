@@ -49,7 +49,7 @@ const AddToCart = ({ minQty, incQty, className }: AddToCartProps) => {
         </Button>
       </div>
 
-      <form className="flex flex-row items-stretch gap-2">
+      <div className="flex flex-row items-stretch gap-2">
         <div className="flex-[4] rounded-md border border-wurth-gray-250 p-0.5 md:flex-1">
           <div className="text-center text-xs font-medium uppercase leading-none text-wurth-gray-400">
             Qty / Each
@@ -101,7 +101,7 @@ const AddToCart = ({ minQty, incQty, className }: AddToCartProps) => {
 
           <span className="text-lg font-semibold">Add to cart</span>
         </Button>
-      </form>
+      </div>
 
       <div className="flex flex-row items-center justify-between gap-2">
         <div className="flex-1 text-sm text-wurth-gray-500 md:flex md:flex-row md:items-center md:gap-4">

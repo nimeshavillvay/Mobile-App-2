@@ -1,5 +1,6 @@
 "use client";
 
+import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import { cn } from "@/_lib/utils";
 import {
@@ -105,6 +106,15 @@ const ProductCard = ({ orientation, product, token }: ProductProps) => {
     );
   }
 
+  const { setOpen, setProductId } = useAddToCartDialog(
+    (state) => state.actions,
+  );
+
+  const addToCart = () => {
+    setProductId(parseInt(id));
+    setOpen("verification");
+  };
+
   return (
     <ProductCardRoot
       orientation={orientation}
@@ -147,7 +157,7 @@ const ProductCard = ({ orientation, product, token }: ProductProps) => {
               actualPrice={previousPrice}
             />
 
-            <ProductCardActions />
+            <ProductCardActions addToCart={addToCart} />
           </>
         )}
       </ProductCardContent>

@@ -5,7 +5,6 @@ import { DEFAULT_REVALIDATE } from "@/_lib/constants";
 import { ChevronLeft } from "@repo/web-ui/components/icons/chevron-left";
 import {
   ProductCard,
-  ProductCardActions,
   ProductCardContent,
   ProductCardDetails,
   ProductCardDiscount,
@@ -106,21 +105,25 @@ const ProductPage = async ({ params: { id, slug } }: ProductPageProps) => {
       .then(({ data }) => data),
   ]);
 
+  const lastBreadcrumb = breadcrumbs[breadcrumbs.length - 1];
+
   return (
     <>
-      <div className="container my-4 md:hidden">
-        <Link
-          href="/cam-locks"
-          className={buttonVariants({
-            variant: "link",
-            className: "h-fit gap-1 p-0",
-          })}
-        >
-          <ChevronLeft className="size-4" />
+      {!!lastBreadcrumb && (
+        <div className="container my-4 md:hidden">
+          <Link
+            href={`/category/${lastBreadcrumb.id}/${lastBreadcrumb.slug}`}
+            className={buttonVariants({
+              variant: "link",
+              className: "h-fit gap-1 p-0",
+            })}
+          >
+            <ChevronLeft className="size-4" />
 
-          <span>Cam Locks</span>
-        </Link>
-      </div>
+            <span>{lastBreadcrumb.categoryName}</span>
+          </Link>
+        </div>
+      )}
 
       <Breadcrumb className="container mb-6 mt-3 hidden md:block">
         <BreadcrumbList>
@@ -190,8 +193,6 @@ const ProductPage = async ({ params: { id, slug } }: ProductPageProps) => {
                         uom="pair"
                         actualPrice={4.11}
                       />
-
-                      <ProductCardActions />
                     </ProductCardContent>
                   </ProductCard>
                 ))}
@@ -234,8 +235,6 @@ const ProductPage = async ({ params: { id, slug } }: ProductPageProps) => {
                 />
 
                 <ProductCardPrice price={2.05} uom="pair" actualPrice={4.11} />
-
-                <ProductCardActions />
               </ProductCardContent>
             </ProductCard>
           ))}
