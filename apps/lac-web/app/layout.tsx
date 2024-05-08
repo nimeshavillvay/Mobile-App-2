@@ -11,20 +11,6 @@ import "./global.css";
 import Providers from "./providers";
 
 // TODO Remove this and delete all the local font files after the old designs are removed
-const wurth = localFont({
-  src: [
-    {
-      path: "./wuerth-bold.woff2",
-      weight: "700",
-    },
-    {
-      path: "./wuerth-extrabold-cond.woff2",
-      weight: "800",
-    },
-  ],
-  variable: "--wurth-font",
-  display: "swap",
-});
 
 const titleFont = localFont({
   src: [
@@ -63,7 +49,6 @@ const RootLayout = ({ children }: { children: ReactNode }) => {
       lang="en"
       className={cn(
         "h-full scroll-smooth",
-        wurth.variable,
         titleFont.variable,
         bodyFont.variable,
       )}
