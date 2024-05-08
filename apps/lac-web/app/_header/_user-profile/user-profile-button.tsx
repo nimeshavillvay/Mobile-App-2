@@ -1,7 +1,7 @@
 "use client";
 
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
-// import useSuspenseUsersList from "@/_hooks/user/use-suspense-users-list.hook";
+import useSuspenseUsersList from "@/_hooks/user/use-suspense-users-list.hook";
 import { Exit } from "@repo/web-ui/components/icons/exit";
 import {
   DropdownMenu,
@@ -11,7 +11,8 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@repo/web-ui/components/ui/dropdown-menu";
-import SignInLink from "./signin-link";
+import Link from "next/link";
+import ButtonContent, { buttonClasses } from "./button-content";
 import type { ViewportTypes } from "./types";
 import useLogoutMutation from "./use-logout-mutation.hook";
 
@@ -26,7 +27,18 @@ const UserProfileButton = ({
 
   // User isn't logged in
   if (checkLoginQuery.data.status_code === "NOT_LOGGED_IN") {
-    return <SignInLink type={type} />;
+    return (
+      <Link
+        href="/sign-in"
+        className={buttonClasses({
+          variant: "ghost",
+          size: type === "mobile" ? "icon" : "default",
+          type,
+        })}
+      >
+        <ButtonContent />
+      </Link>
+    );
   }
 
   return <UserProfileDropdown token={token} type={type} />;
@@ -35,23 +47,27 @@ const UserProfileButton = ({
 export default UserProfileButton;
 
 const UserProfileDropdown = ({
-  // token,
+  token,
   type,
 }: {
   token: string;
   type: ViewportTypes;
 }) => {
-  // TODO: Replace with real data
-  const userProfile = { firstName: "User" };
-  // const usersListQuery = useSuspenseUsersList(token);
-  // const userProfile = usersListQuery.data.manageContact.yourProfile;
+  const usersListQuery = useSuspenseUsersList(token);
+  const userProfile = usersListQuery.data.manageContact.yourProfile;
 
   const logoutMutation = useLogoutMutation();
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <SignInLink type={type} text={`Hi, ${userProfile.firstName}`} />
+      <DropdownMenuTrigger
+        className={buttonClasses({
+          variant: "ghost",
+          size: type === "mobile" ? "icon" : "default",
+          type,
+        })}
+      >
+        <ButtonContent>Hi, {userProfile.firstName}</ButtonContent>
       </DropdownMenuTrigger>
 
       <DropdownMenuContent className="w-56">
