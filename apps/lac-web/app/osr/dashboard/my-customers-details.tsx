@@ -194,7 +194,6 @@ const MyCustomerDetails = ({
       </div>
 
       <SignAsCustomerDialog
-        token={token}
         userId={signAsCustomerId}
         open={signAsCustomerDialogOpen}
         setOpen={setSignAsCustomerDialogOpen}

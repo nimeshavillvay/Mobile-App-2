@@ -30,9 +30,9 @@ const OSRDetailsView = ({ token }: { token: string }) => {
           <div>
             <span>Logged in as&nbsp;</span>
 
-            {loginCheckData?.user && (
+            {loginCheckData.status_code === "OK" && (
               <span className="font-bold">
-                {loginCheckData.user.company || loginCheckData.user.billto}
+                {loginCheckData.user.company ?? loginCheckData.user.billto}
               </span>
             )}
           </div>
