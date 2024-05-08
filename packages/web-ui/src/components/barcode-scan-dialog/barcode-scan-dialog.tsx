@@ -1,7 +1,6 @@
 "use client";
-import { redirect } from "next/navigation";
-import { useState } from "react";
-import { useZxing } from "react-zxing";
+
+import { BarcodeScanner } from "../barcode-scanner";
 import { BarcodeScanButton } from "../search-box";
 import { Button } from "../ui/button";
 import {
@@ -15,22 +14,12 @@ import {
 } from "../ui/dialog";
 
 export const BarcodeScannerDialog = () => {
-  const [result, setResult] = useState("");
-  const [turnOffCamera, setTurnOffCamera] = useState(false);
-  const { ref } = useZxing({
-    onDecodeResult(result) {
-      setResult(result.getText());
-      setTurnOffCamera(true);
-      redirect("/plp");
-    },
-    paused: turnOffCamera,
-  });
   return (
     <Dialog>
       <DialogTrigger asChild>
         <BarcodeScanButton />
       </DialogTrigger>
-      <DialogContent style={{ maxWidth: 425 }}>
+      <DialogContent>
         <DialogHeader>
           <DialogTitle>Product Barcode Scan</DialogTitle>
           <DialogDescription>
@@ -39,8 +28,7 @@ export const BarcodeScannerDialog = () => {
           </DialogDescription>
         </DialogHeader>
         <div>
-          <video ref={ref} />
-          <span>Result: {result}</span>
+          <BarcodeScanner />
         </div>
         <DialogFooter>
           <Button type="submit">Cancel</Button>

@@ -1,4 +1,4 @@
-import { type ComponentProps } from "react";
+import { forwardRef, type ComponentProps } from "react";
 import { MagnifyingGlass } from "~/components/icons/magnifying-glass";
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
@@ -52,13 +52,13 @@ export const SearchBoxButton = ({
   );
 };
 
-export const BarcodeScanButton = ({
-  type = "submit",
-  className,
-  ...delegated
-}: Omit<ComponentProps<"button">, "children">) => {
+export const BarcodeScanButton = forwardRef<
+  HTMLButtonElement,
+  Omit<ComponentProps<"button">, "children">
+>(({ type = "submit", className, ...delegated }, ref) => {
   return (
     <Button
+      ref={ref}
       type={type}
       variant="ghost"
       size="icon"
@@ -66,6 +66,9 @@ export const BarcodeScanButton = ({
       {...delegated}
     >
       <BarcodeScan className="size-5" />
+
+      <span className="sr-only">Scan barcode</span>
     </Button>
   );
-};
+});
+BarcodeScanButton.displayName = "BarcodeScanButton";

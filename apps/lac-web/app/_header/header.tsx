@@ -1,23 +1,35 @@
 import { api } from "@/_lib/api";
 import { DEFAULT_REVALIDATE } from "@/_lib/constants";
 import { cn } from "@/_lib/utils";
-import { BarcodeScannerDialog } from "@repo/web-ui/components/barcode-scan-dialog";
 import { Phone } from "@repo/web-ui/components/icons/phone";
 import { Shop } from "@repo/web-ui/components/icons/shop";
 import { ShoppingCart } from "@repo/web-ui/components/icons/shopping-cart";
 import { WurthFullBlack } from "@repo/web-ui/components/logos/wurth-full-black";
 import {
+  BarcodeScanButton,
   SearchBox,
   SearchBoxButton,
   SearchBoxInput,
 } from "@repo/web-ui/components/search-box";
 import { Button, buttonVariants } from "@repo/web-ui/components/ui/button";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { Suspense } from "react";
 import UserProfile, { UserProfileSkeleton } from "./_user-profile";
 import DesktopNavigationMenu from "./desktop-navigation-menu";
 import MobileNavigationMenu from "./mobile-navigation-menu";
 import type { Category, TransformedCategory } from "./types";
+
+const BarcodeScannerDialog = dynamic(
+  () =>
+    import("@repo/web-ui/components/barcode-scan-dialog").then(
+      (mod) => mod.BarcodeScannerDialog,
+    ),
+  {
+    loading: () => <BarcodeScanButton />,
+    ssr: false,
+  },
+);
 
 const Header = async () => {
   const categories = await api
