@@ -41,6 +41,11 @@ type CheckAvailability = {
   price: number;
   productid: number;
   status: null | string;
+  available_locations: {
+    location: string;
+    name: string;
+    amount: number;
+  }[];
 };
 
 const getPlantAvailability = (option: Options) => {
@@ -118,6 +123,7 @@ const useSuspenseCheckAvailability = (
           backOrderQuantity: Number(item.backOrderQuantity_1) ?? 0,
           availability: getPlantAvailability(item),
         })),
+        availableLocations: data.available_locations,
       };
     },
   });
