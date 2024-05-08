@@ -1,4 +1,7 @@
-import { type ComponentProps } from "react";
+"use client";
+import { redirect } from "next/navigation";
+import { useState } from "react";
+import { useZxing } from "react-zxing";
 import { BarcodeScanButton } from "../search-box";
 import { Button } from "../ui/button";
 import {
@@ -11,16 +14,23 @@ import {
   DialogTrigger,
 } from "../ui/dialog";
 
-export const BarcodeScannerDialog = ({
-  className,
-  ...delegated
-}: ComponentProps<"div">) => {
+export const BarcodeScannerDialog = () => {
+  const [result, setResult] = useState("");
+  const [turnOffCamera, setTurnOffCamera] = useState(false);
+  const { ref } = useZxing({
+    onDecodeResult(result) {
+      setResult(result.getText());
+      setTurnOffCamera(true);
+      redirect("/plp");
+    },
+    paused: turnOffCamera,
+  });
   return (
-    <Dialog {...delegated}>
+    <Dialog>
       <DialogTrigger asChild>
         <BarcodeScanButton />
       </DialogTrigger>
-      <DialogContent className={className} style={{ maxWidth: 425 }}>
+      <DialogContent style={{ maxWidth: 425 }}>
         <DialogHeader>
           <DialogTitle>Product Barcode Scan</DialogTitle>
           <DialogDescription>
@@ -28,8 +38,13 @@ export const BarcodeScannerDialog = ({
             fully observed.
           </DialogDescription>
         </DialogHeader>
+        <div>
+          <video ref={ref} />
+          <span>Result: {result}</span>
+        </div>
         <DialogFooter>
           <Button type="submit">Cancel</Button>
+          {/* <Button type="submit" onClick={dismissQrReader}>Cancel</Button> */}
         </DialogFooter>
       </DialogContent>
     </Dialog>
