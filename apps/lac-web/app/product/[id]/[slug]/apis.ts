@@ -64,7 +64,7 @@ type Product = {
       attribute_name: string;
       attribute_value: string;
     }[];
-    detailed_images: {
+    detailed_images?: {
       img: string;
       alt: string;
     }[];

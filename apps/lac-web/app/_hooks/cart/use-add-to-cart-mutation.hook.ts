@@ -21,9 +21,9 @@ const useAddToCartMutation = (
   });
 
   return useMutation({
-    mutationFn: async () => {
+    mutationFn: async ({ poOrJobName = "" }: { poOrJobName?: string }) => {
       const configuration: { [key: string]: string } = {
-        poOrJobName: "",
+        poOrJobName,
         will_call_avail: "",
         will_call_plant: "",
         selectedOption: "",
@@ -98,7 +98,7 @@ const useAddToCartMutation = (
     },
     onSuccess: () => {
       // Open the dialog
-      setOpen(true);
+      setOpen("confirmation");
     },
   });
 };
