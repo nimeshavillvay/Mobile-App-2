@@ -199,18 +199,16 @@ const AddressSuggestionDialog = ({
               onClick={onBackButtonClicked}
               className="mx-2rounded-[3px] border-2 border-gray-300 bg-transparent px-6 py-2 text-base font-normal uppercase text-black shadow"
             >
-              <span className="sr-only">Back</span>
-              BACK
+              back
             </button>
           ) : (
             <button
               onClick={onContinueOrSubmitButtonClicked}
               className="mx-2 rounded-[3px] bg-black px-6 py-2 text-base font-normal uppercase text-white"
             >
-              <span className="sr-only">Submit</span>
               {addressCheckSuggestions?.checkType == "ADDRESS"
-                ? "CONTINUE"
-                : "SUBMIT"}
+                ? "continue"
+                : "submit"}
             </button>
           )}
         </div>

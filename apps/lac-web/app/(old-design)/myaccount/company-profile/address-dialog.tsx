@@ -76,7 +76,7 @@ const AddressDialog = ({
     zipCode: z.string().refine((value) => /^\d+$/.test(value), {
       message: "Please enter a valid ZIP4",
     }),
-    phoneNumber: z.string(),
+    phoneNumber: z.string().trim().min(1, "Please enter phone number").max(20),
     country: z.string().trim().min(1, "Please enter country").max(40),
   });
 
@@ -449,7 +449,6 @@ const AddressDialog = ({
                 type="submit"
                 className="h-9 rounded-[3px] bg-brand-primary px-4 text-base font-normal uppercase text-white"
               >
-                <span className="sr-only">Save Address</span>
                 Done
               </button>
             </div>

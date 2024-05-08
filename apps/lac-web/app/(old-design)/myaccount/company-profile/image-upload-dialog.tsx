@@ -116,10 +116,7 @@ const ImageUploadDialog = ({
               </ul>
 
               {files.length > 0 && (
-                <Button onClick={submitImage}>
-                  <span className="sr-only">Submit profile image</span>Upload
-                  Image
-                </Button>
+                <Button onClick={submitImage}>Upload Image</Button>
               )}
             </div>
           </div>

@@ -33,7 +33,7 @@ const ShippingAddressCard = ({
 
   const deleteShippingAddress = () => {
     if (shippingAddress.shipTo) {
-      deleteShippingAddressMutation.mutate(shippingAddress.shipTo as string);
+      deleteShippingAddressMutation.mutate(shippingAddress.shipTo);
     }
   };
 
@@ -62,7 +62,6 @@ const ShippingAddressCard = ({
                 })
               }
             >
-              <span className="sr-only">Set Default</span>
               Set Default
             </Button>
           ) : (
