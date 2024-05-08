@@ -2,8 +2,8 @@
 
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
 import { Switch } from "@repo/web-ui/components/icons/switch";
+import { Separator } from "@repo/web-ui/components/ui/separator";
 import { useRouter } from "next/navigation";
-import { Separator } from "~/components/ui/separator";
 import useLogoutMutation from "./use-logout-mutation.hook";
 
 const OSRDetailsView = ({ token }: { token: string }) => {
