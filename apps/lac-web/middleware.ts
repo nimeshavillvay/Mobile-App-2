@@ -1,3 +1,4 @@
+import { loginCheck } from "@/_hooks/user/use-suspense-check-login.hook";
 import { api } from "@/_lib/api";
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import dayjs from "dayjs";
@@ -54,7 +55,22 @@ export const middleware = async (request: NextRequest) => {
     return response;
   }
 
+  await redirectUserIfNotASalesRep(request);
+
   return NextResponse.next();
+};
+
+const redirectUserIfNotASalesRep = async function (request: NextRequest) {
+  if (request.nextUrl.pathname.startsWith("/osr/dashboard")) {
+    const sessionToken = request.cookies.get(SESSION_TOKEN_COOKIE);
+
+    if (sessionToken) {
+      const response = await loginCheck(sessionToken?.value);
+      if (response.status_code !== "OK" || !("sales_rep_id" in response)) {
+        return NextResponse.redirect(new URL(`/`, request.nextUrl));
+      }
+    }
+  }
 };
 
 export const config = {

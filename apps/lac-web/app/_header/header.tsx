@@ -13,9 +13,11 @@ import {
 import { Button, buttonVariants } from "@repo/web-ui/components/ui/button";
 import Link from "next/link";
 import { Suspense } from "react";
+import { Skeleton } from "~/components/ui/skeleton";
 import UserProfile, { UserProfileSkeleton } from "./_user-profile";
 import DesktopNavigationMenu from "./desktop-navigation-menu";
 import MobileNavigationMenu from "./mobile-navigation-menu";
+import OSRDetails from "./osr-details";
 import type { Category, TransformedCategory } from "./types";
 
 const Header = async () => {
@@ -77,12 +79,16 @@ const Header = async () => {
 
         <div className="bg-wurth-gray-50">
           <div className="container flex flex-row items-center justify-between pb-3 pt-12 text-sm font-medium md:py-3">
-            <div>
+            <div className="flex items-center gap-5">
               <Button variant="ghost" className="h-fit px-0 py-0 font-medium">
                 <Shop width={16} height={16} />
 
                 <span>Brea, CA</span>
               </Button>
+
+              <Suspense fallback={<Skeleton className="h-6 w-60" />}>
+                <OSRDetails />
+              </Suspense>
             </div>
 
             <div className="hidden flex-row items-center gap-6 md:flex">
