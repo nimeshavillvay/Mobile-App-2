@@ -21,11 +21,7 @@ const AddToCartFormProvider = ({
     resolver: zodResolver(addToCartSchema),
   });
 
-  return (
-    <FormProvider {...methods}>
-      <form>{children}</form>
-    </FormProvider>
-  );
+  return <FormProvider {...methods}>{children}</FormProvider>;
 };
 
 export default AddToCartFormProvider;
