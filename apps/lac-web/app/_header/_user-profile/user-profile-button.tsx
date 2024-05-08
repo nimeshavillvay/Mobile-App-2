@@ -13,7 +13,6 @@ import {
   DropdownMenuTrigger,
 } from "@repo/web-ui/components/ui/dropdown-menu";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import ButtonContent, { buttonClasses } from "./button-content";
 import type { ViewportTypes } from "./types";
 import useLogoutMutation from "./use-logout-mutation.hook";
@@ -60,8 +59,6 @@ const UserProfileDropdown = ({
 
   const logoutMutation = useLogoutMutation();
 
-  const router = useRouter();
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
@@ -78,38 +75,38 @@ const UserProfileDropdown = ({
 
       <DropdownMenuContent className="w-56">
         <DropdownMenuItem
+          asChild
           className="flex flex-row items-center gap-2 text-black"
-          onClick={() => router.push("/myaccount/orderhistory")}
         >
-          <DropdownMenuShortcut className="ml-0">
-            {/* To fill the icon gap */}
-            <div className="size-4" />
-          </DropdownMenuShortcut>
+          <Link href="/myaccount/orderhistory">
+            <DropdownMenuShortcut className="ml-0 size-4" />
 
-          <span>My Orders</span>
+            <span>My Orders</span>
+          </Link>
         </DropdownMenuItem>
 
         <DropdownMenuItem
+          asChild
           className="flex flex-row items-center gap-2 text-black"
-          onClick={() => router.push("/myaccount/purchaseditems")}
         >
-          <DropdownMenuShortcut className="ml-0">
-            {/* To fill the icon gap */}
-            <div className="size-4" />
-          </DropdownMenuShortcut>
+          <Link href="/myaccount/purchaseditems">
+            <DropdownMenuShortcut className="ml-0 size-4" />
 
-          <span>My Purchased Items</span>
+            <span>My Purchased Items</span>
+          </Link>
         </DropdownMenuItem>
 
         <DropdownMenuItem
+          asChild
           className="flex flex-row items-center gap-2 text-black"
-          onClick={() => router.push("/myaccount/myfavorites")}
         >
-          <DropdownMenuShortcut className="ml-0">
-            <HeartOutline className="size-4 stroke-black stroke-2" />
-          </DropdownMenuShortcut>
+          <Link href="/myaccount/myfavorites">
+            <DropdownMenuShortcut className="ml-0">
+              <HeartOutline className="size-4 stroke-black stroke-2" />
+            </DropdownMenuShortcut>
 
-          <span>My Favorites</span>
+            <span>My Favorites</span>
+          </Link>
         </DropdownMenuItem>
 
         <DropdownMenuSeparator />
