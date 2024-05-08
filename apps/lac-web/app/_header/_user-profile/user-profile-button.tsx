@@ -3,6 +3,7 @@
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
 import useSuspenseUsersList from "@/_hooks/user/use-suspense-users-list.hook";
 import { Exit } from "@repo/web-ui/components/icons/exit";
+import { HeartOutline } from "@repo/web-ui/components/icons/heart-outline";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -67,10 +68,47 @@ const UserProfileDropdown = ({
           type,
         })}
       >
-        <ButtonContent>Hi, {userProfile.firstName}</ButtonContent>
+        <ButtonContent>
+          Hi, {userProfile.firstName !== "" ? userProfile.firstName : "User"}
+        </ButtonContent>
       </DropdownMenuTrigger>
 
       <DropdownMenuContent className="w-56">
+        <DropdownMenuItem
+          asChild
+          className="flex flex-row items-center gap-2 text-black"
+        >
+          <Link href="/myaccount/orderhistory">
+            <DropdownMenuShortcut className="ml-0 size-4" />
+
+            <span>My Orders</span>
+          </Link>
+        </DropdownMenuItem>
+
+        <DropdownMenuItem
+          asChild
+          className="flex flex-row items-center gap-2 text-black"
+        >
+          <Link href="/myaccount/purchaseditems">
+            <DropdownMenuShortcut className="ml-0 size-4" />
+
+            <span>My Purchased Items</span>
+          </Link>
+        </DropdownMenuItem>
+
+        <DropdownMenuItem
+          asChild
+          className="flex flex-row items-center gap-2 text-black"
+        >
+          <Link href="/myaccount/myfavorites">
+            <DropdownMenuShortcut className="ml-0">
+              <HeartOutline className="size-4 stroke-black stroke-2" />
+            </DropdownMenuShortcut>
+
+            <span>My Favorites</span>
+          </Link>
+        </DropdownMenuItem>
+
         <DropdownMenuSeparator />
 
         <DropdownMenuItem
