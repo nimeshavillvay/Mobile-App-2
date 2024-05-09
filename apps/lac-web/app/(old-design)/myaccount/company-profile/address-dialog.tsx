@@ -216,7 +216,7 @@ const AddressDialog = ({
                     </FormDescription>
 
                     <FormControl>
-                      <Input placeholder="Attn" type="text" {...field} />
+                      <Input placeholder="Company" type="text" {...field} />
                     </FormControl>
                     <FormDescription className="sr-only">
                       Enter Address CompanyName

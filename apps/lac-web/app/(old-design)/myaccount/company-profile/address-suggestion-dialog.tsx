@@ -40,16 +40,11 @@ const AddressSuggestionDialog = ({
   isShippingAddressUpdate,
   address,
 }: AddressDialogProps) => {
-  const [selectedAddressSuggestion, setSelectedAddressSuggestion] =
-    useState<Address>();
+  const [selectedAddressSuggestionId, setSelectedAddressSuggestionId] =
+    useState("");
 
   const onAddressSuggestionChange = (addressSuggestionUuid: string) => {
-    const suggestion = addressCheckSuggestions.suggestions.find(
-      (suggestion) => addressSuggestionUuid === suggestion?.uuid,
-    );
-    if (suggestion) {
-      setSelectedAddressSuggestion(suggestion);
-    }
+    setSelectedAddressSuggestionId(addressSuggestionUuid);
   };
 
   const onBackButtonClicked = () => {
@@ -92,6 +87,9 @@ const AddressSuggestionDialog = ({
   };
 
   const onContinueOrSubmitButtonClicked = () => {
+    const selectedAddressSuggestion = addressCheckSuggestions.suggestions.find(
+      (suggestion) => selectedAddressSuggestionId === suggestion?.uuid,
+    );
     if (selectedAddressSuggestion) {
       const selectedAddress = convertAddressSuggestionToFormDataFormat(
         selectedAddressSuggestion,
