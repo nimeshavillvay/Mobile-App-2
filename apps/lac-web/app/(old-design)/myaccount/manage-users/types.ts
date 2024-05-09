@@ -1,4 +1,52 @@
+import type { Status } from "@/_lib/types";
+
 export type Permission = "ADMIN" | "BUYER";
+
+export type UserProfile = {
+  id: number;
+  status: Status;
+  firstName: string;
+  lastName: string;
+  email: string;
+  role: string;
+  roleDescription: string;
+  permission: string;
+  soldToAccountStatus: string;
+};
+
+export type ManageContact = {
+  your_profile: UserProfile;
+  contact_list: UserProfile[];
+};
+
+export type ForgetPasswordResponse = {
+  data: { status: Status };
+  message: string | null;
+  isSuccess: boolean;
+};
+
+export type CurrentUser = {
+  email: string;
+};
+
+// Types used in new-design
+export type UpdateUser = {
+  userId: number;
+  firstName: string;
+  lastName: string;
+  jobTitle: string;
+  email: string;
+  password?: string;
+  permission: string;
+  status: string;
+};
+
+// Types used in old-design
+// TODO: Remove these types once old-design is removed
+export type UpdateField = {
+  field: string;
+  value: string;
+};
 
 export type SignedData = {
   payload: string;
@@ -14,48 +62,7 @@ export type ApproveContact = {
   signedData: SignedData;
 };
 
-export type Status =
-  | "PENDING"
-  | "ACTIVE"
-  | "DEACTIVE"
-  | "INACTIVE"
-  | "DISABLED";
-
-export type UserProfile = {
-  uuid: string;
-  pimid: string;
-  status: Status;
-  first_name: string;
-  last_name: string;
-  email: string;
-  role: string;
-  role_description: string;
-  permission: Permission;
-  sold_to_status: Status;
-  signed_data: SignedData;
-};
-
-export type ManageContact = {
-  your_profile: UserProfile;
-  contact_list: UserProfile[];
-};
-
 export type ManageUsers = {
   approve_contacts: ApproveContact[];
   manage_contact: ManageContact;
-};
-
-export type ForgetPasswordResponse = {
-  data: { status: Status };
-  message: string | null;
-  isSuccess: boolean;
-};
-
-export type UpdateField = {
-  field: string;
-  value: string;
-};
-
-export type CurrentUser = {
-  email: string;
 };

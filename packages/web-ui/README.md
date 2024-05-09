@@ -4,66 +4,41 @@ This package contains base components with minimal styling that can be imported 
 
 ## Usage
 
-First add `postcss-import` to you PostCSS config and make sure it the first plugin.
+Include the path of the components of this package from the project they are being used in. Exclude the Storybook Stories to make sure the classes used in the stories are not included.
 
-```js
-module.exports = {
-  plugins: {
-    "postcss-import": {},
-    // ...
-  },
+```typescript
+import type { Config } from "tailwindcss";
+import defaultTheme from "tailwindcss/defaultTheme";
+
+const config: Config = {
+  content: [
+    "./app/**/*.{ts,tsx}",
+    "../../packages/web-ui/src/**/*.{ts,tsx}",
+    "!../../packages/web-ui/src/**/*.stories.{ts,tsx}",
+  ],
+  presets: [require("@repo/tailwindcss-config")],
 };
+
+export default config;
 ```
 
-Then add some additional configuration so that `postcss-import` package can correctly resolve the path of the CSS file.
+Also add the TypeScript absolute path to the project that is importing this package
 
-```js
-/* eslint-disable @typescript-eslint/no-var-requires */
-const path = require("path");
-
-module.exports = {
-  plugins: {
-    "postcss-import": {
-      resolve: (importPath) => {
-        if (importPath.startsWith("@repo/web-ui")) {
-          const newPath = importPath.replace(
-            "@repo/web-ui",
-            "../../packages/web-ui/dist",
-          );
-
-          return path.resolve(__dirname, newPath);
-        }
-        return importPath;
-      },
-    },
-    // ...
-  },
-};
+```json
+{
+  "compilerOptions": {
+    "paths": {
+      // ...
+      "~/*": ["../../packages/web-ui/src/*"]
+    }
+  }
+}
 ```
 
-After that, import the CSS file at the very top of the global CSS file.
+## Shared dependencies
 
-```css
-@import "@repo/web-ui/styles.css";
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-```
-
-Then import the required components.
-
-```tsx
-import { Button } from "@repo/web-ui/ui/button";
-```
-
-## Optimizing the bundle
-
-When bundling this package, certain dependencies will be excluded, such as `react`, `react-dom`, and `next`, as the expectation is they will always be installed in the main package.
-
-These packages should be installed in this package with the `--save-peer` flag.
+These packages that are shared between the project such as `react` and `clsx` should be installed in this package with the `--save-peer` flag.
 
 ```shell
 pnpm install react --save-peer
 ```
-
-Then they need to be specified in **tsup** configuration file to be excluded by the bundler through the `external` field.

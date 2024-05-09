@@ -1,8 +1,5 @@
 "use client";
 
-import Close from "@/components/icons/close";
-import { cva, type VariantProps } from "@/lib/cva.config";
-import { cn } from "@/lib/utils";
 import * as SheetPrimitive from "@radix-ui/react-dialog";
 import {
   forwardRef,
@@ -10,6 +7,9 @@ import {
   type ElementRef,
   type HTMLAttributes,
 } from "react";
+import { Close } from "~/components/icons/close";
+import { cva, type VariantProps } from "~/lib/cva.config";
+import { cn } from "~/lib/utils";
 
 const Sheet = SheetPrimitive.Root;
 
@@ -25,7 +25,7 @@ const SheetOverlay = forwardRef<
 >(({ className, ...props }, ref) => (
   <SheetPrimitive.Overlay
     className={cn(
-      "ui- ui-fixed ui-inset-0 ui-z-50 ui-bg-black/80 data-[state=open]:ui-animate-in data-[state=closed]:ui-animate-out data-[state=closed]:ui-fade-out-0 data-[state=open]:ui-fade-in-0",
+      "fixed inset-0 z-50 bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
       className,
     )}
     {...props}
@@ -35,15 +35,15 @@ const SheetOverlay = forwardRef<
 SheetOverlay.displayName = SheetPrimitive.Overlay.displayName;
 
 const sheetVariants = cva({
-  base: "ui-fixed ui-z-50 ui-gap-4 ui-bg-white ui-shadow-lg ui-transition ui-ease-in-out data-[state=closed]:ui-duration-300 data-[state=open]:ui-duration-500 data-[state=open]:ui-animate-in data-[state=closed]:ui-animate-out",
+  base: "fixed z-50 gap-4 bg-white shadow-lg transition ease-in-out data-[state=closed]:duration-300 data-[state=open]:duration-500 data-[state=open]:animate-in data-[state=closed]:animate-out",
   variants: {
     side: {
-      top: "ui-inset-x-0 ui-top-0 data-[state=closed]:ui-slide-out-to-top data-[state=open]:ui-slide-in-from-top",
+      top: "inset-x-0 top-0 data-[state=closed]:slide-out-to-top data-[state=open]:slide-in-from-top",
       bottom:
-        "ui-inset-x-0 ui-bottom-0 data-[state=closed]:ui-slide-out-to-bottom data-[state=open]:ui-slide-in-from-bottom",
-      left: "ui-inset-y-0 ui-left-0 ui-h-full ui-w-3/4 data-[state=closed]:ui-slide-out-to-left data-[state=open]:ui-slide-in-from-left sm:ui-max-w-sm",
+        "inset-x-0 bottom-0 data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom",
+      left: "inset-y-0 left-0 h-full w-3/4 data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left sm:max-w-sm",
       right:
-        "ui-inset-y-0 ui-right-0 ui-h-full ui-w-3/4 data-[state=closed]:ui-slide-out-to-right data-[state=open]:ui-slide-in-from-right sm:ui-max-w-sm",
+        "inset-y-0 right-0 h-full w-3/4 data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right sm:max-w-sm",
     },
   },
   defaultVariants: {
@@ -67,9 +67,9 @@ const SheetContent = forwardRef<
       {...props}
     >
       {children}
-      <SheetPrimitive.Close className="ui-absolute ui-right-3 ui-top-3 ui-rounded ui-bg-black/10 ui-p-1.5 ui-opacity-70 ui-ring-offset-white ui-transition-opacity hover:ui-opacity-100 focus:ui-outline-none focus:ui-ring-2 focus:ui-ring-zinc-950 focus:ui-ring-offset-2 disabled:ui-pointer-events-none data-[state=open]:ui-bg-zinc-100">
-        <Close className="ui-size-3 ui-stroke-white ui-stroke-2" />
-        <span className="ui-sr-only">Close</span>
+      <SheetPrimitive.Close className="absolute right-3 top-3 rounded bg-black/10 p-1.5 opacity-70 ring-offset-white transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-zinc-950 focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-zinc-100">
+        <Close className="size-3 stroke-white stroke-2" />
+        <span className="sr-only">Close</span>
       </SheetPrimitive.Close>
     </SheetPrimitive.Content>
   </SheetPortal>
@@ -82,7 +82,7 @@ const SheetHeader = ({
 }: HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn(
-      "ui-flex ui-min-h-[5.75rem] ui-flex-col ui-justify-end ui-space-y-2 ui-bg-wurth-red-650 ui-pb-3 ui-pl-4 ui-pr-9 ui-pt-5 ui-text-center sm:ui-text-left",
+      "flex min-h-[5.75rem] flex-col justify-end space-y-2 bg-wurth-red-650 pb-3 pl-4 pr-9 pt-5 text-center sm:text-left",
       className,
     )}
     {...props}
@@ -96,7 +96,7 @@ const SheetFooter = ({
 }: HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn(
-      "ui-flex ui-flex-col-reverse sm:ui-flex-row sm:ui-justify-end sm:ui-space-x-2",
+      "flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2",
       className,
     )}
     {...props}
@@ -111,7 +111,7 @@ const SheetTitle = forwardRef<
   <SheetPrimitive.Title
     ref={ref}
     className={cn(
-      "ui-text-balance ui-font-title ui-text-2xl ui-font-medium ui-tracking-[-0.144px] ui-text-white",
+      "text-balance font-title text-2xl font-medium tracking-[-0.144px] text-white",
       className,
     )}
     {...props}
@@ -125,7 +125,7 @@ const SheetDescription = forwardRef<
 >(({ className, ...props }, ref) => (
   <SheetPrimitive.Description
     ref={ref}
-    className={cn("ui-text-sm ui-text-white", className)}
+    className={cn("text-sm text-white", className)}
     {...props}
   />
 ));

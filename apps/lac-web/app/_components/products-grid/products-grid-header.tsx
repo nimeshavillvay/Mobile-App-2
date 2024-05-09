@@ -1,23 +1,24 @@
-import ChevronDown from "@repo/web-ui/components/icons/chevron-down";
-import CloseIcon from "@repo/web-ui/components/icons/close";
-import Settings from "@repo/web-ui/components/icons/settings";
-import { Button } from "@repo/web-ui/components/ui/button";
-import { Separator } from "@repo/web-ui/components/ui/separator";
+"use client";
+
+import { ChevronDown } from "@repo/web-ui/components/icons/chevron-down";
+import { Settings } from "@repo/web-ui/components/icons/settings";
+import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import { type ReactNode } from "react";
+import { useFilterParams } from "./use-filter-params.hook";
 
-type ProductsGridHeaderProps = {
-  total: number;
-  page: {
-    current: number;
-    total: number;
-  };
-};
+export const ProductsGridHeader = ({
+  totalCount,
+  totalPages,
+}: {
+  totalCount: number;
+  totalPages: number;
+}) => {
+  const { pageNo } = useFilterParams([]);
 
-const ProductsGridHeader = ({ total, page }: ProductsGridHeaderProps) => {
   return (
-    <header className="space-y-3">
+    <header className="flex flex-col gap-3">
       {/* Mobile filters selector */}
-      <div className="container flex w-full snap-x scroll-pl-4 flex-row items-center gap-2 overflow-x-auto md:hidden">
+      <div className="flex w-full snap-x scroll-pl-4 flex-row items-center gap-2 overflow-x-auto md:hidden">
         <MobileAttributePill>
           <Settings className="size-5" />
 
@@ -38,45 +39,18 @@ const ProductsGridHeader = ({ total, page }: ProductsGridHeaderProps) => {
         </MobileAttributePill>
       </div>
 
-      <div className="container flex flex-row items-end justify-between text-wurth-gray-800">
+      <div className="flex flex-row items-end justify-between text-wurth-gray-800">
         <div className="font-title text-lg font-medium tracking-normal md:text-3xl md:tracking-[-0.01406rem]">
-          {total} {total === 1 ? "item" : "items"}
+          {totalCount} {totalCount === 1 ? "item" : "items"}
         </div>
 
         <div className="text-sm font-normal md:text-base">
-          Page {page.current} of {page.total}
+          Page {pageNo} of {totalPages}
         </div>
-      </div>
-
-      {/* Desktop selected attributes viewer */}
-      <div className="container hidden md:flex md:flex-row md:items-center md:gap-2">
-        <DesktopAttributePill
-          name="Brands"
-          values={[
-            { name: "Amerock", id: 1 },
-            { name: "Advance Affiliates Inc", id: 2 },
-          ]}
-        />
-
-        <DesktopAttributePill
-          name="Wood Species"
-          values={[{ name: "4 selected", id: 3 }]}
-        />
-
-        <Button
-          variant="ghost"
-          className="flex h-fit flex-row items-center gap-2.5 rounded-full px-4 py-2.5"
-        >
-          <span className="text-sm font-bold">Clear all</span>
-
-          <CloseIcon width={16} height={16} />
-        </Button>
       </div>
     </header>
   );
 };
-
-export default ProductsGridHeader;
 
 const MobileAttributePill = ({ children }: { children: ReactNode }) => {
   return (
@@ -86,35 +60,12 @@ const MobileAttributePill = ({ children }: { children: ReactNode }) => {
   );
 };
 
-const DesktopAttributePill = ({
-  name,
-  values,
-}: {
-  name: string;
-  values: { name: string; id: number }[];
-}) => {
+export const ProductsGridHeaderSkeleton = () => {
   return (
-    <div className="flex flex-row items-center gap-2 rounded-full border border-wurth-gray-250 bg-white px-4 py-2.5 shadow-sm">
-      <span className="text-sm font-medium text-wurth-gray-800">{name}</span>
+    <div className="flex flex-row items-end justify-between">
+      <Skeleton className="h-7 w-24 md:h-9 md:w-36" />
 
-      <Separator orientation="vertical" className="h-5" />
-
-      <ul className="flex flex-row items-center gap-1">
-        {values.map((value) => (
-          <li key={value.id}>
-            <Button
-              variant="subtle"
-              className="flex h-fit flex-row items-center gap-2 rounded-sm px-1 py-0.5"
-            >
-              <span className="text-xs font-normal text-wurth-gray-800">
-                {value.name}
-              </span>
-
-              <CloseIcon width={12} height={12} />
-            </Button>
-          </li>
-        ))}
-      </ul>
+      <Skeleton className="h-5 w-20 md:h-6 md:w-24" />
     </div>
   );
 };

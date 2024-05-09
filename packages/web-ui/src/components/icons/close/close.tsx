@@ -1,7 +1,7 @@
-import { cn } from "@/lib/utils";
 import { type ComponentProps } from "react";
+import { cn } from "~/lib/utils";
 
-const Close = ({ className, ...delegated }: ComponentProps<"svg">) => {
+export const Close = ({ className, ...delegated }: ComponentProps<"svg">) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -9,12 +9,10 @@ const Close = ({ className, ...delegated }: ComponentProps<"svg">) => {
       height="24"
       fill="none"
       viewBox="0 0 24 24"
-      className={cn("ui-stroke-black", className)}
+      className={cn("stroke-black", className)}
       {...delegated}
     >
       <path strokeLinecap="square" d="M4.5 4.5l15 15m0-15l-15 15"></path>
     </svg>
   );
 };
-
-export default Close;

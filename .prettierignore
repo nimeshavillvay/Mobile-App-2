@@ -1,3 +1,4 @@
 .next
 .expo
+.tsup
 next-env.d.ts

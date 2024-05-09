@@ -10,7 +10,7 @@
     "prettier:check": "prettier --check \"**/*.{js,jsx,ts,tsx,md,json}\""
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=20.12.2"
   },
   "pnpm": {
     "peerDependencyRules": {
@@ -24,9 +24,9 @@
   "devDependencies": {
     "@repo/prettier-config": "workspace:*",
     "prettier": "3.2.5",
-    "turbo": "1.13.2"
+    "turbo": "1.13.3"
   },
   "dependencies": {
-    "dotenv-cli": "7.3.0"
+    "dotenv-cli": "7.4.1"
   }
 }

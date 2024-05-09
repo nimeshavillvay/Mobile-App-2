@@ -1,18 +1,15 @@
-import { cn } from "@/lib/utils";
+import { type ComponentProps } from "react";
+import { cn } from "~/lib/utils";
 
-function Skeleton({
-  className,
-  ...props
-}: React.HTMLAttributes<HTMLDivElement>) {
+export type SkeletonProps = ComponentProps<"div">;
+
+const Skeleton = ({ className = "", ...delegated }: SkeletonProps) => {
   return (
     <div
-      className={cn(
-        "ui-animate-pulse ui-rounded-md ui-bg-zinc-900/10",
-        className,
-      )}
-      {...props}
+      className={cn("animate-pulse rounded-md bg-zinc-900/10", className)}
+      {...delegated}
     />
   );
-}
+};
 
 export { Skeleton };

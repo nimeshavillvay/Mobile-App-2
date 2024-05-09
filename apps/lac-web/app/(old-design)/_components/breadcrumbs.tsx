@@ -12,7 +12,7 @@ const Breadcrumbs = ({ links }: BreadcrumbsProps) => {
     <nav className="hidden bg-brand-gray-200 xs:block">
       <ul
         className={cn(
-          "mx-auto flex max-w-desktop flex-row items-center py-3 text-[#333333]",
+          "container flex flex-row items-center py-3 text-[#333333]",
           "[&>li:not(:last-child)]:after:mx-1.5 [&>li:not(:last-child)]:after:content-['/']",
         )}
       >

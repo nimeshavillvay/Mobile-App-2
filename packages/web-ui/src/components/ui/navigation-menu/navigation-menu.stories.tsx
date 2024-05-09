@@ -1,11 +1,11 @@
-import Zap from "@/components/icons/zap";
-import { cn } from "@/lib/utils";
 import type { Meta, StoryObj } from "@storybook/react";
 import {
   forwardRef,
   type ComponentPropsWithoutRef,
   type ElementRef,
 } from "react";
+import { Zap } from "~/components/icons/zap";
+import { cn } from "~/lib/utils";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -73,18 +73,18 @@ export const Showcase: Story = {
           <NavigationMenuItem>
             <NavigationMenuTrigger>Getting started</NavigationMenuTrigger>
             <NavigationMenuContent>
-              <ul className="ui-grid ui-gap-3 ui-p-4 md:ui-w-[400px] lg:ui-w-[500px] lg:ui-grid-cols-[.75fr_1fr]">
-                <li className="ui-row-span-3">
+              <ul className="grid gap-3 p-4 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
+                <li className="row-span-3">
                   <NavigationMenuLink asChild>
                     <a
-                      className="ui-from-muted/50 ui-to-muted ui-flex ui-h-full ui-w-full ui-select-none ui-flex-col ui-justify-end ui-rounded-md ui-bg-gradient-to-b ui-p-6 ui-no-underline ui-outline-none focus:ui-shadow-md"
+                      className="from-muted/50 to-muted flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b p-6 no-underline outline-none focus:shadow-md"
                       href="/"
                     >
-                      <Zap className="ui-size-6" />
-                      <div className="ui-mb-2 ui-mt-4 ui-text-lg ui-font-medium">
+                      <Zap className="size-6" />
+                      <div className="mb-2 mt-4 text-lg font-medium">
                         shadcn/ui
                       </div>
-                      <p className="ui-text-muted-foreground ui-text-sm ui-leading-tight">
+                      <p className="text-muted-foreground text-sm leading-tight">
                         Beautifully designed components built with Radix UI and
                         Tailwind CSS.
                       </p>
@@ -106,7 +106,7 @@ export const Showcase: Story = {
           <NavigationMenuItem>
             <NavigationMenuTrigger>Components</NavigationMenuTrigger>
             <NavigationMenuContent>
-              <ul className="ui-grid ui-w-[400px] ui-gap-3 ui-p-4 md:ui-w-[500px] md:ui-grid-cols-2 lg:ui-w-[600px] ">
+              <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
                 {components.map((component) => (
                   <ListItem
                     key={component.title}
@@ -136,15 +136,13 @@ const ListItem = forwardRef<ElementRef<"a">, ComponentPropsWithoutRef<"a">>(
           <a
             ref={ref}
             className={cn(
-              "hover:ui-bg-accent hover:ui-text-accent-foreground focus:ui-bg-accent focus:ui-text-accent-foreground ui-block ui-select-none ui-space-y-1 ui-rounded-md ui-p-3 ui-leading-none ui-no-underline ui-outline-none ui-transition-colors",
+              "hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors",
               className,
             )}
             {...props}
           >
-            <div className="ui-text-sm ui-font-medium ui-leading-none">
-              {title}
-            </div>
-            <p className="ui-text-muted-foreground ui-line-clamp-2 ui-text-sm ui-leading-snug">
+            <div className="text-sm font-medium leading-none">{title}</div>
+            <p className="text-muted-foreground line-clamp-2 text-sm leading-snug">
               {children}
             </p>
           </a>

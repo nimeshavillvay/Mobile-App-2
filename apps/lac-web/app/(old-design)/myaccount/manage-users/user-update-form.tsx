@@ -1,3 +1,4 @@
+import { Status } from "@/_lib/types";
 import { Button } from "@/old/_components/ui/button";
 import {
   Form,
@@ -22,33 +23,17 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import {
-  ForgetPasswordResponse,
-  Status,
-  UpdateField,
-  UserProfile,
-} from "./types";
-import useUpdateOtherUserMutation from "./use-update-other-user-mutation.hook";
-
-const USER_PERMISSIONS = [
-  { label: "Admin", value: "ADMIN" },
-  { label: "Buyer", value: "BUYER" },
-] as const;
-
-const USER_STATUSES = [
-  { label: "Active", value: "ACTIVE" },
-  { label: "Deactive", value: "DEACTIVE" },
-] as const;
+import { USER_PERMISSIONS, USER_STATUSES } from "./constants";
+import type { ForgetPasswordResponse, UpdateUser, UserProfile } from "./types";
+import useUpdateProfileMutation from "./use-update-profile-mutation.hook";
 
 const PASSWORD_RESET_INACTIVE_MSG =
-  "This User is currently flagged as inactive in the system. please contact web support at websupport@wurthlac.com, or call 800-422-4389 x1014.";
-const PASSWORD_RESET_PENDING_MSG =
-  "An email has been sent to the User to  complete their registration. If they do not receive this email within 15 minutes, please contact web support at websupport@wurthlac.com, or call 800-422-4389 x1014.";
+  "This User is currently flagged as deactive in the system. please contact web support at websupport@wurthlac.com, or call 800-422-4389 x1014.";
 
 const updateUserSchema = z.object({
   firstName: z.string().trim().min(1, "Please enter first name.").max(40),
   lastName: z.string().trim().min(1, "Please enter last name.").max(40),
-  jobTitle: z.string(),
+  jobTitle: z.string().nullable(),
   email: z
     .string()
     .trim()
@@ -76,8 +61,8 @@ const UserUpdateForm = ({
   const form = useForm<UpdateUserSchema>({
     resolver: zodResolver(updateUserSchema),
     values: {
-      firstName: user?.first_name,
-      lastName: user?.last_name,
+      firstName: user?.firstName,
+      lastName: user?.lastName,
       jobTitle: user?.role,
       email: user?.email,
       permission: user?.permission,
@@ -85,93 +70,42 @@ const UserUpdateForm = ({
     },
   });
 
-  const updateOtherUserMutation = useUpdateOtherUserMutation();
+  const updateProfileMutation = useUpdateProfileMutation();
   const forgetPasswordMutation = useForgetPasswordMutation();
 
   const onSubmit = (values: UpdateUserSchema) => {
-    const updateFields: UpdateField[] = [];
+    const updateValues: UpdateUser = {
+      userId: user?.id,
+      firstName: values.firstName.trim(),
+      lastName: values.lastName.trim(),
+      jobTitle: values.jobTitle ?? "",
+      email: values.email.trim(),
+      permission: values.permission,
+      status: values.status,
+    };
 
-    if (values?.firstName !== user?.first_name) {
-      updateFields.push({
-        field: "first_name",
-        value: values?.firstName.trim(),
-      });
-    }
-
-    if (values?.lastName !== user?.last_name) {
-      updateFields.push({
-        field: "last_name",
-        value: values?.lastName.trim(),
-      });
-    }
-
-    if (values?.jobTitle !== user?.role) {
-      updateFields.push({
-        field: "role",
-        value: values?.jobTitle,
-      });
-    }
-
-    if (values?.permission !== user?.permission) {
-      updateFields.push({
-        field: "permission",
-        value: values?.permission,
-      });
-    }
-
-    if (values?.status !== user?.status) {
-      updateFields.push({
-        field: "status",
-        value: values?.status,
-      });
-    }
-
-    if (values?.email !== user?.email) {
-      updateFields.push({
-        field: "email",
-        value: values?.email.trim(),
-      });
-    }
-
-    if (updateFields.length > 0) {
-      // Mutate other user update
-      updateOtherUserMutation.mutate({
-        signedData: user?.signed_data,
-        updateFields: updateFields,
-      });
-    }
+    // Mutate other user update
+    updateProfileMutation.mutate(updateValues);
   };
 
   const hasEditPermissions = (status: Status) => {
-    if (status === "PENDING") return false;
-    if (status === "INACTIVE") return false;
+    if (status === "SUSPENDED") return false;
     return true;
   };
 
   const handlePasswordReset = () => {
     // Mutate user password reset
     forgetPasswordMutation.mutate(
-      {
-        email: user?.email,
-        key: "user-management",
-      },
+      { email: user?.email },
       {
         onError: async (error) => {
           // Get data for error response body
           const response =
             (await error?.response?.json()) as ForgetPasswordResponse;
 
-          if (response?.data?.status) {
-            switch (response?.data?.status) {
-              case "DEACTIVE":
-                setMessage(PASSWORD_RESET_INACTIVE_MSG);
-                setMessageOpen(true);
-                break;
-              case "PENDING":
-                setMessage(PASSWORD_RESET_PENDING_MSG);
-                setMessageOpen(true);
-                break;
-            }
+          if (response?.data?.status === "SUSPENDED") {
+            setMessage(PASSWORD_RESET_INACTIVE_MSG);
+            setMessageOpen(true);
           }
         },
       },
@@ -195,7 +129,7 @@ const UserUpdateForm = ({
                       <Input
                         placeholder="First Name"
                         className="text-[15px] placeholder:text-brand-gray-400"
-                        disabled={user?.status === "PENDING"}
+                        disabled={user?.status === "SUSPENDED"}
                         {...field}
                       />
                     </FormControl>
@@ -220,7 +154,7 @@ const UserUpdateForm = ({
                       <Input
                         placeholder="Last Name"
                         className="text-[15px] placeholder:text-brand-gray-400"
-                        disabled={user?.status === "PENDING"}
+                        disabled={user?.status === "SUSPENDED"}
                         {...field}
                       />
                     </FormControl>
@@ -245,7 +179,7 @@ const UserUpdateForm = ({
 
                     <Select
                       onValueChange={field.onChange}
-                      defaultValue={field.value}
+                      defaultValue={field.value ?? undefined}
                       disabled={!hasEditPermissions(user?.status)}
                     >
                       <FormControl>
@@ -365,7 +299,6 @@ const UserUpdateForm = ({
                             {status?.label}
                           </SelectItem>
                         ))}
-                        <StatusOption status={user?.status} />
                       </SelectContent>
                     </Select>
 
@@ -384,6 +317,7 @@ const UserUpdateForm = ({
             <div className="flex justify-between">
               <Button
                 className="bg-brand-secondary px-6"
+                type="button"
                 onClick={() => handlePasswordReset()}
               >
                 Reset User Password
@@ -391,7 +325,7 @@ const UserUpdateForm = ({
               <Button
                 type="submit"
                 className="px-6"
-                disabled={user?.status === "PENDING"}
+                disabled={user?.status === "SUSPENDED"}
               >
                 Update
               </Button>
@@ -404,16 +338,3 @@ const UserUpdateForm = ({
 };
 
 export default UserUpdateForm;
-
-const StatusOption = ({ status }: { status: Status }) => {
-  switch (status) {
-    case "PENDING":
-      return <SelectItem value={status}>Pending</SelectItem>;
-    case "INACTIVE":
-      return <SelectItem value={status}>Inactive</SelectItem>;
-    case "DISABLED":
-      return <SelectItem value={status}>Disabled</SelectItem>;
-    default:
-      return null;
-  }
-};

@@ -1,53 +1,104 @@
 import SubHeading from "@/_components/sub-heading";
+import { api } from "@/_lib/api";
+import { DEFAULT_REVALIDATE } from "@/_lib/constants";
 import { Button } from "@repo/web-ui/components/ui/button";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@repo/web-ui/components/ui/collapsible";
+import Image from "next/image";
+import Link from "next/link";
 
-const FeaturedCategories = () => {
+const SHOWN_CATEGORIES = 9;
+
+const FeaturedCategories = async () => {
+  const data = await api
+    .get("rest/featuredcategories", {
+      next: {
+        revalidate: DEFAULT_REVALIDATE,
+      },
+    })
+    .json<
+      {
+        id: string;
+        name: string;
+        slug: string;
+        shortcode: string;
+        item_count: string;
+        direct_item_count: string;
+        img: string;
+      }[]
+    >();
+
+  const showCategories = data.slice(0, SHOWN_CATEGORIES).map((category) => ({
+    id: category.id,
+    slug: category.slug,
+    image: category.img,
+    name: category.name,
+  }));
+  const hiddenCategories = data.slice(SHOWN_CATEGORIES).map((category) => ({
+    id: category.id,
+    slug: category.slug,
+    image: category.img,
+    name: category.name,
+  }));
+
   return (
     <section className="container my-14 space-y-6 md:my-20 md:space-y-9">
       <SubHeading>Featured Categories</SubHeading>
 
-      <CategoriesGrid />
+      <CategoriesGrid categories={showCategories} />
 
-      <Collapsible className="flex flex-col space-y-6 md:space-y-9">
-        <CollapsibleContent asChild>
-          <CategoriesGrid />
-        </CollapsibleContent>
+      {hiddenCategories.length > 0 && (
+        <Collapsible className="flex flex-col space-y-6 md:space-y-9">
+          <CollapsibleContent asChild>
+            <CategoriesGrid categories={hiddenCategories} />
+          </CollapsibleContent>
 
-        <CollapsibleTrigger asChild>
-          <Button
-            variant="outline"
-            className="mx-auto py-2.5 font-bold text-black"
-          >
-            View all categories
-          </Button>
-        </CollapsibleTrigger>
-      </Collapsible>
+          <CollapsibleTrigger asChild>
+            <Button
+              variant="outline"
+              className="mx-auto py-2.5 font-bold text-black"
+            >
+              View all categories
+            </Button>
+          </CollapsibleTrigger>
+        </Collapsible>
+      )}
     </section>
   );
 };
 
 export default FeaturedCategories;
 
-const CategoriesGrid = () => {
+const CategoriesGrid = ({
+  categories,
+}: {
+  categories: { id: string; slug: string; image: string; name: string }[];
+}) => {
   return (
-    <div className="grid grid-cols-3 gap-x-4 gap-y-10 pb-4 lg:grid-cols-5 xl:grid-cols-7 2xl:grid-cols-9">
-      {Array.from({ length: 9 }).map((_, index) => (
-        <article
-          key={index}
-          className="flex flex-col items-center gap-4 md:gap-2"
-        >
-          <div className="size-28 rounded-full bg-wurth-gray-400 md:size-[7.75rem]" />
+    <ul className="grid grid-cols-3 gap-x-4 gap-y-10 pb-4 lg:grid-cols-5 xl:grid-cols-7 2xl:grid-cols-9">
+      {categories.map((category) => (
+        <li key={category.id}>
+          <Link
+            href={`/category/${category.id}/${category.slug}`}
+            className="flex flex-col items-center gap-4 md:gap-2"
+          >
+            <Image
+              src={category.image}
+              alt={`An image of the category ${category.name}`}
+              width={124}
+              height={124}
+              className="size-28 rounded-full object-fill md:size-[7.75rem]"
+            />
 
-          <div className="text-center text-[0.9375rem] font-semibold leading-5 text-black md:text-base">
-            Bathroom Stall Hardware
-          </div>
-        </article>
+            <span className="text-center text-[0.9375rem] font-semibold leading-5 text-black md:text-base">
+              Bathroom Stall Hardware
+            </span>
+          </Link>
+        </li>
       ))}
-    </div>
+    </ul>
   );
 };

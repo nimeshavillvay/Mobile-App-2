@@ -3,8 +3,10 @@
   "experimentalUI": false,
   "globalDependencies": ["**/.env.*local"],
   "globalEnv": [
+    "VERCEL_PROJECT_PRODUCTION_URL",
     "NEXT_PUBLIC_WURTH_LAC_OLD_API",
     "NEXT_PUBLIC_WURTH_LAC_API",
+    "NEXT_PUBLIC_WURTH_LAC_API_KEY",
     "NEXT_PUBLIC_WURTH_LAC_LOGIN_PUBLIC_KEY",
     "EXPO_USE_METRO_WORKSPACE_ROOT",
     "EXPO_PUBLIC_API_URL"
@@ -21,7 +23,6 @@
         ".next/**",
         "!.next/cache/**",
         "node_modules/.cache/metro/**",
-        "dist/**",
         "storybook-static/**"
       ]
     },

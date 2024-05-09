@@ -3,7 +3,6 @@ import { useState } from "react";
 import {
   ProductCard,
   ProductCardActions,
-  ProductCardCompare,
   ProductCardContent,
   ProductCardDetails,
   ProductCardDiscount,
@@ -27,6 +26,10 @@ const meta: Meta<typeof ProductCard> = {
 export default meta;
 type Story = StoryObj<typeof ProductCard>;
 
+const addToCart = () => {
+  console.log("Added to cart");
+};
+
 export const WithDiscount: Story = {
   render: () => {
     return (
@@ -42,8 +45,6 @@ export const WithDiscount: Story = {
           />
 
           <ProductCardLabel>Label</ProductCardLabel>
-
-          <ProductCardCompare />
         </ProductCardHero>
 
         <ProductCardContent>
@@ -55,7 +56,7 @@ export const WithDiscount: Story = {
 
           <ProductCardPrice price={39} uom="pair" actualPrice={49} />
 
-          <ProductCardActions />
+          <ProductCardActions addToCart={addToCart} />
         </ProductCardContent>
       </ProductCard>
     );
@@ -75,8 +76,6 @@ export const WithoutDiscount: Story = {
           />
 
           <ProductCardLabel>Label</ProductCardLabel>
-
-          <ProductCardCompare />
         </ProductCardHero>
 
         <ProductCardContent>
@@ -88,7 +87,7 @@ export const WithoutDiscount: Story = {
 
           <ProductCardPrice price={39} uom="pair" />
 
-          <ProductCardActions />
+          <ProductCardActions addToCart={addToCart} />
         </ProductCardContent>
       </ProductCard>
     );
@@ -108,8 +107,6 @@ export const Horizontal: Story = {
             href="/product/771770/PROMD3-MB"
             title="The product title"
           />
-
-          <ProductCardCompare />
         </ProductCardHero>
 
         <ProductCardContent>
@@ -123,7 +120,7 @@ export const Horizontal: Story = {
 
           <ProductCardPrice price={39} uom="pair" actualPrice={49} />
 
-          <ProductCardActions />
+          <ProductCardActions addToCart={addToCart} />
         </ProductCardContent>
       </ProductCard>
     );
@@ -152,8 +149,6 @@ export const WithVariantSelector: Story = {
           />
 
           <ProductCardLabel>Label</ProductCardLabel>
-
-          <ProductCardCompare />
         </ProductCardHero>
 
         <ProductCardContent>

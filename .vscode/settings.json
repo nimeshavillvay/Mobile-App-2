@@ -2,12 +2,16 @@
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
   "cSpell.words": [
-    "wurth",
+    "_tsup",
+    "clsx",
     "embla",
     "localstorage",
+    "Pinterest",
     "sku",
+    "tsup",
     "turborepo",
-    "_tsup"
+    "wurth",
+    "zustand"
   ],
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"
@@ -24,6 +28,7 @@
     "class",
     "className",
     "ngClass",
-    "buttonClassName"
+    "buttonClassName",
+    "tw"
   ]
 }

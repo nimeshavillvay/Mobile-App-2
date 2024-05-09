@@ -1,7 +1,7 @@
-import { cn } from "@/lib/utils";
 import { type ComponentProps } from "react";
+import { cn } from "~/lib/utils";
 
-const Alert = ({ className, ...delegated }: ComponentProps<"svg">) => {
+export const Alert = ({ className, ...delegated }: ComponentProps<"svg">) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -9,7 +9,7 @@ const Alert = ({ className, ...delegated }: ComponentProps<"svg">) => {
       height="24"
       fill="none"
       viewBox="0 0 24 24"
-      className={cn("ui-stroke-black", className)}
+      className={cn("stroke-black", className)}
       {...delegated}
     >
       <path
@@ -19,5 +19,3 @@ const Alert = ({ className, ...delegated }: ComponentProps<"svg">) => {
     </svg>
   );
 };
-
-export default Alert;

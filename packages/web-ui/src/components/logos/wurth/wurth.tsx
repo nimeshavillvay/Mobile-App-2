@@ -1,6 +1,6 @@
 import { type ComponentProps } from "react";
 
-const Wurth = (props: ComponentProps<"svg">) => {
+export const Wurth = (props: ComponentProps<"svg">) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -17,5 +17,3 @@ const Wurth = (props: ComponentProps<"svg">) => {
     </svg>
   );
 };
-
-export default Wurth;

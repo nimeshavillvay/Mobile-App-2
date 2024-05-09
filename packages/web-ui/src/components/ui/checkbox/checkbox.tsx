@@ -1,35 +1,29 @@
 "use client";
 
-import { cn } from "@/lib/utils";
 import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
 import { CheckIcon } from "@radix-ui/react-icons";
-import {
-  forwardRef,
-  type ComponentPropsWithoutRef,
-  type ElementRef,
-} from "react";
+import { ComponentProps } from "react";
+import { cn } from "~/lib/utils";
 
-const Checkbox = forwardRef<
-  ElementRef<typeof CheckboxPrimitive.Root>,
-  ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root>
->(({ className, ...props }, ref) => (
-  <CheckboxPrimitive.Root
-    ref={ref}
-    className={cn(
-      "ui-peer ui-size-3.5 ui-shrink-0 ui-rounded-sm ui-border ui-border-wurth-gray-250 ui-shadow focus-visible:ui-outline-none focus-visible:ui-ring-1 focus-visible:ui-ring-wurth-gray-800 disabled:ui-cursor-not-allowed disabled:ui-opacity-50 data-[state=checked]:ui-bg-wurth-gray-800 data-[state=checked]:ui-text-wurth-gray-50",
-      className,
-    )}
-    {...props}
-  >
-    <CheckboxPrimitive.Indicator
+const Checkbox = ({
+  className = "",
+  ...delegated
+}: ComponentProps<typeof CheckboxPrimitive.Root>) => {
+  return (
+    <CheckboxPrimitive.Root
       className={cn(
-        "ui-flex ui-items-center ui-justify-center ui-text-current",
+        "peer size-3.5 shrink-0 rounded-sm border border-wurth-gray-250 shadow focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-wurth-gray-800 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-wurth-gray-800 data-[state=checked]:text-wurth-gray-50",
+        className,
       )}
+      {...delegated}
     >
-      <CheckIcon className="ui-size-3" />
-    </CheckboxPrimitive.Indicator>
-  </CheckboxPrimitive.Root>
-));
-Checkbox.displayName = CheckboxPrimitive.Root.displayName;
+      <CheckboxPrimitive.Indicator
+        className={cn("flex items-center justify-center text-current")}
+      >
+        <CheckIcon className="size-3" />
+      </CheckboxPrimitive.Indicator>
+    </CheckboxPrimitive.Root>
+  );
+};
 
 export { Checkbox };

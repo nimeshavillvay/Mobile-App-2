@@ -1,12 +1,12 @@
+import { ChevronDownIcon, SlashIcon } from "@radix-ui/react-icons";
+import type { Meta, StoryObj } from "@storybook/react";
+import Link from "next/link";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { ChevronDownIcon, SlashIcon } from "@radix-ui/react-icons";
-import type { Meta, StoryObj } from "@storybook/react";
-import Link from "next/link";
+} from "~/components/ui/dropdown-menu";
 import {
   Breadcrumb,
   BreadcrumbEllipsis,
@@ -43,9 +43,9 @@ export const Demo: Story = {
           <BreadcrumbSeparator />
           <BreadcrumbItem>
             <DropdownMenu>
-              <DropdownMenuTrigger className="ui-flex ui-items-center ui-gap-1">
-                <BreadcrumbEllipsis className="ui-size-4" />
-                <span className="ui-sr-only">Toggle menu</span>
+              <DropdownMenuTrigger className="flex items-center gap-1">
+                <BreadcrumbEllipsis className="size-4" />
+                <span className="sr-only">Toggle menu</span>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start">
                 <DropdownMenuItem>Documentation</DropdownMenuItem>
@@ -107,7 +107,7 @@ export const WithDropdown: Story = {
           </BreadcrumbSeparator>
           <BreadcrumbItem>
             <DropdownMenu>
-              <DropdownMenuTrigger className="ui-flex ui-items-center ui-gap-1">
+              <DropdownMenuTrigger className="flex items-center gap-1">
                 Components
                 <ChevronDownIcon />
               </DropdownMenuTrigger>

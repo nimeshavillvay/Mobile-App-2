@@ -1,7 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import { ArrowLeftIcon, ArrowRightIcon } from "@radix-ui/react-icons";
 import useEmblaCarousel, {
   type UseEmblaCarouselType,
@@ -17,6 +15,8 @@ import {
   type HTMLAttributes,
   type KeyboardEvent,
 } from "react";
+import { Button } from "~/components/ui/button";
+import { cn } from "~/lib/utils";
 
 type CarouselApi = UseEmblaCarouselType[1];
 type UseCarouselParameters = Parameters<typeof useEmblaCarousel>;
@@ -173,7 +173,7 @@ const Carousel = forwardRef<
         <div
           ref={ref}
           onKeyDownCapture={handleKeyDown}
-          className={cn("ui-relative", className)}
+          className={cn("relative", className)}
           role="region"
           aria-roledescription="carousel"
           {...props}
@@ -193,12 +193,12 @@ const CarouselContent = forwardRef<
   const { carouselRef, orientation } = useCarousel();
 
   return (
-    <div ref={carouselRef} className="ui-overflow-hidden">
+    <div ref={carouselRef} className="overflow-hidden">
       <div
         ref={ref}
         className={cn(
-          "ui-flex",
-          orientation === "horizontal" ? "ui--ml-4" : "ui--mt-4 ui-flex-col",
+          "flex",
+          orientation === "horizontal" ? "-ml-4" : "-mt-4 flex-col",
           className,
         )}
         {...props}
@@ -218,8 +218,8 @@ const CarouselItem = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
         role="group"
         aria-roledescription="slide"
         className={cn(
-          "ui-min-w-0 ui-shrink-0 ui-grow-0 ui-basis-full",
-          orientation === "horizontal" ? "ui-pl-4" : "ui-pt-4",
+          "min-w-0 shrink-0 grow-0 basis-full",
+          orientation === "horizontal" ? "pl-4" : "pt-4",
           className,
         )}
         {...props}
@@ -241,18 +241,18 @@ const CarouselPrevious = forwardRef<
       variant={variant}
       size={size}
       className={cn(
-        "ui- ui-absolute ui-h-8 ui-w-8 ui-rounded-full",
+        " absolute h-8 w-8 rounded-full",
         orientation === "horizontal"
-          ? "ui--left-12 ui-top-1/2 ui--translate-y-1/2"
-          : "ui--top-12 ui-left-1/2 ui--translate-x-1/2 ui-rotate-90",
+          ? "-left-12 top-1/2 -translate-y-1/2"
+          : "-top-12 left-1/2 -translate-x-1/2 rotate-90",
         className,
       )}
       disabled={!canScrollPrev}
       onClick={scrollPrev}
       {...props}
     >
-      <ArrowLeftIcon className="ui-h-4 ui-w-4" />
-      <span className="ui-sr-only">Previous slide</span>
+      <ArrowLeftIcon className="h-4 w-4" />
+      <span className="sr-only">Previous slide</span>
     </Button>
   );
 });
@@ -270,18 +270,18 @@ const CarouselNext = forwardRef<
       variant={variant}
       size={size}
       className={cn(
-        "ui-absolute ui-h-8 ui-w-8 ui-rounded-full",
+        "absolute h-8 w-8 rounded-full",
         orientation === "horizontal"
-          ? "ui--right-12 ui-top-1/2 ui--translate-y-1/2"
-          : "ui--bottom-12 ui-left-1/2 ui--translate-x-1/2 ui-rotate-90",
+          ? "-right-12 top-1/2 -translate-y-1/2"
+          : "-bottom-12 left-1/2 -translate-x-1/2 rotate-90",
         className,
       )}
       disabled={!canScrollNext}
       onClick={scrollNext}
       {...props}
     >
-      <ArrowRightIcon className="ui-h-4 ui-w-4" />
-      <span className="ui-sr-only">Next slide</span>
+      <ArrowRightIcon className="h-4 w-4" />
+      <span className="sr-only">Next slide</span>
     </Button>
   );
 });
@@ -297,7 +297,7 @@ const CarouselDots = ({
   return (
     <div
       className={cn(
-        "ui-mx-auto ui-flex ui-h-3 ui-flex-row ui-items-center ui-justify-center ui-gap-3",
+        "mx-auto flex h-3 flex-row items-center justify-center gap-3",
         className,
       )}
       {...delegated}
@@ -305,14 +305,15 @@ const CarouselDots = ({
       {scrollSnaps.map((_, index) => (
         <button
           key={index}
+          type="button"
           onClick={() => scrollTo(index)}
           className={cn(
-            "ui-size-2 ui-rounded-full ui-border-[0.1rem] ui-border-black/40 data-[selected]:ui-border-transparent data-[selected]:ui-bg-black/40",
+            "size-2 rounded-full border-[0.1rem] border-black/40 data-[selected]:border-transparent data-[selected]:bg-black/40",
             buttonClassName,
           )}
           data-selected={selectedIndex === index ? true : undefined}
         >
-          <span className="ui-sr-only">Item {index + 1}</span>
+          <span className="sr-only">Item {index + 1}</span>
         </button>
       ))}
     </div>

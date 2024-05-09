@@ -1,1 +1,1 @@
-export { default } from "./wurth-full-black";
+export * from "./wurth-full-black";

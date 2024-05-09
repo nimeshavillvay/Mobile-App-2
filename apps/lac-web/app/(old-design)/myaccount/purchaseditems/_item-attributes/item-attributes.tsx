@@ -1,14 +1,13 @@
-import useSuspenseItemAttributes from "./use-suspense-item-attributes.hook";
+import useItemInfo from "@/_hooks/product/use-item-info.hook";
 
 type ItemAttributesProps = {
-  token: string;
-  sku: string;
+  productId: number;
 };
 
-const ItemAttributes = ({ token, sku }: ItemAttributesProps) => {
-  const itemAttributesQuery = useSuspenseItemAttributes(token, sku);
+const ItemAttributes = ({ productId }: ItemAttributesProps) => {
+  const itemAttributesQuery = useItemInfo([productId]);
 
-  const attributes = itemAttributesQuery.data ?? null;
+  const attributes = itemAttributesQuery.data?.[0] ?? null;
 
   return (
     <div className="flex flex-row py-2 text-sm text-brand-gray-500">
@@ -18,13 +17,13 @@ const ItemAttributes = ({ token, sku }: ItemAttributesProps) => {
             <Attribute label="Brand" value={attributes.brand} />
             <Attribute
               label="Box Quantity"
-              value={attributes.box_quantity.toString()}
+              value={attributes.boxQuantity.toString()}
             />
             <Attribute
               label="Manufacturer&rsquo;s Part"
-              value={attributes.manufacturer_part}
+              value={attributes.mfrPartNo}
             />
-            <Attribute label="Weight" value={attributes.weight} />
+            <Attribute label="Weight" value={attributes.weight.toString()} />
           </div>
 
           <div className="flex-1 flex-col">
@@ -33,7 +32,7 @@ const ItemAttributes = ({ token, sku }: ItemAttributesProps) => {
                 <Attribute
                   key={attribute.attribute_name}
                   label={attribute.attribute_name}
-                  value={attribute.attribute_value}
+                  value={attribute.attribute_value ?? ""}
                 />
               ))}
           </div>

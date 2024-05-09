@@ -1,16 +1,6 @@
-import { api } from "@/old/_lib/api";
+import { api } from "@/_lib/api";
+import { PriceBreakDowns } from "@/_lib/types";
 import { useSuspenseQuery } from "@tanstack/react-query";
-
-type PriceBreakDowns = {
-  price_1: string;
-  price_2: string;
-  price_3: string;
-  price_4: string;
-  qty_1: number;
-  qty_2: number;
-  qty_3: number;
-  qty_4: number;
-};
 
 type ItemPrice = {
   productid: number;
@@ -27,34 +17,38 @@ type ItemsPriceResult = {
 };
 
 const getPriceBreakDowns = (price_breakdowns: PriceBreakDowns) => {
-  return Object.entries(price_breakdowns)
-    .filter(([key]) => key.startsWith("price_"))
-    .map(([key, value]) => {
-      const index = parseInt(key.replace("price_", ""));
-      const quantityKey = `qty_${index}` as keyof PriceBreakDowns;
+  return price_breakdowns.map(
+    (priceObject): { quantity: number; price: number } => {
       return {
-        quantity: Number(price_breakdowns[quantityKey]),
-        price: Number(value),
+        quantity: Number(priceObject.qty_1),
+        price: Number(priceObject.price_1),
       };
-    });
+    },
+  );
+};
+
+type Product = {
+  productId: number;
+  qty: number;
 };
 
 // TODO: Need to remove usePriceCheck hook and replace it with useSuspensePriceCheck
-const useSuspensePriceCheck = (
-  token: string,
-  sku: string,
-  quantity: number,
-) => {
+const useSuspensePriceCheck = (token: string, products: Product[]) => {
   return useSuspenseQuery({
-    queryKey: ["user", "price-check", token, sku, quantity],
+    queryKey: ["user", "price-check", token, products],
     queryFn: () =>
       api
-        .post("pim/webservice/ecommerce/price-check", {
+        .post("rest/pricecheck", {
           headers: {
             authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
           },
-          json: { skuqty: [{ sku, quantity }] },
+          json: {
+            products: products.map((product) => ({
+              productid: product.productId,
+              qty: product.qty,
+            })),
+          },
+          cache: "no-store",
         })
         .json<ItemsPriceResult>(),
     select: (data) => {

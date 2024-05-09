@@ -1,1 +1,1 @@
-export { default } from "./save";
+export { Save } from "./save";

@@ -1,15 +1,13 @@
-import Banner from "@/_components/banner";
-import SubHeading from "@/_components/sub-heading";
-import ArrowRight from "@repo/web-ui/components/icons/arrow-right";
+import { getBanners } from "@/_lib/apis/server";
+import { ArrowRight } from "@repo/web-ui/components/icons/arrow-right";
 import Image, { type StaticImageData } from "next/image";
-import { type CSSProperties } from "react";
+import { type CSSProperties, type ComponentProps } from "react";
 import Balancer from "react-wrap-balancer";
+import FeaturedBrand from "./_featured-brand";
+import FlashSale from "./_flash-sale";
 import ad1 from "./ad-1.png";
 import ad2 from "./ad-2.png";
-import blogImage from "./blog-image.png";
-import FeaturedBrand from "./featured-brand";
 import FeaturedCategories from "./featured-categories";
-import FlashSale from "./flash-sale";
 import HeroBanners from "./hero-banners";
 
 type Colors = {
@@ -63,10 +61,25 @@ const ADS: (
   },
 ];
 
-const HomePage = () => {
+const HomePage = async () => {
+  const banners = await getBanners("0");
+
+  const heroBanner: ComponentProps<typeof HeroBanners>["banners"] = [];
+  banners.T.flatMap((topBanner) => topBanner.banners)
+    .filter((banner) => banner.file_path?.endsWith(".jpg"))
+    .forEach((banner) => {
+      if (banner.file_path) {
+        heroBanner.push({
+          id: banner.id,
+          alt: banner.alt_tag,
+          image: banner.file_path,
+        });
+      }
+    });
+
   return (
     <>
-      <HeroBanners />
+      <HeroBanners banners={heroBanner} />
 
       <section className="container my-3 flex w-full snap-x scroll-pl-4 flex-row  items-stretch gap-4 overflow-x-auto md:my-6 md:grid md:snap-none md:scroll-pl-0 md:grid-cols-3 md:gap-5">
         {ADS.map((ad) => (
@@ -141,83 +154,9 @@ const HomePage = () => {
 
       <FlashSale />
 
-      <Banner />
-
       <FeaturedBrand />
 
-      <section className="container my-14 space-y-6 md:my-20 md:space-y-9">
-        <SubHeading>Save More...</SubHeading>
-
-        <ul className="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-8">
-          {Array.from({ length: 4 }).map((_, index) => (
-            <li
-              key={index}
-              className="md:aspect-auto aspect-square relative flex flex-col justify-between gap-2 rounded-lg bg-green-50 p-3 md:min-h-[11.25rem] md:p-4"
-            >
-              <h3 className="text-sm font-medium text-black md:text-base md:leading-tight">
-                <Balancer>GRASS Institutional Hinges</Balancer>
-              </h3>
-
-              <div className="z-10 font-title text-xl leading-6 text-green-700 md:text-2xl md:leading-none">
-                <span className="tracking-[-0.00625rem] md:tracking-[-0.0075rem]">
-                  Up to
-                </span>
-                <br />
-                <span className="text-2xl font-bold leading-none tracking-[-0.01125rem] md:text-4xl md:tracking-[-0.01688rem]">
-                  30%
-                </span>{" "}
-                <span className="text-base uppercase">off</span>
-              </div>
-
-              <Image
-                src={ad1}
-                alt="A placeholder"
-                width={125}
-                height={125}
-                className="absolute bottom-3 right-0 object-contain"
-              />
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      <Banner />
-
       <FeaturedCategories />
-
-      <section className="my-14 space-y-6 bg-wurth-gray-50 py-9 md:my-20 md:space-y-9 md:py-16">
-        <SubHeading>Latest From Our Blog</SubHeading>
-
-        <ul className="container flex snap-x scroll-pl-4 flex-row items-center gap-4 overflow-x-auto md:scroll-pl-8">
-          {Array.from({ length: 10 }).map((_, index) => (
-            <li key={index} className="snap-start">
-              <article className="w-[19.75rem] overflow-hidden rounded-lg border border-wurth-gray-250 bg-white shadow-md">
-                <Image
-                  src={blogImage}
-                  alt="Blog image"
-                  width={316}
-                  height={180}
-                />
-
-                <div className="space-y-1 p-5">
-                  <h3 className="line-clamp-3 text-lg font-bold leading-6 text-black">
-                    <Balancer>
-                      2024 Kitchen Trends - Delivering What Homeowners Want
-                    </Balancer>
-                  </h3>
-
-                  <p className="line-clamp-2 text-sm text-wurth-gray-500">
-                    Stay ahead of the curve with the hottest kitchen trends
-                    homeowners are craving. Discover design tips, material
-                    recommendations, and strategies to win over clients with
-                    cutting-edge kitchens.
-                  </p>
-                </div>
-              </article>
-            </li>
-          ))}
-        </ul>
-      </section>
     </>
   );
 };
