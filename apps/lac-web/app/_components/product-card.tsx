@@ -1,5 +1,7 @@
 "use client";
 
+import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
+import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import { cn } from "@/_lib/utils";
 import {
   ProductCardActions,
@@ -8,7 +10,6 @@ import {
   ProductCardDiscount,
   ProductCardHero,
   ProductCardImage,
-  ProductCardLabel,
   ProductCardPrice,
   ProductCard as ProductCardRoot,
   ProductCardVariantSelector,
@@ -23,13 +24,16 @@ type ProductProps = {
     variants: {
       id: string;
       slug: string;
+      sku: string;
       title: string;
       image: string;
+      uom: string;
     }[];
   };
+  token: string;
 };
 
-const ProductCard = ({ orientation, product }: ProductProps) => {
+const ProductCard = ({ orientation, product, token }: ProductProps) => {
   const [selectedId, setSelectedId] = useState<string | undefined>();
 
   const defaultVariant = product.variants[0];
@@ -53,11 +57,17 @@ const ProductCard = ({ orientation, product }: ProductProps) => {
     image = selectedVariant.image;
   }
 
+  let id = "";
   let sku = "";
+  let uom = "";
   if (selectedVariant) {
-    sku = selectedVariant.id;
+    id = selectedVariant.id;
+    sku = selectedVariant.sku;
+    uom = selectedVariant.uom;
   } else if (defaultVariant) {
-    sku = defaultVariant.id;
+    id = defaultVariant.id;
+    sku = defaultVariant.sku;
+    uom = defaultVariant.uom;
   }
 
   let title = "";
@@ -74,6 +84,37 @@ const ProductCard = ({ orientation, product }: ProductProps) => {
     }
   }
 
+  const priceCheckQuery = useSuspensePriceCheck(token, [
+    {
+      productId: parseInt(id),
+      qty: 1,
+    },
+  ]);
+
+  let currentPrice = 0;
+  let previousPrice = 0;
+  let discountPercent = 0;
+
+  if (priceCheckQuery.data.productPrices[0]) {
+    currentPrice = priceCheckQuery.data.productPrices[0].price;
+    previousPrice = priceCheckQuery.data.productPrices[0].extendedPrice;
+  }
+
+  if (currentPrice !== previousPrice) {
+    discountPercent = Math.floor(
+      ((currentPrice - previousPrice) / previousPrice) * 100,
+    );
+  }
+
+  const { setOpen, setProductId } = useAddToCartDialog(
+    (state) => state.actions,
+  );
+
+  const addToCart = () => {
+    setProductId(parseInt(id));
+    setOpen("verification");
+  };
+
   return (
     <ProductCardRoot
       orientation={orientation}
@@ -83,7 +124,9 @@ const ProductCard = ({ orientation, product }: ProductProps) => {
       )}
     >
       <ProductCardHero>
-        <ProductCardDiscount>30</ProductCardDiscount>
+        {discountPercent > 0 && (
+          <ProductCardDiscount>{discountPercent}</ProductCardDiscount>
+        )}
 
         <ProductCardImage
           src={image}
@@ -91,8 +134,6 @@ const ProductCard = ({ orientation, product }: ProductProps) => {
           href={href}
           title={title}
         />
-
-        <ProductCardLabel>Label</ProductCardLabel>
       </ProductCardHero>
 
       <ProductCardContent>
@@ -110,9 +151,13 @@ const ProductCard = ({ orientation, product }: ProductProps) => {
           />
         ) : (
           <>
-            <ProductCardPrice price={2.05} uom="pair" actualPrice={4.11} />
+            <ProductCardPrice
+              price={currentPrice}
+              uom={uom}
+              actualPrice={previousPrice}
+            />
 
-            <ProductCardActions />
+            <ProductCardActions addToCart={addToCart} />
           </>
         )}
       </ProductCardContent>

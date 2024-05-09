@@ -51,6 +51,7 @@ export const verifyAccountToken = async (token: string) => {
     .json<"OK">();
 };
 
+// TODO: Remove this function after new cart functionality is implemented
 export const checkAvailability = async (
   token: string,
   sku: string,

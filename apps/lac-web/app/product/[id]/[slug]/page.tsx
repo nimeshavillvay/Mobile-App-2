@@ -1,12 +1,10 @@
 import productItemImage from "@/_assets/images/product-item-image.png";
-import RelatedSearches from "@/_components/related-searches";
 import { api } from "@/_lib/api";
 import { getBreadcrumbs } from "@/_lib/apis/server";
 import { DEFAULT_REVALIDATE } from "@/_lib/constants";
 import { ChevronLeft } from "@repo/web-ui/components/icons/chevron-left";
 import {
   ProductCard,
-  ProductCardActions,
   ProductCardContent,
   ProductCardDetails,
   ProductCardDiscount,
@@ -25,28 +23,16 @@ import {
 import { Button, buttonVariants } from "@repo/web-ui/components/ui/button";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
 import { Fragment } from "react";
 import Balancer from "react-wrap-balancer";
 import ProductHero from "./_product-hero";
 import { getProduct } from "./apis";
-
-type ProductPageProps = {
-  params: {
-    id: string;
-    slug: string;
-  };
-};
+import type { ProductPageProps } from "./types";
 
 export const generateMetadata = async ({
   params: { id, slug },
 }: ProductPageProps): Promise<Metadata> => {
-  const product = await getProduct(id);
-
-  // Check if the slug matches the product's slug
-  if (slug !== product.selectedProduct.slug) {
-    return notFound();
-  }
+  const product = await getProduct(id, slug);
 
   return {
     title: product.selectedProduct.productName,
@@ -55,12 +41,8 @@ export const generateMetadata = async ({
 };
 
 const ProductPage = async ({ params: { id, slug } }: ProductPageProps) => {
-  const product = await getProduct(id);
-
-  // Check if the slug matches the product's slug
-  if (slug !== product.selectedProduct.slug) {
-    return notFound();
-  }
+  // Just to check if the product exists
+  await getProduct(id, slug);
 
   const [breadcrumbs, relatedProducts] = await Promise.all([
     getBreadcrumbs(id, "product"),
@@ -123,21 +105,25 @@ const ProductPage = async ({ params: { id, slug } }: ProductPageProps) => {
       .then(({ data }) => data),
   ]);
 
+  const lastBreadcrumb = breadcrumbs[breadcrumbs.length - 1];
+
   return (
     <>
-      <div className="container my-4 md:hidden">
-        <Link
-          href="/cam-locks"
-          className={buttonVariants({
-            variant: "link",
-            className: "h-fit gap-1 p-0",
-          })}
-        >
-          <ChevronLeft className="size-4" />
+      {!!lastBreadcrumb && (
+        <div className="container my-4 md:hidden">
+          <Link
+            href={`/category/${lastBreadcrumb.id}/${lastBreadcrumb.slug}`}
+            className={buttonVariants({
+              variant: "link",
+              className: "h-fit gap-1 p-0",
+            })}
+          >
+            <ChevronLeft className="size-4" />
 
-          <span>Cam Locks</span>
-        </Link>
-      </div>
+            <span>{lastBreadcrumb.categoryName}</span>
+          </Link>
+        </div>
+      )}
 
       <Breadcrumb className="container mb-6 mt-3 hidden md:block">
         <BreadcrumbList>
@@ -163,7 +149,7 @@ const ProductPage = async ({ params: { id, slug } }: ProductPageProps) => {
         </BreadcrumbList>
       </Breadcrumb>
 
-      <ProductHero id={id} />
+      <ProductHero id={id} slug={slug} />
 
       {relatedProducts.length > 0 && (
         <section className="my-10 space-y-4 md:my-[3.75rem] md:space-y-9">
@@ -207,8 +193,6 @@ const ProductPage = async ({ params: { id, slug } }: ProductPageProps) => {
                         uom="pair"
                         actualPrice={4.11}
                       />
-
-                      <ProductCardActions />
                     </ProductCardContent>
                   </ProductCard>
                 ))}
@@ -251,15 +235,11 @@ const ProductPage = async ({ params: { id, slug } }: ProductPageProps) => {
                 />
 
                 <ProductCardPrice price={2.05} uom="pair" actualPrice={4.11} />
-
-                <ProductCardActions />
               </ProductCardContent>
             </ProductCard>
           ))}
         </div>
       </section>
-
-      <RelatedSearches />
     </>
   );
 };

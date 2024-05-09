@@ -23,15 +23,14 @@ const HeroBanners = ({ banners }: HeroBannersProps) => {
         <CarouselContent>
           {banners.map((banner, index) => (
             <CarouselItem key={banner.id}>
-              <div className="relative h-96 overflow-hidden rounded-lg">
-                <Image
-                  src={banner.image}
-                  alt={banner.alt}
-                  fill
-                  priority={index === 0}
-                  className="bg-[#362A23] object-cover shadow-lg"
-                />
-              </div>
+              <Image
+                src={banner.image}
+                alt={banner.alt}
+                width={1856}
+                height={384}
+                priority={index === 0}
+                className="block rounded-lg bg-[#362A23] object-cover shadow-lg"
+              />
             </CarouselItem>
           ))}
         </CarouselContent>

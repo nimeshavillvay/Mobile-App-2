@@ -1,36 +1,21 @@
 import { cn } from "@/_lib/utils";
-import AccountSelectorDialog from "@/old/account-selector-dialog";
-import LoginDialog from "@/old/login-dialog";
 import { Toaster } from "@repo/web-ui/components/ui/toast";
 import { type Metadata } from "next";
 import localFont from "next/font/local";
 import NextTopLoader from "nextjs-toploader";
 import { type ReactNode } from "react";
+import AddToCartDialog from "./_add-to-cart-dialog";
 import Footer from "./_footer";
 import Header from "./_header";
 import "./global.css";
 import Providers from "./providers";
 
 // TODO Remove this and delete all the local font files after the old designs are removed
-const wurth = localFont({
-  src: [
-    {
-      path: "./wuerth-bold.woff2",
-      weight: "700",
-    },
-    {
-      path: "./wuerth-extrabold-cond.woff2",
-      weight: "800",
-    },
-  ],
-  variable: "--wurth-font",
-  display: "swap",
-});
 
 const titleFont = localFont({
   src: [
     {
-      path: "./_fonts/Jost-VariableFont_wght.ttf",
+      path: "./_fonts/Jost.ttf",
     },
   ],
   variable: "--font-title",
@@ -39,7 +24,7 @@ const titleFont = localFont({
 const bodyFont = localFont({
   src: [
     {
-      path: "./_fonts/DMSans-VariableFont_opsz,wght.ttf",
+      path: "./_fonts/DMSans.ttf",
     },
   ],
   variable: "--font-body",
@@ -51,6 +36,11 @@ export const metadata: Metadata = {
     default: "Wurth Louis and Company",
     template: "%s | Wurth Louis and Company",
   },
+  metadataBase: new URL(
+    process.env.VERCEL_PROJECT_PRODUCTION_URL
+      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+      : "http://localhost:3000",
+  ),
 };
 
 const RootLayout = ({ children }: { children: ReactNode }) => {
@@ -59,7 +49,6 @@ const RootLayout = ({ children }: { children: ReactNode }) => {
       lang="en"
       className={cn(
         "h-full scroll-smooth",
-        wurth.variable,
         titleFont.variable,
         bodyFont.variable,
       )}
@@ -76,8 +65,7 @@ const RootLayout = ({ children }: { children: ReactNode }) => {
 
           <Toaster />
 
-          <LoginDialog />
-          <AccountSelectorDialog />
+          <AddToCartDialog />
         </Providers>
       </body>
     </html>

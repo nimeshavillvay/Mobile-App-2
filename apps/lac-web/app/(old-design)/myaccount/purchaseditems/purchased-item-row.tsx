@@ -10,7 +10,7 @@ import { Input } from "@/old/_components/ui/input";
 import { Label } from "@/old/_components/ui/label";
 import { TableCell, TableRow } from "@/old/_components/ui/table";
 import useAddToCartMutation from "@/old/_hooks/cart/use-add-to-cart-mutation.hook";
-import { cn, getMediaUrl } from "@/old/_utils/helpers";
+import { cn } from "@/old/_utils/helpers";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { WurthFullBlack } from "@repo/web-ui/components/logos/wurth-full-black";
 import dayjs from "dayjs";
@@ -46,6 +46,8 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
   const id = useId();
   const router = useRouter();
   const quantityId = `quantity-${id}`;
+
+  // TODO: Replace this function with new add to cart function after new cart functionality is implemented
   const addToCartMutation = useAddToCartMutation();
 
   const { register, watch, handleSubmit } = useForm<Schema>({
@@ -118,7 +120,7 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
           >
             {item.image ? (
               <Image
-                src={getMediaUrl(item.image.original)}
+                src={item.image}
                 alt={item.productDescription}
                 width={76}
                 height={76}
@@ -297,7 +299,7 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
                     </div>
                   }
                 >
-                  <ItemAttributes token={token} sku={item.productSku} />
+                  <ItemAttributes productId={item.productId} />
                 </Suspense>
               </ErrorBoundary>
             </CollapsibleContent>

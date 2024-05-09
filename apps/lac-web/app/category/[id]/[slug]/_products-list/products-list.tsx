@@ -9,6 +9,7 @@ import {
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import { cookies } from "next/headers";
 import { Suspense } from "react";
+import ProductsListDesktopFiltersHeader from "./products-list-desktop-filters-header";
 import ProductsListFilters from "./products-list-filters";
 import ProductsListGrid from "./products-list-grid";
 import ProductsListHeader from "./products-list-header";
@@ -30,6 +31,13 @@ const ProductsList = ({ categoryId }: ProductsListProps) => {
     <ProductsGrid>
       <Suspense fallback={<ProductsGridHeaderSkeleton />}>
         <ProductsListHeader token={tokenCookie.value} categoryId={categoryId} />
+      </Suspense>
+
+      <Suspense>
+        <ProductsListDesktopFiltersHeader
+          token={tokenCookie.value}
+          categoryId={categoryId}
+        />
       </Suspense>
 
       <Suspense fallback={<ProductsGridListSkeleton type="mobile" />}>

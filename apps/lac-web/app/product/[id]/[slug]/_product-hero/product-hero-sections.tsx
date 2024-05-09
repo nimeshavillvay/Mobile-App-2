@@ -53,50 +53,6 @@ export const ProductDescription = ({
   );
 };
 
-export const ProductPrices = ({ className }: { className?: string }) => {
-  return (
-    <section className={cn("space-y-3 md:space-y-4", className)}>
-      <div className="flex flex-row items-end gap-1 text-lg leading-6 text-wurth-gray-800">
-        <div className="text-xl font-semibold leading-none">
-          $<span className="font-title text-[1.75rem] leading-8">8.33</span>
-        </div>
-
-        <div className="text-wurth-gray-400 line-through">$18.32</div>
-
-        <div>
-          <span className="text-sm font-semibold">/</span>
-          <span className="font-title leading-none">pair</span>
-        </div>
-
-        <div className="font-semibold text-green-700">You save $0</div>
-      </div>
-
-      <div className="grid grid-cols-2 gap-0.5">
-        {[
-          { items: "25-99", price: 8.06, uom: "pair" },
-          { items: "100+", price: 7.75, uom: "pair" },
-        ].map((item) => (
-          <div
-            key={item.items}
-            className="rounded-lg bg-wurth-gray-50 px-4 py-3 odd:rounded-r-none last:odd:rounded-r-lg even:rounded-l-none md:py-2"
-          >
-            <h5 className="text-sm font-medium text-wurth-gray-800">
-              {item.items} items
-            </h5>
-
-            <div className="text-sm font-semibold leading-none text-wurth-gray-800">
-              <span className="text-base font-bold leading-6">
-                ${item.price}
-              </span>
-              /{item.uom}
-            </div>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-};
-
 export const DropShipItemNotice = ({ className }: { className?: string }) => {
   return (
     <section className={className}>
@@ -169,13 +125,15 @@ type GroupAsset = {
 };
 export const ProductDetails = async ({
   id,
+  slug,
   className,
 }: {
   id: string;
+  slug: string;
   className?: string;
 }) => {
   const [product, attachments] = await Promise.all([
-    getProduct(id),
+    getProduct(id, slug),
     api
       .get(`rest/landingattachment/${id}`, {
         next: {

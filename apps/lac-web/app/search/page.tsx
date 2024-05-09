@@ -4,7 +4,6 @@ import {
   ProductsGridHeaderSkeleton,
   ProductsGridListSkeleton,
 } from "@/_components/products-grid";
-import RelatedSearches from "@/_components/related-searches";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -59,7 +58,6 @@ const SearchPage = async ({
       >
         <ProductsList SearchTerm={searchParams.query} />
       </Suspense>
-      <RelatedSearches />
     </>
   );
 };

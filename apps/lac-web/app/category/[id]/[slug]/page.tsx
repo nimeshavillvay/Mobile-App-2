@@ -6,10 +6,7 @@ import {
   ProductsGridListSkeleton,
   ProductsGridPaginationSkeleton,
 } from "@/_components/products-grid";
-import RelatedSearches from "@/_components/related-searches";
-import { api } from "@/_lib/api";
 import { getBreadcrumbs } from "@/_lib/apis/server";
-import { DEFAULT_REVALIDATE } from "@/_lib/constants";
 import { ChevronLeft } from "@repo/web-ui/components/icons/chevron-left";
 import {
   Breadcrumb,
@@ -28,76 +25,15 @@ import {
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { notFound } from "next/navigation";
 import { Fragment, Suspense } from "react";
 import Balancer from "react-wrap-balancer";
 import ProductsList from "./_products-list";
+import { getCategory } from "./apis";
 import categoryImage from "./category.jpeg";
+import type { CategoryPageProps } from "./types";
 
 const VISIBLE_SUB_CATEGORIES_LENGTH = 6;
 
-type ProductLandingCategory = {
-  main: {
-    catId: string;
-    type: string;
-    catTitle: string;
-    description: string;
-    additional_description: string;
-    Image: string;
-    slug: string;
-    subCatgores: {
-      SubCatId: string;
-      SubCatTitle: string;
-      slug: string;
-      Image: string;
-    }[];
-  };
-};
-
-const getCategory = async (id: string, slug: string) => {
-  try {
-    const response = await api
-      .get(`rest/productlandingcategory/${id}`, {
-        next: { revalidate: DEFAULT_REVALIDATE },
-      })
-      .json<ProductLandingCategory>();
-
-    const transformResponse = {
-      mainCategory: {
-        id: Number(response.main.catId),
-        type: response.main.type,
-        title: response.main.catTitle,
-        description: response.main.description,
-        additionalDescription: response.main.additional_description,
-        image: response.main.Image,
-        slug: response.main.slug,
-        subCategories: response.main.subCatgores.map(
-          ({ SubCatId, SubCatTitle, slug, Image }) => ({
-            id: Number(SubCatId),
-            title: SubCatTitle,
-            slug: slug,
-            image: Image ?? null,
-          }),
-        ),
-      },
-    };
-    // Compare slug
-    if (slug !== transformResponse.mainCategory.slug) {
-      notFound();
-    }
-
-    return transformResponse.mainCategory;
-  } catch {
-    notFound();
-  }
-};
-
-type CategoryPageProps = {
-  params: {
-    id: string;
-    slug: string;
-  };
-};
 type SubCategory = {
   id: number;
   slug: string;
@@ -248,8 +184,6 @@ const CategoryPage = async ({ params: { id, slug } }: CategoryPageProps) => {
       >
         <ProductsList categoryId={id} />
       </Suspense>
-
-      <RelatedSearches />
     </>
   );
 };

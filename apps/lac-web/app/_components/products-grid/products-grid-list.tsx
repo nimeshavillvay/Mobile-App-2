@@ -1,9 +1,9 @@
 "use client";
 
 import ProductCard from "@/_components/product-card";
+import ProductCardSkeleton from "@/_components/product-card-skeleton";
 import { cn } from "@/_lib/utils";
-import { ProductCardSkeleton } from "@repo/web-ui/components/product-card";
-import { type ComponentProps, type ReactNode } from "react";
+import { Suspense, type ComponentProps, type ReactNode } from "react";
 
 const ProductsGridListContainer = ({
   type,
@@ -28,21 +28,26 @@ const ProductsGridListContainer = ({
 export const ProductsGridList = ({
   type,
   products,
+  token,
 }: {
   type: ComponentProps<typeof ProductsGridListContainer>["type"];
   products: {
     prop: ComponentProps<typeof ProductCard>["product"];
     info: { groupId: string };
   }[];
+  token: string;
 }) => {
+  const orientation = type === "mobile" ? "horizontal" : "vertical";
+
   return (
     <ProductsGridListContainer type={type}>
       {products.map(({ prop, info }) => (
-        <ProductCard
+        <Suspense
           key={info.groupId}
-          orientation={type === "mobile" ? "horizontal" : "vertical"}
-          product={prop}
-        />
+          fallback={<ProductCardSkeleton orientation={orientation} />}
+        >
+          <ProductCard orientation={orientation} product={prop} token={token} />
+        </Suspense>
       ))}
     </ProductsGridListContainer>
   );
