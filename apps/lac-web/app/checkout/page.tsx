@@ -30,7 +30,9 @@ const CheckoutPage = async () => {
       <div className="container flex flex-col md:flex-row md:gap-12">
         <div className="flex-1">
           <Suspense
-            fallback={<Skeleton className="h-[246px] rounded-lg shadow-lg" />}
+            fallback={
+              <Skeleton className="h-[246px] rounded-lg shadow-lg md:h-[254px]" />
+            }
           >
             <CartSummary token={sessionCookie.value} plants={plants} />
           </Suspense>
