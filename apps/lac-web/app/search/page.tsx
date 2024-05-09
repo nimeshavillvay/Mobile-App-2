@@ -10,6 +10,7 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
+  BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@repo/web-ui/components/ui/breadcrumb";
 import Link from "next/link";
@@ -35,14 +36,14 @@ const SearchPage = async ({
             <BreadcrumbSeparator />
 
             <BreadcrumbItem>
-              <BreadcrumbLink asChild>
-                <Link href="">Search Results</Link>
-              </BreadcrumbLink>
+              <BreadcrumbPage>Search Results</BreadcrumbPage>
             </BreadcrumbItem>
           </Fragment>
         </BreadcrumbList>
       </Breadcrumb>
-
+      <h1 className="line-clamp-3 text-balance pl-8 font-title text-4xl font-medium tracking-tight text-wurth-gray-800 md:text-5xl md:leading-[3.5rem] md:tracking-[-0.036rem]">
+        Search Results for &quot;{searchParams.query}&quot;
+      </h1>
       <Suspense
         fallback={
           <ProductsGrid>
