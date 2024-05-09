@@ -34,6 +34,7 @@ const BillingAndPaymentInfo = ({
     availablePaymentMethodIds.includes(paymentMethod.code),
   );
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const showCreditCards = !!mappedPaymentMethods.find(
     (paymentMethod) => paymentMethod.isCreditCard,
   );
