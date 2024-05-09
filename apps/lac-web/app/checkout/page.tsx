@@ -23,7 +23,7 @@ const CheckoutPage = async () => {
 
   return (
     <>
-      <h1 className="container mb-6 mt-4 text-2xl font-medium tracking-[-0.144px] text-wurth-gray-800">
+      <h1 className="container mb-6 mt-4 text-2xl font-medium tracking-[-0.144px] text-wurth-gray-800 md:mb-7 md:mt-6 md:text-5xl md:leading-[3.5rem] md:tracking-[-0.576px]">
         Checkout
       </h1>
 
