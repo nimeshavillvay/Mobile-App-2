@@ -4,7 +4,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/old/_components/ui/dialog";
-import { Label } from "@/old/_components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/old/_components/ui/radio-group";
 import { nanoid } from "nanoid";
 import { Dispatch, SetStateAction, useState } from "react";
@@ -23,9 +22,9 @@ type AddressDialogProps = {
   setOpenAddressSuggestionDialog: Dispatch<SetStateAction<boolean>>;
   setOpenAddressDialog: Dispatch<SetStateAction<boolean>>;
   setAddressCheckSuggestions: (
-    addressCheckSuggestions?: AddressCheckSuggestions,
+    addressCheckSuggestions?: AddressCheckSuggestionsWithUuid,
   ) => void;
-  addressCheckSuggestions: AddressCheckSuggestions;
+  addressCheckSuggestions: AddressCheckSuggestionsWithUuid;
   isShippingAddress: boolean;
   isShippingAddressUpdate: boolean;
   address: AddressFormData;
@@ -44,18 +43,8 @@ const AddressSuggestionDialog = ({
   const [selectedAddressSuggestion, setSelectedAddressSuggestion] =
     useState<Address>();
 
-  const suggestions = addressCheckSuggestions.suggestions.map((suggestion) => {
-    return { ...suggestion, uuid: nanoid() };
-  });
-
-  const addressSuggestions: AddressCheckSuggestionsWithUuid = {
-    checkType: addressCheckSuggestions.checkType,
-    message: addressCheckSuggestions.message,
-    suggestions,
-  };
-
   const onAddressSuggestionChange = (addressSuggestionUuid: string) => {
-    const suggestion = addressSuggestions.suggestions.find(
+    const suggestion = addressCheckSuggestions.suggestions.find(
       (suggestion) => addressSuggestionUuid === suggestion?.uuid,
     );
     if (suggestion) {
@@ -86,6 +75,22 @@ const AddressSuggestionDialog = ({
     };
   };
 
+  const getAddressSuggestionsWithUuid = (
+    data: AddressCheckSuggestions,
+  ): AddressCheckSuggestionsWithUuid => {
+    const suggestions = data.suggestions.map((suggestion) => {
+      return { ...suggestion, uuid: nanoid() };
+    });
+
+    const addressSuggestions: AddressCheckSuggestionsWithUuid = {
+      checkType: data.checkType,
+      message: data.message,
+      suggestions,
+    };
+
+    return addressSuggestions;
+  };
+
   const onContinueOrSubmitButtonClicked = () => {
     if (selectedAddressSuggestion) {
       const selectedAddress = convertAddressSuggestionToFormDataFormat(
@@ -109,7 +114,9 @@ const AddressSuggestionDialog = ({
                 setOpenAddressSuggestionDialog(false);
 
                 if ("checkType" in data) {
-                  setAddressCheckSuggestions(data);
+                  setAddressCheckSuggestions(
+                    getAddressSuggestionsWithUuid(data),
+                  );
                   setOpenAddressSuggestionDialog(true);
                 }
               },
@@ -128,7 +135,9 @@ const AddressSuggestionDialog = ({
                 setOpenAddressSuggestionDialog(false);
 
                 if ("checkType" in data) {
-                  setAddressCheckSuggestions(data);
+                  setAddressCheckSuggestions(
+                    getAddressSuggestionsWithUuid(data),
+                  );
                   setOpenAddressSuggestionDialog(true);
                 }
               },
@@ -148,7 +157,7 @@ const AddressSuggestionDialog = ({
               setOpenAddressSuggestionDialog(false);
 
               if ("checkType" in data) {
-                setAddressCheckSuggestions(data);
+                setAddressCheckSuggestions(getAddressSuggestionsWithUuid(data));
                 setOpenAddressSuggestionDialog(true);
               }
             },
@@ -168,26 +177,24 @@ const AddressSuggestionDialog = ({
         <p className="mx-5 mb-1">{addressCheckSuggestions?.message}</p>
 
         <RadioGroup onValueChange={onAddressSuggestionChange}>
-          {addressSuggestions?.suggestions?.map((addressSuggestion) => (
+          {addressCheckSuggestions?.suggestions?.map((addressSuggestion) => (
             <div
               key={addressSuggestion?.uuid}
               className="mx-5 mt-1 flex cursor-default flex-row items-start gap-3 rounded border-2 border-gray-100 py-3 pl-5 shadow"
             >
               <RadioGroupItem value={addressSuggestion?.uuid} />
 
-              <div className="flex flex-col font-bold text-brand-gray-500">
-                <Label className="font-bold text-brand-gray-500">
-                  {addressSuggestion?.streetAddress},{" "}
-                  {addressSuggestion?.locality}, {addressSuggestion?.region},{" "}
-                  {addressSuggestion?.county?.length ?? 0 > 0
-                    ? addressSuggestion?.county + ","
-                    : ""}
-                  {addressSuggestion?.countryName},{" "}
-                  {addressSuggestion?.postalCode}
-                  {addressSuggestion?.zip4?.length > 0
-                    ? "- " + addressSuggestion?.zip4
-                    : ""}
-                </Label>
+              <div className="font-bold text-brand-gray-500">
+                {addressSuggestion?.streetAddress},{" "}
+                {addressSuggestion?.locality}, {addressSuggestion?.region},{" "}
+                {addressSuggestion?.county?.length ?? 0 > 0
+                  ? addressSuggestion?.county + ","
+                  : ""}
+                {addressSuggestion?.countryName},{" "}
+                {addressSuggestion?.postalCode}
+                {addressSuggestion?.zip4?.length > 0
+                  ? "- " + addressSuggestion?.zip4
+                  : ""}
               </div>
             </div>
           ))}

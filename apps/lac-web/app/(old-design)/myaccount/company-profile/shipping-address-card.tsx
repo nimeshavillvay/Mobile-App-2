@@ -5,7 +5,7 @@ import AddressDialog from "./address-dialog";
 import AddressSuggestionDialog from "./address-suggestion-dialog";
 import type {
   Address,
-  AddressCheckSuggestions,
+  AddressCheckSuggestionsWithUuid,
   AddressFormData,
 } from "./types";
 import useDeleteShippingAddressMutation from "./use-delete-shipping-address-mutation.hook";
@@ -26,7 +26,7 @@ const ShippingAddressCard = ({
 
   const [address, setAddress] = useState<AddressFormData>();
   const [addressCheckSuggestions, setAddressCheckSuggestions] =
-    useState<AddressCheckSuggestions>();
+    useState<AddressCheckSuggestionsWithUuid>();
 
   const updateShippingAddressMutation = useUpdateShippingAddressMutation();
   const deleteShippingAddressMutation = useDeleteShippingAddressMutation();

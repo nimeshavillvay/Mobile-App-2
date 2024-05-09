@@ -8,7 +8,7 @@ import AddressSuggestionDialog from "./address-suggestion-dialog";
 import ShippingAddressCard from "./shipping-address-card";
 import type {
   Address,
-  AddressCheckSuggestions,
+  AddressCheckSuggestionsWithUuid,
   AddressFormData,
 } from "./types";
 import useSuspenseShippingAddressList from "./use-suspense-shipping-address-list.hook";
@@ -39,7 +39,7 @@ const ShippingAddress = ({ token }: { token: string }) => {
 
   const [address, setAddress] = useState<AddressFormData>();
   const [addressCheckSuggestions, setAddressCheckSuggestions] =
-    useState<AddressCheckSuggestions>();
+    useState<AddressCheckSuggestionsWithUuid>();
 
   const shippingAddressQuery = useSuspenseShippingAddressList(token);
   const shippingAddresses = shippingAddressQuery?.data;

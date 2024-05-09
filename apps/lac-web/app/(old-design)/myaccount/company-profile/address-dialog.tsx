@@ -25,12 +25,14 @@ import {
   SelectValue,
 } from "@/old/_components/ui/select";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { nanoid } from "nanoid";
 import { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import type {
   Address,
   AddressCheckSuggestions,
+  AddressCheckSuggestionsWithUuid,
   AddressFormData,
 } from "./types";
 import useAddShippingAddressMutation from "./use-add-shipping-address-mutation.hook";
@@ -43,7 +45,7 @@ type AddressDialogProps = {
   setOpenAddressSuggestionDialog: Dispatch<SetStateAction<boolean>>;
   setAddress: (address?: AddressFormData) => void;
   setAddressCheckSuggestions: (
-    addressCheckSuggestions?: AddressCheckSuggestions,
+    addressCheckSuggestions?: AddressCheckSuggestionsWithUuid,
   ) => void;
   isShippingAddress: boolean;
   isShippingAddressUpdate: boolean;
@@ -101,6 +103,22 @@ const AddressDialog = ({
   const updateShippingAddressMutation = useUpdateShippingAddressMutation();
   const updateBillingAddressMutation = useUpdateBillingAddressMutation();
 
+  const getAddressSuggestionsWithUuid = (
+    data: AddressCheckSuggestions,
+  ): AddressCheckSuggestionsWithUuid => {
+    const suggestions = data.suggestions.map((suggestion) => {
+      return { ...suggestion, uuid: nanoid() };
+    });
+
+    const addressSuggestions: AddressCheckSuggestionsWithUuid = {
+      checkType: data.checkType,
+      message: data.message,
+      suggestions,
+    };
+
+    return addressSuggestions;
+  };
+
   const onAddressSubmit = (data: AddressDataSchema) => {
     const addressData: AddressFormData = {
       company: data.company,
@@ -127,7 +145,7 @@ const AddressDialog = ({
             setOpenAddressDialog(false);
 
             if ("checkType" in data) {
-              setAddressCheckSuggestions(data);
+              setAddressCheckSuggestions(getAddressSuggestionsWithUuid(data));
               setAddress(requestData);
               setOpenAddressSuggestionDialog(true);
             }
@@ -139,7 +157,7 @@ const AddressDialog = ({
             setOpenAddressDialog(false);
 
             if ("checkType" in data) {
-              setAddressCheckSuggestions(data);
+              setAddressCheckSuggestions(getAddressSuggestionsWithUuid(data));
               setAddress(addressData);
               setOpenAddressSuggestionDialog(true);
             }
@@ -156,7 +174,7 @@ const AddressDialog = ({
           setOpenAddressDialog(false);
 
           if ("checkType" in data) {
-            setAddressCheckSuggestions(data);
+            setAddressCheckSuggestions(getAddressSuggestionsWithUuid(data));
             setAddress(addressData);
             setOpenAddressSuggestionDialog(true);
           }

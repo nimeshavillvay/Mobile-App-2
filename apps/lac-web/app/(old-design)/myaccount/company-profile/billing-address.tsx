@@ -5,7 +5,7 @@ import { useState } from "react";
 import { MdOutlineEdit } from "react-icons/md";
 import AddressDialog from "./address-dialog";
 import AddressSuggestionDialog from "./address-suggestion-dialog";
-import type { AddressCheckSuggestions, AddressFormData } from "./types";
+import type { AddressCheckSuggestionsWithUuid, AddressFormData } from "./types";
 import useSuspenseBillingAddressList from "./use-suspense-billing-address-list.hook";
 
 const BillingAddress = ({ token }: { token: string }) => {
@@ -19,7 +19,7 @@ const BillingAddress = ({ token }: { token: string }) => {
 
   const [address, setAddress] = useState<AddressFormData>();
   const [addressCheckSuggestions, setAddressCheckSuggestions] =
-    useState<AddressCheckSuggestions>();
+    useState<AddressCheckSuggestionsWithUuid>();
 
   const billingAddressQuery = useSuspenseBillingAddressList(token);
   const billingAddress = billingAddressQuery?.data;
