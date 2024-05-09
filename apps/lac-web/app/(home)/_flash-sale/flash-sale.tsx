@@ -1,16 +1,10 @@
+import ProductCard from "@/_components/product-card";
+import ProductCardSkeleton from "@/_components/product-card-skeleton";
 import SubHeading from "@/_components/sub-heading";
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
-import { ProductCardSkeleton as ProductCardSkeletonPrimitive } from "@repo/web-ui/components/product-card";
 import { cookies } from "next/headers";
 import { Suspense } from "react";
 import { getSaleItems } from "./apis";
-import FlashSaleProduct from "./flash-sale-product";
-
-const ProductCardSkeleton = () => {
-  return (
-    <ProductCardSkeletonPrimitive className="h-[25.625rem] shrink-0 snap-start md:h-[28.5rem]" />
-  );
-};
 
 const FlashSaleList = async () => {
   const cookiesStore = cookies();
@@ -24,16 +18,23 @@ const FlashSaleList = async () => {
 
   return saleItems.map((product) => (
     <Suspense key={product.productId} fallback={<ProductCardSkeleton />}>
-      <FlashSaleProduct
-        product={{
-          id: product.productId,
-          slug: product.slug,
-          title: product.productTitle,
-          sku: product.productSku,
-          image: product.productImage,
-          uom: product.unitOfMeasure,
-        }}
+      <ProductCard
+        orientation="vertical"
         token={sessionToken.value}
+        product={{
+          groupName: product.productTitle,
+          groupImage: product.productImage,
+          variants: [
+            {
+              id: product.productId,
+              slug: product.slug,
+              sku: product.productSku,
+              title: product.productTitle,
+              image: product.productImage,
+              uom: product.unitOfMeasure,
+            },
+          ],
+        }}
       />
     </Suspense>
   ));
@@ -51,7 +52,7 @@ const FlashSale = () => {
         </p>
       </header>
 
-      <div className="container flex w-full snap-x scroll-pl-4 flex-row gap-4 overflow-x-auto md:scroll-pl-8 md:gap-5">
+      <div className="container flex w-full snap-x scroll-pl-4 flex-row items-stretch gap-4 overflow-x-auto md:scroll-pl-8 md:gap-5">
         <Suspense
           fallback={Array.from({ length: 7 }).map((_, index) => (
             <ProductCardSkeleton key={index} />

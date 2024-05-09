@@ -86,10 +86,10 @@ const Footer = () => {
                 <ul>
                   {section.links.map((link) => (
                     <li
-                      key={link}
+                      key={link.label}
                       className="text-sm font-normal leading-8 text-black hover:underline"
                     >
-                      {link}
+                      <Link href={link.href}>{link.label}</Link>
                     </li>
                   ))}
                 </ul>
@@ -109,8 +109,8 @@ const Footer = () => {
 
               <ul>
                 {section.links.map((link) => (
-                  <li key={link} className="leading-8 hover:underline">
-                    {link}
+                  <li key={link.label} className="leading-8 hover:underline">
+                    <Link href={link.href}>{link.label}</Link>
                   </li>
                 ))}
               </ul>

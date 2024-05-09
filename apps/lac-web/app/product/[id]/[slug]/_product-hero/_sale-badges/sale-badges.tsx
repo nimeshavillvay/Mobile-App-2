@@ -13,9 +13,7 @@ const SaleBadges = ({ token, productId }: SaleBadgesProps) => {
   const { watch } = useAddToCartForm();
   const quantity = watch("quantity");
 
-  const priceCheckQuery = useSuspensePriceCheck(token, [
-    { productId, qty: quantity },
-  ]);
+  const priceCheckQuery = useSuspensePriceCheck(token, [{ productId, qty: 1 }]);
   const priceData = priceCheckQuery.data.productPrices[0];
 
   let currentPrice = 0;
@@ -23,7 +21,15 @@ const SaleBadges = ({ token, productId }: SaleBadgesProps) => {
 
   if (priceData) {
     currentPrice = priceData.price;
-    previousPrice = priceData.extendedPrice;
+    previousPrice = priceData.price;
+
+    // Get discounted price from breakdowns
+    const priceBreakdown = priceData.priceBreakDowns.findLast(
+      (breakdown) => quantity >= breakdown.quantity,
+    );
+    if (priceBreakdown) {
+      currentPrice = priceBreakdown.price;
+    }
   }
 
   if (currentPrice === previousPrice) {

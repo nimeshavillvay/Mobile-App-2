@@ -31,36 +31,22 @@ const useAddToCartMutation = (
       };
 
       if (checkAvailabilityQuery.data.options[0]) {
-        configuration.hashvalue = checkAvailabilityQuery.data.options[0].hash;
+        const selectedOption = checkAvailabilityQuery.data.options[0];
 
-        // Added items from availability check
-        checkAvailabilityQuery.data.options[0].availability.forEach(
-          (option, index) => {
-            configuration[`avail_${index + 1}`] = option.quantity.toString();
-            configuration[`plant_${index + 1}`] = option.plant ?? "";
-          },
-        );
+        configuration.hashvalue = selectedOption.hash;
 
-        // Fill the rest with empty values
-        for (
-          let i = checkAvailabilityQuery.data.options[0].availability.length;
-          i < 5;
-          i++
-        ) {
-          configuration[`avail_${i + 1}`] = "";
-          configuration[`plant_${i + 1}`] = "";
-        }
-
-        // Shipping methods
-        const shippingMethods =
-          checkAvailabilityQuery.data.options[0].availability[0]?.shippingMethods?.split(
-            ",",
-          ) ?? [];
-        shippingMethods.forEach((method, index) => {
-          configuration[`shipping_method_${index + 1}`] = method;
-        });
-        for (let i = shippingMethods.length; i < 5; i++) {
-          configuration[`shipping_method_${i + 1}`] = "";
+        // Add 1st plant
+        configuration["avail_1"] =
+          selectedOption.plants["1"]?.quantity?.toString() ?? "";
+        configuration["plant_1"] = selectedOption.plants["1"]?.plant ?? "";
+        // Add just the 1st shipping method
+        configuration["shipping_method_1"] =
+          selectedOption.plants["1"]?.shippingMethods?.split(",")[0] ?? "";
+        // Add other plants
+        for (let i = 2; i <= 5; i++) {
+          configuration[`avail_${i}`] = "";
+          configuration[`plant_${i}`] = "";
+          configuration[`shipping_method_${i}`] = "";
         }
       }
 

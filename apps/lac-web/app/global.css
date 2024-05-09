@@ -6,13 +6,6 @@
   --desktop-width: 1120px;
 }
 
-@layer components {
-  /* TODO Remove after old designs are completely removed */
-  .old-design-text-base {
-    @apply font-arial text-[15px] leading-5;
-  }
-}
-
 @layer utilities {
   /*
     Hide arrows in number type inputs

@@ -17,9 +17,32 @@ const wurth = localFont({
   display: "swap",
 });
 
+const arialFont = localFont({
+  src: [
+    {
+      path: "./arial-webfont.woff",
+      weight: "400",
+    },
+    {
+      path: "./arial-webfont.woff2",
+      weight: "400",
+    },
+  ],
+  variable: "--arial-font",
+  display: "swap",
+});
+
 const OldDesignRootLayout = ({ children }: { children: ReactNode }) => {
   return (
-    <div className={cn("old-design-text-base", wurth.variable)}>{children}</div>
+    <div
+      className={cn(
+        "font-arial text-[15px] leading-5",
+        wurth.variable,
+        arialFont.variable,
+      )}
+    >
+      {children}
+    </div>
   );
 };
 

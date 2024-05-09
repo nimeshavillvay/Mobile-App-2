@@ -20,9 +20,7 @@ const ProductPrices = ({
   const { watch } = useAddToCartForm();
   const quantity = watch("quantity");
 
-  const priceCheckQuery = useSuspensePriceCheck(token, [
-    { productId, qty: quantity },
-  ]);
+  const priceCheckQuery = useSuspensePriceCheck(token, [{ productId, qty: 1 }]);
   const priceData = priceCheckQuery.data.productPrices[0];
 
   let currentPrice = 0;
@@ -30,7 +28,15 @@ const ProductPrices = ({
 
   if (priceData) {
     currentPrice = priceData.price;
-    previousPrice = priceData.extendedPrice;
+    previousPrice = priceData.price;
+
+    // Get discounted price from breakdowns
+    const priceBreakdown = priceData.priceBreakDowns.findLast(
+      (breakdown) => quantity >= breakdown.quantity,
+    );
+    if (priceBreakdown) {
+      currentPrice = priceBreakdown.price;
+    }
   }
 
   return (
@@ -56,7 +62,7 @@ const ProductPrices = ({
 
         {currentPrice !== previousPrice && (
           <div className="font-semibold text-green-700">
-            You save ${previousPrice - currentPrice}
+            You save ${(previousPrice - currentPrice).toFixed(2)}
           </div>
         )}
       </div>
