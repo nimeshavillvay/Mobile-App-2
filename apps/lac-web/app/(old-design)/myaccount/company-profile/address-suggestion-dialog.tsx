@@ -43,6 +43,10 @@ const AddressSuggestionDialog = ({
   const [selectedAddressSuggestionId, setSelectedAddressSuggestionId] =
     useState("");
 
+  const selectedAddressSuggestion = addressCheckSuggestions.suggestions.find(
+    (suggestion) => selectedAddressSuggestionId === suggestion?.uuid,
+  );
+
   const onAddressSuggestionChange = (addressSuggestionUuid: string) => {
     setSelectedAddressSuggestionId(addressSuggestionUuid);
   };
@@ -87,9 +91,6 @@ const AddressSuggestionDialog = ({
   };
 
   const onContinueOrSubmitButtonClicked = () => {
-    const selectedAddressSuggestion = addressCheckSuggestions.suggestions.find(
-      (suggestion) => selectedAddressSuggestionId === suggestion?.uuid,
-    );
     if (selectedAddressSuggestion) {
       const selectedAddress = convertAddressSuggestionToFormDataFormat(
         selectedAddressSuggestion,
