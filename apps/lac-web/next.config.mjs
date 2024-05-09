@@ -19,6 +19,10 @@ const nextConfig = {
         protocol: "https",
         hostname: "wurthlac.x-shops.com",
       },
+      {
+        protocol: "https",
+        hostname: "www.wurthmachinery.com",
+      },
     ],
   },
   eslint: {

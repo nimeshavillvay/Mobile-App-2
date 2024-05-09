@@ -10,10 +10,28 @@ type SearchData = {
   };
   results: {
     id: string;
-    description: string;
-    title: string;
-    img: string;
-    code: string;
+    categoryName?: string;
+    categoryPath?: string;
+    parentCategoryList?: string;
+    subCategoryList?: string;
+    slug: string;
+    brandName?: string;
+    brandImage?: string;
+    lastUpadtedDate?: string | null;
+    MFRPartNo?: string;
+    sellingBookSequenceNo?: string;
+    UPCCode?: string;
+    alias?: string;
+    materialNumber?: string;
+    productTitle?: string;
+    Status?: string;
+    productStatus?: string;
+    createDate?: string;
+    keywords?: string;
+    minimumOrderQuantity?: string;
+    orderQuantitybyIncrements?: string;
+    attributes?: [];
+    itemImages?: string;
   }[];
 };
 type Results = {
@@ -60,7 +78,7 @@ const useMultiSearch = (query: string) => {
     queryKey: ["multi-search", query],
     queryFn: () =>
       searchApi
-        .get("", {
+        .get("multisearch", {
           searchParams: new URLSearchParams({
             query,
           }),

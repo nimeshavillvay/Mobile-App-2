@@ -15,10 +15,28 @@ type SearchData = {
   };
   results: {
     id: string;
-    title: string;
-    img: string;
-    code: string;
-    description: string;
+    categoryName?: string;
+    categoryPath?: string;
+    parentCategoryList?: string;
+    subCategoryList?: string;
+    slug: string;
+    brandName?: string;
+    brandImage?: string;
+    lastUpadtedDate?: string | null;
+    MFRPartNo?: string;
+    sellingBookSequenceNo?: string;
+    UPCCode?: string;
+    alias?: string;
+    materialNumber?: string;
+    productTitle?: string;
+    Status?: string;
+    productStatus?: string;
+    createDate?: string;
+    keywords?: string;
+    minimumOrderQuantity?: string;
+    orderQuantitybyIncrements?: string;
+    attributes?: [];
+    itemImage?: string;
   }[];
 };
 
@@ -68,7 +86,23 @@ export const SearchBoxInput = ({
       },
       items: [...categories.results, ...brands.results, ...products.results],
       itemToString(item) {
-        return item ? item.title : "";
+        if (item && item.productTitle && item.brandName && item.categoryPath) {
+          return item.productTitle;
+        } else if (
+          item &&
+          item.brandName &&
+          !item.productTitle &&
+          !item.categoryPath
+        ) {
+          return item.brandName;
+        } else if (
+          item &&
+          item.categoryPath &&
+          !item.brandName &&
+          !item.productTitle
+        ) {
+          return item.categoryPath;
+        }
       },
     });
 
@@ -102,7 +136,7 @@ export const SearchBoxInput = ({
                 </li>
                 {categories.results.map((category, index) => (
                   <Link
-                    href={`/category/${category.id}/${category.title.replace(/ /g, "-")}`}
+                    href={`/category/${category.id}/${category.slug}`}
                     key={category.id}
                   >
                     <li
@@ -112,7 +146,7 @@ export const SearchBoxInput = ({
                     >
                       <span>
                         <span className="text-gray-500">&#8627;</span>{" "}
-                        <b className="text-red-500">{category.title}</b>
+                        <b className="text-red-500">{category.categoryPath}</b>
                         <br />
                       </span>
                     </li>
@@ -128,10 +162,7 @@ export const SearchBoxInput = ({
                 </li>
                 <li className="flex flex-row flex-wrap ">
                   {brands.results.map((brand, index) => (
-                    <Link
-                      href={`/search?query=${brand.title.replace(/ /g, "-")}`}
-                      key={brand.id}
-                    >
+                    <Link href={`/search?query=${brand.slug}`} key={brand.id}>
                       <div
                         key={brand.id}
                         className={cn(
@@ -144,14 +175,14 @@ export const SearchBoxInput = ({
                         })}
                       >
                         <Image
-                          src={brand.img}
-                          alt={brand.title}
-                          className="mr-2 min-h-10 min-w-10"
+                          src={brand.brandImage}
+                          alt={brand.brandName}
+                          className="mr-2 min-h-10 min-w-10 object-contain"
                           width={40}
                           height={40}
                         />
                         <span className="flex-grow truncate break-all text-center">
-                          {brand.title}
+                          {brand.brandName}
                         </span>
                       </div>
                     </Link>
@@ -169,7 +200,7 @@ export const SearchBoxInput = ({
                   <div className="w-1/2">
                     {products.results.slice(0, 5).map((product, index) => (
                       <Link
-                        href={`/product/${product.id}/${product.title.replace(/ /g, "-")}`}
+                        href={`/product/${product.id}/${product.slug}`}
                         key={product.id}
                       >
                         <li
@@ -185,17 +216,17 @@ export const SearchBoxInput = ({
                         >
                           <div className="flex">
                             <Image
-                              src={product.img}
-                              alt={product.title}
-                              className="mr-2 min-h-20 min-w-20 rounded-md border border-gray-300"
+                              src={product.itemImage}
+                              alt={product.productTitle}
+                              className="mr-2 min-h-20 min-w-20 rounded-md border border-gray-300 object-contain"
                               width={80}
                               height={80}
                               priority={true}
                             />
                             <div className="flex flex-col justify-between">
-                              <span>{product.title}</span>
+                              <span>{product.productTitle}</span>
                               <span className="text-gray-500">
-                                Item# {product.code}
+                                Item# {product.MFRPartNo}
                               </span>
                             </div>
                           </div>
@@ -204,9 +235,9 @@ export const SearchBoxInput = ({
                     ))}
                   </div>
                   <div className="w-1/2">
-                    {products.results.slice(5).map((product, index) => (
+                    {products.results.slice(5, 10).map((product, index) => (
                       <Link
-                        href={`/product/${product.id}/${product.title.replace(/ /g, "-")}`}
+                        href={`/product/${product.id}/${product.slug}`}
                         key={product.id}
                       >
                         <li
@@ -223,16 +254,16 @@ export const SearchBoxInput = ({
                         >
                           <div className="flex">
                             <Image
-                              src={product.img}
-                              alt={product.title}
-                              className="mr-2 min-h-20 min-w-20 rounded-md border border-gray-300"
+                              src={product.itemImage}
+                              alt={product.productTitle}
+                              className="mr-2 min-h-20 min-w-20 rounded-md border border-gray-300 object-contain"
                               width={80}
                               height={80}
                             />
                             <div className="flex flex-col justify-between">
-                              <span>{product.title}</span>
+                              <span>{product.productTitle}</span>
                               <span className="text-gray-500">
-                                Item# {product.code}
+                                Item# {product.MFRPartNo}
                               </span>
                             </div>
                           </div>

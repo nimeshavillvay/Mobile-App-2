@@ -16,24 +16,24 @@ const ProductListGrid = ({ type, term }: ProductListGridProps) => {
   const searchQuery = useSuspenseSearchProductList(term);
 
   const handleRedirect = () => {
-    const firstProduct = searchQuery.data.products.results[0];
-    if (searchQuery.data.products.meta.plp && firstProduct) {
-      const productPath = `/products/${firstProduct.id}/${firstProduct.productTitle.replace(/ /g, "-")}`;
+    const firstProduct = searchQuery.data.results[0];
+    if (searchQuery.data.summary.plp && firstProduct) {
+      const productPath = `/products/${firstProduct.id}/${firstProduct.slug}`;
       router.push(productPath);
     }
   };
 
   const products: ComponentProps<typeof ProductsGridList>["products"] =
-    searchQuery.data.products.results.map((product) => ({
+    searchQuery.data.results.map((product) => ({
       prop: {
         groupName: product.id,
-        groupImage: product.itemImages,
+        groupImage: product.itemImage,
         variants: [
           {
             id: product.id,
-            slug: product.productTitle,
+            slug: product.slug,
             title: product.productTitle,
-            image: product.itemImages,
+            image: product.itemImage,
           },
         ],
       },
@@ -42,10 +42,7 @@ const ProductListGrid = ({ type, term }: ProductListGridProps) => {
       },
     }));
 
-  if (
-    searchQuery.data.products.meta.plp &&
-    searchQuery.data.products.results.length > 0
-  ) {
+  if (searchQuery.data.summary.plp && searchQuery.data.results.length > 0) {
     handleRedirect();
     return null;
   }

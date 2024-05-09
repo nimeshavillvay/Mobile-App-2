@@ -14,7 +14,3 @@ export const searchApi = ky.create({
   timeout: 20000,
 });
 
-export const multiSearchApi = ky.create({
-  prefixUrl: process.env.NEXT_PUBLIC_WURTH_LAC_MULTI_SEARCH_API,
-  timeout: 20000,
-});

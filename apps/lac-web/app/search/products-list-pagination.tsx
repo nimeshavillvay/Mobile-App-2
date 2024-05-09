@@ -8,12 +8,10 @@ type ProductsListPaginationProps = {
   term: string;
 };
 
-const ProductsListPagination = ({
-  term,
-}: ProductsListPaginationProps) => {
+const ProductsListPagination = ({ term }: ProductsListPaginationProps) => {
   const searchQuery = useSuspenseSearchProductList(term);
 
-  const totalPages = Math.ceil(searchQuery.data?.products?.meta?.total / 20);
+  const totalPages = Math.ceil(searchQuery.data?.summary?.total / 20);
 
   return <ProductsGridPagination totalPages={totalPages} />;
 };

@@ -11,11 +11,11 @@ type ProductsListHeaderProps = {
 const ProductsListHeader = ({ term }: ProductsListHeaderProps) => {
   const searchQuery = useSuspenseSearchProductList(term);
 
-  const totalPages = Math.ceil(searchQuery.data?.products?.meta?.total / 20);
+  const totalPages = Math.ceil(searchQuery.data?.summary?.total / 20);
   return (
     <ProductsGridHeader
       filters={[]}
-      totalCount={searchQuery.data?.products?.meta?.total}
+      totalCount={searchQuery.data?.summary?.total}
       totalPages={totalPages}
     />
   );

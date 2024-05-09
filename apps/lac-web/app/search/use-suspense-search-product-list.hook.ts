@@ -1,4 +1,4 @@
-import { multiSearchApi } from "@/_lib/api";
+import { searchApi } from "@/_lib/api";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
 type SearchResult = {
@@ -20,11 +20,12 @@ type SearchResult = {
   categoryPath: string;
   categoryName: string;
   attributes: string[] | null;
-  itemImages: string;
+  itemImage: string;
+  slug:string;
 };
 
 type SearchData = {
-  meta: {
+  summary: {
     total: number;
     page_size: number;
     page_no: number;
@@ -33,27 +34,21 @@ type SearchData = {
   results: SearchResult[];
 };
 
-type Results = {
-  products: SearchData;
-};
-
-export const placeholderData: Results = {
-  products: {
-    meta: {
-      total: 0,
-      page_size: 0,
-      page_no: 0,
-      plp: false,
-    },
-    results: [],
+export const placeholderData: SearchData = {
+  summary: {
+    total: 0,
+    page_size: 0,
+    page_no: 0,
+    plp: false,
   },
+  results: [],
 };
 
 const useSuspenseSearchProductList = (query: string) => {
-  return useSuspenseQuery<Results>({
+  return useSuspenseQuery<SearchData>({
     queryKey: ["on-enter-search", query],
     queryFn: async () => {
-      const response = await multiSearchApi.get("", {
+      const response = await searchApi.get("search", {
         searchParams: new URLSearchParams({
           query,
         }),
