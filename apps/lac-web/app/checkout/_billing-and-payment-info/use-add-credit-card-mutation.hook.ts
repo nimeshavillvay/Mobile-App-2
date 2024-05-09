@@ -4,7 +4,7 @@ import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import { useToast } from "@repo/web-ui/components/ui/toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-const useAddNewCreditCardMutation = () => {
+const useAddCreditCardMutation = () => {
   const queryClient = useQueryClient();
   const [cookies] = useCookies();
   const { toast } = useToast();
@@ -59,4 +59,4 @@ const useAddNewCreditCardMutation = () => {
   });
 };
 
-export default useAddNewCreditCardMutation;
+export default useAddCreditCardMutation;

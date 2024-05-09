@@ -1,18 +1,4 @@
-export type Address = {
-  xcAddressId?: string;
-  countryName: string;
-  county: string | null;
-  locality: string;
-  organization?: string;
-  phoneNumber?: string;
-  region: string;
-  streetAddress: string;
-  postalCode: string;
-  zip4: string;
-  shipTo?: string;
-  soldTo?: string;
-  default?: boolean;
-};
+import type { Address } from "@/_lib/types";
 
 export type AddressWithUuid = Address & {
   uuid: string;

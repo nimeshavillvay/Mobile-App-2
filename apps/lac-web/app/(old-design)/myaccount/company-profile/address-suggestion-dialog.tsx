@@ -1,3 +1,4 @@
+import { Address } from "@/_lib/types";
 import {
   Dialog,
   DialogContent,
@@ -8,7 +9,6 @@ import { RadioGroup, RadioGroupItem } from "@/old/_components/ui/radio-group";
 import { nanoid } from "nanoid";
 import { Dispatch, SetStateAction, useState } from "react";
 import type {
-  Address,
   AddressCheckSuggestions,
   AddressCheckSuggestionsWithUuid,
   AddressFormData,

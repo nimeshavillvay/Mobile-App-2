@@ -1,12 +1,12 @@
 "use client";
 
 import { Button } from "@/(old-design)/_components/ui/button";
+import useSuspenseBillingAddress from "@/_hooks/address/use-suspense-billing-address.hook";
 import { useState } from "react";
 import { MdOutlineEdit } from "react-icons/md";
 import AddressDialog from "./address-dialog";
 import AddressSuggestionDialog from "./address-suggestion-dialog";
 import type { AddressCheckSuggestionsWithUuid, AddressFormData } from "./types";
-import useSuspenseBillingAddressList from "./use-suspense-billing-address-list.hook";
 
 const BillingAddress = ({ token }: { token: string }) => {
   const [openBillingAddressDialog, setOpenBillingAddressDialog] =
@@ -21,7 +21,7 @@ const BillingAddress = ({ token }: { token: string }) => {
   const [addressCheckSuggestions, setAddressCheckSuggestions] =
     useState<AddressCheckSuggestionsWithUuid>();
 
-  const billingAddressQuery = useSuspenseBillingAddressList(token);
+  const billingAddressQuery = useSuspenseBillingAddress(token);
   const billingAddress = billingAddressQuery?.data;
 
   return (

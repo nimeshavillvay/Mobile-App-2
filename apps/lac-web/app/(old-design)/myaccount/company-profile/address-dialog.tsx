@@ -1,6 +1,7 @@
 import useCounties from "@/_hooks/registration/use-counties.hook";
 import useCountries from "@/_hooks/registration/use-countries.hook";
 import useStates from "@/_hooks/registration/use-states.hook";
+import { Address } from "@/_lib/types";
 import {
   Dialog,
   DialogContent,
@@ -30,7 +31,6 @@ import { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import type {
-  Address,
   AddressCheckSuggestions,
   AddressCheckSuggestionsWithUuid,
   AddressFormData,

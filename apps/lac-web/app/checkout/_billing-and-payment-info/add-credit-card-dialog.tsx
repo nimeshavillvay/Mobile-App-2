@@ -23,7 +23,7 @@ import { Input, inputStyles } from "@repo/web-ui/components/ui/input";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import useAddNewCreditCardMutation from "./use-add-new-credit-cart-mutation.hook";
+import useAddCreditCardMutation from "./use-add-credit-card-mutation.hook";
 import useSuspenseCreditCardSignature from "./use-suspense-credit-card-signature.hook";
 
 const formSchema = z.object({
@@ -55,10 +55,10 @@ const AddCreditCardDialog = ({ token }: AddCreditCardDialogProps) => {
     },
   });
 
-  const addNewCreditCardMutation = useAddNewCreditCardMutation();
+  const addCreditCardMutation = useAddCreditCardMutation();
 
   const onSubmit = form.handleSubmit((values) => {
-    addNewCreditCardMutation.mutate(
+    addCreditCardMutation.mutate(
       {
         token: values.token,
         expDate: values.date,

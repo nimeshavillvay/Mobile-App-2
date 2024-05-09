@@ -1,16 +1,13 @@
 "use client";
 
+import { Address } from "@/_lib/types";
 import Separator from "@/old/_components/separator";
 import Title from "@/old/_components/title";
 import { useState } from "react";
 import AddressDialog from "./address-dialog";
 import AddressSuggestionDialog from "./address-suggestion-dialog";
 import ShippingAddressCard from "./shipping-address-card";
-import type {
-  Address,
-  AddressCheckSuggestionsWithUuid,
-  AddressFormData,
-} from "./types";
+import type { AddressCheckSuggestionsWithUuid, AddressFormData } from "./types";
 import useSuspenseShippingAddressList from "./use-suspense-shipping-address-list.hook";
 
 const emptyShippingAddress: Address = {

@@ -1,6 +1,6 @@
 import { api } from "@/_lib/api";
+import type { Address } from "@/_lib/types";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import type { Address } from "./types";
 
 type AddressResponse = {
   "xc-addressid": string;

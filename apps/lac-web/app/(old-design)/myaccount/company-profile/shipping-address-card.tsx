@@ -1,13 +1,10 @@
+import { Address } from "@/_lib/types";
 import { Button } from "@/old/_components/ui/button";
 import { useState } from "react";
 import { MdOutlineDelete, MdOutlineEdit } from "react-icons/md";
 import AddressDialog from "./address-dialog";
 import AddressSuggestionDialog from "./address-suggestion-dialog";
-import type {
-  Address,
-  AddressCheckSuggestionsWithUuid,
-  AddressFormData,
-} from "./types";
+import type { AddressCheckSuggestionsWithUuid, AddressFormData } from "./types";
 import useDeleteShippingAddressMutation from "./use-delete-shipping-address-mutation.hook";
 import useUpdateShippingAddressMutation from "./use-update-shipping-address-mutation.hook";
 

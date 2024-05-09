@@ -1,15 +1,39 @@
 "use client";
 
+import useSuspenseBillingAddress from "@/_hooks/address/use-suspense-billing-address.hook";
 import useSuspenseCart from "@/_hooks/cart/use-suspense-cart.hook";
 import type { PaymentMethod } from "@/_lib/types";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Close } from "@repo/web-ui/components/icons/close";
+import { Mastercard } from "@repo/web-ui/components/logos/mastercard";
+import { Visa } from "@repo/web-ui/components/logos/visa";
+import { Button } from "@repo/web-ui/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@repo/web-ui/components/ui/form";
+import { Input } from "@repo/web-ui/components/ui/input";
 import { Label } from "@repo/web-ui/components/ui/label";
 import {
   RadioGroup,
   RadioGroupItem,
 } from "@repo/web-ui/components/ui/radio-group";
 import { useId } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 import AddCreditCardDialog from "./add-credit-card-dialog";
+import useDeleteCreditCardMutation from "./use-delete-credit-card-mutation.hook";
 import useSuspenseCreditCards from "./use-suspense-credit-cards.hook";
+
+const formSchema = z.object({
+  email: z.string().email(),
+  addressTo: z.string().min(1),
+});
 
 type BillingAndPaymentInfoProps = {
   token: string;
@@ -26,7 +50,8 @@ const BillingAndPaymentInfo = ({
   };
 
   const cartQuery = useSuspenseCart(token);
-  useSuspenseCreditCards(token);
+  const creditCartsQuery = useSuspenseCreditCards(token);
+  const billingAddressQuery = useSuspenseBillingAddress(token);
 
   const availablePaymentMethodIds =
     cartQuery.data.configuration.avail_payment_options.split(",");
@@ -34,7 +59,6 @@ const BillingAndPaymentInfo = ({
     availablePaymentMethodIds.includes(paymentMethod.code),
   );
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const showCreditCards = !!mappedPaymentMethods.find(
     (paymentMethod) => paymentMethod.isCreditCard,
   );
@@ -42,17 +66,155 @@ const BillingAndPaymentInfo = ({
     (paymentMethod) => !paymentMethod.isCreditCard,
   );
 
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    values: {
+      email: cartQuery.data.mappedConfiguration.orderEmail ?? "",
+      addressTo: cartQuery.data.mappedConfiguration.overriddenEmail ?? "",
+    },
+  });
+
+  const onSubmit = (values: z.infer<typeof formSchema>) => {
+    // Do something with the form values.
+    // ✅ This will be type-safe and validated.
+    console.log(values);
+  };
+
+  const deleteCreditCardMutation = useDeleteCreditCardMutation();
+
   return (
-    <section className="flex flex-col gap-6 rounded-lg border border-wurth-gray-250 p-5 shadow-lg md:p-6">
+    <section className="flex flex-col gap-5 rounded-lg border border-wurth-gray-250 p-5 shadow-lg md:gap-6 md:p-6">
       <h2 className="font-title text-xl font-medium text-wurth-gray-800 md:text-2xl md:tracking-[-0.144px]">
         Billing and Payment Info
       </h2>
 
+      <div className="flex flex-col gap-5 md:flex-row md:gap-6">
+        <div className="flex-1 space-y-4">
+          <div className="space-y-1">
+            <h3 className="text-sm font-semibold text-black">
+              Wurth LAC account #
+            </h3>
+
+            <div className="text-base text-wurth-gray-800">
+              {billingAddressQuery.data.xcAddressId}
+            </div>
+          </div>
+
+          <div className="space-y-1">
+            <h3 className="text-sm font-semibold text-black">
+              Billing Address
+            </h3>
+
+            <div className="text-base text-wurth-gray-800">
+              {billingAddressQuery.data.soldTo}{" "}
+              {billingAddressQuery.data.organization}
+              <br />
+              {billingAddressQuery.data.streetAddress},{" "}
+              {billingAddressQuery.data.county},{" "}
+              {billingAddressQuery.data.postalCode} -{" "}
+              {billingAddressQuery.data.zip4}
+              <br />
+              {billingAddressQuery.data.countryName}
+            </div>
+          </div>
+        </div>
+
+        <div className="flex-1 space-y-4">
+          <h3 className="text-sm font-semibold text-black">
+            Order Confirmation
+          </h3>
+
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email to:</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Email" type="email" {...field} />
+                    </FormControl>
+                    <FormDescription className="sr-only">
+                      The email to send the order confirmation.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="addressTo"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Address to:</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Name" type="text" {...field} />
+                    </FormControl>
+                    <FormDescription className="sr-only">
+                      The name of the confirmation recipient.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </form>
+          </Form>
+        </div>
+      </div>
+
       <div className="flex flex-col gap-5 md:gap-4">
-        <h3 className="text-sm text-black">Payment method</h3>
+        <h3 className="text-sm font-semibold text-black">Payment method</h3>
 
         <RadioGroup asChild>
           <ul className="grid grid-cols-1 gap-5 md:grid-cols-2">
+            {showCreditCards &&
+              creditCartsQuery.data.map((card) => (
+                <li
+                  key={card.id}
+                  className="relative flex min-h-[4.75rem] flex-row items-center gap-3 rounded-lg border-2 border-wurth-gray-150 p-4"
+                >
+                  <RadioGroupItem
+                    value={card.id.toString()}
+                    id={getId(card.id.toString())}
+                  />
+
+                  <Label
+                    htmlFor={getId(card.id.toString())}
+                    className="flex flex-row items-center gap-3"
+                  >
+                    {card.type === "MC" && (
+                      <Mastercard width={44} height={70} />
+                    )}
+                    {card.type === "VISA" && <Visa width={44} height={44} />}
+
+                    <span className="flex flex-col">
+                      <span className="text-base text-wurth-gray-800">
+                        &#x2022;&#x2022;&#x2022;&#x2022;
+                        &#x2022;&#x2022;&#x2022;&#x2022;
+                        &#x2022;&#x2022;&#x2022;&#x2022;{" "}
+                        {card.number.substring(card.number.length - 4)}
+                      </span>
+
+                      <span className="text-sm text-wurth-gray-500">
+                        Expires {card.expiryDate}
+                      </span>
+                    </span>
+                  </Label>
+
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="absolute right-3 top-3 size-4 p-0"
+                    onClick={() => deleteCreditCardMutation.mutate(card.id)}
+                  >
+                    <Close width={16} height={16} />
+                    <span className="sr-only">Remove</span>
+                  </Button>
+                </li>
+              ))}
+
             {otherPaymentMethods.map((paymentMethod) => (
               <li
                 key={paymentMethod.code}

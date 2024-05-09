@@ -229,3 +229,19 @@ export type Filters = {
     active: boolean;
   }[];
 };
+
+export type Address = {
+  xcAddressId?: string;
+  countryName: string;
+  county: string | null;
+  locality: string;
+  organization?: string;
+  phoneNumber?: string;
+  region: string;
+  streetAddress: string;
+  postalCode: string;
+  zip4: string;
+  shipTo?: string;
+  soldTo?: string;
+  default?: boolean;
+};

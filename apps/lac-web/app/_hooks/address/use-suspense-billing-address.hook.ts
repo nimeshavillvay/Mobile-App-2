@@ -1,6 +1,6 @@
 import { api } from "@/_lib/api";
+import type { Address } from "@/_lib/types";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import type { Address } from "./types";
 
 type AddressResponse = {
   "xc-addressid": string;
@@ -30,9 +30,9 @@ const transformAddress = (address: AddressResponse): Address => ({
   soldTo: address["soldto"],
 });
 
-const useSuspenseBillingAddressList = (token: string) => {
+const useSuspenseBillingAddress = (token: string) => {
   return useSuspenseQuery({
-    queryKey: ["my-account", "billing-addresses", token],
+    queryKey: ["my-account", "billing-address", token],
     queryFn: () =>
       api
         .get("rest/my-account/billing-address", {
@@ -47,4 +47,4 @@ const useSuspenseBillingAddressList = (token: string) => {
   });
 };
 
-export default useSuspenseBillingAddressList;
+export default useSuspenseBillingAddress;
