@@ -27,21 +27,33 @@ const useAddToCartMutation = (
         will_call_avail: "",
         will_call_plant: "",
         selectedOption: "",
-        backorder_all: "C",
       };
 
       if (checkAvailabilityQuery.data.options[0]) {
         const selectedOption = checkAvailabilityQuery.data.options[0];
 
+        configuration.backorder_all = selectedOption.backOrder ? "C" : "";
         configuration.hashvalue = selectedOption.hash;
 
-        // Add 1st plant
-        configuration["avail_1"] =
-          selectedOption.plants["1"]?.quantity?.toString() ?? "";
-        configuration["plant_1"] = selectedOption.plants["1"]?.plant ?? "";
-        // Add just the 1st shipping method
-        configuration["shipping_method_1"] =
-          selectedOption.plants["1"]?.shippingMethods?.split(",")[0] ?? "";
+        // Add the 1st plant
+        for (let i = 1; i <= 5; i++) {
+          if (selectedOption.plants[i.toString()]) {
+            const selectedPlant = selectedOption.plants[i.toString()];
+
+            if (selectedPlant) {
+              const quantity = selectedOption.backOrder
+                ? selectedPlant.backOrderQuantity
+                : selectedPlant.quantity;
+
+              configuration["avail_1"] = quantity?.toString() ?? "";
+              configuration["plant_1"] = selectedPlant.plant ?? "";
+              configuration["shipping_method_1"] =
+                selectedPlant.shippingMethods?.split(",")[0] ?? "";
+
+              break;
+            }
+          }
+        }
         // Add other plants
         for (let i = 2; i <= 5; i++) {
           configuration[`avail_${i}`] = "";

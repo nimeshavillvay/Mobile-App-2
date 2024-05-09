@@ -5,6 +5,8 @@ import dayjs from "dayjs";
 import type { ResponseCookie } from "next/dist/compiled/@edge-runtime/cookies";
 import { NextResponse, type NextRequest } from "next/server";
 
+const PRIVATE_ROUTES = ["/osr", "/checkout", "/myaccount"];
+
 export const middleware = async (request: NextRequest) => {
   const sessionToken = request.cookies.get(SESSION_TOKEN_COOKIE);
 
@@ -55,13 +57,25 @@ export const middleware = async (request: NextRequest) => {
     return response;
   }
 
-  if (request.nextUrl.pathname.startsWith("/osr/dashboard")) {
-    const sessionToken = request.cookies.get(SESSION_TOKEN_COOKIE);
+  // Check for private routes
+  const isPrivateRoute = !!PRIVATE_ROUTES.find((route) =>
+    request.nextUrl.pathname.startsWith(route),
+  );
+  if (isPrivateRoute && sessionToken) {
+    const response = await loginCheck(sessionToken?.value);
 
-    if (sessionToken) {
-      const response = await loginCheck(sessionToken?.value);
-      if (response.status_code !== "OK" || !("sales_rep_id" in response)) {
-        return NextResponse.redirect(new URL(`/`, request.nextUrl));
+    if (response.status_code === "NOT_LOGGED_IN") {
+      // Redirect to sign in page if user is not logged in
+      return NextResponse.redirect(new URL("/sign-in", request.url));
+    } else {
+      // Do checks for individual routes
+
+      // OSR Dashboard
+      if (
+        request.nextUrl.pathname.startsWith("/osr") &&
+        !("sales_rep_id" in response)
+      ) {
+        return NextResponse.redirect(new URL("/", request.url));
       }
     }
   }

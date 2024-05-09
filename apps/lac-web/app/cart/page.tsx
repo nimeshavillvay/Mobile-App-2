@@ -6,10 +6,10 @@ import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { Suspense } from "react";
 import CartList from "./_cart-list";
+import CheckoutButton from "./_checkout-button";
 import CartDetails from "./cart-details";
 import CartHeading from "./cart-heading";
 import CartItemFallback from "./cart-item-fallback";
-import CheckoutButton from "./checkout-button";
 import ShippingMethod from "./shipping-method";
 
 export const metadata: Metadata = {
