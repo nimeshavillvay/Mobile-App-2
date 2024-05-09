@@ -1,10 +1,11 @@
 import OrderSummary from "@/_components/order-summary";
-import { getPlants } from "@/_lib/apis/server";
+import { getPaymentMethods, getPlants } from "@/_lib/apis/server";
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { Suspense } from "react";
+import BillingAndPaymentInfo from "./_billing-and-payment-info";
 import CartSummary from "./cart-summary";
 
 export const metadata: Metadata = {
@@ -19,7 +20,10 @@ const CheckoutPage = async () => {
     return null;
   }
 
-  const plants = await getPlants();
+  const [plants, paymentMethods] = await Promise.all([
+    getPlants(),
+    getPaymentMethods(),
+  ]);
 
   return (
     <>
@@ -28,13 +32,24 @@ const CheckoutPage = async () => {
       </h1>
 
       <div className="container flex flex-col md:flex-row md:gap-12">
-        <div className="flex-1">
+        <div className="flex flex-1 flex-col gap-5 md:gap-6">
           <Suspense
             fallback={
               <Skeleton className="h-[246px] rounded-lg shadow-lg md:h-[254px]" />
             }
           >
             <CartSummary token={sessionCookie.value} plants={plants} />
+          </Suspense>
+
+          <Suspense
+            fallback={
+              <Skeleton className="h-[246px] rounded-lg shadow-lg md:h-[254px]" />
+            }
+          >
+            <BillingAndPaymentInfo
+              token={sessionCookie.value}
+              paymentMethods={paymentMethods}
+            />
           </Suspense>
         </div>
 

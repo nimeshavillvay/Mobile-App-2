@@ -140,7 +140,7 @@ export type CartConfiguration = {
   osr: null;
   "first-name": null;
   delivering_plant: null;
-  avail_payment_options: null;
+  avail_payment_options: string;
   attnName: null;
   pickDate: null;
   driverNote: null;
@@ -210,7 +210,7 @@ export type ShippingMethod = {
 export type PaymentMethod = {
   code: string;
   name: string;
-  is_credit_card: boolean;
+  isCreditCard: boolean;
 };
 
 export type Plant = {
