@@ -38,7 +38,7 @@ const useSuspensePurchasedItemsList = (
             from: fromDate,
             to: toDate,
             page: page,
-            size: size,
+            perpage: size,
             field: orderField,
             order: orderType,
           },

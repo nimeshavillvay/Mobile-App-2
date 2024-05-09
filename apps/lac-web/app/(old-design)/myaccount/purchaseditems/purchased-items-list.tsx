@@ -12,11 +12,14 @@ import {
 import {
   Table,
   TableBody,
+  TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/old/_components/ui/table";
 import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
+import { Skeleton } from "~/components/ui/skeleton";
 import { changeSearchParams } from "./client-helpers";
 import {
   DEFAULT_SORT,
@@ -102,9 +105,9 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
       );
 
       const initialDetails: ItemInfo = {
-        productId: 0,
+        productId: item.productId,
         isExcludedProduct: false,
-        productSku: "",
+        productSku: item.productSku,
         productName: "",
         image: "",
         isComparison: false,
@@ -113,7 +116,7 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
         productIdOnSap: "",
         mfrPartNo: "",
         productDescription: "",
-        productTitle: "",
+        productTitle: item.productTitle,
         brandCode: 0,
         unitOfMeasure: "",
         boxQuantity: 0,
@@ -250,14 +253,15 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
           </TableHeader>
 
           <TableBody>
-            {combinedPurchasedItems?.map((item, index) => (
-              <PurchasedItemRow
-                key={`${item.productId}_${index}`}
-                token={token}
-                index={index}
-                item={item}
-              />
-            ))}
+            {combinedPurchasedItems.length > 0 &&
+              combinedPurchasedItems.map((item, index) => (
+                <Suspense
+                  key={`${item.productId}_${index}`}
+                  fallback={<PurchaseItemFallback />}
+                >
+                  <PurchasedItemRow token={token} index={index} item={item} />
+                </Suspense>
+              ))}
           </TableBody>
         </Table>
       </div>
@@ -268,3 +272,11 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
 };
 
 export default PurchasedItemsList;
+
+const PurchaseItemFallback = () => (
+  <TableRow>
+    <TableCell colSpan={7}>
+      <Skeleton className="h-[228.74px] w-full" />
+    </TableCell>
+  </TableRow>
+);
