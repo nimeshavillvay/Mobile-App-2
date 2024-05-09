@@ -15,6 +15,7 @@ import { useForm } from "react-hook-form";
 import Balancer from "react-wrap-balancer";
 import { z } from "zod";
 import { ShippingMethod } from "../types";
+import CartItemShippingMethod from "./cart-item-shipping-method";
 
 const cartItemSchema = z.object({
   quantity: z.number(),
@@ -35,7 +36,7 @@ type CartItemProps = {
   shippingMethods: ShippingMethod[];
 };
 
-const CartItem = ({ product }: CartItemProps) => {
+const CartItem = ({ product, shippingMethods }: CartItemProps) => {
   const id = useId();
   const quantityId = `quantity-${id}`;
   const poId = `po-${id}`;
@@ -175,7 +176,9 @@ const CartItem = ({ product }: CartItemProps) => {
         </form>
       </div>
 
-      <div className="bg-red-300 md:w-80">Shipping options</div>
+      <div className="md:w-80">
+        <CartItemShippingMethod options={shippingMethods} />
+      </div>
 
       <div className="hidden space-y-3 md:block md:shrink-0">
         <div className="flex flex-col items-end text-right">

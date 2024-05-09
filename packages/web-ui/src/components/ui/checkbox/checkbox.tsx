@@ -5,10 +5,15 @@ import { CheckIcon } from "@radix-ui/react-icons";
 import { ComponentProps } from "react";
 import { cn } from "~/lib/utils";
 
+type CheckboxProps = ComponentProps<typeof CheckboxPrimitive.Root> & {
+  iconClassName?: string;
+};
+
 const Checkbox = ({
   className = "",
+  iconClassName = "",
   ...delegated
-}: ComponentProps<typeof CheckboxPrimitive.Root>) => {
+}: CheckboxProps) => {
   return (
     <CheckboxPrimitive.Root
       className={cn(
@@ -20,7 +25,7 @@ const Checkbox = ({
       <CheckboxPrimitive.Indicator
         className={cn("flex items-center justify-center text-current")}
       >
-        <CheckIcon className="size-3" />
+        <CheckIcon className={cn("size-3", iconClassName)} />
       </CheckboxPrimitive.Indicator>
     </CheckboxPrimitive.Root>
   );
