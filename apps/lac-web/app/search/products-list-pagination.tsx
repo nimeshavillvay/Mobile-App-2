@@ -6,13 +6,22 @@ import useSuspenseSearchProductList from "./use-suspense-search-product-list.hoo
 type ProductsListPaginationProps = {
   token: string;
   term: string;
+  pageNo: string;
 };
 
-const ProductsListPagination = ({ term }: ProductsListPaginationProps) => {
-  const searchQuery = useSuspenseSearchProductList(term);
+const ProductsListPagination = ({
+  term,
+  pageNo,
+}: ProductsListPaginationProps) => {
+  const searchQuery = useSuspenseSearchProductList(term, pageNo);
 
-  const totalPages = Math.ceil(searchQuery.data?.summary?.total / 20);
-
+  let totalPages: number;
+  if (searchQuery.data?.summary?.total != 0) {
+    totalPages = Math.ceil(searchQuery.data?.summary?.total / 24);
+  } else {
+    const total = parseInt(localStorage.getItem("total") || "0");
+    totalPages = Math.ceil(total / 24);
+  }
   return <ProductsGridPagination totalPages={totalPages} />;
 };
 

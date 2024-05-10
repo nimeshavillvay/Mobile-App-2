@@ -19,7 +19,7 @@ import ProductsList from "./products-list";
 const SearchPage = async ({
   searchParams,
 }: {
-  searchParams: { query: string };
+  searchParams: { query: string; page: string };
 }) => {
   return (
     <>
@@ -40,24 +40,28 @@ const SearchPage = async ({
           </Fragment>
         </BreadcrumbList>
       </Breadcrumb>
+
       <h1 className="line-clamp-3 text-balance pl-8 font-title text-4xl font-medium tracking-tight text-wurth-gray-800 md:text-5xl md:leading-[3.5rem] md:tracking-[-0.036rem]">
         Search Results for &quot;{searchParams.query}&quot;
       </h1>
-      <Suspense
-        fallback={
-          <ProductsGrid>
-            <ProductsGridHeaderSkeleton />
-
-            <ProductsGridListSkeleton type="mobile" />
-
-            <ProductsGridDesktopContainer>
-              <ProductsGridListSkeleton type="desktop" />
-            </ProductsGridDesktopContainer>
-          </ProductsGrid>
-        }
-      >
-        <ProductsList SearchTerm={searchParams.query} />
-      </Suspense>
+      <div className="mx-auto max-w-[1360px]">
+        <Suspense
+          fallback={
+            <ProductsGrid>
+              <ProductsGridHeaderSkeleton />
+              <ProductsGridListSkeleton type="mobile" />
+              <ProductsGridDesktopContainer>
+                <ProductsGridListSkeleton type="desktop" />
+              </ProductsGridDesktopContainer>
+            </ProductsGrid>
+          }
+        >
+          <ProductsList
+            SearchTerm={searchParams.query}
+            PageNo={searchParams.page}
+          />
+        </Suspense>
+      </div>
     </>
   );
 };

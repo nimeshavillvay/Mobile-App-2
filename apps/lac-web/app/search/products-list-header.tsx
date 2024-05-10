@@ -6,16 +6,25 @@ import useSuspenseSearchProductList from "./use-suspense-search-product-list.hoo
 type ProductsListHeaderProps = {
   token: string;
   term: string;
+  pageNo: string;
 };
 
-const ProductsListHeader = ({ term }: ProductsListHeaderProps) => {
-  const searchQuery = useSuspenseSearchProductList(term);
+const ProductsListHeader = ({ term, pageNo }: ProductsListHeaderProps) => {
+  const searchQuery = useSuspenseSearchProductList(term, pageNo);
 
-  const totalPages = Math.ceil(searchQuery.data?.summary?.total / 20);
+  let totalPages: number;
+  let total: number;
+  if (searchQuery.data?.summary?.total != 0) {
+    total = searchQuery.data?.summary?.total;
+    totalPages = Math.ceil(searchQuery.data?.summary?.total / 24);
+  } else {
+    total = parseInt(localStorage.getItem("total") || "0");
+    totalPages = Math.ceil(total / 24);
+  }
   return (
     <ProductsGridHeader
       filters={[]}
-      totalCount={searchQuery.data?.summary?.total}
+      totalCount={total}
       totalPages={totalPages}
     />
   );

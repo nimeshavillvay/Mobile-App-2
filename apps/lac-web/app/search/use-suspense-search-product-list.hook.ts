@@ -1,10 +1,11 @@
 import { searchApi } from "@/_lib/api";
 import { useSuspenseQuery } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 
 type SearchResult = {
   brandName: string;
   id: string;
-  lastUpadtedDate: string | null;
+  lastUpdatedDate: string | null;
   MFRPartNo: string;
   sellingBookSequenceNo: string;
   UPCCode: string;
@@ -16,12 +17,12 @@ type SearchResult = {
   createDate: string;
   keywords: string;
   minimumOrderQuantity: string;
-  orderQuantitybyIncrements: string;
+  orderQuantityByIncrements: string;
   categoryPath: string;
   categoryName: string;
   attributes: string[] | null;
   itemImage: string;
-  slug:string;
+  slug: string;
 };
 
 type SearchData = {
@@ -30,8 +31,9 @@ type SearchData = {
     page_size: number;
     page_no: number;
     plp: boolean;
+    searchParams?: string;
   };
-  results: SearchResult[];
+  results: SearchResult | SearchResult[];
 };
 
 export const placeholderData: SearchData = {
@@ -44,16 +46,49 @@ export const placeholderData: SearchData = {
   results: [],
 };
 
-const useSuspenseSearchProductList = (query: string) => {
+const useSuspenseSearchProductList = (query: string, pageNo: string) => {
+  const [cachedSearchParams, setCachedSearchParams] = useState("");
+  useEffect(() => {
+    const data = localStorage.getItem("searchParams");
+    if (data) {
+      setCachedSearchParams(data);
+    }
+  }, []);
+
   return useSuspenseQuery<SearchData>({
-    queryKey: ["on-enter-search", query],
+    queryKey: ["on-enter-search", query, "on-enter-search-pageNo", pageNo],
     queryFn: async () => {
       const response = await searchApi.get("search", {
         searchParams: new URLSearchParams({
-          query,
+          pageNo: pageNo || "1",
+          query: query,
+          isFilterByBrand: "false",
+          pageSize: "24",
         }),
+        headers: {
+          searchParams: cachedSearchParams,
+        },
       });
-      return response.json();
+      const responseData: SearchData = await response.json();
+      if (
+        responseData.summary.total === 0 &&
+        Array.isArray(responseData.results) &&
+        responseData.results.length === 0
+      ) {
+        console.log(Array.isArray(responseData.results));
+        localStorage.setItem("total", "0");
+      }
+
+      if (
+        responseData.summary.searchParams &&
+        responseData.summary.total !== 0
+      ) {
+        const { searchParams } = responseData.summary;
+        localStorage.setItem("searchParams", searchParams);
+        localStorage.setItem("total", responseData.summary.total.toString());
+      }
+
+      return responseData;
     },
   });
 };
