@@ -48,7 +48,7 @@ const useAddToCartMutation = (
               configuration["avail_1"] = quantity?.toString() ?? "";
               configuration["plant_1"] = selectedPlant.plant ?? "";
               configuration["shipping_method_1"] =
-                selectedPlant.shippingMethods?.split(",")[0] ?? "";
+                selectedPlant.shippingMethods?.[0] ?? "";
 
               break;
             }
