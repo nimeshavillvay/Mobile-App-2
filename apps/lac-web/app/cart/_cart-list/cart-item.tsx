@@ -1,7 +1,12 @@
 import productItemImage from "@/_assets/images/product-item-image.png";
 import useUpdateCartConfigMutation from "@/_hooks/cart/use-update-cart-item-mutation.hook";
+import useSuspenseCheckAvailability from "@/_hooks/product/use-suspense-check-availability.hook";
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
-import type { CartItemConfiguration } from "@/_lib/types";
+import type {
+  CartItemConfiguration,
+  Plant,
+  ShippingMethod,
+} from "@/_lib/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { HeartOutline } from "@repo/web-ui/components/icons/heart-outline";
 import { Save } from "@repo/web-ui/components/icons/save";
@@ -10,11 +15,11 @@ import { Button } from "@repo/web-ui/components/ui/button";
 import { Input } from "@repo/web-ui/components/ui/input";
 import { Label } from "@repo/web-ui/components/ui/label";
 import Image from "next/image";
-import { useId } from "react";
+import { useId, useState } from "react";
 import { useForm } from "react-hook-form";
 import Balancer from "react-wrap-balancer";
 import { z } from "zod";
-import { ShippingMethod } from "../types";
+import CartItemShippingMethod from "./cart-item-shipping-method";
 
 const cartItemSchema = z.object({
   quantity: z.number(),
@@ -22,6 +27,7 @@ const cartItemSchema = z.object({
 });
 
 type CartItemProps = {
+  token: string;
   product: {
     id: number;
     title: string;
@@ -33,12 +39,20 @@ type CartItemProps = {
     increment: number;
   };
   shippingMethods: ShippingMethod[];
+  plants: Plant[];
 };
 
-const CartItem = ({ product }: CartItemProps) => {
+const CartItem = ({
+  token,
+  product,
+  shippingMethods,
+  plants,
+}: CartItemProps) => {
   const id = useId();
   const quantityId = `quantity-${id}`;
   const poId = `po-${id}`;
+
+  const [selectedWillCallPlant, setSelectedWillCallPlant] = useState("");
 
   const priceCheckQuery = useSuspensePriceCheck("token", [
     { productId: product.id, qty: product.quantity },
@@ -46,12 +60,22 @@ const CartItem = ({ product }: CartItemProps) => {
 
   const price = priceCheckQuery.data.productPrices[0];
 
-  const { register, getValues } = useForm<z.infer<typeof cartItemSchema>>({
+  const { register, getValues, watch } = useForm<
+    z.infer<typeof cartItemSchema>
+  >({
     resolver: zodResolver(cartItemSchema),
     values: {
       quantity: product.quantity,
       po: product.configuration.poOrJobName ?? "",
     },
+  });
+
+  const quantity = watch("quantity");
+
+  const checkAvailabilityQuery = useSuspenseCheckAvailability(token, {
+    productId: product.id,
+    qty: Number(quantity),
+    plant: selectedWillCallPlant !== "" ? selectedWillCallPlant : undefined,
   });
 
   const updateCartConfigMutation = useUpdateCartConfigMutation();
@@ -175,7 +199,15 @@ const CartItem = ({ product }: CartItemProps) => {
         </form>
       </div>
 
-      <div className="bg-red-300 md:w-80">Shipping options</div>
+      <div className="md:w-80">
+        <CartItemShippingMethod
+          shippingMethods={shippingMethods}
+          plants={plants}
+          availability={checkAvailabilityQuery.data}
+          setSelectedWillCallPlant={setSelectedWillCallPlant}
+          selectedWillCallPlant={selectedWillCallPlant}
+        />
+      </div>
 
       <div className="hidden space-y-3 md:block md:shrink-0">
         <div className="flex flex-col items-end text-right">
