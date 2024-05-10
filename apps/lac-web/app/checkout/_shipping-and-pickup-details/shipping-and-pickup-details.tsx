@@ -2,6 +2,7 @@
 
 import useSuspenseShippingAddressList from "@/_hooks/address/use-suspense-shipping-address-list.hook";
 import useSuspenseCart from "@/_hooks/cart/use-suspense-cart.hook";
+import useUpdateCartConfigMutation from "@/_hooks/cart/use-update-cart-config-mutation.hook";
 import { cn } from "@/_lib/utils";
 import { Button } from "@repo/web-ui/components/ui/button";
 import { Calendar } from "@repo/web-ui/components/ui/calendar";
@@ -31,7 +32,6 @@ const ShippingAndPickupDetails = ({ token }: ShippingAndPickupDetailsProps) => {
   const driversNoteId = `drivers-note-${id}`;
 
   const [open, setOpen] = useState(true);
-  const [date, setDate] = useState(new Date());
 
   const shippingAddressListQuery = useSuspenseShippingAddressList(token);
   const cartQuery = useSuspenseCart(token);
@@ -40,6 +40,40 @@ const ShippingAndPickupDetails = ({ token }: ShippingAndPickupDetailsProps) => {
     (address) =>
       address.xcAddressId === cartQuery.data.configuration.shippingAddressId,
   );
+
+  const updateCartConfigMutation = useUpdateCartConfigMutation();
+
+  const checked = cartQuery.data.mappedConfiguration.completeDelivery === "T";
+  const handleCheckboxChange = () => {
+    updateCartConfigMutation.mutate({
+      completeDelivery: checked ? "F" : "T",
+    });
+  };
+
+  const date = dayjs(
+    cartQuery.data.mappedConfiguration.pickDate ?? undefined,
+  ).toDate();
+  const handleDateChange = (date?: Date) => {
+    if (date) {
+      updateCartConfigMutation.mutate({
+        pickDate: dayjs(date).format("MM-DD-YYYY"),
+      });
+    }
+  };
+
+  const [driversNote, setDriversNote] = useState(
+    cartQuery.data.mappedConfiguration.driverNote ?? "",
+  );
+  const handleDriversNoteChange = (
+    event: React.ChangeEvent<HTMLTextAreaElement>,
+  ) => {
+    setDriversNote(event.target.value);
+  };
+  const handleDriversNoteBlur = () => {
+    updateCartConfigMutation.mutate({
+      driverNote: driversNote,
+    });
+  };
 
   return (
     <section className="flex flex-col gap-5 rounded-lg border border-wurth-gray-250 p-5 shadow-lg md:gap-6 md:p-6">
@@ -124,11 +158,7 @@ const ShippingAndPickupDetails = ({ token }: ShippingAndPickupDetailsProps) => {
                     <Calendar
                       mode="single"
                       selected={date}
-                      onSelect={(date) => {
-                        if (date) {
-                          setDate(date);
-                        }
-                      }}
+                      onSelect={handleDateChange}
                       initialFocus
                     />
                   </PopoverContent>
@@ -137,7 +167,11 @@ const ShippingAndPickupDetails = ({ token }: ShippingAndPickupDetailsProps) => {
 
               <div>
                 <div className="flex flex-row items-center gap-2">
-                  <Checkbox id={shipOrderId} />
+                  <Checkbox
+                    id={shipOrderId}
+                    checked={checked}
+                    onCheckedChange={handleCheckboxChange}
+                  />
 
                   <Label
                     htmlFor={shipOrderId}
@@ -177,6 +211,9 @@ const ShippingAndPickupDetails = ({ token }: ShippingAndPickupDetailsProps) => {
                 id={driversNoteId}
                 placeholder="Note here"
                 className="min-h-[130px] resize-none p-3 text-base"
+                value={driversNote}
+                onChange={handleDriversNoteChange}
+                onBlur={handleDriversNoteBlur}
               />
             </>
           )}

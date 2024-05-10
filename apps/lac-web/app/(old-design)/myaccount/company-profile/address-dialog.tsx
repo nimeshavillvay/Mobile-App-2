@@ -1,7 +1,11 @@
 import useCounties from "@/_hooks/registration/use-counties.hook";
 import useCountries from "@/_hooks/registration/use-countries.hook";
 import useStates from "@/_hooks/registration/use-states.hook";
-import { Address } from "@/_lib/types";
+import type {
+  Address,
+  AddressCheckSuggestions,
+  AddressFormData,
+} from "@/_lib/types";
 import {
   Dialog,
   DialogContent,
@@ -30,11 +34,7 @@ import { nanoid } from "nanoid";
 import { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import type {
-  AddressCheckSuggestions,
-  AddressCheckSuggestionsWithUuid,
-  AddressFormData,
-} from "./types";
+import type { AddressCheckSuggestionsWithUuid } from "./types";
 import useAddShippingAddressMutation from "./use-add-shipping-address-mutation.hook";
 import useUpdateBillingAddressMutation from "./use-update-billing-address-mutation.hook";
 import useUpdateShippingAddressMutation from "./use-update-shipping-address-mutation.hook";

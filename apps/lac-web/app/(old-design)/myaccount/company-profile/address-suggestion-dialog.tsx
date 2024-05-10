@@ -1,3 +1,4 @@
+import type { AddressCheckSuggestions, AddressFormData } from "@/_lib/types";
 import { Address } from "@/_lib/types";
 import {
   Dialog,
@@ -8,11 +9,7 @@ import {
 import { RadioGroup, RadioGroupItem } from "@/old/_components/ui/radio-group";
 import { nanoid } from "nanoid";
 import { Dispatch, SetStateAction, useState } from "react";
-import type {
-  AddressCheckSuggestions,
-  AddressCheckSuggestionsWithUuid,
-  AddressFormData,
-} from "./types";
+import type { AddressCheckSuggestionsWithUuid } from "./types";
 import useAddShippingAddressMutation from "./use-add-shipping-address-mutation.hook";
 import useUpdateBillingAddressMutation from "./use-update-billing-address-mutation.hook";
 import useUpdateShippingAddressMutation from "./use-update-shipping-address-mutation.hook";
