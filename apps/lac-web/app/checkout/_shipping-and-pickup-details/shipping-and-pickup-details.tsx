@@ -43,10 +43,13 @@ const ShippingAndPickupDetails = ({ token }: ShippingAndPickupDetailsProps) => {
 
   const updateCartConfigMutation = useUpdateCartConfigMutation();
 
-  const checked = cartQuery.data.mappedConfiguration.completeDelivery === "T";
+  const checked =
+    cartQuery.data.mappedConfiguration.completeDelivery === null
+      ? false
+      : cartQuery.data.mappedConfiguration.completeDelivery;
   const handleCheckboxChange = () => {
     updateCartConfigMutation.mutate({
-      completeDelivery: checked ? "F" : "T",
+      completeDelivery: !checked,
     });
   };
 

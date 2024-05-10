@@ -16,6 +16,9 @@ const useUpdateCartConfigMutation = <
     mutationFn: async (config: T) => {
       return await api
         .patch("rest/cart-config", {
+          headers: {
+            Authorization: `Bearer ${sessionToken}`,
+          },
           json: config,
         })
         .json<{
