@@ -6,6 +6,7 @@ import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { Suspense } from "react";
 import BillingAndPaymentInfo from "./_billing-and-payment-info";
+import ShippingAndPickupDetails from "./_shipping-and-pickup-details";
 import CartSummary from "./cart-summary";
 
 export const metadata: Metadata = {
@@ -43,7 +44,15 @@ const CheckoutPage = async () => {
 
           <Suspense
             fallback={
-              <Skeleton className="h-[246px] rounded-lg shadow-lg md:h-[254px]" />
+              <Skeleton className="h-[774px] rounded-lg shadow-lg md:h-[486px]" />
+            }
+          >
+            <ShippingAndPickupDetails token={sessionCookie.value} />
+          </Suspense>
+
+          <Suspense
+            fallback={
+              <Skeleton className="h-[774px] rounded-lg shadow-lg md:h-[486px]" />
             }
           >
             <BillingAndPaymentInfo

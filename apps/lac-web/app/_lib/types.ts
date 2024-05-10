@@ -152,7 +152,7 @@ export type CartConfiguration = {
   expireDate: null;
   paymentMethod: null;
   isAPrimaryShippingAddress?: null;
-  shippingAddressId: null;
+  shippingAddressId: string | null;
 };
 
 export type GroupList = {

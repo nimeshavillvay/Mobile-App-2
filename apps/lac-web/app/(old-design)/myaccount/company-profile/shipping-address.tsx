@@ -1,5 +1,6 @@
 "use client";
 
+import useSuspenseShippingAddressList from "@/_hooks/address/use-suspense-shipping-address-list.hook";
 import { Address } from "@/_lib/types";
 import Separator from "@/old/_components/separator";
 import Title from "@/old/_components/title";
@@ -8,7 +9,6 @@ import AddressDialog from "./address-dialog";
 import AddressSuggestionDialog from "./address-suggestion-dialog";
 import ShippingAddressCard from "./shipping-address-card";
 import type { AddressCheckSuggestionsWithUuid, AddressFormData } from "./types";
-import useSuspenseShippingAddressList from "./use-suspense-shipping-address-list.hook";
 
 const emptyShippingAddress: Address = {
   xcAddressId: "",

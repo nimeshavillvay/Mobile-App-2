@@ -39,6 +39,7 @@ const useSuspenseBillingAddress = (token: string) => {
           headers: {
             authorization: `Bearer ${token}`,
           },
+          cache: "no-cache",
         })
         .json<AddressResponse>(),
 

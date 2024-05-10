@@ -41,9 +41,9 @@ const useSuspenseShippingAddressList = (token: string) => {
           headers: {
             authorization: `Bearer ${token}`,
           },
+          cache: "no-store",
         })
         .json<AddressResponse[]>(),
-
     select: (addresses: AddressResponse[]) => {
       const mappedAddresses = addresses.map(transformAddress);
       return mappedAddresses;
