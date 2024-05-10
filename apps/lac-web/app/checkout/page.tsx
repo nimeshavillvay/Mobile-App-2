@@ -44,7 +44,7 @@ const CheckoutPage = async () => {
 
           <Suspense
             fallback={
-              <Skeleton className="h-[774px] rounded-lg shadow-lg md:h-[486px]" />
+              <Skeleton className="h-[694px] rounded-lg shadow-lg md:h-[350px]" />
             }
           >
             <ShippingAndPickupDetails token={sessionCookie.value} />
