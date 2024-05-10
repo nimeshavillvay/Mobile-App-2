@@ -1,7 +1,7 @@
 import { api } from "@/_lib/api";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
-type CheckAvailability = {
+export type CheckAvailability = {
   productid: number;
   status: string;
   options: {
@@ -11,14 +11,28 @@ type CheckAvailability = {
         plant: string;
         quantity?: number;
         backOrderQuantity?: number;
-        backOrderDate?: Date;
-        shippingMethods: string;
+        backOrderDate?: string;
+        shippingMethods: string[];
       };
     };
     type: string;
     hash: string;
   }[];
-  willcallanywhere: unknown[];
+  willcallanywhere: {
+    hash: string;
+    status: string;
+    willCallBackOrder: string; // Back order date
+    willCallPlant: string;
+    willCallQuantity: number;
+    backOrder?: boolean;
+    backOrderDate_1?: string;
+    backOrderQuantity_1?: number;
+    index?: number;
+    plant_1?: string;
+    quantity_1?: number;
+    shippingMethods_1?: string[];
+    type?: string;
+  };
   xplant: string;
   available_locations: {
     location: string;
