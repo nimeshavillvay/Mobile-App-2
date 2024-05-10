@@ -14,8 +14,10 @@ const ProductsListPagination = ({
   pageNo,
 }: ProductsListPaginationProps) => {
   const searchQuery = useSuspenseSearchProductList(term, pageNo);
-
   let totalPages: number;
+  if (localStorage.getItem("total") == "0") {
+    return null;
+  }
   if (searchQuery.data?.summary?.total != 0) {
     totalPages = Math.ceil(searchQuery.data?.summary?.total / 24);
   } else {

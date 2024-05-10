@@ -14,6 +14,9 @@ const ProductsListHeader = ({ term, pageNo }: ProductsListHeaderProps) => {
 
   let totalPages: number;
   let total: number;
+  if (localStorage.getItem("total") == "0") {
+    return null;
+  }
   if (searchQuery.data?.summary?.total != 0) {
     total = searchQuery.data?.summary?.total;
     totalPages = Math.ceil(searchQuery.data?.summary?.total / 24);
