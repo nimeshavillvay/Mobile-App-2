@@ -1,9 +1,11 @@
 import { BrowserMultiFormatReader } from "@zxing/library";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 
 export const BarcodeScanner = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const reader = useRef(new BrowserMultiFormatReader());
+  const router = useRouter();
 
   useEffect(() => {
     if (!videoRef.current) return;
@@ -16,17 +18,17 @@ export const BarcodeScanner = () => {
         },
       },
       videoRef.current,
-      (result, error) => {
+      (result) => {
         if (result) {
-          console.log(result);
+          console.log("result: ", result);
+          router.replace("/plp");
         }
-        if (error) console.log(error);
       },
     );
     return () => {
       currentReader.reset();
     };
-  }, [videoRef]);
+  }, [videoRef, router]);
 
   return <video ref={videoRef} />;
 };

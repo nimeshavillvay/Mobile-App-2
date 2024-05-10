@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { BarcodeScanner } from "../barcode-scanner";
 import { BarcodeScanButton } from "../search-box";
 import { Button } from "../ui/button";
@@ -14,10 +15,17 @@ import {
 } from "../ui/dialog";
 
 export const BarcodeScannerDialog = () => {
+  const [open, setOpen] = useState(false);
+  const closeDialog = () => {
+    setOpen(false);
+  };
+  const onOpenChange = (change: boolean) => {
+    setOpen(change);
+  };
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>
-        <BarcodeScanButton />
+        <BarcodeScanButton onClick={() => setOpen(true)} />
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -31,8 +39,7 @@ export const BarcodeScannerDialog = () => {
           <BarcodeScanner />
         </div>
         <DialogFooter>
-          <Button type="submit">Cancel</Button>
-          {/* <Button type="submit" onClick={dismissQrReader}>Cancel</Button> */}
+          <Button onClick={closeDialog}>Cancel</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
