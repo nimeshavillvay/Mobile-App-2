@@ -7,7 +7,7 @@ const useSelectedAddress = () => {
   const [cookies] = useCookies();
 
   return account?.addresses.find(
-    (address) => parseInt(address["address-id"]) === cookies[ADDRESS_ID_COOKIE],
+    (address) => address.xcAddressId === cookies[ADDRESS_ID_COOKIE],
   );
 };
 

@@ -169,24 +169,26 @@ export const getShippingMethods = async () => {
     .json<ShippingMethod[]>();
 };
 
-export const getPaymentMethods = async () => {
+export const getPaymentMethods = async (): Promise<PaymentMethod[]> => {
   const response = await api
     .get("rest/payment_methods", {
       next: {
         revalidate: DEFAULT_REVALIDATE,
       },
     })
-    .json<PaymentMethod[]>();
+    .json<
+      {
+        code: string;
+        name: string;
+        is_credit_card: boolean;
+      }[]
+    >();
 
-  const transformedData = response?.length
-    ? response.map((data) => ({
-        code: data.code,
-        name: data.name,
-        isCreditCard: data.is_credit_card,
-      }))
-    : [];
-
-  return transformedData;
+  return response.map((method) => ({
+    code: method.code,
+    name: method.name,
+    isCreditCard: method.is_credit_card,
+  }));
 };
 
 export const getPlants = async () => {
