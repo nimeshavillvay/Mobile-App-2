@@ -75,7 +75,6 @@ const useSuspenseSearchProductList = (query: string, pageNo: string) => {
         Array.isArray(responseData.results) &&
         responseData.results.length === 0
       ) {
-        console.log(Array.isArray(responseData.results));
         localStorage.setItem("total", "0");
       }
 
