@@ -82,6 +82,7 @@ const ProductHero = async ({ id, slug }: ProductHeroProps) => {
           <ProductVariants id={id} />
 
           <AddToCart
+            productId={parseInt(id)}
             minQty={product.selectedProduct.minimumOrderQuantity}
             incQty={product.selectedProduct.quantityByIncrements}
           />
@@ -141,6 +142,7 @@ const ProductHero = async ({ id, slug }: ProductHeroProps) => {
         <ProductVariants id={id} className="container my-6 md:hidden" />
 
         <AddToCart
+          productId={parseInt(id)}
           minQty={product.selectedProduct.minimumOrderQuantity}
           incQty={product.selectedProduct.quantityByIncrements}
           className="container my-6 md:hidden"

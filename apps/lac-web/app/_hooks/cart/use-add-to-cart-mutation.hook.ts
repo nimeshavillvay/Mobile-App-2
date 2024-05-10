@@ -27,40 +27,38 @@ const useAddToCartMutation = (
         will_call_avail: "",
         will_call_plant: "",
         selectedOption: "",
-        backorder_all: "C",
       };
 
       if (checkAvailabilityQuery.data.options[0]) {
-        configuration.hashvalue = checkAvailabilityQuery.data.options[0].hash;
+        const selectedOption = checkAvailabilityQuery.data.options[0];
 
-        // Added items from availability check
-        checkAvailabilityQuery.data.options[0].availability.forEach(
-          (option, index) => {
-            configuration[`avail_${index + 1}`] = option.quantity.toString();
-            configuration[`plant_${index + 1}`] = option.plant ?? "";
-          },
-        );
+        configuration.backorder_all = selectedOption.backOrder ? "C" : "";
+        configuration.hashvalue = selectedOption.hash;
 
-        // Fill the rest with empty values
-        for (
-          let i = checkAvailabilityQuery.data.options[0].availability.length;
-          i < 5;
-          i++
-        ) {
-          configuration[`avail_${i + 1}`] = "";
-          configuration[`plant_${i + 1}`] = "";
+        // Add the 1st plant
+        for (let i = 1; i <= 5; i++) {
+          if (selectedOption.plants[i.toString()]) {
+            const selectedPlant = selectedOption.plants[i.toString()];
+
+            if (selectedPlant) {
+              const quantity = selectedOption.backOrder
+                ? selectedPlant.backOrderQuantity
+                : selectedPlant.quantity;
+
+              configuration["avail_1"] = quantity?.toString() ?? "";
+              configuration["plant_1"] = selectedPlant.plant ?? "";
+              configuration["shipping_method_1"] =
+                selectedPlant.shippingMethods?.split(",")[0] ?? "";
+
+              break;
+            }
+          }
         }
-
-        // Shipping methods
-        const shippingMethods =
-          checkAvailabilityQuery.data.options[0].availability[0]?.shippingMethods?.split(
-            ",",
-          ) ?? [];
-        shippingMethods.forEach((method, index) => {
-          configuration[`shipping_method_${index + 1}`] = method;
-        });
-        for (let i = shippingMethods.length; i < 5; i++) {
-          configuration[`shipping_method_${i + 1}`] = "";
+        // Add other plants
+        for (let i = 2; i <= 5; i++) {
+          configuration[`avail_${i}`] = "";
+          configuration[`plant_${i}`] = "";
+          configuration[`shipping_method_${i}`] = "";
         }
       }
 

@@ -5,31 +5,16 @@ import { Phone } from "@repo/web-ui/components/icons/phone";
 import { Shop } from "@repo/web-ui/components/icons/shop";
 import { ShoppingCart } from "@repo/web-ui/components/icons/shopping-cart";
 import { WurthFullBlack } from "@repo/web-ui/components/logos/wurth-full-black";
-import {
-  BarcodeScanButton,
-  SearchBox,
-  SearchBoxButton,
-  SearchBoxInput,
-} from "@repo/web-ui/components/search-box";
 import { Button, buttonVariants } from "@repo/web-ui/components/ui/button";
-import dynamic from "next/dynamic";
+import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import Link from "next/link";
 import { Suspense } from "react";
 import UserProfile, { UserProfileSkeleton } from "./_user-profile";
 import DesktopNavigationMenu from "./desktop-navigation-menu";
 import MobileNavigationMenu from "./mobile-navigation-menu";
+import OSRDetails from "./osr-details";
+import SearchBar from "./search-bar";
 import type { Category, TransformedCategory } from "./types";
-
-const BarcodeScannerDialog = dynamic(
-  () =>
-    import("@repo/web-ui/components/barcode-scan-dialog").then(
-      (mod) => mod.BarcodeScannerDialog,
-    ),
-  {
-    loading: () => <BarcodeScanButton />,
-    ssr: false,
-  },
-);
 
 const Header = async () => {
   const categories = await api
@@ -90,12 +75,16 @@ const Header = async () => {
 
         <div className="bg-wurth-gray-50">
           <div className="container flex flex-row items-center justify-between pb-3 pt-12 text-sm font-medium md:py-3">
-            <div>
+            <div className="flex items-center gap-5">
               <Button variant="ghost" className="h-fit px-0 py-0 font-medium">
                 <Shop width={16} height={16} />
 
                 <span>Brea, CA</span>
               </Button>
+
+              <Suspense fallback={<Skeleton className="h-6 w-60" />}>
+                <OSRDetails />
+              </Suspense>
             </div>
 
             <div className="hidden flex-row items-center gap-6 md:flex">
@@ -132,14 +121,11 @@ const Header = async () => {
           <span className="sr-only">Home</span>
         </Link>
 
-        <SearchBox className="mx-auto hidden min-w-0 max-w-[35rem] flex-1 md:flex">
-          <SearchBoxInput placeholder="What are you looking for?" />
+        <div className="container relative w-[800px]">
+          <SearchBar />
+        </div>
 
-          <SearchBoxButton />
-          <BarcodeScannerDialog />
-        </SearchBox>
-
-        <div className="ml-auto flex flex-row items-center gap-4 md:ml-0 md:min-w-[16.5rem] md:justify-end md:gap-6">
+        <div className="ml-auto flex flex-row items-center gap-4 md:ml-0 md:gap-6">
           {/* Mobile */}
           <Suspense fallback={<UserProfileSkeleton type="mobile" />}>
             <UserProfile type="mobile" />
@@ -180,11 +166,7 @@ const Header = async () => {
       </div>
 
       <div className="container w-full md:hidden">
-        <SearchBox>
-          <SearchBoxInput placeholder="What are you looking for?" />
-
-          <SearchBoxButton />
-        </SearchBox>
+        <SearchBar />
       </div>
 
       <DesktopNavigationMenu categories={transformedCategory} />
