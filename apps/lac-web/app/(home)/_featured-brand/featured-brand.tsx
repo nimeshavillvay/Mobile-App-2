@@ -59,7 +59,7 @@ const FeaturedBrand = async () => {
           <Image
             src={details.background}
             alt={`The background image of ${details.name}`}
-            className="block  aspect-2 object-cover md:flex-1"
+            className="block aspect-2 object-cover md:flex-1"
             width={880}
             height={440}
           />
