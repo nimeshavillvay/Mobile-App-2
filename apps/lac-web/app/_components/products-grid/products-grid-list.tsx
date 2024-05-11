@@ -44,9 +44,19 @@ export const ProductsGridList = ({
       {products.map(({ prop, info }) => (
         <Suspense
           key={info.groupId}
-          fallback={<ProductCardSkeleton orientation={orientation} />}
+          fallback={
+            <ProductCardSkeleton
+              orientation={orientation}
+              stretchWidth={orientation === "vertical"}
+            />
+          }
         >
-          <ProductCard orientation={orientation} product={prop} token={token} />
+          <ProductCard
+            orientation={orientation}
+            product={prop}
+            token={token}
+            stretchWidth={orientation === "vertical"}
+          />
         </Suspense>
       ))}
     </ProductsGridListContainer>
@@ -64,6 +74,7 @@ export const ProductsGridListSkeleton = ({
         <ProductCardSkeleton
           key={index}
           orientation={type === "mobile" ? "horizontal" : "vertical"}
+          stretchWidth={type === "desktop"}
         />
       ))}
     </ProductsGridListContainer>

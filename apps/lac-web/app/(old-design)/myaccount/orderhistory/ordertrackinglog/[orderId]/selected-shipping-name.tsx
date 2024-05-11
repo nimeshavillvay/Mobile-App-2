@@ -8,7 +8,7 @@ const SelectedShippingName = () => {
 
   return (
     <div className="text-sm font-bold text-black md:font-normal md:text-brand-gray-500">
-      {address?.name ?? "N/A"}
+      {address?.streetAddress ?? "N/A"}
     </div>
   );
 };
