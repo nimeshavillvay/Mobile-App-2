@@ -2,7 +2,6 @@ import { api } from "@/_lib/api";
 import { DEFAULT_REVALIDATE } from "@/_lib/constants";
 import { cn } from "@/_lib/utils";
 import { Phone } from "@repo/web-ui/components/icons/phone";
-import { Shop } from "@repo/web-ui/components/icons/shop";
 import { ShoppingCart } from "@repo/web-ui/components/icons/shopping-cart";
 import { WurthFullBlack } from "@repo/web-ui/components/logos/wurth-full-black";
 import {
@@ -15,6 +14,7 @@ import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import Link from "next/link";
 import { Suspense } from "react";
 import UserProfile, { UserProfileSkeleton } from "./_user-profile";
+import WillCallPlant from "./_will-call-plant";
 import DesktopNavigationMenu from "./desktop-navigation-menu";
 import MobileNavigationMenu from "./mobile-navigation-menu";
 import OSRDetails from "./osr-details";
@@ -74,43 +74,35 @@ const Header = async () => {
 
   return (
     <header className="flex flex-col gap-4 border-b border-b-wurth-gray-250 pb-5 shadow-[0px_1px_5px_0px_rgba(0,0,0,0.05),0px_1px_2px_-1px_rgba(0,0,0,0.05)] md:border-0 md:pb-0">
-      <div>
-        <div className="hidden h-12 bg-[#383838] md:block" />
+      <div className="bg-wurth-gray-50">
+        <div className="container flex flex-row items-center justify-between pb-3 pt-12 text-sm font-medium md:py-3">
+          <div className="flex items-center gap-5">
+            <WillCallPlant />
 
-        <div className="bg-wurth-gray-50">
-          <div className="container flex flex-row items-center justify-between pb-3 pt-12 text-sm font-medium md:py-3">
-            <div className="flex items-center gap-5">
-              <Button variant="ghost" className="h-fit px-0 py-0 font-medium">
-                <Shop width={16} height={16} />
+            <Suspense fallback={<Skeleton className="h-5 w-60" />}>
+              <OSRDetails />
+            </Suspense>
+          </div>
 
-                <span>Brea, CA</span>
-              </Button>
+          <div className="hidden flex-row items-center gap-6 md:flex">
+            <Button
+              variant="link"
+              className="group h-fit px-0 py-0 font-medium"
+              asChild
+            >
+              <a href="tel:800-444-0043">
+                <Phone
+                  width={16}
+                  height={16}
+                  className="group-hover:stroke-red-800"
+                />
 
-              <Suspense fallback={<Skeleton className="h-6 w-60" />}>
-                <OSRDetails />
-              </Suspense>
-            </div>
+                <span>(800) 444-0043</span>
+              </a>
+            </Button>
 
-            <div className="hidden flex-row items-center gap-6 md:flex">
-              <Button
-                variant="link"
-                className="group h-fit px-0 py-0 font-medium"
-                asChild
-              >
-                <a href="tel:800-444-0043">
-                  <Phone
-                    width={16}
-                    height={16}
-                    className="group-hover:stroke-red-800"
-                  />
-
-                  <span>(800) 444-0043</span>
-                </a>
-              </Button>
-
-              <div className="font-normal text-wurth-gray-800">
-                Wurth Louis and Company
-              </div>
+            <div className="font-normal text-wurth-gray-800">
+              Wurth Louis and Company
             </div>
           </div>
         </div>
