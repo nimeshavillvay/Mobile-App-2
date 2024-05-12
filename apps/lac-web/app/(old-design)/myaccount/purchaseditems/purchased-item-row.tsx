@@ -151,7 +151,7 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
               <h4 className="text-wrap font-bold">{item.productTitle}</h4>
 
               <div className="text-sm text-brand-gray-500">
-                Category :{" "}
+                Category :&nbsp;
                 {item.productCategory !== "" ? item.productCategory : "N/A"}
               </div>
             </>
