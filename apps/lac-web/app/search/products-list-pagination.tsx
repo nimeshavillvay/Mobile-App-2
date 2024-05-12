@@ -1,7 +1,5 @@
-"use client";
-
 import { ProductsGridPagination } from "@/_components/products-grid";
-import useSuspenseSearchProductList from "./use-suspense-search-product-list.hook";
+import { getSearchResults } from "./apis";
 
 type ProductsListPaginationProps = {
   token: string;
@@ -9,21 +7,17 @@ type ProductsListPaginationProps = {
   pageNo: string;
 };
 
-const ProductsListPagination = ({
+const ProductsListPagination = async ({
   term,
   pageNo,
 }: ProductsListPaginationProps) => {
-  const searchQuery = useSuspenseSearchProductList(term, pageNo);
-  let totalPages: number;
-  if (localStorage.getItem("total") == "0") {
-    return null;
-  }
-  if (searchQuery.data?.summary?.total != 0) {
-    totalPages = Math.ceil(searchQuery.data?.summary?.total / 24);
-  } else {
-    const total = parseInt(localStorage.getItem("total") || "0");
-    totalPages = Math.ceil(total / 24);
-  }
+  const searchResults = await getSearchResults({
+    query: term,
+    pageNo,
+  });
+
+  const totalPages = Math.ceil(searchResults?.summary?.total / 24);
+
   return <ProductsGridPagination totalPages={totalPages} />;
 };
 

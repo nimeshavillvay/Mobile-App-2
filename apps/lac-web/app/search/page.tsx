@@ -13,14 +13,31 @@ import {
   BreadcrumbSeparator,
 } from "@repo/web-ui/components/ui/breadcrumb";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { Fragment, Suspense } from "react";
+import { getSearchResults } from "./apis";
 import ProductsList from "./products-list";
+import NoResultsNotice from './no-results-notice'
 
 const SearchPage = async ({
   searchParams,
 }: {
-  searchParams: { query: string; page: string };
+  searchParams: { [key: string]: string | string[] | undefined };
 }) => {
+  const query = searchParams.query?.toString() ?? "";
+  const pageNo = searchParams.pageNo?.toString() ?? "1";
+
+  const searchResults = await getSearchResults({
+    query,
+    pageNo,
+  });
+
+  if (searchResults.summary.plp && !Array.isArray(searchResults.results)) {
+    return redirect(
+      `/product/${searchResults.results.id}/${searchResults.results.slug}`,
+    );
+  }
+
   return (
     <>
       <Breadcrumb className="container my-3 hidden md:block">
@@ -41,8 +58,10 @@ const SearchPage = async ({
         </BreadcrumbList>
       </Breadcrumb>
 
+      {searchResults.summary.total == 0 && Array.isArray(searchResults.results) && searchResults.results.length == 0 && <NoResultsNotice/>}
+
       <h1 className="line-clamp-3 text-balance pl-8 font-title text-4xl font-medium tracking-tight text-wurth-gray-800 md:text-5xl md:leading-[3.5rem] md:tracking-[-0.036rem]">
-        Search Results for &quot;{searchParams.query}&quot;
+        Search Results for &quot;{query}&quot;
       </h1>
       <div className="mx-auto max-w-[1360px]">
         <Suspense
@@ -56,10 +75,7 @@ const SearchPage = async ({
             </ProductsGrid>
           }
         >
-          <ProductsList
-            SearchTerm={searchParams.query}
-            PageNo={searchParams.page}
-          />
+          <ProductsList SearchTerm={query} PageNo={pageNo} />
         </Suspense>
       </div>
     </>

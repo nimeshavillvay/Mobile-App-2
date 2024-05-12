@@ -1,8 +1,8 @@
 import { searchApi } from "@/_lib/api";
 import { useQuery } from "@tanstack/react-query";
 
-type SearchData = {
-  meta: {
+export type SearchData = {
+  summary: {
     total: number;
     page_size: number;
     page_no: number;
@@ -45,7 +45,7 @@ type Results = {
  */
 export const placeholderData: Results = {
   products: {
-    meta: {
+    summary: {
       total: 0,
       page_size: 0,
       page_no: 0,
@@ -54,7 +54,7 @@ export const placeholderData: Results = {
     results: [],
   },
   brands: {
-    meta: {
+    summary: {
       total: 0,
       page_size: 0,
       page_no: 0,
@@ -63,7 +63,7 @@ export const placeholderData: Results = {
     results: [],
   },
   categories: {
-    meta: {
+    summary: {
       total: 0,
       page_size: 0,
       page_no: 0,
