@@ -21,7 +21,7 @@ import NoResultsNotice from "./no-results-notice";
 import ProductsList from "./products-list";
 
 export const metadata: Metadata = {
-  title: "Search Landing",
+  title: "Search",
 };
 
 const SearchPage = async ({
