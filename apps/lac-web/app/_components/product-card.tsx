@@ -31,9 +31,15 @@ type ProductProps = {
     }[];
   };
   token: string;
+  stretchWidth?: boolean;
 };
 
-const ProductCard = ({ orientation, product, token }: ProductProps) => {
+const ProductCard = ({
+  orientation,
+  product,
+  token,
+  stretchWidth = false,
+}: ProductProps) => {
   const [selectedId, setSelectedId] = useState<string | undefined>();
 
   const defaultVariant = product.variants[0];
@@ -121,6 +127,7 @@ const ProductCard = ({ orientation, product, token }: ProductProps) => {
       className={cn(
         "shrink-0 snap-start",
         orientation === "horizontal" && "w-full",
+        stretchWidth && "md:w-full",
       )}
     >
       <ProductCardHero>

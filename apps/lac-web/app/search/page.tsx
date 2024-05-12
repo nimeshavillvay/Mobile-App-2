@@ -12,12 +12,17 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@repo/web-ui/components/ui/breadcrumb";
+import { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Fragment, Suspense } from "react";
 import { getSearchResults } from "./apis";
+import NoResultsNotice from "./no-results-notice";
 import ProductsList from "./products-list";
-import NoResultsNotice from './no-results-notice'
+
+export const metadata: Metadata = {
+  title: "Search Landing",
+};
 
 const SearchPage = async ({
   searchParams,
@@ -58,7 +63,9 @@ const SearchPage = async ({
         </BreadcrumbList>
       </Breadcrumb>
 
-      {searchResults.summary.total == 0 && Array.isArray(searchResults.results) && searchResults.results.length == 0 && <NoResultsNotice/>}
+      {searchResults.summary.total == 0 &&
+        Array.isArray(searchResults.results) &&
+        searchResults.results.length == 0 && <NoResultsNotice />}
 
       <h1 className="line-clamp-3 text-balance pl-8 font-title text-4xl font-medium tracking-tight text-wurth-gray-800 md:text-5xl md:leading-[3.5rem] md:tracking-[-0.036rem]">
         Search Results for &quot;{query}&quot;

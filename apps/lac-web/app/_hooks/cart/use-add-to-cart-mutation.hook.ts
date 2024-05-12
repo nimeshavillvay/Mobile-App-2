@@ -2,11 +2,11 @@ import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
 import { api } from "@/_lib/api";
 import { useToast } from "@repo/web-ui/components/ui/toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import useSuspenseCheckAvailability from "../product/use-suspense-check-availability.hook";
+import { checkAvailability } from "../product/use-suspense-check-availability.hook";
 
 const useAddToCartMutation = (
   token: string,
-  { productId, quantity }: { productId: number; quantity: number },
+  { productId }: { productId: number },
 ) => {
   const queryClient = useQueryClient();
   const { toast } = useToast();
@@ -15,13 +15,14 @@ const useAddToCartMutation = (
     (state) => state.actions,
   );
 
-  const checkAvailabilityQuery = useSuspenseCheckAvailability(token, {
-    productId,
-    qty: quantity,
-  });
-
   return useMutation({
-    mutationFn: async ({ poOrJobName = "" }: { poOrJobName?: string }) => {
+    mutationFn: async ({
+      quantity,
+      poOrJobName = "",
+    }: {
+      quantity: number;
+      poOrJobName?: string;
+    }) => {
       const configuration: { [key: string]: string } = {
         poOrJobName,
         will_call_avail: "",
@@ -29,8 +30,13 @@ const useAddToCartMutation = (
         selectedOption: "",
       };
 
-      if (checkAvailabilityQuery.data.options[0]) {
-        const selectedOption = checkAvailabilityQuery.data.options[0];
+      const availability = await checkAvailability(token, {
+        productId,
+        qty: quantity,
+      });
+
+      if (availability.options[0]) {
+        const selectedOption = availability.options[0];
 
         configuration.backorder_all = selectedOption.backOrder ? "C" : "";
         configuration.hashvalue = selectedOption.hash;
@@ -45,20 +51,16 @@ const useAddToCartMutation = (
                 ? selectedPlant.backOrderQuantity
                 : selectedPlant.quantity;
 
-              configuration["avail_1"] = quantity?.toString() ?? "";
-              configuration["plant_1"] = selectedPlant.plant ?? "";
-              configuration["shipping_method_1"] =
-                selectedPlant.shippingMethods?.split(",")[0] ?? "";
-
-              break;
+              configuration[`avail_${i}`] = quantity?.toString() ?? "";
+              configuration[`plant_${i}`] = selectedPlant.plant ?? "";
+              configuration[`shipping_method_${i}`] =
+                selectedPlant.shippingMethods?.[0] ?? "";
             }
+          } else {
+            configuration[`avail_${i}`] = "";
+            configuration[`plant_${i}`] = "";
+            configuration[`shipping_method_${i}`] = "";
           }
-        }
-        // Add other plants
-        for (let i = 2; i <= 5; i++) {
-          configuration[`avail_${i}`] = "";
-          configuration[`plant_${i}`] = "";
-          configuration[`shipping_method_${i}`] = "";
         }
       }
 

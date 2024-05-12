@@ -19,6 +19,7 @@ import useLogoutMutation from "../use-logout-mutation.hook";
 import ButtonContent, { buttonClasses } from "./button-content";
 import type { ViewportTypes } from "./types";
 import useOSRLogoutMutation from "./use-osr-logout-mutation.hook";
+import UserMobileNavigation from "./user-mobile-navigation";
 
 const UserProfileButton = ({
   token,
@@ -48,44 +49,41 @@ const UserProfileButton = ({
     isOSRLoggedInAsCustomer = true;
   }
 
-  // User isn't logged in
-  if (checkLoginQuery.data.status_code === "NOT_LOGGED_IN") {
-    return (
+  if (type === "mobile") {
+    return <UserMobileNavigation token={token} />;
+  } else {
+    // Desktop
+    return checkLoginQuery.data.status_code === "NOT_LOGGED_IN" ? (
       <Link
         href="/sign-in"
         className={buttonClasses({
           variant: "ghost",
-          size: type === "mobile" ? "icon" : "default",
-          type,
+          size: "default",
+          type: "desktop",
         })}
       >
         <ButtonContent />
       </Link>
+    ) : (
+      <UserProfileDropdown
+        token={token}
+        isOSRUser={isOSRUser}
+        isOSRLoggedInAsCustomer={isOSRLoggedInAsCustomer}
+        customerDetails={customerDetails}
+      />
     );
   }
-
-  return (
-    <UserProfileDropdown
-      token={token}
-      type={type}
-      isOSRUser={isOSRUser}
-      isOSRLoggedInAsCustomer={isOSRLoggedInAsCustomer}
-      customerDetails={customerDetails}
-    />
-  );
 };
 
 export default UserProfileButton;
 
 const UserProfileDropdown = ({
   token,
-  type,
   isOSRUser,
   isOSRLoggedInAsCustomer,
   customerDetails,
 }: {
   token: string;
-  type: ViewportTypes;
   isOSRUser: boolean;
   isOSRLoggedInAsCustomer: boolean;
   customerDetails: string;
@@ -102,8 +100,8 @@ const UserProfileDropdown = ({
       <DropdownMenuTrigger
         className={buttonClasses({
           variant: "ghost",
-          size: type === "mobile" ? "icon" : "default",
-          type,
+          size: "default",
+          type: "desktop",
         })}
       >
         <ButtonContent>
