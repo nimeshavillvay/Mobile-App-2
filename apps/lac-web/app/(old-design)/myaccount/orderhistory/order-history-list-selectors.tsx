@@ -52,8 +52,6 @@ const OrderHistoryListSelectors = ({
     mappedSelectedValues.push({ ...value, id: key });
   }
 
-  // console.log("selectedValues", mappedSelectedValues);
-
   const poNoFilter = filterAndMapValues(filters, "PO #");
   const jobNameFilter = filterAndMapValues(filters, "Job Name");
   const statusFilter = filterAndMapValues(filters, "Status");

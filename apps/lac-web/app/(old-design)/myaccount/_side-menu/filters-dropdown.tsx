@@ -1,11 +1,10 @@
+import type { Filters } from "@/_lib/types";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/old/_components/ui/accordion";
-
-import type { Filters } from "@/_lib/types";
 import { type CheckedState } from "@radix-ui/react-checkbox";
 import { Checkbox } from "@repo/web-ui/components/ui/checkbox";
 import { Label } from "@repo/web-ui/components/ui/label";

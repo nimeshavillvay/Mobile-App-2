@@ -11,7 +11,7 @@ export type SelectedValues = {
   };
 };
 
-export const useFilterParams = (filters: Filters[] = []) => {
+const useFilterParams = (filters: Filters[] = []) => {
   const searchParams = useSearchParams();
 
   const pageNoValue = searchParams.get(QUERY_KEYS.page) ?? "1";
@@ -45,3 +45,5 @@ export const useFilterParams = (filters: Filters[] = []) => {
 
   return { pageNo, selectedValues, searchParams };
 };
+
+export default useFilterParams;

@@ -24,12 +24,7 @@ import { updateSearchParams } from "@/old/_utils/client-helpers";
 import { cn } from "@/old/_utils/helpers";
 import dayjs from "dayjs";
 import { useSearchParams } from "next/navigation";
-import {
-  useState,
-  type ComponentProps,
-  type Dispatch,
-  type SetStateAction,
-} from "react";
+import { useState, type Dispatch, type SetStateAction } from "react";
 import { MdCheck } from "react-icons/md";
 import { changeSearchParams } from "../_utils/client-helpers";
 import {
@@ -476,12 +471,7 @@ const CheckboxWithLabel = ({
   );
 };
 
-const MobileSortFilterHeading = ({
-  title,
-}: {
-  title: string;
-  children?: ComponentProps<"div">["children"];
-}) => {
+const MobileSortFilterHeading = ({ title }: { title: string }) => {
   return (
     <div className="bg-brand-gray-200 px-5 py-3 text-base text-brand-gray-500">
       {title}
