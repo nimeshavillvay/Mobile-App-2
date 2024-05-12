@@ -40,6 +40,7 @@ import {
   SORTING_FILTERS_FOR_MOBILE,
   URL_DATE_FORMAT,
 } from "./constants";
+import { useFilterParams } from "./use-filter-params.hook";
 
 const customDuration = DURATIONS.at(-1);
 
@@ -54,6 +55,7 @@ const SelectorsForMobileDialog = ({
   filters,
   onOpenChange,
 }: SelectorsForMobileDialogProps) => {
+  const { searchParams } = useFilterParams(filters);
   const urlSearchParams = useSearchParams();
 
   const poNoFilter = filterAndMapValues(filters, "PO #");
@@ -122,7 +124,15 @@ const SelectorsForMobileDialog = ({
   };
 
   const handleApplyFilters = () => {
-    const urlFilters: { key: string; value: string }[] = [];
+    const newUrlSearchParams = new URLSearchParams(searchParams);
+    const urlFilters: { key: string; value: string }[] = []; // TODO: Remove this
+
+    if (fromDate) {
+      newUrlSearchParams.set(
+        QUERY_KEYS.FROM_DATE,
+        dayjs(fromDate).format(URL_DATE_FORMAT),
+      );
+    }
 
     if (fromDate && toDate) {
       urlFilters.push({

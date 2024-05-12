@@ -33,8 +33,10 @@ const TotalCountAndPagination = ({
   totalItems,
 }: TotalCountAndPaginationProps) => {
   const urlSearchParams = useSearchParams();
-  const page = Number(urlSearchParams.get("page") ?? INIT_PAGE_NUMBER);
-  const perPage = Number(urlSearchParams.get("perPage") ?? INIT_PAGE_SIZE);
+  const page = Number(urlSearchParams.get(QUERY_KEYS.PAGE) ?? INIT_PAGE_NUMBER);
+  const perPage = Number(
+    urlSearchParams.get(QUERY_KEYS.PER_PAGE) ?? INIT_PAGE_SIZE,
+  );
 
   const totalPagesCount = Math.ceil(totalItems / perPage);
 

@@ -56,16 +56,22 @@ export const ORDER_TYPES = {
   X: "Handling unit",
 } as const;
 
+export const SORT_BY_FIELDS = {
+  SKU: "productcode",
+  ORDER_DATE: "date",
+  TOTAL_ITEMS: "count",
+};
+
 export const QUERY_KEYS = {
   FROM_DATE: "from",
   TO_DATE: "to",
   PAGE: "page",
-  PER_PAGE: "perPage",
+  PER_PAGE: "perpage",
   ORDER_BY: "orderBy",
   ORDER_TYPE: "orderType",
   ORDER_STATUS: "orderStatus",
-  SORT_TYPE: "sortBy",
-  SORT_DIRECTION: "sortDirection",
+  SORT_TYPE: "sort",
+  SORT_DIRECTION: "sort_direction",
 } as const;
 
 export const SORTING_DIRECTION = {
@@ -125,8 +131,10 @@ export const PAGE_SIZES = ["10", "20", "30", "40"] as const;
 export const INIT_PAGE_NUMBER = "1" as const;
 export const INIT_PAGE_SIZE = "10" as const;
 export const INIT_FROM_DATE = dayjs()
-  .subtract(1, "year")
+  .subtract(30, "days")
   .format(URL_DATE_FORMAT);
 export const INIT_TO_DATE = dayjs().format(URL_DATE_FORMAT);
 export const INIT_DURATION = DURATIONS.at(0); // Initial duration is 30 days
 export const CUSTOM_DURATION = DURATIONS.at(-1); // Custom duration is the last item in the list
+export const INIT_SORT_TYPE = SORT_BY_FIELDS.ORDER_DATE;
+export const INIT_SORT_DIRECTION = SORTING_DIRECTION.DESC;

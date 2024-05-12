@@ -16,7 +16,6 @@ import dayjs from "dayjs";
 import { useSearchParams } from "next/navigation";
 import { useId, useState } from "react";
 import { MdKeyboardArrowDown } from "react-icons/md";
-// import { changeSearchParams } from "../_utils/client-helpers";
 import {
   CUSTOM_DURATION,
   DURATIONS,
@@ -45,7 +44,9 @@ const OrderHistoryListSelectors = ({
   isLoading,
   totalItems,
 }: OrderHistoryListSelectorsProps) => {
+  const urlSearchParams = useSearchParams();
   const { selectedValues, searchParams } = useFilterParams(filters);
+
   const mappedSelectedValues: (SelectedValues[string] & { id: string })[] = [];
   for (const [key, value] of Object.entries(selectedValues)) {
     mappedSelectedValues.push({ ...value, id: key });
@@ -58,11 +59,12 @@ const OrderHistoryListSelectors = ({
   const statusFilter = filterAndMapValues(filters, "Status");
   const typesFilter = filterAndMapValues(filters, "Transaction Type");
 
-  const urlSearchParams = useSearchParams();
-  const urlFromDate = urlSearchParams.get("from");
-  const urlToDate = urlSearchParams.get("to");
-  const page = Number(urlSearchParams.get("page") ?? INIT_PAGE_NUMBER);
-  const perPage = Number(urlSearchParams.get("perPage") ?? INIT_PAGE_SIZE);
+  const urlFromDate = urlSearchParams.get(QUERY_KEYS.FROM_DATE);
+  const urlToDate = urlSearchParams.get(QUERY_KEYS.TO_DATE);
+  const page = Number(urlSearchParams.get(QUERY_KEYS.PAGE) ?? INIT_PAGE_NUMBER);
+  const perPage = Number(
+    urlSearchParams.get(QUERY_KEYS.PER_PAGE) ?? INIT_PAGE_SIZE,
+  );
 
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [duration, setDuration] = useState(INIT_DURATION);
@@ -72,6 +74,8 @@ const OrderHistoryListSelectors = ({
   const [toDate, setToDate] = useState(new Date(urlToDate ?? INIT_TO_DATE));
   const [orderStatuses, setOrderStatuses] = useState<number[]>([]);
   const [orderTypes, setOrderTypes] = useState<number[]>([]);
+  const [poNos, setPoNos] = useState<number[]>([]);
+  const [jobNames, setJobNames] = useState<number[]>([]);
 
   const formattedFromDate = dayjs(fromDate).format(URL_DATE_FORMAT);
   const formattedToDate = dayjs(toDate).format(URL_DATE_FORMAT);
@@ -96,9 +100,19 @@ const OrderHistoryListSelectors = ({
   };
 
   const handleSearch = () => {
+    const { id: typeAttributeId } = typesFilter ?? {};
+    const { id: statusAttributeId } = statusFilter ?? {};
+    const { id: poAttributeId } = poNoFilter ?? {};
+    const { id: jobAttributeId } = jobNameFilter ?? {};
+
+    const filters = [
+      { key: typeAttributeId, values: orderTypes },
+      { key: statusAttributeId, values: orderStatuses },
+      { key: poAttributeId, values: poNos },
+      { key: jobAttributeId, values: jobNames },
+    ];
+
     const newUrlSearchParams = new URLSearchParams(searchParams);
-    const typeAttributeId = typesFilter?.id.toString() ?? "";
-    const statusAttributeId = statusFilter?.id.toString() ?? "";
 
     if (fromDate) {
       newUrlSearchParams.set(
@@ -114,29 +128,21 @@ const OrderHistoryListSelectors = ({
       );
     }
 
-    if (orderTypes.length > 0) {
-      // check if urlSearchParams already has the typeAttributeId
-      if (newUrlSearchParams.has(typeAttributeId)) {
-        newUrlSearchParams.delete(typeAttributeId);
+    filters.forEach(({ key, values }) => {
+      if (key && values.length > 0) {
+        // Delete existing parameter
+        newUrlSearchParams.delete(key);
+        // Append new values
+        values.forEach((value) =>
+          newUrlSearchParams.append(key, value.toString()),
+        );
+      } else {
+        // If values are empty, delete the parameter
+        if (key) {
+          newUrlSearchParams.delete(key);
+        }
       }
-      orderTypes.forEach((type) => {
-        newUrlSearchParams.append(typeAttributeId, type.toString());
-      });
-    } else {
-      newUrlSearchParams.delete(typeAttributeId);
-    }
-
-    if (orderStatuses.length > 0) {
-      // check if urlSearchParams already has the statusAttributeId
-      if (newUrlSearchParams.has(statusAttributeId)) {
-        newUrlSearchParams.delete(statusAttributeId);
-      }
-      orderStatuses.forEach((status) => {
-        newUrlSearchParams.append(statusAttributeId, status.toString());
-      });
-    } else {
-      newUrlSearchParams.delete(statusAttributeId);
-    }
+    });
 
     window.history.pushState(null, "", `?${newUrlSearchParams.toString()}`);
   };
@@ -162,9 +168,18 @@ const OrderHistoryListSelectors = ({
   };
 
   const handleOrderStatusChange = (values: Option[]) => {
-    console.log("values", values);
     const selectedOrderStatus = values.map((value) => value.id);
     setOrderStatuses(selectedOrderStatus);
+  };
+
+  const handlePONosChange = (values: Option[]) => {
+    const selectedPONos = values.map((value) => value.id);
+    setPoNos(selectedPONos);
+  };
+
+  const handleJobNamesChange = (values: Option[]) => {
+    const selectedJobNames = values.map((value) => value.id);
+    setJobNames(selectedJobNames);
   };
 
   return (
@@ -261,12 +276,18 @@ const OrderHistoryListSelectors = ({
               label="PO No."
               flag="po"
               data={poNoFilter?.values ?? []}
+              onValuesChange={(values) => handlePONosChange(values)}
+              onClear={() => setPoNos([])}
             />
+
             <MultiSelect
               label="Job Name"
               flag="job"
               data={jobNameFilter?.values ?? []}
+              onValuesChange={(values) => handleJobNamesChange(values)}
+              onClear={() => setJobNames([])}
             />
+
             <MultiSelect
               label="Order Status"
               flag="status"

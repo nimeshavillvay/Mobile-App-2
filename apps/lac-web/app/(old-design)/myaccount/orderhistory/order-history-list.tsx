@@ -1,5 +1,6 @@
 "use client";
 
+import useSuspenseFilters from "@/_hooks/search/use-suspense-filters.hook";
 import {
   Table,
   TableBody,
@@ -14,8 +15,10 @@ import {
   INIT_FROM_DATE,
   INIT_PAGE_NUMBER,
   INIT_PAGE_SIZE,
+  INIT_SORT_DIRECTION,
+  INIT_SORT_TYPE,
   INIT_TO_DATE,
-  SORTING_DIRECTION,
+  QUERY_KEYS,
 } from "./constants";
 import OrderHistoryListFilters from "./order-history-list-filters";
 import OrderHistoryListForMobile from "./order-history-list-for-mobile";
@@ -25,32 +28,31 @@ import useSuspenseOrderHistorySearch from "./use-suspense-order-history-search.h
 
 const OrderHistoryList = ({ token }: { token: string }) => {
   const searchParams = useSearchParams();
-  const fromDate = searchParams.get("from") ?? INIT_FROM_DATE;
-  const toDate = searchParams.get("to") ?? INIT_TO_DATE;
-  const currentPage = Number(searchParams.get("page") ?? INIT_PAGE_NUMBER);
-  const pageSize = Number(searchParams.get("perPage") ?? INIT_PAGE_SIZE);
-  const orderTypes = searchParams.get("orderType")?.split(",") ?? [];
-  const orderStatus = searchParams.get("orderStatus")?.split(",") ?? [];
-  const sortBy = searchParams.get("sortBy") ?? "date";
+  const fromDate = searchParams.get(QUERY_KEYS.FROM_DATE) ?? INIT_FROM_DATE;
+  const toDate = searchParams.get(QUERY_KEYS.TO_DATE) ?? INIT_TO_DATE;
+  const page = Number(searchParams.get(QUERY_KEYS.PAGE) ?? INIT_PAGE_NUMBER);
+  const perPage = Number(
+    searchParams.get(QUERY_KEYS.PER_PAGE) ?? INIT_PAGE_SIZE,
+  );
+  const sortBy = searchParams.get(QUERY_KEYS.SORT_TYPE) ?? INIT_SORT_TYPE;
   const sortDirection =
-    searchParams.get("sortDirection") ?? SORTING_DIRECTION.DESC;
+    searchParams.get(QUERY_KEYS.SORT_DIRECTION) ?? INIT_SORT_DIRECTION;
+
+  const filtersQuery = useSuspenseFilters(token, {
+    type: "Order History",
+    from: fromDate,
+    to: toDate,
+  });
 
   const searchQuery = useSuspenseOrderHistorySearch(
     token,
     fromDate,
     toDate,
-    orderTypes,
-    orderStatus,
-    currentPage - 1,
-    pageSize,
+    page - 1,
+    perPage,
     sortBy,
     sortDirection,
-    {
-      rf_data: {
-        "16712": orderTypes,
-        "16715": orderStatus,
-      },
-    },
+    filtersQuery.data,
   );
 
   const orderHistoryItems = searchQuery?.data?.orders ?? null;
