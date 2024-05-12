@@ -65,7 +65,7 @@ const PurchasedItemRowForMobile = ({
         {item.image ? (
           <Image
             src={item.image}
-            alt={item.productDescription}
+            alt={item.productTitle}
             width={92}
             height={92}
             className="size-[92px] border border-brand-gray-200 object-contain"
@@ -85,9 +85,7 @@ const PurchasedItemRowForMobile = ({
           <div className="text-sm">{item.productCategory}</div>
         )}
 
-        <h4 className="text-wrap font-bold text-black">
-          {item.productDescription}
-        </h4>
+        <h4 className="text-wrap font-bold text-black">{item.productTitle}</h4>
 
         <div className="truncate text-sm">
           {item.productSku !== "" ? item.productSku : "N/A"}

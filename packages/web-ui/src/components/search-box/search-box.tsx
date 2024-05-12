@@ -85,43 +85,49 @@ export const SearchBoxInput = ({
       onInputValueChange: ({ inputValue }) => {
         setValue(inputValue);
       },
-      items: [...categories.results, ...brands.results, ...products.results],
-      itemToString(item) {
-        if (item && item.productTitle && item.brandName && item.categoryPath) {
+      items: [
+        ...categories.results,
+        ...brands.results,
+        ...products.results,
+      ].map((item) => item),
+      itemToString(
+        item: {
+          id: string;
+          categoryName?: string;
+          categoryPath?: string;
+          parentCategoryList?: string;
+          subCategoryList?: string;
+          slug: string;
+          brandName?: string;
+          productTitle?: string;
+          itemImage?: string;
+        } | null,
+      ): string {
+        if (!item) return "";
+
+        if (item.productTitle && item.brandName && item.categoryPath) {
           return item.productTitle;
-        } else if (
-          item &&
-          item.brandName &&
-          !item.productTitle &&
-          !item.categoryPath
-        ) {
+        } else if (item.brandName && !item.productTitle && !item.categoryPath) {
           return item.brandName;
-        } else if (
-          item &&
-          item.categoryPath &&
-          !item.brandName &&
-          !item.productTitle
-        ) {
+        } else if (item.categoryPath && !item.brandName && !item.productTitle) {
           return item.categoryPath;
         }
+
+        return "";
       },
     });
 
   return (
     <div className="relative w-full rounded-md">
-      <div className="flex flex-col gap-1">
-        <div>
-          <input
-            className={cn(
-              "placeholder-text-wurth-gray-400 w-full min-w-0 flex-1 shrink rounded-l-full border-0 py-2.5 pl-3.5 text-sm",
-              className,
-            )}
-            {...delegated}
-            {...getInputProps()}
-            onKeyDown={handleKeyDown}
-          />
-        </div>
-      </div>
+      <input
+        className={cn(
+          "placeholder-text-wurth-gray-400 w-full min-w-0 flex-1 shrink rounded-l-full border-0 py-2.5 pl-3.5 text-sm",
+          className,
+        )}
+        {...delegated}
+        {...getInputProps()}
+        onKeyDown={handleKeyDown}
+      />
       <ul
         className={`${
           isOpen ? "block" : "hidden"
@@ -132,26 +138,24 @@ export const SearchBoxInput = ({
           <>
             {categories.summary.total > 0 && (
               <>
-                <li className="text-black-500 px-3 py-1 font-semibold ">
+                <li className="text-black-500 px-3 py-1 font-semibold">
                   Categories for &quot;{value}&quot;
                 </li>
                 {categories.results.map((category, index) => (
-                  <Link
-                    href={`/category/${category.id}/${category.slug}`}
+                  <li
+                    className="p-2 pl-8"
                     key={category.id}
+                    {...getItemProps({ item: category, index })}
                   >
-                    <li
-                      className="p-2 pl-8"
+                    <Link
+                      href={`/category/${category.id}/${category.slug}`}
                       key={category.id}
-                      {...getItemProps({ item: category, index })}
                     >
-                      <span>
-                        <span className="text-gray-500">&#8627;</span>{" "}
-                        <b className="text-red-500">{category.categoryPath}</b>
-                        <br />
-                      </span>
-                    </li>
-                  </Link>
+                      <span className="text-gray-500">&#8627;</span>{" "}
+                      <b className="text-red-500">{category.categoryPath}</b>
+                      <br />
+                    </Link>
+                  </li>
                 ))}
                 <br />
               </>
@@ -164,10 +168,10 @@ export const SearchBoxInput = ({
                 <li className="flex flex-row flex-wrap ">
                   {brands.results.map((brand, index) => (
                     <Link href={`/search?query=${brand.slug}`} key={brand.id}>
-                      <div
+                      <li
                         key={brand.id}
                         className={cn(
-                          "mb-2 mr-2 flex items-center rounded-md p-2 ",
+                          "mb-2 mr-2 flex items-center rounded-md p-2",
                           "m-2 rounded-lg border-2 p-4 shadow-sm",
                         )}
                         {...getItemProps({
@@ -175,23 +179,29 @@ export const SearchBoxInput = ({
                           index: index + categories.results.length,
                         })}
                       >
-                        <Image
-                          src={brand.brandImage}
-                          alt={brand.brandName}
-                          className="mr-2 min-h-10 min-w-10 object-contain"
-                          width={40}
-                          height={40}
-                        />
+                        {brand.brandImage && brand.brandName && (
+                          <Image
+                            src={brand.brandImage}
+                            alt={brand.brandName}
+                            className="mr-2 min-h-10 min-w-10 object-contain"
+                            width={40}
+                            height={40}
+                          />
+                        )}
+                        {!brand.brandImage && (
+                          <div className="h-10 w-10 rounded-full"></div>
+                        )}
                         <span className="flex-grow truncate break-all text-center">
                           {brand.brandName}
                         </span>
-                      </div>
+                      </li>
                     </Link>
                   ))}
                 </li>
                 <br />
               </>
             )}
+
             {products.summary.total > 0 && (
               <>
                 <li className="text-black-500 px-3 py-1 font-semibold">
@@ -215,8 +225,8 @@ export const SearchBoxInput = ({
                               brands.results.length,
                           })}
                         >
-                          <div className="flex items-center">
-                            <div className="mr-2 h-20 w-20 overflow-hidden rounded-md border border-gray-300">
+                          <div className="mr-2 h-20 w-20 overflow-hidden rounded-md border border-gray-300">
+                            {product.itemImage && product.productTitle && (
                               <Image
                                 src={product.itemImage}
                                 alt={product.productTitle}
@@ -224,17 +234,17 @@ export const SearchBoxInput = ({
                                 layout="responsive"
                                 width={80}
                                 height={80}
-                                priority={true}
                               />
-                            </div>
-                            <div className="flex flex-col justify-between">
-                              <span className="w-52">
-                                {product.productTitle}
-                              </span>
-                              <span className="text-gray-500">
-                                Item# {product.MFRPartNo}
-                              </span>
-                            </div>
+                            )}
+                            {!product.itemImage && (
+                              <div className="h-10 w-10 rounded-full"></div>
+                            )}
+                          </div>
+                          <div className="flex flex-col justify-between">
+                            <span className="w-52">{product.productTitle}</span>
+                            <span className="text-gray-500">
+                              Item# {product.MFRPartNo}
+                            </span>
                           </div>
                         </li>
                       </Link>
@@ -258,8 +268,8 @@ export const SearchBoxInput = ({
                               5,
                           })}
                         >
-                          <div className="flex items-center">
-                            <div className="mr-2 h-20 w-20 overflow-hidden rounded-md border border-gray-300">
+                          <div className="mr-2 h-20 w-20 overflow-hidden rounded-md border border-gray-300">
+                            {product.itemImage && product.productTitle && (
                               <Image
                                 src={product.itemImage}
                                 alt={product.productTitle}
@@ -267,17 +277,17 @@ export const SearchBoxInput = ({
                                 layout="responsive"
                                 width={80}
                                 height={80}
-                                priority={true}
                               />
-                            </div>
-                            <div className="flex flex-col justify-between">
-                              <span className="w-52">
-                                {product.productTitle}
-                              </span>
-                              <span className="text-gray-500">
-                                Item# {product.MFRPartNo}
-                              </span>
-                            </div>
+                            )}
+                            {!product.itemImage && (
+                              <div className="h-10 w-10 rounded-full"></div>
+                            )}
+                          </div>
+                          <div className="flex flex-col justify-between">
+                            <span className="w-52">{product.productTitle}</span>
+                            <span className="text-gray-500">
+                              Item# {product.MFRPartNo}
+                            </span>
                           </div>
                         </li>
                       </Link>

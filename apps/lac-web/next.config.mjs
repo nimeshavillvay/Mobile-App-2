@@ -19,6 +19,7 @@ const nextConfig = {
         protocol: "https",
         hostname: "wurthlac.x-shops.com",
       },
+      // TODO Remove this domain
       {
         protocol: "https",
         hostname: "www.wurthmachinery.com",

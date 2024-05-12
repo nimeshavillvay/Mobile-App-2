@@ -2,7 +2,6 @@
 
 import useAddToCartMutation from "@/_hooks/cart/use-add-to-cart-mutation.hook";
 import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
-import useDebounce from "@/_hooks/misc/use-debouce.hook";
 import useItemInfo from "@/_hooks/product/use-item-info.hook";
 import useSuspenseCheckAvailability from "@/_hooks/product/use-suspense-check-availability.hook";
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
@@ -30,7 +29,7 @@ import { Input } from "@repo/web-ui/components/ui/input";
 import { Label } from "@repo/web-ui/components/ui/label";
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import Image from "next/image";
-import { Suspense, useId, type ComponentProps } from "react";
+import { Suspense, useId } from "react";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import { z } from "zod";
 
@@ -172,38 +171,13 @@ const VerificationDialog = ({ token }: VerificationDialogProps) => {
               )}
 
               {itemInfo ? (
-                <Suspense
-                  fallback={
-                    <AddToCartContent
-                      formProps={{
-                        id: formId,
-                      }}
-                      decrementButtonProps={{
-                        disabled: true,
-                      }}
-                      inputProps={{
-                        ...methods.register("quantity", {
-                          valueAsNumber: true,
-                        }),
-                        disabled: true,
-                      }}
-                      incrementButtonProps={{
-                        disabled: true,
-                      }}
-                      submitButtonProps={{
-                        disabled: true,
-                      }}
-                    />
-                  }
-                >
-                  <AddToCart
-                    token={token}
-                    productId={itemInfo.productId}
-                    minAmount={itemInfo.minimumOrderQuantity}
-                    increments={itemInfo.quantityByIncrements}
-                    formId={formId}
-                  />
-                </Suspense>
+                <AddToCart
+                  token={token}
+                  productId={itemInfo.productId}
+                  minAmount={itemInfo.minimumOrderQuantity}
+                  increments={itemInfo.quantityByIncrements}
+                  formId={formId}
+                />
               ) : (
                 <Skeleton className="h-[3.75rem]" />
               )}
@@ -295,82 +269,6 @@ const PriceCheck = ({
   );
 };
 
-// This is a separate component so that its disabled state can be used
-// in the Suspense fallback
-const AddToCartContent = ({
-  formProps,
-  decrementButtonProps,
-  inputProps,
-  incrementButtonProps,
-  submitButtonProps,
-}: {
-  formProps: Omit<ComponentProps<"form">, "className">;
-  decrementButtonProps: Omit<
-    ComponentProps<typeof Button>,
-    "type" | "variant" | "size" | "className" | "children"
-  >;
-  inputProps: Omit<ComponentProps<typeof Input>, "type" | "className">;
-  incrementButtonProps: Omit<
-    ComponentProps<typeof Button>,
-    "type" | "variant" | "size" | "className" | "children"
-  >;
-  submitButtonProps: Omit<
-    ComponentProps<typeof Button>,
-    "type" | "variant" | "className" | "children"
-  >;
-}) => {
-  return (
-    <form className="flex flex-row items-stretch gap-2" {...formProps}>
-      <div className="flex-[4] rounded-md border border-wurth-gray-250 p-0.5 md:flex-1">
-        <div className="text-center text-xs font-medium uppercase leading-none text-wurth-gray-400">
-          Qty / Each
-        </div>
-
-        <div className="flex flex-row items-center justify-between gap-2 shadow-sm">
-          <Button
-            type="button"
-            variant="subtle"
-            size="icon"
-            className="size-10 rounded-sm"
-            {...decrementButtonProps}
-          >
-            <Minus className="size-4" />
-            <span className="sr-only">Reduce quantity</span>
-          </Button>
-
-          <Input
-            type="number"
-            className="flex-1 rounded-sm border-0 p-0 text-center text-lg font-semibold text-wurth-gray-800 shadow-none"
-            {...inputProps}
-          />
-
-          <Button
-            type="button"
-            variant="subtle"
-            size="icon"
-            className="size-10 rounded-sm"
-            {...incrementButtonProps}
-          >
-            <Plus className="size-4" />
-            <span className="sr-only">Increase quantity</span>
-          </Button>
-        </div>
-      </div>
-
-      <Button
-        type="submit"
-        variant="secondary"
-        className="h-full flex-[5] gap-2 rounded-lg px-5 py-4 shadow-md md:flex-[2]"
-        {...submitButtonProps}
-      >
-        <AddToCartIcon className="stroke-white" />
-
-        <span className="text-lg font-semibold">Add to cart</span>
-      </Button>
-    </form>
-  );
-};
-
 const AddToCart = ({
   token,
   productId,
@@ -387,7 +285,6 @@ const AddToCart = ({
   const { watch, setValue, register, handleSubmit } =
     useFormContext<VerificationDialogSchema>();
   const quantity = watch("quantity");
-  const delayedQuantity = useDebounce(quantity);
 
   const reduceQuantity = () => {
     setValue("quantity", quantity - increments);
@@ -399,41 +296,75 @@ const AddToCart = ({
 
   const addToCartMutation = useAddToCartMutation(token, {
     productId,
-    quantity: delayedQuantity,
   });
 
   const onSubmit = handleSubmit((data) => {
     addToCartMutation.mutate({
+      quantity: data.quantity,
       poOrJobName: data.poOrJobName,
     });
   });
 
   return (
-    <AddToCartContent
-      formProps={{
-        id: formId,
-        onSubmit: onSubmit,
-      }}
-      decrementButtonProps={{
-        onClick: reduceQuantity,
-        disabled: quantity === minAmount || addToCartMutation.isPending,
-      }}
-      inputProps={{
-        ...register("quantity", {
-          valueAsNumber: true,
-        }),
-        min: minAmount,
-        step: increments,
-        disabled: addToCartMutation.isPending,
-      }}
-      incrementButtonProps={{
-        onClick: increaseQuantity,
-        disabled: addToCartMutation.isPending,
-      }}
-      submitButtonProps={{
-        disabled: addToCartMutation.isPending,
-      }}
-    />
+    <form
+      className="flex flex-row items-stretch gap-2"
+      id={formId}
+      onSubmit={onSubmit}
+    >
+      <div className="flex-[4] rounded-md border border-wurth-gray-250 p-0.5 md:flex-1">
+        <div className="text-center text-xs font-medium uppercase leading-none text-wurth-gray-400">
+          Qty / Each
+        </div>
+
+        <div className="flex flex-row items-center justify-between gap-2 shadow-sm">
+          <Button
+            type="button"
+            variant="subtle"
+            size="icon"
+            className="size-10 rounded-sm"
+            onClick={reduceQuantity}
+            disabled={quantity === minAmount || addToCartMutation.isPending}
+          >
+            <Minus className="size-4" />
+            <span className="sr-only">Reduce quantity</span>
+          </Button>
+
+          <Input
+            {...register("quantity", {
+              valueAsNumber: true,
+            })}
+            type="number"
+            className="flex-1 rounded-sm border-0 p-0 text-center text-lg font-semibold text-wurth-gray-800 shadow-none"
+            min={minAmount}
+            step={increments}
+            disabled={addToCartMutation.isPending}
+          />
+
+          <Button
+            type="button"
+            variant="subtle"
+            size="icon"
+            className="size-10 rounded-sm"
+            onClick={increaseQuantity}
+            disabled={addToCartMutation.isPending}
+          >
+            <Plus className="size-4" />
+            <span className="sr-only">Increase quantity</span>
+          </Button>
+        </div>
+      </div>
+
+      <Button
+        type="submit"
+        variant="secondary"
+        className="h-full flex-[5] gap-2 rounded-lg px-5 py-4 shadow-md md:flex-[2]"
+        disabled={addToCartMutation.isPending}
+      >
+        <AddToCartIcon className="stroke-white" />
+
+        <span className="text-lg font-semibold">Add to cart</span>
+      </Button>
+    </form>
   );
 };
 

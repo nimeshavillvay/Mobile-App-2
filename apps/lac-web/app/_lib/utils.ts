@@ -1,4 +1,4 @@
-import type { Filter, FilterTitle, PasswordPolicies } from "@/_lib/types";
+import type { Filters, FilterTitle, PasswordPolicies } from "@/_lib/types";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import type { RefinementCtx } from "zod";
@@ -10,9 +10,8 @@ export const cn = (...args: ClassValue[]) => {
   return twMerge(clsx(args));
 };
 
-export const filterAndMapValues = (filters: Filter[], title: FilterTitle) => {
-  const filter = filters.find((filter) => filter.title === title);
-  return filter ? filter.values : [];
+export const filterAndMapValues = (filters: Filters[], title: FilterTitle) => {
+  return filters.find((filter) => filter.filter === title);
 };
 
 type ErrorResponse = {

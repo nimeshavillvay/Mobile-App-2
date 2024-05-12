@@ -1,15 +1,6 @@
-"use client";
-
 import { ProductsGridList } from "@/_components/products-grid";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogOverlay,
-} from "@repo/web-ui/components/ui/dialog";
-import { useRouter } from "next/navigation";
 import { type ComponentProps } from "react";
-import useSuspenseSearchProductList from "./use-suspense-search-product-list.hook";
+import { getSearchResults } from "./apis";
 
 type ProductListGridProps = {
   token: string;
@@ -18,68 +9,43 @@ type ProductListGridProps = {
   pageNo: string;
 };
 
-const ProductListGrid = ({ type, term, pageNo }: ProductListGridProps) => {
-  const router = useRouter();
-  const searchQuery = useSuspenseSearchProductList(term, pageNo);
+const ProductListGrid = async ({
+  type,
+  term,
+  pageNo,
+  token,
+}: ProductListGridProps) => {
+  const searchResults = await getSearchResults({
+    query: term,
+    pageNo,
+  });
 
-  const handleCloseDialog = () => {
-    router.push("/");
-  };
+  let products: ComponentProps<typeof ProductsGridList>["products"] = [];
 
-  const handleOpenChange = (newOpen: boolean) => {
-    if (!newOpen) {
-      handleCloseDialog(); // Redirect when dialog is closed
-    }
-  };
-
-  if (
-    searchQuery.data.results &&
-    Array.isArray(searchQuery.data.results) &&
-    searchQuery.data.results.length === 0
-  ) {
-    return (
-      <Dialog open={true} onOpenChange={handleOpenChange}>
-        <DialogOverlay />
-        <DialogContent>
-          <h2>No Results Found</h2>
-          <p>Sorry, no results were found for your search term.</p>
-          <DialogClose />
-        </DialogContent>
-      </Dialog>
-    );
+  if (Array.isArray(searchResults.results)) {
+    products = searchResults.results.map((product) => ({
+      prop: {
+        groupName: product.id,
+        groupImage: product.itemImage,
+        variants: [
+          {
+            id: product.id,
+            slug: product.slug,
+            title: product.productTitle,
+            image: product.itemImage,
+            sku: product.MFRPartNo,
+            //need to request from be till then hardcoded
+            uom: "piece",
+          },
+        ],
+      },
+      info: {
+        groupId: product.id,
+      },
+    }));
   }
 
-  const handleRedirect = () => {
-    if (searchQuery.data.summary.plp == true) {
-      const productPath = `/product/${searchQuery.data.results.id}/${searchQuery.data.results.slug}`;
-      router.push(productPath);
-    }
-  };
-
-  if (searchQuery.data.summary.plp) {
-    handleRedirect();
-    return null;
-  } else {
-    const products: ComponentProps<typeof ProductsGridList>["products"] =
-      searchQuery.data.results.map((product) => ({
-        prop: {
-          groupName: product.id,
-          groupImage: product.itemImage,
-          variants: [
-            {
-              id: product.id,
-              slug: product.slug,
-              title: product.productTitle,
-              image: product.itemImage,
-            },
-          ],
-        },
-        info: {
-          groupId: product.id,
-        },
-      }));
-    return <ProductsGridList products={products} type={type} />;
-  }
+  return <ProductsGridList products={products} type={type} token={token} />;
 };
 
 export default ProductListGrid;

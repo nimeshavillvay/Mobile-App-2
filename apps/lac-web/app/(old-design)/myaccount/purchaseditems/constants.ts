@@ -18,18 +18,18 @@ export const SORTING_TYPES = [
 ];
 
 export const SORTING_BY_FIELDS = {
-  SKU: "sku",
-  ORDER_DATE: "orderDate",
-  TOTAL_ITEMS: "totalItem",
+  SKU: "productcode",
+  ORDER_DATE: "date",
+  TOTAL_ITEMS: "count",
 };
 
 export const QUERY_KEYS = {
   FROM_DATE: "from",
   TO_DATE: "to",
   PAGE: "page",
-  PER_PAGE: "perPage",
-  ORDER_BY: "orderBy",
-  ORDER_TYPE: "orderType",
+  PER_PAGE: "perpage",
+  ORDER_BY: "sort",
+  ORDER_TYPE: "sort_direction",
 };
 
 export const DEFAULT_SORT = "Sort...";

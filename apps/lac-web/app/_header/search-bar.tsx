@@ -17,6 +17,7 @@ const SearchBar = () => {
   const handleSearchEnter = () => {
     router.push(`/search?query=${encodeURIComponent(value)}`);
   };
+
   return (
     <SearchBox>
       <SearchBoxInput
@@ -26,10 +27,10 @@ const SearchBar = () => {
         onEnterPressed={handleSearchEnter}
         placeholder="What are you looking for?"
       />
-
       <SearchBoxButton />
       <BarcodeScannerDialog />
     </SearchBox>
   );
 };
+
 export default SearchBar;

@@ -1,3 +1,4 @@
+import useAddToCartMutation from "@/_hooks/cart/use-add-to-cart-mutation.hook";
 import AlertInline from "@/old/_components/alert-inline";
 import ErrorBoundary from "@/old/_components/error-boundary";
 import { Button } from "@/old/_components/ui/button";
@@ -9,7 +10,6 @@ import {
 import { Input } from "@/old/_components/ui/input";
 import { Label } from "@/old/_components/ui/label";
 import { TableCell, TableRow } from "@/old/_components/ui/table";
-import useAddToCartMutation from "@/old/_hooks/cart/use-add-to-cart-mutation.hook";
 import { cn } from "@/old/_utils/helpers";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { WurthFullBlack } from "@repo/web-ui/components/logos/wurth-full-black";
@@ -47,25 +47,21 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
   const router = useRouter();
   const quantityId = `quantity-${id}`;
 
-  // TODO: Replace this function with new add to cart function after new cart functionality is implemented
-  const addToCartMutation = useAddToCartMutation();
-
   const { register, watch, handleSubmit } = useForm<Schema>({
     resolver: zodResolver(schema),
   });
 
   const quantity = watch("quantity") ?? 1;
 
-  const onSubmit = (values: Schema) => {
-    addToCartMutation.mutate(
-      { sku: item.productSku, quantity: values.quantity },
-      {
-        onSuccess: () => {
-          // TODO: handle add to cart popup here
-        },
-      },
-    );
-  };
+  const addToCartMutation = useAddToCartMutation(token, {
+    productId: item.productId,
+  });
+
+  const onSubmit = handleSubmit((data) => {
+    addToCartMutation.mutate({
+      quantity: data.quantity,
+    });
+  });
 
   const onAddToFavorites = () => {
     if (item.isFavorite) {
@@ -153,10 +149,10 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
                 MRF Part# : {item.mfrPartNo !== "" ? item.mfrPartNo : "N/A"}
               </div>
 
-              <h4 className="text-wrap font-bold">{item.productDescription}</h4>
+              <h4 className="text-wrap font-bold">{item.productTitle}</h4>
 
               <div className="text-sm text-brand-gray-500">
-                Category :{" "}
+                Category :&nbsp;
                 {item.productCategory !== "" ? item.productCategory : "N/A"}
               </div>
             </>
@@ -306,8 +302,7 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
           </Collapsible>
         </TableCell>
 
-        <TableCell></TableCell>
-        <TableCell></TableCell>
+        <TableCell colSpan={2}></TableCell>
       </TableRow>
 
       {isEligible(item) && (
@@ -319,7 +314,7 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
         >
           <TableCell colSpan={7}>
             <div className="flex flex-row items-end justify-end gap-2">
-              <form onSubmit={handleSubmit(onSubmit)}>
+              <form onSubmit={onSubmit}>
                 <Button
                   className="w-[170px]"
                   disabled={!quantity || quantity < 1}

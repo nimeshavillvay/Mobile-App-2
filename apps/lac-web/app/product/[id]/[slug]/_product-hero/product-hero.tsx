@@ -91,7 +91,9 @@ const ProductHero = async ({ id, slug }: ProductHeroProps) => {
             incQty={product.selectedProduct.quantityByIncrements}
           />
 
-          <DropShipItemNotice />
+          {product.selectedProduct.isDirectlyShippedFromVendor && (
+            <DropShipItemNotice />
+          )}
         </div>
 
         <ProductDetails id={id} slug={slug} />
@@ -152,7 +154,9 @@ const ProductHero = async ({ id, slug }: ProductHeroProps) => {
           className="container my-6 md:hidden"
         />
 
-        <DropShipItemNotice className="container my-6 md:hidden" />
+        {product.selectedProduct.isDirectlyShippedFromVendor && (
+          <DropShipItemNotice className="container my-6 md:hidden" />
+        )}
 
         <ProductDetails
           id={id}
