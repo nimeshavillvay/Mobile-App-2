@@ -4,11 +4,6 @@ import { cn } from "@/_lib/utils";
 import { Phone } from "@repo/web-ui/components/icons/phone";
 import { ShoppingCart } from "@repo/web-ui/components/icons/shopping-cart";
 import { WurthFullBlack } from "@repo/web-ui/components/logos/wurth-full-black";
-import {
-  SearchBox,
-  SearchBoxButton,
-  SearchBoxInput,
-} from "@repo/web-ui/components/search-box";
 import { Button, buttonVariants } from "@repo/web-ui/components/ui/button";
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import Link from "next/link";
@@ -19,6 +14,7 @@ import WillCallPlant from "./_will-call-plant";
 import DesktopNavigationMenu from "./desktop-navigation-menu";
 import MobileNavigationMenu from "./mobile-navigation-menu";
 import OSRDetails from "./osr-details";
+import SearchBar from "./search-bar";
 import type { Category, TransformedCategory } from "./types";
 
 const Header = async () => {
@@ -120,13 +116,11 @@ const Header = async () => {
           <span className="sr-only">Home</span>
         </Link>
 
-        <SearchBox className="mx-auto hidden min-w-0 max-w-[35rem] flex-1 md:flex">
-          <SearchBoxInput placeholder="What are you looking for?" />
+        <div className="container relative w-[800px]">
+          <SearchBar />
+        </div>
 
-          <SearchBoxButton />
-        </SearchBox>
-
-        <div className="ml-auto flex flex-row items-center gap-4 md:ml-0 md:min-w-[16.5rem] md:justify-end md:gap-6">
+        <div className="ml-auto flex flex-row items-center gap-4 md:ml-0 md:gap-6">
           {/* Mobile */}
           <Suspense fallback={<UserProfileSkeleton type="mobile" />}>
             <UserProfile type="mobile" />
@@ -167,11 +161,7 @@ const Header = async () => {
       </div>
 
       <div className="container w-full md:hidden">
-        <SearchBox>
-          <SearchBoxInput placeholder="What are you looking for?" />
-
-          <SearchBoxButton />
-        </SearchBox>
+        <SearchBar />
       </div>
 
       <DesktopNavigationMenu categories={transformedCategory} />
