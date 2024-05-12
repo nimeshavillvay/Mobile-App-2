@@ -2,11 +2,12 @@
 
 import { Button } from "@/(old-design)/_components/ui/button";
 import useSuspenseBillingAddress from "@/_hooks/address/use-suspense-billing-address.hook";
+import type { AddressFormData } from "@/_lib/types";
 import { useState } from "react";
 import { MdOutlineEdit } from "react-icons/md";
 import AddressDialog from "./address-dialog";
 import AddressSuggestionDialog from "./address-suggestion-dialog";
-import type { AddressCheckSuggestionsWithUuid, AddressFormData } from "./types";
+import type { AddressCheckSuggestionsWithUuid } from "./types";
 
 const BillingAddress = ({ token }: { token: string }) => {
   const [openBillingAddressDialog, setOpenBillingAddressDialog] =

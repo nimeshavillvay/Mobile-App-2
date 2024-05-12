@@ -1,5 +1,4 @@
 import AlertInline from "@/old/_components/alert-inline";
-import { Button } from "@/old/_components/ui/button";
 import {
   Table,
   TableBody,
@@ -15,6 +14,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Fragment } from "react";
 import { UI_DATE_FORMAT } from "../constants";
+import BuyAgainButton from "./buy-again-button";
 
 type OrderItemProps = {
   index: number;
@@ -140,9 +140,7 @@ const OrderItem = ({
             </div>
           </div>
 
-          <Button className="w-[170px] text-base" disabled={isExcludedProduct}>
-            Buy Again
-          </Button>
+          <BuyAgainButton disabled={isExcludedProduct} productId={productId} />
         </div>
       </div>
 

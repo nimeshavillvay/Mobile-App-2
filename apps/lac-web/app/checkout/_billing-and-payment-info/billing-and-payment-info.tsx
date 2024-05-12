@@ -2,6 +2,7 @@
 
 import useSuspenseBillingAddress from "@/_hooks/address/use-suspense-billing-address.hook";
 import useSuspenseCart from "@/_hooks/cart/use-suspense-cart.hook";
+import useUpdateCartConfigMutation from "@/_hooks/cart/use-update-cart-config-mutation.hook";
 import type { PaymentMethod } from "@/_lib/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Close } from "@repo/web-ui/components/icons/close";
@@ -23,7 +24,7 @@ import {
   RadioGroup,
   RadioGroupItem,
 } from "@repo/web-ui/components/ui/radio-group";
-import { useId } from "react";
+import { useId, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import AddCreditCardDialog from "./add-credit-card-dialog";
@@ -32,7 +33,7 @@ import useSuspenseCreditCards from "./use-suspense-credit-cards.hook";
 
 const formSchema = z.object({
   email: z.string().email(),
-  addressTo: z.string().min(1),
+  addressTo: z.string(),
 });
 
 type BillingAndPaymentInfoProps = {
@@ -74,13 +75,71 @@ const BillingAndPaymentInfo = ({
     },
   });
 
+  const updateCartConfigMutation = useUpdateCartConfigMutation();
+
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+    updateCartConfigMutation.mutate({
+      orderEmail: values.email,
+      attnName: values.addressTo,
+    });
   };
 
   const deleteCreditCardMutation = useDeleteCreditCardMutation();
+
+  const [paymentId, setPaymentId] = useState(() => {
+    // Search for the credit card
+    const creditCard = creditCartsQuery.data.find(
+      (card) => card.number === cartQuery.data.configuration.paymentToken,
+    );
+    if (creditCard) {
+      return creditCard.id.toString();
+    }
+
+    // Search for the payment method
+    const paymentMethod = paymentMethods.find(
+      (paymentMethod) =>
+        paymentMethod.code === cartQuery.data.configuration.paymentMethod,
+    );
+    if (paymentMethod) {
+      return paymentMethod.code;
+    }
+
+    return "";
+  });
+
+  const selectPayment = (id: string) => {
+    setPaymentId(id);
+
+    // If a credit card is selected
+    const selectedCreditCard = creditCartsQuery.data.find(
+      (card) => card.id.toString() === id,
+    );
+    if (selectedCreditCard) {
+      return updateCartConfigMutation.mutate({
+        cardName: selectedCreditCard.name,
+        cardType: selectedCreditCard.type,
+        expireDate: selectedCreditCard.expiryDate,
+        paymentMethod: paymentMethods.find(
+          (paymentMethod) => paymentMethod.isCreditCard,
+        )?.code,
+        paymentToken: selectedCreditCard.number,
+      });
+    }
+
+    // If a normal payment method is selected
+    const selectedPaymentMethod = paymentMethods.find(
+      (paymentMethod) => paymentMethod.code === id,
+    );
+    if (selectedPaymentMethod) {
+      return updateCartConfigMutation.mutate({
+        cardName: "",
+        cardType: "",
+        expireDate: "",
+        paymentMethod: selectedPaymentMethod.code,
+        paymentToken: "0000",
+      });
+    }
+  };
 
   return (
     <section className="flex flex-col gap-5 rounded-lg border border-wurth-gray-250 p-5 shadow-lg md:gap-6 md:p-6">
@@ -133,7 +192,12 @@ const BillingAndPaymentInfo = ({
                   <FormItem>
                     <FormLabel>Email to:</FormLabel>
                     <FormControl>
-                      <Input placeholder="Email" type="email" {...field} />
+                      <Input
+                        placeholder="Email"
+                        type="email"
+                        {...field}
+                        onBlur={form.handleSubmit(onSubmit)}
+                      />
                     </FormControl>
                     <FormDescription className="sr-only">
                       The email to send the order confirmation.
@@ -150,7 +214,12 @@ const BillingAndPaymentInfo = ({
                   <FormItem>
                     <FormLabel>Address to:</FormLabel>
                     <FormControl>
-                      <Input placeholder="Name" type="text" {...field} />
+                      <Input
+                        placeholder="Name"
+                        type="text"
+                        {...field}
+                        onBlur={form.handleSubmit(onSubmit)}
+                      />
                     </FormControl>
                     <FormDescription className="sr-only">
                       The name of the confirmation recipient.
@@ -167,7 +236,7 @@ const BillingAndPaymentInfo = ({
       <div className="flex flex-col gap-5 md:gap-4">
         <h3 className="text-sm font-semibold text-black">Payment method</h3>
 
-        <RadioGroup asChild>
+        <RadioGroup value={paymentId} onValueChange={selectPayment} asChild>
           <ul className="grid grid-cols-1 gap-5 md:grid-cols-2">
             {showCreditCards &&
               creditCartsQuery.data.map((card) => (

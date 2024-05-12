@@ -1,25 +1,46 @@
 import { api } from "@/_lib/api";
+import type { Filters } from "@/_lib/types";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import type { MyOrders } from "./types";
-
-type RFData = {
-  rf_data: {
-    [filterId: string]: string[];
-  };
-};
+import { useFilterParams } from "./use-filter-params.hook";
 
 const useSuspenseOrderHistorySearch = (
   token: string,
   fromDate: string,
   toDate: string,
-  orderTypes: string[],
-  orderStatus: string[],
   currentPage: number,
   pageSize: number,
   sortBy: string,
   sortDirection: string,
-  rfData?: RFData,
+  filters: Filters[],
 ) => {
+  const { selectedValues } = useFilterParams(filters);
+
+  const selectedFilters: {
+    [attributeId: string]: string[];
+  } = {};
+
+  for (const [key, value] of Object.entries(selectedValues)) {
+    selectedFilters[key] = value.values.map((v) => v.id);
+  }
+
+  const body: {
+    [attributeId: string]: {
+      [valueId: string]: "Y";
+    };
+  } = {};
+
+  if (selectedFilters) {
+    for (const [key, values] of Object.entries(selectedFilters)) {
+      values.forEach((value) => {
+        body[key] = {
+          ...body[key],
+          [value]: "Y",
+        };
+      });
+    }
+  }
+
   return useSuspenseQuery({
     queryKey: [
       "user",
@@ -31,23 +52,24 @@ const useSuspenseOrderHistorySearch = (
       pageSize,
       sortBy,
       sortDirection,
-      rfData,
+      body,
     ],
     queryFn: () =>
       api
-        .get("rest/order-history/search", {
+        .post("rest/order-history/search", {
           headers: {
             authorization: `Bearer ${token}`,
           },
           searchParams: {
             from: fromDate,
             to: toDate,
-            order_type: orderTypes.join(","),
-            order_status: orderStatus.join(","),
             page: currentPage,
             perpage: pageSize,
             sort: sortBy,
             sort_direction: sortDirection,
+          },
+          json: {
+            rf_data: body,
           },
         })
         .json<MyOrders>(),

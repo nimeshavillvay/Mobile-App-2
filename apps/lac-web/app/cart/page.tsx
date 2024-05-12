@@ -1,5 +1,5 @@
 import OrderSummary from "@/_components/order-summary";
-import { getShippingMethods } from "@/_lib/apis/server";
+import { getPlants, getShippingMethods } from "@/_lib/apis/server";
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import type { Metadata } from "next";
@@ -20,7 +20,10 @@ const CartPage = async () => {
   const cookiesStore = cookies();
   const sessionToken = cookiesStore.get(SESSION_TOKEN_COOKIE);
 
-  const shippingMethods = await getShippingMethods();
+  const [shippingMethods, plants] = await Promise.all([
+    getShippingMethods(),
+    getPlants(),
+  ]);
 
   if (!sessionToken?.value) {
     return null;
@@ -57,6 +60,7 @@ const CartPage = async () => {
             <CartList
               token={sessionToken.value}
               shippingMethods={shippingMethods}
+              plants={plants}
             />
           </Suspense>
         </div>

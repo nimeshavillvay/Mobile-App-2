@@ -1,7 +1,44 @@
+import { useCombobox } from "downshift";
+import Image from "next/image";
+import Link from "next/link";
 import { type ComponentProps } from "react";
 import { MagnifyingGlass } from "~/components/icons/magnifying-glass";
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
+
+type SearchData = {
+  summary: {
+    total: number;
+    page_size: number;
+    page_no: number;
+    plp: boolean;
+  };
+  results: {
+    id: string;
+    categoryName?: string;
+    categoryPath?: string;
+    parentCategoryList?: string;
+    subCategoryList?: string;
+    slug: string;
+    brandName?: string;
+    brandImage?: string;
+    lastUpdatedDate?: string | null;
+    MFRPartNo?: string;
+    sellingBookSequenceNo?: string;
+    UPCCode?: string;
+    alias?: string;
+    materialNumber?: string;
+    productTitle?: string;
+    Status?: string;
+    productStatus?: string;
+    createDate?: string;
+    keywords?: string;
+    minimumOrderQuantity?: string;
+    orderQuantityByIncrements?: string;
+    attributes?: [];
+    itemImage?: string;
+  }[];
+};
 
 export const SearchBox = ({
   className,
@@ -20,16 +57,249 @@ export const SearchBox = ({
 
 export const SearchBoxInput = ({
   className,
+  data,
+  value,
+  setValue,
+  onEnterPressed,
   ...delegated
-}: ComponentProps<"input">) => {
+}: ComponentProps<"input"> & {
+  data: {
+    products: SearchData;
+    categories: SearchData;
+    brands: SearchData;
+  };
+  value: string;
+  setValue: (value: string) => void;
+  onEnterPressed: () => void;
+}) => {
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      onEnterPressed();
+      closeMenu();
+    }
+  };
+  const { products, categories, brands } = data;
+  const { isOpen, getMenuProps, getInputProps, getItemProps, closeMenu } =
+    useCombobox({
+      onInputValueChange: ({ inputValue }) => {
+        setValue(inputValue);
+      },
+      items: [
+        ...categories.results,
+        ...brands.results,
+        ...products.results,
+      ].map((item) => item),
+      itemToString(
+        item: {
+          id: string;
+          categoryName?: string;
+          categoryPath?: string;
+          parentCategoryList?: string;
+          subCategoryList?: string;
+          slug: string;
+          brandName?: string;
+          productTitle?: string;
+          itemImage?: string;
+        } | null,
+      ): string {
+        if (!item) return "";
+
+        if (item.productTitle && item.brandName && item.categoryPath) {
+          return item.productTitle;
+        } else if (item.brandName && !item.productTitle && !item.categoryPath) {
+          return item.brandName;
+        } else if (item.categoryPath && !item.brandName && !item.productTitle) {
+          return item.categoryPath;
+        }
+
+        return "";
+      },
+    });
+
   return (
-    <input
-      className={cn(
-        "min-w-0 flex-1 shrink rounded-l-full border-0 py-2.5 pl-3.5 text-sm placeholder:text-wurth-gray-400",
-        className,
-      )}
-      {...delegated}
-    />
+    <div className="relative w-full rounded-md">
+      <input
+        className={cn(
+          "placeholder-text-wurth-gray-400 w-full min-w-0 flex-1 shrink rounded-l-full border-0 py-2.5 pl-3.5 text-sm",
+          className,
+        )}
+        {...delegated}
+        {...getInputProps()}
+        onKeyDown={handleKeyDown}
+      />
+      <ul
+        className={`${
+          isOpen ? "block" : "hidden"
+        } shadow-right shadow-bottom shadow-left le absolute z-50 ml-3 mt-4 w-full rounded-b-lg bg-white p-0 pl-4 shadow-sm`}
+        {...getMenuProps()}
+      >
+        {isOpen && value && (
+          <>
+            {categories.summary.total > 0 && (
+              <>
+                <li className="text-black-500 px-3 py-1 font-semibold">
+                  Categories for &quot;{value}&quot;
+                </li>
+                {categories.results.map((category, index) => (
+                  <li
+                    className="p-2 pl-8"
+                    key={category.id}
+                    {...getItemProps({ item: category, index })}
+                  >
+                    <Link
+                      href={`/category/${category.id}/${category.slug}`}
+                      key={category.id}
+                    >
+                      <span className="text-gray-500">&#8627;</span>{" "}
+                      <b className="text-red-500">{category.categoryPath}</b>
+                      <br />
+                    </Link>
+                  </li>
+                ))}
+                <br />
+              </>
+            )}
+            {brands.summary.total > 0 && (
+              <>
+                <li className="text-black-500 px-3 py-1 font-semibold">
+                  Brands for &quot;{value}&quot;
+                </li>
+                <li className="flex flex-row flex-wrap ">
+                  {brands.results.map((brand, index) => (
+                    <Link href={`/search?query=${brand.slug}`} key={brand.id}>
+                      <li
+                        key={brand.id}
+                        className={cn(
+                          "mb-2 mr-2 flex items-center rounded-md p-2",
+                          "m-2 rounded-lg border-2 p-4 shadow-sm",
+                        )}
+                        {...getItemProps({
+                          item: brand,
+                          index: index + categories.results.length,
+                        })}
+                      >
+                        {brand.brandImage && brand.brandName && (
+                          <Image
+                            src={brand.brandImage}
+                            alt={brand.brandName}
+                            className="mr-2 min-h-10 min-w-10 object-contain"
+                            width={40}
+                            height={40}
+                          />
+                        )}
+                        {!brand.brandImage && (
+                          <div className="h-10 w-10 rounded-full"></div>
+                        )}
+                        <span className="flex-grow truncate break-all text-center">
+                          {brand.brandName}
+                        </span>
+                      </li>
+                    </Link>
+                  ))}
+                </li>
+                <br />
+              </>
+            )}
+
+            {products.summary.total > 0 && (
+              <>
+                <li className="text-black-500 px-3 py-1 font-semibold">
+                  Products for &quot;{value}&quot;
+                </li>
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                  <div className="w-full">
+                    {products.results.slice(0, 5).map((product, index) => (
+                      <Link
+                        href={`/product/${product.id}/${product.slug}`}
+                        key={product.id}
+                      >
+                        <li
+                          className="m-w-[339px] m-h[120px] flex justify-between px-3 py-2"
+                          key={product.id}
+                          {...getItemProps({
+                            item: product,
+                            index:
+                              index +
+                              categories.results.length +
+                              brands.results.length,
+                          })}
+                        >
+                          <div className="mr-2 h-20 w-20 overflow-hidden rounded-md border border-gray-300">
+                            {product.itemImage && product.productTitle && (
+                              <Image
+                                src={product.itemImage}
+                                alt={product.productTitle}
+                                className="h-full w-full object-cover"
+                                layout="responsive"
+                                width={80}
+                                height={80}
+                              />
+                            )}
+                            {!product.itemImage && (
+                              <div className="h-10 w-10 rounded-full"></div>
+                            )}
+                          </div>
+                          <div className="flex flex-col justify-between">
+                            <span className="w-52">{product.productTitle}</span>
+                            <span className="text-gray-500">
+                              Item# {product.MFRPartNo}
+                            </span>
+                          </div>
+                        </li>
+                      </Link>
+                    ))}
+                  </div>
+                  <div className="w-full">
+                    {products.results.slice(5, 10).map((product, index) => (
+                      <Link
+                        href={`/product/${product.id}/${product.slug}`}
+                        key={product.id}
+                      >
+                        <li
+                          className="m-w-[339px] m-h[120px] flex justify-between  px-3 py-2"
+                          key={product.id}
+                          {...getItemProps({
+                            item: product,
+                            index:
+                              index +
+                              categories.results.length +
+                              brands.results.length +
+                              5,
+                          })}
+                        >
+                          <div className="mr-2 h-20 w-20 overflow-hidden rounded-md border border-gray-300">
+                            {product.itemImage && product.productTitle && (
+                              <Image
+                                src={product.itemImage}
+                                alt={product.productTitle}
+                                className="h-full w-full object-cover"
+                                layout="responsive"
+                                width={80}
+                                height={80}
+                              />
+                            )}
+                            {!product.itemImage && (
+                              <div className="h-10 w-10 rounded-full"></div>
+                            )}
+                          </div>
+                          <div className="flex flex-col justify-between">
+                            <span className="w-52">{product.productTitle}</span>
+                            <span className="text-gray-500">
+                              Item# {product.MFRPartNo}
+                            </span>
+                          </div>
+                        </li>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+                <br />
+              </>
+            )}
+          </>
+        )}
+      </ul>
+    </div>
   );
 };
 

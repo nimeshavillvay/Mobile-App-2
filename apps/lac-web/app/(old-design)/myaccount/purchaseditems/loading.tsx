@@ -1,18 +1,29 @@
 import Separator from "@/old/_components/separator";
+import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 
 const PurchasedItemsLoading = () => {
   return (
     <>
-      <h2 className="relative font-wurth text-xl font-medium text-brand-primary">
-        My Purchased Items
-      </h2>
+      <div className="px-4 pt-4 md:px-0 md:pt-0">
+        <h2 className="relative font-wurth text-xl font-medium text-brand-primary">
+          My Purchased Items
+        </h2>
 
-      <Separator
-        orientation="horizontal"
-        className="mb-4 h-px flex-1 bg-brand-primary"
-      />
+        <Separator
+          orientation="horizontal"
+          className="mb-4 h-px flex-1 bg-brand-primary"
+        />
+      </div>
 
-      <div className="py-4 text-center">Purchased Items Loading...</div>
+      <div className="py-4 text-center">
+        <Skeleton className="mb-4 h-48" />
+
+        <div className="flex flex-col px-4">
+          <Skeleton className="mb-4 h-48" />
+
+          <Skeleton className="mb-4 h-48" />
+        </div>
+      </div>
     </>
   );
 };

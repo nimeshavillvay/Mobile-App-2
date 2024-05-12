@@ -4,12 +4,7 @@ import { Label } from "@/old/_components/ui/label";
 import { cn } from "@/old/_utils/helpers";
 import { useMultipleSelection, useSelect } from "downshift";
 import { ChevronDown, X } from "lucide-react";
-
-type Option = {
-  id: string;
-  value: string;
-  active: boolean;
-};
+import type { Option } from "./types";
 
 type MultiSelectProps = {
   label: string;
@@ -89,11 +84,11 @@ const MultiSelect = ({
         type === ItemClick
       ) {
         if (selectedItem && selectedItem.active) {
-          onValuesChange && onValuesChange([...selectedItems, selectedItem]);
-
           if (isItemSelected(selectedItem)) {
+            onValuesChange && onValuesChange(selectedItems);
             removeSelectedItem(selectedItem);
           } else {
+            onValuesChange && onValuesChange([...selectedItems, selectedItem]);
             addSelectedItem(selectedItem);
           }
         }

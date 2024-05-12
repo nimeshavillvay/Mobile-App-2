@@ -1,0 +1,51 @@
+import { ProductsGridList } from "@/_components/products-grid";
+import { type ComponentProps } from "react";
+import { getSearchResults } from "./apis";
+
+type ProductListGridProps = {
+  token: string;
+  term: string;
+  type: ComponentProps<typeof ProductsGridList>["type"];
+  pageNo: string;
+};
+
+const ProductListGrid = async ({
+  type,
+  term,
+  pageNo,
+  token,
+}: ProductListGridProps) => {
+  const searchResults = await getSearchResults({
+    query: term,
+    pageNo,
+  });
+
+  let products: ComponentProps<typeof ProductsGridList>["products"] = [];
+
+  if (Array.isArray(searchResults.results)) {
+    products = searchResults.results.map((product) => ({
+      prop: {
+        groupName: product.id,
+        groupImage: product.itemImage,
+        variants: [
+          {
+            id: product.id,
+            slug: product.slug,
+            title: product.productTitle,
+            image: product.itemImage,
+            sku: product.MFRPartNo,
+            //need to request from be till then hardcoded
+            uom: "piece",
+          },
+        ],
+      },
+      info: {
+        groupId: product.id,
+      },
+    }));
+  }
+
+  return <ProductsGridList products={products} type={type} token={token} />;
+};
+
+export default ProductListGrid;

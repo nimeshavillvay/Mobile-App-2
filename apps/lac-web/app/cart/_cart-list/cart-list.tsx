@@ -1,17 +1,18 @@
 "use client";
 
 import useSuspenseCart from "@/_hooks/cart/use-suspense-cart.hook";
+import type { Plant, ShippingMethod } from "@/_lib/types";
 import { Suspense } from "react";
 import CartItemFallback from "../cart-item-fallback";
-import { ShippingMethod } from "../types";
 import CartItem from "./cart-item";
 
 type CartListProps = {
   token: string;
   shippingMethods: ShippingMethod[];
+  plants: Plant[];
 };
 
-const CartList = ({ token, shippingMethods }: CartListProps) => {
+const CartList = ({ token, shippingMethods, plants }: CartListProps) => {
   const { data } = useSuspenseCart(token);
 
   return (
@@ -24,6 +25,7 @@ const CartList = ({ token, shippingMethods }: CartListProps) => {
           <Suspense fallback={<CartItemFallback />}>
             <CartItem
               key={item.itemInfo.productId}
+              token={token}
               product={{
                 id: item.itemInfo.productId,
                 title: item.itemInfo.metaTitle,
@@ -35,6 +37,7 @@ const CartList = ({ token, shippingMethods }: CartListProps) => {
                 increment: item.itemInfo.quantityByIncrements,
               }}
               shippingMethods={shippingMethods}
+              plants={plants}
             />
           </Suspense>
         </li>

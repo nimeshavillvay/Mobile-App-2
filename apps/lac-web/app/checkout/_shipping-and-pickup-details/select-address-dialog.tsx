@@ -15,6 +15,7 @@ import {
 } from "@repo/web-ui/components/ui/dialog";
 import { useToast } from "@repo/web-ui/components/ui/toast";
 import { useState } from "react";
+import AddShippingAddressDialog from "./add-shipping-address-dialog";
 
 type SelectAddressDialogProps = {
   token: string;
@@ -22,6 +23,7 @@ type SelectAddressDialogProps = {
 
 const SelectAddressDialog = ({ token }: SelectAddressDialogProps) => {
   const [open, setOpen] = useState(false);
+  const [openAdd, setOpenAdd] = useState(false);
   const { toast } = useToast();
 
   const shippingAddressListQuery = useSuspenseShippingAddressList(token);
@@ -50,67 +52,88 @@ const SelectAddressDialog = ({ token }: SelectAddressDialogProps) => {
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button variant="outline" className="max-w-fit font-bold shadow-md">
-          Change Address
-        </Button>
-      </DialogTrigger>
-
-      <DialogContent className="max-w-[34.375rem]">
-        <DialogHeader>
-          <DialogTitle>Change Shipping Address</DialogTitle>
-        </DialogHeader>
-
-        <ul className="flex flex-col gap-4">
-          {shippingAddressListQuery.data.map((address) => (
-            <li key={address.xcAddressId}>
-              <Button
-                variant="outline"
-                className={cn(
-                  "h-fit w-full justify-start rounded-lg border-2 border-wurth-gray-150 px-4 py-4",
-                  address.xcAddressId === addressId && "border-black",
-                )}
-                onClick={() => {
-                  if (address.xcAddressId) {
-                    setAddressId(address.xcAddressId);
-                  }
-                }}
-              >
-                {address.xcAddressId === addressId ? (
-                  <CheckCircleFilled
-                    width={20}
-                    height={20}
-                    className="fill-black"
-                  />
-                ) : (
-                  <CheckCircle
-                    width={20}
-                    height={20}
-                    className="stroke-wurth-gray-150"
-                  />
-                )}
-
-                <span className="text-base text-wurth-gray-800">
-                  {address.streetAddress}, {address.locality},{" "}
-                  {address.postalCode}-{address.zip4}
-                </span>
-              </Button>
-            </li>
-          ))}
-        </ul>
-
-        <DialogFooter>
-          <Button
-            className="font-bold"
-            onClick={handleConfirm}
-            disabled={updateCartConfigMutation.isPending}
-          >
-            Confirm
+    <>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogTrigger asChild>
+          <Button variant="outline" className="max-w-fit font-bold shadow-md">
+            Change Address
           </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        </DialogTrigger>
+
+        <DialogContent className="max-w-[34.375rem]">
+          <DialogHeader>
+            <DialogTitle>Change Shipping Address</DialogTitle>
+          </DialogHeader>
+
+          <ul className="flex flex-col gap-4">
+            {shippingAddressListQuery.data.map((address) => (
+              <li key={address.xcAddressId}>
+                <Button
+                  variant="outline"
+                  className={cn(
+                    "h-fit w-full justify-start rounded-lg border-2 border-wurth-gray-150 px-4 py-4",
+                    address.xcAddressId === addressId && "border-black",
+                  )}
+                  onClick={() => {
+                    if (address.xcAddressId) {
+                      setAddressId(address.xcAddressId);
+                    }
+                  }}
+                >
+                  {address.xcAddressId === addressId ? (
+                    <CheckCircleFilled
+                      width={20}
+                      height={20}
+                      className="fill-black"
+                    />
+                  ) : (
+                    <CheckCircle
+                      width={20}
+                      height={20}
+                      className="stroke-wurth-gray-150"
+                    />
+                  )}
+
+                  <span className="text-base text-wurth-gray-800">
+                    {address.streetAddress}, {address.locality},{" "}
+                    {address.postalCode}-{address.zip4}
+                  </span>
+                </Button>
+              </li>
+            ))}
+          </ul>
+
+          <DialogFooter>
+            <Button
+              variant="outline"
+              className="max-w-fit font-bold shadow-md"
+              onClick={() => {
+                setOpenAdd(true);
+                setOpen(false);
+              }}
+            >
+              Add new address
+            </Button>
+
+            <Button
+              className="font-bold"
+              onClick={handleConfirm}
+              disabled={updateCartConfigMutation.isPending}
+            >
+              Confirm
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <AddShippingAddressDialog
+        open={openAdd}
+        closeDialog={() => {
+          setOpenAdd(false);
+          setOpen(true);
+        }}
+      />
+    </>
   );
 };
 
