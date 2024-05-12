@@ -14,9 +14,10 @@ import ProductsListPagination from "./products-list-pagination";
 
 type ProductsListProps = {
   SearchTerm: string;
+  PageNo: string;
 };
 
-const ProductsList = ({ SearchTerm }: ProductsListProps) => {
+const ProductsList = ({ SearchTerm, PageNo }: ProductsListProps) => {
   const cookieStore = cookies();
   const tokenCookie = cookieStore.get(SESSION_TOKEN_COOKIE);
 
@@ -27,7 +28,11 @@ const ProductsList = ({ SearchTerm }: ProductsListProps) => {
   return (
     <ProductsGrid>
       <Suspense fallback={<ProductsGridHeaderSkeleton />}>
-        <ProductsListHeader token={tokenCookie.value} term={SearchTerm} />
+        <ProductsListHeader
+          token={tokenCookie.value}
+          term={SearchTerm}
+          pageNo={PageNo}
+        />
       </Suspense>
 
       <Suspense fallback={<ProductsGridListSkeleton type="mobile" />}>
@@ -35,6 +40,7 @@ const ProductsList = ({ SearchTerm }: ProductsListProps) => {
           type="mobile"
           token={tokenCookie.value}
           term={SearchTerm}
+          pageNo={PageNo}
         />
       </Suspense>
 
@@ -44,12 +50,17 @@ const ProductsList = ({ SearchTerm }: ProductsListProps) => {
             type="desktop"
             token={tokenCookie.value}
             term={SearchTerm}
+            pageNo={PageNo}
           />
         </Suspense>
       </ProductsGridDesktopContainer>
 
       <Suspense fallback={<ProductsGridPaginationSkeleton />}>
-        <ProductsListPagination token={tokenCookie.value} term={SearchTerm} />
+        <ProductsListPagination
+          token={tokenCookie.value}
+          term={SearchTerm}
+          pageNo={PageNo}
+        />
       </Suspense>
     </ProductsGrid>
   );

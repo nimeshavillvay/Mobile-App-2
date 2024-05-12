@@ -8,7 +8,7 @@ import { cn } from "~/lib/utils";
 import { BarcodeScan } from "../icons/barcode-scan";
 
 type SearchData = {
-  meta: {
+  summary: {
     total: number;
     page_size: number;
     page_no: number;
@@ -23,7 +23,7 @@ type SearchData = {
     slug: string;
     brandName?: string;
     brandImage?: string;
-    lastUpadtedDate?: string | null;
+    lastUpdatedDate?: string | null;
     MFRPartNo?: string;
     sellingBookSequenceNo?: string;
     UPCCode?: string;
@@ -35,7 +35,7 @@ type SearchData = {
     createDate?: string;
     keywords?: string;
     minimumOrderQuantity?: string;
-    orderQuantitybyIncrements?: string;
+    orderQuantityByIncrements?: string;
     attributes?: [];
     itemImage?: string;
   }[];
@@ -109,7 +109,7 @@ export const SearchBoxInput = ({
 
   return (
     <div className="relative w-full rounded-md">
-      <div className="flex  flex-col gap-1">
+      <div className="flex flex-col gap-1">
         <div>
           <input
             className={cn(
@@ -130,7 +130,7 @@ export const SearchBoxInput = ({
       >
         {isOpen && value && (
           <>
-            {categories.results.length > 0 && (
+            {categories.summary.total > 0 && (
               <>
                 <li className="text-black-500 px-3 py-1 font-semibold ">
                   Categories for &quot;{value}&quot;
@@ -156,7 +156,7 @@ export const SearchBoxInput = ({
                 <br />
               </>
             )}
-            {brands.results.length > 0 && (
+            {brands.summary.total > 0 && (
               <>
                 <li className="text-black-500 px-3 py-1 font-semibold">
                   Brands for &quot;{value}&quot;
@@ -192,20 +192,20 @@ export const SearchBoxInput = ({
                 <br />
               </>
             )}
-            {products.results.length > 0 && (
+            {products.summary.total > 0 && (
               <>
                 <li className="text-black-500 px-3 py-1 font-semibold">
                   Products for &quot;{value}&quot;
                 </li>
-                <div className="flex">
-                  <div className="w-1/2">
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                  <div className="w-full">
                     {products.results.slice(0, 5).map((product, index) => (
                       <Link
                         href={`/product/${product.id}/${product.slug}`}
                         key={product.id}
                       >
                         <li
-                          className={cn("flex px-3 py-2")}
+                          className="m-w-[339px] m-h[120px] flex justify-between px-3 py-2"
                           key={product.id}
                           {...getItemProps({
                             item: product,
@@ -215,17 +215,22 @@ export const SearchBoxInput = ({
                               brands.results.length,
                           })}
                         >
-                          <div className="flex">
-                            <Image
-                              src={product.itemImage}
-                              alt={product.productTitle}
-                              className="mr-2 min-h-20 min-w-20 rounded-md border border-gray-300 object-contain"
-                              width={80}
-                              height={80}
-                              priority={true}
-                            />
+                          <div className="flex items-center">
+                            <div className="mr-2 h-20 w-20 overflow-hidden rounded-md border border-gray-300">
+                              <Image
+                                src={product.itemImage}
+                                alt={product.productTitle}
+                                className="h-full w-full object-cover"
+                                layout="responsive"
+                                width={80}
+                                height={80}
+                                priority={true}
+                              />
+                            </div>
                             <div className="flex flex-col justify-between">
-                              <span>{product.productTitle}</span>
+                              <span className="w-52">
+                                {product.productTitle}
+                              </span>
                               <span className="text-gray-500">
                                 Item# {product.MFRPartNo}
                               </span>
@@ -235,14 +240,14 @@ export const SearchBoxInput = ({
                       </Link>
                     ))}
                   </div>
-                  <div className="w-1/2">
+                  <div className="w-full">
                     {products.results.slice(5, 10).map((product, index) => (
                       <Link
                         href={`/product/${product.id}/${product.slug}`}
                         key={product.id}
                       >
                         <li
-                          className={cn("flex px-3 py-2")}
+                          className="m-w-[339px] m-h[120px] flex justify-between  px-3 py-2"
                           key={product.id}
                           {...getItemProps({
                             item: product,
@@ -253,16 +258,22 @@ export const SearchBoxInput = ({
                               5,
                           })}
                         >
-                          <div className="flex">
-                            <Image
-                              src={product.itemImage}
-                              alt={product.productTitle}
-                              className="mr-2 min-h-20 min-w-20 rounded-md border border-gray-300 object-contain"
-                              width={80}
-                              height={80}
-                            />
+                          <div className="flex items-center">
+                            <div className="mr-2 h-20 w-20 overflow-hidden rounded-md border border-gray-300">
+                              <Image
+                                src={product.itemImage}
+                                alt={product.productTitle}
+                                className="h-full w-full object-cover"
+                                layout="responsive"
+                                width={80}
+                                height={80}
+                                priority={true}
+                              />
+                            </div>
                             <div className="flex flex-col justify-between">
-                              <span>{product.productTitle}</span>
+                              <span className="w-52">
+                                {product.productTitle}
+                              </span>
                               <span className="text-gray-500">
                                 Item# {product.MFRPartNo}
                               </span>
