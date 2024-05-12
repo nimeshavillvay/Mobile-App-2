@@ -41,11 +41,7 @@ const LINKS = [
   },
 ];
 
-type SideMenuProps = {
-  token: string;
-};
-
-const SideMenu = ({ token }: SideMenuProps) => {
+const SideMenu = ({ token }: { token: string }) => {
   const pathname = usePathname();
   const router = useRouter();
   const logout = useLogout();

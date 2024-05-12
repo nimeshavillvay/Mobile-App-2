@@ -18,9 +18,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/old/_components/ui/table";
+import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
-import { Skeleton } from "~/components/ui/skeleton";
 import { changeSearchParams } from "./client-helpers";
 import {
   DEFAULT_SORT,
