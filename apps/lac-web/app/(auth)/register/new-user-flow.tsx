@@ -39,11 +39,11 @@ import useRegisterNewUserMutation, {
 type Step = "personal" | "address";
 
 const REGISTRATION_TYPES = [
-  { value: "C", label: "private / residential purposes" },
-  { value: "B", label: "Business" },
+  { value: "R", label: "private / residential purposes" },
+  { value: "C", label: "Business" },
   { value: "unselected", label: "Unselected" },
 ] as const;
-const REGISTRATION_TYPES_VALUES = ["C", "B", "unselected"] as const;
+const REGISTRATION_TYPES_VALUES = ["R", "C", "unselected"] as const;
 type RegistrationType = (typeof REGISTRATION_TYPES_VALUES)[number];
 
 const personalDetailsSchema = z.object({
@@ -53,6 +53,9 @@ const personalDetailsSchema = z.object({
   password: z.string().min(8),
   confirmPassword: z.string().min(8),
   type: z.enum(REGISTRATION_TYPES_VALUES),
+  companyName: z.string(),
+  industry: z.string(),
+  employees: z.number(),
 });
 const addressSchema = z.object({
   billingAddress: z.string(),
@@ -85,6 +88,9 @@ const NewUserFlow = ({ passwordPolicies }: NewUserFlowProps) => {
   const emailId = `email-${id}`;
   const passwordId = `password-${id}`;
   const confirmPasswordId = `confirm-password-${id}`;
+  const companyNameId = `company-name-${id}`;
+  const industryId = `industry-${id}`;
+  const employeesId = `employees-${id}`;
   const billingAddressId = `billing-address-${id}`;
   const billingCityId = `billing-city-${id}`;
   const billingStateId = `billing-state-${id}`;
@@ -179,6 +185,9 @@ const NewUserFlow = ({ passwordPolicies }: NewUserFlowProps) => {
       password: "",
       confirmPassword: "",
       type: "unselected",
+      companyName: "",
+      industry: "",
+      employees: 0,
     },
   });
   const type = personalDetailsForm.watch("type");
@@ -224,8 +233,16 @@ const NewUserFlow = ({ passwordPolicies }: NewUserFlowProps) => {
 
   const registerNewUserMutation = useRegisterNewUserMutation();
   const handleAddressOnSubmit = addressForm.handleSubmit((values) => {
-    const { firstName, lastName, email, password, type } =
-      personalDetailsForm.getValues();
+    const {
+      firstName,
+      lastName,
+      email,
+      password,
+      type,
+      companyName,
+      industry,
+      employees,
+    } = personalDetailsForm.getValues();
 
     registerNewUserMutation.mutate(
       {
@@ -234,6 +251,9 @@ const NewUserFlow = ({ passwordPolicies }: NewUserFlowProps) => {
         email,
         password,
         type,
+        company: companyName,
+        industry,
+        employees,
         billingAddress: {
           address: values.billingAddress,
           city: values.billingCity,
@@ -459,6 +479,71 @@ const NewUserFlow = ({ passwordPolicies }: NewUserFlowProps) => {
               </InputHelperDescription>
             )}
           </div>
+
+          {type === "C" && (
+            <div className="flex flex-col gap-5 md:grid md:grid-cols-2">
+              <h3 className="flex-1 text-base font-semibold text-wurth-gray-800">
+                Business details
+              </h3>
+
+              <div className="flex flex-col gap-2 md:col-span-2">
+                <Label htmlFor={companyNameId}>Name of the company</Label>
+
+                <Input
+                  {...personalDetailsForm.register("companyName")}
+                  id={companyNameId}
+                  type="text"
+                  required={type === "C"}
+                  disabled={registerNewUserMutation.isPending}
+                />
+
+                {!!personalDetailsForm.formState.errors.companyName
+                  ?.message && (
+                  <InputHelperDescription isError>
+                    {personalDetailsForm.formState.errors.companyName.message}
+                  </InputHelperDescription>
+                )}
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <Label htmlFor={industryId}>Industry</Label>
+
+                <Input
+                  {...personalDetailsForm.register("industry")}
+                  id={industryId}
+                  type="text"
+                  required={type === "C"}
+                  disabled={registerNewUserMutation.isPending}
+                />
+
+                {!!personalDetailsForm.formState.errors.industry?.message && (
+                  <InputHelperDescription isError>
+                    {personalDetailsForm.formState.errors.industry.message}
+                  </InputHelperDescription>
+                )}
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <Label htmlFor={employeesId}>Number of employees</Label>
+
+                <Input
+                  {...personalDetailsForm.register("employees", {
+                    valueAsNumber: true,
+                  })}
+                  id={employeesId}
+                  type="number"
+                  required={type === "C"}
+                  disabled={registerNewUserMutation.isPending}
+                />
+
+                {!!personalDetailsForm.formState.errors.employees?.message && (
+                  <InputHelperDescription isError>
+                    {personalDetailsForm.formState.errors.employees.message}
+                  </InputHelperDescription>
+                )}
+              </div>
+            </div>
+          )}
 
           <p className="text-sm text-wurth-gray-800">
             By continuing, you agree to the{" "}
