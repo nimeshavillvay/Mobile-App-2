@@ -21,7 +21,6 @@ export const BarcodeScan = ({
         strokeWidth="1.5"
         strokeMiterlimit="10"
         strokeLinecap="square"
-        // strokeLinejoin="square"
       />
       <path
         d="M18 9v6M14 9v6M10 9v6M6 9v6"

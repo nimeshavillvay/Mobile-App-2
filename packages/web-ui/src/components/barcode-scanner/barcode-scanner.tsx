@@ -1,5 +1,3 @@
-// import useSuspenseBarcodeSearch from "@/_hooks/search/use-suspense-barcode-search.hook";
-
 import { BrowserMultiFormatReader } from "@zxing/library";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
