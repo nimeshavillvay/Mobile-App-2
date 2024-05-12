@@ -12,7 +12,7 @@ const meta: Meta<typeof SearchBox> = {
 
 const items = {
   products: {
-    meta: {
+    summary: {
       total: 250,
       page_size: 10,
       page_no: 1,
@@ -72,7 +72,7 @@ const items = {
   },
 
   brands: {
-    meta: {
+    summary: {
       total: 250,
       page_size: 10,
       page_no: 1,
@@ -104,7 +104,7 @@ const items = {
   },
 
   categories: {
-    meta: {
+    summary: {
       total: 250,
       page_size: 10,
       page_no: 1,
@@ -156,10 +156,10 @@ export const Default: Story = {
         category.title.toLowerCase().includes(lowerCasedValue),
       );
       return {
-        products: { meta: items.products.meta, results: filteredProducts },
-        brands: { meta: items.brands.meta, results: filteredBrands },
+        products: { meta: items.products.summary, results: filteredProducts },
+        brands: { meta: items.brands.summary, results: filteredBrands },
         categories: {
-          meta: items.categories.meta,
+          meta: items.categories.summary,
           results: filteredCategories,
         },
       };

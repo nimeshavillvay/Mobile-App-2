@@ -2,7 +2,6 @@ import { ProductsGridPagination } from "@/_components/products-grid";
 import { getSearchResults } from "./apis";
 
 type ProductsListPaginationProps = {
-  token: string;
   term: string;
   pageNo: string;
 };

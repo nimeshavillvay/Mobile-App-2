@@ -84,7 +84,11 @@ export const SearchBoxInput = ({
       onInputValueChange: ({ inputValue }) => {
         setValue(inputValue);
       },
-      items: [...categories.results, ...brands.results, ...products.results],
+      items: [
+        ...categories.results,
+        ...brands.results,
+        ...products.results,
+      ].map((item) => item),
       itemToString(
         item: {
           id: string;
@@ -196,6 +200,7 @@ export const SearchBoxInput = ({
                 <br />
               </>
             )}
+
             {products.summary.total > 0 && (
               <>
                 <li className="text-black-500 px-3 py-1 font-semibold">
@@ -219,30 +224,26 @@ export const SearchBoxInput = ({
                               brands.results.length,
                           })}
                         >
-                          <div className="flex items-center">
-                            <div className="mr-2 h-20 w-20 overflow-hidden rounded-md border border-gray-300">
-                              {product.itemImage && product.productTitle && (
-                                <Image
-                                  src={product.itemImage}
-                                  alt={product.productTitle}
-                                  className="h-full w-full object-cover"
-                                  layout="responsive"
-                                  width={80}
-                                  height={80}
-                                />
-                              )}
-                              {!product.itemImage && (
-                                <div className="h-10 w-10 rounded-full"></div>
-                              )}
-                            </div>
-                            <div className="flex flex-col justify-between">
-                              <span className="w-52">
-                                {product.productTitle}
-                              </span>
-                              <span className="text-gray-500">
-                                Item# {product.MFRPartNo}
-                              </span>
-                            </div>
+                          <div className="mr-2 h-20 w-20 overflow-hidden rounded-md border border-gray-300">
+                            {product.itemImage && product.productTitle && (
+                              <Image
+                                src={product.itemImage}
+                                alt={product.productTitle}
+                                className="h-full w-full object-cover"
+                                layout="responsive"
+                                width={80}
+                                height={80}
+                              />
+                            )}
+                            {!product.itemImage && (
+                              <div className="h-10 w-10 rounded-full"></div>
+                            )}
+                          </div>
+                          <div className="flex flex-col justify-between">
+                            <span className="w-52">{product.productTitle}</span>
+                            <span className="text-gray-500">
+                              Item# {product.MFRPartNo}
+                            </span>
                           </div>
                         </li>
                       </Link>
@@ -266,30 +267,26 @@ export const SearchBoxInput = ({
                               5,
                           })}
                         >
-                          <div className="flex items-center">
-                            <div className="mr-2 h-20 w-20 overflow-hidden rounded-md border border-gray-300">
-                              {product.itemImage && product.productTitle && (
-                                <Image
-                                  src={product.itemImage}
-                                  alt={product.productTitle}
-                                  className="h-full w-full object-cover"
-                                  layout="responsive"
-                                  width={80}
-                                  height={80}
-                                />
-                              )}
-                              {!product.itemImage && (
-                                <div className="h-10 w-10 rounded-full"></div>
-                              )}
-                            </div>
-                            <div className="flex flex-col justify-between">
-                              <span className="w-52">
-                                {product.productTitle}
-                              </span>
-                              <span className="text-gray-500">
-                                Item# {product.MFRPartNo}
-                              </span>
-                            </div>
+                          <div className="mr-2 h-20 w-20 overflow-hidden rounded-md border border-gray-300">
+                            {product.itemImage && product.productTitle && (
+                              <Image
+                                src={product.itemImage}
+                                alt={product.productTitle}
+                                className="h-full w-full object-cover"
+                                layout="responsive"
+                                width={80}
+                                height={80}
+                              />
+                            )}
+                            {!product.itemImage && (
+                              <div className="h-10 w-10 rounded-full"></div>
+                            )}
+                          </div>
+                          <div className="flex flex-col justify-between">
+                            <span className="w-52">{product.productTitle}</span>
+                            <span className="text-gray-500">
+                              Item# {product.MFRPartNo}
+                            </span>
                           </div>
                         </li>
                       </Link>

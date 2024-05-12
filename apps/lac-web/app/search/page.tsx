@@ -75,7 +75,7 @@ const SearchPage = async ({
             </ProductsGrid>
           }
         >
-          <ProductsList SearchTerm={query} PageNo={pageNo} />
+          <ProductsList query={query} pageNo={pageNo} />
         </Suspense>
       </div>
     </>

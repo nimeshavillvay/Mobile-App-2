@@ -2,7 +2,6 @@ import { ProductsGridHeader } from "@/_components/products-grid";
 import { getSearchResults } from "./apis";
 
 type ProductsListHeaderProps = {
-  token: string;
   term: string;
   pageNo: string;
 };
