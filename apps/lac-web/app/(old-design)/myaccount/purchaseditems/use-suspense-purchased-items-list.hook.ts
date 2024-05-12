@@ -6,7 +6,7 @@ import type {
   PurchasedItems,
   PurchasedProduct,
 } from "@/_lib/types";
-import { useFilterParams } from "@/old/myaccount/_side-menu/use-filter-params.hook";
+import useFilterParams from "@/old/myaccount/_side-menu/use-filter-params.hook";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
 const useSuspensePurchasedItemsList = (

@@ -9,7 +9,7 @@ import { type CheckedState } from "@radix-ui/react-checkbox";
 import { Checkbox } from "@repo/web-ui/components/ui/checkbox";
 import { Label } from "@repo/web-ui/components/ui/label";
 import { useId } from "react";
-import { useFilterParams } from "./use-filter-params.hook";
+import useFilterParams from "./use-filter-params.hook";
 
 const FiltersDropdown = ({ filters }: { filters: Filters[] }) => {
   const id = useId();
