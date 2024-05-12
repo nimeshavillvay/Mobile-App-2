@@ -166,7 +166,7 @@ export const SearchBoxInput = ({
                       <li
                         key={brand.id}
                         className={cn(
-                          "mb-2 mr-2 flex items-center rounded-md p-2 ",
+                          "mb-2 mr-2 flex items-center rounded-md p-2",
                           "m-2 rounded-lg border-2 p-4 shadow-sm",
                         )}
                         {...getItemProps({
