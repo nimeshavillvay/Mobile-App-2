@@ -1,9 +1,8 @@
 "use client";
 
-import { useState } from "react";
-import { BarcodeScanner } from "../barcode-scanner";
-import { BarcodeScanButton } from "../search-box";
-import { Button } from "../ui/button";
+import { BarcodeScanner } from "@repo/web-ui/components/barcode-scanner";
+import { BarcodeScanButton } from "@repo/web-ui/components/search-box";
+import { Button } from "@repo/web-ui/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -12,34 +11,35 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "../ui/dialog";
+} from "@repo/web-ui/components/ui/dialog";
+import { useState } from "react";
 
 export const BarcodeScannerDialog = () => {
   const [open, setOpen] = useState(false);
-  const closeDialog = () => {
-    setOpen(false);
-  };
-  const onOpenChange = (change: boolean) => {
-    setOpen(change);
-  };
+  const [productNotFound, setProductNotFound] = useState(false);
+  console.log("productNotFound...............", productNotFound);
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <BarcodeScanButton onClick={() => setOpen(true)} />
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Product Barcode Scan</DialogTitle>
+          <div>{productNotFound && <span>Product cannot be found!</span>}</div>
           <DialogDescription>
             Focus the device camera on the barcode at a distance where it can be
             fully observed.
           </DialogDescription>
         </DialogHeader>
         <div>
-          <BarcodeScanner />
+          <BarcodeScanner
+            setDialogOpen={setOpen}
+            setProductNotFound={setProductNotFound}
+          />
         </div>
         <DialogFooter>
-          <Button onClick={closeDialog}>Cancel</Button>
+          <Button onClick={() => setOpen(false)}>Cancel</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

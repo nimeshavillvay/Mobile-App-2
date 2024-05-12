@@ -1,11 +1,39 @@
+// import useSuspenseBarcodeSearch from "@/_hooks/search/use-suspense-barcode-search.hook";
+
 import { BrowserMultiFormatReader } from "@zxing/library";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import useSuspenseBarcodeSearch from "../../../../../apps/lac-web/app/_hooks/search/use-suspense-barcode-search.hook";
 
-export const BarcodeScanner = () => {
+export const BarcodeScanner = ({
+  setDialogOpen,
+  setProductNotFound,
+}: {
+  setDialogOpen: (open: boolean) => void;
+  setProductNotFound: (open: boolean) => void;
+}) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const reader = useRef(new BrowserMultiFormatReader());
   const router = useRouter();
+
+  const [scannedValue, setScannedValue] = useState("");
+  const searchQuery = useSuspenseBarcodeSearch(scannedValue);
+
+  const firstProduct = searchQuery.data.results;
+
+  if (searchQuery.data.summary.plp && firstProduct) {
+    const productPath = `/product/${firstProduct.id}/${firstProduct.slug}`;
+    setDialogOpen(false);
+    router.replace(productPath);
+  }
+  if (
+    Array.isArray(firstProduct) &&
+    firstProduct.length !== 0 &&
+    !searchQuery.data.summary.plp &&
+    scannedValue !== ""
+  ) {
+    setProductNotFound(true);
+  }
 
   useEffect(() => {
     if (!videoRef.current) return;
@@ -20,15 +48,15 @@ export const BarcodeScanner = () => {
       videoRef.current,
       (result) => {
         if (result) {
-          console.log("result: ", result);
-          router.replace("/plp");
+          console.log("result: ", result.getText());
+          setScannedValue(result.getText());
         }
       },
     );
     return () => {
       currentReader.reset();
     };
-  }, [videoRef, router]);
+  }, [videoRef, router, setDialogOpen]);
 
   return <video ref={videoRef} />;
 };
