@@ -1,6 +1,8 @@
 "use client";
 
 import useSuspenseFilters from "@/_hooks/search/use-suspense-filters.hook";
+import { cn } from "@/_lib/utils";
+import { Button } from "@/old/_components/ui/button";
 import {
   Table,
   TableBody,
@@ -8,34 +10,41 @@ import {
   TableHeader,
   TableRow,
 } from "@/old/_components/ui/table";
+import { CaretDownIcon, CaretUpIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 import {
   INIT_FROM_DATE,
   INIT_PAGE_NUMBER,
   INIT_PAGE_SIZE,
+  INIT_SORT_DIRECTION,
+  INIT_SORT_TYPE,
   INIT_TO_DATE,
+  QUERY_KEYS,
   SORTING_DIRECTION,
+  SORT_BY_FIELDS,
 } from "./constants";
+import OrderHistoryListFilters from "./order-history-list-filters";
 import OrderHistoryListForMobile from "./order-history-list-for-mobile";
-import OrderHistoryListSelectors from "./order-history-list-selectors";
 import OrderHistoryRow from "./order-history-row";
 import TotalCountAndPagination from "./total-count-and-pagination";
 import useSuspenseOrderHistorySearch from "./use-suspense-order-history-search.hook";
 
 const OrderHistoryList = ({ token }: { token: string }) => {
   const searchParams = useSearchParams();
-  const fromDate = searchParams.get("from") ?? INIT_FROM_DATE;
-  const toDate = searchParams.get("to") ?? INIT_TO_DATE;
-  const currentPage = Number(searchParams.get("page") ?? INIT_PAGE_NUMBER);
-  const pageSize = Number(searchParams.get("perPage") ?? INIT_PAGE_SIZE);
-  const orderTypes = searchParams.get("orderType")?.split(",") ?? [];
-  const orderStatus = searchParams.get("orderStatus")?.split(",") ?? [];
-  const sortBy = searchParams.get("sortBy") ?? "date";
-  const sortDirection =
-    searchParams.get("sortDirection") ?? SORTING_DIRECTION.DESC;
 
-  const filterQuery = useSuspenseFilters(token, {
+  const fromDate = searchParams.get(QUERY_KEYS.FROM_DATE) ?? INIT_FROM_DATE;
+  const toDate = searchParams.get(QUERY_KEYS.TO_DATE) ?? INIT_TO_DATE;
+  const page = Number(searchParams.get(QUERY_KEYS.PAGE) ?? INIT_PAGE_NUMBER);
+  const perPage = Number(
+    searchParams.get(QUERY_KEYS.PER_PAGE) ?? INIT_PAGE_SIZE,
+  );
+  const urlSortBy = searchParams.get(QUERY_KEYS.SORT_TYPE) ?? INIT_SORT_TYPE;
+  const urlSortDirection =
+    searchParams.get(QUERY_KEYS.SORT_DIRECTION) ?? INIT_SORT_DIRECTION;
+
+  const filtersQuery = useSuspenseFilters(token, {
     type: "Order History",
     from: fromDate,
     to: toDate,
@@ -45,22 +54,35 @@ const OrderHistoryList = ({ token }: { token: string }) => {
     token,
     fromDate,
     toDate,
-    orderTypes,
-    orderStatus,
-    currentPage - 1,
-    pageSize,
-    sortBy,
-    sortDirection,
-    {
-      rf_data: {
-        "16712": orderTypes,
-        "16715": orderStatus,
-      },
-    },
+    page - 1,
+    perPage,
+    urlSortBy,
+    urlSortDirection,
+    filtersQuery.data,
   );
 
   const orderHistoryItems = searchQuery?.data?.orders ?? null;
   const totalItems = searchQuery?.data?.pagination[0]?.db_count ?? 0;
+
+  const handleHeaderSort = ({
+    sortBy,
+    direction,
+  }: {
+    sortBy: string;
+    direction: string;
+  }) => {
+    const newUrlSearchParams = new URLSearchParams(searchParams);
+
+    if (sortBy) {
+      newUrlSearchParams.set(QUERY_KEYS.SORT_TYPE, sortBy);
+    }
+
+    if (direction) {
+      newUrlSearchParams.set(QUERY_KEYS.SORT_DIRECTION, direction);
+    }
+
+    window.history.pushState(null, "", `?${newUrlSearchParams.toString()}`);
+  };
 
   return (
     <>
@@ -73,19 +95,14 @@ const OrderHistoryList = ({ token }: { token: string }) => {
         </Link>
       </div>
 
-      <OrderHistoryListSelectors
-        filters={filterQuery.data.map((filter) => ({
-          id: filter.id,
-          title: filter.filter,
-          values: filter.values.map((value) => ({
-            id: value.id.toString(),
-            value: value.value,
-            active: value.active,
-          })),
-        }))}
-        isLoading={searchQuery.isLoading}
-        totalItems={totalItems}
-      />
+      <Suspense fallback={<div>Filters Loading...</div>}>
+        <OrderHistoryListFilters
+          token={token}
+          fromDate={fromDate}
+          toDate={toDate}
+          totalItems={totalItems}
+        />
+      </Suspense>
 
       <TotalCountAndPagination
         isLoading={searchQuery.isLoading}
@@ -104,9 +121,71 @@ const OrderHistoryList = ({ token }: { token: string }) => {
         <TableHeader>
           <TableRow>
             <TableHead className="text-center">Order Type</TableHead>
-            <TableHead className="text-center">Order #</TableHead>
-            <TableHead className="text-center">Order Date</TableHead>
-            <TableHead className="text-center">Order Total</TableHead>
+            <TableHead className="text-center">
+              <div className="inline-flex w-full items-center justify-center">
+                Order #&nbsp;
+                <HeaderSortButtons
+                  active={urlSortBy === SORT_BY_FIELDS.SKU}
+                  direction={urlSortDirection}
+                  onClickAsc={() =>
+                    handleHeaderSort({
+                      sortBy: SORT_BY_FIELDS.SKU,
+                      direction: SORTING_DIRECTION.ASC,
+                    })
+                  }
+                  onClickDesc={() =>
+                    handleHeaderSort({
+                      sortBy: SORT_BY_FIELDS.SKU,
+                      direction: SORTING_DIRECTION.DESC,
+                    })
+                  }
+                />
+              </div>
+            </TableHead>
+
+            <TableHead className="">
+              <div className="inline-flex w-full items-center justify-center">
+                Order Date&nbsp;
+                <HeaderSortButtons
+                  active={urlSortBy === SORT_BY_FIELDS.ORDER_DATE}
+                  direction={urlSortDirection}
+                  onClickAsc={() =>
+                    handleHeaderSort({
+                      sortBy: SORT_BY_FIELDS.ORDER_DATE,
+                      direction: SORTING_DIRECTION.ASC,
+                    })
+                  }
+                  onClickDesc={() =>
+                    handleHeaderSort({
+                      sortBy: SORT_BY_FIELDS.ORDER_DATE,
+                      direction: SORTING_DIRECTION.DESC,
+                    })
+                  }
+                />
+              </div>
+            </TableHead>
+
+            <TableHead className="text-center">
+              <div className="inline-flex w-full items-center justify-center">
+                Order Total&nbsp;
+                <HeaderSortButtons
+                  active={urlSortBy === SORT_BY_FIELDS.TOTAL_ITEMS}
+                  direction={urlSortDirection}
+                  onClickAsc={() =>
+                    handleHeaderSort({
+                      sortBy: SORT_BY_FIELDS.TOTAL_ITEMS,
+                      direction: SORTING_DIRECTION.ASC,
+                    })
+                  }
+                  onClickDesc={() =>
+                    handleHeaderSort({
+                      sortBy: SORT_BY_FIELDS.TOTAL_ITEMS,
+                      direction: SORTING_DIRECTION.DESC,
+                    })
+                  }
+                />
+              </div>
+            </TableHead>
             <TableHead className="text-center">Order Status</TableHead>
           </TableRow>
         </TableHeader>
@@ -132,3 +211,38 @@ const OrderHistoryList = ({ token }: { token: string }) => {
 };
 
 export default OrderHistoryList;
+
+const HeaderSortButtons = ({
+  active = false,
+  direction,
+  onClickDesc,
+  onClickAsc,
+}: {
+  active: boolean;
+  direction?: string;
+  onClickDesc: () => void;
+  onClickAsc: () => void;
+}) => (
+  <div className="flex flex-col">
+    <Button
+      variant="ghost"
+      className={cn(
+        "h-3 px-1",
+        active && direction === "desc" ? "text-black" : "text-brand-gray-400",
+      )}
+      onClick={onClickDesc}
+    >
+      <CaretUpIcon className="h-4 w-4 opacity-70" />
+    </Button>
+    <Button
+      variant="ghost"
+      className={cn(
+        "h-3 px-1",
+        active && direction === "asc" ? "text-black" : "text-brand-gray-400",
+      )}
+      onClick={onClickAsc}
+    >
+      <CaretDownIcon className="h-4 w-4 opacity-70" />
+    </Button>
+  </div>
+);

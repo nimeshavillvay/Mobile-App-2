@@ -23,7 +23,6 @@ const useSuspenseFilters = (
       }
     | {
         type: typeof PURCHASES;
-        id: string;
         from: string;
         to: string;
       }
@@ -57,7 +56,7 @@ const useSuspenseFilters = (
 
       return await api
         .post(
-          `rest/filters/${FILTER_TYPES[args.type]}${args.type !== "Order History" ? `/${args.id}` : ""}`,
+          `rest/filters/${FILTER_TYPES[args.type]}${args.type !== "Order History" && args.type !== "Purchases" ? `/${args.id}` : ""}`,
           {
             searchParams,
             headers: {

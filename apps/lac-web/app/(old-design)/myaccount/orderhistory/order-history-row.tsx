@@ -47,7 +47,7 @@ const OrderHistoryRow = ({ index, order }: OrderHistoryRowProps) => {
 
         <TableCell className="text-center" rowSpan={2}>
           <div className="flex flex-col items-center justify-center gap-2 ">
-            <div className="px-4 py-2 font-bold text-brand-gray-500">
+            <div className="px-4 py-2 font-bold text-brand-secondary">
               {order.status ?? "N/A"}
             </div>
 
