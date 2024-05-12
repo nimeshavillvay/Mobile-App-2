@@ -1,5 +1,5 @@
 import Separator from "@/old/_components/separator";
-import { Skeleton } from "~/components/ui/skeleton";
+import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 
 const PurchasedItemsLoading = () => {
   return (
