@@ -24,6 +24,7 @@ export const BarcodeScanner = ({
   if (searchQuery.data.summary.plp && firstProduct) {
     const productPath = `/product/${firstProduct.id}/${firstProduct.slug}`;
     setDialogOpen(false);
+    setProductNotFound(false);
     router.replace(productPath);
   }
   if (

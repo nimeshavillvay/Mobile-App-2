@@ -13,6 +13,7 @@ import {
   DialogTrigger,
 } from "@repo/web-ui/components/ui/dialog";
 import { useState } from "react";
+import AlertInline from "../../../../../apps/lac-web/app/(old-design)/_components/alert-inline";
 
 export const BarcodeScannerDialog = () => {
   const [open, setOpen] = useState(false);
@@ -21,12 +22,25 @@ export const BarcodeScannerDialog = () => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <BarcodeScanButton onClick={() => setOpen(true)} />
+        <BarcodeScanButton
+          onClick={() => {
+            setOpen(true);
+            setProductNotFound(false);
+          }}
+        />
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Product Barcode Scan</DialogTitle>
-          <div>{productNotFound && <span>Product cannot be found!</span>}</div>
+          <div>
+            {productNotFound && (
+              <AlertInline
+                variant="destructive"
+                title="Error!"
+                description="Product cannot be found!"
+              />
+            )}
+          </div>
           <DialogDescription>
             Focus the device camera on the barcode at a distance where it can be
             fully observed.
