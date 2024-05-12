@@ -16,7 +16,7 @@ const Instructions = ({ type }: InstructionsProps) => {
         className={cn(
           type === "mobile"
             ? "hidden"
-            : "grid-span-2 font-title text-2xl tracking-[-0.144px]",
+            : "col-span-2 font-title text-2xl tracking-[-0.144px]",
         )}
       >
         Instructions
