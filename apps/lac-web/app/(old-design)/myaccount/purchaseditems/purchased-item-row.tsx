@@ -1,4 +1,4 @@
-// import useAddToCartMutation from "@/_hooks/cart/use-add-to-cart-mutation.hook";
+import useAddToCartMutation from "@/_hooks/cart/use-add-to-cart-mutation.hook";
 import AlertInline from "@/old/_components/alert-inline";
 import ErrorBoundary from "@/old/_components/error-boundary";
 import { Button } from "@/old/_components/ui/button";
@@ -53,13 +53,13 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
 
   const quantity = watch("quantity") ?? 1;
 
-  // const addToCartMutation = useAddToCartMutation(token, {
-  //   productId: item.productId,
-  //   quantity: quantity,
-  // });
+  const addToCartMutation = useAddToCartMutation(token, {
+    productId: item.productId,
+    quantity: quantity,
+  });
 
   const onSubmit = () => {
-    // addToCartMutation.mutate({});
+    addToCartMutation.mutate({});
   };
 
   const onAddToFavorites = () => {
