@@ -1,6 +1,7 @@
 "use client";
 
 import useItemInfo from "@/_hooks/product/use-item-info.hook";
+import useSuspenseFilters from "@/_hooks/search/use-suspense-filters.hook";
 import { ItemInfo } from "@/_lib/types";
 import {
   Select,
@@ -42,8 +43,8 @@ import useSuspensePurchasedItemsList from "./use-suspense-purchased-items-list.h
 
 const PurchasedItemsList = ({ token }: { token: string }) => {
   const searchParams = useSearchParams();
-  const fromDate = searchParams.get("from") ?? INIT_FROM_DATE;
-  const toDate = searchParams.get("to") ?? INIT_TO_DATE;
+  const fromDate = searchParams.get(QUERY_KEYS.FROM_DATE) ?? INIT_FROM_DATE;
+  const toDate = searchParams.get(QUERY_KEYS.TO_DATE) ?? INIT_TO_DATE;
   const orderBy = searchParams.get(QUERY_KEYS.ORDER_BY) ?? INIT_SORTING_FIELD;
   const orderType =
     searchParams.get(QUERY_KEYS.ORDER_TYPE) ?? INIT_SORTING_TYPE;
@@ -59,6 +60,12 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
     (sortingType) => sortingType.value === orderType,
   );
 
+  const filtersQuery = useSuspenseFilters(token, {
+    type: "Purchases",
+    from: fromDate,
+    to: toDate,
+  });
+
   const purchasedItemsList = useSuspensePurchasedItemsList(
     token,
     fromDate,
@@ -67,6 +74,7 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
     perPage,
     orderBy,
     orderType,
+    filtersQuery.data,
   );
 
   const productIds: number[] = [];
@@ -192,7 +200,6 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
                         key={type.value}
                         value={type.value}
                         className="pl-2"
-                        asChild
                       >
                         <div>{type.label}</div>
                       </SelectItem>
