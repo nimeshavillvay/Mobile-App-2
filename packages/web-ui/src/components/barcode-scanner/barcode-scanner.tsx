@@ -49,7 +49,6 @@ export const BarcodeScanner = ({
       videoRef.current,
       (result) => {
         if (result) {
-          console.log("result: ", result.getText());
           setScannedValue(result.getText());
         }
       },
@@ -59,5 +58,5 @@ export const BarcodeScanner = ({
     };
   }, [videoRef, router, setDialogOpen]);
 
-  return <video ref={videoRef} />;
+  return <video width="100%" height="100%" ref={videoRef} />;
 };

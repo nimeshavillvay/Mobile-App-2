@@ -24,7 +24,6 @@ import { Alert as AlertIcon } from "~/components/icons/alert";
 export const BarcodeScannerDialog = () => {
   const [open, setOpen] = useState(false);
   const [productNotFound, setProductNotFound] = useState(false);
-  console.log("productNotFound...............", productNotFound);
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
