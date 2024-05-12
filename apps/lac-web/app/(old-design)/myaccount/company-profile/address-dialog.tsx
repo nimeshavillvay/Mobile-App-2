@@ -1,3 +1,4 @@
+import useUpdateShippingAddressMutation from "@/_hooks/address/use-update-shipping-address-mutation.hook";
 import useCounties from "@/_hooks/registration/use-counties.hook";
 import useCountries from "@/_hooks/registration/use-countries.hook";
 import useStates from "@/_hooks/registration/use-states.hook";
@@ -37,7 +38,6 @@ import * as z from "zod";
 import type { AddressCheckSuggestionsWithUuid } from "./types";
 import useAddShippingAddressMutation from "./use-add-shipping-address-mutation.hook";
 import useUpdateBillingAddressMutation from "./use-update-billing-address-mutation.hook";
-import useUpdateShippingAddressMutation from "./use-update-shipping-address-mutation.hook";
 
 type AddressDialogProps = {
   open: boolean;
