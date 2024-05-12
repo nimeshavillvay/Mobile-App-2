@@ -2,6 +2,12 @@
 
 import { BarcodeScanner } from "@repo/web-ui/components/barcode-scanner";
 import { BarcodeScanButton } from "@repo/web-ui/components/search-box";
+import {
+  Alert,
+  AlertContent,
+  AlertDescription,
+  AlertTitle,
+} from "@repo/web-ui/components/ui/alert";
 import { Button } from "@repo/web-ui/components/ui/button";
 import {
   Dialog,
@@ -13,7 +19,7 @@ import {
   DialogTrigger,
 } from "@repo/web-ui/components/ui/dialog";
 import { useState } from "react";
-import AlertInline from "../../../../../apps/lac-web/app/(old-design)/_components/alert-inline";
+import { Alert as AlertIcon } from "~/components/icons/alert";
 
 export const BarcodeScannerDialog = () => {
   const [open, setOpen] = useState(false);
@@ -34,11 +40,13 @@ export const BarcodeScannerDialog = () => {
           <DialogTitle>Product Barcode Scan</DialogTitle>
           <div>
             {productNotFound && (
-              <AlertInline
-                variant="destructive"
-                title="Error!"
-                description="Product cannot be found!"
-              />
+              <Alert variant="destructive">
+                <AlertIcon className="size-4" />
+                <AlertContent>
+                  <AlertTitle>Error</AlertTitle>
+                  <AlertDescription>Product cannot be found!</AlertDescription>
+                </AlertContent>
+              </Alert>
             )}
           </div>
           <DialogDescription>
