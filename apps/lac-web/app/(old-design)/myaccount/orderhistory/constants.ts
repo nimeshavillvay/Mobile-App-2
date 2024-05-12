@@ -57,9 +57,10 @@ export const ORDER_TYPES = {
 } as const;
 
 export const SORT_BY_FIELDS = {
-  SKU: "productcode",
+  SKU: "orderid",
+  ORDER_STATUS: "status",
   ORDER_DATE: "date",
-  TOTAL_ITEMS: "count",
+  TOTAL_ITEMS: "total",
 };
 
 export const QUERY_KEYS = {

@@ -1,6 +1,8 @@
 "use client";
 
 import useSuspenseFilters from "@/_hooks/search/use-suspense-filters.hook";
+import { cn } from "@/_lib/utils";
+import { Button } from "@/old/_components/ui/button";
 import {
   Table,
   TableBody,
@@ -8,6 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/old/_components/ui/table";
+import { CaretDownIcon, CaretUpIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
@@ -19,6 +22,8 @@ import {
   INIT_SORT_TYPE,
   INIT_TO_DATE,
   QUERY_KEYS,
+  SORTING_DIRECTION,
+  SORT_BY_FIELDS,
 } from "./constants";
 import OrderHistoryListFilters from "./order-history-list-filters";
 import OrderHistoryListForMobile from "./order-history-list-for-mobile";
@@ -28,14 +33,15 @@ import useSuspenseOrderHistorySearch from "./use-suspense-order-history-search.h
 
 const OrderHistoryList = ({ token }: { token: string }) => {
   const searchParams = useSearchParams();
+
   const fromDate = searchParams.get(QUERY_KEYS.FROM_DATE) ?? INIT_FROM_DATE;
   const toDate = searchParams.get(QUERY_KEYS.TO_DATE) ?? INIT_TO_DATE;
   const page = Number(searchParams.get(QUERY_KEYS.PAGE) ?? INIT_PAGE_NUMBER);
   const perPage = Number(
     searchParams.get(QUERY_KEYS.PER_PAGE) ?? INIT_PAGE_SIZE,
   );
-  const sortBy = searchParams.get(QUERY_KEYS.SORT_TYPE) ?? INIT_SORT_TYPE;
-  const sortDirection =
+  const urlSortBy = searchParams.get(QUERY_KEYS.SORT_TYPE) ?? INIT_SORT_TYPE;
+  const urlSortDirection =
     searchParams.get(QUERY_KEYS.SORT_DIRECTION) ?? INIT_SORT_DIRECTION;
 
   const filtersQuery = useSuspenseFilters(token, {
@@ -50,13 +56,33 @@ const OrderHistoryList = ({ token }: { token: string }) => {
     toDate,
     page - 1,
     perPage,
-    sortBy,
-    sortDirection,
+    urlSortBy,
+    urlSortDirection,
     filtersQuery.data,
   );
 
   const orderHistoryItems = searchQuery?.data?.orders ?? null;
   const totalItems = searchQuery?.data?.pagination[0]?.db_count ?? 0;
+
+  const handleHeaderSort = ({
+    sortBy,
+    direction,
+  }: {
+    sortBy: string;
+    direction: string;
+  }) => {
+    const newUrlSearchParams = new URLSearchParams(searchParams);
+
+    if (sortBy) {
+      newUrlSearchParams.set(QUERY_KEYS.SORT_TYPE, sortBy);
+    }
+
+    if (direction) {
+      newUrlSearchParams.set(QUERY_KEYS.SORT_DIRECTION, direction);
+    }
+
+    window.history.pushState(null, "", `?${newUrlSearchParams.toString()}`);
+  };
 
   return (
     <>
@@ -95,9 +121,71 @@ const OrderHistoryList = ({ token }: { token: string }) => {
         <TableHeader>
           <TableRow>
             <TableHead className="text-center">Order Type</TableHead>
-            <TableHead className="text-center">Order #</TableHead>
-            <TableHead className="text-center">Order Date</TableHead>
-            <TableHead className="text-center">Order Total</TableHead>
+            <TableHead className="text-center">
+              <div className="inline-flex w-full items-center justify-center">
+                Order #&nbsp;
+                <HeaderSortButtons
+                  active={urlSortBy === SORT_BY_FIELDS.SKU}
+                  direction={urlSortDirection}
+                  onClickAsc={() =>
+                    handleHeaderSort({
+                      sortBy: SORT_BY_FIELDS.SKU,
+                      direction: SORTING_DIRECTION.ASC,
+                    })
+                  }
+                  onClickDesc={() =>
+                    handleHeaderSort({
+                      sortBy: SORT_BY_FIELDS.SKU,
+                      direction: SORTING_DIRECTION.DESC,
+                    })
+                  }
+                />
+              </div>
+            </TableHead>
+
+            <TableHead className="">
+              <div className="inline-flex w-full items-center justify-center">
+                Order Date&nbsp;
+                <HeaderSortButtons
+                  active={urlSortBy === SORT_BY_FIELDS.ORDER_DATE}
+                  direction={urlSortDirection}
+                  onClickAsc={() =>
+                    handleHeaderSort({
+                      sortBy: SORT_BY_FIELDS.ORDER_DATE,
+                      direction: SORTING_DIRECTION.ASC,
+                    })
+                  }
+                  onClickDesc={() =>
+                    handleHeaderSort({
+                      sortBy: SORT_BY_FIELDS.ORDER_DATE,
+                      direction: SORTING_DIRECTION.DESC,
+                    })
+                  }
+                />
+              </div>
+            </TableHead>
+
+            <TableHead className="text-center">
+              <div className="inline-flex w-full items-center justify-center">
+                Order Total&nbsp;
+                <HeaderSortButtons
+                  active={urlSortBy === SORT_BY_FIELDS.TOTAL_ITEMS}
+                  direction={urlSortDirection}
+                  onClickAsc={() =>
+                    handleHeaderSort({
+                      sortBy: SORT_BY_FIELDS.TOTAL_ITEMS,
+                      direction: SORTING_DIRECTION.ASC,
+                    })
+                  }
+                  onClickDesc={() =>
+                    handleHeaderSort({
+                      sortBy: SORT_BY_FIELDS.TOTAL_ITEMS,
+                      direction: SORTING_DIRECTION.DESC,
+                    })
+                  }
+                />
+              </div>
+            </TableHead>
             <TableHead className="text-center">Order Status</TableHead>
           </TableRow>
         </TableHeader>
@@ -123,3 +211,38 @@ const OrderHistoryList = ({ token }: { token: string }) => {
 };
 
 export default OrderHistoryList;
+
+const HeaderSortButtons = ({
+  active = false,
+  direction,
+  onClickDesc,
+  onClickAsc,
+}: {
+  active: boolean;
+  direction?: string;
+  onClickDesc: () => void;
+  onClickAsc: () => void;
+}) => (
+  <div className="flex flex-col">
+    <Button
+      variant="ghost"
+      className={cn(
+        "h-3 px-1",
+        active && direction === "desc" ? "text-black" : "text-brand-gray-400",
+      )}
+      onClick={onClickDesc}
+    >
+      <CaretUpIcon className="h-4 w-4 opacity-70" />
+    </Button>
+    <Button
+      variant="ghost"
+      className={cn(
+        "h-3 px-1",
+        active && direction === "asc" ? "text-black" : "text-brand-gray-400",
+      )}
+      onClick={onClickAsc}
+    >
+      <CaretDownIcon className="h-4 w-4 opacity-70" />
+    </Button>
+  </div>
+);
