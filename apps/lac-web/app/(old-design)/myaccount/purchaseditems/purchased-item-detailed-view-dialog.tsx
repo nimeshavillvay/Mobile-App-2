@@ -14,7 +14,6 @@ import { Input } from "@/old/_components/ui/input";
 import { Label } from "@/old/_components/ui/label";
 // import useAddToCartMutation from "@/old/_hooks/cart/use-add-to-cart-mutation.hook";
 import useAddToCartMutation from "@/_hooks/cart/use-add-to-cart-mutation.hook";
-import useDebounce from "@/_hooks/misc/use-debouce.hook";
 import { cn } from "@/old/_utils/helpers";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { WurthFullBlack } from "@repo/web-ui/components/logos/wurth-full-black";
@@ -66,15 +65,15 @@ const PurchasedItemDetailedViewDialog = ({
   });
 
   const quantity = watch("quantity") ?? 1;
-  const delayedQuantity = useDebounce(quantity);
 
   const addToCartMutation = useAddToCartMutation(token, {
     productId: item.productId,
-    quantity: delayedQuantity,
   });
 
   const onSubmit = () => {
-    addToCartMutation.mutate({});
+    addToCartMutation.mutate({
+      quantity,
+    });
   };
 
   const onAddToFavorites = () => {

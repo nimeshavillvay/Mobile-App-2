@@ -55,12 +55,13 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
 
   const addToCartMutation = useAddToCartMutation(token, {
     productId: item.productId,
-    quantity: quantity,
   });
 
-  const onSubmit = () => {
-    addToCartMutation.mutate({});
-  };
+  const onSubmit = handleSubmit((data) => {
+    addToCartMutation.mutate({
+      quantity: data.quantity,
+    });
+  });
 
   const onAddToFavorites = () => {
     if (item.isFavorite) {
@@ -313,7 +314,7 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
         >
           <TableCell colSpan={7}>
             <div className="flex flex-row items-end justify-end gap-2">
-              <form onSubmit={handleSubmit(onSubmit)}>
+              <form onSubmit={onSubmit}>
                 <Button
                   className="w-[170px]"
                   disabled={!quantity || quantity < 1}

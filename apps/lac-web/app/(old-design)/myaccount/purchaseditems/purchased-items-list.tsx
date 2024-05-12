@@ -13,14 +13,11 @@ import {
 import {
   Table,
   TableBody,
-  TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/old/_components/ui/table";
-import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import { useSearchParams } from "next/navigation";
-import { Suspense } from "react";
 import { changeSearchParams } from "./client-helpers";
 import {
   DEFAULT_SORT,
@@ -278,12 +275,12 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
           <TableBody>
             {combinedPurchasedItems.length > 0 &&
               combinedPurchasedItems.map((item, index) => (
-                <Suspense
+                <PurchasedItemRow
                   key={`${item.productId}_${index}`}
-                  fallback={<PurchaseItemFallback />}
-                >
-                  <PurchasedItemRow token={token} index={index} item={item} />
-                </Suspense>
+                  token={token}
+                  index={index}
+                  item={item}
+                />
               ))}
           </TableBody>
         </Table>
@@ -295,11 +292,3 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
 };
 
 export default PurchasedItemsList;
-
-const PurchaseItemFallback = () => (
-  <TableRow>
-    <TableCell colSpan={7}>
-      <Skeleton className="h-[228.74px] w-full" />
-    </TableCell>
-  </TableRow>
-);

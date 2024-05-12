@@ -3,7 +3,7 @@ import { WurthFullBlack } from "@repo/web-ui/components/logos/wurth-full-black";
 import dayjs from "dayjs";
 import Image from "next/image";
 import Link from "next/link";
-import { Suspense, useState } from "react";
+import { useState } from "react";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { generateItemUrl } from "./client-helpers";
 import { DATE_FORMAT } from "./constants";
@@ -39,14 +39,12 @@ const PurchasedItemsListForMobile = ({
           ))}
       </div>
       {selectedItem && (
-        <Suspense>
-          <PurchasedItemDetailedViewDialog
-            open={showDetailedView}
-            onOpenChange={setShowDetailedView}
-            item={selectedItem}
-            token={token}
-          />
-        </Suspense>
+        <PurchasedItemDetailedViewDialog
+          open={showDetailedView}
+          onOpenChange={setShowDetailedView}
+          item={selectedItem}
+          token={token}
+        />
       )}
     </>
   );
