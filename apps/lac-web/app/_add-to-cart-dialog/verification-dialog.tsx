@@ -4,6 +4,7 @@ import useAddToCartMutation from "@/_hooks/cart/use-add-to-cart-mutation.hook";
 import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
 import useDebounce from "@/_hooks/misc/use-debouce.hook";
 import useItemInfo from "@/_hooks/product/use-item-info.hook";
+import useSuspenseCheckAvailability from "@/_hooks/product/use-suspense-check-availability.hook";
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import { cn } from "@/_lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,6 +14,11 @@ import { Minus } from "@repo/web-ui/components/icons/minus";
 import { Plus } from "@repo/web-ui/components/icons/plus";
 import { Badge } from "@repo/web-ui/components/ui/badge";
 import { Button } from "@repo/web-ui/components/ui/button";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@repo/web-ui/components/ui/collapsible";
 import {
   Dialog,
   DialogContent,
@@ -118,29 +124,18 @@ const VerificationDialog = ({ token }: VerificationDialogProps) => {
             )}
 
             <div className="flex flex-col gap-2">
-              <div className="flex flex-row items-center justify-between gap-2 rounded-lg bg-wurth-gray-50 p-2">
-                <div className="flex flex-row items-center gap-2">
-                  <Badge
-                    variant="success-alt"
-                    className="rounded px-2 py-1 text-sm font-semibold leading-4 shadow-none"
-                  >
-                    In Stock
-                  </Badge>
-
-                  <div className="text-sm font-medium text-wurth-gray-800">
-                    156 in stock at Brea, CA
-                  </div>
-                </div>
-
-                <Button
-                  variant="subtle"
-                  className="h-fit gap-1 p-0 pl-1 text-sm font-bold text-black"
+              {itemInfo ? (
+                <Suspense
+                  fallback={<Skeleton className="h-[2.625rem] rounded-lg" />}
                 >
-                  <span>Check Other Stores</span>
-
-                  <ChevronRight width={16} height={16} />
-                </Button>
-              </div>
+                  <LocationStocks
+                    token={token}
+                    productId={itemInfo.productId}
+                  />
+                </Suspense>
+              ) : (
+                <Skeleton className="h-[2.625rem] rounded-lg" />
+              )}
 
               <div>
                 <Label htmlFor={jobNameId} className="sr-only">
@@ -439,5 +434,83 @@ const AddToCart = ({
         disabled: addToCartMutation.isPending,
       }}
     />
+  );
+};
+
+const LocationStocks = ({
+  token,
+  productId,
+}: {
+  token: string;
+  productId: number;
+}) => {
+  const checkAvailabilityQuery = useSuspenseCheckAvailability(token, {
+    productId,
+    qty: 1,
+  });
+  const firstLocation = checkAvailabilityQuery.data.availableLocations[0];
+  const otherLocations =
+    checkAvailabilityQuery.data.availableLocations.slice(1);
+
+  return (
+    <Collapsible className="flex flex-col gap-1">
+      <div className="flex flex-row items-center justify-between gap-2 rounded-lg bg-wurth-gray-50 p-2">
+        <div className="flex flex-row items-center gap-2">
+          <Badge
+            variant="success-alt"
+            className="rounded px-2 py-1 text-sm font-semibold leading-4 shadow-none"
+          >
+            In Stock
+          </Badge>
+
+          <div className="text-sm font-medium text-wurth-gray-800">
+            {firstLocation?.amount} in stock at {firstLocation?.name}
+          </div>
+        </div>
+
+        <CollapsibleTrigger
+          asChild
+          className="group h-fit gap-1 p-0 pl-1 text-sm font-bold text-black"
+        >
+          <Button variant="subtle">
+            <span>Check Other Stores</span>
+
+            <ChevronRight
+              width={16}
+              height={16}
+              className="transition duration-150 ease-out group-data-[state=open]:rotate-90"
+            />
+          </Button>
+        </CollapsibleTrigger>
+      </div>
+
+      <CollapsibleContent>
+        <table className="w-full border-separate rounded-lg border border-wurth-gray-150 [&_td]:p-3 [&_th]:p-3">
+          <thead className="">
+            <tr className="text-sm text-wurth-gray-500">
+              <th className="border-b border-b-wurth-gray-150 text-left font-normal">
+                Location
+              </th>
+              <th className="border-b border-b-wurth-gray-150 text-right font-normal">
+                Stock
+              </th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {otherLocations.map((location) => (
+              <tr
+                key={location.location}
+                className="text-sm text-wurth-gray-800 [&:not(:last-child)]:border-b [&:not(:last-child)]:border-b-wurth-gray-150"
+              >
+                <td className="text-left font-normal">{location.name}</td>
+
+                <td className="text-right font-normal">{location.amount}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </CollapsibleContent>
+    </Collapsible>
   );
 };

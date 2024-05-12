@@ -28,7 +28,8 @@ const config: Config = {
         desktop: "var(--desktop-width)",
       },
       fontFamily: {
-        arial: ["Arial", ...defaultTheme.fontFamily.serif],
+        // TODO Remove these fonts once the new design is fully implemented
+        arial: ["var(--arial-font)", ...defaultTheme.fontFamily.serif],
         wurth: ["var(--wurth-font)", ...defaultTheme.fontFamily.serif],
       },
     },

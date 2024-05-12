@@ -6,15 +6,20 @@ type ProductCardSkeletonProps = {
   orientation?: ComponentProps<
     typeof ProductCardSkeletonPrimitive
   >["orientation"];
+  stretchWidth?: boolean;
 };
 
-const ProductCardSkeleton = ({ orientation }: ProductCardSkeletonProps) => {
+const ProductCardSkeleton = ({
+  orientation,
+  stretchWidth = false,
+}: ProductCardSkeletonProps) => {
   return (
     <ProductCardSkeletonPrimitive
       orientation={orientation}
       className={cn(
         "shrink-0 snap-start",
         orientation === "horizontal" && "w-full",
+        stretchWidth && "md:w-full",
       )}
     />
   );

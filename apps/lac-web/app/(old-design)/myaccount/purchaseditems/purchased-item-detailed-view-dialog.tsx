@@ -12,7 +12,9 @@ import {
 import { Dialog, DialogContent } from "@/old/_components/ui/dialog";
 import { Input } from "@/old/_components/ui/input";
 import { Label } from "@/old/_components/ui/label";
-import useAddToCartMutation from "@/old/_hooks/cart/use-add-to-cart-mutation.hook";
+// import useAddToCartMutation from "@/old/_hooks/cart/use-add-to-cart-mutation.hook";
+import useAddToCartMutation from "@/_hooks/cart/use-add-to-cart-mutation.hook";
+import useDebounce from "@/_hooks/misc/use-debouce.hook";
 import { cn } from "@/old/_utils/helpers";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { WurthFullBlack } from "@repo/web-ui/components/logos/wurth-full-black";
@@ -59,24 +61,20 @@ const PurchasedItemDetailedViewDialog = ({
   const router = useRouter();
   const quantityId = `quantity-${id}`;
 
-  // TODO: Replace this function with new add to cart function after new cart functionality is implemented
-  const addToCartMutation = useAddToCartMutation();
-
   const { register, handleSubmit, watch } = useForm<Schema>({
     resolver: zodResolver(schema),
   });
 
   const quantity = watch("quantity") ?? 1;
+  const delayedQuantity = useDebounce(quantity);
 
-  const onSubmit = (values: Schema) => {
-    addToCartMutation.mutate(
-      { sku: item.productSku, quantity: values.quantity },
-      {
-        onSuccess: () => {
-          // TODO: handle add to cart popup here
-        },
-      },
-    );
+  const addToCartMutation = useAddToCartMutation(token, {
+    productId: item.productId,
+    quantity: delayedQuantity,
+  });
+
+  const onSubmit = () => {
+    addToCartMutation.mutate({});
   };
 
   const onAddToFavorites = () => {
@@ -110,7 +108,7 @@ const PurchasedItemDetailedViewDialog = ({
               {item.image ? (
                 <Image
                   src={item.image}
-                  alt={item.productDescription}
+                  alt={item.productTitle}
                   width={92}
                   height={92}
                   className="size-[92px] border border-brand-gray-200 object-contain"
@@ -130,7 +128,7 @@ const PurchasedItemDetailedViewDialog = ({
               )}
 
               <h4 className="text-wrap font-bold text-black">
-                {item.productDescription}
+                {item.productTitle}
               </h4>
             </div>
           </div>

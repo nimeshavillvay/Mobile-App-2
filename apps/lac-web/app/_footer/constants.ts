@@ -37,25 +37,33 @@ export const SECTIONS = [
   {
     heading: "Company Information",
     links: [
-      "About us",
-      "Careers",
-      "Sales Tax and Exemption",
-      "Government Customers",
+      { label: "About us", href: "/about-us" },
+      { label: "Careers", href: "/careers" },
+      { label: "Sales Tax and Exemption", href: "/tax-form" },
+      { label: "Government Customers", href: "/government" },
     ],
   },
   {
     heading: "My Account",
     links: [
-      "Sign in/Register",
-      "Forgot password?",
-      "Order History",
-      "Shipping and Returns",
-      "Wish List",
+      { label: "Sign in/Register", href: "/sign-in" },
+      { label: "Forgot password?", href: "#" },
+      { label: "Order History", href: "/myaccount/orderhistory" },
+      { label: "Shipping and Returns", href: "/shipping-returns" },
+      { label: "Wish List", href: "/myaccount/wishlist" },
     ],
   },
   {
     heading: "Tools and Resources",
-    links: ["FAQs", "Our Branches", "Terms of Sale", "Terms for Suppliers"],
+    links: [
+      { label: "FAQs", href: "/faqs" },
+      { label: "Our Branches", href: "/branches" },
+      { label: "Terms of Sale", href: "/terms-of-sale" },
+      {
+        label: "Terms for Suppliers",
+        href: "/Terms-and-Conditions-for-WLACs-Purchase-of-Products-from-Suppliers",
+      },
+    ],
   },
 ] as const;
 

@@ -1,6 +1,7 @@
 "use client";
 
 import useItemInfo from "@/_hooks/product/use-item-info.hook";
+import useSuspenseFilters from "@/_hooks/search/use-suspense-filters.hook";
 import { ItemInfo } from "@/_lib/types";
 import {
   Select,
@@ -12,11 +13,14 @@ import {
 import {
   Table,
   TableBody,
+  TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/old/_components/ui/table";
+import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 import { changeSearchParams } from "./client-helpers";
 import {
   DEFAULT_SORT,
@@ -39,12 +43,15 @@ import useSuspensePurchasedItemsList from "./use-suspense-purchased-items-list.h
 
 const PurchasedItemsList = ({ token }: { token: string }) => {
   const searchParams = useSearchParams();
-  const fromDate = searchParams.get("from") ?? INIT_FROM_DATE;
-  const toDate = searchParams.get("to") ?? INIT_TO_DATE;
-  const orderField = searchParams.get("orderBy") ?? INIT_SORTING_FIELD;
-  const orderType = searchParams.get("orderType") ?? INIT_SORTING_TYPE;
-  const page = Number(searchParams.get("page") ?? INIT_PAGE_NUMBER);
-  const perPage = Number(searchParams.get("perPage") ?? INIT_PER_PAGE);
+  const fromDate = searchParams.get(QUERY_KEYS.FROM_DATE) ?? INIT_FROM_DATE;
+  const toDate = searchParams.get(QUERY_KEYS.TO_DATE) ?? INIT_TO_DATE;
+  const orderBy = searchParams.get(QUERY_KEYS.ORDER_BY) ?? INIT_SORTING_FIELD;
+  const orderType =
+    searchParams.get(QUERY_KEYS.ORDER_TYPE) ?? INIT_SORTING_TYPE;
+  const page = Number(searchParams.get(QUERY_KEYS.PAGE) ?? INIT_PAGE_NUMBER);
+  const perPage = Number(
+    searchParams.get(QUERY_KEYS.PER_PAGE) ?? INIT_PER_PAGE,
+  );
 
   let isLoading = true;
   let totalItems = 0;
@@ -53,14 +60,21 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
     (sortingType) => sortingType.value === orderType,
   );
 
+  const filtersQuery = useSuspenseFilters(token, {
+    type: "Purchases",
+    from: fromDate,
+    to: toDate,
+  });
+
   const purchasedItemsList = useSuspensePurchasedItemsList(
     token,
     fromDate,
     toDate,
     page - 1,
     perPage,
-    orderField,
+    orderBy,
     orderType,
+    filtersQuery.data,
   );
 
   const productIds: number[] = [];
@@ -102,9 +116,9 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
       );
 
       const initialDetails: ItemInfo = {
-        productId: 0,
+        productId: item.productId,
         isExcludedProduct: false,
-        productSku: "",
+        productSku: item.productSku,
         productName: "",
         image: "",
         isComparison: false,
@@ -113,7 +127,7 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
         productIdOnSap: "",
         mfrPartNo: "",
         productDescription: "",
-        productTitle: "",
+        productTitle: item.productTitle,
         brandCode: 0,
         unitOfMeasure: "",
         boxQuantity: 0,
@@ -174,7 +188,7 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
                 >
                   <SelectTrigger className="h-8 w-[120px] py-0">
                     <SelectValue>
-                      {orderField == SORTING_BY_FIELDS.SKU
+                      {orderBy === SORTING_BY_FIELDS.SKU
                         ? selectedSorting?.label
                         : DEFAULT_SORT}
                     </SelectValue>
@@ -182,8 +196,12 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
 
                   <SelectContent>
                     {SORTING_TYPES.map((type) => (
-                      <SelectItem key={type.value} value={type.value}>
-                        {type.label}
+                      <SelectItem
+                        key={type.value}
+                        value={type.value}
+                        className="pl-2"
+                      >
+                        <div>{type.label}</div>
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -199,7 +217,7 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
                 >
                   <SelectTrigger className="h-8 w-[120px] py-0">
                     <SelectValue>
-                      {orderField == SORTING_BY_FIELDS.ORDER_DATE
+                      {orderBy === SORTING_BY_FIELDS.ORDER_DATE
                         ? selectedSorting?.label
                         : DEFAULT_SORT}
                     </SelectValue>
@@ -207,7 +225,11 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
 
                   <SelectContent>
                     {SORTING_TYPES.map((type) => (
-                      <SelectItem key={type.value} value={type.value}>
+                      <SelectItem
+                        key={type.value}
+                        value={type.value}
+                        className="pl-2"
+                      >
                         {type.label}
                       </SelectItem>
                     ))}
@@ -225,7 +247,7 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
                 >
                   <SelectTrigger className="h-8 w-[120px] py-0">
                     <SelectValue>
-                      {orderField == SORTING_BY_FIELDS.TOTAL_ITEMS
+                      {orderBy === SORTING_BY_FIELDS.TOTAL_ITEMS
                         ? selectedSorting?.label
                         : DEFAULT_SORT}
                     </SelectValue>
@@ -233,7 +255,11 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
 
                   <SelectContent>
                     {SORTING_TYPES.map((type) => (
-                      <SelectItem key={type.value} value={type.value}>
+                      <SelectItem
+                        key={type.value}
+                        value={type.value}
+                        className="pl-2"
+                      >
                         {type.label}
                       </SelectItem>
                     ))}
@@ -250,14 +276,15 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
           </TableHeader>
 
           <TableBody>
-            {combinedPurchasedItems?.map((item, index) => (
-              <PurchasedItemRow
-                key={`${item.productId}_${index}`}
-                token={token}
-                index={index}
-                item={item}
-              />
-            ))}
+            {combinedPurchasedItems.length > 0 &&
+              combinedPurchasedItems.map((item, index) => (
+                <Suspense
+                  key={`${item.productId}_${index}`}
+                  fallback={<PurchaseItemFallback />}
+                >
+                  <PurchasedItemRow token={token} index={index} item={item} />
+                </Suspense>
+              ))}
           </TableBody>
         </Table>
       </div>
@@ -268,3 +295,11 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
 };
 
 export default PurchasedItemsList;
+
+const PurchaseItemFallback = () => (
+  <TableRow>
+    <TableCell colSpan={7}>
+      <Skeleton className="h-[228.74px] w-full" />
+    </TableCell>
+  </TableRow>
+);

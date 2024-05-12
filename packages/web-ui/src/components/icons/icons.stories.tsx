@@ -37,6 +37,7 @@ import { Settings } from "./settings";
 import { Shield } from "./shield";
 import { Shop } from "./shop";
 import { ShoppingCart } from "./shopping-cart";
+import { Switch } from "./switch";
 import { TikTok } from "./tiktok";
 import { Trash } from "./trash";
 import { Truck } from "./truck";
@@ -257,6 +258,10 @@ export const Showcase: Story = {
 
         <IconContainer name="TikTok">
           <TikTok />
+        </IconContainer>
+
+        <IconContainer name="Switch">
+          <Switch />
         </IconContainer>
       </ul>
     );

@@ -5,6 +5,7 @@ import {
   CarouselItem,
 } from "@repo/web-ui/components/ui/carousel";
 import Image from "next/image";
+import Link from "next/link";
 import Balancer from "react-wrap-balancer";
 import "server-only";
 import { getProduct } from "../apis";
@@ -47,9 +48,12 @@ const ProductHero = async ({ id, slug }: ProductHeroProps) => {
       minQuantity={product.selectedProduct.minimumOrderQuantity}
     >
       <div className="container my-2 flex flex-row items-center gap-2 md:my-1">
-        <div className="text-sm font-normal text-black">
+        <Link
+          href={`/search?query=${product.brand}`}
+          className="text-sm font-normal text-black hover:underline"
+        >
           Shop <span className="font-semibold">{product.brand}</span>
-        </div>
+        </Link>
 
         <SaleBadges productId={parseInt(id)} />
       </div>
@@ -82,6 +86,7 @@ const ProductHero = async ({ id, slug }: ProductHeroProps) => {
           <ProductVariants id={id} />
 
           <AddToCart
+            productId={parseInt(id)}
             minQty={product.selectedProduct.minimumOrderQuantity}
             incQty={product.selectedProduct.quantityByIncrements}
           />
@@ -141,6 +146,7 @@ const ProductHero = async ({ id, slug }: ProductHeroProps) => {
         <ProductVariants id={id} className="container my-6 md:hidden" />
 
         <AddToCart
+          productId={parseInt(id)}
           minQty={product.selectedProduct.minimumOrderQuantity}
           incQty={product.selectedProduct.quantityByIncrements}
           className="container my-6 md:hidden"

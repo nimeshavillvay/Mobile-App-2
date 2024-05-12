@@ -1,6 +1,9 @@
+import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import Breadcrumbs from "@/old/_components/breadcrumbs";
 import Separator from "@/old/_components/separator";
 import Title from "@/old/_components/title";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import { type ReactNode } from "react";
 import SideMenu from "./_side-menu";
 import Profile from "./profile";
@@ -10,6 +13,12 @@ type MyAccountLayoutProps = {
 };
 
 const MyAccountLayout = ({ children }: MyAccountLayoutProps) => {
+  const sessionTokenCookie = cookies().get(SESSION_TOKEN_COOKIE);
+
+  if (!sessionTokenCookie?.value) {
+    return redirect("/");
+  }
+
   return (
     <>
       <Breadcrumbs links={[{ href: "/myaccount", label: "My Account" }]} />
@@ -28,7 +37,7 @@ const MyAccountLayout = ({ children }: MyAccountLayoutProps) => {
           <aside className="mb-6 hidden md:mb-0 md:block md:w-[280px]">
             <Profile />
 
-            <SideMenu />
+            <SideMenu token={sessionTokenCookie?.value} />
           </aside>
 
           <div className="relative w-full px-0 md:pl-12">{children}</div>

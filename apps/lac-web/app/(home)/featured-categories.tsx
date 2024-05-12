@@ -94,7 +94,7 @@ const CategoriesGrid = ({
             />
 
             <span className="text-center text-[0.9375rem] font-semibold leading-5 text-black md:text-base">
-              Bathroom Stall Hardware
+              {category.name}
             </span>
           </Link>
         </li>
