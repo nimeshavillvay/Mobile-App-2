@@ -1,19 +1,21 @@
 import {
+  getOrderDetails,
   getPaymentMethods,
   getPlants,
   getShippingMethods,
 } from "@/_lib/apis/server";
 import { getItemInfo } from "@/_lib/apis/shared";
+import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import AlertInline from "@/old/_components/alert-inline";
 import Separator from "@/old/_components/separator";
 import { Badge } from "@/old/_components/ui/badge";
 import { formatNumberToPrice } from "@/old/_utils/helpers";
 import dayjs from "dayjs";
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { redirect } from "next/navigation";
 import BackButton from "../back-button";
-import { getOrderDetail } from "./api";
 import OrderDetailsForMobile from "./order-details-for-mobile";
 import OrderItem from "./order-item";
 import OrderItemForMobile from "./order-item-for-mobile";
@@ -24,15 +26,21 @@ type DetailedOrderPageProps = {
   };
 };
 
+const getOrder = async (orderId: string) => {
+  const cookiesStore = cookies();
+  const sessionToken = cookiesStore.get(SESSION_TOKEN_COOKIE);
+
+  if (!sessionToken?.value) {
+    return redirect("/sign-in");
+  }
+
+  return await getOrderDetails(sessionToken.value, orderId);
+};
+
 export const generateMetadata = async ({
   params: { orderId },
 }: DetailedOrderPageProps): Promise<Metadata> => {
-  // Check if the orderId exists
-  if (!orderId) {
-    return notFound();
-  }
-
-  const orderDetail = await getOrderDetail(orderId);
+  const orderDetail = await getOrder(orderId);
 
   return {
     title: `Order - ${orderDetail.orderNo}`,
@@ -43,11 +51,7 @@ export const generateMetadata = async ({
 const DetailedOrderPage = async ({
   params: { orderId },
 }: DetailedOrderPageProps) => {
-  if (!orderId) {
-    return notFound();
-  }
-
-  const orderDetail = await getOrderDetail(orderId);
+  const orderDetail = await getOrder(orderId);
 
   const [paymentMethods, shippingMethods, plants] = await Promise.all([
     getPaymentMethods(),

@@ -28,6 +28,7 @@ import { useId, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import AddCreditCardDialog from "./add-credit-card-dialog";
+import useCheckoutMutation from "./use-checkout-mutation.hook";
 import useDeleteCreditCardMutation from "./use-delete-credit-card-mutation.hook";
 import useSuspenseCreditCards from "./use-suspense-credit-cards.hook";
 
@@ -140,6 +141,8 @@ const BillingAndPaymentInfo = ({
       });
     }
   };
+
+  const checkoutMutation = useCheckoutMutation();
 
   return (
     <section className="flex flex-col gap-5 rounded-lg border border-wurth-gray-250 p-5 shadow-lg md:gap-6 md:p-6">
@@ -307,6 +310,16 @@ const BillingAndPaymentInfo = ({
 
         <AddCreditCardDialog token={token} />
       </div>
+
+      <Button
+        variant="secondary"
+        size="lg"
+        className="h-fit rounded-lg px-20 py-4 text-lg font-normal shadow-md md:max-w-60 md:self-end"
+        onClick={() => checkoutMutation.mutate()}
+        disabled={checkoutMutation.isPending}
+      >
+        Place your Order
+      </Button>
     </section>
   );
 };
