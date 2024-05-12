@@ -44,10 +44,13 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
   const searchParams = useSearchParams();
   const fromDate = searchParams.get("from") ?? INIT_FROM_DATE;
   const toDate = searchParams.get("to") ?? INIT_TO_DATE;
-  const orderField = searchParams.get("orderBy") ?? INIT_SORTING_FIELD;
-  const orderType = searchParams.get("orderType") ?? INIT_SORTING_TYPE;
-  const page = Number(searchParams.get("page") ?? INIT_PAGE_NUMBER);
-  const perPage = Number(searchParams.get("perPage") ?? INIT_PER_PAGE);
+  const orderBy = searchParams.get(QUERY_KEYS.ORDER_BY) ?? INIT_SORTING_FIELD;
+  const orderType =
+    searchParams.get(QUERY_KEYS.ORDER_TYPE) ?? INIT_SORTING_TYPE;
+  const page = Number(searchParams.get(QUERY_KEYS.PAGE) ?? INIT_PAGE_NUMBER);
+  const perPage = Number(
+    searchParams.get(QUERY_KEYS.PER_PAGE) ?? INIT_PER_PAGE,
+  );
 
   let isLoading = true;
   let totalItems = 0;
@@ -62,7 +65,7 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
     toDate,
     page - 1,
     perPage,
-    orderField,
+    orderBy,
     orderType,
   );
 
@@ -177,7 +180,7 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
                 >
                   <SelectTrigger className="h-8 w-[120px] py-0">
                     <SelectValue>
-                      {orderField == SORTING_BY_FIELDS.SKU
+                      {orderBy === SORTING_BY_FIELDS.SKU
                         ? selectedSorting?.label
                         : DEFAULT_SORT}
                     </SelectValue>
@@ -185,8 +188,13 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
 
                   <SelectContent>
                     {SORTING_TYPES.map((type) => (
-                      <SelectItem key={type.value} value={type.value}>
-                        {type.label}
+                      <SelectItem
+                        key={type.value}
+                        value={type.value}
+                        className="pl-2"
+                        asChild
+                      >
+                        <div>{type.label}</div>
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -202,7 +210,7 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
                 >
                   <SelectTrigger className="h-8 w-[120px] py-0">
                     <SelectValue>
-                      {orderField == SORTING_BY_FIELDS.ORDER_DATE
+                      {orderBy === SORTING_BY_FIELDS.ORDER_DATE
                         ? selectedSorting?.label
                         : DEFAULT_SORT}
                     </SelectValue>
@@ -210,7 +218,11 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
 
                   <SelectContent>
                     {SORTING_TYPES.map((type) => (
-                      <SelectItem key={type.value} value={type.value}>
+                      <SelectItem
+                        key={type.value}
+                        value={type.value}
+                        className="pl-2"
+                      >
                         {type.label}
                       </SelectItem>
                     ))}
@@ -228,7 +240,7 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
                 >
                   <SelectTrigger className="h-8 w-[120px] py-0">
                     <SelectValue>
-                      {orderField == SORTING_BY_FIELDS.TOTAL_ITEMS
+                      {orderBy === SORTING_BY_FIELDS.TOTAL_ITEMS
                         ? selectedSorting?.label
                         : DEFAULT_SORT}
                     </SelectValue>
@@ -236,7 +248,11 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
 
                   <SelectContent>
                     {SORTING_TYPES.map((type) => (
-                      <SelectItem key={type.value} value={type.value}>
+                      <SelectItem
+                        key={type.value}
+                        value={type.value}
+                        className="pl-2"
+                      >
                         {type.label}
                       </SelectItem>
                     ))}

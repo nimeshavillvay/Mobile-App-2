@@ -13,7 +13,7 @@ const useSuspensePurchasedItemsList = (
   toDate: string,
   page: number,
   size: number,
-  orderField: string,
+  orderBy: string,
   orderType: string,
 ) => {
   return useSuspenseQuery({
@@ -25,7 +25,7 @@ const useSuspensePurchasedItemsList = (
       toDate,
       page,
       size,
-      orderField,
+      orderBy,
       orderType,
     ],
     queryFn: () =>
@@ -39,8 +39,8 @@ const useSuspensePurchasedItemsList = (
             to: toDate,
             page: page,
             perpage: size,
-            field: orderField,
-            order: orderType,
+            sort: orderBy,
+            sort_direction: orderType,
           },
         })
         .json<OldPurchasedItems>(),
