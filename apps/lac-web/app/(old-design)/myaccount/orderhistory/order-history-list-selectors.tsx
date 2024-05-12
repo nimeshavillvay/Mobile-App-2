@@ -1,4 +1,4 @@
-import type { Filter } from "@/_lib/types";
+import type { Filters } from "@/_lib/types";
 import { filterAndMapValues } from "@/_lib/utils";
 import DatePicker from "@/old/_components/date-picker";
 import { Button } from "@/old/_components/ui/button";
@@ -16,7 +16,6 @@ import dayjs from "dayjs";
 import { useSearchParams } from "next/navigation";
 import { useId, useState } from "react";
 import { MdKeyboardArrowDown } from "react-icons/md";
-import { changeSearchParams } from "../_utils/client-helpers";
 import {
   CUSTOM_DURATION,
   DURATIONS,
@@ -32,9 +31,10 @@ import {
 import MultiSelect from "./multi-select";
 import SelectorsForMobileDialog from "./selectors-for-mobile-dialog";
 import type { Option } from "./types";
+import { useFilterParams, type SelectedValues } from "./use-filter-params.hook";
 
 type OrderHistoryListSelectorsProps = {
-  filters: Filter[];
+  filters: Filters[];
   isLoading: boolean;
   totalItems: number;
 };
@@ -44,16 +44,25 @@ const OrderHistoryListSelectors = ({
   isLoading,
   totalItems,
 }: OrderHistoryListSelectorsProps) => {
+  const urlSearchParams = useSearchParams();
+  const { selectedValues, searchParams } = useFilterParams(filters);
+
+  const mappedSelectedValues: (SelectedValues[string] & { id: string })[] = [];
+  for (const [key, value] of Object.entries(selectedValues)) {
+    mappedSelectedValues.push({ ...value, id: key });
+  }
+
   const poNoFilter = filterAndMapValues(filters, "PO #");
   const jobNameFilter = filterAndMapValues(filters, "Job Name");
   const statusFilter = filterAndMapValues(filters, "Status");
   const typesFilter = filterAndMapValues(filters, "Transaction Type");
 
-  const urlSearchParams = useSearchParams();
-  const urlFromDate = urlSearchParams.get("from");
-  const urlToDate = urlSearchParams.get("to");
-  const page = Number(urlSearchParams.get("page") ?? INIT_PAGE_NUMBER);
-  const perPage = Number(urlSearchParams.get("perPage") ?? INIT_PAGE_SIZE);
+  const urlFromDate = urlSearchParams.get(QUERY_KEYS.FROM_DATE);
+  const urlToDate = urlSearchParams.get(QUERY_KEYS.TO_DATE);
+  const page = Number(urlSearchParams.get(QUERY_KEYS.PAGE) ?? INIT_PAGE_NUMBER);
+  const perPage = Number(
+    urlSearchParams.get(QUERY_KEYS.PER_PAGE) ?? INIT_PAGE_SIZE,
+  );
 
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [duration, setDuration] = useState(INIT_DURATION);
@@ -61,8 +70,10 @@ const OrderHistoryListSelectors = ({
     new Date(urlFromDate ?? INIT_FROM_DATE),
   );
   const [toDate, setToDate] = useState(new Date(urlToDate ?? INIT_TO_DATE));
-  const [orderStatuses, setOrderStatuses] = useState<string[]>([]);
-  const [orderTypes, setOrderTypes] = useState<string[]>([]);
+  const [orderStatuses, setOrderStatuses] = useState<number[]>([]);
+  const [orderTypes, setOrderTypes] = useState<number[]>([]);
+  const [poNos, setPoNos] = useState<number[]>([]);
+  const [jobNames, setJobNames] = useState<number[]>([]);
 
   const formattedFromDate = dayjs(fromDate).format(URL_DATE_FORMAT);
   const formattedToDate = dayjs(toDate).format(URL_DATE_FORMAT);
@@ -87,24 +98,51 @@ const OrderHistoryListSelectors = ({
   };
 
   const handleSearch = () => {
-    changeSearchParams(urlSearchParams, [
-      {
-        key: QUERY_KEYS.FROM_DATE,
-        value: dayjs(fromDate).format(URL_DATE_FORMAT),
-      },
-      {
-        key: QUERY_KEYS.TO_DATE,
-        value: dayjs(toDate).format(URL_DATE_FORMAT),
-      },
-      {
-        key: QUERY_KEYS.ORDER_STATUS,
-        value: orderStatuses.join(","),
-      },
-      {
-        key: QUERY_KEYS.ORDER_TYPE,
-        value: orderTypes.join(","),
-      },
-    ]);
+    const { id: typeAttributeId } = typesFilter ?? {};
+    const { id: statusAttributeId } = statusFilter ?? {};
+    const { id: poAttributeId } = poNoFilter ?? {};
+    const { id: jobAttributeId } = jobNameFilter ?? {};
+
+    const filters = [
+      { key: typeAttributeId, values: orderTypes },
+      { key: statusAttributeId, values: orderStatuses },
+      { key: poAttributeId, values: poNos },
+      { key: jobAttributeId, values: jobNames },
+    ];
+
+    const newUrlSearchParams = new URLSearchParams(searchParams);
+
+    if (fromDate) {
+      newUrlSearchParams.set(
+        QUERY_KEYS.FROM_DATE,
+        dayjs(fromDate).format(URL_DATE_FORMAT),
+      );
+    }
+
+    if (toDate) {
+      newUrlSearchParams.set(
+        QUERY_KEYS.TO_DATE,
+        dayjs(toDate).format(URL_DATE_FORMAT),
+      );
+    }
+
+    filters.forEach(({ key, values }) => {
+      if (key && values.length > 0) {
+        // Delete existing parameter
+        newUrlSearchParams.delete(key);
+        // Append new values
+        values.forEach((value) =>
+          newUrlSearchParams.append(key, value.toString()),
+        );
+      } else {
+        // If values are empty, delete the parameter
+        if (key) {
+          newUrlSearchParams.delete(key);
+        }
+      }
+    });
+
+    window.history.pushState(null, "", `?${newUrlSearchParams.toString()}`);
   };
 
   const handleReset = () => {
@@ -119,17 +157,27 @@ const OrderHistoryListSelectors = ({
     updateSearchParams(params);
   };
 
-  const handleOrderTypeCheckedChanged = (id: string, checked: boolean) => {
+  const handleOrderTypeCheckedChanged = (valueId: number, checked: boolean) => {
     if (checked) {
-      setOrderTypes((prev) => [...prev, id]);
+      setOrderTypes((prev) => [...prev, valueId]);
     } else {
-      setOrderTypes((prev) => prev.filter((type) => type !== id));
+      setOrderTypes((prev) => prev.filter((type) => type !== valueId));
     }
   };
 
   const handleOrderStatusChange = (values: Option[]) => {
     const selectedOrderStatus = values.map((value) => value.id);
     setOrderStatuses(selectedOrderStatus);
+  };
+
+  const handlePONosChange = (values: Option[]) => {
+    const selectedPONos = values.map((value) => value.id);
+    setPoNos(selectedPONos);
+  };
+
+  const handleJobNamesChange = (values: Option[]) => {
+    const selectedJobNames = values.map((value) => value.id);
+    setJobNames(selectedJobNames);
   };
 
   return (
@@ -204,15 +252,16 @@ const OrderHistoryListSelectors = ({
           <Label className="text-nowrap font-bold">Order Types</Label>
 
           <div className="flex min-h-[186px] min-w-[170px] flex-col gap-2 rounded-sm border bg-white p-3">
-            {typesFilter.map((orderType) => (
-              <OrderTypeCheckbox
-                key={`type-${orderType.id}`}
-                onCheckedChanged={(checked) =>
-                  handleOrderTypeCheckedChanged(orderType.id, checked)
-                }
-                {...orderType}
-              />
-            ))}
+            {typesFilter?.values?.length &&
+              typesFilter.values.map((orderType) => (
+                <OrderTypeCheckbox
+                  key={`type-${orderType.id}`}
+                  onCheckedChanged={(checked) =>
+                    handleOrderTypeCheckedChanged(orderType.id, checked)
+                  }
+                  {...orderType}
+                />
+              ))}
           </div>
         </div>
 
@@ -221,12 +270,26 @@ const OrderHistoryListSelectors = ({
           <Label className="text-nowrap font-bold">Filter By</Label>
 
           <div className="flex flex-col gap-2">
-            <MultiSelect label="PO No." flag="po" data={poNoFilter} />
-            <MultiSelect label="Job Name" flag="job" data={jobNameFilter} />
+            <MultiSelect
+              label="PO No."
+              flag="po"
+              data={poNoFilter?.values ?? []}
+              onValuesChange={(values) => handlePONosChange(values)}
+              onClear={() => setPoNos([])}
+            />
+
+            <MultiSelect
+              label="Job Name"
+              flag="job"
+              data={jobNameFilter?.values ?? []}
+              onValuesChange={(values) => handleJobNamesChange(values)}
+              onClear={() => setJobNames([])}
+            />
+
             <MultiSelect
               label="Order Status"
               flag="status"
-              data={statusFilter}
+              data={statusFilter?.values ?? []}
               onValuesChange={(values) => handleOrderStatusChange(values)}
               onClear={() => setOrderStatuses([])}
             />
@@ -286,7 +349,7 @@ const OrderTypeCheckbox = ({
   active,
   onCheckedChanged,
 }: {
-  id: string;
+  id: number;
   value: string;
   active: boolean;
   onCheckedChanged: (checked: boolean) => void;

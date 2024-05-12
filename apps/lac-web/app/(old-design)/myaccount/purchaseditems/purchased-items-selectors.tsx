@@ -186,6 +186,7 @@ const PurchasedItemsSelectors = ({
           <div className="font-bold">{`${formattedFromDate} - ${formattedToDate}`}</div>
         </div>
       </div>
+
       <div className="flex md:hidden">
         <FiltersForMobileDialog open={open} setOpen={setOpen} />
       </div>

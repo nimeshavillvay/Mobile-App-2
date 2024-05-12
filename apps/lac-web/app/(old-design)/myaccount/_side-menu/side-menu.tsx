@@ -8,10 +8,13 @@ import {
 } from "@/old/_components/ui/accordion";
 import useLogout from "@/old/_hooks/account/use-logout.hook";
 import { cn } from "@/old/_utils/helpers";
+import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import { cva } from "cva";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import Filters from "./filters";
+import { Suspense } from "react";
+import FavoritesFilters from "./favorites-filters";
+import PurchasesFilters from "./purchases-filters";
 
 const menuItem = cva({
   base: "block border-b border-brand-gray-200 py-2.5 font-bold text-black first:border-t hover:underline",
@@ -38,7 +41,7 @@ const LINKS = [
   },
 ];
 
-const SideMenu = () => {
+const SideMenu = ({ token }: { token: string }) => {
   const pathname = usePathname();
   const router = useRouter();
   const logout = useLogout();
@@ -73,7 +76,9 @@ const SideMenu = () => {
           </AccordionTrigger>
 
           <AccordionContent className="pb-0">
-            <Filters section="purchased-items" />
+            <Suspense fallback={<Skeleton className="mb-4 h-32" />}>
+              <PurchasesFilters token={token} />
+            </Suspense>
           </AccordionContent>
         </AccordionItem>
 
@@ -83,7 +88,9 @@ const SideMenu = () => {
           </AccordionTrigger>
 
           <AccordionContent className="pb-0">
-            <Filters section="favorites" />
+            <Suspense fallback={<Skeleton className="mb-4 h-32" />}>
+              <FavoritesFilters token={token} />
+            </Suspense>
           </AccordionContent>
         </AccordionItem>
       </Accordion>
