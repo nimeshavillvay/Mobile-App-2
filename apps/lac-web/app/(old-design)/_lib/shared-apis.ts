@@ -1,5 +1,6 @@
+import { Address } from "@/_lib/types";
 import { api } from "./api";
-import type { Address, Availability } from "./types";
+import type { Availability } from "./types";
 
 export const getAccountList = async (token: string) => {
   return await api
