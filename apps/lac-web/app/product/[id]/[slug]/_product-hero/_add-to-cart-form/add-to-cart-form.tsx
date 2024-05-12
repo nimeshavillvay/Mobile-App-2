@@ -1,7 +1,6 @@
 "use client";
 
 import useAddToCartMutation from "@/_hooks/cart/use-add-to-cart-mutation.hook";
-import useDebounce from "@/_hooks/misc/use-debouce.hook";
 import useAddToCartForm from "../use-add-to-cart-form.hook";
 import FormContent from "./form-content";
 
@@ -20,7 +19,6 @@ const AddToCartForm = ({
 }: AddToCartFormProps) => {
   const { watch, setValue, register, handleSubmit } = useAddToCartForm();
   const quantity = watch("quantity");
-  const delayedQuantity = useDebounce(quantity);
 
   const reduceQuantity = () => {
     setValue("quantity", quantity - incQty);
@@ -31,11 +29,12 @@ const AddToCartForm = ({
 
   const addToCartMutation = useAddToCartMutation(token, {
     productId,
-    quantity: delayedQuantity,
   });
 
   const onSubmit = handleSubmit(() => {
-    addToCartMutation.mutate({});
+    addToCartMutation.mutate({
+      quantity,
+    });
   });
 
   return (
