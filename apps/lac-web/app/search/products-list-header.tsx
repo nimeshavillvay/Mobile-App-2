@@ -1,5 +1,7 @@
 import { ProductsGridHeader } from "@/_components/products-grid";
+import { cookies } from "next/headers";
 import { getSearchResults } from "./apis";
+import { TOTAL_COOKIE } from "./constants";
 
 type ProductsListHeaderProps = {
   term: string;
@@ -14,8 +16,26 @@ const ProductsListHeader = async ({
     query: term,
     pageNo,
   });
-  const total = searchResults.summary.total;
-  const totalPages = Math.ceil(searchResults?.summary?.total / 24);
+  const cookiesStore = cookies();
+  const searchParamsCookie = cookiesStore.get(TOTAL_COOKIE);
+  let totalPages = 1;
+  let total = 0;
+  if (
+    searchResults?.summary?.total != 0 &&
+    Array.isArray(searchResults.results) &&
+    searchResults.results.length !== 0
+  ) {
+    totalPages = Math.ceil(searchResults.summary.total / 24);
+    total = searchResults.summary.total;
+  } else if (
+    searchParamsCookie?.value &&
+    Array.isArray(searchResults.results) &&
+    searchResults.results.length !== 0
+  ) {
+    totalPages = Math.ceil(parseInt(searchParamsCookie.value) / 24);
+    total = parseInt(searchParamsCookie.value);
+  }
+
   return <ProductsGridHeader totalCount={total} totalPages={totalPages} />;
 };
 

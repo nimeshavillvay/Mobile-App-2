@@ -1,5 +1,6 @@
 import { searchApi } from "@/_lib/api";
-import "server-only";
+import { cookies } from "next/headers";
+import { SEARCH_PARAMS_COOKIE } from "./constants";
 
 type SearchResult = {
   brandName: string;
@@ -42,6 +43,8 @@ export const getSearchResults = async ({
   pageNo?: string;
   query: string;
 }) => {
+  const cookiesStore = cookies();
+  const searchParamsCookie = cookiesStore.get(SEARCH_PARAMS_COOKIE);
   return await searchApi
     .get("search", {
       searchParams: new URLSearchParams({
@@ -50,6 +53,9 @@ export const getSearchResults = async ({
         isFilterByBrand: "false",
         pageSize: "24",
       }),
+      headers: {
+        searchParams: searchParamsCookie?.value,
+      },
       cache: "no-store",
     })
     .json<SearchData>();

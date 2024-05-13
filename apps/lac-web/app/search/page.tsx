@@ -19,6 +19,7 @@ import { Fragment, Suspense } from "react";
 import { getSearchResults } from "./apis";
 import NoResultsNotice from "./no-results-notice";
 import ProductsList from "./products-list";
+import ResultCacher from "./result-cacher";
 
 export const metadata: Metadata = {
   title: "Search",
@@ -30,7 +31,7 @@ const SearchPage = async ({
   searchParams: { [key: string]: string | string[] | undefined };
 }) => {
   const query = searchParams.query?.toString() ?? "";
-  const pageNo = searchParams.pageNo?.toString() ?? "1";
+  const pageNo = searchParams.page?.toString() ?? "1";
 
   const searchResults = await getSearchResults({
     query,
@@ -45,6 +46,11 @@ const SearchPage = async ({
 
   return (
     <>
+      <ResultCacher
+        total={searchResults.summary.total}
+        searchParams={searchResults.summary.searchParams}
+      />
+
       <Breadcrumb className="container my-3 hidden md:block">
         <BreadcrumbList>
           <BreadcrumbItem>
