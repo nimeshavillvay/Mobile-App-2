@@ -1,14 +1,14 @@
+import useCookies from "@/_hooks/storage/use-cookies.hook";
 import { api } from "@/_lib/api";
-import useCookies from "@/old/_hooks/storage/use-cookies.hook";
-import { ACCOUNT_TOKEN_COOKIE } from "@/old/_lib/constants";
+import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import { useToast } from "@repo/web-ui/components/ui/toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { UpdateUser } from "./types";
 
 const useUpdateProfileMutation = () => {
-  const queryClient = useQueryClient();
   const [cookies] = useCookies();
   const { toast } = useToast();
+  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: ({
@@ -24,7 +24,7 @@ const useUpdateProfileMutation = () => {
       api
         .post("rest/my-account/update_profile", {
           headers: {
-            authorization: `Bearer ${cookies[ACCOUNT_TOKEN_COOKIE]}`,
+            authorization: `Bearer ${cookies[SESSION_TOKEN_COOKIE]}`,
           },
           json: {
             user_id: userId,

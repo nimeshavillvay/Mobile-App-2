@@ -68,6 +68,8 @@ const ManageUsersLoading = () => {
           </TableRow>
         </TableBody>
       </Table>
+
+      <Skeleton className="mt-5 h-36" />
     </div>
   );
 };
