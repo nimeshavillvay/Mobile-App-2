@@ -28,14 +28,19 @@ const ShoppingList = ({ token }: { token: string }) => {
   let shoppingList;
   const shoppingListIdValue = searchParams.get("shoppingListId");
   if (shoppingListIdValue == selectedAddressShoppingListId) {
+    // for selecting shopping list during pagination
     shoppingList = shoppingLists.lists.find(
       (list) => shoppingListIdValue == list?.listId,
     );
   } else if (selectedAddressShoppingListId) {
+    // for selecting shopping list during tab selection
     shoppingList = shoppingLists.lists.find(
       (list) => selectedAddressShoppingListId == list?.listId,
     );
-  } else {
+  }
+
+  if (!shoppingList) {
+    // for selecting the first shopping list when another shopping list is deleted
     shoppingList = shoppingLists.lists[0];
   }
 
