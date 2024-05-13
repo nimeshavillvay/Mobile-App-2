@@ -21,6 +21,9 @@ const useRegisterNewUserMutation = () => {
       email,
       password,
       type,
+      company = "",
+      industry = "",
+      employees = 0,
       billingAddress,
       shippingAddress,
     }: {
@@ -29,6 +32,9 @@ const useRegisterNewUserMutation = () => {
       email: string;
       password: string;
       type: string;
+      company?: string;
+      industry?: string;
+      employees?: number;
       billingAddress: Address;
       shippingAddress: Address;
     }) => {
@@ -40,11 +46,14 @@ const useRegisterNewUserMutation = () => {
             email,
             password,
             accountType: type,
+            company,
+            industry,
+            employees: employees.toString(),
             "billing-address": {
               "country-name": billingAddress.country,
               county: billingAddress.county,
               locality: billingAddress.city, // TODO Verify field
-              organization: "wbsc", // TODO Verify field
+              organization: company, // TODO Verify field
               "phone-number": "244234", // TODO Verify field
               region: billingAddress.state,
               "street-address": billingAddress.address,
@@ -55,7 +64,7 @@ const useRegisterNewUserMutation = () => {
               "country-name": shippingAddress.country,
               county: shippingAddress.county,
               locality: billingAddress.city, // TODO Verify field
-              organization: "wbsc", // TODO Verify field
+              organization: company, // TODO Verify field
               "phone-number": "244234", // TODO Verify field
               region: shippingAddress.state,
               "street-address": shippingAddress.address,

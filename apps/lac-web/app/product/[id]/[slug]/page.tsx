@@ -1,17 +1,8 @@
-import productItemImage from "@/_assets/images/product-item-image.png";
+import ProductCardSkeleton from "@/_components/product-card-skeleton";
 import { api } from "@/_lib/api";
 import { getBreadcrumbs } from "@/_lib/apis/server";
 import { DEFAULT_REVALIDATE } from "@/_lib/constants";
 import { ChevronLeft } from "@repo/web-ui/components/icons/chevron-left";
-import {
-  ProductCard,
-  ProductCardContent,
-  ProductCardDetails,
-  ProductCardDiscount,
-  ProductCardHero,
-  ProductCardImage,
-  ProductCardPrice,
-} from "@repo/web-ui/components/product-card";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -22,11 +13,12 @@ import {
 import { Button, buttonVariants } from "@repo/web-ui/components/ui/button";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Fragment } from "react";
+import { Fragment, Suspense } from "react";
 import Balancer from "react-wrap-balancer";
 import ProductHero from "./_product-hero";
 import { getProduct } from "./apis";
-import type { ProductPageProps } from "./types";
+import RelatedProductsList from "./related-products-list";
+import type { ProductPageProps, RelatedProduct } from "./types";
 
 export const generateMetadata = async ({
   params: { id, slug },
@@ -52,53 +44,7 @@ const ProductPage = async ({ params: { id, slug } }: ProductPageProps) => {
       .json<{
         data: {
           heading: string;
-          items: {
-            productid: string;
-            is_product_exclude: boolean;
-            txt_wurth_lac_item: string;
-            item_name: string;
-            img: string;
-            url: string;
-            is_favourite: null;
-            is_comparison: null;
-            txt_hazardous: string;
-            txt_special_shipping: string;
-            txt_sap: string;
-            txt_mfn: string;
-            txt_description_name: string;
-            txt_sub_description: string;
-            sel_assigned_brand: string;
-            txt_uom: string;
-            txt_uom_label: string;
-            txt_uom_value: null;
-            txt_rounding: null;
-            txt_box_qt: string;
-            txt_min_order_amount: string;
-            txt_order_qty_increments: string;
-            txt_weight_value: string;
-            txt_wight: string;
-            txt_weight_label: string;
-            date: Date;
-            txt_chemical_carncengen: null;
-            txt_chemical_reproduction: null;
-            txt_contains_wood: null;
-            txt_prop65_message_01: null;
-            txt_prop65_message_02: null;
-            txt_prop65_message_03: null;
-            txt_meta_title: string;
-            txt_upc1: string;
-            txt_seo_meta_description: string;
-            txt_keywords: string;
-            list_price: string;
-            on_sale: string;
-            fclassid: string;
-            brand_name: string;
-            txt_group_code: null;
-            item_status: null;
-            category_name: string;
-            product_summary: string;
-            is_directly_shipped_from_vendor: boolean;
-          }[];
+          items: RelatedProduct[];
         }[];
       }>()
       .then(({ data }) => data),
@@ -163,38 +109,13 @@ const ProductPage = async ({ params: { id, slug } }: ProductPageProps) => {
               </h3>
 
               <div className="container grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-4 xl:grid-cols-3 2xl:grid-cols-4">
-                {relatedSection.items.map((item) => (
-                  <ProductCard
-                    key={item.productid}
-                    orientation="horizontal"
-                    className="w-full"
-                  >
-                    <ProductCardHero>
-                      <ProductCardDiscount>30</ProductCardDiscount>
-
-                      <ProductCardImage
-                        src={productItemImage}
-                        alt={`A picture if the item ${item.item_name}`}
-                        href={`/product/${item.productid}/${item.url}`}
-                        title={item.item_name}
-                      />
-                    </ProductCardHero>
-
-                    <ProductCardContent>
-                      <ProductCardDetails
-                        title={item.item_name}
-                        sku={item.productid}
-                        href={`/product/${item.productid}/${item.url}`}
-                      />
-
-                      <ProductCardPrice
-                        price={2.05}
-                        uom="pair"
-                        actualPrice={4.11}
-                      />
-                    </ProductCardContent>
-                  </ProductCard>
-                ))}
+                <Suspense
+                  fallback={Array.from({ length: 4 }).map((_, index) => (
+                    <ProductCardSkeleton key={index} />
+                  ))}
+                >
+                  <RelatedProductsList products={relatedSection.items} />
+                </Suspense>
               </div>
 
               <div className="container md:hidden">
