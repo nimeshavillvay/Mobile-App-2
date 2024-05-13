@@ -1,11 +1,10 @@
 import { useCombobox } from "downshift";
 import Image from "next/image";
 import Link from "next/link";
-import { forwardRef, type ComponentProps } from "react";
+import { type ComponentProps } from "react";
 import { MagnifyingGlass } from "~/components/icons/magnifying-glass";
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
-import { BarcodeScan } from "../icons/barcode-scan";
 
 type SearchData = {
   summary: {
@@ -321,24 +320,3 @@ export const SearchBoxButton = ({
     </Button>
   );
 };
-
-export const BarcodeScanButton = forwardRef<
-  HTMLButtonElement,
-  Omit<ComponentProps<"button">, "children">
->(({ type = "submit", className, ...delegated }, ref) => {
-  return (
-    <Button
-      ref={ref}
-      type={type}
-      variant="ghost"
-      size="icon"
-      className={cn("mx-0.5 rounded-full px-2", className)}
-      {...delegated}
-    >
-      <BarcodeScan className="size-5" />
-
-      <span className="sr-only">Scan barcode</span>
-    </Button>
-  );
-});
-BarcodeScanButton.displayName = "BarcodeScanButton";

@@ -1,7 +1,6 @@
 "use client";
 
 import { BarcodeScanner } from "@repo/web-ui/components/barcode-scanner";
-import { BarcodeScanButton } from "@repo/web-ui/components/search-box";
 import {
   Alert,
   AlertContent,
@@ -20,6 +19,8 @@ import {
 } from "@repo/web-ui/components/ui/dialog";
 import { useState } from "react";
 import { Alert as AlertIcon } from "~/components/icons/alert";
+import { cn } from "~/lib/utils";
+import { BarcodeScan } from "../icons/barcode-scan/barcode-scan";
 
 export const BarcodeScannerDialog = () => {
   const [open, setOpen] = useState(false);
@@ -27,12 +28,18 @@ export const BarcodeScannerDialog = () => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <BarcodeScanButton
+        <Button
+          variant="ghost"
+          size="icon"
+          className={cn("mx-0.5 rounded-full px-2")}
           onClick={() => {
             setOpen(true);
             setProductNotFound(false);
           }}
-        />
+        >
+          <BarcodeScan className="size-5" />
+          <span className="sr-only">Scan barcode</span>
+        </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
