@@ -1,14 +1,14 @@
 "use client";
 
+import { Button } from "@repo/web-ui/components/ui/button";
 import { useState } from "react";
 import { MdOutlineDelete } from "react-icons/md";
 import { PiPenNibDuotone } from "react-icons/pi";
-import { Button } from "~/components/ui/button";
 import ActionConfirmationDialog from "../manage-users/action-confirmation-dialog";
 import ProductCard from "./product-card";
 import ShoppingListDialog from "./shopping-list-dialog";
 import type { ShoppingListElement } from "./type";
-import useDeleteShoppingList from "./use-delete-shopping-list.hook";
+import useDeleteShoppingListMutation from "./use-delete-shopping-list-mutation.hook";
 import useSuspenseShoppingListItems from "./use-suspense-shopping-list-item.hook";
 
 const ShoppingListItems = ({
@@ -26,16 +26,18 @@ const ShoppingListItems = ({
   const [isOpenShoppingListDialog, setIsOpenShoppingListDialog] =
     useState(false);
 
-  const shoppingListItems = useSuspenseShoppingListItems(
+  const shoppingListItemsQuery = useSuspenseShoppingListItems(
     token,
     shoppingList.listId,
     page,
     perPage,
     "title",
     "desc",
-  )?.data;
+  );
 
-  const deleteShoppingListMutation = useDeleteShoppingList();
+  const shoppingListItems = shoppingListItemsQuery?.data;
+
+  const deleteShoppingListMutation = useDeleteShoppingListMutation();
 
   const renameShoppingList = () => {
     setIsOpenShoppingListDialog(true);
@@ -46,7 +48,7 @@ const ShoppingListItems = ({
       <div className="mx-2 my-5 flex flex-row items-center gap-2.5">
         <h3 className="text-2xl font-bold">{shoppingList.listName}</h3>
 
-        <div className="flex-1 text-right">
+        <div className="flex-1 gap-2 text-right">
           <Button
             variant="outline"
             className="rounded-lg border-gray-100 bg-transparent py-5 text-sm font-bold tracking-wide text-black shadow hover:border-gray-300"

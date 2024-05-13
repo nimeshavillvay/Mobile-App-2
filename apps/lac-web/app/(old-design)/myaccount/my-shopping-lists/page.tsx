@@ -6,10 +6,10 @@ import { redirect } from "next/navigation";
 import ShoppingList from "./shopping-list";
 
 export const metadata: Metadata = {
-  title: "Shopping List",
+  title: "My Shopping Lists",
 };
 
-const MyFavoritesPage = () => {
+const MyShoppingListsPage = () => {
   const cookieStore = cookies();
   const sessionToken = cookieStore.get(SESSION_TOKEN_COOKIE);
 
@@ -21,7 +21,7 @@ const MyFavoritesPage = () => {
     <>
       <div className="px-4 pt-4 md:px-0 md:pt-0">
         <h2 className="relative font-wurth text-xl font-medium text-brand-primary">
-          My Shopping List
+          My Shopping Lists
         </h2>
 
         <Separator
@@ -35,4 +35,4 @@ const MyFavoritesPage = () => {
   );
 };
 
-export default MyFavoritesPage;
+export default MyShoppingListsPage;

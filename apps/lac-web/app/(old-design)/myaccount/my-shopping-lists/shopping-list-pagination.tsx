@@ -21,10 +21,12 @@ const ShoppingListPagination = ({
   perPage: number;
   shoppingListId: string;
 }) => {
-  const shoppingListItemCount = useSuspenseShoppingListItemCount(
+  const shoppingListItemCountQuery = useSuspenseShoppingListItemCount(
     token,
     shoppingListId,
-  )?.data;
+  );
+
+  const shoppingListItemCount = shoppingListItemCountQuery?.data;
 
   const totalPages = Math.ceil(shoppingListItemCount.count / perPage);
   const previousPage = page - 1 < 1 ? 1 : page - 1;
@@ -46,57 +48,55 @@ const ShoppingListPagination = ({
   };
 
   return (
-    <>
-      <Pagination className="pt-4">
-        <PaginationContent>
-          <PaginationItem>
-            <PaginationPrevious href={getHref(previousPage)} />
-          </PaginationItem>
+    <Pagination className="pt-4">
+      <PaginationContent>
+        <PaginationItem>
+          <PaginationPrevious href={getHref(previousPage)} />
+        </PaginationItem>
 
-          {page !== previousPage && (
-            <>
-              {previousPage > 1 && (
-                <PaginationItem>
-                  <PaginationEllipsis />
-                </PaginationItem>
-              )}
-
+        {page !== previousPage && (
+          <>
+            {previousPage > 1 && (
               <PaginationItem>
-                <PaginationLink href={getHref(previousPage)}>
-                  {previousPage}
-                </PaginationLink>
+                <PaginationEllipsis />
               </PaginationItem>
-            </>
-          )}
+            )}
 
-          <PaginationItem>
-            <PaginationLink href={getHref(page)} isActive>
-              {page}
-            </PaginationLink>
-          </PaginationItem>
+            <PaginationItem>
+              <PaginationLink href={getHref(previousPage)}>
+                {previousPage}
+              </PaginationLink>
+            </PaginationItem>
+          </>
+        )}
 
-          {page !== nextPage && (
-            <>
+        <PaginationItem>
+          <PaginationLink href={getHref(page)} isActive>
+            {page}
+          </PaginationLink>
+        </PaginationItem>
+
+        {page !== nextPage && (
+          <>
+            <PaginationItem>
+              <PaginationLink href={getHref(nextPage)}>
+                {nextPage}
+              </PaginationLink>
+            </PaginationItem>
+
+            {nextPage < totalPages && (
               <PaginationItem>
-                <PaginationLink href={getHref(nextPage)}>
-                  {nextPage}
-                </PaginationLink>
+                <PaginationEllipsis />
               </PaginationItem>
+            )}
+          </>
+        )}
 
-              {nextPage < totalPages && (
-                <PaginationItem>
-                  <PaginationEllipsis />
-                </PaginationItem>
-              )}
-            </>
-          )}
-
-          <PaginationItem>
-            <PaginationNext href={getHref(nextPage)} />
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
-    </>
+        <PaginationItem>
+          <PaginationNext href={getHref(nextPage)} />
+        </PaginationItem>
+      </PaginationContent>
+    </Pagination>
   );
 };
 

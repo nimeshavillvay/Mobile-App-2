@@ -15,12 +15,12 @@ import {
 } from "@/old/_components/ui/form";
 import { Input } from "@/old/_components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Dispatch, SetStateAction } from "react";
+import type { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import type { ShoppingListElement } from "./type";
-import useCreateShoppingList from "./use-create-shopping-list.hook";
-import useUpdateShoppingList from "./use-update-shopping-list-hook";
+import useCreateShoppingListMutation from "./use-create-shopping-list-mutation.hook";
+import useUpdateShoppingListMutation from "./use-update-shopping-list-mutation.hook";
 
 type ShoppingListDialogProps = {
   open: boolean;
@@ -51,8 +51,8 @@ const ShoppingListDialog = ({
     },
   });
 
-  const createShoppingListMutation = useCreateShoppingList();
-  const updateShoppingListMutation = useUpdateShoppingList();
+  const createShoppingListMutation = useCreateShoppingListMutation();
+  const updateShoppingListMutation = useUpdateShoppingListMutation();
 
   const onShoppingListNameSubmit = (formData: ShoppingListNameSchema) => {
     if (isShoppingListNameUpdate) {

@@ -4,36 +4,35 @@ import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import { useToast } from "@/old/_components/ui/use-toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-const useUpdateShoppingList = () => {
+const useCreateShoppingListMutation = () => {
   const queryClient = useQueryClient();
   const [cookies] = useCookies();
   const { toast } = useToast();
 
   return useMutation({
-    mutationFn: ({ listId, listName }: { listId: string; listName: string }) =>
+    mutationFn: (listName: string) =>
       api
-        .put("rest/my-favourite/lists/", {
+        .post("rest/my-favourite/lists/", {
           headers: {
             authorization: `Bearer ${cookies[SESSION_TOKEN_COOKIE]}`,
           },
           json: {
             list: listName,
-            list_id: listId,
           },
         })
         .json(),
     onMutate: () => {
-      toast({ description: "Updating shopping list" });
+      toast({ description: "Creating shopping list" });
     },
     onSuccess: () => {
       toast({
-        description: "Shopping list updated",
+        description: "Shopping list created",
         variant: "success",
       });
     },
     onError: () => {
       toast({
-        description: "Failed to update shopping list",
+        description: "Failed to create shopping list",
         variant: "destructive",
       });
     },
@@ -45,4 +44,4 @@ const useUpdateShoppingList = () => {
   });
 };
 
-export default useUpdateShoppingList;
+export default useCreateShoppingListMutation;

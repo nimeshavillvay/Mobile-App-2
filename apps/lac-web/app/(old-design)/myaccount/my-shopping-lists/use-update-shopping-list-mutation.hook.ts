@@ -4,50 +4,45 @@ import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import { useToast } from "@/old/_components/ui/use-toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-const useRemoveShoppingListItem = () => {
+const useUpdateShoppingListMutation = () => {
   const queryClient = useQueryClient();
   const [cookies] = useCookies();
   const { toast } = useToast();
 
   return useMutation({
-    mutationFn: ({
-      listId,
-      productId,
-    }: {
-      listId: string;
-      productId: string;
-    }) =>
+    mutationFn: ({ listId, listName }: { listId: string; listName: string }) =>
       api
-        .delete("rest/my-favourite/list-items/" + listId, {
+        .put("rest/my-favourite/lists/", {
           headers: {
             authorization: `Bearer ${cookies[SESSION_TOKEN_COOKIE]}`,
           },
           json: {
-            productid: productId,
+            list: listName,
+            list_id: listId,
           },
         })
         .json(),
     onMutate: () => {
-      toast({ description: "Removing product from shopping list" });
+      toast({ description: "Updating shopping list" });
     },
     onSuccess: () => {
       toast({
-        description: "Product removed from shopping list",
+        description: "Shopping list updated",
         variant: "success",
       });
     },
     onError: () => {
       toast({
-        description: "Failed to remove product from shopping list",
+        description: "Failed to update shopping list",
         variant: "destructive",
       });
     },
     onSettled: () => {
       queryClient.invalidateQueries({
-        queryKey: ["my-account", "shopping-list-items"],
+        queryKey: ["my-account", "shopping-list"],
       });
     },
   });
 };
 
-export default useRemoveShoppingListItem;
+export default useUpdateShoppingListMutation;

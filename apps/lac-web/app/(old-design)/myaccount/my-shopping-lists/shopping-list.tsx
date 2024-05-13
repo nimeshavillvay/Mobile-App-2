@@ -1,15 +1,18 @@
 "use client";
 
-import { Tabs, TabsList, TabsTrigger } from "@/_components/ui/tabs";
-import { useState } from "react";
-
+import {
+  Tabs,
+  TabsList,
+  TabsTrigger,
+} from "@/old/myaccount/my-shopping-lists/tabs";
+import { Button } from "@repo/web-ui/components/ui/button";
 import { useSearchParams } from "next/navigation";
+import { useState } from "react";
 import { MdOutlineAdd } from "react-icons/md";
-import { Button } from "~/components/ui/button";
 import ShoppingListDialog from "./shopping-list-dialog";
 import ShoppingListItems from "./shopping-list-items";
 import ShoppingListPagination from "./shopping-list-pagination";
-import useSuspenseShoppingList from "./use-suspense-shopping-list.hook";
+import useSuspenseShoppingListMutation from "./use-suspense-shopping-list.hook";
 
 const ShoppingList = ({ token }: { token: string }) => {
   const [selectedAddressShoppingListId, setSelectedAddressShoppingListId] =
@@ -18,7 +21,13 @@ const ShoppingList = ({ token }: { token: string }) => {
     useState(false);
 
   const perPage = 20;
-  const shoppingLists = useSuspenseShoppingList(token, "name", "desc")?.data;
+  const shoppingListsQuery = useSuspenseShoppingListMutation(
+    token,
+    "name",
+    "desc",
+  );
+
+  const shoppingLists = shoppingListsQuery?.data;
 
   const searchParams = useSearchParams();
 

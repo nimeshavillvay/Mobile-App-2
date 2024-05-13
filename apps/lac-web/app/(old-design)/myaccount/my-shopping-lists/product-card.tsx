@@ -12,11 +12,11 @@ import {
   ProductCardPrice,
   ProductCard as ProductCardRoot,
 } from "@repo/web-ui/components/product-card";
+import { Button } from "@repo/web-ui/components/ui/button";
 import { type ComponentProps } from "react";
 import { MdOutlineDelete } from "react-icons/md";
-import { Button } from "~/components/ui/button";
 import type { ShoppingListItemsElement } from "./type";
-import useRemoveShoppingListItem from "./use-remove-shopping-list-item.hook";
+import useRemoveShoppingListItemMutation from "./use-remove-shopping-list-item-mutation.hook";
 
 type ProductProps = {
   orientation?: ComponentProps<typeof ProductCardRoot>["orientation"];
@@ -40,7 +40,7 @@ const ProductCard = ({ orientation, token, product, listId }: ProductProps) => {
     },
   ]);
 
-  const removeShoppingListItemMutation = useRemoveShoppingListItem();
+  const removeShoppingListItemMutation = useRemoveShoppingListItemMutation();
 
   let currentPrice = 0;
   let previousPrice = 0;

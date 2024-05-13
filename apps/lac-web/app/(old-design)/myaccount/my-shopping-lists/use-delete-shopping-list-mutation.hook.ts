@@ -4,7 +4,7 @@ import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import { useToast } from "@/old/_components/ui/use-toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-const useDeleteShoppingList = () => {
+const useDeleteShoppingListMutation = () => {
   const queryClient = useQueryClient();
   const [cookies] = useCookies();
   const { toast } = useToast();
@@ -44,4 +44,4 @@ const useDeleteShoppingList = () => {
   });
 };
 
-export default useDeleteShoppingList;
+export default useDeleteShoppingListMutation;
