@@ -28,7 +28,12 @@ const ShoppingListPagination = ({
 
   const totalPages = Math.ceil(shoppingListItemCount.count / perPage);
   const previousPage = page - 1 < 1 ? 1 : page - 1;
-  const nextPage = page + 1 > totalPages ? totalPages : page + 1;
+  let nextPage;
+  if (totalPages == 0) {
+    nextPage = 1;
+  } else {
+    nextPage = page + 1 > totalPages ? totalPages : page + 1;
+  }
 
   const pathname = usePathname();
   const searchParams = useSearchParams();

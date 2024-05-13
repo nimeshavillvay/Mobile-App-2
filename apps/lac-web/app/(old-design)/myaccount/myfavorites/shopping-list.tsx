@@ -17,7 +17,7 @@ const ShoppingList = ({ token }: { token: string }) => {
   const [isOpenShoppingListDialog, setIsOpenShoppingListDialog] =
     useState(false);
 
-  const perPage = 1;
+  const perPage = 20;
   const shoppingLists = useSuspenseShoppingList(token, "name", "desc")?.data;
 
   const searchParams = useSearchParams();
@@ -27,17 +27,15 @@ const ShoppingList = ({ token }: { token: string }) => {
 
   let shoppingList;
   const shoppingListIdValue = searchParams.get("shoppingListId");
-  if (shoppingListIdValue) {
+  if (shoppingListIdValue == selectedAddressShoppingListId) {
     shoppingList = shoppingLists.lists.find(
       (list) => shoppingListIdValue == list?.listId,
     );
-  } else {
+  } else if (selectedAddressShoppingListId) {
     shoppingList = shoppingLists.lists.find(
       (list) => selectedAddressShoppingListId == list?.listId,
     );
-  }
-
-  if (!shoppingList) {
+  } else {
     shoppingList = shoppingLists.lists[0];
   }
 

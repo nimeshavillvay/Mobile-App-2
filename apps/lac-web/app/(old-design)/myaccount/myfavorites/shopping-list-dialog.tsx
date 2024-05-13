@@ -18,7 +18,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { ShoppingListElement } from "./type";
+import type { ShoppingListElement } from "./type";
 import useCreateShoppingList from "./use-create-shopping-list.hook";
 import useUpdateShoppingList from "./use-update-shopping-list-hook";
 

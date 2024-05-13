@@ -7,7 +7,7 @@ import { Button } from "~/components/ui/button";
 import ActionConfirmationDialog from "../manage-users/action-confirmation-dialog";
 import ProductCard from "./product-card";
 import ShoppingListDialog from "./shopping-list-dialog";
-import { ShoppingListElement } from "./type";
+import type { ShoppingListElement } from "./type";
 import useDeleteShoppingList from "./use-delete-shopping-list.hook";
 import useSuspenseShoppingListItems from "./use-suspense-shopping-list-item.hook";
 
