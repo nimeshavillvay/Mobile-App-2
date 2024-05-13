@@ -1,5 +1,13 @@
 import type { Plant, ShippingMethod } from "@/_lib/types";
+import { cn } from "@/_lib/utils";
+import { ChevronDown } from "@repo/web-ui/components/icons/chevron-down";
+import { Button } from "@repo/web-ui/components/ui/button";
 import { Checkbox } from "@repo/web-ui/components/ui/checkbox";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@repo/web-ui/components/ui/collapsible";
 import { Label } from "@repo/web-ui/components/ui/label";
 import {
   RadioGroup,
@@ -12,6 +20,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@repo/web-ui/components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@repo/web-ui/components/ui/table";
 import dayjs from "dayjs";
 import { useId, useState } from "react";
 import type { Availability } from "../types";
@@ -29,6 +45,9 @@ const TAKE_ON_HAND = "take-on-hand";
 const ALTERNATIVE_BRANCHES = "alternative-branches";
 
 const EXCLUDED_OPTIONS = ["CC", "WI", "1D", "2D", "DR"];
+const DEFAULT_SHIPPING_METHOD = "OT";
+// TODO: Same day shipping logic yet to be finalized
+const SAME_DAY_SHIPPING_ENABLED = false;
 
 type CartItemShippingMethodProps = {
   shippingMethods: ShippingMethod[];
@@ -145,7 +164,7 @@ const CartItemShippingMethod = ({
         <div className="ml-[1.625rem] flex flex-col gap-2">
           <Select
             disabled={selectedSection !== SHIP_TO_ME}
-            defaultValue={"UP"}
+            defaultValue={DEFAULT_SHIPPING_METHOD}
             onValueChange={handleSelectValueChange}
           >
             <SelectTrigger className="w-full">
@@ -162,9 +181,11 @@ const CartItemShippingMethod = ({
             </SelectContent>
           </Select>
 
-          <div className="text-sm">
-            Get it by <b>today</b> if you order before noon
-          </div>
+          {SAME_DAY_SHIPPING_ENABLED && (
+            <div className="text-sm">
+              Get it by <b>today</b> if you order before noon
+            </div>
+          )}
 
           {selectedSection === SHIP_TO_ME && (
             <RadioGroup
@@ -262,6 +283,60 @@ const CartItemShippingMethod = ({
                         }
                       />
                     )}
+
+                    <Collapsible className="mt-1.5 flex flex-col gap-1">
+                      <CollapsibleTrigger
+                        className="group flex h-7 w-full flex-row items-center justify-start"
+                        asChild
+                      >
+                        <Button
+                          type="button"
+                          variant="subtle"
+                          className="gap-2 px-2"
+                        >
+                          <ChevronDown
+                            width={16}
+                            height={16}
+                            className="transition duration-150 ease-out group-data-[state=open]:rotate-180"
+                          />
+                          <span>Show breakdown by branch</span>
+                        </Button>
+                      </CollapsibleTrigger>
+
+                      <CollapsibleContent>
+                        <Table>
+                          <TableHeader>
+                            <TableRow>
+                              <TableHead className="font-light">
+                                Location
+                              </TableHead>
+                              <TableHead className="text-end font-light">
+                                Items
+                              </TableHead>
+                            </TableRow>
+                          </TableHeader>
+
+                          <TableBody className="font-light">
+                            {shipAlternativeBranch.plants &&
+                              Object.values(shipAlternativeBranch.plants).map(
+                                (plant) => (
+                                  <TableRow key={plant.plant}>
+                                    <TableCell>
+                                      <div>{getPlantName(plant.plant)}</div>
+                                      <div className="text-xs">
+                                        via Ground Shipping
+                                      </div>
+                                    </TableCell>
+                                    <TableCell className="text-end">
+                                      {plant.quantity}
+                                    </TableCell>
+                                  </TableRow>
+                                ),
+                              )}
+                          </TableBody>
+                        </Table>
+                      </CollapsibleContent>
+                    </Collapsible>
                   </div>
                 </div>
               )}
@@ -312,7 +387,6 @@ const CartItemShippingMethod = ({
               </SelectTrigger>
 
               <SelectContent>
-                {/* TODO: Needs implement plants related to will call anywhere */}
                 {plants?.length > 0 &&
                   plants.map((option) => (
                     <SelectItem key={option.code} value={option.code}>
@@ -343,6 +417,21 @@ const CartItemShippingMethod = ({
                       &nbsp;
                       {getPlantName(willCallAnywhere.willCallPlant)}
                     </div>
+
+                    {willCallAnywhere.backOrderQuantity_1 &&
+                      willCallAnywhere.backOrderQuantity_1 > 0 && (
+                        <div className="flex items-center text-sm">
+                          <ItemCountBadge
+                            count={willCallAnywhere.backOrderQuantity_1}
+                            className="bg-red-600/10 text-red-600"
+                          />
+                          &nbsp;<span className="font-medium">pick up at</span>
+                          &nbsp;
+                          {willCallAnywhere.plant_1
+                            ? getPlantName(willCallAnywhere.plant_1)
+                            : "Plant N/A"}
+                        </div>
+                      )}
 
                     {willCallAnywhere?.backOrder && (
                       <BackOrderItemCountLabel
@@ -420,9 +509,20 @@ const CartItemShippingMethod = ({
 
 export default CartItemShippingMethod;
 
-const ItemCountBadge = ({ count = 0 }: { count: number }) => {
+const ItemCountBadge = ({
+  count = 0,
+  className,
+}: {
+  count: number;
+  className?: string;
+}) => {
   return (
-    <span className="rounded bg-green-700/10 px-1 font-medium text-green-700">
+    <span
+      className={cn(
+        "rounded bg-green-700/10 px-1 font-medium text-green-700",
+        className,
+      )}
+    >
       {count}&nbsp;{count > 1 ? "items" : "item"}
     </span>
   );

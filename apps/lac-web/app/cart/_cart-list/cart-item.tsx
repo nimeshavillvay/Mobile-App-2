@@ -1,5 +1,5 @@
 import productItemImage from "@/_assets/images/product-item-image.png";
-import useUpdateCartConfigMutation from "@/_hooks/cart/use-update-cart-item-mutation.hook";
+import useUpdateCartItemMutation from "@/_hooks/cart/use-update-cart-item-mutation.hook";
 import useSuspenseCheckAvailability from "@/_hooks/product/use-suspense-check-availability.hook";
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import type {
@@ -78,7 +78,7 @@ const CartItem = ({
     plant: selectedWillCallPlant !== "" ? selectedWillCallPlant : undefined,
   });
 
-  const updateCartConfigMutation = useUpdateCartConfigMutation();
+  const updateCartConfigMutation = useUpdateCartItemMutation();
 
   const handleSave = () => {
     const data = getValues();
