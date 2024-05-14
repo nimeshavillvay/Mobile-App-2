@@ -15,6 +15,7 @@ import {
 } from "@repo/web-ui/components/ui/dropdown-menu";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { PiBuildingOfficeLight } from "react-icons/pi";
 import useLogoutMutation from "../use-logout-mutation.hook";
 import ButtonContent, { buttonClasses } from "./button-content";
 import type { ViewportTypes } from "./types";
@@ -148,6 +149,21 @@ const UserProfileDropdown = ({
             </DropdownMenuShortcut>
 
             <span>My Favorites</span>
+          </Link>
+        </DropdownMenuItem>
+
+        <DropdownMenuSeparator />
+
+        <DropdownMenuItem
+          asChild
+          className="flex flex-row items-center gap-2 text-black"
+        >
+          <Link href="/myaccount/company-profile">
+            <DropdownMenuShortcut className="ml-0">
+              <PiBuildingOfficeLight className="size-4 stroke-black stroke-2" />
+            </DropdownMenuShortcut>
+
+            <span>Company Profile</span>
           </Link>
         </DropdownMenuItem>
 

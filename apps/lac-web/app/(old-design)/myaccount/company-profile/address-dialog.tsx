@@ -143,6 +143,7 @@ const AddressDialog = ({
         updateShippingAddressMutation.mutate(requestData, {
           onSuccess: (data) => {
             setOpenAddressDialog(false);
+            form.reset();
 
             if ("checkType" in data) {
               setAddressCheckSuggestions(getAddressSuggestionsWithUuid(data));
@@ -155,6 +156,7 @@ const AddressDialog = ({
         addShippingAddressMutation.mutate(addressData, {
           onSuccess: (data) => {
             setOpenAddressDialog(false);
+            form.reset();
 
             if ("checkType" in data) {
               setAddressCheckSuggestions(getAddressSuggestionsWithUuid(data));
@@ -162,16 +164,13 @@ const AddressDialog = ({
               setOpenAddressSuggestionDialog(true);
             }
           },
-          onError: (error) => {
-            console.log("error response");
-            console.log(error);
-          },
         });
       }
     } else {
       updateBillingAddressMutation.mutate(addressData, {
         onSuccess: (data) => {
           setOpenAddressDialog(false);
+          form.reset();
 
           if ("checkType" in data) {
             setAddressCheckSuggestions(getAddressSuggestionsWithUuid(data));
@@ -190,8 +189,13 @@ const AddressDialog = ({
   const statesQuery = useStates(selectedCountry);
   const countiesQuery = useCounties(selectedState);
 
+  const handleOpenChange = () => {
+    setOpenAddressDialog(!open);
+    form.reset();
+  };
+
   return (
-    <Dialog open={open} onOpenChange={setOpenAddressDialog}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="old-design-text-base max-w-[500px]">
         <DialogHeader>
           <DialogTitle>

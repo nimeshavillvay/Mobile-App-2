@@ -165,7 +165,7 @@ const AddressSuggestionDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={setOpenAddressSuggestionDialog}>
-      <DialogContent className="old-design-text-base max-w-[500px]">
+      <DialogContent className="old-design-text-base max-h-[800px] max-w-[500px] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Address Suggestions</DialogTitle>
         </DialogHeader>
