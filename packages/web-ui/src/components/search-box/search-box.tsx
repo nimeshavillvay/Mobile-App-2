@@ -131,7 +131,7 @@ export const SearchBoxInput = ({
       <ul
         className={`${
           isOpen ? "block" : "hidden"
-        } dropdown-container shadow-right shadow-bottom shadow-left le absolute z-50 mt-4  w-full rounded-b-lg bg-white p-0 pl-4 text-sm shadow-sm`}
+        } shadow-right shadow-bottom shadow-left absolute z-50 mt-4 rounded-b-lg bg-white p-0 pl-4 text-sm shadow-sm`}
         {...getMenuProps()}
       >
         {isOpen && value && (
@@ -143,19 +143,19 @@ export const SearchBoxInput = ({
                 </li>
                 <li className="flex flex-wrap">
                   {brands.results.map((brand, index) => (
-                    <Link href={`/search?query=${brand.slug}`} key={brand.id}>
-                      <li
+                    <li
+                      key={brand.id}
+                      {...getItemProps({
+                        item: brand,
+                        index: index + categories.results.length,
+                      })}
+                    >
+                      <Link
+                        href={`/search?query=${brand.slug}`}
                         key={brand.id}
-                        className={cn(
-                          "mb-2 mr-2 flex items-center rounded-md p-2",
-                          "m-2 rounded-lg border-2 p-4 shadow-sm",
-                          "hover:bg-gray-100",
-                          "w-1/2 sm:w-auto",
-                        )}
-                        {...getItemProps({
-                          item: brand,
-                          index: index + categories.results.length,
-                        })}
+                        className={
+                          "m-2 mb-2 mr-2 flex w-1/2 items-center rounded-md border-2 p-4 shadow-sm hover:bg-gray-100 sm:w-auto"
+                        }
                       >
                         {brand.brandImage && brand.brandName && (
                           <Image
@@ -172,8 +172,8 @@ export const SearchBoxInput = ({
                         <span className="flex-grow truncate break-all text-center font-medium">
                           {brand.brandName}
                         </span>
-                      </li>
-                    </Link>
+                      </Link>
+                    </li>
                   ))}
                 </li>
                 <br />
@@ -195,9 +195,9 @@ export const SearchBoxInput = ({
                       key={category.id}
                     >
                       <span className="text-[#74767B]">&#8627;</span>{" "}
-                      <b className="font-semibold text-[#CC0000]">
+                      <span className="font-semibold text-[#CC0000]">
                         {category.categoryPath}
-                      </b>
+                      </span>
                       <br />
                     </Link>
                   </li>
@@ -216,11 +216,10 @@ export const SearchBoxInput = ({
                     <Link
                       href={`/product/${product.id}/${product.slug}`}
                       key={product.id}
-                      className="mx-h-[120px] mx-w-[338px] block"
                     >
-                      <div className="mx-h-[120px] mx-w-[338px]">
+                      <div>
                         <li
-                          className="flex items-start justify-start space-x-4 px-3 py-2"
+                          className="flex items-start justify-start gap-4 px-3 py-2"
                           key={product.id}
                           {...getItemProps({
                             item: product,
@@ -235,7 +234,7 @@ export const SearchBoxInput = ({
                               <Image
                                 src={product.itemImage}
                                 alt={product.productTitle}
-                                className="h-full w-full object-cover"
+                                className="object-cover"
                                 layout="responsive"
                                 width={80}
                                 height={80}
@@ -245,13 +244,13 @@ export const SearchBoxInput = ({
                               <div className="h-10 w-10 rounded-full"></div>
                             )}
                           </div>
-                          <div className="flex flex-col justify-start">
-                            <span className="overflow-hidden overflow-ellipsis font-normal hover:underline">
+                          <div>
+                            <div className="overflow-hidden overflow-ellipsis font-normal hover:underline">
                               {product.productTitle}
-                            </span>{" "}
-                            <span className="text-[#74767B]">
+                            </div>{" "}
+                            <div className="text-[#74767B]">
                               Item# {product.materialNumber}
-                            </span>
+                            </div>
                           </div>
                         </li>
                       </div>
