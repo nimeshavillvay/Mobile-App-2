@@ -13,12 +13,15 @@ import {
   BreadcrumbSeparator,
 } from "@repo/web-ui/components/ui/breadcrumb";
 import { Metadata } from "next";
+import { cookies } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Fragment, Suspense } from "react";
 import { getSearchResults } from "./apis";
+import { TOTAL_COOKIE } from "./constants";
 import NoResultsNotice from "./no-results-notice";
 import ProductsList from "./products-list";
+import ResultCacher from "./result-cacher";
 
 export const metadata: Metadata = {
   title: "Search",
@@ -30,12 +33,19 @@ const SearchPage = async ({
   searchParams: { [key: string]: string | string[] | undefined };
 }) => {
   const query = searchParams.query?.toString() ?? "";
-  const pageNo = searchParams.pageNo?.toString() ?? "1";
+  const pageNo = searchParams.page?.toString() ?? "1";
 
   const searchResults = await getSearchResults({
     query,
     pageNo,
   });
+
+  const cookiesStore = cookies();
+
+  const total =
+    searchResults.summary.total === 0
+      ? parseInt(cookiesStore.get(TOTAL_COOKIE)?.value ?? "0")
+      : searchResults.summary.total;
 
   if (searchResults.summary.plp && !Array.isArray(searchResults.results)) {
     return redirect(
@@ -45,6 +55,11 @@ const SearchPage = async ({
 
   return (
     <>
+      <ResultCacher
+        total={searchResults.summary.total}
+        searchParams={searchResults.summary.searchParams}
+      />
+
       <Breadcrumb className="container my-3 hidden md:block">
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -82,7 +97,7 @@ const SearchPage = async ({
             </ProductsGrid>
           }
         >
-          <ProductsList query={query} pageNo={pageNo} />
+          <ProductsList query={query} pageNo={pageNo} total={total} />
         </Suspense>
       </div>
     </>
