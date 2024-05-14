@@ -13,7 +13,7 @@ const SearchBar = () => {
   const router = useRouter();
   const [value, setValue] = useState("");
   const multiSearchQuery = useMultiSearch(value);
-  const handleSearchEnter = () => {
+  const handleSearch = () => {
     router.push(`/search?query=${encodeURIComponent(value)}`);
   };
 
@@ -23,10 +23,10 @@ const SearchBar = () => {
         data={multiSearchQuery.data ?? placeholderData}
         value={value}
         setValue={setValue}
-        onEnterPressed={handleSearchEnter}
+        onEnterPressed={handleSearch}
         placeholder="What are you looking for?"
       />
-      <SearchBoxButton />
+      <SearchBoxButton onClick={handleSearch} />
     </SearchBox>
   );
 };

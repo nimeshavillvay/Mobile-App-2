@@ -263,14 +263,18 @@ export const SearchBoxInput = ({
 export const SearchBoxButton = ({
   type = "submit",
   className,
+  onClick,
   ...delegated
-}: Omit<ComponentProps<"button">, "children">) => {
+}: Omit<ComponentProps<"button">, "children"> & {
+  onClick?: () => void;
+}) => {
   return (
     <Button
       type={type}
       variant="ghost"
       size="icon"
       className={cn("mx-0.5 rounded-full px-2", className)}
+      onClick={onClick}
       {...delegated}
     >
       <MagnifyingGlass className="size-5" />
