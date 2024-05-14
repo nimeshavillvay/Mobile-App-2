@@ -44,8 +44,8 @@ const SearchPage = async ({
 
   const total =
     searchResults.summary.total === 0
-      ? cookiesStore.get(TOTAL_COOKIE)?.value ?? "0"
-      : searchResults.summary.total.toString();
+      ? parseInt(cookiesStore.get(TOTAL_COOKIE)?.value ?? "0")
+      : searchResults.summary.total;
 
   if (searchResults.summary.plp && !Array.isArray(searchResults.results)) {
     return redirect(

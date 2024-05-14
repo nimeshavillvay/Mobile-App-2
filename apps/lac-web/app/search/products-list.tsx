@@ -15,7 +15,7 @@ import ProductsListPagination from "./products-list-pagination";
 type ProductsListProps = {
   query: string;
   pageNo: string;
-  total: string;
+  total: number;
 };
 
 const ProductsList = ({ query, pageNo, total }: ProductsListProps) => {
@@ -29,7 +29,7 @@ const ProductsList = ({ query, pageNo, total }: ProductsListProps) => {
   return (
     <ProductsGrid>
       <Suspense fallback={<ProductsGridHeaderSkeleton />}>
-        <ProductsListHeader total={total}  />
+        <ProductsListHeader total={total} />
       </Suspense>
 
       <Suspense fallback={<ProductsGridListSkeleton type="mobile" />}>

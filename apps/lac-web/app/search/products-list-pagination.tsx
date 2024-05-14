@@ -1,13 +1,13 @@
 import { ProductsGridPagination } from "@/_components/products-grid";
 
 type ProductsListPaginationProps = {
-  total: string;
+  total: number;
 };
 
 const ProductsListPagination = async ({
   total,
 }: ProductsListPaginationProps) => {
-  const totalPages = Math.ceil(parseInt(total) / 24);
+  const totalPages = Math.ceil(total / 24);
 
   return <ProductsGridPagination totalPages={totalPages} />;
 };
