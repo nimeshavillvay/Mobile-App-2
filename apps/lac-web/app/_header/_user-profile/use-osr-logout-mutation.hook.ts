@@ -23,7 +23,7 @@ const useOSRLogoutMutation = () => {
         }>(),
     onSuccess: () => {
       queryClient.invalidateQueries();
-      router.replace("/sign-in");
+      router.replace("/");
     },
   });
 };
