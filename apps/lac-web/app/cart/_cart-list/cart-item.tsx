@@ -20,6 +20,7 @@ import { useForm } from "react-hook-form";
 import Balancer from "react-wrap-balancer";
 import { z } from "zod";
 import CartItemShippingMethod from "./cart-item-shipping-method";
+import type { CartItemConfigurationOptional } from "./types";
 
 const cartItemSchema = z.object({
   quantity: z.number(),
@@ -90,6 +91,21 @@ const CartItem = ({
         config: {
           ...product.configuration,
           poOrJobName: data.po,
+        },
+      },
+    ]);
+  };
+
+  const handleSaveShippingMethod = (config: CartItemConfigurationOptional) => {
+    const data = getValues();
+
+    updateCartConfigMutation.mutate([
+      {
+        productId: product.id,
+        quantity: data.quantity,
+        config: {
+          ...product.configuration,
+          ...config,
         },
       },
     ]);
@@ -206,6 +222,7 @@ const CartItem = ({
           availability={checkAvailabilityQuery.data}
           setSelectedWillCallPlant={setSelectedWillCallPlant}
           selectedWillCallPlant={selectedWillCallPlant}
+          onSave={handleSaveShippingMethod}
         />
       </div>
 

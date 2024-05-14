@@ -31,6 +31,7 @@ import {
 import dayjs from "dayjs";
 import { useId, useState } from "react";
 import type { Availability } from "../types";
+import type { CartItemConfigurationOptional } from "./types";
 
 const UI_DATE_FORMAT = "ddd, MMM. DD YYYY";
 
@@ -55,6 +56,7 @@ type CartItemShippingMethodProps = {
   availability: Availability;
   setSelectedWillCallPlant: (plant: string) => void;
   selectedWillCallPlant: string;
+  onSave: (config: CartItemConfigurationOptional) => void;
 };
 
 const CartItemShippingMethod = ({
@@ -63,6 +65,7 @@ const CartItemShippingMethod = ({
   availability,
   setSelectedWillCallPlant,
   selectedWillCallPlant,
+  onSave,
 }: CartItemShippingMethodProps) => {
   const id = useId();
   const shipToMeId = `ship-to-me-${id}`;
@@ -80,10 +83,6 @@ const CartItemShippingMethod = ({
   );
 
   const [selectedSection, setSelectedSection] = useState<string>();
-
-  const handleSelectValueChange = (value: string) => {
-    console.log(value);
-  };
 
   const availableAll =
     options.find((option) => option.type === "availableAll") ?? undefined;
@@ -131,6 +130,31 @@ const CartItemShippingMethod = ({
     return backOrderDates.length > 0 ? backOrderDates[0] : "";
   };
 
+  const getBackOrderAllPlant = (plants: {
+    [key: string]: {
+      plant: string;
+    };
+  }) => {
+    const backOrderPlants = ["1", "5"]
+      .map((key) => plants?.[key]?.plant)
+      .filter(Boolean);
+
+    return backOrderPlants.length > 0 ? backOrderPlants[0] : "";
+  };
+
+  const getBackOrderAllMethod = (plants: {
+    [key: string]: {
+      shippingMethods: string[];
+    };
+  }) => {
+    const backOrderMethods = ["1", "5"]
+      .map((key) => plants?.[key]?.shippingMethods)
+      .filter(Boolean)
+      .flat();
+
+    return backOrderMethods.find((method) => method) ?? "";
+  };
+
   return (
     <ul className="flex flex-col gap-3">
       {checkVendorShipped() && (
@@ -165,7 +189,7 @@ const CartItemShippingMethod = ({
           <Select
             disabled={selectedSection !== SHIP_TO_ME}
             defaultValue={DEFAULT_SHIPPING_METHOD}
-            onValueChange={handleSelectValueChange}
+            onValueChange={(val) => onSave({ shipping_method_1: val })}
           >
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Select a delivery method" />
@@ -482,6 +506,16 @@ const CartItemShippingMethod = ({
               onCheckedChange={(checked) => {
                 if (checked === true) {
                   setSelectedSection(BACK_ORDER);
+                  onSave({
+                    plant_1: getBackOrderAllPlant(backOrderAll?.plants) ?? "",
+                    shipping_method_1:
+                      getBackOrderAllMethod(backOrderAll?.plants) ?? "",
+                    shipping_method_2: "",
+                    shipping_method_3: "",
+                    shipping_method_4: "",
+                    shipping_method_5: "",
+                    backorder_all: "T",
+                  });
                 } else {
                   setSelectedSection(undefined);
                 }
