@@ -150,7 +150,7 @@ export const SearchBoxInput = ({
                           "mb-2 mr-2 flex items-center rounded-md p-2",
                           "m-2 rounded-lg border-2 p-4 shadow-sm",
                           "hover:bg-gray-100",
-                          "w-1/2 sm:w-auto", 
+                          "w-1/2 sm:w-auto",
                         )}
                         {...getItemProps({
                           item: brand,
@@ -169,7 +169,7 @@ export const SearchBoxInput = ({
                         {!brand.brandImage && (
                           <div className="h-10 w-10 rounded-full"></div>
                         )}
-                        <span className="flex-grow truncate break-all text-center">
+                        <span className="flex-grow truncate break-all text-center font-medium">
                           {brand.brandName}
                         </span>
                       </li>
@@ -195,7 +195,9 @@ export const SearchBoxInput = ({
                       key={category.id}
                     >
                       <span className="text-[#74767B]">&#8627;</span>{" "}
-                      <b className="text-[#CC0000]">{category.categoryPath}</b>
+                      <b className="font-semibold text-[#CC0000]">
+                        {category.categoryPath}
+                      </b>
                       <br />
                     </Link>
                   </li>
@@ -244,7 +246,7 @@ export const SearchBoxInput = ({
                             )}
                           </div>
                           <div className="flex flex-col justify-start">
-                            <span className="overflow-hidden overflow-ellipsis hover:underline">
+                            <span className="overflow-hidden overflow-ellipsis font-normal hover:underline">
                               {product.productTitle}
                             </span>{" "}
                             <span className="text-[#74767B]">
