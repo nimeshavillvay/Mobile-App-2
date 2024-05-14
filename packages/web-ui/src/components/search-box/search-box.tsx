@@ -153,7 +153,7 @@ export const SearchBoxInput = ({
                       <Link
                         href={`/search?query=${brand.slug}`}
                         key={brand.id}
-                        className="m-2 mb-2 mr-2 flex w-1/2 items-center rounded-md border-2 p-4 shadow-sm hover:bg-gray-100 sm:w-auto"
+                        className="m-2 mb-2 mr-2 flex w-1/2 items-center rounded-md border-2 p-2 shadow-sm hover:bg-gray-100 sm:w-auto"
                       >
                         {brand.brandImage && brand.brandName && (
                           <Image
