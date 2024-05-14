@@ -13,6 +13,7 @@ import {
 import Link from "next/link";
 import useLogoutMutation from "../use-logout-mutation.hook";
 import ButtonContent, { buttonClasses } from "./button-content";
+import useOSRLogoutMutation from "./use-osr-logout-mutation.hook";
 
 const sectionLinkStyles = cva({
   base: "flex w-full flex-row items-center justify-between gap-2 bg-white px-4 py-3 text-base font-normal text-black",
@@ -71,6 +72,12 @@ const UserMobileProfileNavigation = ({ token }: { token: string }) => {
   const usersListQuery = useSuspenseUsersList(token);
   const userProfile = usersListQuery.data.manageContact.yourProfile;
 
+  const checkLoginQuery = useSuspenseCheckLogin(token);
+  const isOsr =
+    checkLoginQuery.data.status_code === "OK" &&
+    !!checkLoginQuery.data.sales_rep_id;
+
+  const osrLogoutMutation = useOSRLogoutMutation();
   const logoutMutation = useLogoutMutation();
 
   return (
@@ -138,7 +145,13 @@ const UserMobileProfileNavigation = ({ token }: { token: string }) => {
           <li>
             <SheetClose
               className={sectionLinkStyles()}
-              onClick={() => logoutMutation.mutate()}
+              onClick={() => {
+                if (isOsr) {
+                  osrLogoutMutation.mutate();
+                } else {
+                  logoutMutation.mutate();
+                }
+              }}
             >
               Logout
             </SheetClose>
