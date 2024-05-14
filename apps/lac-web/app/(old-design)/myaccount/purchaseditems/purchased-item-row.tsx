@@ -18,7 +18,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Suspense, useId, useState } from "react";
-import { useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import { IoMdHeart, IoMdHeartEmpty } from "react-icons/io";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import * as z from "zod";
@@ -29,7 +29,7 @@ import { DATE_FORMAT } from "./constants";
 import { CombinedPurchasedItem } from "./types";
 
 const schema = z.object({
-  quantity: z.number().int().min(1),
+  quantity: z.number().int().min(1).nullable(),
 });
 
 type Schema = z.infer<typeof schema>;
@@ -46,21 +46,33 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
   const id = useId();
   const router = useRouter();
   const quantityId = `quantity-${id}`;
+  const formId = `purchase-add-to-cart-form-${id}`;
 
-  const { register, watch, handleSubmit } = useForm<Schema>({
+  const methods = useForm<Schema>({
+    values: { quantity: null },
     resolver: zodResolver(schema),
   });
 
-  const quantity = watch("quantity") ?? 1;
+  const quantity = methods.watch("quantity");
 
   const addToCartMutation = useAddToCartMutation(token, {
     productId: item.productId,
   });
 
-  const onSubmit = handleSubmit((data) => {
-    addToCartMutation.mutate({
-      quantity: data.quantity,
-    });
+  const onSubmit = methods.handleSubmit((data) => {
+    if (data.quantity) {
+      addToCartMutation.mutate(
+        {
+          quantity: data.quantity,
+        },
+        {
+          onSuccess: () => {
+            // Reset the form after submission
+            methods.reset();
+          },
+        },
+      );
+    }
   });
 
   const onAddToFavorites = () => {
@@ -76,7 +88,8 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
       item &&
       item.productSku &&
       !item.isExcludedProduct &&
-      item.productStatus !== "DL"
+      item.productStatus !== "DL" &&
+      !item.isDiscontinued
     );
   };
 
@@ -92,14 +105,15 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
       item.isExcludedProduct ||
       item.productStatus === "DL" ||
       item.productStatus === "DU" ||
-      item.productStatus === "DV"
+      item.productStatus === "DV" ||
+      item.isDiscontinued
     );
   };
 
   const isItemNotAdded = !item.productSku;
 
   return (
-    <>
+    <FormProvider {...methods}>
       <TableRow
         key={`${index}_0`}
         className={cn(
@@ -109,15 +123,15 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
       >
         <TableCell className="min-w-[76px]">
           <Link
-            href={generateItemUrl(item.productId)}
+            href={generateItemUrl(item)}
             className={
-              isItemNotAdded ? "pointer-events-none" : "pointer-events-auto"
+              isItemError(item) ? "pointer-events-none" : "pointer-events-auto"
             }
           >
             {item.image ? (
               <Image
                 src={item.image}
-                alt={item.productDescription}
+                alt={item.productTitle}
                 width={76}
                 height={76}
                 className="border border-brand-gray-200 object-contain"
@@ -134,10 +148,10 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
 
         <TableCell className="flex flex-col gap-0.5">
           <Link
-            href={generateItemUrl(item.productId)}
+            href={generateItemUrl(item)}
             className={cn(
               "text-sm text-brand-gray-500",
-              isItemNotAdded ? "pointer-events-none" : "pointer-events-auto",
+              isItemError(item) ? "pointer-events-none" : "pointer-events-auto",
             )}
           >
             Item# : {item.productSku !== "" ? item.productSku : "N/A"}
@@ -173,13 +187,13 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
           <Collapsible
             open={showMyPrice}
             onOpenChange={setShowMyPrice}
-            disabled={isItemNotAdded}
+            disabled={isItemError(item)}
             className="min-w-[260px]"
           >
             <CollapsibleTrigger
               className={cn(
                 "group mx-auto flex cursor-pointer flex-row items-center justify-center text-sm",
-                isItemNotAdded
+                isItemError(item)
                   ? "cursor-not-allowed text-brand-gray-400"
                   : "cursor-pointer text-brand-primary",
               )}
@@ -225,13 +239,13 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
           <Input
             id={quantityId}
             type="number"
-            disabled={isItemNotAdded}
+            disabled={isItemError(item)}
             className="h-6 w-16 px-1 text-right text-base leading-4"
-            {...register("quantity", {
+            {...methods.register("quantity", {
               valueAsNumber: true,
             })}
           />
-          {!isItemNotAdded && (
+          {!isItemError(item) && (
             <>
               <div className="text-nowrap">
                 <span className="font-bold text-black">Min: </span>
@@ -288,15 +302,7 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
                   </div>
                 }
               >
-                <Suspense
-                  fallback={
-                    <div className="p-4 text-center text-brand-gray-400">
-                      Attributes Loading...
-                    </div>
-                  }
-                >
-                  <ItemAttributes productId={item.productId} />
-                </Suspense>
+                <ItemAttributes productId={item.productId} />
               </ErrorBoundary>
             </CollapsibleContent>
           </Collapsible>
@@ -313,24 +319,31 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
           )}
         >
           <TableCell colSpan={7}>
-            <div className="flex flex-row items-end justify-end gap-2">
-              <form onSubmit={onSubmit}>
-                <Button
-                  className="w-[170px]"
-                  disabled={!quantity || quantity < 1}
-                >
-                  Add to cart
-                </Button>
-              </form>
+            <form
+              id={formId}
+              onSubmit={onSubmit}
+              className="flex flex-row items-end justify-end gap-2"
+            >
+              <Button
+                type="submit"
+                className="w-[170px]"
+                disabled={!quantity || quantity < 1}
+              >
+                Add to cart
+              </Button>
 
-              <Button variant="ghost" onClick={() => onAddToFavorites()}>
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={() => onAddToFavorites()}
+              >
                 {item?.isFavorite ? (
                   <IoMdHeart className="text-2xl text-brand-primary" />
                 ) : (
                   <IoMdHeartEmpty className="text-2xl text-brand-gray-500" />
                 )}
               </Button>
-            </div>
+            </form>
           </TableCell>
         </TableRow>
       )}
@@ -347,7 +360,7 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
           </TableCell>
         </TableRow>
       )}
-    </>
+    </FormProvider>
   );
 };
 
@@ -374,7 +387,7 @@ const ErrorAlert = ({ item }: { item: CombinedPurchasedItem }) => {
     );
   }
 
-  if (item?.productStatus === "DL") {
+  if (item?.isDiscontinued || item?.productStatus === "DL") {
     return (
       <AlertInline
         variant="destructive"

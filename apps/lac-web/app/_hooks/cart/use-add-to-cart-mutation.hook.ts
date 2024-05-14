@@ -96,9 +96,29 @@ const useAddToCartMutation = (
         title: "Failed to add item cart",
       });
     },
-    onSuccess: () => {
-      // Open the dialog
-      setOpen("confirmation");
+    onSuccess: async (data) => {
+      const response: {
+        car_item_id: boolean;
+        error: string;
+        productid: number;
+      }[] = await data.json();
+
+      if (data.status === 200 && data.statusText === "OK") {
+        if (response?.[0]?.error !== "") {
+          toast({
+            variant: "destructive",
+            title: response?.[0]?.error,
+          });
+        } else {
+          // Open the dialog
+          setOpen("confirmation");
+        }
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Failed to add item cart",
+        });
+      }
     },
   });
 };

@@ -9,6 +9,7 @@ export const DURATIONS = [
 ];
 
 export const DATE_FORMAT = "MM/DD/YYYY";
+export const URL_DATE_FORMAT = "YYYY-MM-DD";
 
 export const PAGE_SIZES = ["10", "20", "40"];
 

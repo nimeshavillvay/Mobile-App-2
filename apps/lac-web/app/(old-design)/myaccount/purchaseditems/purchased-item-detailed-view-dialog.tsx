@@ -99,10 +99,7 @@ const PurchasedItemDetailedViewDialog = ({
       <DialogContent className="bottom-0 top-auto max-w-[768px] translate-y-[0%] gap-0 py-8 md:bottom-auto md:top-[50%] md:translate-y-[-50%]">
         <div className="flex flex-col gap-4 px-6 text-brand-gray-500">
           <div className="flex flex-row gap-4">
-            <Link
-              href={generateItemUrl(item.productId)}
-              className="min-w-[92px]"
-            >
+            <Link href={generateItemUrl(item)} className="min-w-[92px]">
               {item.image ? (
                 <Image
                   src={item.image}
@@ -306,7 +303,7 @@ const PurchasedItemDetailedViewDialog = ({
             className="flex flex-row gap-4"
             onSubmit={handleSubmit(onSubmit)}
           >
-            <Link href={generateItemUrl(item.productId)} className="flex-1">
+            <Link href={generateItemUrl(item)} className="flex-1">
               <Button
                 variant="secondary"
                 className="h-12 w-full border-brand-primary text-brand-primary"
