@@ -4,7 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@repo/web-ui/components/ui/button";
 import { Input } from "@repo/web-ui/components/ui/input";
 import { Label } from "@repo/web-ui/components/ui/label";
-import { useSearchParams } from "next/navigation";
 import { useId } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -14,16 +13,17 @@ const emailFormSchema = z.object({
   email: z.string().email(),
 });
 
-const ForgotPasswordForm = () => {
+type ForgotPasswordFormProps = {
+  email: string;
+};
+
+const ForgotPasswordForm = ({ email }: ForgotPasswordFormProps) => {
   const id = useId();
   const emailId = `email-${id}`;
 
-  const searchParams = useSearchParams();
-  const email = searchParams.get("email");
-
   const emailForm = useForm<z.infer<typeof emailFormSchema>>({
     values: {
-      email: email ?? "",
+      email,
     },
     resolver: zodResolver(emailFormSchema),
   });

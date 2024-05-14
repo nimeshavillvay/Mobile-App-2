@@ -5,8 +5,14 @@ export const metadata: Metadata = {
   title: "Forgot Password",
 };
 
-const ForgotPassword = () => {
-  return <ForgotPasswordForm />;
+type ForgotPasswordProps = {
+  searchParams: { [key: string]: string | string[] | undefined };
+};
+
+const ForgotPassword = ({ searchParams }: ForgotPasswordProps) => {
+  const email = searchParams.email?.toString() ?? "";
+
+  return <ForgotPasswordForm email={email} />;
 };
 
 export default ForgotPassword;
