@@ -1,7 +1,6 @@
 import ProductCard from "@/_components/product-card";
 import ProductCardSkeleton from "@/_components/product-card-skeleton";
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
-import fontColorContrast from "font-color-contrast";
 import { cookies } from "next/headers";
 import Image from "next/image";
 import { Suspense, type CSSProperties } from "react";
@@ -46,7 +45,6 @@ const FeaturedBrand = async () => {
       style={
         {
           "--brand-color": details.color,
-          "--text-color": fontColorContrast(details.color),
           // TODO Try to convert to a Tailwind CSS class
           background:
             "linear-gradient(0deg, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0.15) 100%), var(--brand-color)",
@@ -64,7 +62,7 @@ const FeaturedBrand = async () => {
             height={440}
           />
 
-          <div className="p-6 text-[var(--text-color)] md:flex-1 md:p-12">
+          <div className="p-6 text-white md:flex-1 md:p-12">
             <Image
               src={details.logo}
               alt={`The logo of ${details.name}`}
