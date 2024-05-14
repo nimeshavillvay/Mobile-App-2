@@ -141,7 +141,7 @@ export const SearchBoxInput = ({
                 <li className="text-black-500 px-3 py-1 font-semibold">
                   Brands for &quot;{value}&quot;
                 </li>
-                <li className="flex flex-wrap">
+                <ul className="flex flex-wrap">
                   {brands.results.map((brand, index) => (
                     <li
                       key={brand.id}
@@ -153,9 +153,7 @@ export const SearchBoxInput = ({
                       <Link
                         href={`/search?query=${brand.slug}`}
                         key={brand.id}
-                        className={
-                          "m-2 mb-2 mr-2 flex w-1/2 items-center rounded-md border-2 p-4 shadow-sm hover:bg-gray-100 sm:w-auto"
-                        }
+                        className="m-2 mb-2 mr-2 flex w-1/2 items-center rounded-md border-2 p-4 shadow-sm hover:bg-gray-100 sm:w-auto"
                       >
                         {brand.brandImage && brand.brandName && (
                           <Image
@@ -175,12 +173,11 @@ export const SearchBoxInput = ({
                       </Link>
                     </li>
                   ))}
-                </li>
-                <br />
+                </ul>
               </>
             )}
             {categories.summary.total > 0 && (
-              <>
+              <ul>
                 <li className="text-black-500 px-3 py-1 font-semibold">
                   Categories for &quot;{value}&quot;
                 </li>
@@ -203,61 +200,58 @@ export const SearchBoxInput = ({
                   </li>
                 ))}
                 <br />
-              </>
+              </ul>
             )}
 
             {products.summary.total > 0 && (
-              <div>
+              <>
                 <li className="text-black-500 whitespace-normal px-3 py-1 font-semibold">
                   Products for &quot;{value}&quot;
                 </li>
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <ul className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   {products.results.slice(0, 10).map((product, index) => (
-                    <Link
-                      href={`/product/${product.id}/${product.slug}`}
+                    <li
                       key={product.id}
+                      {...getItemProps({
+                        item: product,
+                        index:
+                          index +
+                          categories.results.length +
+                          brands.results.length,
+                      })}
                     >
-                      <div>
-                        <li
-                          className="flex items-start justify-start gap-4 px-3 py-2"
-                          key={product.id}
-                          {...getItemProps({
-                            item: product,
-                            index:
-                              index +
-                              categories.results.length +
-                              brands.results.length,
-                          })}
-                        >
-                          <div className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-md border border-gray-300">
-                            {product.itemImage && product.productTitle && (
-                              <Image
-                                src={product.itemImage}
-                                alt={product.productTitle}
-                                className="object-cover"
-                                layout="responsive"
-                                width={80}
-                                height={80}
-                              />
-                            )}
-                            {!product.itemImage && (
-                              <div className="h-10 w-10 rounded-full"></div>
-                            )}
+                      <Link
+                        className="flex items-start justify-start gap-4 px-3 py-2"
+                        href={`/product/${product.id}/${product.slug}`}
+                        key={product.id}
+                      >
+                        <div className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-md border border-gray-300">
+                          {product.itemImage && product.productTitle && (
+                            <Image
+                              src={product.itemImage}
+                              alt={product.productTitle}
+                              className="object-cover"
+                              width={80}
+                              height={80}
+                            />
+                          )}
+                          {!product.itemImage && (
+                            <div className="h-10 w-10 rounded-full"></div>
+                          )}
+                        </div>
+                        <div>
+                          <div className="overflow-hidden overflow-ellipsis font-normal hover:underline">
+                            {product.productTitle}
+                          </div>{" "}
+                          <div className="text-[#74767B]">
+                            Item# {product.materialNumber}
                           </div>
-                          <div>
-                            <div className="overflow-hidden overflow-ellipsis font-normal hover:underline">
-                              {product.productTitle}
-                            </div>{" "}
-                            <div className="text-[#74767B]">
-                              Item# {product.materialNumber}
-                            </div>
-                          </div>
-                        </li>
-                      </div>
-                    </Link>
+                        </div>
+                      </Link>
+                    </li>
                   ))}
-                </div>
-              </div>
+                </ul>
+              </>
             )}
           </>
         )}
