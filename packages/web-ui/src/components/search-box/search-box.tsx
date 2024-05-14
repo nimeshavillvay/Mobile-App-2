@@ -78,6 +78,7 @@ export const SearchBoxInput = ({
       closeMenu();
     }
   };
+
   const { products, categories, brands } = data;
   const { isOpen, getMenuProps, getInputProps, getItemProps, closeMenu } =
     useCombobox({
@@ -108,8 +109,8 @@ export const SearchBoxInput = ({
           return item.productTitle;
         } else if (item.brandName && !item.productTitle && !item.categoryPath) {
           return item.brandName;
-        } else if (item.categoryPath && !item.brandName && !item.productTitle) {
-          return item.categoryPath;
+        } else if (item.categoryName && !item.brandName && !item.productTitle) {
+          return item.categoryName;
         }
 
         return "";
@@ -130,41 +131,17 @@ export const SearchBoxInput = ({
       <ul
         className={`${
           isOpen ? "block" : "hidden"
-        } shadow-right shadow-bottom shadow-left le absolute z-50 ml-3 mt-4 w-full rounded-b-lg bg-white p-0 pl-4 shadow-sm`}
+        } dropdown-container shadow-right shadow-bottom shadow-left le absolute z-50 mt-4  w-full rounded-b-lg bg-white p-0 pl-4 text-sm shadow-sm`}
         {...getMenuProps()}
       >
         {isOpen && value && (
           <>
-            {categories.summary.total > 0 && (
-              <>
-                <li className="text-black-500 px-3 py-1 font-semibold">
-                  Categories for &quot;{value}&quot;
-                </li>
-                {categories.results.map((category, index) => (
-                  <li
-                    className="p-2 pl-8"
-                    key={category.id}
-                    {...getItemProps({ item: category, index })}
-                  >
-                    <Link
-                      href={`/category/${category.id}/${category.slug}`}
-                      key={category.id}
-                    >
-                      <span className="text-gray-500">&#8627;</span>{" "}
-                      <b className="text-red-500">{category.categoryPath}</b>
-                      <br />
-                    </Link>
-                  </li>
-                ))}
-                <br />
-              </>
-            )}
             {brands.summary.total > 0 && (
               <>
                 <li className="text-black-500 px-3 py-1 font-semibold">
                   Brands for &quot;{value}&quot;
                 </li>
-                <li className="flex flex-row flex-wrap ">
+                <li className="flex flex-wrap">
                   {brands.results.map((brand, index) => (
                     <Link href={`/search?query=${brand.slug}`} key={brand.id}>
                       <li
@@ -172,6 +149,8 @@ export const SearchBoxInput = ({
                         className={cn(
                           "mb-2 mr-2 flex items-center rounded-md p-2",
                           "m-2 rounded-lg border-2 p-4 shadow-sm",
+                          "hover:bg-gray-100",
+                          "w-1/2 sm:w-auto", 
                         )}
                         {...getItemProps({
                           item: brand,
@@ -200,21 +179,46 @@ export const SearchBoxInput = ({
                 <br />
               </>
             )}
-
-            {products.summary.total > 0 && (
+            {categories.summary.total > 0 && (
               <>
                 <li className="text-black-500 px-3 py-1 font-semibold">
+                  Categories for &quot;{value}&quot;
+                </li>
+                {categories.results.map((category, index) => (
+                  <li
+                    className="p-2 pl-8 hover:bg-gray-100"
+                    key={category.id}
+                    {...getItemProps({ item: category, index })}
+                  >
+                    <Link
+                      href={`/category/${category.id}/${category.slug}`}
+                      key={category.id}
+                    >
+                      <span className="text-[#74767B]">&#8627;</span>{" "}
+                      <b className="text-[#CC0000]">{category.categoryPath}</b>
+                      <br />
+                    </Link>
+                  </li>
+                ))}
+                <br />
+              </>
+            )}
+
+            {products.summary.total > 0 && (
+              <div>
+                <li className="text-black-500 whitespace-normal px-3 py-1 font-semibold">
                   Products for &quot;{value}&quot;
                 </li>
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                  <div className="w-full">
-                    {products.results.slice(0, 5).map((product, index) => (
-                      <Link
-                        href={`/product/${product.id}/${product.slug}`}
-                        key={product.id}
-                      >
+                  {products.results.slice(0, 10).map((product, index) => (
+                    <Link
+                      href={`/product/${product.id}/${product.slug}`}
+                      key={product.id}
+                      className="mx-h-[120px] mx-w-[338px] block"
+                    >
+                      <div className="mx-h-[120px] mx-w-[338px]">
                         <li
-                          className="m-w-[339px] m-h[120px] flex justify-between px-3 py-2"
+                          className="flex items-start justify-start space-x-4 px-3 py-2"
                           key={product.id}
                           {...getItemProps({
                             item: product,
@@ -224,7 +228,7 @@ export const SearchBoxInput = ({
                               brands.results.length,
                           })}
                         >
-                          <div className="mr-2 h-20 w-20 overflow-hidden rounded-md border border-gray-300">
+                          <div className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-md border border-gray-300">
                             {product.itemImage && product.productTitle && (
                               <Image
                                 src={product.itemImage}
@@ -239,62 +243,20 @@ export const SearchBoxInput = ({
                               <div className="h-10 w-10 rounded-full"></div>
                             )}
                           </div>
-                          <div className="flex flex-col justify-between">
-                            <span className="w-52">{product.productTitle}</span>
-                            <span className="text-gray-500">
-                              Item# {product.MFRPartNo}
+                          <div className="flex flex-col justify-start">
+                            <span className="overflow-hidden overflow-ellipsis hover:underline">
+                              {product.productTitle}
+                            </span>{" "}
+                            <span className="text-[#74767B]">
+                              Item# {product.materialNumber}
                             </span>
                           </div>
                         </li>
-                      </Link>
-                    ))}
-                  </div>
-                  <div className="w-full">
-                    {products.results.slice(5, 10).map((product, index) => (
-                      <Link
-                        href={`/product/${product.id}/${product.slug}`}
-                        key={product.id}
-                      >
-                        <li
-                          className="m-w-[339px] m-h[120px] flex justify-between  px-3 py-2"
-                          key={product.id}
-                          {...getItemProps({
-                            item: product,
-                            index:
-                              index +
-                              categories.results.length +
-                              brands.results.length +
-                              5,
-                          })}
-                        >
-                          <div className="mr-2 h-20 w-20 overflow-hidden rounded-md border border-gray-300">
-                            {product.itemImage && product.productTitle && (
-                              <Image
-                                src={product.itemImage}
-                                alt={product.productTitle}
-                                className="h-full w-full object-cover"
-                                layout="responsive"
-                                width={80}
-                                height={80}
-                              />
-                            )}
-                            {!product.itemImage && (
-                              <div className="h-10 w-10 rounded-full"></div>
-                            )}
-                          </div>
-                          <div className="flex flex-col justify-between">
-                            <span className="w-52">{product.productTitle}</span>
-                            <span className="text-gray-500">
-                              Item# {product.MFRPartNo}
-                            </span>
-                          </div>
-                        </li>
-                      </Link>
-                    ))}
-                  </div>
+                      </div>
+                    </Link>
+                  ))}
                 </div>
-                <br />
-              </>
+              </div>
             )}
           </>
         )}
