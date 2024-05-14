@@ -15,9 +15,10 @@ import ProductsListPagination from "./products-list-pagination";
 type ProductsListProps = {
   query: string;
   pageNo: string;
+  total: string;
 };
 
-const ProductsList = ({ query, pageNo }: ProductsListProps) => {
+const ProductsList = ({ query, pageNo, total }: ProductsListProps) => {
   const cookieStore = cookies();
   const tokenCookie = cookieStore.get(SESSION_TOKEN_COOKIE);
 
@@ -28,7 +29,7 @@ const ProductsList = ({ query, pageNo }: ProductsListProps) => {
   return (
     <ProductsGrid>
       <Suspense fallback={<ProductsGridHeaderSkeleton />}>
-        <ProductsListHeader term={query} pageNo={pageNo} />
+        <ProductsListHeader total={total}  />
       </Suspense>
 
       <Suspense fallback={<ProductsGridListSkeleton type="mobile" />}>
@@ -52,7 +53,7 @@ const ProductsList = ({ query, pageNo }: ProductsListProps) => {
       </ProductsGridDesktopContainer>
 
       <Suspense fallback={<ProductsGridPaginationSkeleton />}>
-        <ProductsListPagination term={query} pageNo={pageNo} />
+        <ProductsListPagination total={total} />
       </Suspense>
     </ProductsGrid>
   );

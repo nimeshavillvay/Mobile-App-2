@@ -1,5 +1,6 @@
 import { searchApi } from "@/_lib/api";
 import { cookies } from "next/headers";
+import "server-only";
 import { SEARCH_PARAMS_COOKIE } from "./constants";
 
 type SearchResult = {
@@ -45,6 +46,7 @@ export const getSearchResults = async ({
 }) => {
   const cookiesStore = cookies();
   const searchParamsCookie = cookiesStore.get(SEARCH_PARAMS_COOKIE);
+
   return await searchApi
     .get("search", {
       searchParams: new URLSearchParams({

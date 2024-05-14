@@ -13,10 +13,12 @@ import {
   BreadcrumbSeparator,
 } from "@repo/web-ui/components/ui/breadcrumb";
 import { Metadata } from "next";
+import { cookies } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Fragment, Suspense } from "react";
 import { getSearchResults } from "./apis";
+import { TOTAL_COOKIE } from "./constants";
 import NoResultsNotice from "./no-results-notice";
 import ProductsList from "./products-list";
 import ResultCacher from "./result-cacher";
@@ -37,6 +39,13 @@ const SearchPage = async ({
     query,
     pageNo,
   });
+
+  const cookiesStore = cookies();
+
+  const total =
+    searchResults.summary.total === 0
+      ? cookiesStore.get(TOTAL_COOKIE)?.value ?? "0"
+      : searchResults.summary.total.toString();
 
   if (searchResults.summary.plp && !Array.isArray(searchResults.results)) {
     return redirect(
@@ -88,7 +97,7 @@ const SearchPage = async ({
             </ProductsGrid>
           }
         >
-          <ProductsList query={query} pageNo={pageNo} />
+          <ProductsList query={query} pageNo={pageNo} total={total} />
         </Suspense>
       </div>
     </>
