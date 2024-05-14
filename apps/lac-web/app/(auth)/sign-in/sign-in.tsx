@@ -225,7 +225,7 @@ const SignIn = ({ passwordPolicies }: SignInProps) => {
             </Button>
 
             <Link
-              href="/forgot-password"
+              href={`/forgot-password?email=${email}`}
               className={cn(
                 buttonVariants({
                   variant: "link",
