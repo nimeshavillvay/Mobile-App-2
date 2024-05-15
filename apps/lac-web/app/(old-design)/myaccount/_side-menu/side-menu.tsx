@@ -1,7 +1,7 @@
 "use client";
 
-import useOSRLogoutMutation from "@/_header/_user-profile/use-osr-logout-mutation.hook";
-import useLogoutMutation from "@/_header/use-logout-mutation.hook";
+import useLogoutMutation from "@/_hooks/user/use-logout-mutation.hook";
+import useOSRLogoutMutation from "@/_hooks/user/use-osr-logout-mutation.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
 import {
   Accordion,
@@ -32,10 +32,6 @@ const LINKS = [
   {
     href: "/myaccount/manage-users",
     name: "Manage Users",
-  },
-  {
-    href: "/myaccount/personal-navigation",
-    name: "Personal Navigation",
   },
   {
     href: "/myaccount/orderhistory",
