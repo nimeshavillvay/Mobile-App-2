@@ -4,7 +4,7 @@ import Separator from "@/old/_components/separator";
 import Title from "@/old/_components/title";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { type ReactNode } from "react";
+import { Suspense, type ReactNode } from "react";
 import SideMenu from "./_side-menu";
 import Profile from "./profile";
 
@@ -34,8 +34,10 @@ const MyAccountLayout = ({ children }: MyAccountLayoutProps) => {
         </div>
 
         <div className="flex flex-col md:flex-row">
-          <aside className="mb-6 hidden md:mb-0 md:block md:w-[280px]">
-            <Profile />
+          <aside className="mb-6 hidden md:mb-0 md:block md:w-[290px]">
+            <Suspense>
+              <Profile token={sessionTokenCookie?.value} />
+            </Suspense>
 
             <SideMenu token={sessionTokenCookie?.value} />
           </aside>
