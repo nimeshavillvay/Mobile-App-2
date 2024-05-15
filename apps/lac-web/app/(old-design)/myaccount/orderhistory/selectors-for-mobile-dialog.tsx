@@ -215,7 +215,7 @@ const SelectorsForMobileDialog = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="bottom-0 top-auto max-w-[500px] translate-y-[0%] gap-0">
         <DialogHeader>
-          <DialogTitle className="text-left  font-wurth md:text-center">
+          <DialogTitle className="text-left font-wurth md:text-center">
             Sort & Filter
           </DialogTitle>
 

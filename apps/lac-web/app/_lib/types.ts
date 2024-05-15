@@ -11,6 +11,7 @@ export type OldPagination = {
 
 export type ItemInfo = {
   productId: number;
+  slug: string;
   isExcludedProduct: boolean;
   productSku: string;
   productName: string;
@@ -46,6 +47,7 @@ export type ItemInfo = {
 export type OldPurchasedProduct = {
   product: string;
   id: string;
+  isDiscontinued: boolean;
   isFavourite: boolean;
   orderDate: string;
   sku: string;
@@ -57,17 +59,6 @@ export type OldPurchasedItems = {
   pagination: [OldPagination];
 };
 
-// Shared types for new design
-export type Filter = {
-  id: string;
-  title: string;
-  values: {
-    id: string;
-    value: string;
-    active: boolean;
-  }[];
-};
-
 export type FilterTitle = "PO #" | "Job Name" | "Status" | "Transaction Type";
 
 export type PurchasedProduct = {
@@ -77,6 +68,7 @@ export type PurchasedProduct = {
   totalItem: number;
   purchaseOrderDate: string;
   isFavorite: boolean;
+  isDiscontinued: boolean;
 };
 
 export type Pagination = {

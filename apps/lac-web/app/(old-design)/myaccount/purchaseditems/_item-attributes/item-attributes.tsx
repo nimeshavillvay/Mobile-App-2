@@ -1,4 +1,5 @@
 import useItemInfo from "@/_hooks/product/use-item-info.hook";
+import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 
 type ItemAttributesProps = {
   productId: number;
@@ -11,7 +12,7 @@ const ItemAttributes = ({ productId }: ItemAttributesProps) => {
 
   return (
     <div className="flex flex-row py-2 text-sm text-brand-gray-500">
-      {attributes && (
+      {attributes ? (
         <>
           <div className="flex-1 flex-col">
             <Attribute label="Brand" value={attributes.brand} />
@@ -37,6 +38,8 @@ const ItemAttributes = ({ productId }: ItemAttributesProps) => {
               ))}
           </div>
         </>
+      ) : (
+        itemAttributesQuery.isLoading && <Skeleton className="h-32 w-full" />
       )}
     </div>
   );
