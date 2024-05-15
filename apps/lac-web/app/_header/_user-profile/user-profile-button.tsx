@@ -2,6 +2,7 @@
 
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
 import useSuspenseUsersList from "@/_hooks/user/use-suspense-users-list.hook";
+import { Building } from "@repo/web-ui/components/icons/building";
 import { Exit } from "@repo/web-ui/components/icons/exit";
 import { HeartOutline } from "@repo/web-ui/components/icons/heart-outline";
 import { Switch } from "@repo/web-ui/components/icons/switch";
@@ -15,7 +16,6 @@ import {
 } from "@repo/web-ui/components/ui/dropdown-menu";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { PiBuildingOfficeLight } from "react-icons/pi";
 import useLogoutMutation from "../use-logout-mutation.hook";
 import ButtonContent, { buttonClasses } from "./button-content";
 import type { ViewportTypes } from "./types";
@@ -160,7 +160,7 @@ const UserProfileDropdown = ({
         >
           <Link href="/myaccount/company-profile">
             <DropdownMenuShortcut className="ml-0">
-              <PiBuildingOfficeLight className="size-4 stroke-black stroke-2" />
+              <Building className="size-4 stroke-black stroke-2" />
             </DropdownMenuShortcut>
 
             <span>Company Profile</span>

@@ -189,9 +189,12 @@ const AddressDialog = ({
   const statesQuery = useStates(selectedCountry);
   const countiesQuery = useCounties(selectedState);
 
-  const handleOpenChange = () => {
-    setOpenAddressDialog(!open);
-    form.reset();
+  const handleOpenChange = (open: boolean) => {
+    console.log(open);
+    setOpenAddressDialog(open);
+    if (!open) {
+      form.reset();
+    }
   };
 
   return (
