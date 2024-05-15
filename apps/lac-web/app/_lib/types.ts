@@ -59,8 +59,6 @@ export type OldPurchasedItems = {
   pagination: [OldPagination];
 };
 
-// Shared types for new design
-
 export type FilterTitle = "PO #" | "Job Name" | "Status" | "Transaction Type";
 
 export type PurchasedProduct = {

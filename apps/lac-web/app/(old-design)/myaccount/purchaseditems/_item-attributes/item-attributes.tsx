@@ -1,5 +1,5 @@
 import useItemInfo from "@/_hooks/product/use-item-info.hook";
-import { Skeleton } from "~/components/ui/skeleton";
+import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 
 type ItemAttributesProps = {
   productId: number;

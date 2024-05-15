@@ -25,7 +25,8 @@ export const generateItemUrl = ({
   productId: number;
   slug: string;
 }) => {
-  if (productId && slug) {
+  // Check if slug is empty
+  if (slug !== "") {
     return `/product/${productId}/${slug}`;
   }
   return "#";
