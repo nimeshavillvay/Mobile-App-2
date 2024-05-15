@@ -61,7 +61,7 @@ const PurchasedItemRowForMobile = ({
 }) => {
   return (
     <div className="flex min-h-[180px] flex-row justify-between bg-white p-4">
-      <Link href={generateItemUrl(item.productId)} className="min-w-[92px]">
+      <Link href={generateItemUrl(item)} className="min-w-[92px]">
         {item.image ? (
           <Image
             src={item.image}
