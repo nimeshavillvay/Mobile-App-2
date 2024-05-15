@@ -1,9 +1,11 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Button } from "@repo/web-ui/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from "@/old/_components/ui/dialog";
+} from "@repo/web-ui/components/ui/dialog";
 import {
   Form,
   FormControl,
@@ -12,9 +14,8 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/old/_components/ui/form";
-import { Input } from "@/old/_components/ui/input";
-import { zodResolver } from "@hookform/resolvers/zod";
+} from "@repo/web-ui/components/ui/form";
+import { Input } from "@repo/web-ui/components/ui/input";
 import type { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -118,12 +119,12 @@ const ShoppingListDialog = ({
             </div>
 
             <div className="text-right">
-              <button
+              <Button
                 type="submit"
                 className="h-9 rounded-[3px] bg-brand-primary px-4 text-base font-normal uppercase text-white"
               >
                 Done
-              </button>
+              </Button>
             </div>
           </form>
         </Form>

@@ -4,7 +4,7 @@ import { Button } from "@repo/web-ui/components/ui/button";
 import { useState } from "react";
 import { MdOutlineDelete } from "react-icons/md";
 import { PiPenNibDuotone } from "react-icons/pi";
-import ActionConfirmationDialog from "../manage-users/action-confirmation-dialog";
+import ActionConfirmationDialog from "./action-confirmation-dialog";
 import ProductCard from "./product-card";
 import ShoppingListDialog from "./shopping-list-dialog";
 import type { ShoppingListElement } from "./type";
