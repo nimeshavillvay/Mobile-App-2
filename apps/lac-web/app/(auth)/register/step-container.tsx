@@ -49,16 +49,14 @@ export const StepContainerOpen = ({
   steps,
   submitBtnText = "Continue",
   allFieldsRequired = false,
-  onSubmit,
-}: {
-  children: ReactNode;
+  ...delegated
+}: Omit<ComponentProps<"form">, "className"> & {
   steps: {
     current: number;
     total: number;
   };
   submitBtnText?: string;
   allFieldsRequired?: boolean;
-  onSubmit?: ComponentProps<"form">["onSubmit"];
 }) => {
   const { state, title } = useStepContext();
 
@@ -69,7 +67,7 @@ export const StepContainerOpen = ({
   return (
     <form
       className="flex flex-col gap-5 rounded-lg border border-wurth-gray-250 p-6 shadow-lg"
-      onSubmit={onSubmit}
+      {...delegated}
     >
       <div className="flex flex-row items-start justify-between">
         <h3 className="text-base font-semibold text-wurth-gray-800">{title}</h3>
