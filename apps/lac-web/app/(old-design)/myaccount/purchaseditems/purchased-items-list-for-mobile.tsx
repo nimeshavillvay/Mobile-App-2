@@ -8,10 +8,10 @@ import { MdKeyboardArrowRight } from "react-icons/md";
 import { generateItemUrl } from "./client-helpers";
 import { DATE_FORMAT } from "./constants";
 import PurchasedItemDetailedViewDialog from "./purchased-item-detailed-view-dialog";
-import type { CombinedPurchasedItem } from "./types";
+import type { DetailedPurchasedItem } from "./types";
 
 type PurchasedItemsListForMobileProps = {
-  items: CombinedPurchasedItem[];
+  items: DetailedPurchasedItem[];
   token: string;
 };
 
@@ -19,7 +19,7 @@ const PurchasedItemsListForMobile = ({
   items,
   token,
 }: PurchasedItemsListForMobileProps) => {
-  const [selectedItem, setSelectedItem] = useState<CombinedPurchasedItem>();
+  const [selectedItem, setSelectedItem] = useState<DetailedPurchasedItem>();
   const [showDetailedView, setShowDetailedView] = useState(false);
 
   return (
@@ -56,7 +56,7 @@ const PurchasedItemRowForMobile = ({
   item,
   onClick,
 }: {
-  item: CombinedPurchasedItem;
+  item: DetailedPurchasedItem;
   onClick: () => void;
 }) => {
   return (
