@@ -45,10 +45,10 @@ const ShoppingListItems = ({
 
   return (
     <>
-      <div className="mx-2 my-5 flex flex-row items-center gap-2.5">
+      <div className="mx-2 my-5 flex flex-row items-center justify-between">
         <h3 className="text-2xl font-bold">{shoppingList.listName}</h3>
 
-        <div className="flex-1 gap-2 text-right">
+        <div className="flex flex-row items-center gap-2">
           <Button
             variant="outline"
             className="rounded-lg border-gray-100 bg-transparent py-5 text-sm font-bold tracking-wide text-black shadow hover:border-gray-300"
@@ -61,7 +61,7 @@ const ShoppingListItems = ({
           </Button>
           <Button
             variant="outline"
-            className="ml-2 rounded-lg border-gray-100 bg-transparent py-5 text-sm font-bold tracking-wide text-brand-primary shadow hover:border-gray-300"
+            className="rounded-lg border-gray-100 bg-transparent py-5 text-sm font-bold tracking-wide text-brand-primary shadow hover:border-gray-300"
             aria-label="Delete shopping list"
             onClick={() => setIsOpenDeleteDialog(true)}
           >

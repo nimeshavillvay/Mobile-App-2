@@ -4,7 +4,7 @@ import {
   Tabs,
   TabsList,
   TabsTrigger,
-} from "@/old/myaccount/my-shopping-lists/tabs";
+} from "@/(old-design)/myaccount/shopping-lists/tabs";
 import { Button } from "@repo/web-ui/components/ui/button";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
