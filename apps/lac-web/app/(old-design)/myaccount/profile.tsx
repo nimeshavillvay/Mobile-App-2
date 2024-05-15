@@ -68,18 +68,14 @@ const Profile = ({ token }: { token: string }) => {
       </div>
 
       <div>
-        {userProfile.firstName !== "" ? userProfile.firstName : "N/A"}&nbsp;
-        {userProfile.lastName !== "" ? userProfile.lastName : "N/A"}
+        {userProfile.firstName !== "" && `${userProfile.firstName} `}
+        {userProfile.lastName !== "" ? userProfile.lastName : "User"}
       </div>
 
       <div className="capitalize">
-        {userProfile.roleDescription !== ""
-          ? userProfile.roleDescription
-          : "N/A"}
-        /
-        {userProfile.permission !== ""
-          ? userProfile.permission.toLowerCase()
-          : "N/A"}
+        {userProfile.roleDescription !== "" &&
+          `${userProfile.roleDescription}/`}
+        {userProfile.permission !== "" && userProfile.permission.toLowerCase()}
       </div>
     </div>
   );
