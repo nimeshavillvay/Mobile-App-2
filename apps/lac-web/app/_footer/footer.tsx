@@ -133,6 +133,7 @@ const Footer = () => {
             {SOCIAL_LINKS.map(({ name, Icon }) => (
               <li key={name}>
                 <a
+                  href="wurthlac.com"
                   target="_blank"
                   rel="noopener noreferrer"
                   className={cn(

@@ -161,7 +161,6 @@ const ConfirmationDialog = ({ token }: ConfirmationDialogProps) => {
             id={jobNameId}
             type="text"
             placeholder="PO # / Job Name"
-            autoFocus={false}
           />
         </form>
 
