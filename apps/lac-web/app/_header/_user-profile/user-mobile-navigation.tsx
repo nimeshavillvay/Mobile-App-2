@@ -126,7 +126,7 @@ const UserMobileProfileNavigation = ({ token }: { token: string }) => {
 
           <li>
             <SheetClose asChild className={sectionLinkStyles()}>
-              <Link href="/myaccount/my-shopping-lists">My Shopping Lists</Link>
+              <Link href="/myaccount/shopping-lists">My Shopping Lists</Link>
             </SheetClose>
           </li>
 

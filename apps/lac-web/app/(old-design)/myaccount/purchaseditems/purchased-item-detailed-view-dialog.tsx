@@ -196,13 +196,13 @@ const PurchasedItemDetailedViewDialog = ({
                     </Suspense>
                   </ErrorBoundary>
 
-                  <div
+                  <button
                     className="flex h-10 items-center justify-between rounded-sm border border-brand-gray-300 px-2"
                     onClick={() => setShowPriceBreakdown(!showPriceBreakdown)}
                   >
                     <div>Price Breakdown</div>
                     <MdKeyboardArrowRight className="text-2xl leading-none" />
-                  </div>
+                  </button>
                 </>
               )}
             </div>
@@ -216,7 +216,6 @@ const PurchasedItemDetailedViewDialog = ({
 
                 <Input
                   id={quantityId}
-                  autoFocus={false}
                   type="number"
                   disabled={isItemNotAdded}
                   className="h-10 rounded-r-none px-2 text-base"
