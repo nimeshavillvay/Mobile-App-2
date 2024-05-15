@@ -25,6 +25,7 @@ import {
   INIT_PER_PAGE,
   INIT_TO_DATE,
   QUERY_KEYS,
+  URL_DATE_FORMAT,
 } from "./constants";
 import FiltersForMobileDialog from "./filters-for-mobile-dialog";
 
@@ -38,14 +39,16 @@ const PurchasedItemsSelectors = ({
   totalItems,
 }: PurchasedItemsSelectorProps) => {
   const urlSearchParams = useSearchParams();
-  const page = Number(urlSearchParams.get("page") ?? INIT_PAGE_NUMBER);
-  const perPage = Number(urlSearchParams.get("perPage") ?? INIT_PER_PAGE);
+  const page = Number(urlSearchParams.get(QUERY_KEYS.PAGE) ?? INIT_PAGE_NUMBER);
+  const perPage = Number(
+    urlSearchParams.get(QUERY_KEYS.PER_PAGE) ?? INIT_PER_PAGE,
+  );
 
   const [fromDate, setFromDate] = useState(
-    new Date(urlSearchParams.get("from") ?? INIT_FROM_DATE),
+    new Date(urlSearchParams.get(QUERY_KEYS.FROM_DATE) ?? INIT_FROM_DATE),
   );
   const [toDate, setToDate] = useState(
-    new Date(urlSearchParams.get("to") ?? INIT_TO_DATE),
+    new Date(urlSearchParams.get(QUERY_KEYS.TO_DATE) ?? INIT_TO_DATE),
   );
 
   const [duration, setDuration] = useState(INIT_DURATION);
@@ -53,8 +56,8 @@ const PurchasedItemsSelectors = ({
 
   const id = useId();
   const durationId = `duration-${id}`;
-  const formattedFromDate = dayjs(fromDate).format("YYYY-MM-DD");
-  const formattedToDate = dayjs(toDate).format("YYYY-MM-DD");
+  const formattedFromDate = dayjs(fromDate).format(URL_DATE_FORMAT);
+  const formattedToDate = dayjs(toDate).format(URL_DATE_FORMAT);
 
   const handleDurationChange = (value: string) => {
     const duration = DURATIONS.find((duration) => duration.value === value);
@@ -68,10 +71,12 @@ const PurchasedItemsSelectors = ({
     }
 
     setFromDate(
-      new Date(dayjs().subtract(Number(value), "months").format("YYYY-MM-DD")),
+      new Date(
+        dayjs().subtract(Number(value), "months").format(URL_DATE_FORMAT),
+      ),
     );
 
-    setToDate(new Date(dayjs().format("YYYY-MM-DD")));
+    setToDate(new Date(dayjs().format(URL_DATE_FORMAT)));
   };
 
   const search = () => {
@@ -80,11 +85,11 @@ const PurchasedItemsSelectors = ({
     searchParams.push(
       {
         key: QUERY_KEYS.FROM_DATE,
-        value: dayjs(fromDate).format("YYYY-MM-DD"),
+        value: dayjs(fromDate).format(URL_DATE_FORMAT),
       },
       {
         key: QUERY_KEYS.TO_DATE,
-        value: dayjs(toDate).format("YYYY-MM-DD"),
+        value: dayjs(toDate).format(URL_DATE_FORMAT),
       },
     );
 
@@ -166,7 +171,7 @@ const PurchasedItemsSelectors = ({
       <div className="block px-4 md:hidden">
         <div className="mb-3 flex justify-between">
           <button
-            className="items-left flex cursor-pointer items-center text-base font-bold uppercase tracking-wide"
+            className="items-left flex cursor-pointer items-center font-wurth text-base font-bold uppercase tracking-wide"
             onClick={() => setOpen(true)}
           >
             Sort & Filter

@@ -18,9 +18,16 @@ export const changeSearchParams = (
   updateSearchParams(newSearchParams);
 };
 
-export const generateItemUrl = (productId: number) => {
-  if (productId) {
-    return `/product/${productId}`;
+export const generateItemUrl = ({
+  productId,
+  slug,
+}: {
+  productId: number;
+  slug: string;
+}) => {
+  // Check if slug is empty
+  if (slug !== "") {
+    return `/product/${productId}/${slug}`;
   }
   return "#";
 };

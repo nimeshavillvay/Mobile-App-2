@@ -114,6 +114,7 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
 
       const initialDetails: ItemInfo = {
         productId: item.productId,
+        slug: "",
         isExcludedProduct: false,
         productSku: item.productSku,
         productName: "",
@@ -162,7 +163,11 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
         />
       )}
 
-      <TotalCountAndPagination isLoading={isLoading} totalItems={totalItems} />
+      <TotalCountAndPagination
+        isLoading={isLoading}
+        totalItems={totalItems}
+        itemCountOnly
+      />
 
       {/* Mobile View for Items List */}
       <PurchasedItemsListForMobile
