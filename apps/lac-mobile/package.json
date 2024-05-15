@@ -11,9 +11,9 @@
   },
   "dependencies": {
     "@repo/shared-logic": "workspace:*",
-    "@tanstack/react-query": "5.32.1",
-    "expo": "50.0.17",
-    "expo-status-bar": "1.11.1",
+    "@tanstack/react-query": "5.36.0",
+    "expo": "51.0.5",
+    "expo-status-bar": "1.12.1",
     "ky": "1.2.4",
     "react": "18.3.1",
     "react-native": "0.74.1"
@@ -23,7 +23,7 @@
     "@repo/eslint-config": "workspace:*",
     "@repo/prettier-config": "workspace:*",
     "@total-typescript/ts-reset": "0.5.1",
-    "@types/react": "18.3.1",
+    "@types/react": "18.3.2",
     "eslint": "8.57.0",
     "ts-node": "10.9.2",
     "typescript": "5.4.5"

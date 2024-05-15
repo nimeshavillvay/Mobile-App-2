@@ -10,7 +10,7 @@ type ProductLandingCategory = {
     catTitle: string;
     description: string;
     additional_description: string;
-    Image: string;
+    Image: string | null;
     slug: string;
     subCatgores: {
       SubCatId: string;

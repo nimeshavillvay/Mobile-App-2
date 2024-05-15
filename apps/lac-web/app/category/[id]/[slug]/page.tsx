@@ -121,13 +121,15 @@ const CategoryPage = async ({ params: { id, slug } }: CategoryPageProps) => {
       <section className="container md:my-10">
         <div className="grid overflow-hidden rounded-lg border border-wurth-gray-250 bg-white shadow-lg md:max-h-[21rem] md:grid-cols-2">
           <div className="relative aspect-2 md:hidden">
-            <Image
-              src={category.image}
-              alt={category.title}
-              className="object-contain"
-              priority
-              fill
-            />
+            {!!category.image && (
+              <Image
+                src={category.image}
+                alt={category.title}
+                className="object-contain"
+                priority
+                fill
+              />
+            )}
           </div>
 
           <div className="flex flex-col justify-center space-y-3 p-6 md:max-h-[21rem] md:flex-1 md:space-y-5 md:p-10">
@@ -143,13 +145,15 @@ const CategoryPage = async ({ params: { id, slug } }: CategoryPageProps) => {
           </div>
 
           <div className="relative hidden aspect-2 md:block md:max-h-[21rem] md:w-full">
-            <Image
-              src={category.image}
-              alt={category.title}
-              className="object-contain"
-              priority
-              fill
-            />
+            {!!category.image && (
+              <Image
+                src={category.image}
+                alt={category.title}
+                className="object-contain"
+                priority
+                fill
+              />
+            )}
           </div>
         </div>
       </section>
