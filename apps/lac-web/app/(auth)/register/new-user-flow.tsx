@@ -67,7 +67,7 @@ const addressSchema = z.object({
   billingCity: z.string(),
   billingCountry: z.string(),
   billingState: z.string(),
-  billingCounty: z.string(),
+  billingCounty: z.string().optional(),
   billingPostCode: z.string(),
   billingZipCode: z.string().optional(),
 
@@ -77,10 +77,11 @@ const addressSchema = z.object({
   shippingCity: z.string(),
   shippingCountry: z.string(),
   shippingState: z.string(),
-  shippingCounty: z.string(),
+  shippingCounty: z.string().optional(),
   shippingPostCode: z.string(),
   shippingZipCode: z.string().optional(),
 });
+type AddressSchema = z.infer<typeof addressSchema>;
 
 type NewUserFlowProps = {
   passwordPolicies: PasswordPolicies;
@@ -101,6 +102,25 @@ const NewUserFlow = ({ passwordPolicies }: NewUserFlowProps) => {
   const [shippingSuggestions, setShippingSuggestions] = useState<
     ResponseAddress[]
   >([]);
+  // Backup state of the address form because all the fields
+  // become undefined after submitting. This is a workaround.
+  const [formValues, setFormValues] = useState<AddressSchema>({
+    billingAddress: "",
+    billingCity: "",
+    billingCountry: "",
+    billingState: "",
+    billingCounty: "",
+    billingPostCode: "",
+    billingZipCode: "",
+    same: true,
+    shippingAddress: "",
+    shippingCity: "",
+    shippingCountry: "",
+    shippingState: "",
+    shippingCounty: "",
+    shippingPostCode: "",
+    shippingZipCode: "",
+  });
 
   const refinedPersonalDetailsSchema = useMemo(
     () =>
@@ -175,25 +195,9 @@ const NewUserFlow = ({ passwordPolicies }: NewUserFlowProps) => {
     setStep("address");
   });
 
-  const addressForm = useForm<z.infer<typeof addressSchema>>({
+  const addressForm = useForm<AddressSchema>({
     resolver: zodResolver(addressSchema),
-    values: {
-      billingAddress: "",
-      billingCity: "",
-      billingCountry: "",
-      billingState: "",
-      billingCounty: "",
-      billingPostCode: "",
-      billingZipCode: "",
-      same: true,
-      shippingAddress: "",
-      shippingCity: "",
-      shippingCountry: "",
-      shippingState: "",
-      shippingCounty: "",
-      shippingPostCode: "",
-      shippingZipCode: "",
-    },
+    values: formValues,
   });
 
   const billingCountry = addressForm.watch("billingCountry");
@@ -209,7 +213,8 @@ const NewUserFlow = ({ passwordPolicies }: NewUserFlowProps) => {
   const shippingCountyQuery = useCounties(shippingState);
 
   const registerNewUserMutation = useRegisterNewUserMutation();
-  const handleAddressOnSubmit = addressForm.handleSubmit((values) => {
+
+  const registerUser = (values: AddressSchema) => {
     const {
       firstName,
       lastName,
@@ -241,15 +246,15 @@ const NewUserFlow = ({ passwordPolicies }: NewUserFlowProps) => {
           zipCode: values.billingZipCode,
         },
         shippingAddress: {
-          address: sameAddress ? values.billingAddress : values.shippingAddress,
-          city: sameAddress ? values.billingCity : values.shippingCity,
-          country: sameAddress ? values.billingCountry : values.shippingCountry,
-          state: sameAddress ? values.billingState : values.shippingState,
-          county: sameAddress ? values.billingCounty : values.shippingCounty,
-          postalCode: sameAddress
+          address: values.same ? values.billingAddress : values.shippingAddress,
+          city: values.same ? values.billingCity : values.shippingCity,
+          country: values.same ? values.billingCountry : values.shippingCountry,
+          state: values.same ? values.billingState : values.shippingState,
+          county: values.same ? values.billingCounty : values.shippingCounty,
+          postalCode: values.same
             ? values.billingPostCode
             : values.shippingPostCode,
-          zipCode: sameAddress ? values.billingZipCode : values.shippingZipCode,
+          zipCode: values.same ? values.billingZipCode : values.shippingZipCode,
         },
       },
       {
@@ -271,32 +276,37 @@ const NewUserFlow = ({ passwordPolicies }: NewUserFlowProps) => {
         },
       },
     );
+  };
+
+  const handleAddressOnSubmit = addressForm.handleSubmit((values) => {
+    setFormValues(values);
+    registerUser(values);
   });
 
   const updateAddress: ComponentProps<
     typeof AddressSelector
   >["updateAddress"] = ({ billing, shipping }) => {
+    const newFormValues = structuredClone(formValues);
     if (billing) {
-      addressForm.setValue("billingAddress", billing["street-address"]);
-      addressForm.setValue("billingCity", billing.locality);
-      addressForm.setValue("billingState", billing.region);
-      addressForm.setValue("billingCountry", billing["country-name"]);
-      addressForm.setValue("billingPostCode", billing["postal-code"]);
-      addressForm.setValue("billingZipCode", billing.zip4);
+      newFormValues.billingAddress = billing["street-address"];
+      newFormValues.billingCity = billing.locality;
+      newFormValues.billingState = billing.region;
+      newFormValues.billingCountry = billing["country-name"];
+      newFormValues.billingPostCode = billing["postal-code"];
+      newFormValues.billingZipCode = billing.zip4;
     }
 
     if (shipping) {
-      addressForm.setValue("shippingAddress", shipping["street-address"]);
-      addressForm.setValue("shippingCity", shipping.locality);
-      addressForm.setValue("shippingState", shipping.region);
-      addressForm.setValue("shippingCountry", shipping["country-name"]);
-      addressForm.setValue("shippingPostCode", shipping["postal-code"]);
-      addressForm.setValue("shippingZipCode", shipping.zip4);
+      newFormValues.shippingAddress = shipping["street-address"];
+      newFormValues.shippingCity = shipping.locality;
+      newFormValues.shippingState = shipping.region;
+      newFormValues.shippingCountry = shipping["country-name"];
+      newFormValues.shippingPostCode = shipping["postal-code"];
+      newFormValues.shippingZipCode = shipping.zip4;
     }
 
-    // Clear all suggestions
-    setBillingSuggestions([]);
-    setShippingSuggestions([]);
+    // Submit the form again
+    registerUser(newFormValues);
   };
 
   // Hide the forms when there is an address conflict.
@@ -307,13 +317,14 @@ const NewUserFlow = ({ passwordPolicies }: NewUserFlowProps) => {
     return (
       <AddressSelector
         billingAddresses={billingSuggestions}
-        shippingAddresses={billingSuggestions}
-        updateAddressManually={() => {
+        shippingAddresses={shippingSuggestions}
+        clearSuggestions={() => {
           // Clear all suggestions
           setBillingSuggestions([]);
           setShippingSuggestions([]);
         }}
         updateAddress={updateAddress}
+        disabled={registerNewUserMutation.isPending}
       />
     );
   }

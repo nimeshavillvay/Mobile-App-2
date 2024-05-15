@@ -7,7 +7,7 @@ import type { ResponseAddress } from "./use-register-new-user-mutation.hook";
 type AddressSelectorProps = {
   billingAddresses: ResponseAddress[];
   shippingAddresses: ResponseAddress[];
-  updateAddressManually: () => void;
+  clearSuggestions: () => void;
   updateAddress: ({
     billing,
     shipping,
@@ -15,13 +15,15 @@ type AddressSelectorProps = {
     billing?: ResponseAddress;
     shipping?: ResponseAddress;
   }) => void;
+  disabled: boolean;
 };
 
 const AddressSelector = ({
   billingAddresses,
   shippingAddresses,
-  updateAddressManually,
+  clearSuggestions,
   updateAddress,
+  disabled,
 }: AddressSelectorProps) => {
   const [selectedBillingAddress, setSelectedBillingAddress] =
     useState<number>();
@@ -60,6 +62,7 @@ const AddressSelector = ({
             addresses={billingAddresses}
             selectedIndex={selectedBillingAddress}
             setSelectedIndex={setSelectedBillingAddress}
+            disabled={disabled}
           />
         )}
 
@@ -69,19 +72,27 @@ const AddressSelector = ({
             addresses={shippingAddresses}
             selectedIndex={selectedShippingAddress}
             setSelectedIndex={setSelectedShippingAddress}
+            disabled={disabled}
           />
         )}
       </div>
 
       <div className="flex flex-row items-center justify-end gap-2">
-        <Button variant="outline" onClick={updateAddressManually}>
+        <Button
+          variant="outline"
+          onClick={clearSuggestions}
+          disabled={disabled}
+        >
           Update address
         </Button>
 
         <Button
           disabled={
-            (billingAddresses.length > 0 && !selectedBillingAddress) ||
-            (shippingAddresses.length > 0 && !selectedShippingAddress)
+            (billingAddresses.length > 0 &&
+              selectedBillingAddress === undefined) ||
+            (shippingAddresses.length > 0 &&
+              selectedShippingAddress === undefined) ||
+            disabled
           }
           onClick={onSubmit}
         >
@@ -99,11 +110,13 @@ const AddressList = ({
   addresses,
   selectedIndex,
   setSelectedIndex,
+  disabled,
 }: {
   type: "Billing" | "Shipping";
   addresses: ResponseAddress[];
   selectedIndex?: number;
   setSelectedIndex: (index: number) => void;
+  disabled: boolean;
 }) => {
   return (
     <div className="space-y-1">
@@ -121,6 +134,7 @@ const AddressList = ({
                 selectedIndex === index && "border-wurth-gray-800",
               )}
               onClick={() => setSelectedIndex(index)}
+              disabled={disabled}
             >
               <CheckCircle
                 className={cn(
@@ -131,7 +145,8 @@ const AddressList = ({
 
               <div className="text-base font-medium text-wurth-gray-800">
                 {address["street-address"]}, {address.locality},{" "}
-                {address.region}, {address["postal-code"]}-{address.zip4}
+                {address.region}, {address["postal-code"]}
+                {address.zip4.length > 0 && `-${address.zip4}`}
               </div>
             </Button>
           </li>
