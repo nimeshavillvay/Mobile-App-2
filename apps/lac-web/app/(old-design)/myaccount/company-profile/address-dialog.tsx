@@ -190,7 +190,6 @@ const AddressDialog = ({
   const countiesQuery = useCounties(selectedState);
 
   const handleOpenChange = (open: boolean) => {
-    console.log(open);
     setOpenAddressDialog(open);
     if (!open) {
       form.reset();
