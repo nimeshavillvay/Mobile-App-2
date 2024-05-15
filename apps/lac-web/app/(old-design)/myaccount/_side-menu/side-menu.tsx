@@ -82,9 +82,9 @@ const SideMenu = ({ token }: { token: string }) => {
           </AccordionContent>
         </AccordionItem>
 
-        <AccordionItem value="/myaccount/myfavorites">
+        <AccordionItem value="/myaccount/shopping-lists">
           <AccordionTrigger className="text-black data-[state=open]:text-brand-primary">
-            My Favorites
+            My Shopping Lists
           </AccordionTrigger>
 
           <AccordionContent className="pb-0">
