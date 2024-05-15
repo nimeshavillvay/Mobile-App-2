@@ -2,6 +2,7 @@
 
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
 import useSuspenseUsersList from "@/_hooks/user/use-suspense-users-list.hook";
+import { Building } from "@repo/web-ui/components/icons/building";
 import { Exit } from "@repo/web-ui/components/icons/exit";
 import { HeartOutline } from "@repo/web-ui/components/icons/heart-outline";
 import { Switch } from "@repo/web-ui/components/icons/switch";
@@ -148,6 +149,21 @@ const UserProfileDropdown = ({
             </DropdownMenuShortcut>
 
             <span>My Favorites</span>
+          </Link>
+        </DropdownMenuItem>
+
+        <DropdownMenuSeparator />
+
+        <DropdownMenuItem
+          asChild
+          className="flex flex-row items-center gap-2 text-black"
+        >
+          <Link href="/myaccount/company-profile">
+            <DropdownMenuShortcut className="ml-0">
+              <Building className="size-4 stroke-black stroke-2" />
+            </DropdownMenuShortcut>
+
+            <span>Company Profile</span>
           </Link>
         </DropdownMenuItem>
 
