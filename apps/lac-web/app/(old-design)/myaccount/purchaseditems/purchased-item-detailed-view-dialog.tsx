@@ -240,11 +240,14 @@ const PurchasedItemDetailedViewDialog = ({
                     id={quantityId}
                     autoFocus={false}
                     type="number"
-                    disabled={isItemError(item)}
                     className="h-10 rounded-r-none px-2 text-base"
                     placeholder="Qty"
+                    step={item.quantityByIncrements}
                     {...methods.register("quantity", {
                       valueAsNumber: true,
+                      min: item.minimumOrderQuantity,
+                      disabled:
+                        addToCartMutation.isPending || isItemError(item),
                     })}
                   />
 
@@ -337,7 +340,10 @@ const PurchasedItemDetailedViewDialog = ({
                 </Button>
               </Link>
 
-              <Button className="h-12 flex-1" disabled={!isValidQuantity}>
+              <Button
+                className="h-12 flex-1"
+                disabled={!isValidQuantity || addToCartMutation.isPending}
+              >
                 <AddToCartIcon /> Add to Cart
               </Button>
             </form>

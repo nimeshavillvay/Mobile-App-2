@@ -94,6 +94,7 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
   };
 
   const isItemNotAdded = !item.productSku;
+  const isValidQuantity = !!(quantity && quantity >= 1);
 
   return (
     <FormProvider {...methods}>
@@ -222,10 +223,12 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
           <Input
             id={quantityId}
             type="number"
-            disabled={isItemError(item)}
+            step={item.quantityByIncrements}
             className="h-6 w-16 px-1 text-right text-base leading-4"
             {...methods.register("quantity", {
               valueAsNumber: true,
+              min: item.minimumOrderQuantity,
+              disabled: addToCartMutation.isPending || isItemError(item),
             })}
           />
           {!isItemError(item) && (
@@ -310,7 +313,7 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
               <Button
                 type="submit"
                 className="w-[170px]"
-                disabled={!quantity || quantity < 1}
+                disabled={!isValidQuantity || addToCartMutation.isPending}
               >
                 Add to cart
               </Button>
