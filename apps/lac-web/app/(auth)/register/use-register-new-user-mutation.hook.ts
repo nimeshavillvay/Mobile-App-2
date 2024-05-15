@@ -6,7 +6,7 @@ type Address = {
   city: string;
   country: string;
   state: string;
-  county: string;
+  county?: string;
   postalCode: string;
   zipCode?: string;
 };
@@ -52,8 +52,8 @@ const useRegisterNewUserMutation = () => {
             "billing-address": {
               "country-name": billingAddress.country,
               county: billingAddress.county,
-              locality: billingAddress.city, // TODO Verify field
-              organization: company, // TODO Verify field
+              locality: billingAddress.city,
+              organization: company,
               "phone-number": "244234", // TODO Verify field
               region: billingAddress.state,
               "street-address": billingAddress.address,
@@ -63,8 +63,8 @@ const useRegisterNewUserMutation = () => {
             "shipping-address": {
               "country-name": shippingAddress.country,
               county: shippingAddress.county,
-              locality: billingAddress.city, // TODO Verify field
-              organization: company, // TODO Verify field
+              locality: shippingAddress.city,
+              organization: company,
               "phone-number": "244234", // TODO Verify field
               region: shippingAddress.state,
               "street-address": shippingAddress.address,
