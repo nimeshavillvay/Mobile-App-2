@@ -34,8 +34,7 @@ const ProductListGrid = async ({
             title: product.productTitle,
             image: product.itemImage,
             sku: product.materialNumber,
-            //need to request from be till then hardcoded
-            uom: "piece",
+            uom: product.uom ?? "Set",
           },
         ],
       },

@@ -37,6 +37,7 @@ type SearchData = {
     orderQuantityByIncrements?: string;
     attributes?: [];
     itemImage?: string;
+    uom?: string;
   }[];
 };
 
