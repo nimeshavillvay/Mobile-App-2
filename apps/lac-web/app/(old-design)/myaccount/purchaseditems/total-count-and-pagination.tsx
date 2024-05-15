@@ -100,33 +100,35 @@ const TotalCountAndPagination = ({
         </div>
       </div>
 
-      <div className="overflow-hidden py-3 md:hidden">
-        <div className="flex flex-row justify-center gap-1 font-bold">
-          <button className="flex flex-row items-center bg-gray-100 px-3 py-3 text-base uppercase text-brand-gray-400">
-            <MdArrowBack className="mr-[5px] text-2xl leading-none" />
-            Back
-          </button>
+      {!itemCountOnly && (
+        <div className="overflow-hidden py-3 md:hidden">
+          <div className="flex flex-row justify-center gap-1 font-bold">
+            <button className="flex flex-row items-center bg-gray-100 px-3 py-3 text-base uppercase text-brand-gray-400">
+              <MdArrowBack className="mr-[5px] text-2xl leading-none" />
+              Back
+            </button>
 
-          <button
-            className="text-brand-[#000] flex w-full max-w-28 flex-row items-center justify-center rounded-sm border-2 border-black bg-gray-100 px-3 py-3 text-base font-bold uppercase"
-            onClick={() => setMobilePagination(true)}
-          >
-            {page}/{totalPagesCount}
-            <ChevronDown className="h-5 w-8 shrink-0" />
-          </button>
+            <button
+              className="text-brand-[#000] flex w-full max-w-28 flex-row items-center justify-center rounded-sm border-2 border-black bg-gray-100 px-3 py-3 text-base font-bold uppercase"
+              onClick={() => setMobilePagination(true)}
+            >
+              {page}/{totalPagesCount}
+              <ChevronDown className="h-5 w-8 shrink-0" />
+            </button>
 
-          <button className="flex flex-row items-center bg-gray-100 px-3 py-3 uppercase text-brand-gray-400">
-            Next
-            <MdArrowForward className="ml-[5px] text-2xl leading-none" />
-          </button>
+            <button className="flex flex-row items-center bg-gray-100 px-3 py-3 uppercase text-brand-gray-400">
+              Next
+              <MdArrowForward className="ml-[5px] text-2xl leading-none" />
+            </button>
+          </div>
+
+          <PurchasedItemsMobilePagination
+            open={openMobilePagination}
+            setOpen={setMobilePagination}
+            totalPagesCount={totalPagesCount}
+          />
         </div>
-
-        <PurchasedItemsMobilePagination
-          open={openMobilePagination}
-          setOpen={setMobilePagination}
-          totalPagesCount={totalPagesCount}
-        />
-      </div>
+      )}
     </>
   );
 };

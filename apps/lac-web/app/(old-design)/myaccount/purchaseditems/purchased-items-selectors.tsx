@@ -171,7 +171,7 @@ const PurchasedItemsSelectors = ({
       <div className="block px-4 md:hidden">
         <div className="mb-3 flex justify-between">
           <button
-            className="items-left flex cursor-pointer items-center text-base font-bold uppercase tracking-wide"
+            className="items-left flex cursor-pointer items-center font-wurth text-base font-bold uppercase tracking-wide"
             onClick={() => setOpen(true)}
           >
             Sort & Filter

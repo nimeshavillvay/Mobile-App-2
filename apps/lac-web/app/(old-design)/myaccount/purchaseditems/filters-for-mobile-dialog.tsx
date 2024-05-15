@@ -1,20 +1,13 @@
 "use client";
 
-import DatePicker from "@/(old-design)/_components/date-picker";
+import DatePicker from "@/old/_components/date-picker";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/(old-design)/_components/ui/accordion";
-import { Button } from "@/(old-design)/_components/ui/button";
-import { Label } from "@/(old-design)/_components/ui/label";
-import {
-  RadioGroup,
-  RadioGroupItem,
-} from "@/(old-design)/_components/ui/radio-group";
-import { updateSearchParams } from "@/(old-design)/_utils/client-helpers";
-import { cn } from "@/(old-design)/_utils/helpers";
+} from "@/old/_components/ui/accordion";
+import { Button } from "@/old/_components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -22,6 +15,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/old/_components/ui/dialog";
+import { Label } from "@/old/_components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/old/_components/ui/radio-group";
+import { updateSearchParams } from "@/old/_utils/client-helpers";
+import { cn } from "@/old/_utils/helpers";
 import dayjs from "dayjs";
 import { useSearchParams } from "next/navigation";
 import { Dispatch, SetStateAction, useState } from "react";
@@ -35,6 +32,7 @@ import {
   QUERY_KEYS,
   SORTING_BY_FIELDS,
   SORTING_FILTERS_FOR_MOBILE,
+  URL_DATE_FORMAT,
 } from "./constants";
 
 const customDuration = DURATIONS[DURATIONS.length - 1]; // Custom duration: last item in the `DURATIONS` array
@@ -102,11 +100,11 @@ const FiltersForMobileDialog = ({ open, setOpen }: FiltersForMobileProps) => {
     searchParams.push(
       {
         key: QUERY_KEYS.FROM_DATE,
-        value: dayjs(fromDate).format("YYYY-MM-DD"),
+        value: dayjs(fromDate).format(URL_DATE_FORMAT),
       },
       {
         key: QUERY_KEYS.TO_DATE,
-        value: dayjs(toDate).format("YYYY-MM-DD"),
+        value: dayjs(toDate).format(URL_DATE_FORMAT),
       },
     );
 
@@ -117,9 +115,11 @@ const FiltersForMobileDialog = ({ open, setOpen }: FiltersForMobileProps) => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="old-design-text-base max-h-[80vh] max-w-[500px] overflow-scroll">
+      <DialogContent className="bottom-0 top-auto max-h-[80vh] max-w-[500px] translate-y-[0%] gap-0">
         <DialogHeader>
-          <DialogTitle className="text-left">Sort & Filter</DialogTitle>
+          <DialogTitle className="text-left font-wurth font-extrabold">
+            Sort & Filter
+          </DialogTitle>
 
           <DialogDescription className="sr-only">
             Add a new user by entering the email
@@ -139,7 +139,7 @@ const FiltersForMobileDialog = ({ open, setOpen }: FiltersForMobileProps) => {
               </AccordionTrigger>
 
               <AccordionContent className="grid gap-y-5 px-5 py-3">
-                <div className="mt-4 flex flex-col items-center gap-2 xs:flex-row">
+                <div className="mt-4 flex flex-row items-center justify-center gap-2">
                   <DatePicker
                     date={fromDate}
                     onSelectDate={(date) => {
