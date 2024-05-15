@@ -238,7 +238,6 @@ const PurchasedItemDetailedViewDialog = ({
 
                   <Input
                     id={quantityId}
-                    autoFocus={false}
                     type="number"
                     className="h-10 rounded-r-none px-2 text-base"
                     placeholder="Qty"

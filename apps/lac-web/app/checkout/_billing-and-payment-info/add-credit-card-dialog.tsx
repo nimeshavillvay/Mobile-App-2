@@ -148,6 +148,7 @@ const AddCreditCardDialog = ({ token }: AddCreditCardDialogProps) => {
                   <FormControl>
                     <>
                       <iframe
+                        title="Snappay credit card iframe"
                         src={`${process.env.NEXT_PUBLIC_SNAPPAY_URL}/Interop/InteropRequest?reqno=${creditCardSignatureQuery.data.requestId}`}
                         className={cn(
                           inputStyles(),

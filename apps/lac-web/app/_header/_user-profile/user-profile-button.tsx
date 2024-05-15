@@ -143,12 +143,12 @@ const UserProfileDropdown = ({
           asChild
           className="flex flex-row items-center gap-2 text-black"
         >
-          <Link href="/myaccount/myfavorites">
+          <Link href="/myaccount/shopping-lists">
             <DropdownMenuShortcut className="ml-0">
               <HeartOutline className="size-4 stroke-black stroke-2" />
             </DropdownMenuShortcut>
 
-            <span>My Favorites</span>
+            <span>My Shopping Lists</span>
           </Link>
         </DropdownMenuItem>
 
