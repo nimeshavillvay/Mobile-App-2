@@ -2,8 +2,9 @@
 // import useSuspenseFilters from "@/_hooks/search/use-suspense-filters.hook";
 import FiltersDropdown from "./filters-dropdown";
 
-// TODO: the following method must be passed with a token
-const FavoritesFilters = () => {
+// TODO: Remove disable ESLint line
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const FavoritesFilters = ({ token }: { token: string }) => {
   // TODO: This feature is not supported
   // const filtersQuery = useSuspenseFilters(token, {
   //   type: "Favorites",
