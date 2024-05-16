@@ -27,7 +27,7 @@ const HeroBanners = ({ banners }: HeroBannersProps) => {
                 href={banner.pdfLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="aspect-w-[28] aspect-h-9 block"
+                className="aspect-h-9 aspect-w-[28] block"
               >
                 <Image
                   src={banner.image}
