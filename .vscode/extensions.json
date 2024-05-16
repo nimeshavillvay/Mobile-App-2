@@ -7,6 +7,7 @@
     "esbenp.prettier-vscode",
     "yoavbls.pretty-ts-errors",
     "bradlc.vscode-tailwindcss",
-    "gruntfuggly.todo-tree"
+    "gruntfuggly.todo-tree",
+    "github.vscode-github-actions"
   ]
 }
