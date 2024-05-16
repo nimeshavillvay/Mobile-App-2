@@ -1,6 +1,7 @@
 "use client";
 
-import Pagination from "@/(old-design)/_components/pagination";
+import Pagination from "@/old/_components/pagination";
+import { Button } from "@/old/_components/ui/button";
 import {
   Select,
   SelectContent,
@@ -8,10 +9,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/old/_components/ui/select";
-import { ChevronDown } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
-import { MdArrowBack, MdArrowForward } from "react-icons/md";
+import {
+  MdArrowBack,
+  MdArrowForward,
+  MdKeyboardArrowDown,
+} from "react-icons/md";
 import { changeSearchParams } from "./client-helpers";
 import {
   INIT_PAGE_NUMBER,
@@ -39,6 +43,28 @@ const TotalCountAndPagination = ({
   const totalPagesCount = Math.ceil(totalItems / perPage);
 
   const [openMobilePagination, setMobilePagination] = useState(false);
+
+  const onNextPage = () => {
+    if (page < totalPagesCount) {
+      changeSearchParams(urlSearchParams, [
+        {
+          key: QUERY_KEYS.PAGE,
+          value: (page + 1).toString(),
+        },
+      ]);
+    }
+  };
+
+  const onPrevPage = () => {
+    if (page > 1) {
+      changeSearchParams(urlSearchParams, [
+        {
+          key: QUERY_KEYS.PAGE,
+          value: (page - 1).toString(),
+        },
+      ]);
+    }
+  };
 
   return (
     <>
@@ -101,25 +127,33 @@ const TotalCountAndPagination = ({
       </div>
 
       {!itemCountOnly && (
-        <div className="overflow-hidden py-3 md:hidden">
-          <div className="flex flex-row justify-center gap-1 font-bold">
-            <button className="flex flex-row items-center bg-gray-100 px-3 py-3 text-base uppercase text-brand-gray-400">
-              <MdArrowBack className="mr-[5px] text-2xl leading-none" />
+        <>
+          <div className="flex flex-row justify-center gap-2 px-3 py-3 font-bold md:hidden">
+            <Button
+              className="h-12 flex-1 bg-gray-100 text-base text-brand-gray-500"
+              onClick={() => onPrevPage()}
+              disabled={page === 1}
+            >
+              <MdArrowBack className="text-xl leading-none" />
               Back
-            </button>
+            </Button>
 
-            <button
-              className="text-brand-[#000] flex w-full max-w-28 flex-row items-center justify-center rounded-sm border-2 border-black bg-gray-100 px-3 py-3 text-base font-bold uppercase"
+            <Button
+              className="h-12 flex-1 gap-3 border-2 border-black bg-gray-100 text-base text-black"
               onClick={() => setMobilePagination(true)}
             >
               {page}/{totalPagesCount}
-              <ChevronDown className="h-5 w-8 shrink-0" />
-            </button>
+              <MdKeyboardArrowDown className="text-xl leading-none" />
+            </Button>
 
-            <button className="flex flex-row items-center bg-gray-100 px-3 py-3 uppercase text-brand-gray-400">
+            <Button
+              className="h-12 flex-1 bg-gray-100 text-base text-brand-gray-500"
+              onClick={() => onNextPage()}
+              disabled={page === totalPagesCount}
+            >
               Next
-              <MdArrowForward className="ml-[5px] text-2xl leading-none" />
-            </button>
+              <MdArrowForward className="text-xl leading-none" />
+            </Button>
           </div>
 
           <PurchasedItemsMobilePagination
@@ -127,7 +161,7 @@ const TotalCountAndPagination = ({
             setOpen={setMobilePagination}
             totalPagesCount={totalPagesCount}
           />
-        </div>
+        </>
       )}
     </>
   );
