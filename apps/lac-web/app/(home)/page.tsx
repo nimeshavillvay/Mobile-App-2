@@ -64,18 +64,13 @@ const ADS: (
 const HomePage = async () => {
   const banners = await getBanners("0");
 
-  const heroBanner: ComponentProps<typeof HeroBanners>["banners"] = [];
-  banners.T.flatMap((topBanner) => topBanner.banners)
-    .filter((banner) => banner.file_path?.endsWith(".jpg"))
-    .forEach((banner) => {
-      if (banner.file_path) {
-        heroBanner.push({
-          id: banner.id,
-          alt: banner.alt_tag,
-          image: banner.file_path,
-        });
-      }
-    });
+  const heroBanner: ComponentProps<typeof HeroBanners>["banners"] =
+    banners.T.flatMap((topBanner) => topBanner.banners).map((banner) => ({
+      id: banner.id,
+      alt: banner.alt_tag,
+      image: banner.file_path,
+      pdfLink: banner.pdf_file_path,
+    }));
 
   return (
     <>
