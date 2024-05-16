@@ -10,7 +10,7 @@ import Autoplay from "embla-carousel-autoplay";
 import Image from "next/image";
 
 type HeroBannersProps = {
-  banners: { id: string; alt: string; image: string }[];
+  banners: { id: string; alt: string; image: string; pdfLink: string }[];
 };
 
 const HeroBanners = ({ banners }: HeroBannersProps) => {
@@ -18,19 +18,26 @@ const HeroBanners = ({ banners }: HeroBannersProps) => {
     <section className="bg-[#271E1A] py-4">
       <Carousel
         className="container w-full"
-        plugins={[Autoplay({ delay: 3000 })]}
+        plugins={[Autoplay({ delay: 5000 })]}
       >
         <CarouselContent>
           {banners.map((banner, index) => (
             <CarouselItem key={banner.id}>
-              <Image
-                src={banner.image}
-                alt={banner.alt}
-                width={1856}
-                height={384}
-                priority={index === 0}
-                className="block rounded-lg bg-[#362A23] object-cover shadow-lg"
-              />
+              <a
+                href={banner.pdfLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="aspect-w-[28] aspect-h-9 block"
+              >
+                <Image
+                  src={banner.image}
+                  alt={banner.alt}
+                  width={1920}
+                  height={538}
+                  priority={index === 0}
+                  className="block rounded-lg bg-[#362A23] object-cover shadow-lg"
+                />
+              </a>
             </CarouselItem>
           ))}
         </CarouselContent>
