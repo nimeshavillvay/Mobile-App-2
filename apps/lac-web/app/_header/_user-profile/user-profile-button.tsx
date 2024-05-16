@@ -1,5 +1,7 @@
 "use client";
 
+import useLogoutMutation from "@/_hooks/user/use-logout-mutation.hook";
+import useOSRLogoutMutation from "@/_hooks/user/use-osr-logout-mutation.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
 import useSuspenseUsersList from "@/_hooks/user/use-suspense-users-list.hook";
 import { Building } from "@repo/web-ui/components/icons/building";
@@ -16,10 +18,8 @@ import {
 } from "@repo/web-ui/components/ui/dropdown-menu";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import useLogoutMutation from "../use-logout-mutation.hook";
 import ButtonContent, { buttonClasses } from "./button-content";
 import type { ViewportTypes } from "./types";
-import useOSRLogoutMutation from "./use-osr-logout-mutation.hook";
 import UserMobileNavigation from "./user-mobile-navigation";
 
 const UserProfileButton = ({

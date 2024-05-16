@@ -1,6 +1,7 @@
 import { updateSearchParams } from "@/old/_utils/client-helpers";
 import "client-only";
 import { QUERY_KEYS } from "./constants";
+import type { DetailedPurchasedItem } from "./types";
 
 export const changeSearchParams = (
   searchParams: URLSearchParams,
@@ -30,4 +31,17 @@ export const generateItemUrl = ({
     return `/product/${productId}/${slug}`;
   }
   return "#";
+};
+
+// Check if purchase item has an error
+export const isItemError = (item: DetailedPurchasedItem) => {
+  return (
+    !item ||
+    !item.productSku ||
+    item.isExcludedProduct ||
+    item.productStatus === "DL" ||
+    item.productStatus === "DU" ||
+    item.productStatus === "DV" ||
+    item.isDiscontinued
+  );
 };

@@ -24,9 +24,9 @@ import { MdKeyboardArrowDown } from "react-icons/md";
 import * as z from "zod";
 import ItemAttributes from "./_item-attributes/item-attributes";
 import ItemPrices from "./_item-prices/item-prices";
-import { generateItemUrl } from "./client-helpers";
+import { generateItemUrl, isItemError } from "./client-helpers";
 import { DATE_FORMAT } from "./constants";
-import { CombinedPurchasedItem } from "./types";
+import type { DetailedPurchasedItem } from "./types";
 
 const schema = z.object({
   quantity: z.number().int().min(1).nullable(),
@@ -36,7 +36,7 @@ type Schema = z.infer<typeof schema>;
 
 type PurchasedItemRowProps = {
   token: string;
-  item: CombinedPurchasedItem;
+  item: DetailedPurchasedItem;
   index: number;
 };
 
@@ -83,7 +83,7 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
     }
   };
 
-  const isEligible = (item: CombinedPurchasedItem) => {
+  const isEligible = (item: DetailedPurchasedItem) => {
     return (
       item &&
       item.productSku &&
@@ -93,24 +93,8 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
     );
   };
 
-  /**
-   * TODO: Should move to a common function
-   * @param item
-   * @returns true | false
-   */
-  const isItemError = (item: CombinedPurchasedItem) => {
-    return (
-      !item ||
-      !item.productSku ||
-      item.isExcludedProduct ||
-      item.productStatus === "DL" ||
-      item.productStatus === "DU" ||
-      item.productStatus === "DV" ||
-      item.isDiscontinued
-    );
-  };
-
   const isItemNotAdded = !item.productSku;
+  const isValidQuantity = !!(quantity && quantity >= 1);
 
   return (
     <FormProvider {...methods}>
@@ -239,10 +223,12 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
           <Input
             id={quantityId}
             type="number"
-            disabled={isItemError(item)}
+            step={item.quantityByIncrements}
             className="h-6 w-16 px-1 text-right text-base leading-4"
             {...methods.register("quantity", {
               valueAsNumber: true,
+              min: item.minimumOrderQuantity,
+              disabled: addToCartMutation.isPending || isItemError(item),
             })}
           />
           {!isItemError(item) && (
@@ -327,7 +313,7 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
               <Button
                 type="submit"
                 className="w-[170px]"
-                disabled={!quantity || quantity < 1}
+                disabled={!isValidQuantity || addToCartMutation.isPending}
               >
                 Add to cart
               </Button>
@@ -366,7 +352,7 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
 
 export default PurchasedItemRow;
 
-const ErrorAlert = ({ item }: { item: CombinedPurchasedItem }) => {
+const ErrorAlert = ({ item }: { item: DetailedPurchasedItem }) => {
   if (!item?.productSku) {
     return (
       <AlertInline
