@@ -1,4 +1,6 @@
+import useCookies from "@/_hooks/storage/use-cookies.hook";
 import { api } from "@/_lib/api";
+import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 type Address = {
@@ -13,6 +15,7 @@ type Address = {
 
 const useRegisterNewUserMutation = () => {
   const queryClient = useQueryClient();
+  const [cookies] = useCookies();
 
   return useMutation({
     mutationFn: async ({
@@ -40,6 +43,9 @@ const useRegisterNewUserMutation = () => {
     }) => {
       const response = await api
         .post("rest/register/new", {
+          headers: {
+            Authorization: `Bearer ${cookies[SESSION_TOKEN_COOKIE]}`,
+          },
           json: {
             firstName,
             lastName,
@@ -79,8 +85,11 @@ const useRegisterNewUserMutation = () => {
 
       return response;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries();
+    onSuccess: (response) => {
+      if (!isVerifyAddressResponse(response)) {
+        // Revalidate the queries only after the user has successfully registered
+        queryClient.invalidateQueries();
+      }
     },
   });
 };
@@ -100,7 +109,7 @@ type UnableToRegisterResponse = {
 
 export type ResponseAddress = {
   "country-name": string;
-  county: null;
+  county: string;
   locality: string;
   region: string;
   "street-address": string;

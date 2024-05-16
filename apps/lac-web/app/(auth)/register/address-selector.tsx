@@ -32,12 +32,14 @@ const AddressSelector = ({
 
   const onSubmit = () => {
     updateAddress({
-      billing: selectedBillingAddress
-        ? billingAddresses[selectedBillingAddress]
-        : undefined,
-      shipping: selectedShippingAddress
-        ? shippingAddresses[selectedShippingAddress]
-        : undefined,
+      billing:
+        typeof selectedBillingAddress === "number"
+          ? billingAddresses[selectedBillingAddress]
+          : undefined,
+      shipping:
+        typeof selectedShippingAddress === "number"
+          ? shippingAddresses[selectedShippingAddress]
+          : undefined,
     });
   };
 
