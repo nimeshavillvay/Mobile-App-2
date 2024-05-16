@@ -19,7 +19,6 @@ import { redirect } from "next/navigation";
 import { Fragment, Suspense } from "react";
 import { getSearchResults } from "./apis";
 import { TOTAL_COOKIE } from "./constants";
-import NoResultsNotice from "./no-results-notice";
 import ProductsList from "./products-list";
 import ResultCacher from "./result-cacher";
 
@@ -80,7 +79,12 @@ const SearchPage = async ({
 
       {searchResults.summary.total == 0 &&
         Array.isArray(searchResults.results) &&
-        searchResults.results.length == 0 && <NoResultsNotice />}
+        searchResults.results.length == 0 && (
+          <div className="max-w-500px max-h-200px mx-auto flex flex-col items-center justify-center pb-[250px] pt-[10px]">
+            <h1 className="mb-4 text-3xl font-bold">No results</h1>
+            <h4>Sorry, no results were found for your search term.</h4>
+          </div>
+        )}
 
       {total !== 0 &&
         Array.isArray(searchResults.results) &&

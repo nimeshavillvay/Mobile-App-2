@@ -116,7 +116,7 @@ const Header = async () => {
           <span className="sr-only">Home</span>
         </Link>
 
-        <div className="container relative hidden  w-[800px] md:block">
+        <div className="container relative hidden w-[800px] md:block">
           <SearchBar />
         </div>
 

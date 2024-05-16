@@ -238,7 +238,7 @@ export const SearchBoxInput = ({
                           )}
                         </div>
                         <div>
-                          <div className=" font-normal hover:underline">
+                          <div className="font-normal hover:underline">
                             <p className="break-all">{product.productTitle}</p>
                           </div>{" "}
                           <div className="break-all text-[#74767B]">
