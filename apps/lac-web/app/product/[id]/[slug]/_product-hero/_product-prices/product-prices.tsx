@@ -2,42 +2,27 @@
 
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import { cn } from "@/_lib/utils";
-import useAddToCartForm from "../use-add-to-cart-form.hook";
 
 type ProductPricesProps = {
   token: string;
   productId: number;
+  listPrice: number;
   uom: string;
   className?: string;
 };
 
 const ProductPrices = ({
   productId,
+  listPrice,
   uom,
   token,
   className,
 }: ProductPricesProps) => {
-  const { watch } = useAddToCartForm();
-  const quantity = watch("quantity");
-
   const priceCheckQuery = useSuspensePriceCheck(token, [{ productId, qty: 1 }]);
   const priceData = priceCheckQuery.data.productPrices[0];
+  const currentPrice = priceData?.price ?? 0;
 
-  let currentPrice = 0;
-  let previousPrice = 0;
-
-  if (priceData) {
-    currentPrice = priceData.price;
-    previousPrice = priceData.price;
-
-    // Get discounted price from breakdowns
-    const priceBreakdown = priceData.priceBreakDowns.findLast(
-      (breakdown) => quantity >= breakdown.quantity,
-    );
-    if (priceBreakdown) {
-      currentPrice = priceBreakdown.price;
-    }
-  }
+  const discount = Math.round(((listPrice - currentPrice) / listPrice) * 100);
 
   return (
     <section className={cn("space-y-3 md:space-y-4", className)}>
@@ -49,10 +34,8 @@ const ProductPrices = ({
           </span>
         </div>
 
-        {currentPrice !== previousPrice && (
-          <div className="text-wurth-gray-400 line-through">
-            ${previousPrice}
-          </div>
+        {discount > 0 && (
+          <div className="text-wurth-gray-400 line-through">${listPrice}</div>
         )}
 
         <div>
@@ -60,9 +43,9 @@ const ProductPrices = ({
           <span className="font-title leading-none">{uom}</span>
         </div>
 
-        {currentPrice !== previousPrice && (
+        {discount > 0 && (
           <div className="font-semibold text-green-700">
-            You save ${(previousPrice - currentPrice).toFixed(2)}
+            You save ${(listPrice - currentPrice).toFixed(2)}
           </div>
         )}
       </div>
