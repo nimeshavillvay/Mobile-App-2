@@ -14,7 +14,9 @@ const SearchBar = () => {
   const [value, setValue] = useState("");
   const multiSearchQuery = useMultiSearch(value);
   const handleSearch = () => {
-    router.push(`/search?query=${encodeURIComponent(value)}`);
+    if (value) {
+      router.push(`/search?query=${encodeURIComponent(value)}`);
+    }
   };
 
   return (

@@ -82,24 +82,30 @@ const SearchPage = async ({
         Array.isArray(searchResults.results) &&
         searchResults.results.length == 0 && <NoResultsNotice />}
 
-      <h1 className="line-clamp-3 text-balance pl-8 font-title text-4xl font-medium tracking-tight text-wurth-gray-800 md:text-5xl md:leading-[3.5rem] md:tracking-[-0.036rem]">
-        Search Results for &quot;{query}&quot;
-      </h1>
-      <div className="mx-auto max-w-[1360px]">
-        <Suspense
-          fallback={
-            <ProductsGrid>
-              <ProductsGridHeaderSkeleton />
-              <ProductsGridListSkeleton type="mobile" />
-              <ProductsGridDesktopContainer>
-                <ProductsGridListSkeleton type="desktop" />
-              </ProductsGridDesktopContainer>
-            </ProductsGrid>
-          }
-        >
-          <ProductsList query={query} pageNo={pageNo} total={total} />
-        </Suspense>
-      </div>
+      {total !== 0 &&
+        Array.isArray(searchResults.results) &&
+        searchResults.results.length !== 0 && (
+          <>
+            <h1 className="line-clamp-3 text-balance pl-8 font-title text-4xl font-medium tracking-tight text-wurth-gray-800 md:text-5xl md:leading-[3.5rem] md:tracking-[-0.036rem]">
+              Search Results for &quot;{query}&quot;
+            </h1>
+            <div className="mx-auto max-w-[1360px]">
+              <Suspense
+                fallback={
+                  <ProductsGrid>
+                    <ProductsGridHeaderSkeleton />
+                    <ProductsGridListSkeleton type="mobile" />
+                    <ProductsGridDesktopContainer>
+                      <ProductsGridListSkeleton type="desktop" />
+                    </ProductsGridDesktopContainer>
+                  </ProductsGrid>
+                }
+              >
+                <ProductsList query={query} pageNo={pageNo} total={total} />
+              </Suspense>
+            </div>
+          </>
+        )}
     </>
   );
 };

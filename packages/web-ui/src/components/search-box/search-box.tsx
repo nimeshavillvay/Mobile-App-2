@@ -139,7 +139,7 @@ export const SearchBoxInput = ({
           <>
             {brands.summary.total > 0 && (
               <>
-                <li className="text-black-500 px-3 py-1 font-semibold">
+                <li className="text-black-500 break-all px-3 py-1 font-semibold">
                   Brands for &quot;{value}&quot;
                 </li>
                 <ul className="flex flex-wrap">
@@ -160,7 +160,7 @@ export const SearchBoxInput = ({
                           <Image
                             src={brand.brandImage}
                             alt={brand.brandName}
-                            className="mr-2 min-h-10 min-w-10 object-contain"
+                            className="mr-2 min-h-10 min-w-10 object-contain "
                             width={40}
                             height={40}
                           />
@@ -168,9 +168,7 @@ export const SearchBoxInput = ({
                         {!brand.brandImage && (
                           <div className="h-10 w-10 rounded-full"></div>
                         )}
-                        <span className="flex-grow truncate break-all text-center font-medium">
-                          {brand.brandName}
-                        </span>
+                        <span className="break-all">{brand.brandName}</span>
                       </Link>
                     </li>
                   ))}
@@ -179,12 +177,12 @@ export const SearchBoxInput = ({
             )}
             {categories.summary.total > 0 && (
               <ul>
-                <li className="text-black-500 px-3 py-1 font-semibold">
+                <li className="text-black-500 break-all px-3 py-1 font-semibold">
                   Categories for &quot;{value}&quot;
                 </li>
                 {categories.results.map((category, index) => (
                   <li
-                    className="p-2 pl-8 hover:bg-gray-100"
+                    className="p-2 pl-8  hover:bg-gray-100 "
                     key={category.id}
                     {...getItemProps({ item: category, index })}
                   >
@@ -193,10 +191,9 @@ export const SearchBoxInput = ({
                       key={category.id}
                     >
                       <span className="text-[#74767B]">&#8627;</span>{" "}
-                      <span className="font-semibold text-[#CC0000]">
+                      <span className="break-words font-semibold text-[#CC0000]">
                         {category.categoryPath}
                       </span>
-                      <br />
                     </Link>
                   </li>
                 ))}
@@ -206,10 +203,10 @@ export const SearchBoxInput = ({
 
             {products.summary.total > 0 && (
               <>
-                <li className="text-black-500 whitespace-normal px-3 py-1 font-semibold">
+                <li className="text-black-500 whitespace-normal break-all px-3 py-1 font-semibold">
                   Products for &quot;{value}&quot;
                 </li>
-                <ul className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <ul className="grid grid-cols-1 gap-4 break-words md:grid-cols-1 lg:grid-cols-2">
                   {products.results.slice(0, 10).map((product, index) => (
                     <li
                       key={product.id}
@@ -226,7 +223,7 @@ export const SearchBoxInput = ({
                         href={`/product/${product.id}/${product.slug}`}
                         key={product.id}
                       >
-                        <div className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-md border border-gray-300">
+                        <div className="flex-shrink-0 overflow-hidden rounded-md border border-gray-300">
                           {product.itemImage && product.productTitle && (
                             <Image
                               src={product.itemImage}
@@ -241,10 +238,10 @@ export const SearchBoxInput = ({
                           )}
                         </div>
                         <div>
-                          <div className="overflow-hidden overflow-ellipsis font-normal hover:underline">
-                            {product.productTitle}
+                          <div className=" font-normal hover:underline">
+                            <p className="break-all">{product.productTitle}</p>
                           </div>{" "}
-                          <div className="text-[#74767B]">
+                          <div className="break-all text-[#74767B]">
                             Item# {product.materialNumber}
                           </div>
                         </div>
@@ -264,18 +261,14 @@ export const SearchBoxInput = ({
 export const SearchBoxButton = ({
   type = "submit",
   className,
-  onClick,
   ...delegated
-}: Omit<ComponentProps<"button">, "children"> & {
-  onClick?: () => void;
-}) => {
+}: Omit<ComponentProps<"button">, "children">) => {
   return (
     <Button
       type={type}
       variant="ghost"
       size="icon"
       className={cn("mx-0.5 rounded-full px-2", className)}
-      onClick={onClick}
       {...delegated}
     >
       <MagnifyingGlass className="size-5" />
