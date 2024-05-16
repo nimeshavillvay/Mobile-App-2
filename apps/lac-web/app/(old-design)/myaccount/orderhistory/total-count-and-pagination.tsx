@@ -23,6 +23,7 @@ import {
   PAGE_SIZES,
   QUERY_KEYS,
 } from "./constants";
+import OrderHistoryMobilePagination from "./order-history-mobile-pagination";
 
 type TotalCountAndPaginationProps = {
   isLoading: boolean;
@@ -47,7 +48,7 @@ const TotalCountAndPagination = ({
     changeSearchParams(urlSearchParams, [
       {
         key: QUERY_KEYS.PAGE,
-        value: "1",
+        value: INIT_PAGE_NUMBER,
       },
       {
         key: QUERY_KEYS.PER_PAGE,
@@ -150,6 +151,12 @@ const TotalCountAndPagination = ({
           <MdArrowForward className="text-xl leading-none" />
         </Button>
       </div>
+
+      <OrderHistoryMobilePagination
+        open={openMobilePagination}
+        setOpen={setMobilePagination}
+        totalPagesCount={totalPagesCount}
+      />
     </>
   );
 };

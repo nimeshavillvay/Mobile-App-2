@@ -12,10 +12,10 @@ import { cn } from "@/old/_utils/helpers";
 import { useSearchParams } from "next/navigation";
 import { useState, type Dispatch, type SetStateAction } from "react";
 import { MdCheck } from "react-icons/md";
-// import { changeSearchParams } from "./client-helpers";
+import { changeSearchParams } from "../_utils/client-helpers";
 import { INIT_PAGE_NUMBER, QUERY_KEYS } from "./constants";
 
-type FiltersForMobileProps = {
+type OrderHistoryMobilePaginationProps = {
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
   totalPagesCount: number;
@@ -25,7 +25,7 @@ const OrderHistoryMobilePagination = ({
   open,
   setOpen,
   totalPagesCount,
-}: FiltersForMobileProps) => {
+}: OrderHistoryMobilePaginationProps) => {
   const urlSearchParams = useSearchParams();
   const currentPage = Number(
     urlSearchParams.get(QUERY_KEYS.PAGE) ?? INIT_PAGE_NUMBER,
@@ -43,7 +43,7 @@ const OrderHistoryMobilePagination = ({
       value: page.toString(),
     });
 
-    // changeSearchParams(urlSearchParams, searchParams);
+    changeSearchParams(urlSearchParams, searchParams);
 
     setOpen(false);
   };
@@ -78,6 +78,7 @@ const OrderHistoryMobilePagination = ({
               />
             </button>
           ))}
+
           <DialogFooter className="px-5 py-6">
             <Button className="w-full p-6" onClick={() => paginate()}>
               Done
