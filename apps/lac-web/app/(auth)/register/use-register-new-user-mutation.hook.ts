@@ -85,8 +85,11 @@ const useRegisterNewUserMutation = () => {
 
       return response;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries();
+    onSuccess: (response) => {
+      if (!isVerifyAddressResponse(response)) {
+        // Revalidate the queries only after the user has successfully registered
+        queryClient.invalidateQueries();
+      }
     },
   });
 };
@@ -106,7 +109,7 @@ type UnableToRegisterResponse = {
 
 export type ResponseAddress = {
   "country-name": string;
-  county: null;
+  county: string;
   locality: string;
   region: string;
   "street-address": string;

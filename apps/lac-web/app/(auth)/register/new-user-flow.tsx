@@ -287,9 +287,11 @@ const NewUserFlow = ({ passwordPolicies }: NewUserFlowProps) => {
     typeof AddressSelector
   >["updateAddress"] = ({ billing, shipping }) => {
     const newFormValues = structuredClone(formValues);
+
     if (billing) {
       newFormValues.billingAddress = billing["street-address"];
       newFormValues.billingCity = billing.locality;
+      newFormValues.billingCounty = billing.county;
       newFormValues.billingState = billing.region;
       newFormValues.billingCountry = billing["country-name"];
       newFormValues.billingPostCode = billing["postal-code"];
@@ -297,8 +299,10 @@ const NewUserFlow = ({ passwordPolicies }: NewUserFlowProps) => {
     }
 
     if (shipping) {
+      newFormValues.same = false;
       newFormValues.shippingAddress = shipping["street-address"];
       newFormValues.shippingCity = shipping.locality;
+      newFormValues.shippingCounty = shipping.county;
       newFormValues.shippingState = shipping.region;
       newFormValues.shippingCountry = shipping["country-name"];
       newFormValues.shippingPostCode = shipping["postal-code"];
