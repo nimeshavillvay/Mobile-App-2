@@ -2,43 +2,22 @@
 
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import { Zap } from "@repo/web-ui/components/icons/zap";
-import useAddToCartForm from "../use-add-to-cart-form.hook";
 
 type SaleBadgesProps = {
   token: string;
   productId: number;
+  listPrice: number;
 };
 
-const SaleBadges = ({ token, productId }: SaleBadgesProps) => {
-  const { watch } = useAddToCartForm();
-  const quantity = watch("quantity");
-
+const SaleBadges = ({ token, productId, listPrice }: SaleBadgesProps) => {
   const priceCheckQuery = useSuspensePriceCheck(token, [{ productId, qty: 1 }]);
-  const priceData = priceCheckQuery.data.productPrices[0];
+  const currentPrice = priceCheckQuery.data.productPrices[0]?.price ?? 0;
 
-  let currentPrice = 0;
-  let previousPrice = 0;
+  const discount = Math.round(((listPrice - currentPrice) / listPrice) * 100);
 
-  if (priceData) {
-    currentPrice = priceData.price;
-    previousPrice = priceData.price;
-
-    // Get discounted price from breakdowns
-    const priceBreakdown = priceData.priceBreakDowns.findLast(
-      (breakdown) => quantity >= breakdown.quantity,
-    );
-    if (priceBreakdown) {
-      currentPrice = priceBreakdown.price;
-    }
-  }
-
-  if (currentPrice === previousPrice) {
+  if (discount === 0) {
     return null;
   }
-
-  const discount = Math.round(
-    ((previousPrice - currentPrice) / previousPrice) * 100,
-  );
 
   return (
     <>
