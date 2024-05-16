@@ -36,9 +36,7 @@ const MyAccountLayout = ({ children }: MyAccountLayoutProps) => {
 
         <div className="flex flex-col md:flex-row">
           <aside className="mb-6 hidden md:mb-0 md:block md:w-[290px]">
-            <Suspense
-              fallback={<Skeleton className="mb-3 h-[158.02px] w-full" />}
-            >
+            <Suspense fallback={<Skeleton className="mb-3 h-[158px] w-full" />}>
               <Profile token={sessionTokenCookie?.value} />
             </Suspense>
 
