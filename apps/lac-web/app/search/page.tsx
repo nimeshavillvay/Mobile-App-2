@@ -62,6 +62,7 @@ const SearchPage = async ({
   if (
     searchResults.summary.plp &&
     !Array.isArray(searchResults.results) &&
+    searchResults.results.productStatus != "discontinued" &&
     (searchResults.results.groupId === "0" ||
       searchResults.results.categoryName === "")
   ) {
