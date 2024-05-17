@@ -47,12 +47,12 @@ const OrderHistoryRow = ({ index, order }: OrderHistoryRowProps) => {
 
         <TableCell className="text-center" rowSpan={2}>
           <div className="flex flex-col items-center justify-center gap-2 ">
-            <div className="px-4 py-2 font-bold text-brand-secondary">
+            <div className="px-4 py-2 font-title font-bold text-brand-secondary">
               {order.status ?? "N/A"}
             </div>
 
             <Link
-              className="block rounded-sm bg-brand-gray-200 px-4 py-2 text-center font-wurth font-extrabold uppercase text-brand-gray-500"
+              className="block rounded-sm bg-brand-gray-200 px-4 py-2 text-center font-wurth font-extrabold uppercase text-brand-gray-500 transition-colors duration-300 ease-in-out hover:bg-brand-gray-300"
               href={orderTrackingHref}
             >
               Order Tracking Log
