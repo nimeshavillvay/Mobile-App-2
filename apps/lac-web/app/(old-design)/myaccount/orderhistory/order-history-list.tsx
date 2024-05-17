@@ -88,7 +88,7 @@ const OrderHistoryList = ({ token }: { token: string }) => {
     <>
       <div className="flex flex-row items-center md:justify-end md:py-4">
         <Link
-          className="hover:bg-brand-secondary-dark hidden text-nowrap rounded-sm bg-brand-secondary px-4 py-2 text-center font-wurth font-extrabold uppercase text-white md:block"
+          className="hidden text-nowrap rounded-sm bg-brand-secondary px-4 py-2 text-center font-wurth font-extrabold uppercase text-white hover:bg-brand-secondary-dark md:block"
           href="https://wurthlac.billtrust.com/"
         >
           Pay Your Bill Online
