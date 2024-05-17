@@ -26,7 +26,7 @@ export const STATUS_COLOR_CLASSES = {
   S: "text-brand-tertiary",
   K: "text-brand-gray-500",
   F: "text-brand-success",
-  default: "text-brand-gray-500",
+  default: "text-brand-secondary",
 } as const;
 
 export const ORDER_TYPES = {

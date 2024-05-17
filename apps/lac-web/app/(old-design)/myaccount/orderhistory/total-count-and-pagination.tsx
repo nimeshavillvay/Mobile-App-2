@@ -10,6 +10,7 @@ import {
   SelectValue,
 } from "@/old/_components/ui/select";
 import { useSearchParams } from "next/navigation";
+import { useState } from "react";
 import {
   MdArrowBack,
   MdArrowForward,
@@ -22,6 +23,7 @@ import {
   PAGE_SIZES,
   QUERY_KEYS,
 } from "./constants";
+import OrderHistoryMobilePagination from "./order-history-mobile-pagination";
 
 type TotalCountAndPaginationProps = {
   isLoading: boolean;
@@ -40,17 +42,41 @@ const TotalCountAndPagination = ({
 
   const totalPagesCount = Math.ceil(totalItems / perPage);
 
+  const [openMobilePagination, setMobilePagination] = useState(false);
+
   const handlePerPageChange = (value: string) => {
     changeSearchParams(urlSearchParams, [
       {
         key: QUERY_KEYS.PAGE,
-        value: "1",
+        value: INIT_PAGE_NUMBER,
       },
       {
         key: QUERY_KEYS.PER_PAGE,
         value: value,
       },
     ]);
+  };
+
+  const onNextPage = () => {
+    if (page < totalPagesCount) {
+      changeSearchParams(urlSearchParams, [
+        {
+          key: QUERY_KEYS.PAGE,
+          value: (page + 1).toString(),
+        },
+      ]);
+    }
+  };
+
+  const onPrevPage = () => {
+    if (page > 1) {
+      changeSearchParams(urlSearchParams, [
+        {
+          key: QUERY_KEYS.PAGE,
+          value: (page - 1).toString(),
+        },
+      ]);
+    }
   };
 
   return (
@@ -99,21 +125,38 @@ const TotalCountAndPagination = ({
 
       {/* For Mobile View */}
       <div className="container flex flex-row gap-2 py-3 md:hidden">
-        <Button className="h-12 flex-1 bg-gray-100 text-base text-brand-gray-400">
+        <Button
+          className="h-12 flex-1 bg-gray-100 text-base text-brand-gray-500"
+          onClick={() => onPrevPage()}
+          disabled={page === 1}
+        >
           <MdArrowBack className="text-xl leading-none" />
           Back
         </Button>
 
-        <Button className="h-12 flex-1 gap-3 border-2 border-black bg-gray-100 text-base text-black">
+        <Button
+          className="h-12 flex-1 gap-3 border-2 border-black bg-gray-100 text-base text-black"
+          onClick={() => setMobilePagination(true)}
+        >
           {page}/{totalPagesCount}
           <MdKeyboardArrowDown className="text-xl leading-none" />
         </Button>
 
-        <Button className="h-12 flex-1 bg-gray-100 text-base text-brand-gray-400">
+        <Button
+          className="h-12 flex-1 bg-gray-100 text-base text-brand-gray-500"
+          onClick={() => onNextPage()}
+          disabled={page === totalPagesCount}
+        >
           Next
           <MdArrowForward className="text-xl leading-none" />
         </Button>
       </div>
+
+      <OrderHistoryMobilePagination
+        open={openMobilePagination}
+        setOpen={setMobilePagination}
+        totalPagesCount={totalPagesCount}
+      />
     </>
   );
 };
