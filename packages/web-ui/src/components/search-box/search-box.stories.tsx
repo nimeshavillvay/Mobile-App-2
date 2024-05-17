@@ -1,6 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
-import { SearchBox, SearchBoxButton, SearchBoxInput } from "./search-box";
+import {
+  SearchBox,
+  SearchBoxButton,
+  SearchBoxInput,
+  SearchClearButton,
+} from "./search-box";
 
 const meta: Meta<typeof SearchBox> = {
   title: "Components/Search Box",
@@ -173,6 +178,7 @@ export const Default: Story = {
           setValue={setValue}
           placeholder="What are you looking for?"
         />
+        {value && <SearchClearButton />}
         <SearchBoxButton />
       </SearchBox>
     );
