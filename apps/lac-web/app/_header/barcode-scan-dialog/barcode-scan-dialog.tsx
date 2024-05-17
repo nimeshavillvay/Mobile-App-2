@@ -17,7 +17,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@repo/web-ui/components/ui/dialog";
-// import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Alert as AlertIcon } from "~/components/icons/alert";
 import { BarcodeScan } from "~/components/icons/barcode-scan/barcode-scan";
@@ -27,24 +26,7 @@ import useScanBarcodeMutation from "../../_hooks/search/use-scan-barcode-mutatio
 export const BarcodeScannerDialog = () => {
   const [open, setOpen] = useState(false);
   const [productNotFound, setProductNotFound] = useState(false);
-  // const router = useRouter();
-  // const [scannedValue, setScannedValue] = useState("");
 
-  // const firstProduct = searchResults.data?.results;
-  // if (searchResults.data?.summary.plp && firstProduct) {
-  //   const productPath = `/product/${firstProduct.id}/${firstProduct.slug}`;
-  //   setOpen(false);
-  //   setProductNotFound(false);
-  //   router.push(productPath);
-  // }
-  // if (
-  //   Array.isArray(firstProduct) &&
-  //   firstProduct.length !== 0 &&
-  //   !searchResults.data?.summary.plp &&
-  //   scannedValue !== ""
-  // ) {
-  // setProductNotFound(true);
-  // }
   const scanBarcodeMutation = useScanBarcodeMutation({
     setOpen,
     setProductNotFound,
@@ -88,9 +70,7 @@ export const BarcodeScannerDialog = () => {
             fully observed.
           </DialogDescription>
         </DialogHeader>
-        <div>
-          <BarcodeScanner onScanSuccess={useScanSuccess} />
-        </div>
+        <BarcodeScanner onScanSuccess={useScanSuccess} />
         <DialogFooter>
           <Button onClick={() => setOpen(false)}>Cancel</Button>
         </DialogFooter>

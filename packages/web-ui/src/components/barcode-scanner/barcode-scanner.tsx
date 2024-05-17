@@ -12,8 +12,6 @@ export const BarcodeScanner = ({
   useEffect(() => {
     if (!videoRef.current) return;
     const currentReader = reader.current;
-    console.log("currentReader", currentReader);
-    console.log("videoRef", videoRef);
     currentReader.decodeFromConstraints(
       {
         audio: false,
@@ -24,7 +22,6 @@ export const BarcodeScanner = ({
       videoRef.current,
       (result) => {
         if (result) {
-          console.log("result scan", result);
           onScanSuccess(result.getText());
         }
       },
@@ -32,7 +29,7 @@ export const BarcodeScanner = ({
     return () => {
       currentReader.reset();
     };
-  }, [videoRef, onScanSuccess]);
+  }, [videoRef]);
 
   return <video width="100%" height="100%" ref={videoRef} />;
 };
