@@ -1,6 +1,6 @@
 "use client";
 
-import { BarcodeScannerDialog } from "@repo/web-ui/components/barcode-scan-dialog";
+// import { BarcodeScannerDialog } from "@/_header/barcode-scan-dialog";
 import {
   SearchBox,
   SearchBoxButton,
@@ -8,6 +8,7 @@ import {
 } from "@repo/web-ui/components/search-box";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { BarcodeScannerDialog } from "./barcode-scan-dialog";
 import useMultiSearch, { placeholderData } from "./use-multi-search.hook";
 
 const SearchBar = () => {
