@@ -153,7 +153,7 @@ export const SearchBoxInput = ({
                         item: brand,
                         index: index + categories.results.length,
                       })}
-                      className="w-full sm:w-full md:w-full lg:w-1/2 xl:w-1/3 2xl:w-1/3 3xl:w-1/3 "
+                      className="w-full sm:w-full md:w-full lg:w-1/2 xl:w-1/3 2xl:w-1/3 3xl:w-1/3"
                     >
                       <Link
                         href={`/search?query=${brand.slug}`}
