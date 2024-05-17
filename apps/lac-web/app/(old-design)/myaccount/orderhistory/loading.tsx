@@ -38,7 +38,7 @@ const OrderHistoryLoading = () => {
 
       <div className="space-y-4">
         {/* Selectors section skeleton */}
-        <Skeleton className="h-[246px] w-full rounded-sm" />
+        <Skeleton className="h-[125px] w-full rounded-sm md:h-[246px]" />
 
         {/* Order history list section skeleton */}
         <Table className="hidden md:table">
@@ -115,6 +115,13 @@ const OrderHistoryLoading = () => {
             ))}
           </TableBody>
         </Table>
+      </div>
+
+      {/* Mobile Item List */}
+      <div className="space-y-4 px-4 md:hidden">
+        <Skeleton className="h-[196px] w-full rounded-sm" />
+        <Skeleton className="h-[196px] w-full rounded-sm" />
+        <Skeleton className="h-[196px] w-full rounded-sm" />
       </div>
 
       {/* Bottom pagination section skeleton */}
