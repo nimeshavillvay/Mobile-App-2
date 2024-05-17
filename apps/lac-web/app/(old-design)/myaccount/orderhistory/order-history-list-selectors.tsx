@@ -239,7 +239,7 @@ const OrderHistoryListSelectors = ({
             </Button>
 
             <Button
-              className="min-w-24 bg-brand-secondary hover:bg-brand-secondary-dark"
+              className="min-w-24 bg-brand-secondary hover:bg-[#008fc6]"
               onClick={handleReset}
             >
               Reset
