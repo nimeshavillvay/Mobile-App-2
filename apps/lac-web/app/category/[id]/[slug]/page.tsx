@@ -29,7 +29,6 @@ import { Fragment, Suspense } from "react";
 import Balancer from "react-wrap-balancer";
 import ProductsList from "./_products-list";
 import { getCategory } from "./apis";
-import categoryImage from "./category.jpeg";
 import type { CategoryPageProps } from "./types";
 
 const VISIBLE_SUB_CATEGORIES_LENGTH = 6;
@@ -120,15 +119,16 @@ const CategoryPage = async ({ params: { id, slug } }: CategoryPageProps) => {
       </Breadcrumb>
 
       <section className="container md:my-10">
-        <div className="overflow-hidden rounded-lg border border-wurth-gray-250 bg-white shadow-lg md:flex md:max-h-[21rem] md:flex-row-reverse md:items-center">
-          <Image
-            src={categoryImage}
-            alt="A placeholder category"
-            className="object-cover object-center"
-            priority
-            width={926}
-            height={336}
-          />
+        <div className="grid overflow-hidden rounded-lg border border-wurth-gray-250 bg-white shadow-lg md:max-h-[21rem] md:grid-cols-2">
+          <div className="relative aspect-2 md:hidden">
+            <Image
+              src={category.image}
+              alt={category.title}
+              className="object-contain"
+              priority
+              fill
+            />
+          </div>
 
           <div className="space-y-3 p-6 md:flex-1 md:space-y-5 md:p-10">
             <h1 className="line-clamp-3 text-balance font-title text-4xl font-medium tracking-tight text-wurth-gray-800 md:text-5xl md:leading-[3.5rem] md:tracking-[-0.036rem]">
@@ -140,6 +140,16 @@ const CategoryPage = async ({ params: { id, slug } }: CategoryPageProps) => {
                 {category.description}
               </p>
             )}
+          </div>
+
+          <div className="relative hidden aspect-2 md:block">
+            <Image
+              src={category.image}
+              alt={category.title}
+              className="object-contain"
+              priority
+              fill
+            />
           </div>
         </div>
       </section>

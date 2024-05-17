@@ -52,7 +52,7 @@ const CheckoutPage = async () => {
 
           <Suspense
             fallback={
-              <Skeleton className="h-[774px] rounded-lg shadow-lg md:h-[486px]" />
+              <Skeleton className="h-[854px] rounded-lg shadow-lg md:h-[570px]" />
             }
           >
             <BillingAndPaymentInfo

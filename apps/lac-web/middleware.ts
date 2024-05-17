@@ -5,7 +5,7 @@ import dayjs from "dayjs";
 import type { ResponseCookie } from "next/dist/compiled/@edge-runtime/cookies";
 import { NextResponse, type NextRequest } from "next/server";
 
-const PRIVATE_ROUTES = ["/osr", "/checkout", "/myaccount"];
+const PRIVATE_ROUTES = ["/osr", "/checkout", "/confirmation", "/myaccount"];
 
 export const middleware = async (request: NextRequest) => {
   const sessionToken = request.cookies.get(SESSION_TOKEN_COOKIE);
