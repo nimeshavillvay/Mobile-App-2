@@ -13,6 +13,7 @@ const config: Config = {
         brand: {
           primary: "#cc0000",
           secondary: "#00adef",
+          "secondary-dark": "#008fc6",
           tertiary: "#c3cf23",
           success: "#55a213",
           gray: {
