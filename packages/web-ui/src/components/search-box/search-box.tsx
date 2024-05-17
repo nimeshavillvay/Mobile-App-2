@@ -2,6 +2,7 @@ import { useCombobox } from "downshift";
 import Image from "next/image";
 import Link from "next/link";
 import { type ComponentProps } from "react";
+import { Close } from "~/components/icons/close";
 import { MagnifyingGlass } from "~/components/icons/magnifying-glass";
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
@@ -71,6 +72,7 @@ export const SearchBoxInput = ({
   };
   value: string;
   setValue: (value: string) => void;
+
   onEnterPressed: () => void;
 }) => {
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -83,6 +85,7 @@ export const SearchBoxInput = ({
   const { products, categories, brands } = data;
   const { isOpen, getMenuProps, getInputProps, getItemProps, closeMenu } =
     useCombobox({
+      inputValue: value,
       onInputValueChange: ({ inputValue }) => {
         setValue(inputValue);
       },
@@ -150,17 +153,18 @@ export const SearchBoxInput = ({
                         item: brand,
                         index: index + categories.results.length,
                       })}
+                      className="w-full sm:w-full md:w-full lg:w-1/2 xl:w-1/3 2xl:w-1/3 3xl:w-1/3 "
                     >
                       <Link
                         href={`/search?query=${brand.slug}`}
                         key={brand.id}
-                        className="m-2 mb-2 mr-2 flex w-1/2 items-center rounded-md border-2 p-2 shadow-sm hover:bg-gray-100 sm:w-auto"
+                        className="m-2 mb-2 mr-2 flex items-center rounded-md border-2 p-2 shadow-sm hover:bg-gray-100"
                       >
                         {brand.brandImage && brand.brandName && (
                           <Image
                             src={brand.brandImage}
                             alt={brand.brandName}
-                            className="mr-2 min-h-10 min-w-10 object-contain "
+                            className="mr-2 min-h-10 min-w-10 object-contain"
                             width={40}
                             height={40}
                           />
@@ -175,6 +179,7 @@ export const SearchBoxInput = ({
                 </ul>
               </>
             )}
+
             {categories.summary.total > 0 && (
               <ul>
                 <li className="text-black-500 break-all px-3 py-1 font-semibold">
@@ -234,7 +239,7 @@ export const SearchBoxInput = ({
                             />
                           )}
                           {!product.itemImage && (
-                            <div className="h-10 w-10 rounded-full"></div>
+                            <div className="h-20 w-20 rounded-full"></div>
                           )}
                         </div>
                         <div>
@@ -272,6 +277,24 @@ export const SearchBoxButton = ({
       {...delegated}
     >
       <MagnifyingGlass className="size-5" />
+    </Button>
+  );
+};
+
+export const SearchClearButton = ({
+  type = "button",
+  className,
+  ...delegated
+}: Omit<ComponentProps<"button">, "children">) => {
+  return (
+    <Button
+      type={type}
+      variant="ghost"
+      size="icon"
+      className={cn("mx-0.5 rounded-full px-2", className)}
+      {...delegated}
+    >
+      <Close className="size-5" />
     </Button>
   );
 };

@@ -25,6 +25,11 @@ type SearchResult = {
   itemImage: string;
   slug: string;
   uom?: string;
+  groupId?: string;
+  categoryId?: string;
+  categorySlug?: string;
+  brandId?: string;
+  brandSlug?: string;
 };
 
 type SearchData = {

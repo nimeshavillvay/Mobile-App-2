@@ -19,6 +19,7 @@ import { redirect } from "next/navigation";
 import { Fragment, Suspense } from "react";
 import { getSearchResults } from "./apis";
 import { TOTAL_COOKIE } from "./constants";
+import DiscontinuedItemNotice from "./discontinued-item-notice";
 import ProductsList from "./products-list";
 import ResultCacher from "./result-cacher";
 
@@ -46,10 +47,25 @@ const SearchPage = async ({
       ? parseInt(cookiesStore.get(TOTAL_COOKIE)?.value ?? "0")
       : searchResults.summary.total;
 
-  if (searchResults.summary.plp && !Array.isArray(searchResults.results)) {
+  if (
+    searchResults.summary.plp &&
+    !Array.isArray(searchResults.results) &&
+    searchResults.results.productStatus != "discontinued" &&
+    searchResults.results.groupId !== "0" &&
+    searchResults.results.categoryName !== ""
+  ) {
     return redirect(
       `/product/${searchResults.results.id}/${searchResults.results.slug}`,
     );
+  }
+
+  if (
+    searchResults.summary.plp &&
+    !Array.isArray(searchResults.results) &&
+    (searchResults.results.groupId === "0" ||
+      searchResults.results.categoryName === "")
+  ) {
+    throw new Error("Product group or category is not set");
   }
 
   return (
@@ -76,6 +92,15 @@ const SearchPage = async ({
           </Fragment>
         </BreadcrumbList>
       </Breadcrumb>
+
+      {searchResults.summary.plp &&
+        !Array.isArray(searchResults.results) &&
+        searchResults.results.productStatus == "discontinued" && (
+          <DiscontinuedItemNotice
+            categoryId={searchResults.results.id}
+            slug={searchResults.results.slug}
+          />
+        )}
 
       {searchResults.summary.total == 0 &&
         Array.isArray(searchResults.results) &&
