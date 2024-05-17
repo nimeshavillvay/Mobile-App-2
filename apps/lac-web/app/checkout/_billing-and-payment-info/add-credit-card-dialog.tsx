@@ -69,6 +69,9 @@ const AddCreditCardDialog = ({ token }: AddCreditCardDialogProps) => {
       {
         onSuccess: () => {
           setOpen(false);
+
+          // Refetch the credit card signature when the dialog is closed to get a new requestId
+          creditCardSignatureQuery.refetch();
         },
       },
     );
@@ -106,7 +109,17 @@ const AddCreditCardDialog = ({ token }: AddCreditCardDialogProps) => {
   }, [form]);
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog
+      open={open}
+      onOpenChange={(open) => {
+        setOpen(open);
+
+        // Refetch the credit card signature when the dialog is closed to get a new requestId
+        if (!open) {
+          creditCardSignatureQuery.refetch();
+        }
+      }}
+    >
       <DialogTrigger asChild>
         <Button variant="outline" className="max-w-fit font-bold shadow-md">
           <Plus width={16} height={16} />
