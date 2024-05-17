@@ -88,6 +88,7 @@ const AddShippingAddressDialog = ({
       {
         onSuccess: (data) => {
           if ("xcAddressId" in data) {
+            form.reset();
             closeDialog();
           }
         },
@@ -100,6 +101,7 @@ const AddShippingAddressDialog = ({
       open={open}
       onOpenChange={(open) => {
         if (!open) {
+          form.reset();
           closeDialog();
         }
       }}
@@ -288,7 +290,10 @@ const AddShippingAddressDialog = ({
                 variant="outline"
                 type="button"
                 className="font-bold shadow-md"
-                onClick={closeDialog}
+                onClick={() => {
+                  form.reset();
+                  closeDialog();
+                }}
               >
                 Back
               </Button>
