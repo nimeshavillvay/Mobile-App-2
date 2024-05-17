@@ -24,7 +24,7 @@ type SearchResult = {
   attributes: string[] | null;
   itemImage: string;
   slug: string;
-  uom?:string;
+  uom?: string;
 };
 
 type SearchData = {
