@@ -1,7 +1,6 @@
 "use client";
 
-import { cn } from "@/_lib/utils";
-import { buttonVariants } from "@repo/web-ui/components/ui/button";
+import { Button } from "@repo/web-ui/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -9,7 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@repo/web-ui/components/ui/dialog";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 type DiscontinuedItemNoticeProps = {
@@ -22,6 +21,7 @@ const DiscontinuedItemNotice = ({
   slug,
 }: DiscontinuedItemNoticeProps) => {
   const [open, setOpen] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     setOpen(true);
@@ -38,24 +38,15 @@ const DiscontinuedItemNotice = ({
           </DialogDescription>
         </DialogHeader>
         <div className="flex flex-row items-center justify-end space-x-4">
-          <Link
-            href="/"
-            className={cn(
-              buttonVariants({ variant: "outline" }),
-              "font-bold text-black",
-            )}
-          >
+          <Button variant="outline" onClick={() => router.push(`/`)}>
             No
-          </Link>
-          <Link
-            href={`/category/${categoryId}/${slug}`}
-            className={cn(
-              buttonVariants({ variant: "default" }),
-              "font-bold text-white",
-            )}
+          </Button>
+          <Button
+            variant="default"
+            onClick={() => router.push(`/category/${categoryId}/${slug}`)}
           >
             Yes
-          </Link>
+          </Button>
         </div>
       </DialogContent>
     </Dialog>

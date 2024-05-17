@@ -72,7 +72,6 @@ export const SearchBoxInput = ({
   };
   value: string;
   setValue: (value: string) => void;
-
   onEnterPressed: () => void;
 }) => {
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -90,8 +89,8 @@ export const SearchBoxInput = ({
         setValue(inputValue);
       },
       items: [
-        ...categories.results,
         ...brands.results,
+        ...categories.results,
         ...products.results,
       ].map((item) => item),
       itemToString(
@@ -151,7 +150,7 @@ export const SearchBoxInput = ({
                       key={brand.id}
                       {...getItemProps({
                         item: brand,
-                        index: index + categories.results.length,
+                        index,
                       })}
                       className="w-full sm:w-full md:w-full lg:w-1/2 xl:w-1/3 2xl:w-1/3 3xl:w-1/3"
                     >
@@ -189,7 +188,10 @@ export const SearchBoxInput = ({
                   <li
                     className="p-2 pl-8  hover:bg-gray-100 "
                     key={category.id}
-                    {...getItemProps({ item: category, index })}
+                    {...getItemProps({
+                      item: category,
+                      index: index + brands.results.length,
+                    })}
                   >
                     <Link
                       href={`/category/${category.id}/${category.slug}`}
@@ -295,6 +297,7 @@ export const SearchClearButton = ({
       {...delegated}
     >
       <Close className="size-5" />
+      <span className="sr-only">Clear search</span>
     </Button>
   );
 };
