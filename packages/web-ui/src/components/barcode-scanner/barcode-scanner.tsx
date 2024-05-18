@@ -8,6 +8,11 @@ export const BarcodeScanner = ({
 }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const reader = useRef(new BrowserMultiFormatReader());
+  const onScanSuccessRef = useRef(onScanSuccess);
+
+  useEffect(() => {
+    onScanSuccessRef.current = onScanSuccess;
+  }, [onScanSuccess]);
 
   useEffect(() => {
     if (!videoRef.current) return;
@@ -22,7 +27,7 @@ export const BarcodeScanner = ({
       videoRef.current,
       (result) => {
         if (result) {
-          onScanSuccess(result.getText());
+          onScanSuccessRef.current(result.getText());
         }
       },
     );
