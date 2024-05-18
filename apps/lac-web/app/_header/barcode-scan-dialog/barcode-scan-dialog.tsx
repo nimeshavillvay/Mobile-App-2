@@ -51,6 +51,7 @@ export const BarcodeScannerDialog = () => {
           <span className="sr-only">Scan barcode</span>
         </Button>
       </DialogTrigger>
+
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Product Barcode Scan</DialogTitle>
@@ -65,12 +66,15 @@ export const BarcodeScannerDialog = () => {
               </Alert>
             )}
           </div>
+
           <DialogDescription>
             Focus the device camera on the barcode at a distance where it can be
             fully observed.
           </DialogDescription>
         </DialogHeader>
+
         <BarcodeScanner onScanSuccess={onScanSuccess} />
+
         <DialogFooter>
           <Button onClick={() => setOpen(false)}>Cancel</Button>
         </DialogFooter>

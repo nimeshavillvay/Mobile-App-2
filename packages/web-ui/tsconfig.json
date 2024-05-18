@@ -26,11 +26,6 @@
       "~/*": ["./src/*"]
     }
   },
-  "include": [
-    "src",
-    "next-env.d.ts",
-    "reset.d.ts",
-    "../../apps/lac-web/app/_header/barcode-scan-dialog"
-  ],
+  "include": ["src", "next-env.d.ts", "reset.d.ts"],
   "exclude": ["node_modules"]
 }
