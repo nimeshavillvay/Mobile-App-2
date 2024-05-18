@@ -44,6 +44,7 @@ const useScanBarcodeMutation = ({
   setProductNotFound: (open: boolean) => void;
 }) => {
   const router = useRouter();
+
   return useMutation({
     mutationFn: async (query: string) => {
       const searchResults = await searchApi

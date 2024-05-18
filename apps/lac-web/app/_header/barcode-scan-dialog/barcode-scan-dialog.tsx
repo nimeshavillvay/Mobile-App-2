@@ -1,5 +1,6 @@
 "use client";
 
+import useScanBarcodeMutation from "@/_hooks/search/use-scan-barcode-mutation.hook";
 import { BarcodeScanner } from "@repo/web-ui/components/barcode-scanner";
 import {
   Alert,
@@ -21,7 +22,6 @@ import { useState } from "react";
 import { Alert as AlertIcon } from "~/components/icons/alert";
 import { BarcodeScan } from "~/components/icons/barcode-scan/barcode-scan";
 import { cn } from "~/lib/utils";
-import useScanBarcodeMutation from "../../_hooks/search/use-scan-barcode-mutation.hook";
 
 export const BarcodeScannerDialog = () => {
   const [open, setOpen] = useState(false);
@@ -31,7 +31,7 @@ export const BarcodeScannerDialog = () => {
     setOpen,
     setProductNotFound,
   });
-  const useScanSuccess = (query: string) => {
+  const onScanSuccess = (query: string) => {
     scanBarcodeMutation.mutate(query);
   };
 
@@ -70,7 +70,7 @@ export const BarcodeScannerDialog = () => {
             fully observed.
           </DialogDescription>
         </DialogHeader>
-        <BarcodeScanner onScanSuccess={useScanSuccess} />
+        <BarcodeScanner onScanSuccess={onScanSuccess} />
         <DialogFooter>
           <Button onClick={() => setOpen(false)}>Cancel</Button>
         </DialogFooter>
