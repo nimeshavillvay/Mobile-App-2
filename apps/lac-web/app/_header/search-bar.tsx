@@ -15,7 +15,7 @@ const SearchBar = () => {
   const [value, setValue] = useState("");
   const multiSearchQuery = useMultiSearch(value);
   const handleSearch = () => {
-    if (value != "") {
+    if (value !== "") {
       router.push(`/search?query=${value}`);
     }
   };
@@ -32,9 +32,10 @@ const SearchBar = () => {
         setValue={setValue}
         onEnterPressed={handleSearch}
         placeholder="What are you looking for?"
-      />
-      {value && <SearchClearButton onClick={clearInput} />}{" "}
-      <SearchBoxButton onClick={handleSearch} />
+      >
+        {value && <SearchClearButton onClick={clearInput} />}
+        <SearchBoxButton onClick={handleSearch} />
+      </SearchBoxInput>
     </SearchBox>
   );
 };
