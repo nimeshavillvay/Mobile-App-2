@@ -15,11 +15,13 @@ const PurchasedItemsLoading = () => {
         />
       </div>
 
-      <div className="py-4 text-center">
-        <Skeleton className="mb-4 h-48" />
+      <div className="">
+        <Skeleton className="h-[92px]" />
 
-        <div className="flex flex-col px-4">
-          <Skeleton className="mb-4 h-48" />
+        <Skeleton className="my-6 h-5 w-24" />
+
+        <div className="flex flex-col">
+          <Skeleton className="mb-4 h-[279.25px]" />
 
           <Skeleton className="mb-4 h-48" />
         </div>

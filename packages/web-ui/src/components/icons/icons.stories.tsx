@@ -8,6 +8,7 @@ import { ArrowRight } from "./arrow-right";
 import { ArrowUp } from "./arrow-up";
 import { ArrowUpRight } from "./arrow-up-right";
 import { Bell } from "./bell";
+import { Building } from "./building";
 import { Check } from "./check";
 import { CheckCircle } from "./check-circle";
 import { CheckCircleFilled } from "./check-circle-filled";
@@ -126,6 +127,10 @@ export const Showcase: Story = {
 
         <IconContainer name="Shop">
           <Shop />
+        </IconContainer>
+
+        <IconContainer name="Building">
+          <Building />
         </IconContainer>
 
         <IconContainer name="ShoppingCart">

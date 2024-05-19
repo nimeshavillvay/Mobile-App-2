@@ -145,6 +145,7 @@ const SignIn = ({ passwordPolicies }: SignInProps) => {
             {...emailForm.register("email")}
             id={emailId}
             type="email"
+            autoComplete="email"
             required
             placeholder="someone@example.com"
             className="rounded border-wurth-gray-250 px-3 py-2 text-center text-base shadow-sm"
@@ -189,6 +190,7 @@ const SignIn = ({ passwordPolicies }: SignInProps) => {
               {...loginForm.register("email")}
               id={emailId}
               type="hidden"
+              autoComplete="email"
               required
             />
           </div>
@@ -202,6 +204,7 @@ const SignIn = ({ passwordPolicies }: SignInProps) => {
               {...loginForm.register("password")}
               id={passwordId}
               type="password"
+              autoComplete="password"
               required
               className="rounded border-wurth-gray-250 px-3 py-2 text-base shadow-sm"
               disabled={signInMutation.isPending}
@@ -225,7 +228,7 @@ const SignIn = ({ passwordPolicies }: SignInProps) => {
             </Button>
 
             <Link
-              href="/forgot-password"
+              href={`/forgot-password?email=${email}`}
               className={cn(
                 buttonVariants({
                   variant: "link",

@@ -1,3 +1,4 @@
+import { cn } from "@/_lib/utils";
 import { CheckCircle } from "@repo/web-ui/components/icons/check-circle";
 import { Button } from "@repo/web-ui/components/ui/button";
 import {
@@ -46,19 +47,20 @@ export const StepContainer = ({
 
 export const StepContainerOpen = ({
   children,
+  className,
   steps,
   submitBtnText = "Continue",
+  disableSubmit = false,
   allFieldsRequired = false,
-  onSubmit,
-}: {
-  children: ReactNode;
+  ...delegated
+}: ComponentProps<"form"> & {
   steps: {
     current: number;
     total: number;
   };
   submitBtnText?: string;
+  disableSubmit?: boolean;
   allFieldsRequired?: boolean;
-  onSubmit?: ComponentProps<"form">["onSubmit"];
 }) => {
   const { state, title } = useStepContext();
 
@@ -68,8 +70,11 @@ export const StepContainerOpen = ({
 
   return (
     <form
-      className="flex flex-col gap-5 rounded-lg border border-wurth-gray-250 p-6 shadow-lg"
-      onSubmit={onSubmit}
+      className={cn(
+        "flex flex-col gap-5 rounded-lg border border-wurth-gray-250 p-6 shadow-lg",
+        className,
+      )}
+      {...delegated}
     >
       <div className="flex flex-row items-start justify-between">
         <h3 className="text-base font-semibold text-wurth-gray-800">{title}</h3>
@@ -85,6 +90,7 @@ export const StepContainerOpen = ({
         <Button
           type="submit"
           className="h-fit min-w-[7.5rem] py-2.5 font-bold shadow-md"
+          disabled={disableSubmit}
         >
           {submitBtnText}
         </Button>

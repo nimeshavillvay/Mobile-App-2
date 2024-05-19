@@ -1,21 +1,13 @@
 import { ProductsGridPagination } from "@/_components/products-grid";
-import { getSearchResults } from "./apis";
 
 type ProductsListPaginationProps = {
-  term: string;
-  pageNo: string;
+  total: number;
 };
 
 const ProductsListPagination = async ({
-  term,
-  pageNo,
+  total,
 }: ProductsListPaginationProps) => {
-  const searchResults = await getSearchResults({
-    query: term,
-    pageNo,
-  });
-
-  const totalPages = Math.ceil(searchResults?.summary?.total / 24);
+  const totalPages = Math.ceil(total / 24);
 
   return <ProductsGridPagination totalPages={totalPages} />;
 };

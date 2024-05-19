@@ -16,6 +16,7 @@ import { Label } from "@/old/_components/ui/label";
 import { cn } from "@/old/_utils/helpers";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { WurthFullBlack } from "@repo/web-ui/components/logos/wurth-full-black";
+import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import dayjs from "dayjs";
 import Image from "next/image";
 import Link from "next/link";
@@ -27,16 +28,16 @@ import {
   type Dispatch,
   type SetStateAction,
 } from "react";
-import { useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import { MdKeyboardArrowDown, MdKeyboardArrowRight } from "react-icons/md";
 import * as z from "zod";
 import ItemPrices from "./_item-prices/item-prices";
-import { generateItemUrl } from "./client-helpers";
+import { generateItemUrl, isItemError } from "./client-helpers";
 import { DATE_FORMAT } from "./constants";
-import { CombinedPurchasedItem } from "./types";
+import type { DetailedPurchasedItem } from "./types";
 
 const schema = z.object({
-  quantity: z.number().int().min(1),
+  quantity: z.number().int().min(1).nullable(),
 });
 
 type Schema = z.infer<typeof schema>;
@@ -44,7 +45,7 @@ type Schema = z.infer<typeof schema>;
 type ActionConfirmationDialogProps = {
   open: boolean;
   onOpenChange: Dispatch<SetStateAction<boolean>>;
-  item: CombinedPurchasedItem;
+  item: DetailedPurchasedItem;
   token: string;
 };
 
@@ -58,22 +59,34 @@ const PurchasedItemDetailedViewDialog = ({
   const id = useId();
   const router = useRouter();
   const quantityId = `quantity-${id}`;
+  const formId = `purchase-add-to-cart-mobile-form-${id}`;
 
-  const { register, handleSubmit, watch } = useForm<Schema>({
+  const methods = useForm<Schema>({
+    values: { quantity: null },
     resolver: zodResolver(schema),
   });
 
-  const quantity = watch("quantity") ?? 1;
+  const quantity = methods.watch("quantity");
 
   const addToCartMutation = useAddToCartMutation(token, {
     productId: item.productId,
   });
 
-  const onSubmit = () => {
-    addToCartMutation.mutate({
-      quantity,
-    });
-  };
+  const onSubmit = methods.handleSubmit((data) => {
+    if (data.quantity) {
+      addToCartMutation.mutate(
+        {
+          quantity: data.quantity,
+        },
+        {
+          onSuccess: () => {
+            // Reset the form after submission
+            methods.reset();
+          },
+        },
+      );
+    }
+  });
 
   const onAddToFavorites = () => {
     if (item.isFavorite) {
@@ -87,241 +100,256 @@ const PurchasedItemDetailedViewDialog = ({
   const isValidQuantity = !!(quantity && quantity >= 1);
 
   return (
-    <Dialog
-      open={open}
-      onOpenChange={(open) => {
-        if (!open) {
-          setShowPriceBreakdown(false);
-        }
-        onOpenChange(open);
-      }}
-    >
-      <DialogContent className="bottom-0 top-auto max-w-[768px] translate-y-[0%] gap-0 py-8 md:bottom-auto md:top-[50%] md:translate-y-[-50%]">
-        <div className="flex flex-col gap-4 px-6 text-brand-gray-500">
-          <div className="flex flex-row gap-4">
-            <Link
-              href={generateItemUrl(item.productId)}
-              className="min-w-[92px]"
-            >
-              {item.image ? (
-                <Image
-                  src={item.image}
-                  alt={item.productTitle}
-                  width={92}
-                  height={92}
-                  className="size-[92px] border border-brand-gray-200 object-contain"
-                />
-              ) : (
-                <WurthFullBlack
-                  width={92}
-                  height={92}
-                  className="border border-brand-gray-200 px-2"
-                />
-              )}
-            </Link>
+    <FormProvider {...methods}>
+      <Dialog
+        open={open}
+        onOpenChange={(open) => {
+          if (!open) {
+            setShowPriceBreakdown(false);
+            methods.reset();
+          }
+          onOpenChange(open);
+        }}
+      >
+        <DialogContent className="bottom-0 top-auto max-w-[768px] translate-y-[0%] gap-0 py-8 md:bottom-auto md:top-[50%] md:translate-y-[-50%]">
+          <div className="flex flex-col gap-4 px-6 text-brand-gray-500">
+            <div className="flex flex-row gap-4">
+              <Link href={generateItemUrl(item)} className="min-w-[92px]">
+                {item.image ? (
+                  <Image
+                    src={item.image}
+                    alt={item.productTitle}
+                    width={92}
+                    height={92}
+                    className="size-[92px] border border-brand-gray-200 object-contain"
+                  />
+                ) : (
+                  <WurthFullBlack
+                    width={92}
+                    height={92}
+                    className="border border-brand-gray-200 px-2"
+                  />
+                )}
+              </Link>
 
-            <div className="flex flex-col">
-              {item.productCategory && (
-                <div className="text-base">{item.productCategory}</div>
-              )}
+              <div className="flex flex-col">
+                {item.productCategory && (
+                  <div className="text-base">{item.productCategory}</div>
+                )}
 
-              <h4 className="text-wrap font-bold text-black">
-                {item.productTitle}
-              </h4>
-            </div>
-          </div>
-
-          <div className="flex flex-row gap-2 rounded-sm bg-brand-gray-100 p-3">
-            <div className="flex-1">
-              <div className="text-nowrap text-sm">Last Order Date</div>
-              <div className="font-bold">
-                {item.purchaseOrderDate
-                  ? dayjs(item.purchaseOrderDate).format(DATE_FORMAT)
-                  : "N/A"}
+                <h4 className="text-wrap font-bold text-black">
+                  {item.productTitle}
+                </h4>
               </div>
             </div>
 
-            <div className="flex-1">
-              <div className="text-nowrap text-sm">Order Count</div>
-              <div className="font-bold">1</div>
-            </div>
-          </div>
+            <div className="flex flex-row gap-2 rounded-sm bg-brand-gray-100 p-3">
+              <div className="flex-1">
+                <div className="text-nowrap text-sm">Last Order Date</div>
+                <div className="font-bold">
+                  {item.purchaseOrderDate
+                    ? dayjs(item.purchaseOrderDate).format(DATE_FORMAT)
+                    : "N/A"}
+                </div>
+              </div>
 
-          <div className="flex flex-row gap-2 p-3">
-            <div className="flex-1">
-              <div className="text-sm">Item #</div>
-              <div className="font-bold">
-                {item.productSku !== "" ? item.productSku : "N/A"}
+              <div className="flex-1">
+                <div className="text-nowrap text-sm">Order Count</div>
+                <div className="font-bold">1</div>
               </div>
             </div>
 
-            <div className="flex-1">
-              <div className="text-sm">Manufacture Part #</div>
-              <div className="font-bold">
-                {item.mfrPartNo !== "" ? item.mfrPartNo : "N/A"}
+            <div className="flex flex-row gap-2 p-3">
+              <div className="flex-1">
+                <div className="text-sm">Item #</div>
+                <div className="font-bold">
+                  {item.productSku !== "" ? item.productSku : "N/A"}
+                </div>
               </div>
-            </div>
-          </div>
-        </div>
 
-        <Separator
-          orientation="horizontal"
-          className="h-px flex-1 bg-brand-gray-200"
-        />
-
-        <div className="max-h-[300px] overflow-y-scroll">
-          <div className="flex flex-row gap-2 px-6 py-4 text-brand-gray-500">
-            <div className="flex-1">
-              {!isItemNotAdded && (
-                <>
-                  <ErrorBoundary
-                    fallback={
-                      <div className="p-4 text-center text-brand-primary">
-                        Failed to Load Price!!!
-                      </div>
-                    }
-                  >
-                    <Suspense
-                      fallback={
-                        <div className="p-4 text-center text-brand-gray-400">
-                          Price Loading...
-                        </div>
-                      }
-                    >
-                      <ItemPrices
-                        token={token}
-                        productId={item.productId}
-                        quantity={1}
-                        uom={item.unitOfMeasure}
-                        salePrice={item.isSaleItem ? Number(item.listPrice) : 0}
-                        unitPriceOnly
-                      />
-                    </Suspense>
-                  </ErrorBoundary>
-
-                  <div
-                    className="flex h-10 items-center justify-between rounded-sm border border-brand-gray-300 px-2"
-                    onClick={() => setShowPriceBreakdown(!showPriceBreakdown)}
-                  >
-                    <div>Price Breakdown</div>
-                    <MdKeyboardArrowRight className="text-2xl leading-none" />
-                  </div>
-                </>
-              )}
-            </div>
-
-            <div className="flex-1 self-end">
-              <div className="mb-1 text-sm">Min:1, Multiple:1</div>
-              <div className="flex">
-                <Label htmlFor={quantityId} className="sr-only">
-                  Quantity
-                </Label>
-
-                <Input
-                  id={quantityId}
-                  autoFocus={false}
-                  type="number"
-                  disabled={isItemNotAdded}
-                  className="h-10 rounded-r-none px-2 text-base"
-                  placeholder="Qty"
-                  {...register("quantity", {
-                    valueAsNumber: true,
-                  })}
-                />
-
-                <div className="flex h-10 items-center rounded-r-sm border border-s-0 border-brand-gray-400 px-2">
-                  Each
+              <div className="flex-1">
+                <div className="text-sm">Manufacture Part #</div>
+                <div className="font-bold">
+                  {item.mfrPartNo !== "" ? item.mfrPartNo : "N/A"}
                 </div>
               </div>
             </div>
           </div>
 
-          <Collapsible
-            open={showPriceBreakdown}
-            onOpenChange={setShowPriceBreakdown}
-            disabled={isItemNotAdded}
-          >
-            <CollapsibleTrigger
-              className={cn(
-                "group flex w-full flex-row items-center justify-between bg-brand-gray-100 px-6 py-4",
-                isItemNotAdded ? "pointer-events-none opacity-50" : "",
-              )}
-            >
-              <h4 className="font-wurth font-extrabold uppercase">
-                Price Breakdown
-              </h4>
+          <Separator
+            orientation="horizontal"
+            className="h-px flex-1 bg-brand-gray-200"
+          />
 
-              <MdKeyboardArrowDown className="text-2xl leading-none transition-transform duration-200 ease-out group-data-[state=open]:rotate-180" />
-            </CollapsibleTrigger>
-            <CollapsibleContent className="flex w-full justify-center">
-              <ErrorBoundary
-                fallback={
-                  <div className="p-4 text-center text-brand-primary">
-                    Failed to Load Prices!!!
+          <div className="max-h-[300px] overflow-y-scroll">
+            <div className="flex flex-row gap-2 px-6 py-4 text-brand-gray-500">
+              <div className="flex-1">
+                {!isItemNotAdded && (
+                  <>
+                    <ErrorBoundary
+                      fallback={
+                        <div className="p-4 text-center text-brand-primary">
+                          Failed to Load Price!!!
+                        </div>
+                      }
+                    >
+                      <Suspense
+                        fallback={
+                          <div className="py-1 text-center text-brand-gray-400">
+                            <Skeleton className="h-5 w-full" />
+                          </div>
+                        }
+                      >
+                        <ItemPrices
+                          token={token}
+                          productId={item.productId}
+                          quantity={1}
+                          uom={item.unitOfMeasure}
+                          salePrice={
+                            item.isSaleItem ? Number(item.listPrice) : 0
+                          }
+                          unitPriceOnly
+                        />
+                      </Suspense>
+                    </ErrorBoundary>
+
+                    <Button
+                      variant="ghost"
+                      className="flex h-10 w-full items-center justify-between rounded-sm border border-brand-gray-300 px-2 font-normal capitalize"
+                      onClick={() => setShowPriceBreakdown(!showPriceBreakdown)}
+                      disabled={isItemError(item)}
+                    >
+                      <span>Price Breakdown</span>
+                      <MdKeyboardArrowRight className="text-2xl leading-none" />
+                    </Button>
+                  </>
+                )}
+              </div>
+
+              <div className="flex-1 self-end">
+                <div className="mb-1 text-sm">
+                  Min:{item.minimumOrderQuantity},&nbsp;Multiple:
+                  {item.quantityByIncrements}
+                </div>
+                <div className="flex">
+                  <Label htmlFor={quantityId} className="sr-only">
+                    Quantity
+                  </Label>
+
+                  <Input
+                    id={quantityId}
+                    type="number"
+                    className="h-10 rounded-r-none px-2 text-base"
+                    placeholder="Qty"
+                    step={item.quantityByIncrements}
+                    {...methods.register("quantity", {
+                      valueAsNumber: true,
+                      min: item.minimumOrderQuantity,
+                      disabled:
+                        addToCartMutation.isPending || isItemError(item),
+                    })}
+                  />
+
+                  <div className="flex h-10 items-center rounded-r-sm border border-s-0 border-brand-gray-400 px-2">
+                    {item.unitOfMeasure !== "" ? item.unitOfMeasure : "N/A"}
                   </div>
-                }
+                </div>
+              </div>
+            </div>
+
+            <Collapsible
+              open={showPriceBreakdown}
+              onOpenChange={setShowPriceBreakdown}
+              disabled={isItemError(item)}
+            >
+              <CollapsibleTrigger
+                className={cn(
+                  "group flex w-full flex-row items-center justify-between bg-brand-gray-100 px-6 py-4",
+                  isItemError(item) ? "pointer-events-none opacity-50" : "",
+                )}
               >
-                <Suspense
+                <h4 className="font-wurth font-extrabold uppercase">
+                  Price Breakdown
+                </h4>
+
+                <MdKeyboardArrowDown className="text-2xl leading-none transition-transform duration-200 ease-out group-data-[state=open]:rotate-180" />
+              </CollapsibleTrigger>
+              <CollapsibleContent className="flex w-full justify-center">
+                <ErrorBoundary
                   fallback={
-                    <div className="p-4 text-center text-brand-gray-400">
-                      Prices Loading...
+                    <div className="p-4 text-center text-brand-primary">
+                      Failed to Load Prices!!!
                     </div>
                   }
                 >
-                  <ItemPrices
-                    token={token}
-                    productId={item.productId}
-                    quantity={1}
-                    uom={item.unitOfMeasure}
-                    salePrice={item.isSaleItem ? Number(item.listPrice) : 0}
-                  />
-                </Suspense>
-              </ErrorBoundary>
-            </CollapsibleContent>
-          </Collapsible>
-        </div>
+                  <Suspense
+                    fallback={
+                      <div className="w-full px-12 py-4">
+                        <Skeleton className="h-20 w-full" />
+                      </div>
+                    }
+                  >
+                    <ItemPrices
+                      token={token}
+                      productId={item.productId}
+                      quantity={1}
+                      uom={item.unitOfMeasure}
+                      salePrice={item.isSaleItem ? Number(item.listPrice) : 0}
+                    />
+                  </Suspense>
+                </ErrorBoundary>
+              </CollapsibleContent>
+            </Collapsible>
+          </div>
 
-        {/* Action Buttons Section */}
-        <div className="flex flex-col gap-4 px-6 pt-6">
-          <Button
-            variant="secondary"
-            className={cn(
-              "h-12",
-              item.isFavorite ? "border-brand-success text-brand-success" : "",
-            )}
-            onClick={() => onAddToFavorites()}
-          >
-            {item.isFavorite ? (
-              <>
-                <FavoriteIcon /> In My Favorites
-              </>
-            ) : (
-              <>
-                <AddToFavoritesIcon /> Add to Favorites
-              </>
-            )}
-          </Button>
-
-          <form
-            className="flex flex-row gap-4"
-            onSubmit={handleSubmit(onSubmit)}
-          >
-            <Link href={generateItemUrl(item.productId)} className="flex-1">
-              <Button
-                variant="secondary"
-                className="h-12 w-full border-brand-primary text-brand-primary"
-              >
-                View Product
-              </Button>
-            </Link>
-
-            <Button className="h-12 flex-1" disabled={!isValidQuantity}>
-              <AddToCartIcon /> Add to Cart
+          {/* Action Buttons Section */}
+          <div className="flex flex-col gap-4 px-6 pt-6">
+            <Button
+              variant="secondary"
+              className={cn(
+                "h-12",
+                item.isFavorite
+                  ? "border-brand-success text-brand-success"
+                  : "",
+              )}
+              onClick={() => onAddToFavorites()}
+            >
+              {item.isFavorite ? (
+                <>
+                  <FavoriteIcon /> In My Favorites
+                </>
+              ) : (
+                <>
+                  <AddToFavoritesIcon /> Add to Favorites
+                </>
+              )}
             </Button>
-          </form>
-        </div>
-      </DialogContent>
-    </Dialog>
+
+            <form
+              id={formId}
+              onSubmit={onSubmit}
+              className="flex flex-row gap-4"
+            >
+              <Link href={generateItemUrl(item)} className="flex-1">
+                <Button
+                  variant="secondary"
+                  className="h-12 w-full border-brand-primary text-brand-primary"
+                >
+                  View Product
+                </Button>
+              </Link>
+
+              <Button
+                className="h-12 flex-1"
+                disabled={!isValidQuantity || addToCartMutation.isPending}
+              >
+                <AddToCartIcon /> Add to Cart
+              </Button>
+            </form>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </FormProvider>
   );
 };
 

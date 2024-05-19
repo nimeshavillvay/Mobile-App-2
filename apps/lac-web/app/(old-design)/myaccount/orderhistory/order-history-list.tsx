@@ -88,124 +88,130 @@ const OrderHistoryList = ({ token }: { token: string }) => {
     <>
       <div className="flex flex-row items-center md:justify-end md:py-4">
         <Link
-          className="hidden text-nowrap rounded-sm bg-brand-secondary px-4 py-2 text-center font-wurth font-extrabold uppercase text-white md:block"
+          className="hidden text-nowrap rounded-sm bg-brand-secondary px-4 py-2 text-center font-wurth font-extrabold uppercase text-white hover:bg-[#008fc6] md:block"
           href="https://wurthlac.billtrust.com/"
         >
           Pay Your Bill Online
         </Link>
       </div>
 
-      <Suspense fallback={<div>Filters Loading...</div>}>
-        <OrderHistoryListFilters
-          token={token}
-          fromDate={fromDate}
-          toDate={toDate}
+      <div className="space-y-4">
+        <Suspense fallback={<div>Filters Loading...</div>}>
+          <OrderHistoryListFilters
+            token={token}
+            fromDate={fromDate}
+            toDate={toDate}
+            totalItems={totalItems}
+          />
+        </Suspense>
+
+        {orderHistoryItems?.length > 0 ? (
+          <>
+            {/* Mobile View */}
+            <OrderHistoryListForMobile
+              items={orderHistoryItems}
+              token={token}
+              isLoading={searchQuery.isLoading}
+            />
+
+            {/* Desktop View */}
+            <Table className="hidden md:table">
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="text-center">Order Type</TableHead>
+                  <TableHead>
+                    <div className="inline-flex w-full items-center justify-center">
+                      Order #&nbsp;
+                      <HeaderSortButtons
+                        active={urlSortBy === SORT_BY_FIELDS.SKU}
+                        direction={urlSortDirection}
+                        onClickAsc={() =>
+                          handleHeaderSort({
+                            sortBy: SORT_BY_FIELDS.SKU,
+                            direction: SORTING_DIRECTION.ASC,
+                          })
+                        }
+                        onClickDesc={() =>
+                          handleHeaderSort({
+                            sortBy: SORT_BY_FIELDS.SKU,
+                            direction: SORTING_DIRECTION.DESC,
+                          })
+                        }
+                      />
+                    </div>
+                  </TableHead>
+
+                  <TableHead>
+                    <div className="inline-flex w-full items-center justify-center">
+                      Order Date&nbsp;
+                      <HeaderSortButtons
+                        active={urlSortBy === SORT_BY_FIELDS.ORDER_DATE}
+                        direction={urlSortDirection}
+                        onClickAsc={() =>
+                          handleHeaderSort({
+                            sortBy: SORT_BY_FIELDS.ORDER_DATE,
+                            direction: SORTING_DIRECTION.ASC,
+                          })
+                        }
+                        onClickDesc={() =>
+                          handleHeaderSort({
+                            sortBy: SORT_BY_FIELDS.ORDER_DATE,
+                            direction: SORTING_DIRECTION.DESC,
+                          })
+                        }
+                      />
+                    </div>
+                  </TableHead>
+
+                  <TableHead>
+                    <div className="inline-flex w-full items-center justify-center">
+                      Order Total&nbsp;
+                      <HeaderSortButtons
+                        active={urlSortBy === SORT_BY_FIELDS.TOTAL_ITEMS}
+                        direction={urlSortDirection}
+                        onClickAsc={() =>
+                          handleHeaderSort({
+                            sortBy: SORT_BY_FIELDS.TOTAL_ITEMS,
+                            direction: SORTING_DIRECTION.ASC,
+                          })
+                        }
+                        onClickDesc={() =>
+                          handleHeaderSort({
+                            sortBy: SORT_BY_FIELDS.TOTAL_ITEMS,
+                            direction: SORTING_DIRECTION.DESC,
+                          })
+                        }
+                      />
+                    </div>
+                  </TableHead>
+                  <TableHead className="text-center">Order Status</TableHead>
+                </TableRow>
+              </TableHeader>
+
+              <TableBody className="text-brand-gray-500">
+                {orderHistoryItems.map((order, index) => (
+                  <OrderHistoryRow
+                    key={order.orderNo}
+                    index={index}
+                    order={order}
+                  />
+                ))}
+              </TableBody>
+            </Table>
+          </>
+        ) : (
+          <div className="px-4 font-wurth text-xl font-bold text-brand-gray-500 md:px-0">
+            No records found.
+          </div>
+        )}
+      </div>
+
+      {orderHistoryItems?.length > 0 && (
+        <TotalCountAndPagination
+          isLoading={searchQuery.isLoading}
           totalItems={totalItems}
         />
-      </Suspense>
-
-      <TotalCountAndPagination
-        isLoading={searchQuery.isLoading}
-        totalItems={totalItems}
-      />
-
-      {/* Mobile View */}
-      <OrderHistoryListForMobile
-        items={orderHistoryItems}
-        token={token}
-        isLoading={searchQuery.isLoading}
-      />
-
-      {/* Desktop View */}
-      <Table className="hidden md:table">
-        <TableHeader>
-          <TableRow>
-            <TableHead className="text-center">Order Type</TableHead>
-            <TableHead className="text-center">
-              <div className="inline-flex w-full items-center justify-center">
-                Order #&nbsp;
-                <HeaderSortButtons
-                  active={urlSortBy === SORT_BY_FIELDS.SKU}
-                  direction={urlSortDirection}
-                  onClickAsc={() =>
-                    handleHeaderSort({
-                      sortBy: SORT_BY_FIELDS.SKU,
-                      direction: SORTING_DIRECTION.ASC,
-                    })
-                  }
-                  onClickDesc={() =>
-                    handleHeaderSort({
-                      sortBy: SORT_BY_FIELDS.SKU,
-                      direction: SORTING_DIRECTION.DESC,
-                    })
-                  }
-                />
-              </div>
-            </TableHead>
-
-            <TableHead className="">
-              <div className="inline-flex w-full items-center justify-center">
-                Order Date&nbsp;
-                <HeaderSortButtons
-                  active={urlSortBy === SORT_BY_FIELDS.ORDER_DATE}
-                  direction={urlSortDirection}
-                  onClickAsc={() =>
-                    handleHeaderSort({
-                      sortBy: SORT_BY_FIELDS.ORDER_DATE,
-                      direction: SORTING_DIRECTION.ASC,
-                    })
-                  }
-                  onClickDesc={() =>
-                    handleHeaderSort({
-                      sortBy: SORT_BY_FIELDS.ORDER_DATE,
-                      direction: SORTING_DIRECTION.DESC,
-                    })
-                  }
-                />
-              </div>
-            </TableHead>
-
-            <TableHead className="text-center">
-              <div className="inline-flex w-full items-center justify-center">
-                Order Total&nbsp;
-                <HeaderSortButtons
-                  active={urlSortBy === SORT_BY_FIELDS.TOTAL_ITEMS}
-                  direction={urlSortDirection}
-                  onClickAsc={() =>
-                    handleHeaderSort({
-                      sortBy: SORT_BY_FIELDS.TOTAL_ITEMS,
-                      direction: SORTING_DIRECTION.ASC,
-                    })
-                  }
-                  onClickDesc={() =>
-                    handleHeaderSort({
-                      sortBy: SORT_BY_FIELDS.TOTAL_ITEMS,
-                      direction: SORTING_DIRECTION.DESC,
-                    })
-                  }
-                />
-              </div>
-            </TableHead>
-            <TableHead className="text-center">Order Status</TableHead>
-          </TableRow>
-        </TableHeader>
-
-        <TableBody className="text-brand-gray-500">
-          {orderHistoryItems &&
-            orderHistoryItems.map((order, index) => (
-              <OrderHistoryRow
-                key={order.orderNo}
-                index={index}
-                order={order}
-              />
-            ))}
-        </TableBody>
-      </Table>
-
-      <TotalCountAndPagination
-        isLoading={searchQuery.isLoading}
-        totalItems={totalItems}
-      />
+      )}
     </>
   );
 };

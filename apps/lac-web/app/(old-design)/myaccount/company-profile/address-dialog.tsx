@@ -1,3 +1,4 @@
+import useAddShippingAddressMutation from "@/_hooks/address/use-add-shipping-address-mutation.hook";
 import useUpdateShippingAddressMutation from "@/_hooks/address/use-update-shipping-address-mutation.hook";
 import useCounties from "@/_hooks/registration/use-counties.hook";
 import useCountries from "@/_hooks/registration/use-countries.hook";
@@ -36,7 +37,6 @@ import { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import type { AddressCheckSuggestionsWithUuid } from "./types";
-import useAddShippingAddressMutation from "./use-add-shipping-address-mutation.hook";
 import useUpdateBillingAddressMutation from "./use-update-billing-address-mutation.hook";
 
 type AddressDialogProps = {
@@ -143,6 +143,7 @@ const AddressDialog = ({
         updateShippingAddressMutation.mutate(requestData, {
           onSuccess: (data) => {
             setOpenAddressDialog(false);
+            form.reset();
 
             if ("checkType" in data) {
               setAddressCheckSuggestions(getAddressSuggestionsWithUuid(data));
@@ -155,6 +156,7 @@ const AddressDialog = ({
         addShippingAddressMutation.mutate(addressData, {
           onSuccess: (data) => {
             setOpenAddressDialog(false);
+            form.reset();
 
             if ("checkType" in data) {
               setAddressCheckSuggestions(getAddressSuggestionsWithUuid(data));
@@ -162,16 +164,13 @@ const AddressDialog = ({
               setOpenAddressSuggestionDialog(true);
             }
           },
-          onError: (error) => {
-            console.log("error response");
-            console.log(error);
-          },
         });
       }
     } else {
       updateBillingAddressMutation.mutate(addressData, {
         onSuccess: (data) => {
           setOpenAddressDialog(false);
+          form.reset();
 
           if ("checkType" in data) {
             setAddressCheckSuggestions(getAddressSuggestionsWithUuid(data));
@@ -190,8 +189,15 @@ const AddressDialog = ({
   const statesQuery = useStates(selectedCountry);
   const countiesQuery = useCounties(selectedState);
 
+  const handleOpenChange = (open: boolean) => {
+    setOpenAddressDialog(open);
+    if (!open) {
+      form.reset();
+    }
+  };
+
   return (
-    <Dialog open={open} onOpenChange={setOpenAddressDialog}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="old-design-text-base max-w-[500px]">
         <DialogHeader>
           <DialogTitle>

@@ -45,7 +45,9 @@ const FiltersDropdown = ({ filters }: { filters: Filters[] }) => {
     <Accordion type="single" collapsible>
       {filters.map((filter) => (
         <AccordionItem key={filter.id} value={filter.id}>
-          <AccordionTrigger>{filter.filter}</AccordionTrigger>
+          <AccordionTrigger className="font-bold hover:no-underline">
+            {filter.filter}
+          </AccordionTrigger>
 
           <AccordionContent className="space-y-2">
             <ul>

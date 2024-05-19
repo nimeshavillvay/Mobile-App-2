@@ -69,6 +69,9 @@ const AddCreditCardDialog = ({ token }: AddCreditCardDialogProps) => {
       {
         onSuccess: () => {
           setOpen(false);
+
+          // Refetch the credit card signature when the dialog is closed to get a new requestId
+          creditCardSignatureQuery.refetch();
         },
       },
     );
@@ -106,7 +109,17 @@ const AddCreditCardDialog = ({ token }: AddCreditCardDialogProps) => {
   }, [form]);
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog
+      open={open}
+      onOpenChange={(open) => {
+        setOpen(open);
+
+        // Refetch the credit card signature when the dialog is closed to get a new requestId
+        if (!open) {
+          creditCardSignatureQuery.refetch();
+        }
+      }}
+    >
       <DialogTrigger asChild>
         <Button variant="outline" className="max-w-fit font-bold shadow-md">
           <Plus width={16} height={16} />
@@ -148,6 +161,7 @@ const AddCreditCardDialog = ({ token }: AddCreditCardDialogProps) => {
                   <FormControl>
                     <>
                       <iframe
+                        title="Snappay credit card iframe"
                         src={`${process.env.NEXT_PUBLIC_SNAPPAY_URL}/Interop/InteropRequest?reqno=${creditCardSignatureQuery.data.requestId}`}
                         className={cn(
                           inputStyles(),

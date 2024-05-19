@@ -1,3 +1,5 @@
+import useLogoutMutation from "@/_hooks/user/use-logout-mutation.hook";
+import useOSRLogoutMutation from "@/_hooks/user/use-osr-logout-mutation.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
 import useSuspenseUsersList from "@/_hooks/user/use-suspense-users-list.hook";
 import { cva } from "@/_lib/cva.config";
@@ -11,7 +13,6 @@ import {
   SheetTrigger,
 } from "@repo/web-ui/components/ui/sheet";
 import Link from "next/link";
-import useLogoutMutation from "../use-logout-mutation.hook";
 import ButtonContent, { buttonClasses } from "./button-content";
 
 const sectionLinkStyles = cva({
@@ -71,6 +72,12 @@ const UserMobileProfileNavigation = ({ token }: { token: string }) => {
   const usersListQuery = useSuspenseUsersList(token);
   const userProfile = usersListQuery.data.manageContact.yourProfile;
 
+  const checkLoginQuery = useSuspenseCheckLogin(token);
+  const isOsr =
+    checkLoginQuery.data.status_code === "OK" &&
+    !!checkLoginQuery.data.sales_rep_id;
+
+  const osrLogoutMutation = useOSRLogoutMutation();
   const logoutMutation = useLogoutMutation();
 
   return (
@@ -119,7 +126,7 @@ const UserMobileProfileNavigation = ({ token }: { token: string }) => {
 
           <li>
             <SheetClose asChild className={sectionLinkStyles()}>
-              <Link href="/myaccount/favourites">My Favorites</Link>
+              <Link href="/myaccount/shopping-lists">My Shopping Lists</Link>
             </SheetClose>
           </li>
 
@@ -138,7 +145,13 @@ const UserMobileProfileNavigation = ({ token }: { token: string }) => {
           <li>
             <SheetClose
               className={sectionLinkStyles()}
-              onClick={() => logoutMutation.mutate()}
+              onClick={() => {
+                if (isOsr) {
+                  osrLogoutMutation.mutate();
+                } else {
+                  logoutMutation.mutate();
+                }
+              }}
             >
               Logout
             </SheetClose>

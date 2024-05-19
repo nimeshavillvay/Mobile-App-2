@@ -4,6 +4,7 @@ import {
   SearchBox,
   SearchBoxButton,
   SearchBoxInput,
+  SearchClearButton,
 } from "@repo/web-ui/components/search-box";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -15,8 +16,14 @@ const SearchBar = () => {
   const router = useRouter();
   const [value, setValue] = useState("");
   const multiSearchQuery = useMultiSearch(value);
-  const handleSearchEnter = () => {
-    router.push(`/search?query=${encodeURIComponent(value)}`);
+  const handleSearch = () => {
+    if (value != "") {
+      router.push(`/search?query=${value}`);
+    }
+  };
+
+  const clearInput = () => {
+    setValue("");
   };
 
   return (
@@ -25,10 +32,11 @@ const SearchBar = () => {
         data={multiSearchQuery.data ?? placeholderData}
         value={value}
         setValue={setValue}
-        onEnterPressed={handleSearchEnter}
+        onEnterPressed={handleSearch}
         placeholder="What are you looking for?"
       />
-      <SearchBoxButton />
+      {value && <SearchClearButton onClick={clearInput} />}{" "}
+      <SearchBoxButton onClick={handleSearch} />
       <VerticalLine className="size-5" />
       <BarcodeScannerDialog />
     </SearchBox>

@@ -1,7 +1,6 @@
 "use client";
 
-import { Button } from "@/(old-design)/_components/ui/button";
-import { cn } from "@/(old-design)/_utils/helpers";
+import { Button } from "@/old/_components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -9,6 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/old/_components/ui/dialog";
+import { cn } from "@/old/_utils/helpers";
 import { useSearchParams } from "next/navigation";
 import { useState, type Dispatch, type SetStateAction } from "react";
 import { MdCheck } from "react-icons/md";
@@ -27,7 +27,9 @@ const PurchasedItemsMobilePagination = ({
   totalPagesCount,
 }: FiltersForMobileProps) => {
   const urlSearchParams = useSearchParams();
-  const currentPage = Number(urlSearchParams.get("page") ?? INIT_PAGE_NUMBER);
+  const currentPage = Number(
+    urlSearchParams.get(QUERY_KEYS.PAGE) ?? INIT_PAGE_NUMBER,
+  );
 
   const [page, setPage] = useState(currentPage);
 
@@ -48,12 +50,13 @@ const PurchasedItemsMobilePagination = ({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="old-design-text-base overflow max-h-[80vh] max-w-[500px] gap-0">
+      <DialogContent className="bottom-0 top-auto max-h-[80vh] max-w-[500px] translate-y-[0%] gap-0">
         <DialogHeader>
-          <DialogTitle className="text-left text-xl font-bold">
+          <DialogTitle className="text-left font-wurth text-xl font-bold capitalize md:text-center">
             Select a page
           </DialogTitle>
         </DialogHeader>
+
         <div>
           {pagesList.map((pageNumber) => (
             <button

@@ -172,7 +172,7 @@ const TermsOfSalePage = () => {
             subject to inspection by Seller and a handling charge as from time
             to time published on Seller&rsquo;s website at (
             <a
-              href="#"
+              href="/terms-of-sale"
               rel="noopener noreferrer"
               className="text-[#007bff] hover:underline"
             >
@@ -261,7 +261,7 @@ const TermsOfSalePage = () => {
             versions of these Terms of Sale. The most current version of these
             Terms of Sale may be found on Seller&rsquo;s website at (
             <a
-              href="#"
+              href="/terms-of-sale"
               rel="noopener noreferrer"
               className="text-[#007bff] hover:underline"
             >

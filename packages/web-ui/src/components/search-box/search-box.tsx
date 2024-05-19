@@ -2,6 +2,7 @@ import { useCombobox } from "downshift";
 import Image from "next/image";
 import Link from "next/link";
 import { type ComponentProps } from "react";
+import { Close } from "~/components/icons/close";
 import { MagnifyingGlass } from "~/components/icons/magnifying-glass";
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
@@ -37,6 +38,7 @@ type SearchData = {
     orderQuantityByIncrements?: string;
     attributes?: [];
     itemImage?: string;
+    uom?: string;
   }[];
 };
 
@@ -78,15 +80,17 @@ export const SearchBoxInput = ({
       closeMenu();
     }
   };
+
   const { products, categories, brands } = data;
   const { isOpen, getMenuProps, getInputProps, getItemProps, closeMenu } =
     useCombobox({
+      inputValue: value,
       onInputValueChange: ({ inputValue }) => {
         setValue(inputValue);
       },
       items: [
-        ...categories.results,
         ...brands.results,
+        ...categories.results,
         ...products.results,
       ].map((item) => item),
       itemToString(
@@ -108,8 +112,8 @@ export const SearchBoxInput = ({
           return item.productTitle;
         } else if (item.brandName && !item.productTitle && !item.categoryPath) {
           return item.brandName;
-        } else if (item.categoryPath && !item.brandName && !item.productTitle) {
-          return item.categoryPath;
+        } else if (item.categoryName && !item.brandName && !item.productTitle) {
+          return item.categoryName;
         }
 
         return "";
@@ -130,53 +134,30 @@ export const SearchBoxInput = ({
       <ul
         className={`${
           isOpen ? "block" : "hidden"
-        } shadow-right shadow-bottom shadow-left le absolute z-50 ml-3 mt-4 w-full rounded-b-lg bg-white p-0 pl-4 shadow-sm`}
+        } shadow-right shadow-bottom shadow-left absolute z-50 mt-4 rounded-b-lg bg-white p-0 pl-4 text-sm shadow-sm`}
         {...getMenuProps()}
       >
         {isOpen && value && (
           <>
-            {categories.summary.total > 0 && (
-              <>
-                <li className="text-black-500 px-3 py-1 font-semibold">
-                  Categories for &quot;{value}&quot;
-                </li>
-                {categories.results.map((category, index) => (
-                  <li
-                    className="p-2 pl-8"
-                    key={category.id}
-                    {...getItemProps({ item: category, index })}
-                  >
-                    <Link
-                      href={`/category/${category.id}/${category.slug}`}
-                      key={category.id}
-                    >
-                      <span className="text-gray-500">&#8627;</span>{" "}
-                      <b className="text-red-500">{category.categoryPath}</b>
-                      <br />
-                    </Link>
-                  </li>
-                ))}
-                <br />
-              </>
-            )}
             {brands.summary.total > 0 && (
               <>
-                <li className="text-black-500 px-3 py-1 font-semibold">
+                <li className="text-black-500 break-all px-3 py-1 font-semibold">
                   Brands for &quot;{value}&quot;
                 </li>
-                <li className="flex flex-row flex-wrap ">
+                <ul className="flex flex-wrap">
                   {brands.results.map((brand, index) => (
-                    <Link href={`/search?query=${brand.slug}`} key={brand.id}>
-                      <li
+                    <li
+                      key={brand.id}
+                      {...getItemProps({
+                        item: brand,
+                        index,
+                      })}
+                      className="w-full sm:w-full md:w-full lg:w-1/2 xl:w-1/3 2xl:w-1/3 3xl:w-1/3"
+                    >
+                      <Link
+                        href={`/search?query=${brand.slug}`}
                         key={brand.id}
-                        className={cn(
-                          "mb-2 mr-2 flex items-center rounded-md p-2",
-                          "m-2 rounded-lg border-2 p-4 shadow-sm",
-                        )}
-                        {...getItemProps({
-                          item: brand,
-                          index: index + categories.results.length,
-                        })}
+                        className="m-2 mb-2 mr-2 flex items-center rounded-md border-2 p-2 shadow-sm hover:bg-gray-100"
                       >
                         {brand.brandImage && brand.brandName && (
                           <Image
@@ -190,110 +171,91 @@ export const SearchBoxInput = ({
                         {!brand.brandImage && (
                           <div className="h-10 w-10 rounded-full"></div>
                         )}
-                        <span className="flex-grow truncate break-all text-center">
-                          {brand.brandName}
-                        </span>
-                      </li>
-                    </Link>
+                        <span className="break-all">{brand.brandName}</span>
+                      </Link>
+                    </li>
                   ))}
-                </li>
-                <br />
+                </ul>
               </>
+            )}
+
+            {categories.summary.total > 0 && (
+              <ul>
+                <li className="text-black-500 break-all px-3 py-1 font-semibold">
+                  Categories for &quot;{value}&quot;
+                </li>
+                {categories.results.map((category, index) => (
+                  <li
+                    className="p-2 pl-8  hover:bg-gray-100 "
+                    key={category.id}
+                    {...getItemProps({
+                      item: category,
+                      index: index + brands.results.length,
+                    })}
+                  >
+                    <Link
+                      href={`/category/${category.id}/${category.slug}`}
+                      key={category.id}
+                    >
+                      <span className="text-[#74767B]">&#8627;</span>{" "}
+                      <span className="break-words font-semibold text-[#CC0000]">
+                        {category.categoryPath}
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+                <br />
+              </ul>
             )}
 
             {products.summary.total > 0 && (
               <>
-                <li className="text-black-500 px-3 py-1 font-semibold">
+                <li className="text-black-500 whitespace-normal break-all px-3 py-1 font-semibold">
                   Products for &quot;{value}&quot;
                 </li>
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                  <div className="w-full">
-                    {products.results.slice(0, 5).map((product, index) => (
+                <ul className="grid grid-cols-1 gap-4 break-words md:grid-cols-1 lg:grid-cols-2">
+                  {products.results.slice(0, 10).map((product, index) => (
+                    <li
+                      key={product.id}
+                      {...getItemProps({
+                        item: product,
+                        index:
+                          index +
+                          categories.results.length +
+                          brands.results.length,
+                      })}
+                    >
                       <Link
+                        className="flex items-start justify-start gap-4 px-3 py-2"
                         href={`/product/${product.id}/${product.slug}`}
                         key={product.id}
                       >
-                        <li
-                          className="m-w-[339px] m-h[120px] flex justify-between px-3 py-2"
-                          key={product.id}
-                          {...getItemProps({
-                            item: product,
-                            index:
-                              index +
-                              categories.results.length +
-                              brands.results.length,
-                          })}
-                        >
-                          <div className="mr-2 h-20 w-20 overflow-hidden rounded-md border border-gray-300">
-                            {product.itemImage && product.productTitle && (
-                              <Image
-                                src={product.itemImage}
-                                alt={product.productTitle}
-                                className="h-full w-full object-cover"
-                                layout="responsive"
-                                width={80}
-                                height={80}
-                              />
-                            )}
-                            {!product.itemImage && (
-                              <div className="h-10 w-10 rounded-full"></div>
-                            )}
+                        <div className="flex-shrink-0 overflow-hidden rounded-md border border-gray-300">
+                          {product.itemImage && product.productTitle && (
+                            <Image
+                              src={product.itemImage}
+                              alt={product.productTitle}
+                              className="object-cover"
+                              width={80}
+                              height={80}
+                            />
+                          )}
+                          {!product.itemImage && (
+                            <div className="h-20 w-20 rounded-full"></div>
+                          )}
+                        </div>
+                        <div>
+                          <div className="font-normal hover:underline">
+                            <p className="break-all">{product.productTitle}</p>
+                          </div>{" "}
+                          <div className="break-all text-[#74767B]">
+                            Item# {product.materialNumber}
                           </div>
-                          <div className="flex flex-col justify-between">
-                            <span className="w-52">{product.productTitle}</span>
-                            <span className="text-gray-500">
-                              Item# {product.MFRPartNo}
-                            </span>
-                          </div>
-                        </li>
+                        </div>
                       </Link>
-                    ))}
-                  </div>
-                  <div className="w-full">
-                    {products.results.slice(5, 10).map((product, index) => (
-                      <Link
-                        href={`/product/${product.id}/${product.slug}`}
-                        key={product.id}
-                      >
-                        <li
-                          className="m-w-[339px] m-h[120px] flex justify-between  px-3 py-2"
-                          key={product.id}
-                          {...getItemProps({
-                            item: product,
-                            index:
-                              index +
-                              categories.results.length +
-                              brands.results.length +
-                              5,
-                          })}
-                        >
-                          <div className="mr-2 h-20 w-20 overflow-hidden rounded-md border border-gray-300">
-                            {product.itemImage && product.productTitle && (
-                              <Image
-                                src={product.itemImage}
-                                alt={product.productTitle}
-                                className="h-full w-full object-cover"
-                                layout="responsive"
-                                width={80}
-                                height={80}
-                              />
-                            )}
-                            {!product.itemImage && (
-                              <div className="h-10 w-10 rounded-full"></div>
-                            )}
-                          </div>
-                          <div className="flex flex-col justify-between">
-                            <span className="w-52">{product.productTitle}</span>
-                            <span className="text-gray-500">
-                              Item# {product.MFRPartNo}
-                            </span>
-                          </div>
-                        </li>
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-                <br />
+                    </li>
+                  ))}
+                </ul>
               </>
             )}
           </>
@@ -317,6 +279,25 @@ export const SearchBoxButton = ({
       {...delegated}
     >
       <MagnifyingGlass className="size-5" />
+    </Button>
+  );
+};
+
+export const SearchClearButton = ({
+  type = "button",
+  className,
+  ...delegated
+}: Omit<ComponentProps<"button">, "children">) => {
+  return (
+    <Button
+      type={type}
+      variant="ghost"
+      size="icon"
+      className={cn("mx-0.5 rounded-full px-2", className)}
+      {...delegated}
+    >
+      <Close className="size-5" />
+      <span className="sr-only">Clear search</span>
     </Button>
   );
 };

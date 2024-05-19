@@ -1,3 +1,3 @@
 import { ItemInfo, PurchasedProduct } from "@/_lib/types";
 
-export type CombinedPurchasedItem = ItemInfo & PurchasedProduct;
+export type DetailedPurchasedItem = ItemInfo & PurchasedProduct;

@@ -3,6 +3,7 @@ const nextConfig = {
   reactStrictMode: true,
   transpilePackages: ["@repo/web-ui"],
   images: {
+    unoptimized: true,
     formats: ["image/avif", "image/webp"],
     remotePatterns: [
       // TODO Remove old domain
@@ -25,6 +26,7 @@ const nextConfig = {
         hostname: "www.wurthmachinery.com",
       },
     ],
+    minimumCacheTTL: 60 * 60 * 24 * 30, // 1 month
   },
   eslint: {
     dirs: ["app"],

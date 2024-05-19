@@ -1,4 +1,6 @@
+import useCookies from "@/_hooks/storage/use-cookies.hook";
 import { api } from "@/_lib/api";
+import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 type Address = {
@@ -6,13 +8,14 @@ type Address = {
   city: string;
   country: string;
   state: string;
-  county: string;
+  county?: string;
   postalCode: string;
   zipCode?: string;
 };
 
 const useRegisterNewUserMutation = () => {
   const queryClient = useQueryClient();
+  const [cookies] = useCookies();
 
   return useMutation({
     mutationFn: async ({
@@ -40,6 +43,9 @@ const useRegisterNewUserMutation = () => {
     }) => {
       const response = await api
         .post("rest/register/new", {
+          headers: {
+            Authorization: `Bearer ${cookies[SESSION_TOKEN_COOKIE]}`,
+          },
           json: {
             firstName,
             lastName,
@@ -52,8 +58,8 @@ const useRegisterNewUserMutation = () => {
             "billing-address": {
               "country-name": billingAddress.country,
               county: billingAddress.county,
-              locality: billingAddress.city, // TODO Verify field
-              organization: company, // TODO Verify field
+              locality: billingAddress.city,
+              organization: company,
               "phone-number": "244234", // TODO Verify field
               region: billingAddress.state,
               "street-address": billingAddress.address,
@@ -63,8 +69,8 @@ const useRegisterNewUserMutation = () => {
             "shipping-address": {
               "country-name": shippingAddress.country,
               county: shippingAddress.county,
-              locality: billingAddress.city, // TODO Verify field
-              organization: company, // TODO Verify field
+              locality: shippingAddress.city,
+              organization: company,
               "phone-number": "244234", // TODO Verify field
               region: shippingAddress.state,
               "street-address": shippingAddress.address,
@@ -79,8 +85,11 @@ const useRegisterNewUserMutation = () => {
 
       return response;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries();
+    onSuccess: (response) => {
+      if (!isVerifyAddressResponse(response)) {
+        // Revalidate the queries only after the user has successfully registered
+        queryClient.invalidateQueries();
+      }
     },
   });
 };
@@ -100,7 +109,7 @@ type UnableToRegisterResponse = {
 
 export type ResponseAddress = {
   "country-name": string;
-  county: null;
+  county: string;
   locality: string;
   region: string;
   "street-address": string;

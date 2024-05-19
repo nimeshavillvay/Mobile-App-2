@@ -23,14 +23,14 @@ import { RadioGroup, RadioGroupItem } from "@/old/_components/ui/radio-group";
 import { updateSearchParams } from "@/old/_utils/client-helpers";
 import { cn } from "@/old/_utils/helpers";
 import dayjs from "dayjs";
-import { useSearchParams } from "next/navigation";
 import { useState, type Dispatch, type SetStateAction } from "react";
 import { MdCheck } from "react-icons/md";
-import { changeSearchParams } from "../_utils/client-helpers";
 import {
   DURATIONS,
   INIT_DURATION,
   INIT_FROM_DATE,
+  INIT_SORT_DIRECTION,
+  INIT_SORT_TYPE,
   QUERY_KEYS,
   SORTING_FILTERS_FOR_MOBILE,
   URL_DATE_FORMAT,
@@ -51,7 +51,9 @@ const SelectorsForMobileDialog = ({
   onOpenChange,
 }: SelectorsForMobileDialogProps) => {
   const { searchParams } = useFilterParams(filters);
-  const urlSearchParams = useSearchParams();
+  const urlSortBy = searchParams.get(QUERY_KEYS.SORT_TYPE) ?? INIT_SORT_TYPE;
+  const urlSortDirection =
+    searchParams.get(QUERY_KEYS.SORT_DIRECTION) ?? INIT_SORT_DIRECTION;
 
   const poNoFilter = filterAndMapValues(filters, "PO #");
   const jobNameFilter = filterAndMapValues(filters, "Job Name");
@@ -65,8 +67,8 @@ const SelectorsForMobileDialog = ({
   const [poNos, setPoNos] = useState<number[]>([]);
   const [jobNames, setJobNames] = useState<number[]>([]);
   const [orderStatuses, setOrderStatuses] = useState<number[]>([]);
-  const [sortDirection, setSortDirection] = useState("");
-  const [sortType, setSortType] = useState("");
+  const [sortBy, setSortBy] = useState(urlSortBy);
+  const [sortDirection, setSortDirection] = useState(urlSortDirection);
 
   const handleDurationChange = (value: string) => {
     const duration = DURATIONS.find((duration) => duration.value === value);
@@ -119,8 +121,19 @@ const SelectorsForMobileDialog = ({
   };
 
   const handleApplyFilters = () => {
+    const { id: typeAttributeId } = typesFilter ?? {};
+    const { id: statusAttributeId } = statusFilter ?? {};
+    const { id: poAttributeId } = poNoFilter ?? {};
+    const { id: jobAttributeId } = jobNameFilter ?? {};
+
+    const filters = [
+      { key: typeAttributeId, values: orderTypes },
+      { key: statusAttributeId, values: orderStatuses },
+      { key: poAttributeId, values: poNos },
+      { key: jobAttributeId, values: jobNames },
+    ];
+
     const newUrlSearchParams = new URLSearchParams(searchParams);
-    const urlFilters: { key: string; value: string }[] = []; // TODO: Remove this
 
     if (fromDate) {
       newUrlSearchParams.set(
@@ -129,76 +142,41 @@ const SelectorsForMobileDialog = ({
       );
     }
 
-    if (fromDate && toDate) {
-      urlFilters.push({
-        key: QUERY_KEYS.FROM_DATE,
-        value: dayjs(fromDate).format(URL_DATE_FORMAT),
-      });
-
-      urlFilters.push({
-        key: QUERY_KEYS.TO_DATE,
-        value: dayjs(toDate).format(URL_DATE_FORMAT),
-      });
-    } else {
-      urlFilters.push({
-        key: QUERY_KEYS.FROM_DATE,
-        value: "",
-      });
-
-      urlFilters.push({
-        key: QUERY_KEYS.TO_DATE,
-        value: "",
-      });
+    if (toDate) {
+      newUrlSearchParams.set(
+        QUERY_KEYS.TO_DATE,
+        dayjs(toDate).format(URL_DATE_FORMAT),
+      );
     }
 
-    if (orderStatuses.length) {
-      urlFilters.push({
-        key: QUERY_KEYS.ORDER_STATUS,
-        value: orderStatuses.join(","),
-      });
-    } else {
-      urlFilters.push({
-        key: QUERY_KEYS.ORDER_STATUS,
-        value: "",
-      });
+    filters.forEach(({ key, values }) => {
+      if (key && values.length > 0) {
+        // Delete existing parameter
+        newUrlSearchParams.delete(key);
+        // Append new values
+        values.forEach((value) =>
+          newUrlSearchParams.append(key, value.toString()),
+        );
+      } else {
+        // If values are empty, delete the parameter
+        if (key) {
+          newUrlSearchParams.delete(key);
+        }
+      }
+    });
+
+    if (sortBy) {
+      newUrlSearchParams.set(QUERY_KEYS.SORT_TYPE, sortBy);
     }
 
-    if (orderTypes.length) {
-      urlFilters.push({
-        key: QUERY_KEYS.ORDER_TYPE,
-        value: orderTypes.join(","),
-      });
-    } else {
-      urlFilters.push({
-        key: QUERY_KEYS.ORDER_TYPE,
-        value: "",
-      });
+    if (sortDirection) {
+      newUrlSearchParams.set(QUERY_KEYS.SORT_DIRECTION, sortDirection);
     }
 
-    if (sortType && sortDirection) {
-      urlFilters.push({
-        key: QUERY_KEYS.SORT_TYPE,
-        value: sortType,
-      });
-      urlFilters.push({
-        key: QUERY_KEYS.SORT_DIRECTION,
-        value: sortDirection,
-      });
-    } else {
-      urlFilters.push({
-        key: QUERY_KEYS.SORT_TYPE,
-        value: "",
-      });
-      urlFilters.push({
-        key: QUERY_KEYS.SORT_DIRECTION,
-        value: "",
-      });
-    }
-
-    changeSearchParams(urlSearchParams, urlFilters);
+    window.history.pushState(null, "", `?${newUrlSearchParams.toString()}`);
 
     // Close the dialog
-    onOpenChange && onOpenChange(false);
+    onOpenChange(false);
   };
 
   const handleResetFilters = () => {
@@ -213,9 +191,9 @@ const SelectorsForMobileDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bottom-0 top-auto max-w-[500px] translate-y-[0%] gap-0">
+      <DialogContent className="bottom-0 top-auto max-w-[768px] translate-y-[0%] gap-0 md:bottom-auto md:top-[50%] md:translate-y-[-50%]">
         <DialogHeader>
-          <DialogTitle className="text-left  font-wurth md:text-center">
+          <DialogTitle className="text-left font-wurth font-extrabold md:text-center">
             Sort & Filter
           </DialogTitle>
 
@@ -391,7 +369,7 @@ const SelectorsForMobileDialog = ({
             {/* Sort direction selector */}
             <AccordionItem value="sort-item">
               <AccordionTrigger className="bg-gray-100 px-5 py-3 text-xl text-black hover:no-underline">
-                Sort Direction
+                Sort
               </AccordionTrigger>
 
               <AccordionContent className="grid">
@@ -403,11 +381,11 @@ const SelectorsForMobileDialog = ({
                         key={`${option.type}-${option.title}`}
                         title={option.title}
                         active={
-                          sortType === option.type &&
+                          sortBy === option.type &&
                           sortDirection === option.direction
                         }
                         onChecked={() => {
-                          setSortType(option.type);
+                          setSortBy(option.type);
                           setSortDirection(option.direction);
                         }}
                       />
