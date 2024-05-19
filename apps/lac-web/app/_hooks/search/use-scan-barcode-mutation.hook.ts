@@ -59,13 +59,7 @@ const useScanBarcodeMutation = ({
         setOpen(false);
         setProductNotFound(false);
         router.push(productPath);
-      }
-      if (
-        Array.isArray(firstProduct) &&
-        firstProduct.length !== 0 &&
-        !searchResults.summary.plp &&
-        query !== ""
-      ) {
+      } else {
         setProductNotFound(true);
       }
     },
