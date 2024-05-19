@@ -37,6 +37,8 @@ export const BarcodeScanner = ({
   }, [videoRef]);
 
   return (
-      <video width="100%" height="100%" ref={videoRef} ><track kind="captions" /></video>
+    <video width="100%" height="100%" ref={videoRef}>
+      <track kind="captions" />
+    </video>
   );
 };
