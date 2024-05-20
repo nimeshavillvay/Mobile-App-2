@@ -1,4 +1,5 @@
 import useAddShippingAddressMutation from "@/_hooks/address/use-add-shipping-address-mutation.hook";
+import useUpdateBillingAddressMutation from "@/_hooks/address/use-update-billing-address-mutation.hook";
 import useUpdateShippingAddressMutation from "@/_hooks/address/use-update-shipping-address-mutation.hook";
 import type { AddressCheckSuggestions, AddressFormData } from "@/_lib/types";
 import { Address } from "@/_lib/types";
@@ -12,7 +13,6 @@ import { RadioGroup, RadioGroupItem } from "@/old/_components/ui/radio-group";
 import { nanoid } from "nanoid";
 import { Dispatch, SetStateAction, useState } from "react";
 import type { AddressCheckSuggestionsWithUuid } from "./types";
-import useUpdateBillingAddressMutation from "./use-update-billing-address-mutation.hook";
 
 type AddressDialogProps = {
   open: boolean;
