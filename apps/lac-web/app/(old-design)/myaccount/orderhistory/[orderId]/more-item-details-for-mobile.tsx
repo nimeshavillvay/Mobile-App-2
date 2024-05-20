@@ -13,8 +13,10 @@ import dayjs from "dayjs";
 import { useState } from "react";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { UI_DATE_FORMAT } from "../constants";
+import BuyAgainButton from "./buy-again-button";
 
 type MoreItemDetailsForMobileProps = {
+  productId: number;
   lineItems: {
     itemNo: string;
     sku: string;
@@ -36,6 +38,7 @@ type MoreItemDetailsForMobileProps = {
 };
 
 const MoreItemDetailsForMobile = ({
+  productId,
   lineItems,
   shippingMethods,
   plants,
@@ -67,12 +70,7 @@ const MoreItemDetailsForMobile = ({
           </Button>
         </CollapsibleTrigger>
 
-        <Button
-          className="h-12 w-[170px] text-base"
-          disabled={isExcludedProduct}
-        >
-          Buy Again
-        </Button>
+        <BuyAgainButton productId={productId} disabled={isExcludedProduct} />
       </div>
 
       <CollapsibleContent className="py-2">

@@ -109,6 +109,7 @@ const OrderItemForMobile = ({
         </div>
 
         <MoreItemDetailsForMobile
+          productId={productId}
           lineItems={orderItem.lineItems}
           shippingMethods={shippingMethods}
           plants={plants}

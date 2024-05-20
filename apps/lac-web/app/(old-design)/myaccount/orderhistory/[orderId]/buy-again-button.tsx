@@ -5,10 +5,10 @@ import { Button } from "@/old/_components/ui/button";
 
 type BuyAgainButtonProps = {
   productId: number;
-  disabled: boolean;
+  disabled?: boolean;
 };
 
-const BuyAgainButton = ({ productId, disabled }: BuyAgainButtonProps) => {
+const BuyAgainButton = ({ productId, ...delegated }: BuyAgainButtonProps) => {
   const { setOpen, setProductId } = useAddToCartDialog(
     (state) => state.actions,
   );
@@ -20,9 +20,9 @@ const BuyAgainButton = ({ productId, disabled }: BuyAgainButtonProps) => {
 
   return (
     <Button
-      className="w-[170px] text-base"
-      disabled={disabled}
+      className="h-12 w-[170px] text-base md:h-8"
       onClick={() => addToCart()}
+      {...delegated}
     >
       Buy Again
     </Button>
