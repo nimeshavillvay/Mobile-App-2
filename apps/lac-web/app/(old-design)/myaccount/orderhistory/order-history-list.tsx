@@ -54,7 +54,7 @@ const OrderHistoryList = ({ token }: { token: string }) => {
     token,
     fromDate,
     toDate,
-    page - 1,
+    page,
     perPage,
     urlSortBy,
     urlSortDirection,
@@ -206,7 +206,7 @@ const OrderHistoryList = ({ token }: { token: string }) => {
         )}
       </div>
 
-      {orderHistoryItems?.length > 0 && (
+      {orderHistoryItems?.length > 0 && totalItems >= perPage && (
         <TotalCountAndPagination
           isLoading={searchQuery.isLoading}
           totalItems={totalItems}
