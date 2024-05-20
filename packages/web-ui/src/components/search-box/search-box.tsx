@@ -63,6 +63,7 @@ export const SearchBoxInput = ({
   value,
   setValue,
   onEnterPressed,
+  children,
   ...delegated
 }: ComponentProps<"input"> & {
   data: {
@@ -122,19 +123,22 @@ export const SearchBoxInput = ({
 
   return (
     <div className="relative w-full rounded-md">
-      <input
-        className={cn(
-          "placeholder-text-wurth-gray-400 w-full min-w-0 flex-1 shrink rounded-l-full border-0 py-2.5 pl-3.5 text-sm",
-          className,
-        )}
-        {...delegated}
-        {...getInputProps()}
-        onKeyDown={handleKeyDown}
-      />
+      <div className="relative flex items-center">
+        <input
+          className={cn(
+            "placeholder-text-wurth-gray-400 w-full min-w-0 flex-1 shrink rounded-full border-0 py-2.5 pl-3.5 pr-12 text-sm", // Adjust padding for buttons
+            className,
+          )}
+          {...delegated}
+          {...getInputProps()}
+          onKeyDown={handleKeyDown}
+        />
+        <div className="absolute right-0 flex items-center">{children}</div>
+      </div>
       <ul
         className={`${
           isOpen ? "block" : "hidden"
-        } shadow-right shadow-bottom shadow-left absolute z-50 mt-4 rounded-b-lg bg-white p-0 pl-4 text-sm shadow-sm`}
+        } absolute left-0 right-0 z-50 mt-4 rounded-b-lg bg-white p-0 pl-4 text-sm shadow-sm`}
         {...getMenuProps()}
       >
         {isOpen && value && (
