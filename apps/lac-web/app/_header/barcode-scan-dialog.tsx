@@ -2,6 +2,8 @@
 
 import useScanBarcodeMutation from "@/_hooks/search/use-scan-barcode-mutation.hook";
 import { BarcodeScanner } from "@repo/web-ui/components/barcode-scanner";
+import { Alert as AlertIcon } from "@repo/web-ui/components/icons/alert";
+import { BarcodeScan } from "@repo/web-ui/components/icons/barcode-scan";
 import {
   Alert,
   AlertContent,
@@ -19,11 +21,9 @@ import {
   DialogTrigger,
 } from "@repo/web-ui/components/ui/dialog";
 import { useState } from "react";
-import { Alert as AlertIcon } from "~/components/icons/alert";
-import { BarcodeScan } from "~/components/icons/barcode-scan/barcode-scan";
 import { cn } from "~/lib/utils";
 
-export const BarcodeScannerDialog = () => {
+const BarcodeScannerDialog = () => {
   const [open, setOpen] = useState(false);
   const [productNotFound, setProductNotFound] = useState(false);
 
@@ -82,3 +82,4 @@ export const BarcodeScannerDialog = () => {
     </Dialog>
   );
 };
+export default BarcodeScannerDialog;

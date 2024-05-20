@@ -8,8 +8,8 @@ import {
 } from "@repo/web-ui/components/search-box";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { VerticalLine } from "~/components/icons/vertical-line/vertical-line";
-import { BarcodeScannerDialog } from "./barcode-scan-dialog";
+import { Separator } from "~/components/ui/separator";
+import BarcodeScannerDialog from "./barcode-scan-dialog";
 import useMultiSearch, { placeholderData } from "./use-multi-search.hook";
 
 const SearchBar = () => {
@@ -37,7 +37,7 @@ const SearchBar = () => {
       />
       {value && <SearchClearButton onClick={clearInput} />}{" "}
       <SearchBoxButton onClick={handleSearch} />
-      <VerticalLine className="size-5" />
+      <Separator orientation="vertical" className="h-5" />
       <BarcodeScannerDialog />
     </SearchBox>
   );
