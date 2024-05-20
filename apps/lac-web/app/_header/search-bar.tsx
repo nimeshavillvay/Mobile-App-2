@@ -4,6 +4,7 @@ import {
   SearchBox,
   SearchBoxButton,
   SearchBoxInput,
+  SearchClearButton,
 } from "@repo/web-ui/components/search-box";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -14,9 +15,13 @@ const SearchBar = () => {
   const [value, setValue] = useState("");
   const multiSearchQuery = useMultiSearch(value);
   const handleSearch = () => {
-    if (value) {
+    if (value !== "") {
       router.push(`/search?query=${value}`);
     }
+  };
+
+  const clearInput = () => {
+    setValue("");
   };
 
   return (
@@ -27,8 +32,10 @@ const SearchBar = () => {
         setValue={setValue}
         onEnterPressed={handleSearch}
         placeholder="What are you looking for?"
-      />
-      <SearchBoxButton onClick={handleSearch} />
+      >
+        {value && <SearchClearButton onClick={clearInput} />}
+        <SearchBoxButton onClick={handleSearch} />
+      </SearchBoxInput>
     </SearchBox>
   );
 };
