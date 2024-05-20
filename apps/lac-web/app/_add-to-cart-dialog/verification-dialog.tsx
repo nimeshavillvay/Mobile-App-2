@@ -290,12 +290,10 @@ const AddToCart = ({
 
   const reduceQuantity = () => {
     setValue("quantity", quantity - increments);
-    setQuantity(quantity - increments);
   };
 
   const increaseQuantity = () => {
     setValue("quantity", quantity + increments);
-    setQuantity(quantity + increments);
   };
 
   const addToCartMutation = useAddToCartMutation(token, {
@@ -303,6 +301,9 @@ const AddToCart = ({
   });
 
   const onSubmit = handleSubmit((data) => {
+    // Update the quantity in add to cart dialog
+    setQuantity(data.quantity);
+
     addToCartMutation.mutate({
       quantity: data.quantity,
       poOrJobName: data.poOrJobName,
