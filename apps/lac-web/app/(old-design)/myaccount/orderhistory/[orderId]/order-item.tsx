@@ -49,6 +49,7 @@ type OrderItemProps = {
     image?: string;
     productTitle?: string;
     isExcludedProduct?: boolean;
+    productName?: string;
   };
   getShippingMethodName: (shippingCode: string) => string;
   getPlantName: (plantId: string) => string;
@@ -74,6 +75,7 @@ const OrderItem = ({
     itemPo,
     lineItems,
     isExcludedProduct = false,
+    productName,
   } = orderItem;
 
   const generateItemUrl = ({
@@ -108,7 +110,7 @@ const OrderItem = ({
               {image ? (
                 <Image
                   src={image}
-                  alt={itemDescription}
+                  alt={productName ?? itemDescription}
                   width={76}
                   height={76}
                 />
@@ -124,8 +126,8 @@ const OrderItem = ({
           <div className="flex flex-col">
             <div>Item#: {sku ?? "N/A"}</div>
 
-            <div className="text-wrap font-bold text-black">
-              {itemDescription ?? productTitle ?? "Description N/A"}
+            <div className="line-clamp-3 text-wrap font-bold text-black">
+              {productName ?? productTitle ?? "Description N/A"}
             </div>
 
             <div className="">
