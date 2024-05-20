@@ -50,14 +50,14 @@ const OrderHistoryMobilePagination = ({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="bottom-0 top-auto max-h-[80vh] max-w-[500px] translate-y-[0%] gap-0">
+      <DialogContent className="bottom-0 top-auto max-w-[500px] translate-y-[0%] gap-0">
         <DialogHeader>
           <DialogTitle className="text-left font-wurth text-xl font-bold capitalize md:text-center">
             Select a page
           </DialogTitle>
         </DialogHeader>
 
-        <div>
+        <div className="max-h-[80vh] overflow-y-scroll">
           {pagesList.map((pageNumber) => (
             <button
               key={pageNumber}
@@ -78,13 +78,13 @@ const OrderHistoryMobilePagination = ({
               />
             </button>
           ))}
-
-          <DialogFooter className="px-5 py-6">
-            <Button className="w-full p-6" onClick={() => paginate()}>
-              Done
-            </Button>
-          </DialogFooter>
         </div>
+
+        <DialogFooter className="px-5 py-6">
+          <Button className="w-full p-6" onClick={() => paginate()}>
+            Done
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
