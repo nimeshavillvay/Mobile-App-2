@@ -67,6 +67,11 @@ const useAddShippingAddressMutation = () => {
         .json<ShippingAddressSuggestionsResponse | ShippingAddressResponse>();
 
       if ("check_type" in response) {
+        toast({
+          title: "Address conflicts found",
+          variant: "destructive",
+        });
+
         const suggestionsResponse: AddressCheckSuggestions = {
           checkType: response.check_type,
           message: response.message,

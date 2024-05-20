@@ -1,4 +1,5 @@
-import useAddShippingAddressMutation from "@/_hooks/address/use-add-shipping-address-mutation.hook";
+import useSuspenseBillingAddress from "@/_hooks/address/use-suspense-billing-address.hook";
+import useUpdateBillingAddressMutation from "@/_hooks/address/use-update-billing-address-mutation.hook";
 import useCounties from "@/_hooks/registration/use-counties.hook";
 import useCountries from "@/_hooks/registration/use-countries.hook";
 import useStates from "@/_hooks/registration/use-states.hook";
@@ -13,6 +14,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from "@repo/web-ui/components/ui/dialog";
 import {
   Form,
@@ -37,73 +39,62 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 const formSchema = z.object({
-  address: z.string().min(1),
-  city: z.string().min(1),
-  country: z.string().min(1),
-  state: z.string().min(1),
+  streetAddress: z.string(),
+  city: z.string(),
+  country: z.string(),
+  state: z.string(),
   county: z.string().optional(),
-  postCode: z.string().min(5),
+  postalCode: z.string(),
   zip: z.string().optional(),
 });
+type FormSchema = z.infer<typeof formSchema>;
 
-type AddShippingAddressDialogProps = {
-  open: boolean;
-  closeDialog: () => void;
+type EditBillingAddressDialogProps = {
+  token: string;
 };
 
-const AddShippingAddressDialog = ({
-  open,
-  closeDialog,
-}: AddShippingAddressDialogProps) => {
-  const form = useForm<z.infer<typeof formSchema>>({
+const EditBillingAddressDialog = ({ token }: EditBillingAddressDialogProps) => {
+  const [open, setOpen] = useState(false);
+  const [suggestions, setSuggestions] = useState<Address[]>([]);
+  const [selectedSuggestionId, setSelectedSuggestionId] = useState("");
+
+  const billingAddressQuery = useSuspenseBillingAddress(token);
+
+  const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      address: "",
-      city: "",
-      country: "",
-      state: "",
-      county: "",
-      postCode: "",
-      zip: "",
+    values: {
+      streetAddress: billingAddressQuery.data.streetAddress,
+      city: billingAddressQuery.data.locality,
+      country: billingAddressQuery.data.countryName,
+      state: billingAddressQuery.data.region,
+      county: billingAddressQuery.data.county ?? "",
+      postalCode: billingAddressQuery.data.postalCode,
+      zip: billingAddressQuery.data.zip4 ?? "",
     },
   });
 
-  const selectedCountry = form.watch("country");
-  const selectedState = form.watch("state");
+  const country = form.watch("country");
+  const state = form.watch("state");
 
-  const countriesQuery = useCountries();
-  const statesQuery = useStates(selectedCountry);
-  const countiesQuery = useCounties(selectedState);
+  const updateBillingAddressMutation = useUpdateBillingAddressMutation();
 
-  const addShippingAddressMutation = useAddShippingAddressMutation();
-
-  const [selectedSuggestionId, setSelectedSuggestionId] = useState("");
-  const [addressSuggestions, setAddressSuggestions] = useState<Address[]>([]);
-
-  const selectedSuggestion = addressSuggestions.find(
-    (address) => address.xcAddressId === selectedSuggestionId,
-  );
-
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    addShippingAddressMutation.mutate(
+  const onSubmit = (values: FormSchema) => {
+    updateBillingAddressMutation.mutate(
       {
-        country: values.country,
-        county: values.county,
+        addressLineOne: values.streetAddress,
         city: values.city,
-        company: "",
-        phoneNumber: "244234",
+        country: values.country,
         state: values.state,
-        addressLineOne: values.address,
-        zipCode: values.postCode,
+        county: values.county,
+        zipCode: values.postalCode,
         zip4: values.zip,
       },
       {
         onSuccess: (data) => {
           if ("xcAddressId" in data) {
-            form.reset();
-            closeDialog();
+            setOpen(false);
           } else if ("suggestions" in data) {
-            setAddressSuggestions(
+            setSuggestions(
               data.suggestions.map((address) => ({
                 ...address,
                 xcAddressId: nanoid(), // Give a temporary ID to each suggestion
@@ -116,24 +107,32 @@ const AddShippingAddressDialog = ({
   };
 
   const submitSuggestion = () => {
+    const selectedSuggestion = suggestions.find(
+      (suggestion) => selectedSuggestionId === suggestion.xcAddressId,
+    );
+
     if (selectedSuggestion) {
-      addShippingAddressMutation.mutate(
+      updateBillingAddressMutation.mutate(
         {
-          country: selectedSuggestion.countryName,
-          county: selectedSuggestion.county ?? "",
-          city: selectedSuggestion.locality,
-          company: "",
-          phoneNumber: "244234",
-          state: selectedSuggestion.region,
           addressLineOne: selectedSuggestion.streetAddress,
+          city: selectedSuggestion.locality,
+          country: selectedSuggestion.countryName,
+          state: selectedSuggestion.region,
+          county: selectedSuggestion.county ?? "",
           zipCode: selectedSuggestion.postalCode,
-          zip4: selectedSuggestion.zip4 ?? "",
+          zip4: selectedSuggestion.zip4,
         },
         {
           onSuccess: (data) => {
             if ("xcAddressId" in data) {
-              form.reset();
-              closeDialog();
+              setOpen(false);
+            } else if ("suggestions" in data) {
+              setSuggestions(
+                data.suggestions.map((address) => ({
+                  ...address,
+                  xcAddressId: nanoid(), // Give a temporary ID to each suggestion
+                })),
+              );
             }
           },
         },
@@ -141,38 +140,46 @@ const AddShippingAddressDialog = ({
     }
   };
 
+  const countriesQuery = useCountries();
+  const statesQuery = useStates(country);
+  const countiesQuery = useCounties(state);
+
   return (
-    <Dialog
-      open={open}
-      onOpenChange={(open) => {
-        if (!open) {
-          form.reset();
-          closeDialog();
-        }
-      }}
-    >
-      <DialogContent className="max-w-[27.75rem]">
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button variant="outline" className="max-w-fit font-bold shadow-md">
+          Edit Address
+        </Button>
+      </DialogTrigger>
+
+      <DialogContent className="max-w-[37.5rem]">
         <DialogHeader>
-          <DialogTitle>Add New Shipping Address</DialogTitle>
+          <DialogTitle>Edit Billing Address</DialogTitle>
         </DialogHeader>
 
-        {addressSuggestions.length === 0 ? (
+        {suggestions.length === 0 ? (
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
-              className="grid-col-6 grid gap-4"
+              className="grid grid-cols-3 gap-5 md:grid-cols-6"
             >
               <FormField
                 control={form.control}
-                name="address"
+                name="streetAddress"
+                disabled={updateBillingAddressMutation.isPending}
                 render={({ field }) => (
-                  <FormItem className="col-span-6">
+                  <FormItem className="col-span-3 md:col-span-6">
                     <FormLabel>Street address</FormLabel>
                     <FormControl>
-                      <Input placeholder="Address" {...field} />
+                      <Input
+                        type="text"
+                        required
+                        disabled={updateBillingAddressMutation.isPending}
+                        {...field}
+                      />
                     </FormControl>
                     <FormDescription className="sr-only">
-                      Enter your street name
+                      This is the street address of your billing address.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -182,14 +189,20 @@ const AddShippingAddressDialog = ({
               <FormField
                 control={form.control}
                 name="city"
+                disabled={updateBillingAddressMutation.isPending}
                 render={({ field }) => (
-                  <FormItem className="col-span-6">
+                  <FormItem className="col-span-3 md:col-span-6">
                     <FormLabel>City</FormLabel>
                     <FormControl>
-                      <Input placeholder="City" {...field} />
+                      <Input
+                        type="text"
+                        required
+                        disabled={updateBillingAddressMutation.isPending}
+                        {...field}
+                      />
                     </FormControl>
                     <FormDescription className="sr-only">
-                      Enter your city
+                      This is the city of your billing address.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -200,18 +213,18 @@ const AddShippingAddressDialog = ({
                 control={form.control}
                 name="country"
                 render={({ field }) => (
-                  <FormItem className="col-span-6">
+                  <FormItem className="col-span-3">
                     <FormLabel>Country</FormLabel>
                     <Select
                       onValueChange={field.onChange}
                       defaultValue={field.value}
+                      disabled={updateBillingAddressMutation.isPending}
                     >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Country" />
+                          <SelectValue />
                         </SelectTrigger>
                       </FormControl>
-
                       <SelectContent>
                         {countriesQuery.data?.map((country) => (
                           <SelectItem key={country.code} value={country.code}>
@@ -220,9 +233,8 @@ const AddShippingAddressDialog = ({
                         ))}
                       </SelectContent>
                     </Select>
-
                     <FormDescription className="sr-only">
-                      Select your country
+                      This is the country of your billing address.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -238,14 +250,15 @@ const AddShippingAddressDialog = ({
                     <Select
                       onValueChange={field.onChange}
                       defaultValue={field.value}
-                      disabled={!selectedCountry}
+                      disabled={
+                        !country || updateBillingAddressMutation.isPending
+                      }
                     >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="State" />
+                          <SelectValue />
                         </SelectTrigger>
                       </FormControl>
-
                       <SelectContent>
                         {statesQuery.data?.map((state) => (
                           <SelectItem key={state.code} value={state.code}>
@@ -254,9 +267,8 @@ const AddShippingAddressDialog = ({
                         ))}
                       </SelectContent>
                     </Select>
-
                     <FormDescription className="sr-only">
-                      Select your country
+                      This is the state of your billing address.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -272,14 +284,15 @@ const AddShippingAddressDialog = ({
                     <Select
                       onValueChange={field.onChange}
                       defaultValue={field.value}
-                      disabled={!selectedState}
+                      disabled={
+                        !state || updateBillingAddressMutation.isPending
+                      }
                     >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="County" />
+                          <SelectValue />
                         </SelectTrigger>
                       </FormControl>
-
                       <SelectContent>
                         {countiesQuery.data?.map(({ county }) => (
                           <SelectItem key={county} value={county}>
@@ -288,9 +301,8 @@ const AddShippingAddressDialog = ({
                         ))}
                       </SelectContent>
                     </Select>
-
                     <FormDescription className="sr-only">
-                      Select your country
+                      This is the county of your billing address.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -299,15 +311,21 @@ const AddShippingAddressDialog = ({
 
               <FormField
                 control={form.control}
-                name="postCode"
+                name="postalCode"
+                disabled={updateBillingAddressMutation.isPending}
                 render={({ field }) => (
-                  <FormItem className="col-span-4">
+                  <FormItem className="col-span-2">
                     <FormLabel>Zip/Post code</FormLabel>
                     <FormControl>
-                      <Input placeholder="Zip/Post code" {...field} />
+                      <Input
+                        type="text"
+                        required
+                        disabled={updateBillingAddressMutation.isPending}
+                        {...field}
+                      />
                     </FormControl>
                     <FormDescription className="sr-only">
-                      Enter your postal code
+                      This is the Zip/Post code of your billing address.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -317,14 +335,21 @@ const AddShippingAddressDialog = ({
               <FormField
                 control={form.control}
                 name="zip"
+                disabled={updateBillingAddressMutation.isPending}
                 render={({ field }) => (
-                  <FormItem className="col-span-2">
-                    <FormLabel>Zip4 (Optional)</FormLabel>
+                  <FormItem className="col-span-1">
+                    <FormLabel className="overflow-hidden text-ellipsis text-nowrap">
+                      Zip4 (Optional)
+                    </FormLabel>
                     <FormControl>
-                      <Input placeholder="Zip4 (Optional)" {...field} />
+                      <Input
+                        type="text"
+                        disabled={updateBillingAddressMutation.isPending}
+                        {...field}
+                      />
                     </FormControl>
                     <FormDescription className="sr-only">
-                      Enter your Zip4
+                      This is the Zip4 of your billing address.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -336,15 +361,19 @@ const AddShippingAddressDialog = ({
                   variant="outline"
                   type="button"
                   className="font-bold shadow-md"
+                  disabled={updateBillingAddressMutation.isPending}
                   onClick={() => {
-                    form.reset();
-                    closeDialog();
+                    setOpen(false);
                   }}
                 >
                   Back
                 </Button>
 
-                <Button type="submit" className="font-bold shadow-md">
+                <Button
+                  type="submit"
+                  className="font-bold shadow-md"
+                  disabled={updateBillingAddressMutation.isPending}
+                >
                   Submit
                 </Button>
               </DialogFooter>
@@ -365,7 +394,7 @@ const AddShippingAddressDialog = ({
             </div>
 
             <ul className="flex flex-col gap-2">
-              {addressSuggestions.map((address) => (
+              {suggestions.map((address) => (
                 <li key={address.xcAddressId}>
                   <Button
                     variant="outline"
@@ -379,7 +408,7 @@ const AddShippingAddressDialog = ({
                         setSelectedSuggestionId(address.xcAddressId);
                       }
                     }}
-                    disabled={addShippingAddressMutation.isPending}
+                    disabled={updateBillingAddressMutation.isPending}
                   >
                     <CheckCircle
                       className={cn(
@@ -403,8 +432,9 @@ const AddShippingAddressDialog = ({
                 variant="outline"
                 type="button"
                 className="font-bold shadow-md"
+                disabled={updateBillingAddressMutation.isPending}
                 onClick={() => {
-                  setAddressSuggestions([]);
+                  setSuggestions([]);
                 }}
               >
                 Back
@@ -413,10 +443,11 @@ const AddShippingAddressDialog = ({
               <Button
                 type="button"
                 className="font-bold shadow-md"
-                onClick={submitSuggestion}
                 disabled={
-                  addShippingAddressMutation.isPending || !selectedSuggestionId
+                  updateBillingAddressMutation.isPending ||
+                  !selectedSuggestionId
                 }
+                onClick={submitSuggestion}
               >
                 Submit
               </Button>
@@ -428,4 +459,4 @@ const AddShippingAddressDialog = ({
   );
 };
 
-export default AddShippingAddressDialog;
+export default EditBillingAddressDialog;

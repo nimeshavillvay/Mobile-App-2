@@ -70,8 +70,8 @@ const AddCreditCardDialog = ({ token }: AddCreditCardDialogProps) => {
         onSuccess: () => {
           setOpen(false);
 
-          // Refetch the credit card signature when the dialog is closed to get a new requestId
-          creditCardSignatureQuery.refetch();
+          // Clear form when the dialog is closed
+          form.reset();
         },
       },
     );
@@ -114,9 +114,12 @@ const AddCreditCardDialog = ({ token }: AddCreditCardDialogProps) => {
       onOpenChange={(open) => {
         setOpen(open);
 
-        // Refetch the credit card signature when the dialog is closed to get a new requestId
-        if (!open) {
+        // Refetch the credit card signature when the dialog is opened to get a new requestId
+        if (open) {
           creditCardSignatureQuery.refetch();
+        } else {
+          // Clear form when the dialog is closed
+          form.reset();
         }
       }}
     >
@@ -159,23 +162,22 @@ const AddCreditCardDialog = ({ token }: AddCreditCardDialogProps) => {
                 <FormItem>
                   <FormLabel>Card number</FormLabel>
                   <FormControl>
-                    <>
-                      <iframe
-                        title="Snappay credit card iframe"
-                        src={`${process.env.NEXT_PUBLIC_SNAPPAY_URL}/Interop/InteropRequest?reqno=${creditCardSignatureQuery.data.requestId}`}
-                        className={cn(
-                          inputStyles(),
-                          "block w-full px-0 py-0 [&_input]:!p-0",
-                        )}
-                      />
+                    {!creditCardSignatureQuery.isFetching ? (
+                      <>
+                        <iframe
+                          title="Snappay credit card iframe"
+                          src={`${process.env.NEXT_PUBLIC_SNAPPAY_URL}/Interop/InteropRequest?reqno=${creditCardSignatureQuery.data.requestId}`}
+                          className={cn(
+                            inputStyles(),
+                            "block w-full px-0 py-0 [&_input]:!p-0",
+                          )}
+                        />
 
-                      <Input
-                        placeholder="MM / YY"
-                        type="hidden"
-                        id="token"
-                        {...field}
-                      />
-                    </>
+                        <Input type="hidden" id="token" {...field} />
+                      </>
+                    ) : (
+                      <Input type="text" disabled {...field} />
+                    )}
                   </FormControl>
                   <FormDescription className="sr-only">
                     The card number.

@@ -1,4 +1,5 @@
 import useAddToCartMutation from "@/_hooks/cart/use-add-to-cart-mutation.hook";
+import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
 import AlertInline from "@/old/_components/alert-inline";
 import ErrorBoundary from "@/old/_components/error-boundary";
 import { Button } from "@/old/_components/ui/button";
@@ -48,6 +49,8 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
   const quantityId = `quantity-${id}`;
   const formId = `purchase-add-to-cart-form-${id}`;
 
+  const { setQuantity } = useAddToCartDialog((state) => state.actions);
+
   const methods = useForm<Schema>({
     values: { quantity: null },
     resolver: zodResolver(schema),
@@ -61,6 +64,9 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
 
   const onSubmit = methods.handleSubmit((data) => {
     if (data.quantity) {
+      // Update the quantity in add to cart dialog
+      setQuantity(data.quantity);
+
       addToCartMutation.mutate(
         {
           quantity: data.quantity,

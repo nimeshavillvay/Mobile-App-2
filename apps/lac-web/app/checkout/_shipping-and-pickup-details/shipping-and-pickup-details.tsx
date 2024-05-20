@@ -32,6 +32,7 @@ const ShippingAndPickupDetails = ({ token }: ShippingAndPickupDetailsProps) => {
   const driversNoteId = `drivers-note-${id}`;
 
   const [open, setOpen] = useState(true);
+  const [openCalendar, setOpenCalendar] = useState(false);
 
   const shippingAddressListQuery = useSuspenseShippingAddressList(token);
   const cartQuery = useSuspenseCart(token);
@@ -58,6 +59,7 @@ const ShippingAndPickupDetails = ({ token }: ShippingAndPickupDetailsProps) => {
   ).toDate();
   const handleDateChange = (date?: Date) => {
     if (date) {
+      setOpenCalendar(false);
       updateCartConfigMutation.mutate({
         pickDate: dayjs(date).format("MM-DD-YYYY"),
       });
@@ -128,7 +130,7 @@ const ShippingAndPickupDetails = ({ token }: ShippingAndPickupDetailsProps) => {
               <div className="space-y-2">
                 <h3 className="text-sm text-black">Set Future Delivery Date</h3>
 
-                <Popover>
+                <Popover open={openCalendar} onOpenChange={setOpenCalendar}>
                   <PopoverTrigger asChild>
                     <Button
                       variant="outline"
@@ -163,6 +165,8 @@ const ShippingAndPickupDetails = ({ token }: ShippingAndPickupDetailsProps) => {
                       selected={date}
                       onSelect={handleDateChange}
                       initialFocus
+                      fromDate={new Date()}
+                      defaultMonth={date}
                     />
                   </PopoverContent>
                 </Popover>

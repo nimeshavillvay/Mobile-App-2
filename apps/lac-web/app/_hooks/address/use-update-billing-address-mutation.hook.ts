@@ -3,7 +3,7 @@ import { api } from "@/_lib/api";
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import type { AddressCheckSuggestions, AddressFormData } from "@/_lib/types";
 import { Address } from "@/_lib/types";
-import { useToast } from "@/old/_components/ui/use-toast";
+import { useToast } from "@repo/web-ui/components/ui/toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 type BillingAddressResponse = {
@@ -66,6 +66,11 @@ const useUpdateBillingAddressMutation = () => {
         .json<BillingAddressSuggestionsResponse | BillingAddressResponse>();
 
       if ("check_type" in response) {
+        toast({
+          title: "Address conflicts found",
+          variant: "destructive",
+        });
+
         const suggestionsResponse: AddressCheckSuggestions = {
           checkType: response.check_type,
           message: response.message,
@@ -105,7 +110,6 @@ const useUpdateBillingAddressMutation = () => {
     onSuccess: () => {
       toast({
         description: "Billing address updated",
-        variant: "success",
       });
     },
     onError: () => {
