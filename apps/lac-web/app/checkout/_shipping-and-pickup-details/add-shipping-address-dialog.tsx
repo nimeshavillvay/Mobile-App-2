@@ -404,8 +404,7 @@ const AddShippingAddressDialog = ({
                 type="button"
                 className="font-bold shadow-md"
                 onClick={() => {
-                  form.reset();
-                  closeDialog();
+                  setAddressSuggestions([]);
                 }}
               >
                 Back
