@@ -24,6 +24,7 @@ const useSuspenseCreditCardSignature = (token: string) => {
       status: data.status,
       message: data.message,
     }),
+    staleTime: Infinity,
   });
 };
 
