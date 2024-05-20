@@ -6,9 +6,9 @@ import {
   SearchBoxInput,
   SearchClearButton,
 } from "@repo/web-ui/components/search-box";
+import { Separator } from "@repo/web-ui/components/ui/separator";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { Separator } from "~/components/ui/separator";
 import BarcodeScannerDialog from "./barcode-scan-dialog";
 import useMultiSearch, { placeholderData } from "./use-multi-search.hook";
 
