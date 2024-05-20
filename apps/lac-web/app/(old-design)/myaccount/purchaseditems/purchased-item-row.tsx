@@ -348,8 +348,8 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
       <AddToShoppingListDialog
         open={showShoppingListsDialog}
         setOpenAddToShoppingListDialog={setShowShoppingListsDialog}
-        token={token}
-        item={item}
+        productId={item.productId}
+        favoriteIds={item.favoriteIds}
       />
     </>
   );

@@ -93,6 +93,8 @@ const ProductHero = async ({ id, slug }: ProductHeroProps) => {
             productId={parseInt(id)}
             minQty={product.selectedProduct.minimumOrderQuantity}
             incQty={product.selectedProduct.quantityByIncrements}
+            isFavourite={product.selectedProduct.isFavourite}
+            favoriteIds={product.selectedProduct.favoriteIds}
           />
 
           {product.selectedProduct.isDirectlyShippedFromVendor && (

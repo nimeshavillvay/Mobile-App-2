@@ -86,7 +86,7 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
     });
   }
 
-  const getItemInfo = useItemInfo(productIds);
+  const getItemInfo = useItemInfo(productIds, token);
   if (purchasedItemsList && getItemInfo) {
     isLoading = false;
   }
@@ -115,6 +115,7 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
       );
 
       console.log("iteminfo", itemInfo);
+      console.log("iteminfo favids", itemInfo?.favoriteIds);
 
       const initialDetails: ItemInfo = {
         productId: item.productId,
@@ -149,7 +150,7 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
         productSummary: "",
         brand: "",
         productCategory: "",
-        favoriteIds: itemInfo?.favoriteIds ?? [],
+        favoriteIds: [],
       };
 
       detailedPurchasedItems.push({

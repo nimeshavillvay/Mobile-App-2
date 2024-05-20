@@ -1,3 +1,4 @@
+import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@repo/web-ui/components/ui/button";
 import {
@@ -18,12 +19,12 @@ import {
 import { Input } from "@repo/web-ui/components/ui/input";
 import { useToast } from "@repo/web-ui/components/ui/toast";
 import { LoaderCircle } from "lucide-react";
-import { useState, type Dispatch, type SetStateAction } from "react";
+import { cookies } from "next/headers";
+import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Checkbox } from "~/components/ui/checkbox";
 import { cn } from "~/lib/utils";
-import { DetailedPurchasedItem } from "../purchaseditems/types";
 import useCreateShoppingListMutation from "./use-create-shopping-list-mutation.hook";
 import useSuspenseShoppingList from "./use-suspense-shopping-list.hook";
 import useUpdateShoppingListItemMutation from "./use-update-shopping-list-item-mutation.hook";
@@ -31,29 +32,30 @@ import useUpdateShoppingListItemMutation from "./use-update-shopping-list-item-m
 type AddToShoppingListDialogProps = {
   open: boolean;
   setOpenAddToShoppingListDialog: Dispatch<SetStateAction<boolean>>;
-  token: string;
-  item: DetailedPurchasedItem;
+  productId: number;
+  favoriteIds: string[];
 };
 
 const AddToShoppingListDialog = ({
   open,
   setOpenAddToShoppingListDialog,
-  token,
-  item,
+  productId,
+  favoriteIds,
 }: AddToShoppingListDialogProps) => {
   const { toast } = useToast();
 
-  const shoppingListsQuery = useSuspenseShoppingList(token, "name", "desc");
+  const shoppingListsQuery = useSuspenseShoppingList("name", "desc");
 
   const shoppingLists = shoppingListsQuery?.data;
 
-  //TODO: Remove this hardcoded values and take from item.favoriteIds
-  const favIds = ["100", "99"];
-
-  const [selectedShoppingLists, setSelectedShoppingLists] =
-    useState<string[]>(favIds);
-
+  const [selectedShoppingLists, setSelectedShoppingLists] = useState<string[]>(
+    [],
+  );
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    setSelectedShoppingLists(favoriteIds);
+  }, [favoriteIds]);
 
   const shoppingListNameSchema = z.object({
     shoppingListName: z.string().trim(),
@@ -87,7 +89,7 @@ const AddToShoppingListDialog = ({
         listIds: selectedShoppingLists.map((shoppingListId) =>
           parseInt(shoppingListId),
         ),
-        productId: item.productId,
+        productId: productId,
       },
       {
         onSuccess: () => {
@@ -193,7 +195,7 @@ const AddToShoppingListDialog = ({
             <div className="text-right">
               <Button
                 type="submit"
-                className="h-9 rounded-[3px] bg-brand-primary px-4 text-base font-normal uppercase text-white"
+                className="h-9 w-[90px] rounded-[3px] bg-brand-primary px-4 text-base font-normal uppercase text-white"
               >
                 {isLoading ? (
                   <LoaderCircle className="animate-spin" />

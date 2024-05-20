@@ -23,6 +23,7 @@ type Product = {
     img: string;
     slug: string;
     is_favourite: null;
+    favoriteIds: string[];
     is_comparison: null;
     txt_hazardous: string;
     txt_special_shipping: string;
@@ -88,6 +89,8 @@ export const getProduct = async (id: string, slug: string) => {
     return notFound();
   }
 
+  console.log(response);
+
   const { selected_item } = response;
 
   return {
@@ -107,6 +110,7 @@ export const getProduct = async (id: string, slug: string) => {
       image: selected_item.img,
       slug: selected_item.slug,
       isFavourite: !!selected_item.is_favourite,
+      favoriteIds: selected_item.favoriteIds,
       isComparison: !!selected_item.is_comparison,
       isDirectlyShippedFromVendor:
         selected_item.is_directly_shipped_from_vendor ?? false,
