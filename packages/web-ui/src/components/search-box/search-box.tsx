@@ -39,6 +39,11 @@ type SearchData = {
     attributes?: [];
     itemImage?: string;
     uom?: string;
+    groupId?: string;
+    categoryId?: string;
+    categorySlug?: string;
+    brandId?: string;
+    brandSlug?: string;
   }[];
 };
 
@@ -63,6 +68,7 @@ export const SearchBoxInput = ({
   value,
   setValue,
   onEnterPressed,
+  children,
   ...delegated
 }: ComponentProps<"input"> & {
   data: {
@@ -120,21 +126,31 @@ export const SearchBoxInput = ({
       },
     });
 
+  const validProducts = products.results.filter(
+    (product) =>
+      product.productStatus !== "discontinued" &&
+      product.groupId !== "0" &&
+      product.categoryName !== "",
+  );
+
   return (
     <div className="relative w-full rounded-md">
-      <input
-        className={cn(
-          "placeholder-text-wurth-gray-400 w-full min-w-0 flex-1 shrink rounded-l-full border-0 py-2.5 pl-3.5 text-sm",
-          className,
-        )}
-        {...delegated}
-        {...getInputProps()}
-        onKeyDown={handleKeyDown}
-      />
+      <div className="relative flex items-center">
+        <input
+          className={cn(
+            "placeholder-text-wurth-gray-400 w-full min-w-0 flex-1 shrink rounded-full border-0 py-2.5 pl-3.5 pr-12 text-sm", // Adjust padding for buttons
+            className,
+          )}
+          {...delegated}
+          {...getInputProps()}
+          onKeyDown={handleKeyDown}
+        />
+        <div className="absolute right-0 flex items-center">{children}</div>
+      </div>
       <ul
         className={`${
           isOpen ? "block" : "hidden"
-        } shadow-right shadow-bottom shadow-left absolute z-50 mt-4 rounded-b-lg bg-white p-0 pl-4 text-sm shadow-sm`}
+        } absolute left-0 right-0 z-50 mt-4 rounded-b-lg bg-white p-0 pl-4 text-sm shadow-sm`}
         {...getMenuProps()}
       >
         {isOpen && value && (
@@ -208,13 +224,13 @@ export const SearchBoxInput = ({
               </ul>
             )}
 
-            {products.summary.total > 0 && (
+            {products.summary.total > 0 && validProducts.length > 0 && (
               <>
                 <li className="text-black-500 whitespace-normal break-all px-3 py-1 font-semibold">
                   Products for &quot;{value}&quot;
                 </li>
                 <ul className="grid grid-cols-1 gap-4 break-words md:grid-cols-1 lg:grid-cols-2">
-                  {products.results.slice(0, 10).map((product, index) => (
+                  {validProducts.slice(0, 10).map((product, index) => (
                     <li
                       key={product.id}
                       {...getItemProps({
@@ -231,7 +247,7 @@ export const SearchBoxInput = ({
                         key={product.id}
                       >
                         <div className="flex-shrink-0 overflow-hidden rounded-md border border-gray-300">
-                          {product.itemImage && product.productTitle && (
+                          {product.itemImage && product.productTitle ? (
                             <Image
                               src={product.itemImage}
                               alt={product.productTitle}
@@ -239,15 +255,14 @@ export const SearchBoxInput = ({
                               width={80}
                               height={80}
                             />
-                          )}
-                          {!product.itemImage && (
+                          ) : (
                             <div className="h-20 w-20 rounded-full"></div>
                           )}
                         </div>
                         <div>
                           <div className="font-normal hover:underline">
                             <p className="break-all">{product.productTitle}</p>
-                          </div>{" "}
+                          </div>
                           <div className="break-all text-[#74767B]">
                             Item# {product.materialNumber}
                           </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import useAddToCartMutation from "@/_hooks/cart/use-add-to-cart-mutation.hook";
+import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
 import useAddToCartForm from "../use-add-to-cart-form.hook";
 import FormContent from "./form-content";
 
@@ -20,6 +21,8 @@ const AddToCartForm = ({
   const { watch, setValue, register, handleSubmit } = useAddToCartForm();
   const quantity = watch("quantity");
 
+  const { setQuantity } = useAddToCartDialog((state) => state.actions);
+
   const reduceQuantity = () => {
     setValue("quantity", quantity - incQty);
   };
@@ -32,6 +35,9 @@ const AddToCartForm = ({
   });
 
   const onSubmit = handleSubmit(() => {
+    // Update the quantity in add to cart dialog
+    setQuantity(quantity);
+
     addToCartMutation.mutate({
       quantity,
     });

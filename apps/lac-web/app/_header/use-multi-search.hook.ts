@@ -88,6 +88,7 @@ const useMultiSearch = (query: string) => {
     placeholderData: (previousData) => {
       return previousData ?? placeholderData;
     },
+    enabled: !!query,
   });
 };
 

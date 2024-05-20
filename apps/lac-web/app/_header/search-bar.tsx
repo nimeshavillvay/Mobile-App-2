@@ -17,8 +17,11 @@ const SearchBar = () => {
   const [value, setValue] = useState("");
   const multiSearchQuery = useMultiSearch(value);
   const handleSearch = () => {
-    if (value != "") {
-      router.push(`/search?query=${value}`);
+    if (value !== "") {
+      const queryParams = new URLSearchParams({
+        query: value,
+      });
+      router.push(`/search?${queryParams.toString()}`);
     }
   };
 
@@ -34,11 +37,12 @@ const SearchBar = () => {
         setValue={setValue}
         onEnterPressed={handleSearch}
         placeholder="What are you looking for?"
-      />
-      {value && <SearchClearButton onClick={clearInput} />}{" "}
-      <SearchBoxButton onClick={handleSearch} />
-      <Separator orientation="vertical" className="h-5" />
-      <BarcodeScannerDialog />
+      >
+        {value && <SearchClearButton onClick={clearInput} />}
+        <SearchBoxButton onClick={handleSearch} />
+        <Separator orientation="vertical" className="h-5" />
+        <BarcodeScannerDialog />
+      </SearchBoxInput>
     </SearchBox>
   );
 };

@@ -284,6 +284,8 @@ const AddToCart = ({
 }) => {
   const { watch, setValue, register, handleSubmit } =
     useFormContext<VerificationDialogSchema>();
+  const { setQuantity } = useAddToCartDialog((state) => state.actions);
+
   const quantity = watch("quantity");
 
   const reduceQuantity = () => {
@@ -299,6 +301,9 @@ const AddToCart = ({
   });
 
   const onSubmit = handleSubmit((data) => {
+    // Update the quantity in add to cart dialog
+    setQuantity(data.quantity);
+
     addToCartMutation.mutate({
       quantity: data.quantity,
       poOrJobName: data.poOrJobName,

@@ -148,7 +148,7 @@ const CartSummary = ({ token, plants }: CartSummaryProps) => {
               showDetails && "rotate-180",
             )}
           />
-          <span>{showDetails ? "Show" : "Hide"} details</span>
+          <span>{showDetails ? "Hide" : "Show"} details</span>
         </Button>
       </div>
     </section>

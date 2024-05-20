@@ -34,7 +34,6 @@ const SearchPage = async ({
 }) => {
   const query = searchParams.query?.toString() ?? "";
   const pageNo = searchParams.page?.toString() ?? "1";
-
   const searchResults = await getSearchResults({
     query,
     pageNo,
@@ -96,10 +95,12 @@ const SearchPage = async ({
 
       {searchResults.summary.plp &&
         !Array.isArray(searchResults.results) &&
-        searchResults.results.productStatus == "discontinued" && (
+        searchResults.results.productStatus === "discontinued" &&
+        searchResults.results.categoryId &&
+        searchResults.results.categorySlug && (
           <DiscontinuedItemNotice
-            categoryId={searchResults.results.id}
-            slug={searchResults.results.slug}
+            categoryId={searchResults.results.categoryId}
+            slug={searchResults.results.categorySlug}
           />
         )}
 
