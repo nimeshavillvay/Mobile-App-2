@@ -1,5 +1,6 @@
 "use client";
 
+import { updateSearchParams } from "@/(old-design)/_utils/client-helpers";
 import {
   Tabs,
   TabsList,
@@ -30,6 +31,16 @@ const ShoppingList = ({ token }: { token: string }) => {
   const shoppingLists = shoppingListsQuery?.data;
 
   const searchParams = useSearchParams();
+
+  if (searchParams.get("list-id") == null && shoppingLists.lists.length > 0) {
+    console.log("redirect");
+
+    const newSearchParams = new URLSearchParams(searchParams);
+
+    newSearchParams.set("list-id", shoppingLists.lists[0]?.listId ?? "");
+
+    updateSearchParams(newSearchParams);
+  }
 
   const pageNoValue = searchParams.get("page") ?? "1";
   const page = !isNaN(parseInt(pageNoValue)) ? parseInt(pageNoValue) : 1;

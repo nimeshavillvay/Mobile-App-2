@@ -42,6 +42,7 @@ export type ItemInfo = {
   productSummary: string;
   brand: string;
   productCategory: string;
+  favoriteIds: string[];
 };
 
 export type OldPurchasedProduct = {
