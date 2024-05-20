@@ -8,7 +8,7 @@ import MoreItemDetailsForMobile from "./more-item-details-for-mobile";
 type OrderItemForMobileProps = {
   orderItem: {
     productId: number;
-    slug: string;
+    slug?: string;
     sku: string;
     totalQuantity: number;
     lineItems: {
@@ -75,7 +75,7 @@ const OrderItemForMobile = ({
         <div className="flex flex-row gap-2">
           <div className="min-w-[92px]">
             <Link
-              href={generateItemUrl({ productId, slug })}
+              href={generateItemUrl({ productId, slug: slug ?? "" })}
               className={
                 productId ? "pointer-events-auto" : "pointer-events-none"
               }
@@ -117,6 +117,7 @@ const OrderItemForMobile = ({
         </div>
 
         <MoreItemDetailsForMobile
+          productId={productId}
           lineItems={orderItem.lineItems}
           shippingMethods={shippingMethods}
           plants={plants}

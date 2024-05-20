@@ -21,7 +21,7 @@ type OrderItemProps = {
   orderItem: {
     sku: string;
     productId: number;
-    slug: string;
+    slug?: string;
     totalQuantity: number;
     lineItems: {
       itemNo: string;
@@ -100,7 +100,7 @@ const OrderItem = ({
         <div className="flex flex-1 flex-row gap-4">
           <div className="min-w-[76px]">
             <Link
-              href={generateItemUrl({ productId, slug })}
+              href={generateItemUrl({ productId, slug: slug ?? "" })}
               className={
                 productId ? "pointer-events-auto" : "pointer-events-none"
               }
