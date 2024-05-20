@@ -284,14 +284,18 @@ const AddToCart = ({
 }) => {
   const { watch, setValue, register, handleSubmit } =
     useFormContext<VerificationDialogSchema>();
+  const { setQuantity } = useAddToCartDialog((state) => state.actions);
+
   const quantity = watch("quantity");
 
   const reduceQuantity = () => {
     setValue("quantity", quantity - increments);
+    setQuantity(quantity - increments);
   };
 
   const increaseQuantity = () => {
     setValue("quantity", quantity + increments);
+    setQuantity(quantity + increments);
   };
 
   const addToCartMutation = useAddToCartMutation(token, {
