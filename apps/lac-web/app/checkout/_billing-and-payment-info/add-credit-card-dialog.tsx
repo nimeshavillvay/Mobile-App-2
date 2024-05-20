@@ -69,6 +69,9 @@ const AddCreditCardDialog = ({ token }: AddCreditCardDialogProps) => {
       {
         onSuccess: () => {
           setOpen(false);
+
+          // Clear form when the dialog is closed
+          form.reset();
         },
       },
     );
@@ -114,6 +117,9 @@ const AddCreditCardDialog = ({ token }: AddCreditCardDialogProps) => {
         // Refetch the credit card signature when the dialog is opened to get a new requestId
         if (open) {
           creditCardSignatureQuery.refetch();
+        } else {
+          // Clear form when the dialog is closed
+          form.reset();
         }
       }}
     >
