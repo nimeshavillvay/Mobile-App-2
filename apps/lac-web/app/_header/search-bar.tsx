@@ -16,7 +16,10 @@ const SearchBar = () => {
   const multiSearchQuery = useMultiSearch(value);
   const handleSearch = () => {
     if (value !== "") {
-      router.push(`/search?query=${value}`);
+      const queryParams = new URLSearchParams({
+        query: value,
+      });
+      router.push(`/search?${queryParams.toString()}`);
     }
   };
 
