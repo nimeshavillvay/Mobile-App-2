@@ -64,6 +64,15 @@ const OrderSummary = ({ token, children }: OrderSummaryProps) => {
     );
   });
 
+  const onOpenChange = (open: boolean) => {
+    setOpenPromo(open);
+
+    if (!open) {
+      // Clear form when closing
+      form.reset();
+    }
+  };
+
   return (
     <div className="flex flex-col gap-3 rounded-lg border border-wurth-gray-150 px-5 py-4 shadow-md">
       <h3 className=" font-title text-xl font-medium tracking-[-0.1px] text-wurth-gray-800">
@@ -116,7 +125,7 @@ const OrderSummary = ({ token, children }: OrderSummaryProps) => {
 
           <tr>
             <td colSpan={2} className="pb-3 pt-1">
-              <Collapsible.Root open={openPromo} onOpenChange={setOpenPromo}>
+              <Collapsible.Root open={openPromo} onOpenChange={onOpenChange}>
                 <div className="flex flex-row items-center justify-between">
                   <div className="py-1 font-medium">Promo Code</div>
 
