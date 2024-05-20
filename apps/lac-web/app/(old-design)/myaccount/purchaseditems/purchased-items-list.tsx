@@ -67,7 +67,7 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
     token,
     fromDate,
     toDate,
-    page - 1,
+    page,
     perPage,
     orderBy,
     orderType,
@@ -291,7 +291,12 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
         </Table>
       </div>
 
-      <TotalCountAndPagination isLoading={isLoading} totalItems={totalItems} />
+      {detailedPurchasedItems.length > 0 && totalItems >= perPage && (
+        <TotalCountAndPagination
+          isLoading={isLoading}
+          totalItems={totalItems}
+        />
+      )}
     </>
   );
 };
