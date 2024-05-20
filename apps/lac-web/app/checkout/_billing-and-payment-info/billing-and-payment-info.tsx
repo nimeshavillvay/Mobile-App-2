@@ -28,6 +28,7 @@ import { useId, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import AddCreditCardDialog from "./add-credit-card-dialog";
+import EditBillingAddressDialog from "./edit-billing-address-dialog";
 import useCheckoutMutation from "./use-checkout-mutation.hook";
 import useDeleteCreditCardMutation from "./use-delete-credit-card-mutation.hook";
 import useSuspenseCreditCards from "./use-suspense-credit-cards.hook";
@@ -178,6 +179,8 @@ const BillingAndPaymentInfo = ({
               <br />
               {billingAddressQuery.data.countryName}
             </div>
+
+            <EditBillingAddressDialog token={token} />
           </div>
         </div>
 

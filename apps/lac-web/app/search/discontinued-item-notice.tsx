@@ -27,8 +27,15 @@ const DiscontinuedItemNotice = ({
     setOpen(true);
   }, []);
 
+  const handleOpenChange = (isOpen: boolean) => {
+    setOpen(isOpen);
+    if (!isOpen) {
+      router.push(`/`);
+    }
+  };
+
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Discontinued</DialogTitle>

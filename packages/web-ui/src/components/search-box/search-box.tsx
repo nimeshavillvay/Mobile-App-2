@@ -39,6 +39,11 @@ type SearchData = {
     attributes?: [];
     itemImage?: string;
     uom?: string;
+    groupId?: string;
+    categoryId?: string;
+    categorySlug?: string;
+    brandId?: string;
+    brandSlug?: string;
   }[];
 };
 
@@ -120,6 +125,13 @@ export const SearchBoxInput = ({
         return "";
       },
     });
+
+  const validProducts = products.results.filter(
+    (product) =>
+      product.productStatus !== "discontinued" &&
+      product.groupId !== "0" &&
+      product.categoryName !== "",
+  );
 
   return (
     <div className="relative w-full rounded-md">
@@ -212,13 +224,13 @@ export const SearchBoxInput = ({
               </ul>
             )}
 
-            {products.summary.total > 0 && (
+            {products.summary.total > 0 && validProducts.length > 0 && (
               <>
                 <li className="text-black-500 whitespace-normal break-all px-3 py-1 font-semibold">
                   Products for &quot;{value}&quot;
                 </li>
                 <ul className="grid grid-cols-1 gap-4 break-words md:grid-cols-1 lg:grid-cols-2">
-                  {products.results.slice(0, 10).map((product, index) => (
+                  {validProducts.slice(0, 10).map((product, index) => (
                     <li
                       key={product.id}
                       {...getItemProps({
@@ -235,7 +247,7 @@ export const SearchBoxInput = ({
                         key={product.id}
                       >
                         <div className="flex-shrink-0 overflow-hidden rounded-md border border-gray-300">
-                          {product.itemImage && product.productTitle && (
+                          {product.itemImage && product.productTitle ? (
                             <Image
                               src={product.itemImage}
                               alt={product.productTitle}
@@ -243,15 +255,14 @@ export const SearchBoxInput = ({
                               width={80}
                               height={80}
                             />
-                          )}
-                          {!product.itemImage && (
+                          ) : (
                             <div className="h-20 w-20 rounded-full"></div>
                           )}
                         </div>
                         <div>
                           <div className="font-normal hover:underline">
                             <p className="break-all">{product.productTitle}</p>
-                          </div>{" "}
+                          </div>
                           <div className="break-all text-[#74767B]">
                             Item# {product.materialNumber}
                           </div>

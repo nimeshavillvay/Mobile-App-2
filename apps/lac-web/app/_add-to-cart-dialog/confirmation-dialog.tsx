@@ -1,7 +1,6 @@
 "use client";
 
 import useSuspenseCart from "@/_hooks/cart/use-suspense-cart.hook";
-import useSuspenseSimulationCheckout from "@/_hooks/cart/use-suspense-simulation-checkout.hook";
 import useUpdateCartItemMutation from "@/_hooks/cart/use-update-cart-item-mutation.hook";
 import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
 import useItemInfo from "@/_hooks/product/use-item-info.hook";
@@ -40,6 +39,7 @@ const ConfirmationDialog = ({ token }: ConfirmationDialogProps) => {
 
   const open = useAddToCartDialog((state) => state.open);
   const productId = useAddToCartDialog((state) => state.productId);
+  const quantity = useAddToCartDialog((state) => state.quantity);
   const { setOpen } = useAddToCartDialog((state) => state.actions);
 
   const onOpenChange = (newOpen: boolean) => {
@@ -54,15 +54,10 @@ const ConfirmationDialog = ({ token }: ConfirmationDialogProps) => {
   const itemInfo = itemInfoQuery.data?.[0];
 
   const cartQuery = useSuspenseCart(token);
-  const simulationCheckoutQuery = useSuspenseSimulationCheckout(token);
 
   const itemInCart = cartQuery.data.cartItems.find(
     (item) => item.itemInfo.productId === productId,
   );
-  const itemInSimulationCheckout =
-    simulationCheckoutQuery.data.productslist.find(
-      (item) => item.productId === productId,
-    );
 
   const { register, getValues } = useForm<
     z.infer<typeof AddToCartDialogSchema>
@@ -78,11 +73,11 @@ const ConfirmationDialog = ({ token }: ConfirmationDialogProps) => {
   const handleSave = () => {
     const data = getValues();
 
-    if (productId && itemInSimulationCheckout && itemInCart) {
+    if (productId && quantity && itemInCart) {
       updateCartItemMutation.mutate([
         {
           productId,
-          quantity: itemInSimulationCheckout.quantity,
+          quantity: quantity,
           config: {
             ...itemInCart.configuration,
             poOrJobName: data.poOrJobName,
@@ -129,12 +124,12 @@ const ConfirmationDialog = ({ token }: ConfirmationDialogProps) => {
               </h3>
 
               <div className="flex flex-row items-start justify-between gap-4">
-                {productId && itemInSimulationCheckout?.quantity ? (
+                {productId && quantity ? (
                   <Suspense fallback={<PriceDisplayFallback />}>
                     <PriceDisplay
                       token={token}
                       productId={productId}
-                      quantity={itemInSimulationCheckout?.quantity ?? 1}
+                      quantity={quantity ?? 1}
                       unitOfMeasure={itemInfo.unitOfMeasure}
                     />
                   </Suspense>
