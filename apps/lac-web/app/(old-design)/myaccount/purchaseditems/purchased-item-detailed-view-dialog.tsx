@@ -143,7 +143,7 @@ const PurchasedItemDetailedViewDialog = ({
                   <div className="text-base">{item.productCategory}</div>
                 )}
 
-                <h4 className="text-wrap font-bold text-black">
+                <h4 className="line-clamp-6 text-wrap font-bold text-black">
                   {item.productTitle}
                 </h4>
               </div>

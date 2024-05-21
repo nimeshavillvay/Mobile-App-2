@@ -7,6 +7,7 @@ import { ArrowPathUp } from "./arrow-path-up";
 import { ArrowRight } from "./arrow-right";
 import { ArrowUp } from "./arrow-up";
 import { ArrowUpRight } from "./arrow-up-right";
+import { BarcodeScan } from "./barcode-scan";
 import { Bell } from "./bell";
 import { Building } from "./building";
 import { Check } from "./check";
@@ -32,7 +33,9 @@ import { PackageDelivery } from "./package-delivery";
 import { Phone } from "./phone";
 import { Pinterest } from "./pinterest";
 import { Plus } from "./plus";
+import { Printer } from "./printer";
 import { Profile } from "./profile";
+import { Receipt } from "./receipt";
 import { Save } from "./save";
 import { Settings } from "./settings";
 import { Shield } from "./shield";
@@ -267,6 +270,18 @@ export const Showcase: Story = {
 
         <IconContainer name="Switch">
           <Switch />
+        </IconContainer>
+
+        <IconContainer name="BarcodeScan">
+          <BarcodeScan />
+        </IconContainer>
+
+        <IconContainer name="Printer">
+          <Printer />
+        </IconContainer>
+
+        <IconContainer name="Receipt">
+          <Receipt />
         </IconContainer>
       </ul>
     );
