@@ -41,7 +41,7 @@ const useAddToCartMutation = (
         configuration.backorder_all = selectedOption.backOrder ? "C" : "";
         configuration.hashvalue = selectedOption.hash;
 
-        // Add the 1st plant
+        // Add the plants
         for (let i = 1; i <= 5; i++) {
           if (selectedOption.plants[i.toString()]) {
             const selectedPlant = selectedOption.plants[i.toString()];
@@ -54,7 +54,11 @@ const useAddToCartMutation = (
               configuration[`avail_${i}`] = quantity?.toString() ?? "";
               configuration[`plant_${i}`] = selectedPlant.plant ?? "";
               configuration[`shipping_method_${i}`] =
-                selectedPlant.shippingMethods?.[0] ?? "";
+                selectedPlant.shippingMethods?.find(
+                  // TODO Temporary fix
+                  // Exclude the same day shipping option
+                  (method) => method.code !== "0",
+                )?.code ?? "";
             }
           } else {
             configuration[`avail_${i}`] = "";
