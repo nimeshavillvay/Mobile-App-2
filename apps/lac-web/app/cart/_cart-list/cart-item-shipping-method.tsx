@@ -248,10 +248,7 @@ const CartItemShippingMethod = ({
               selectedSection !== SHIP_TO_ME || availableOptions?.length === 0
             }
             value={selectedShippingMethod}
-            onValueChange={(val) => {
-              setSelectedShippingMethod(val);
-              console.log(val);
-            }}
+            onValueChange={(val) => setSelectedShippingMethod(val)}
           >
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Select a delivery method" />
