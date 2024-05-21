@@ -86,16 +86,16 @@ const AddressDialog = ({
 
   const form = useForm<AddressDataSchema>({
     resolver: zodResolver(addressDataSchema),
-    defaultValues: {
-      company: address.organization,
+    values: {
+      company: address.organization ?? "",
       addressLineOne: address.streetAddress,
       city: address.locality,
       state: address.region,
       zipCode: address.postalCode,
-      phoneNumber: address.phoneNumber,
+      phoneNumber: address.phoneNumber ?? "",
       zip4: address.zip4,
       country: address.countryName,
-      county: address.county ?? undefined,
+      county: address.county ?? "",
     },
   });
 
