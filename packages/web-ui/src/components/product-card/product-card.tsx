@@ -17,6 +17,7 @@ import {
 import type { SkeletonProps } from "~/components/ui/skeleton";
 import { Skeleton } from "~/components/ui/skeleton";
 import { cn, formatNumberToPrice } from "~/lib/utils";
+import { HeartFilled } from "../icons/heart-filled";
 
 type Orientation = "vertical" | "horizontal";
 
@@ -268,9 +269,13 @@ const ProductCardVariantSelector = ({
 
 const ProductCardActions = ({
   addToCart,
+  isFavourite,
+  onClickShoppingList,
   disabled = false,
 }: {
   addToCart: () => void;
+  isFavourite: boolean;
+  onClickShoppingList: () => void;
   disabled?: boolean;
 }) => {
   return (
@@ -289,8 +294,13 @@ const ProductCardActions = ({
         className="size-10"
         aria-label="Add to favorites"
         disabled={disabled}
+        onClick={onClickShoppingList}
       >
-        <HeartOutline className="size-4 fill-black" />
+        {isFavourite ? (
+          <HeartFilled className="size-4" />
+        ) : (
+          <HeartOutline className="size-4" />
+        )}
       </Button>
     </div>
   );

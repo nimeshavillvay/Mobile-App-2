@@ -32,6 +32,8 @@ const FlashSaleList = async () => {
               title: product.productTitle,
               image: product.productImage,
               uom: product.unitOfMeasure,
+              isFavourite: product.isFavourite,
+              favoriteIds: product.favoriteIds,
             },
           ],
         }}

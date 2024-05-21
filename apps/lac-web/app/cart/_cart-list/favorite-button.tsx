@@ -14,13 +14,14 @@ type FavoriteButtonProps = {
   productId: number;
   isFavourite: boolean;
   favoriteIds: string[];
-  className?: string;
+  display: "mobile" | "desktop";
 };
 
 const FavoriteButton = ({
   productId,
   isFavourite,
   favoriteIds,
+  display,
 }: FavoriteButtonProps) => {
   const [showShoppingListsDialog, setShowShoppingListsDialog] = useState(false);
   const router = useRouter();
@@ -33,23 +34,45 @@ const FavoriteButton = ({
 
   return (
     <>
-      <Button
-        variant="ghost"
-        className="h-fit w-full justify-end px-0 py-0"
-        onClick={() => {
-          isLoggedInUser
-            ? setShowShoppingListsDialog(true)
-            : router.push("/sign-in");
-        }}
-      >
-        <span className="text-[13px] leading-5">Add to favorite</span>
+      {display === "desktop" && (
+        <Button
+          variant="ghost"
+          className="h-fit w-full justify-end px-0 py-0"
+          onClick={() => {
+            isLoggedInUser
+              ? setShowShoppingListsDialog(true)
+              : router.push("/sign-in");
+          }}
+        >
+          <span className="text-[13px] leading-5">Add to favorite</span>
 
-        {isFavourite ? (
-          <HeartFilled className="size-4" />
-        ) : (
-          <HeartOutline className="size-4" />
-        )}
-      </Button>
+          {isFavourite ? (
+            <HeartFilled className="size-4" />
+          ) : (
+            <HeartOutline className="size-4" />
+          )}
+        </Button>
+      )}
+
+      {display === "mobile" && (
+        <Button
+          variant="subtle"
+          className="w-full"
+          onClick={() => {
+            isLoggedInUser
+              ? setShowShoppingListsDialog(true)
+              : router.push("/sign-in");
+          }}
+        >
+          {isFavourite ? (
+            <HeartFilled className="size-4" />
+          ) : (
+            <HeartOutline className="size-4" />
+          )}
+
+          <span className="sr-only">Add to favorites</span>
+        </Button>
+      )}
 
       {isLoggedInUser && (
         <AddToShoppingListDialog

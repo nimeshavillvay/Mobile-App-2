@@ -29,6 +29,8 @@ const FeaturedBrandList = async () => {
             title: item.productName,
             image: item.image,
             uom: item.unitOfMeasure,
+            isFavourite: item.isFavourite,
+            favoriteIds: item.favoriteIds,
           })),
         }}
         token={sessionToken.value}

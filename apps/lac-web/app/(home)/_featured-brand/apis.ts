@@ -58,6 +58,7 @@ export const getFeaturedBrand = async () => {
       image: item.img,
       slug: item.slug,
       isFavourite: !!item.is_favourite,
+      favoriteIds: item.favoriteIds,
       isComparison: !!item.is_comparison,
       skuAttribute: item["SKU-attribute"],
       isHazardous: item.txt_hazardous === "Y",

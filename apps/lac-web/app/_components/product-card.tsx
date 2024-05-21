@@ -1,7 +1,9 @@
 "use client";
 
+import AddToShoppingListDialog from "@/(old-design)/myaccount/shopping-lists/add-to-shopping-list-dialog";
 import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
+import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
 import { cn } from "@/_lib/utils";
 import {
   ProductCardActions,
@@ -14,6 +16,7 @@ import {
   ProductCard as ProductCardRoot,
   ProductCardVariantSelector,
 } from "@repo/web-ui/components/product-card";
+import { useRouter } from "next/navigation";
 import { useState, type ComponentProps } from "react";
 
 type ProductProps = {
@@ -28,6 +31,8 @@ type ProductProps = {
       title: string;
       image: string;
       uom: string;
+      isFavourite: boolean;
+      favoriteIds: string[];
     }[];
   };
   token: string;
@@ -41,6 +46,12 @@ const ProductCard = ({
   stretchWidth = false,
 }: ProductProps) => {
   const [selectedId, setSelectedId] = useState<string | undefined>();
+  const [showShoppingListsDialog, setShowShoppingListsDialog] = useState(false);
+
+  const router = useRouter();
+
+  const checkLoginQuery = useSuspenseCheckLogin(token);
+  const isLoggedInUser = checkLoginQuery.data.status_code === "OK";
 
   const defaultVariant = product.variants[0];
   const selectedVariant = product.variants.find(
@@ -77,9 +88,14 @@ const ProductCard = ({
   }
 
   let title = "";
+  let isFavourite = false;
+  let favoriteIds: string[] = [];
+
   if (product.variants.length === 1 && defaultVariant) {
     // If there is just one variant, use its title
     title = defaultVariant.title;
+    isFavourite = defaultVariant.isFavourite;
+    favoriteIds = defaultVariant.favoriteIds;
   } else if (product.variants.length > 1) {
     if (selectedVariant) {
       // If there are multiple variants and one of them has been selected, use its title
@@ -164,7 +180,24 @@ const ProductCard = ({
               actualPrice={previousPrice}
             />
 
-            <ProductCardActions addToCart={addToCart} />
+            <ProductCardActions
+              addToCart={addToCart}
+              isFavourite={isFavourite}
+              onClickShoppingList={() => {
+                isLoggedInUser
+                  ? setShowShoppingListsDialog(true)
+                  : router.push("/sign-in");
+              }}
+            />
+
+            {isLoggedInUser && (
+              <AddToShoppingListDialog
+                open={showShoppingListsDialog}
+                setOpenAddToShoppingListDialog={setShowShoppingListsDialog}
+                productId={parseInt(id)}
+                favoriteIds={favoriteIds}
+              />
+            )}
           </>
         )}
       </ProductCardContent>

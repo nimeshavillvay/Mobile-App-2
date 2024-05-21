@@ -29,6 +29,8 @@ const RelatedProductsList = ({ products }: RelatedProductsListProps) => {
             slug: item.url,
             title: item.item_name,
             uom: item.txt_uom,
+            isFavourite: item.is_favourite,
+            favoriteIds: item.favoriteIds,
           },
         ],
       }}

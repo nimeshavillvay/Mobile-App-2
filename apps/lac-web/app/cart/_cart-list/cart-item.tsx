@@ -8,7 +8,6 @@ import type {
   ShippingMethod,
 } from "@/_lib/types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { HeartOutline } from "@repo/web-ui/components/icons/heart-outline";
 import { Save } from "@repo/web-ui/components/icons/save";
 import { Trash } from "@repo/web-ui/components/icons/trash";
 import { Button } from "@repo/web-ui/components/ui/button";
@@ -111,11 +110,12 @@ const CartItem = ({
           />
 
           <div className="flex flex-col gap-1 md:hidden">
-            <Button variant="subtle" className="w-full">
-              <HeartOutline className="size-4" />
-
-              <span className="sr-only">Add to favorites</span>
-            </Button>
+            <FavoriteButton
+              display="mobile"
+              productId={product.id}
+              isFavourite={product.isFavourite}
+              favoriteIds={product.favoriteIds}
+            />
 
             <Button variant="subtle" className="w-full">
               <Save className="size-4" />
@@ -204,6 +204,7 @@ const CartItem = ({
 
       <div className="md:w-80">
         <CartItemShippingMethod
+          display="desktop"
           shippingMethods={shippingMethods}
           plants={plants}
           availability={checkAvailabilityQuery.data}

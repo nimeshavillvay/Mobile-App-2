@@ -67,5 +67,8 @@ export const getSaleItems = async () => {
     categoryName: data.categoryName,
     subCategoryId: Number(data.subCategoryId),
     subCategoryName: data.subCategoryName,
+    // TODO: Set correct values for below 2 fields
+    isFavourite: false,
+    favoriteIds: [],
   }));
 };

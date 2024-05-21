@@ -167,6 +167,7 @@ export type GroupList = {
     img: string;
     slug: string;
     is_favourite: null;
+    favoriteIds: string[];
     is_comparison: null;
     "SKU-attribute": string;
     txt_hazardous: string;
