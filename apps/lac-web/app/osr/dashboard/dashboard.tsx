@@ -66,9 +66,7 @@ const Dashboard = ({ token }: { token: string }) => {
     return allColumns.filter((column) => columns.includes(column));
   };
 
-  const handleEnterKeyPress = (
-    event: React.KeyboardEvent<HTMLInputElement>,
-  ) => {
+  const searchOnEnter = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
       changeSearchParams(searchParams, [
         {
@@ -125,7 +123,7 @@ const Dashboard = ({ token }: { token: string }) => {
               placeholder="Search all customers"
               className="min-w-0 flex-1 shrink rounded border-0 py-2.5 pl-3.5 text-sm placeholder:text-wurth-gray-400"
               onChange={(event) => setSearchInput(event.target.value)}
-              onKeyDown={(event) => handleEnterKeyPress(event)}
+              onKeyDown={(event) => searchOnEnter(event)}
             />
 
             <Button
