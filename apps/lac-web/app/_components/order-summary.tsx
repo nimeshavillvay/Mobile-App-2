@@ -4,12 +4,20 @@ import useSuspenseSimulationCheckout from "@/_hooks/cart/use-suspense-simulation
 import useUpdateCartConfigMutation from "@/_hooks/cart/use-update-cart-config-mutation.hook";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as Collapsible from "@radix-ui/react-collapsible";
-import { Label } from "@radix-ui/react-label";
 import { Plus } from "@repo/web-ui/components/icons/plus";
 import { Button } from "@repo/web-ui/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@repo/web-ui/components/ui/form";
 import { Input } from "@repo/web-ui/components/ui/input";
 import Link from "next/link";
-import { useId, useState, type ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -27,13 +35,10 @@ type OrderSummaryProps = {
  * to avoid blocking the rendering of the parent component.
  */
 const OrderSummary = ({ token, children }: OrderSummaryProps) => {
-  const id = useId();
-  const promoId = `promo-${id}`;
-
   const [openPromo, setOpenPromo] = useState(false);
   const simulationCheckoutQuery = useSuspenseSimulationCheckout(token);
 
-  const { register, handleSubmit } = useForm<z.infer<typeof promoSchema>>({
+  const form = useForm<z.infer<typeof promoSchema>>({
     resolver: zodResolver(promoSchema),
     values: {
       promo: simulationCheckoutQuery.data.configuration.coupon ?? "",
@@ -42,9 +47,31 @@ const OrderSummary = ({ token, children }: OrderSummaryProps) => {
 
   const updateCartConfigMutation = useUpdateCartConfigMutation();
 
-  const onSubmit = handleSubmit((data) => {
-    updateCartConfigMutation.mutate({ coupon: data.promo });
+  const onSubmit = form.handleSubmit((data) => {
+    updateCartConfigMutation.mutate(
+      { coupon: data.promo },
+      {
+        onSuccess: (data) => {
+          if (data.error.coupon) {
+            form.setError("promo", {
+              message: "Invalid Promo Code",
+            });
+          } else {
+            form.reset();
+          }
+        },
+      },
+    );
   });
+
+  const onOpenChange = (open: boolean) => {
+    setOpenPromo(open);
+
+    if (!open) {
+      // Clear form when closing
+      form.reset();
+    }
+  };
 
   return (
     <div className="flex flex-col gap-3 rounded-lg border border-wurth-gray-150 px-5 py-4 shadow-md">
@@ -98,7 +125,7 @@ const OrderSummary = ({ token, children }: OrderSummaryProps) => {
 
           <tr>
             <td colSpan={2} className="pb-3 pt-1">
-              <Collapsible.Root open={openPromo} onOpenChange={setOpenPromo}>
+              <Collapsible.Root open={openPromo} onOpenChange={onOpenChange}>
                 <div className="flex flex-row items-center justify-between">
                   <div className="py-1 font-medium">Promo Code</div>
 
@@ -119,26 +146,48 @@ const OrderSummary = ({ token, children }: OrderSummaryProps) => {
                 </div>
 
                 <Collapsible.Content asChild>
-                  <form
-                    onSubmit={onSubmit}
-                    className="mt-2 flex flex-row gap-2"
-                  >
-                    <Label className="sr-only" htmlFor={promoId}>
-                      Promo Code
-                    </Label>
+                  <Form {...form}>
+                    <form
+                      onSubmit={onSubmit}
+                      className="mt-2 flex flex-row gap-2"
+                    >
+                      <FormField
+                        control={form.control}
+                        name="promo"
+                        disabled={updateCartConfigMutation.isPending}
+                        render={({ field }) => (
+                          <FormItem className="flex-1">
+                            <FormLabel className="sr-only">
+                              Promo Code
+                            </FormLabel>
 
-                    <Input
-                      {...register("promo")}
-                      id={promoId}
-                      type="text"
-                      required
-                      className="h-8"
-                    />
+                            <FormControl>
+                              <Input
+                                required
+                                type="text"
+                                className="h-8"
+                                {...field}
+                              />
+                            </FormControl>
 
-                    <Button size="sm" type="submit">
-                      Add
-                    </Button>
-                  </form>
+                            <FormDescription className="sr-only">
+                              Enter your promo code here.
+                            </FormDescription>
+
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <Button
+                        size="sm"
+                        type="submit"
+                        disabled={updateCartConfigMutation.isPending}
+                      >
+                        Add
+                      </Button>
+                    </form>
+                  </Form>
                 </Collapsible.Content>
               </Collapsible.Root>
             </td>

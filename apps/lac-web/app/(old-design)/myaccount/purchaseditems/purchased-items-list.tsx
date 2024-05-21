@@ -35,7 +35,7 @@ import PurchasedItemRow from "./purchased-item-row";
 import PurchasedItemsListForMobile from "./purchased-items-list-for-mobile";
 import PurchasedItemsSelectors from "./purchased-items-selectors";
 import TotalCountAndPagination from "./total-count-and-pagination";
-import { CombinedPurchasedItem } from "./types";
+import { DetailedPurchasedItem } from "./types";
 import useSuspensePurchasedItemsList from "./use-suspense-purchased-items-list.hook";
 
 const PurchasedItemsList = ({ token }: { token: string }) => {
@@ -67,7 +67,7 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
     token,
     fromDate,
     toDate,
-    page - 1,
+    page,
     perPage,
     orderBy,
     orderType,
@@ -104,7 +104,7 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
     ]);
   };
 
-  const combinedPurchasedItems: CombinedPurchasedItem[] = [];
+  const detailedPurchasedItems: DetailedPurchasedItem[] = [];
 
   if (purchasedItemsList.data.pagination.totalCount > 0) {
     purchasedItemsList.data.products.forEach((item) => {
@@ -114,6 +114,7 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
 
       const initialDetails: ItemInfo = {
         productId: item.productId,
+        slug: "",
         isExcludedProduct: false,
         productSku: item.productSku,
         productName: "",
@@ -146,7 +147,7 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
         productCategory: "",
       };
 
-      combinedPurchasedItems.push({
+      detailedPurchasedItems.push({
         ...item,
         ...(itemInfo ?? initialDetails),
       });
@@ -162,11 +163,15 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
         />
       )}
 
-      <TotalCountAndPagination isLoading={isLoading} totalItems={totalItems} />
+      <TotalCountAndPagination
+        isLoading={isLoading}
+        totalItems={totalItems}
+        itemCountOnly
+      />
 
       {/* Mobile View for Items List */}
       <PurchasedItemsListForMobile
-        items={combinedPurchasedItems}
+        items={detailedPurchasedItems}
         token={token}
       />
 
@@ -273,8 +278,8 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
           </TableHeader>
 
           <TableBody>
-            {combinedPurchasedItems.length > 0 &&
-              combinedPurchasedItems.map((item, index) => (
+            {detailedPurchasedItems.length > 0 &&
+              detailedPurchasedItems.map((item, index) => (
                 <PurchasedItemRow
                   key={`${item.productId}_${index}`}
                   token={token}
@@ -286,7 +291,12 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
         </Table>
       </div>
 
-      <TotalCountAndPagination isLoading={isLoading} totalItems={totalItems} />
+      {detailedPurchasedItems.length > 0 && totalItems >= perPage && (
+        <TotalCountAndPagination
+          isLoading={isLoading}
+          totalItems={totalItems}
+        />
+      )}
     </>
   );
 };

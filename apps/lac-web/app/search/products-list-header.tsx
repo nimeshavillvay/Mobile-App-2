@@ -1,21 +1,12 @@
 import { ProductsGridHeader } from "@/_components/products-grid";
-import { getSearchResults } from "./apis";
 
 type ProductsListHeaderProps = {
-  term: string;
-  pageNo: string;
+  total: number;
 };
 
-const ProductsListHeader = async ({
-  term,
-  pageNo,
-}: ProductsListHeaderProps) => {
-  const searchResults = await getSearchResults({
-    query: term,
-    pageNo,
-  });
-  const total = searchResults.summary.total;
-  const totalPages = Math.ceil(searchResults?.summary?.total / 24);
+const ProductsListHeader = async ({ total }: ProductsListHeaderProps) => {
+  const totalPages = Math.ceil(total / 24);
+
   return <ProductsGridHeader totalCount={total} totalPages={totalPages} />;
 };
 

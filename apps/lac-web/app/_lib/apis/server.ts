@@ -80,7 +80,7 @@ type Banner = {
     use_custom_link: number;
     custom_url: string;
     file_name: string;
-    file_path: null | string;
+    file_path: string;
     mobile_file_name: string;
     mobile_file_path: null | string;
   }[];
@@ -97,6 +97,7 @@ export const getBanners = async (categoryId: string) => {
     })
     .json<{
       B: Banner[];
+      H: Banner[];
       T: Banner[];
     }>();
 };

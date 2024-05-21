@@ -1,5 +1,5 @@
 import { getJobRoles, getPasswordPolicies } from "@/_lib/apis/server";
-import { ACCOUNT_TOKEN_COOKIE } from "@/old/_lib/constants";
+import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -10,18 +10,21 @@ export const metadata: Metadata = {
 };
 
 const UserManagementPage = async () => {
-  const accountTokenCookie = cookies().get(ACCOUNT_TOKEN_COOKIE);
+  const cookieStore = cookies();
+  const tokenCookie = cookieStore.get(SESSION_TOKEN_COOKIE);
 
-  if (!accountTokenCookie?.value) {
+  if (!tokenCookie) {
     return redirect("/");
   }
 
-  const jobRoles = await getJobRoles();
-  const passwordPolicies = await getPasswordPolicies();
+  const [jobRoles, passwordPolicies] = await Promise.all([
+    getJobRoles(),
+    getPasswordPolicies(),
+  ]);
 
   return (
     <UsersList
-      token={accountTokenCookie?.value}
+      token={tokenCookie.value}
       jobRoles={jobRoles?.roles}
       passwordPolicies={passwordPolicies}
     />

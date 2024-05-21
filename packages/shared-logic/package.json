@@ -11,10 +11,10 @@
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
-    "@tanstack/react-query": "^5.32.1",
+    "@tanstack/react-query": "^5.36.0",
     "@total-typescript/ts-reset": "0.5.1",
-    "@types/node": "^20.12.8",
-    "@types/react": "^18.3.1",
+    "@types/node": "^20.12.12",
+    "@types/react": "^18.3.2",
     "@types/react-dom": "^18.3.0",
     "eslint": "^8.57.0",
     "ky": "^1.2.4",

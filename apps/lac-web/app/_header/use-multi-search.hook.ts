@@ -32,6 +32,7 @@ export type SearchData = {
     orderQuantitybyIncrements?: string;
     attributes?: [];
     itemImages?: string;
+    uom?: string;
   }[];
 };
 type Results = {
@@ -87,6 +88,7 @@ const useMultiSearch = (query: string) => {
     placeholderData: (previousData) => {
       return previousData ?? placeholderData;
     },
+    enabled: !!query,
   });
 };
 

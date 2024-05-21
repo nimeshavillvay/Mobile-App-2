@@ -1,12 +1,9 @@
-import { cn, formatNumberToPrice } from "@/old/_utils/helpers";
+import { formatNumberToPrice } from "@/old/_utils/helpers";
 import dayjs from "dayjs";
+import Link from "next/link";
 import { MdKeyboardArrowRight } from "react-icons/md";
-import {
-  ORDER_STATUS,
-  STATUS_COLOR_CLASSES,
-  UI_DATE_FORMAT,
-} from "./constants";
-import type { Order, OrderStatus } from "./types";
+import { UI_DATE_FORMAT } from "./constants";
+import type { Order } from "./types";
 
 type OrderHistoryListForMobileProps = {
   items: Order[];
@@ -31,8 +28,11 @@ const OrderHistoryListForMobile = ({
 export default OrderHistoryListForMobile;
 
 const OrderHistoryRowForMobile = ({ order }: { order: Order }) => {
+  const orderDetailHref =
+    order.orderNo !== "" ? `/myaccount/orderhistory/${order.orderNo}` : "#";
+
   return (
-    <div className="flex flex-col gap-3 bg-white p-4">
+    <Link className="flex flex-col gap-3 bg-white p-4" href={orderDetailHref}>
       <div className="flex flex-row justify-between">
         <div className="font-bold">{order.orderBy}</div>
         <div className="text-brand-gray-500">
@@ -64,17 +64,14 @@ const OrderHistoryRowForMobile = ({ order }: { order: Order }) => {
           <MdKeyboardArrowRight className="text-2xl leading-none text-brand-gray-400" />
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 
-const OrderStatusBadgeMobile = ({ status }: { status: OrderStatus }) => {
-  const colorClass =
-    STATUS_COLOR_CLASSES[status] || STATUS_COLOR_CLASSES.default;
-
+const OrderStatusBadgeMobile = ({ status }: { status: string }) => {
   return (
-    <div className={cn("font-bold", colorClass)}>
-      {ORDER_STATUS[status] || "N/A"}
+    <div className="font-bold text-brand-secondary">
+      {status !== "" ? status : "N/A"}
     </div>
   );
 };

@@ -206,14 +206,15 @@ const Map = ({ taxFormDetails }: { taxFormDetails: TaxFormItems }) => {
 
           <ul className="list-none p-5">
             {arizonaOptions.map((option) => (
-              <li
-                key={option.text}
-                onClick={() => {
-                  handleModalSelect(option.stateCode, option.taxFormType);
-                }}
-                className="cursor-pointer p-2.5 hover:bg-brand-gray-200"
-              >
-                {option.text}
+              <li key={option.text}>
+                <button
+                  onClick={() => {
+                    handleModalSelect(option.stateCode, option.taxFormType);
+                  }}
+                  className="p-2.5 hover:bg-brand-gray-200"
+                >
+                  {option.text}
+                </button>
               </li>
             ))}
           </ul>

@@ -1,30 +1,33 @@
 import type { PasswordPolicies } from "@/_lib/types";
+import { cn } from "@/_lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { CheckCircle } from "@repo/web-ui/components/icons/check-circle";
+import { Button } from "@repo/web-ui/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@repo/web-ui/components/ui/form";
 import { Input } from "@repo/web-ui/components/ui/input";
-import { Label } from "@repo/web-ui/components/ui/label";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useId, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import InputHelperDescription from "../input-helper-description";
-import {
-  StepContainer,
-  StepContainerClosed,
-  StepContainerOpen,
-} from "./step-container";
+import { StepContainer, StepContainerOpen } from "./step-container";
 import useRegisterExistingUserMutation from "./use-register-existing-user-mutation.hook";
 
 type Step = "account" | "personal";
 
-const accountDetailsSchema = z.object({
+const currentUserSchema = z.object({
   soldToAccount: z.string(),
   invoiceNo: z.string(),
-});
-const personalDetailsSchema = accountDetailsSchema.extend({
   firstName: z.string(),
   lastName: z.string(),
-  email: z.string().email(),
   password: z.string().min(8),
   confirmPassword: z.string().min(8),
 });
@@ -35,36 +38,16 @@ type CurrentUserFlowProps = {
 
 const CurrentUserFlow = ({ passwordPolicies }: CurrentUserFlowProps) => {
   const id = useId();
-  const soldToId = `sold-to-${id}`;
-  const invoiceNoId = `invoice-no-${id}`;
-  const firstNameId = `first-name-${id}`;
-  const lastNameId = `last-name-${id}`;
-  const emailId = `email-${id}`;
-  const passwordId = `password-${id}`;
-  const confirmPasswordId = `confirm-password-${id}`;
+  const formId = `form-${id}`;
 
   const searchParams = useSearchParams();
   const email = searchParams.get("email");
 
   const [step, setStep] = useState<Step>("account");
 
-  const accountDetailsForm = useForm<z.infer<typeof accountDetailsSchema>>({
-    resolver: zodResolver(accountDetailsSchema),
-    values: {
-      soldToAccount: "",
-      invoiceNo: "",
-    },
-  });
-  const { soldToAccount, invoiceNo } = accountDetailsForm.watch();
-
-  const onAccountDetailsSubmit = accountDetailsForm.handleSubmit(() => {
-    // Move to the next step
-    setStep("personal");
-  });
-
-  const refinedPersonalDetailsSchema = useMemo(
+  const refinedCurrentUserSchema = useMemo(
     () =>
-      personalDetailsSchema
+      currentUserSchema
         .extend({
           password: z.string().min(passwordPolicies.minimumLength),
         })
@@ -105,105 +88,162 @@ const CurrentUserFlow = ({ passwordPolicies }: CurrentUserFlowProps) => {
         }),
     [passwordPolicies],
   );
-  const personalDetailsForm = useForm<
-    z.infer<typeof refinedPersonalDetailsSchema>
-  >({
-    resolver: zodResolver(refinedPersonalDetailsSchema),
+
+  const form = useForm<z.infer<typeof refinedCurrentUserSchema>>({
+    resolver: zodResolver(refinedCurrentUserSchema),
     values: {
-      soldToAccount,
-      invoiceNo,
+      soldToAccount: "",
+      invoiceNo: "",
       firstName: "",
       lastName: "",
-      email: email ?? "",
       password: "",
       confirmPassword: "",
     },
   });
+  const soldToAccount = form.watch("soldToAccount");
+  const invoiceNo = form.watch("invoiceNo");
+
+  const onAccountDetailsSubmit = () => {
+    setStep("personal");
+  };
 
   const createUserMutation = useRegisterExistingUserMutation();
-  const onPersonalDetailsSubmit = personalDetailsForm.handleSubmit((data) => {
-    console.log(data);
+  const onSubmit = form.handleSubmit((data) => {
+    createUserMutation.mutate({
+      accountNo: data.soldToAccount,
+      documentId: data.invoiceNo,
+      firstName: data.firstName,
+      lastName: data.lastName,
+      email: email ?? "",
+      password: data.password,
+    });
   });
 
   return (
-    <>
-      <StepContainer
-        state={step === "account" ? "open" : "closed"}
-        title="Account details"
+    <Form {...form}>
+      <div
+        className={cn(
+          "flex flex-col gap-5 rounded-lg border border-wurth-gray-250 p-6 shadow-lg",
+          step !== "account" && "hidden",
+        )}
       >
-        <StepContainerOpen
-          steps={{
-            current: 1,
-            total: 2,
-          }}
-          allFieldsRequired
-          onSubmit={onAccountDetailsSubmit}
-        >
-          <p className="text-sm leading-6 text-wurth-gray-800">
-            To set up your online account with customer pricing,{" "}
-            <span className="font-semibold">
-              please provide a recent invoice, delivery, or order number (within
-              the last 12 months)
-            </span>
-            . This will help us validate your account information. Please
-            complete the entire form before submitting.
-          </p>
+        <div className="flex flex-row items-start justify-between">
+          <h3 className="text-base font-semibold text-wurth-gray-800">
+            Account details
+          </h3>
 
-          <div className="flex flex-col gap-8 md:grid md:grid-cols-2">
-            <div className="flex flex-col gap-2">
-              <Label htmlFor={soldToId}>Sold-to account</Label>
+          <div className="text-sm text-wurth-gray-500">1 of 2 steps</div>
+        </div>
 
-              <Input
-                {...accountDetailsForm.register("soldToAccount")}
-                id={soldToId}
-                required
-                placeholder="XXXXXXXX"
-                disabled={createUserMutation.isPending}
-              />
+        <p className="text-sm leading-6 text-wurth-gray-800">
+          To set up your online account with customer pricing,{" "}
+          <span className="font-semibold">
+            please provide a recent invoice, delivery, or order number (within
+            the last 12 months)
+          </span>
+          . This will help us validate your account information. Please complete
+          the entire form before submitting.
+        </p>
 
-              <InputHelperDescription>
-                Lorem ipsum dolor sit amet consectetur.
-              </InputHelperDescription>
-            </div>
+        <div className="flex flex-col gap-8 md:grid md:grid-cols-2">
+          <FormField
+            control={form.control}
+            name="soldToAccount"
+            disabled={createUserMutation.isPending}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Sold-to account</FormLabel>
+                <FormControl>
+                  <Input
+                    type="text"
+                    required
+                    placeholder="XXXXXXXX"
+                    form={formId}
+                    {...field}
+                  />
+                </FormControl>
+                <FormDescription>
+                  Lorem ipsum dolor sit amet consectetur.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-            <div className="flex flex-col gap-2">
-              <Label htmlFor={invoiceNoId}>
-                Invoice, delivery or order number
-              </Label>
+          <FormField
+            control={form.control}
+            name="invoiceNo"
+            disabled={createUserMutation.isPending}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Invoice, delivery or order number</FormLabel>
+                <FormControl>
+                  <Input
+                    type="text"
+                    required
+                    placeholder="XXXXXXXX"
+                    form={formId}
+                    {...field}
+                  />
+                </FormControl>
+                <FormDescription>
+                  Recent invoice, delivery or order number from within the last
+                  12 months
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
 
-              <Input
-                {...accountDetailsForm.register("invoiceNo")}
-                id={invoiceNoId}
-                required
-                placeholder="XXXXXXXXXX"
-                disabled={createUserMutation.isPending}
-              />
+        <p className="text-sm text-wurth-gray-800">
+          By continuing, you agree to the{" "}
+          <Link href="/privacy-policy" className="font-semibold underline">
+            Privacy Notice
+          </Link>{" "}
+          and{" "}
+          <Link href="/terms-of-sale" className="font-semibold underline">
+            Terms and Conditions
+          </Link>{" "}
+          and you consent to the collection and processing of your personal data
+          for purposes of completing transactions.
+        </p>
 
-              <InputHelperDescription>
-                Recent invoice, delivery or order number from within the last 12
-                months
-              </InputHelperDescription>
-            </div>
+        <div className="flex flex-row-reverse items-center justify-between pt-1">
+          <Button
+            type="button"
+            onClick={onAccountDetailsSubmit}
+            className="h-fit min-w-[7.5rem] py-2.5 font-bold shadow-md"
+            disabled={!soldToAccount || !invoiceNo}
+          >
+            Continue
+          </Button>
+
+          <div className="text-xs text-wurth-gray-500">
+            *All fields are required
+          </div>
+        </div>
+      </div>
+
+      {step === "personal" && (
+        <section className="flex flex-col gap-4 rounded-lg border border-wurth-gray-250 p-6 shadow-lg">
+          <div className="flex flex-row items-center gap-3">
+            <CheckCircle className="size-5 stroke-green-700" />
+
+            <h3 className="flex-1 text-base font-semibold text-wurth-gray-800">
+              Account details
+            </h3>
+
+            <Button
+              variant="subtle"
+              className="font-bold"
+              onClick={() => setStep("account")}
+              disabled={createUserMutation.isPending}
+            >
+              Edit
+            </Button>
           </div>
 
-          <p className="text-sm text-wurth-gray-800">
-            By continuing, you agree to the{" "}
-            <Link href="/privacy-policy" className="font-semibold underline">
-              Privacy Notice
-            </Link>{" "}
-            and{" "}
-            <Link href="/terms-of-sale" className="font-semibold underline">
-              Terms and Conditions
-            </Link>{" "}
-            and you consent to the collection and processing of your personal
-            data for purposes of completing transactions.
-          </p>
-        </StepContainerOpen>
-
-        <StepContainerClosed
-          onClick={() => setStep("account")}
-          disabled={createUserMutation.isPending}
-        >
           <div className="grid grid-cols-2 gap-8">
             <div className="space-y-1">
               <h4 className="text-sm font-semibold text-black">
@@ -221,109 +261,147 @@ const CurrentUserFlow = ({ passwordPolicies }: CurrentUserFlowProps) => {
               <div className="text-base text-wurth-gray-800">{invoiceNo}</div>
             </div>
           </div>
-        </StepContainerClosed>
-      </StepContainer>
-
-      {step === "personal" && (
-        <StepContainer state="open" title="Personal details">
-          <StepContainerOpen
-            steps={{
-              current: 2,
-              total: 2,
-            }}
-            allFieldsRequired
-            submitBtnText="Create account"
-            onSubmit={onPersonalDetailsSubmit}
-          >
-            <div className="flex flex-col gap-5 md:grid md:grid-cols-2">
-              <div className="sr-only">
-                <Label htmlFor={soldToId}>Sold-to account</Label>
-
-                <Input
-                  {...personalDetailsForm.register("soldToAccount")}
-                  id={soldToId}
-                  type="hidden"
-                  required
-                />
-              </div>
-
-              <div className="sr-only">
-                <Label htmlFor={invoiceNoId}>
-                  Invoice, delivery or order number
-                </Label>
-
-                <Input
-                  {...personalDetailsForm.register("invoiceNo")}
-                  id={invoiceNoId}
-                  type="hidden"
-                  required
-                />
-              </div>
-
-              <div className="flex flex-col gap-2">
-                <Label htmlFor={firstNameId}>First name</Label>
-
-                <Input
-                  {...personalDetailsForm.register("firstName")}
-                  id={firstNameId}
-                  type="text"
-                  required
-                  disabled={createUserMutation.isPending}
-                />
-              </div>
-
-              <div className="flex flex-col gap-2">
-                <Label htmlFor={lastNameId}>Last name</Label>
-
-                <Input
-                  {...personalDetailsForm.register("lastName")}
-                  id={lastNameId}
-                  type="text"
-                  required
-                  disabled={createUserMutation.isPending}
-                />
-              </div>
-
-              <div className="flex flex-col gap-2 md:hidden">
-                <Label htmlFor={emailId}>Email address</Label>
-
-                <Input
-                  {...personalDetailsForm.register("email")}
-                  id={emailId}
-                  type="email"
-                  required
-                  disabled
-                />
-              </div>
-
-              <div className="flex flex-col gap-2">
-                <Label htmlFor={passwordId}>Password</Label>
-
-                <Input
-                  {...personalDetailsForm.register("password")}
-                  id={passwordId}
-                  type="password"
-                  required
-                  disabled={createUserMutation.isPending}
-                />
-              </div>
-
-              <div className="flex flex-col gap-2">
-                <Label htmlFor={confirmPasswordId}>Confirm password</Label>
-
-                <Input
-                  {...personalDetailsForm.register("confirmPassword")}
-                  id={confirmPasswordId}
-                  type="password"
-                  required
-                  disabled={createUserMutation.isPending}
-                />
-              </div>
-            </div>
-          </StepContainerOpen>
-        </StepContainer>
+        </section>
       )}
-    </>
+
+      <StepContainer state="open" title="Personal details">
+        <StepContainerOpen
+          steps={{
+            current: 2,
+            total: 2,
+          }}
+          allFieldsRequired
+          submitBtnText="Create account"
+          onSubmit={onSubmit}
+          className={cn(step !== "personal" && "hidden")}
+          id={formId}
+        >
+          <div className="flex flex-col gap-5 md:grid md:grid-cols-2">
+            <FormField
+              control={form.control}
+              name="soldToAccount"
+              disabled={createUserMutation.isPending}
+              render={({ field }) => (
+                <FormItem className="sr-only">
+                  <FormLabel>Sold-to account</FormLabel>
+                  <FormControl>
+                    <Input type="hidden" required {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="invoiceNo"
+              disabled={createUserMutation.isPending}
+              render={({ field }) => (
+                <FormItem className="sr-only">
+                  <FormLabel>Invoice, delivery or order number</FormLabel>
+                  <FormControl>
+                    <Input type="hidden" required {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="firstName"
+              disabled={createUserMutation.isPending}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>First name</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="text"
+                      autoComplete="given-name"
+                      required
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormDescription className="sr-only">
+                    This is your first name.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="lastName"
+              disabled={createUserMutation.isPending}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Last name</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="text"
+                      autoComplete="family-name"
+                      required
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormDescription className="sr-only">
+                    This is your last name.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="password"
+              disabled={createUserMutation.isPending}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="password"
+                      autoComplete="password"
+                      required
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormDescription className="sr-only">
+                    This is your password.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="confirmPassword"
+              disabled={createUserMutation.isPending}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Confirm password</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="password"
+                      autoComplete="password"
+                      required
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormDescription className="sr-only">
+                    Type the same password here to confirm it.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+        </StepContainerOpen>
+      </StepContainer>
+    </Form>
   );
 };
 

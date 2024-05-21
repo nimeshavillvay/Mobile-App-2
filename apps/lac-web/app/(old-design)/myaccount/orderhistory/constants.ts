@@ -26,7 +26,7 @@ export const STATUS_COLOR_CLASSES = {
   S: "text-brand-tertiary",
   K: "text-brand-gray-500",
   F: "text-brand-success",
-  default: "text-brand-gray-500",
+  default: "text-brand-secondary",
 } as const;
 
 export const ORDER_TYPES = {
@@ -86,12 +86,12 @@ export const SORTING_FILTERS_FOR_MOBILE = [
     options: [
       {
         title: "Item # / MFR Part # Ascending",
-        type: "orderid",
+        type: SORT_BY_FIELDS.SKU,
         direction: SORTING_DIRECTION.ASC,
       },
       {
         title: "Item# / MFR Part# Descending",
-        type: "orderid",
+        type: SORT_BY_FIELDS.SKU,
         direction: SORTING_DIRECTION.DESC,
       },
     ],
@@ -101,12 +101,12 @@ export const SORTING_FILTERS_FOR_MOBILE = [
     options: [
       {
         title: "Order Date Ascending",
-        type: "date",
+        type: SORT_BY_FIELDS.ORDER_DATE,
         direction: SORTING_DIRECTION.ASC,
       },
       {
         title: "Order Date Descending",
-        type: "date",
+        type: SORT_BY_FIELDS.ORDER_DATE,
         direction: SORTING_DIRECTION.DESC,
       },
     ],
@@ -116,12 +116,12 @@ export const SORTING_FILTERS_FOR_MOBILE = [
     options: [
       {
         title: "Order Total Ascending",
-        type: "total",
+        type: SORT_BY_FIELDS.TOTAL_ITEMS,
         direction: SORTING_DIRECTION.ASC,
       },
       {
         title: "Order Total Descending",
-        type: "total",
+        type: SORT_BY_FIELDS.TOTAL_ITEMS,
         direction: SORTING_DIRECTION.DESC,
       },
     ],

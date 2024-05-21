@@ -63,6 +63,7 @@ export const getItemInfo = async (productIdList: number[]) => {
 
   const transformedResponse = response.map((item) => ({
     productId: parseInt(item.productid, 10),
+    slug: item.slug,
     isExcludedProduct: item.is_product_exclude,
     productSku: item.txt_wurth_lac_item,
     productName: item.item_name,
@@ -75,7 +76,7 @@ export const getItemInfo = async (productIdList: number[]) => {
     productIdOnSap: item.txt_sap,
     mfrPartNo: item.txt_mfn,
     productDescription: item.txt_description_name,
-    productTitle: item.txt_sub_description,
+    productSubDescription: item.txt_sub_description,
     brandCode: parseInt(item.sel_assigned_brand, 10),
     unitOfMeasure: item.txt_uom_label,
     boxQuantity: parseInt(item.txt_box_qt, 10) || 1,

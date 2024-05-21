@@ -17,7 +17,7 @@ const Image = async ({ params: { id, slug } }: CategoryPageProps) => {
 
   return OGImage({
     title: category.title,
-    image: category.image,
+    image: category.image ?? undefined,
   });
 };
 

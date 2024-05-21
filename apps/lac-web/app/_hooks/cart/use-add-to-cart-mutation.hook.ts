@@ -64,20 +64,35 @@ const useAddToCartMutation = (
         }
       }
 
-      return api.post("rest/cart", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        json: {
-          "configurable-items": [
-            {
-              productid: productId,
-              quantity,
-              configuration,
-            },
-          ],
-        },
-      });
+      const response = await api
+        .post("rest/cart", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          json: {
+            "configurable-items": [
+              {
+                productid: productId,
+                quantity,
+                configuration,
+              },
+            ],
+          },
+        })
+        .json<
+          {
+            car_item_id: boolean | number;
+            error?: string;
+            productid: number;
+          }[]
+        >();
+
+      // Return transformed data
+      return response.map((item) => ({
+        cartItemId: item.car_item_id,
+        productId: item.productid,
+        error: item.error,
+      }));
     },
     onMutate: () => {
       // Prefetch the product data for the dialog
@@ -96,9 +111,16 @@ const useAddToCartMutation = (
         title: "Failed to add item cart",
       });
     },
-    onSuccess: () => {
-      // Open the dialog
-      setOpen("confirmation");
+    onSuccess: async (data) => {
+      if (data?.[0]?.error && data?.[0]?.error !== "") {
+        toast({
+          variant: "destructive",
+          title: data?.[0]?.error,
+        });
+      } else {
+        // Open the dialog
+        setOpen("confirmation");
+      }
     },
   });
 };

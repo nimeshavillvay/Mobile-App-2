@@ -1,4 +1,6 @@
+import useCookies from "@/_hooks/storage/use-cookies.hook";
 import { api } from "@/_lib/api";
+import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import { isErrorResponse } from "@/_lib/utils";
 import { useToast } from "@repo/web-ui/components/ui/toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -7,6 +9,7 @@ import { useRouter } from "next/navigation";
 const useRegisterExistingUserMutation = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
+  const [cookies] = useCookies();
   const { toast } = useToast();
 
   return useMutation({
@@ -20,6 +23,9 @@ const useRegisterExistingUserMutation = () => {
     }) => {
       const { status_code, type, id } = await api
         .post("rest/register/existing", {
+          headers: {
+            Authorization: `Bearer ${cookies[SESSION_TOKEN_COOKIE]}`,
+          },
           json: { ...data, role: "10" },
         })
         .json<{

@@ -8,6 +8,7 @@ import MoreItemDetailsForMobile from "./more-item-details-for-mobile";
 type OrderItemForMobileProps = {
   orderItem: {
     productId: number;
+    slug?: string;
     sku: string;
     totalQuantity: number;
     lineItems: {
@@ -28,7 +29,7 @@ type OrderItemForMobileProps = {
     itemSubTotal: number;
     itemDescription: string;
     unitOfMeasure?: string;
-    image?: { original: string; webp: string; jp2: string };
+    image?: string;
     productTitle?: string;
     isExcludedProduct?: boolean;
   };
@@ -43,6 +44,7 @@ const OrderItemForMobile = ({
 }: OrderItemForMobileProps) => {
   const {
     productId,
+    slug,
     sku,
     itemDescription,
     totalQuantity,
@@ -54,9 +56,15 @@ const OrderItemForMobile = ({
     isExcludedProduct,
   } = orderItem;
 
-  const generateProductUrl = (productId: number) => {
-    if (productId) {
-      return `/product/${productId}`;
+  const generateItemUrl = ({
+    productId,
+    slug,
+  }: {
+    productId: number;
+    slug: string;
+  }) => {
+    if (slug !== "") {
+      return `/product/${productId}/${slug}`;
     }
     return "#";
   };
@@ -67,14 +75,14 @@ const OrderItemForMobile = ({
         <div className="flex flex-row gap-2">
           <div className="min-w-[92px]">
             <Link
-              href={generateProductUrl(productId)}
+              href={generateItemUrl({ productId, slug: slug ?? "" })}
               className={
                 productId ? "pointer-events-auto" : "pointer-events-none"
               }
             >
-              {image?.original ? (
+              {image ? (
                 <Image
-                  src={image.original.replace("https:", "http:")}
+                  src={image}
                   alt={itemDescription}
                   width={92}
                   height={92}
@@ -109,6 +117,7 @@ const OrderItemForMobile = ({
         </div>
 
         <MoreItemDetailsForMobile
+          productId={productId}
           lineItems={orderItem.lineItems}
           shippingMethods={shippingMethods}
           plants={plants}

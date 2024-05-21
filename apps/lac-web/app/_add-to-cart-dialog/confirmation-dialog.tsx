@@ -1,10 +1,10 @@
 "use client";
 
 import useSuspenseCart from "@/_hooks/cart/use-suspense-cart.hook";
-import useSuspenseSimulationCheckout from "@/_hooks/cart/use-suspense-simulation-checkout.hook";
 import useUpdateCartItemMutation from "@/_hooks/cart/use-update-cart-item-mutation.hook";
 import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
 import useItemInfo from "@/_hooks/product/use-item-info.hook";
+import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckCircle } from "@repo/web-ui/components/icons/check-circle";
 import { Button } from "@repo/web-ui/components/ui/button";
@@ -21,7 +21,7 @@ import { Label } from "@repo/web-ui/components/ui/label";
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import Image from "next/image";
 import Link from "next/link";
-import { useId } from "react";
+import { Suspense, useId } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -39,6 +39,7 @@ const ConfirmationDialog = ({ token }: ConfirmationDialogProps) => {
 
   const open = useAddToCartDialog((state) => state.open);
   const productId = useAddToCartDialog((state) => state.productId);
+  const quantity = useAddToCartDialog((state) => state.quantity);
   const { setOpen } = useAddToCartDialog((state) => state.actions);
 
   const onOpenChange = (newOpen: boolean) => {
@@ -53,15 +54,10 @@ const ConfirmationDialog = ({ token }: ConfirmationDialogProps) => {
   const itemInfo = itemInfoQuery.data?.[0];
 
   const cartQuery = useSuspenseCart(token);
-  const simulationCheckoutQuery = useSuspenseSimulationCheckout(token);
 
   const itemInCart = cartQuery.data.cartItems.find(
     (item) => item.itemInfo.productId === productId,
   );
-  const itemInSimulationCheckout =
-    simulationCheckoutQuery.data.productslist.find(
-      (item) => item.productId === productId,
-    );
 
   const { register, getValues } = useForm<
     z.infer<typeof AddToCartDialogSchema>
@@ -77,11 +73,11 @@ const ConfirmationDialog = ({ token }: ConfirmationDialogProps) => {
   const handleSave = () => {
     const data = getValues();
 
-    if (productId && itemInSimulationCheckout && itemInCart) {
+    if (productId && quantity && itemInCart) {
       updateCartItemMutation.mutate([
         {
           productId,
-          quantity: itemInSimulationCheckout.quantity,
+          quantity: quantity,
           config: {
             ...itemInCart.configuration,
             poOrJobName: data.poOrJobName,
@@ -122,25 +118,23 @@ const ConfirmationDialog = ({ token }: ConfirmationDialogProps) => {
               className="shrink-0 rounded border border-wurth-gray-250 object-contain shadow-sm"
             />
 
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-1 flex-col gap-2">
               <h3 className="line-clamp-3 text-sm font-medium">
                 {itemInfo.productName}
               </h3>
 
               <div className="flex flex-row items-start justify-between gap-4">
-                <div className="font-normal text-wurth-gray-800">
-                  <span className="text-base">${itemInfo.listPrice}</span>
-                  <span className="text-sm font-medium">
-                    /{itemInfo.unitOfMeasure}
-                  </span>
-                </div>
-
-                {itemInSimulationCheckout?.price ? (
-                  <div className="text-lg text-wurth-gray-800">
-                    ${itemInSimulationCheckout?.price}
-                  </div>
+                {productId && quantity ? (
+                  <Suspense fallback={<PriceDisplayFallback />}>
+                    <PriceDisplay
+                      token={token}
+                      productId={productId}
+                      quantity={quantity ?? 1}
+                      unitOfMeasure={itemInfo.unitOfMeasure}
+                    />
+                  </Suspense>
                 ) : (
-                  <Skeleton className="h-7 w-16" />
+                  <PriceDisplayFallback />
                 )}
               </div>
             </div>
@@ -161,7 +155,6 @@ const ConfirmationDialog = ({ token }: ConfirmationDialogProps) => {
             id={jobNameId}
             type="text"
             placeholder="PO # / Job Name"
-            autoFocus={false}
           />
         </form>
 
@@ -188,3 +181,43 @@ const ConfirmationDialog = ({ token }: ConfirmationDialogProps) => {
 };
 
 export default ConfirmationDialog;
+
+const PriceDisplayFallback = () => {
+  return (
+    <>
+      <Skeleton className="h-6 w-24" />
+
+      <Skeleton className="h-7 w-14" />
+    </>
+  );
+};
+
+const PriceDisplay = ({
+  token,
+  productId,
+  unitOfMeasure,
+  quantity,
+}: {
+  token: string;
+  productId: number;
+  unitOfMeasure: string;
+  quantity: number;
+}) => {
+  const priceCheckQuery = useSuspensePriceCheck(token, [
+    { productId, qty: quantity },
+  ]);
+  const priceData = priceCheckQuery.data.productPrices[0];
+
+  return (
+    <>
+      <div className="font-normal text-wurth-gray-800">
+        <span className="text-base">${priceData?.price}</span>
+        <span className="text-sm font-medium">/{unitOfMeasure}</span>
+      </div>
+
+      <div className="text-lg text-wurth-gray-800">
+        ${priceData?.extendedPrice}
+      </div>
+    </>
+  );
+};

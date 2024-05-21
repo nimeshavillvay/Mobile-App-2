@@ -1,10 +1,10 @@
 "use client";
 
+import useLogoutMutation from "@/_hooks/user/use-logout-mutation.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
 import { Switch } from "@repo/web-ui/components/icons/switch";
 import { Separator } from "@repo/web-ui/components/ui/separator";
 import { useRouter } from "next/navigation";
-import useLogoutMutation from "./use-logout-mutation.hook";
 
 const OSRDetailsView = ({ token }: { token: string }) => {
   const loginCheckResponse = useSuspenseCheckLogin(token);
