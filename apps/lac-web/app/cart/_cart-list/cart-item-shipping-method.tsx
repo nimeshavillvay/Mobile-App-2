@@ -113,7 +113,11 @@ const CartItemShippingMethod = ({
   };
 
   const checkVendorShipped = () => {
-    if (availableAll?.plants["1"]?.shippingMethods?.includes("DR")) {
+    if (
+      availableAll?.plants["1"]?.shippingMethods?.find(
+        (method) => method.code === "DR",
+      )
+    ) {
       return true;
     }
     return false;
@@ -565,7 +569,7 @@ const ShipToMeBOInfoBanner = ({
             quantity?: number;
             backOrderQuantity?: number;
             backOrderDate?: string;
-            shippingMethods: string[];
+            shippingMethods: { code: string; name: string }[];
           };
         };
       }
