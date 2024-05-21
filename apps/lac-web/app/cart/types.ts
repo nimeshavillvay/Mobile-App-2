@@ -11,11 +11,12 @@ export type Availability = {
     backOrder: boolean;
     plants: {
       [key: string]: {
+        isSameDayAvail: boolean;
         plant: string;
         quantity?: number;
         backOrderQuantity?: number;
         backOrderDate?: string;
-        shippingMethods: string[];
+        shippingMethods: ShippingMethod[];
       };
     };
     type: string;

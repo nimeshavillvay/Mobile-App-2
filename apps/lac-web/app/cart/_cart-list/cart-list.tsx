@@ -35,6 +35,7 @@ const CartList = ({ token, shippingMethods, plants }: CartListProps) => {
                 configuration: item.configuration,
                 minAmount: item.itemInfo.minimumOrderQuantity,
                 increment: item.itemInfo.quantityByIncrements,
+                image: item.itemInfo.image,
               }}
               shippingMethods={shippingMethods}
               plants={plants}

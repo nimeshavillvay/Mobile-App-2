@@ -45,11 +45,6 @@ const ALL_AVAILABLE = "all-available";
 const TAKE_ON_HAND = "take-on-hand";
 const ALTERNATIVE_BRANCHES = "alternative-branches";
 
-const EXCLUDED_OPTIONS = ["CC", "WI", "1D", "2D", "DR"];
-const DEFAULT_SHIPPING_METHOD = "OT";
-// TODO: Same day shipping logic yet to be finalized
-const SAME_DAY_SHIPPING_ENABLED = false;
-
 type CartItemShippingMethodProps = {
   shippingMethods: ShippingMethod[];
   plants: Plant[];
@@ -60,7 +55,6 @@ type CartItemShippingMethodProps = {
 };
 
 const CartItemShippingMethod = ({
-  shippingMethods,
   plants,
   availability,
   setSelectedWillCallPlant,
@@ -78,10 +72,6 @@ const CartItemShippingMethod = ({
     status === "inStock" ? ALL_AVAILABLE : TAKE_ON_HAND,
   );
 
-  const availableOptions = shippingMethods.filter(
-    (option) => !EXCLUDED_OPTIONS.includes(option.code),
-  );
-
   const [selectedSection, setSelectedSection] = useState<string>();
 
   const availableAll =
@@ -93,6 +83,9 @@ const CartItemShippingMethod = ({
   const shipAlternativeBranch =
     options.find((option) => option.type === "shipAlternativeBranch") ??
     undefined;
+
+  const availableOptions = availableAll?.plants["1"]?.shippingMethods ?? [];
+  const defaultShipToMeOption = availableOptions?.at(0);
 
   const calculateAllPlantsQuantity = (plants: {
     [key: string]: {
@@ -112,8 +105,25 @@ const CartItemShippingMethod = ({
   };
 
   const checkVendorShipped = () => {
-    if (availableAll?.plants["1"]?.shippingMethods?.includes("DR")) {
+    // Check if the vendor ships the item
+    if (
+      availableAll?.plants["1"]?.shippingMethods?.some(
+        (method) => method.code === "D",
+      )
+    ) {
       return true;
+    }
+    return false;
+  };
+
+  const checkSameDayShippingEnabled = () => {
+    // Check if same day shipping is enabled
+    if (availableAll?.plants) {
+      Object.values(availableAll?.plants).forEach((value) => {
+        if (value?.isSameDayAvail) {
+          return true;
+        }
+      });
     }
     return false;
   };
@@ -144,7 +154,7 @@ const CartItemShippingMethod = ({
 
   const getBackOrderAllMethod = (plants: {
     [key: string]: {
-      shippingMethods: string[];
+      shippingMethods: ShippingMethod[];
     };
   }) => {
     const backOrderMethods = ["1", "5"]
@@ -152,7 +162,9 @@ const CartItemShippingMethod = ({
       .filter(Boolean)
       .flat();
 
-    return backOrderMethods.find((method) => method) ?? "";
+    const firstMethod = backOrderMethods.find((method) => method);
+
+    return firstMethod?.code ?? "";
   };
 
   return (
@@ -188,7 +200,7 @@ const CartItemShippingMethod = ({
         <div className="ml-[1.625rem] flex flex-col gap-2">
           <Select
             disabled={selectedSection !== SHIP_TO_ME}
-            defaultValue={DEFAULT_SHIPPING_METHOD}
+            defaultValue={defaultShipToMeOption?.code}
             onValueChange={(val) => onSave({ shipping_method_1: val })}
           >
             <SelectTrigger className="w-full">
@@ -205,7 +217,7 @@ const CartItemShippingMethod = ({
             </SelectContent>
           </Select>
 
-          {SAME_DAY_SHIPPING_ENABLED && (
+          {checkSameDayShippingEnabled() && (
             <div className="text-sm">
               Get it by <b>today</b> if you order before noon
             </div>
@@ -507,9 +519,14 @@ const CartItemShippingMethod = ({
                 if (checked === true) {
                   setSelectedSection(BACK_ORDER);
                   onSave({
-                    plant_1: getBackOrderAllPlant(backOrderAll?.plants) ?? "",
-                    shipping_method_1:
-                      getBackOrderAllMethod(backOrderAll?.plants) ?? "",
+                    plant_1: getBackOrderAllPlant(backOrderAll?.plants),
+                    plant_2: "",
+                    plant_3: "",
+                    plant_4: "",
+                    plant_5: "",
+                    shipping_method_1: getBackOrderAllMethod(
+                      backOrderAll?.plants,
+                    ),
                     shipping_method_2: "",
                     shipping_method_3: "",
                     shipping_method_4: "",
@@ -595,11 +612,7 @@ const ShipToMeBOInfoBanner = ({
         backOrder: boolean;
         plants: {
           [key: string]: {
-            plant: string;
-            quantity?: number;
-            backOrderQuantity?: number;
             backOrderDate?: string;
-            shippingMethods: string[];
           };
         };
       }
