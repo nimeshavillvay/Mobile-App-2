@@ -86,7 +86,7 @@ const AddUserEmailDialog = ({
             errorResponse.message ===
               "Email address already exists in the database."
           ) {
-            form.setError("addUser", {
+            form.setError("email", {
               message: "User already exists",
             });
           }
