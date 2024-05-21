@@ -29,7 +29,7 @@ import { Input } from "@repo/web-ui/components/ui/input";
 import { Label } from "@repo/web-ui/components/ui/label";
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import Image from "next/image";
-import { Suspense, useId } from "react";
+import { Suspense, useEffect, useId } from "react";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import { z } from "zod";
 
@@ -70,6 +70,13 @@ const VerificationDialog = ({ token }: VerificationDialogProps) => {
     },
     resolver: zodResolver(verificationDialogSchema),
   });
+
+  useEffect(() => {
+    methods.reset({
+      poOrJobName: "",
+      quantity: itemInfo?.minimumOrderQuantity ?? 1,
+    });
+  }, [open]);
 
   return (
     <FormProvider {...methods}>
