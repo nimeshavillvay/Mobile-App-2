@@ -49,7 +49,7 @@ const UsersList = ({
   const [addUserDataDialogEmail, setAddUserDataDialogEmail] = useState("");
 
   const usersListQuery = useSuspenseUsersList(token);
- 
+
   const { permission } = usersListQuery.data.manageContact.yourProfile;
   const isAdmin = permission.toLowerCase() === "admin";
 
