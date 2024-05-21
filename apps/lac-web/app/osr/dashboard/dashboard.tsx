@@ -17,7 +17,7 @@ import {
   SelectValue,
 } from "@repo/web-ui/components/ui/select";
 import { useSearchParams } from "next/navigation";
-import { Suspense, useId, useState } from "react";
+import { Suspense, useId, useState, type ComponentProps } from "react";
 import { changeSearchParams } from "./client-helpers";
 import {
   INIT_PAGE_NUMBER,
@@ -66,7 +66,7 @@ const Dashboard = ({ token }: { token: string }) => {
     return allColumns.filter((column) => columns.includes(column));
   };
 
-  const searchOnEnter = (event: React.KeyboardEvent<HTMLInputElement>) => {
+  const searchOnEnter: ComponentProps<"input">["onKeyDown"] = (event) => {
     if (event.key === "Enter") {
       changeSearchParams(searchParams, [
         {
