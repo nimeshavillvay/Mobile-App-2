@@ -155,6 +155,7 @@ const ProductCard = ({
               value: variant.id,
               title: variant.title,
             }))}
+            addToCart={addToCart}
           />
         ) : (
           <>
