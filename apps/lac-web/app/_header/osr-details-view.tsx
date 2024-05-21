@@ -45,7 +45,7 @@ const OSRDetailsView = ({ token }: { token: string }) => {
           />
 
           <button
-            className="flex items-center gap-2 font-bold"
+            className="flex items-center gap-2 font-semibold"
             onClick={() =>
               logoutMutation.mutate(undefined, {
                 onSuccess: () => {
