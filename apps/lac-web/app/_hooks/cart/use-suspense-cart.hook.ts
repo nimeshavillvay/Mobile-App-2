@@ -63,6 +63,7 @@ const useSuspenseCart = (token: string) => {
             image: item.itemInfo.img,
             slug: item.itemInfo.url,
             isFavourite: !!item.itemInfo.is_favourite,
+            favoriteIds: item.itemInfo.favoriteIds,
             isComparison: !!item.itemInfo.is_comparison,
             isHazardous: item.itemInfo.txt_hazardous === "Y",
             specialShipping: SPECIAL_SHIPPING_FLAG.includes(

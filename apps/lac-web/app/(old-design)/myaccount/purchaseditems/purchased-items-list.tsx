@@ -108,14 +108,9 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
 
   if (purchasedItemsList.data.pagination.totalCount > 0) {
     purchasedItemsList.data.products.forEach((item) => {
-      console.log("item", item);
-
       const itemInfo = getItemInfo?.data?.find(
         (info) => info.productSku === item.productSku,
       );
-
-      console.log("iteminfo", itemInfo);
-      console.log("iteminfo favids", itemInfo?.favoriteIds);
 
       const initialDetails: ItemInfo = {
         productId: item.productId,

@@ -275,6 +275,7 @@ export type Cart = {
       img: string;
       url: string;
       is_favourite: null;
+      favoriteIds: string[];
       is_comparison: null;
       txt_hazardous: string;
       txt_special_shipping: string;

@@ -1,9 +1,11 @@
+import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import {
   Carousel,
   CarouselContent,
   CarouselDots,
   CarouselItem,
 } from "@repo/web-ui/components/ui/carousel";
+import { cookies } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
 import Balancer from "react-wrap-balancer";
@@ -29,7 +31,10 @@ type ProductHeroProps = {
 };
 
 const ProductHero = async ({ id, slug }: ProductHeroProps) => {
-  const product = await getProduct(id, slug);
+  const cookiesStore = cookies();
+  const sessionToken = cookiesStore.get(SESSION_TOKEN_COOKIE);
+
+  const product = await getProduct(id, slug, sessionToken?.value);
 
   const images = product.selectedProduct.detailedImages
     ? product.selectedProduct.detailedImages.map((image) => ({
@@ -159,6 +164,8 @@ const ProductHero = async ({ id, slug }: ProductHeroProps) => {
           minQty={product.selectedProduct.minimumOrderQuantity}
           incQty={product.selectedProduct.quantityByIncrements}
           className="container my-6 md:hidden"
+          isFavourite={product.selectedProduct.isFavourite}
+          favoriteIds={product.selectedProduct.favoriteIds}
         />
 
         {product.selectedProduct.isDirectlyShippedFromVendor && (

@@ -20,6 +20,7 @@ import { useForm } from "react-hook-form";
 import Balancer from "react-wrap-balancer";
 import { z } from "zod";
 import CartItemShippingMethod from "./cart-item-shipping-method";
+import FavoriteButton from "./favorite-button";
 
 const cartItemSchema = z.object({
   quantity: z.number(),
@@ -37,6 +38,8 @@ type CartItemProps = {
     configuration: CartItemConfiguration;
     minAmount: number;
     increment: number;
+    isFavourite: boolean;
+    favoriteIds: string[];
   };
   shippingMethods: ShippingMethod[];
   plants: Plant[];
@@ -241,14 +244,11 @@ const CartItem = ({
             <Save className="size-4" />
           </Button>
 
-          <Button
-            variant="ghost"
-            className="h-fit w-full justify-end px-0 py-0"
-          >
-            <span className="text-[13px] leading-5">Add to favorite</span>
-
-            <HeartOutline className="size-4" />
-          </Button>
+          <FavoriteButton
+            productId={product.id}
+            isFavourite={product.isFavourite}
+            favoriteIds={product.favoriteIds}
+          />
         </div>
       </div>
     </div>

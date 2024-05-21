@@ -111,7 +111,6 @@ const AddToShoppingListDialog = ({
       ? [...selectedShoppingLists, listId]
       : selectedShoppingLists.filter((id) => id !== listId);
     setSelectedShoppingLists(updatedShoppingLists);
-    console.log(selectedShoppingLists);
   };
 
   return (

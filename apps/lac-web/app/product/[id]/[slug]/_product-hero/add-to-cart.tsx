@@ -1,11 +1,9 @@
-import AddToShoppingListDialog from "@/(old-design)/myaccount/shopping-lists/add-to-shopping-list-dialog";
 import { cn } from "@/_lib/utils";
 import { Check } from "@repo/web-ui/components/icons/check";
-import { HeartOutline } from "@repo/web-ui/components/icons/heart-outline";
 import { Button } from "@repo/web-ui/components/ui/button";
-import { useState } from "react";
 import AddToCartForm from "./_add-to-cart-form";
 import LocationStocks from "./_location-stocks";
+import FavoriteButton from "./favorite-button";
 
 type AddToCartProps = {
   productId: number;
@@ -24,8 +22,6 @@ const AddToCart = ({
   favoriteIds,
   className,
 }: AddToCartProps) => {
-  const [showShoppingListsDialog, setShowShoppingListsDialog] = useState(false);
-
   return (
     <>
       <section className={cn("space-y-3", className)}>
@@ -55,21 +51,13 @@ const AddToCart = ({
             <span>Compare</span>
           </Button>
 
-          <Button variant="outline" size="icon">
-            {isFavourite ? 1 : 2}
-            <HeartOutline className="size-4" />
-
-            <span className="sr-only">Add to favorites</span>
-          </Button>
+          <FavoriteButton
+            productId={productId}
+            isFavourite={isFavourite}
+            favoriteIds={favoriteIds}
+          />
         </div>
       </section>
-
-      <AddToShoppingListDialog
-        open={showShoppingListsDialog}
-        setOpenAddToShoppingListDialog={setShowShoppingListsDialog}
-        productId={productId}
-        favoriteIds={favoriteIds}
-      />
     </>
   );
 };

@@ -72,9 +72,10 @@ type Product = {
   };
 };
 
-export const getProduct = async (id: string, slug: string) => {
+export const getProduct = async (id: string, slug: string, token?: string) => {
   const response = await api
     .get("rest/landinginfo", {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
       searchParams: {
         productid: id,
       },
@@ -88,8 +89,6 @@ export const getProduct = async (id: string, slug: string) => {
   if (slug !== response.selected_item.slug) {
     return notFound();
   }
-
-  console.log(response);
 
   const { selected_item } = response;
 
