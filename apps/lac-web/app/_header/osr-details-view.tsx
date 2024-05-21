@@ -32,7 +32,9 @@ const OSRDetailsView = ({ token }: { token: string }) => {
 
             {loginCheckData.status_code === "OK" && (
               <span className="font-bold">
-                {loginCheckData.user.company ?? loginCheckData.user.billto}
+                {loginCheckData.user.company !== ""
+                  ? loginCheckData.user.company
+                  : loginCheckData.user.billto}
               </span>
             )}
           </div>
