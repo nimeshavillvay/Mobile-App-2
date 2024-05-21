@@ -17,18 +17,14 @@ import {
   BreadcrumbSeparator,
 } from "@repo/web-ui/components/ui/breadcrumb";
 import { Button } from "@repo/web-ui/components/ui/button";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@repo/web-ui/components/ui/collapsible";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { Fragment, Suspense } from "react";
-import Balancer from "react-wrap-balancer";
 import ProductsList from "./_products-list";
 import { getCategory } from "./apis";
+import { CategoriesGrid } from "./categories-grid";
+import SubCategoriesCollapsible from "./sub-categories-collapsible";
 import type { CategoryPageProps } from "./types";
 
 const VISIBLE_SUB_CATEGORIES_LENGTH = 6;
@@ -162,20 +158,7 @@ const CategoryPage = async ({ params: { id, slug } }: CategoryPageProps) => {
         <CategoriesGrid categories={visibleSubCategories} priorityImages />
 
         {hiddenSubCategories.length > 0 && (
-          <Collapsible className="flex flex-col gap-6 space-y-6 md:space-y-9">
-            <CollapsibleContent asChild>
-              <CategoriesGrid categories={hiddenSubCategories} />
-            </CollapsibleContent>
-
-            <CollapsibleTrigger asChild>
-              <Button
-                variant="outline"
-                className="self-center py-2.5 font-bold text-black"
-              >
-                Show all
-              </Button>
-            </CollapsibleTrigger>
-          </Collapsible>
+          <SubCategoriesCollapsible hiddenSubCategories={hiddenSubCategories} />
         )}
       </section>
 
@@ -203,37 +186,3 @@ const CategoryPage = async ({ params: { id, slug } }: CategoryPageProps) => {
 };
 
 export default CategoryPage;
-
-const CategoriesGrid = ({
-  categories,
-  priorityImages = false,
-}: {
-  categories: SubCategory[];
-  priorityImages?: boolean;
-}) => {
-  return (
-    <ul className="grid grid-cols-3 justify-items-center gap-y-10 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
-      {categories.map((category) => (
-        <li key={category.id}>
-          <Link
-            href={`/category/${category.id}/${category.slug}`}
-            className="flex flex-col items-center gap-4"
-          >
-            <Image
-              src={category.image}
-              alt={`An image of ${category.title}`}
-              width={112}
-              height={112}
-              className="size-28 rounded-full object-contain"
-              priority={priorityImages}
-            />
-
-            <h2 className="text-center text-[0.9375rem] font-semibold leading-5 text-black">
-              <Balancer>{category.title}</Balancer>
-            </h2>
-          </Link>
-        </li>
-      ))}
-    </ul>
-  );
-};
