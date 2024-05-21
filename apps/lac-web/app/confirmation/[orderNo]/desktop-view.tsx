@@ -306,7 +306,7 @@ const DesktopView = async ({ orderNo }: DesktopViewProps) => {
                 <div className="rounded-lg bg-wurth-gray-50 px-6 py-5 text-sm text-wurth-gray-800">
                   <h3>Driver&apos;s Notes</h3>
 
-                  <p>{orderDetails.driverNotes}</p>
+                  <p className="leading-6">{orderDetails.driverNotes}</p>
                 </div>
               )}
             </section>
