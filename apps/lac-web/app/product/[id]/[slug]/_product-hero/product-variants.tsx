@@ -25,31 +25,29 @@ const ProductVariants = async ({ id, className }: ProductVariantsProps) => {
       },
     })
     .json<
-      ({ id: number; name: string } & (
-        | {
-            type: "text";
-            values: ({
-              id: number;
-              name: string;
-              icon: null;
-              selected: boolean;
-            } & ProductSelect)[];
-          }
-        | {
-            type: "icon";
-            values: ({
-              id: number;
-              name: string;
-              icon: string;
-              selected: boolean;
-            } & ProductSelect)[];
-          }
-      ))[]
+      {
+        id: number;
+        name: string;
+        type: "icon" | "text";
+        values: ({
+          id: number;
+          name: string;
+          icon: string | null;
+          selected: boolean;
+        } & ProductSelect)[];
+      }[]
     >();
+
+  const validFilters = filters
+    .map((filter) => ({
+      ...filter,
+      values: filter.values.filter((value) => value.name),
+    }))
+    .filter((filter) => filter.values.length > 1);
 
   return (
     <section className={cn("flex flex-col gap-6", className)}>
-      {filters.map((filter) => (
+      {validFilters.map((filter) => (
         <div key={filter.id} className="space-y-2">
           <h3 className="text-base text-wurth-gray-800">
             {filter.name}:{" "}
