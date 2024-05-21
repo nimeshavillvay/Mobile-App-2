@@ -1,7 +1,7 @@
 import { api } from "@/_lib/api";
 import { DEFAULT_REVALIDATE } from "@/_lib/constants";
 import { cn } from "@/_lib/utils";
-import { Save } from "@repo/web-ui/components/icons/save";
+import { Download } from "@repo/web-ui/components/icons/download";
 import { Truck } from "@repo/web-ui/components/icons/truck";
 import { Button } from "@repo/web-ui/components/ui/button";
 import { type ReactNode } from "react";
@@ -135,7 +135,10 @@ export const ProductDetails = async ({
   const [product, attachments] = await Promise.all([
     getProduct(id, slug),
     api
-      .get(`rest/landingattachment/${id}`, {
+      .get("rest/landingattachment", {
+        searchParams: {
+          productid: id,
+        },
         next: {
           revalidate: DEFAULT_REVALIDATE,
         },
@@ -192,7 +195,7 @@ export const ProductDetails = async ({
                 variant="outline"
                 className="flex h-fit max-w-full flex-col items-start gap-2 rounded-lg border-wurth-gray-250 p-3 shadow-sm"
               >
-                <Save className="mt-1 size-5 shrink-0" />
+                <Download width={20} height={20} className="mt-1 shrink-0" />
 
                 <span className="text-wrap text-left text-sm font-semibold text-wurth-gray-800">
                   {attachment.title}

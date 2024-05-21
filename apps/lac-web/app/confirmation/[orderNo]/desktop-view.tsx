@@ -128,32 +128,36 @@ const DesktopView = async ({ orderNo }: DesktopViewProps) => {
               <h3 className={subHeadingStyles()}>Shipping details</h3>
 
               <table className={tableStyles()}>
-                <tr>
-                  <td className={tableLabelStyles()}>Delivery date</td>
-                  <td className={tableValueStyles()}>
-                    {dayjs(orderDetails.orderDate).format("MM/DD/YYYY")}
-                  </td>
-                </tr>
+                <tbody>
+                  <tr>
+                    <td className={tableLabelStyles()}>Delivery date</td>
+                    <td className={tableValueStyles()}>
+                      {dayjs(orderDetails.orderDate).format("MM/DD/YYYY")}
+                    </td>
+                  </tr>
 
-                <tr>
-                  <td className={tableLabelStyles()}>Ship to address</td>
-                  <td className={tableValueStyles()}>
-                    {orderDetails.shipToAddress.street},{" "}
-                    {orderDetails.shipToAddress.city},{" "}
-                    {orderDetails.shipToAddress.region},{" "}
-                    {orderDetails.shipToAddress.zipCode}
-                  </td>
-                </tr>
+                  <tr>
+                    <td className={tableLabelStyles()}>Ship to address</td>
+                    <td className={tableValueStyles()}>
+                      {orderDetails.shipToAddress.street},{" "}
+                      {orderDetails.shipToAddress.city},{" "}
+                      {orderDetails.shipToAddress.region},{" "}
+                      {orderDetails.shipToAddress.zipCode}
+                    </td>
+                  </tr>
 
-                <tr>
-                  <td className={tableLabelStyles()}>Contact person</td>
-                  <td className={tableValueStyles()}>{orderDetails.orderBy}</td>
-                </tr>
+                  <tr>
+                    <td className={tableLabelStyles()}>Contact person</td>
+                    <td className={tableValueStyles()}>
+                      {orderDetails.orderBy}
+                    </td>
+                  </tr>
 
-                <tr>
-                  <td className={tableLabelStyles()}>Phone no.</td>
-                  <td className={tableValueStyles()}>800 42 24389</td>
-                </tr>
+                  <tr>
+                    <td className={tableLabelStyles()}>Phone no.</td>
+                    <td className={tableValueStyles()}>800 42 24389</td>
+                  </tr>
+                </tbody>
               </table>
             </div>
 
@@ -306,7 +310,7 @@ const DesktopView = async ({ orderNo }: DesktopViewProps) => {
                 <div className="rounded-lg bg-wurth-gray-50 px-6 py-5 text-sm text-wurth-gray-800">
                   <h3>Driver&apos;s Notes</h3>
 
-                  <p>{orderDetails.driverNotes}</p>
+                  <p className="leading-6">{orderDetails.driverNotes}</p>
                 </div>
               )}
             </section>
