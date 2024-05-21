@@ -1,3 +1,5 @@
+import type { ShippingMethod } from "@/_lib/types";
+
 export type CartItemConfigurationOptional = {
   avail_1?: string;
   avail_2?: string;
@@ -20,4 +22,13 @@ export type CartItemConfigurationOptional = {
   hashvalue?: string;
   selectedOption?: string;
   backorder_all?: string;
+};
+
+export type OptionPlant = {
+  isSameDayAvail: boolean;
+  plant: string;
+  quantity?: number;
+  backOrderQuantity?: number;
+  backOrderDate?: string;
+  shippingMethods: ShippingMethod[];
 };

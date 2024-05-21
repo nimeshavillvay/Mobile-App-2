@@ -100,15 +100,6 @@ const CartItem = ({
   const handleSaveShippingMethod = (config: CartItemConfigurationOptional) => {
     const data = getValues();
 
-    console.log("data", {
-      productId: product.id,
-      quantity: data.quantity,
-      config: {
-        ...product.configuration,
-        ...config,
-      },
-    });
-
     updateCartConfigMutation.mutate([
       {
         productId: product.id,

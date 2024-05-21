@@ -31,7 +31,7 @@ import {
 import dayjs from "dayjs";
 import { useId, useState } from "react";
 import type { Availability } from "../types";
-import type { CartItemConfigurationOptional } from "./types";
+import type { CartItemConfigurationOptional, OptionPlant } from "./types";
 
 const UI_DATE_FORMAT = "ddd, MMM. DD YYYY";
 
@@ -68,12 +68,6 @@ const CartItemShippingMethod = ({
 
   const { options, status, willCallAnywhere } = availability;
 
-  const [selectedShipToMe, setSelectedShipToMe] = useState(
-    status === "inStock" ? ALL_AVAILABLE : TAKE_ON_HAND,
-  );
-
-  const [selectedSection, setSelectedSection] = useState<string>();
-
   const availableAll =
     options.find((option) => option.type === "availableAll") ?? undefined;
   const takeOnHand =
@@ -84,8 +78,50 @@ const CartItemShippingMethod = ({
     options.find((option) => option.type === "shipAlternativeBranch") ??
     undefined;
 
-  const availableOptions = availableAll?.plants["1"]?.shippingMethods ?? [];
-  const defaultShipToMeOption = availableOptions?.at(0);
+  const [selectedShipToMe, setSelectedShipToMe] = useState(() => {
+    if (availableAll) {
+      return ALL_AVAILABLE;
+    }
+
+    if (takeOnHand) {
+      return TAKE_ON_HAND;
+    }
+
+    if (shipAlternativeBranch) {
+      return ALTERNATIVE_BRANCHES;
+    }
+
+    return undefined;
+  });
+
+  const [selectedSection, setSelectedSection] = useState<string>();
+
+  let availableOptions: ShippingMethod[] = [];
+
+  // Select the available shipping options based on the priority
+  if (selectedShipToMe === ALL_AVAILABLE && availableAll) {
+    availableOptions =
+      Object.values(availableAll?.plants)?.at(0)?.shippingMethods ?? [];
+  }
+
+  if (selectedShipToMe === TAKE_ON_HAND && takeOnHand) {
+    availableOptions =
+      Object.values(takeOnHand?.plants)?.at(0)?.shippingMethods ?? [];
+  }
+
+  if (selectedShipToMe === ALTERNATIVE_BRANCHES && shipAlternativeBranch) {
+    availableOptions =
+      Object.values(shipAlternativeBranch?.plants)?.at(0)?.shippingMethods ??
+      [];
+  }
+
+  // Find the default option (available first option)
+  const defaultShippingOption = availableOptions?.at(0);
+
+  // User selected shipping method
+  const [selectedShippingMethod, setSelectedShippingMethod] = useState(
+    defaultShippingOption?.code ?? "",
+  );
 
   const calculateAllPlantsQuantity = (plants: {
     [key: string]: {
@@ -107,7 +143,7 @@ const CartItemShippingMethod = ({
   const checkVendorShipped = () => {
     // Check if the vendor ships the item
     if (
-      availableAll?.plants["1"]?.shippingMethods?.some(
+      availableAll?.plants["1"]?.shippingMethods?.find(
         (method) => method.code === "D",
       )
     ) {
@@ -119,15 +155,24 @@ const CartItemShippingMethod = ({
   const checkSameDayShippingEnabled = () => {
     // Check if same day shipping is enabled
     if (availableAll?.plants) {
-      Object.values(availableAll?.plants).forEach((value) => {
-        if (value?.isSameDayAvail) {
-          return true;
-        }
-      });
+      const isSameDayAvail = Object.values(availableAll?.plants)?.find(
+        (value) => value?.isSameDayAvail,
+      );
+
+      return isSameDayAvail?.isSameDayAvail ?? false;
     }
     return false;
   };
 
+  // Available all logics
+  let availableAllPlant: OptionPlant | undefined = undefined;
+
+  if (availableAll) {
+    // Find available plant details within plants object
+    availableAllPlant = Object.values(availableAll?.plants)?.at(0) ?? undefined;
+  }
+
+  // Back Order all logics
   const getBackOrderAllDate = (plants: {
     [key: string]: {
       backOrderDate?: string;
@@ -199,9 +244,14 @@ const CartItemShippingMethod = ({
 
         <div className="ml-[1.625rem] flex flex-col gap-2">
           <Select
-            disabled={selectedSection !== SHIP_TO_ME}
-            defaultValue={defaultShipToMeOption?.code}
-            onValueChange={(val) => onSave({ shipping_method_1: val })}
+            disabled={
+              selectedSection !== SHIP_TO_ME || availableOptions?.length === 0
+            }
+            value={selectedShippingMethod}
+            onValueChange={(val) => {
+              setSelectedShippingMethod(val);
+              console.log(val);
+            }}
           >
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Select a delivery method" />
@@ -225,8 +275,12 @@ const CartItemShippingMethod = ({
 
           {selectedSection === SHIP_TO_ME && (
             <RadioGroup
-              defaultValue={status === "inStock" ? ALL_AVAILABLE : TAKE_ON_HAND}
-              onValueChange={(val) => setSelectedShipToMe(val)}
+              value={selectedShipToMe}
+              onValueChange={(val) => {
+                setSelectedShipToMe(val);
+                // Reset the selected shipping method to default
+                setSelectedShippingMethod(defaultShippingOption?.code ?? "");
+              }}
             >
               {/* All available option */}
               {availableAll && (
@@ -237,14 +291,12 @@ const CartItemShippingMethod = ({
 
                   <div className="flex flex-col gap-0.5">
                     <div className="font-medium">
-                      {availableAll.plants?.["1"]?.quantity && (
-                        <ItemCountBadge
-                          count={availableAll.plants?.["1"]?.quantity}
-                        />
+                      {availableAllPlant?.quantity && (
+                        <ItemCountBadge count={availableAllPlant.quantity} />
                       )}
                       &nbsp;from&nbsp;
-                      {availableAll.plants?.["1"]?.plant
-                        ? getPlantName(availableAll.plants?.["1"]?.plant)
+                      {availableAllPlant?.plant
+                        ? getPlantName(availableAllPlant.plant)
                         : "Plant N/A"}
                     </div>
                   </div>
@@ -320,59 +372,69 @@ const CartItemShippingMethod = ({
                       />
                     )}
 
-                    <Collapsible className="mt-1.5 flex flex-col gap-1">
-                      <CollapsibleTrigger
-                        className="group flex h-7 w-full flex-row items-center justify-start"
-                        asChild
+                    {selectedShipToMe === ALTERNATIVE_BRANCHES && (
+                      <Collapsible
+                        className="mt-1.5 flex flex-col gap-1"
+                        disabled={selectedShipToMe !== ALTERNATIVE_BRANCHES}
                       >
-                        <Button
-                          type="button"
-                          variant="subtle"
-                          className="gap-2 px-2"
+                        <CollapsibleTrigger
+                          className="group flex h-7 w-full flex-row items-center justify-start"
+                          asChild
                         >
-                          <ChevronDown
-                            width={16}
-                            height={16}
-                            className="transition duration-150 ease-out group-data-[state=open]:rotate-180"
-                          />
-                          <span>Show breakdown by branch</span>
-                        </Button>
-                      </CollapsibleTrigger>
+                          <Button
+                            type="button"
+                            variant="subtle"
+                            className="gap-2 px-2"
+                          >
+                            <ChevronDown
+                              width={16}
+                              height={16}
+                              className="transition duration-150 ease-out group-data-[state=open]:rotate-180"
+                            />
+                            <span>Show breakdown by branch</span>
+                          </Button>
+                        </CollapsibleTrigger>
 
-                      <CollapsibleContent>
-                        <Table>
-                          <TableHeader>
-                            <TableRow>
-                              <TableHead className="font-light">
-                                Location
-                              </TableHead>
-                              <TableHead className="text-end font-light">
-                                Items
-                              </TableHead>
-                            </TableRow>
-                          </TableHeader>
+                        <CollapsibleContent>
+                          <Table>
+                            <TableHeader>
+                              <TableRow>
+                                <TableHead className="font-light">
+                                  Location
+                                </TableHead>
+                                <TableHead className="text-end font-light">
+                                  Items
+                                </TableHead>
+                              </TableRow>
+                            </TableHeader>
 
-                          <TableBody className="font-light">
-                            {shipAlternativeBranch.plants &&
-                              Object.values(shipAlternativeBranch.plants).map(
-                                (plant) => (
+                            <TableBody className="font-light">
+                              {shipAlternativeBranch.plants &&
+                                Object.values(
+                                  shipAlternativeBranch.plants,
+                                )?.map((plant) => (
                                   <TableRow key={plant.plant}>
                                     <TableCell>
                                       <div>{getPlantName(plant.plant)}</div>
                                       <div className="text-xs">
-                                        via Ground Shipping
+                                        via&nbsp;
+                                        {availableOptions?.find(
+                                          (option) =>
+                                            option.code ===
+                                            selectedShippingMethod,
+                                        )?.name ?? defaultShippingOption?.name}
                                       </div>
                                     </TableCell>
                                     <TableCell className="text-end">
                                       {plant.quantity}
                                     </TableCell>
                                   </TableRow>
-                                ),
-                              )}
-                          </TableBody>
-                        </Table>
-                      </CollapsibleContent>
-                    </Collapsible>
+                                ))}
+                            </TableBody>
+                          </Table>
+                        </CollapsibleContent>
+                      </Collapsible>
+                    )}
                   </div>
                 </div>
               )}
