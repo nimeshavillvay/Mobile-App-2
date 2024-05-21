@@ -49,6 +49,9 @@ const UsersList = ({
   const [addUserDataDialogEmail, setAddUserDataDialogEmail] = useState("");
 
   const usersListQuery = useSuspenseUsersList(token);
+ 
+  const { permission } = usersListQuery.data.manageContact.yourProfile;
+  const isAdmin = permission.toLowerCase() === "admin";
 
   const yourProfile = usersListQuery?.data?.manageContact?.yourProfile ?? null;
   const currentUsers = usersListQuery?.data?.manageContact?.contactList ?? null;
@@ -59,15 +62,16 @@ const UsersList = ({
         <h2 className="font-wurth text-xl font-medium text-brand-primary">
           Manage Users
         </h2>
-
-        <Button
-          type="submit"
-          className="mb-2 px-6"
-          onClick={() => setOpenAddUserEmailDialog(true)}
-        >
-          <MdPersonAdd className="text-xl leading-none" />
-          Add user
-        </Button>
+        {isAdmin && (
+          <Button
+            type="submit"
+            className="mb-2 px-6"
+            onClick={() => setOpenAddUserEmailDialog(true)}
+          >
+            <MdPersonAdd className="text-xl leading-none" />
+            Add user
+          </Button>
+        )}
       </div>
 
       <Separator
@@ -150,68 +154,69 @@ const UsersList = ({
       </Collapsible>
 
       {/* Current Users Section */}
-      <Collapsible open={showCurrentUsers} onOpenChange={setShowCurrentUsers}>
-        <div className="my-5 flex justify-between">
-          <h6 className="flex font-wurth text-base font-medium capitalize text-brand-gray-500">
-            <MdSupervisorAccount className="self-center text-2xl leading-none" />
-            &nbsp;Current Users On This Account
-          </h6>
+      {isAdmin && (
+        <Collapsible open={showCurrentUsers} onOpenChange={setShowCurrentUsers}>
+          <div className="my-5 flex justify-between">
+            <h6 className="flex font-wurth text-base font-medium capitalize text-brand-gray-500">
+              <MdSupervisorAccount className="self-center text-2xl leading-none" />
+              &nbsp;Current Users On This Account
+            </h6>
 
-          <CollapsibleTrigger asChild>
-            <Button className="flex h-6 min-w-20 flex-row items-center justify-center gap-0.5 bg-brand-secondary px-2 font-wurth text-base leading-6 text-white">
-              {showCurrentUsers ? (
-                <>
-                  Hide
-                  <MdKeyboardArrowUp className="text-xl leading-none" />
-                </>
-              ) : (
-                <>
-                  Show
-                  <MdKeyboardArrowDown className="text-xl leading-none" />
-                </>
-              )}
-            </Button>
-          </CollapsibleTrigger>
-        </div>
+            <CollapsibleTrigger asChild>
+              <Button className="flex h-6 min-w-20 flex-row items-center justify-center gap-0.5 bg-brand-secondary px-2 font-wurth text-base leading-6 text-white">
+                {showCurrentUsers ? (
+                  <>
+                    Hide
+                    <MdKeyboardArrowUp className="text-xl leading-none" />
+                  </>
+                ) : (
+                  <>
+                    Show
+                    <MdKeyboardArrowDown className="text-xl leading-none" />
+                  </>
+                )}
+              </Button>
+            </CollapsibleTrigger>
+          </div>
 
-        <CollapsibleContent>
-          {currentUsers && currentUsers?.length > 0 ? (
-            <Table>
-              <TableCaption className="sr-only">
-                Current users on this account section.
-              </TableCaption>
+          <CollapsibleContent>
+            {currentUsers && currentUsers?.length > 0 ? (
+              <Table>
+                <TableCaption className="sr-only">
+                  Current users on this account section.
+                </TableCaption>
 
-              <TableHeader className="border border-brand-gray-200 bg-brand-gray-200">
-                <TableRow>
-                  <TableHead>Email</TableHead>
+                <TableHeader className="border border-brand-gray-200 bg-brand-gray-200">
+                  <TableRow>
+                    <TableHead>Email</TableHead>
 
-                  <TableHead className="text-center">Permission</TableHead>
+                    <TableHead className="text-center">Permission</TableHead>
 
-                  <TableHead className="text-center">Status</TableHead>
+                    <TableHead className="text-center">Status</TableHead>
 
-                  <TableHead></TableHead>
-                </TableRow>
-              </TableHeader>
+                    <TableHead></TableHead>
+                  </TableRow>
+                </TableHeader>
 
-              <TableBody className="border border-brand-gray-200 text-brand-gray-500">
-                {currentUsers.map((user, index) => (
-                  <UserRow
-                    key={user?.id}
-                    user={user}
-                    index={index}
-                    jobRoles={jobRoles}
-                  />
-                ))}
-              </TableBody>
-            </Table>
-          ) : (
-            <div className="mt-10 rounded-sm border border-brand-gray-300 p-6 text-center font-wurth text-lg capitalize text-brand-gray-300">
-              Current Users Not Available!
-            </div>
-          )}
-        </CollapsibleContent>
-      </Collapsible>
-
+                <TableBody className="border border-brand-gray-200 text-brand-gray-500">
+                  {currentUsers.map((user, index) => (
+                    <UserRow
+                      key={user?.id}
+                      user={user}
+                      index={index}
+                      jobRoles={jobRoles}
+                    />
+                  ))}
+                </TableBody>
+              </Table>
+            ) : (
+              <div className="mt-10 rounded-sm border border-brand-gray-300 p-6 text-center font-wurth text-lg capitalize text-brand-gray-300">
+                Current Users Not Available!
+              </div>
+            )}
+          </CollapsibleContent>
+        </Collapsible>
+      )}
       <Separator
         orientation="horizontal"
         className="h-px flex-1 bg-brand-gray-200"
