@@ -38,7 +38,10 @@ const ProductPage = async ({ params: { id, slug } }: ProductPageProps) => {
   const [breadcrumbs, relatedProducts] = await Promise.all([
     getBreadcrumbs(id, "product"),
     api
-      .get(`rest/landingrelatedproduct/${id}`, {
+      .get("rest/landingrelatedproduct", {
+        searchParams: {
+          productid: id,
+        },
         next: { revalidate: DEFAULT_REVALIDATE },
       })
       .json<{
@@ -104,14 +107,16 @@ const ProductPage = async ({ params: { id, slug } }: ProductPageProps) => {
 
           {relatedProducts.map((relatedSection) => (
             <div key={relatedSection.heading} className="space-y-3 bg-white">
-              <h3 className="container text-lg font-semibold text-wurth-gray-800">
-                <Balancer>{relatedSection.heading}</Balancer>
-              </h3>
+              {!!relatedSection.heading && (
+                <h3 className="container text-lg font-semibold text-wurth-gray-800">
+                  <Balancer>{relatedSection.heading}</Balancer>
+                </h3>
+              )}
 
               <div className="container grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-4 xl:grid-cols-3 2xl:grid-cols-4">
                 <Suspense
                   fallback={Array.from({ length: 4 }).map((_, index) => (
-                    <ProductCardSkeleton key={index} />
+                    <ProductCardSkeleton key={index} orientation="horizontal" />
                   ))}
                 >
                   <RelatedProductsList products={relatedSection.items} />

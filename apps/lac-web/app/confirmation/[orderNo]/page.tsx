@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import DesktopOrderActions from "./desktop-order-actions";
 import DesktopView from "./desktop-view";
 import MobileView from "./mobile-view";
 
@@ -21,9 +22,11 @@ const ConfirmationPage = async ({
         Thank you for your order
       </h1>
 
-      <h2 className="container mb-4 hidden text-base text-wurth-gray-800 md:block">
-        Order #{orderNo}
-      </h2>
+      <div className="container mb-4 hidden md:flex md:flex-row md:items-center md:justify-between">
+        <h2 className="text-base text-wurth-gray-800">Order #{orderNo}</h2>
+
+        <DesktopOrderActions />
+      </div>
 
       <MobileView orderNo={orderNo} />
       <DesktopView orderNo={orderNo} />
