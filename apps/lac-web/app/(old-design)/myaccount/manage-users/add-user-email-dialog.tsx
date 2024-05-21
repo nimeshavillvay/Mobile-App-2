@@ -1,6 +1,7 @@
 "use client";
 
 import useCheckEmailMutation from "@/_hooks/user/use-check-email-mutation.hook";
+import { isErrorResponse } from "@/_lib/utils";
 import { Button } from "@/old/_components/ui/button";
 import {
   Dialog,
@@ -74,6 +75,21 @@ const AddUserEmailDialog = ({
           setOpenAddUserDataDialog(true);
           setEmail(email);
           setOpen(false);
+        }
+      },
+      onError: async (error) => {
+        if (error?.response?.status === 400) {
+          const errorResponse = await error.response.json();
+          if (
+            isErrorResponse(errorResponse) &&
+            errorResponse["status_code"] === "FAILED" &&
+            errorResponse.message ===
+              "Email address already exists in the database."
+          ) {
+            form.setError("email", {
+              message: "User already exists",
+            });
+          }
         }
       },
     });

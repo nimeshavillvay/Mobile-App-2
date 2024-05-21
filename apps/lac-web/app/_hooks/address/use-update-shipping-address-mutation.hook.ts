@@ -57,7 +57,10 @@ const useUpdateShippingAddressMutation = () => {
                 default: true,
               }
             : {
+                "xc-address-id": shippingAddressFormData.xcAddressId,
                 "ship-to": shippingAddressFormData.shipTo,
+                "country-name": shippingAddressFormData.country,
+                county: shippingAddressFormData.county,
                 region: shippingAddressFormData.state,
                 locality: shippingAddressFormData.city,
                 organization: shippingAddressFormData.company,
@@ -65,6 +68,10 @@ const useUpdateShippingAddressMutation = () => {
                 "phone-number": shippingAddressFormData.phoneNumber,
                 "street-address": shippingAddressFormData.addressLineOne,
                 default: shippingAddressFormData.default,
+                zip4: shippingAddressFormData.zip4,
+                ...(shippingAddressFormData.skipAddressCheck !== undefined && {
+                  skip_address_check: shippingAddressFormData.skipAddressCheck,
+                }),
               },
         })
         .json<ShippingAddressSuggestionsResponse | ShippingAddressResponse>();
