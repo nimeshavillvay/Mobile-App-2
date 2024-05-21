@@ -12,7 +12,11 @@ export type CheckAvailability = {
         quantity?: number;
         backOrderQuantity?: number;
         backOrderDate?: string;
-        shippingMethods: string[];
+        shippingMethods: {
+          code: string;
+          name: string;
+        }[];
+        isSameDayAvail?: boolean;
       };
     };
     type: string;

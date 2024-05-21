@@ -15,7 +15,7 @@ export type Availability = {
         quantity?: number;
         backOrderQuantity?: number;
         backOrderDate?: string;
-        shippingMethods: string[];
+        shippingMethods: { code: string; name: string }[];
       };
     };
     type: string;
