@@ -28,9 +28,13 @@ const ProductPrices = ({
     { productId, qty: delayedQuantity },
   ]);
   const priceData = priceCheckQuery.data.productPrices[0];
-  const currentPrice = priceData?.price ?? 0;
+  const currentPrice = priceData?.uomPrice ?? priceData?.price ?? 0;
 
   const discount = Math.round(((listPrice - currentPrice) / listPrice) * 100);
+
+  const actualUom = priceData?.uomPriceUnit ?? uom;
+
+  const isLaminateItem = !!priceData?.uomPrice && !!priceData?.uomPriceUnit;
 
   return (
     <section className={cn("space-y-3 md:space-y-4", className)}>
@@ -42,7 +46,7 @@ const ProductPrices = ({
           </span>
         </div>
 
-        {discount > 0 && (
+        {!isLaminateItem && discount > 0 && (
           <div className="text-wurth-gray-400 line-through">
             ${formatNumberToPrice(listPrice)}
           </div>
@@ -50,10 +54,10 @@ const ProductPrices = ({
 
         <div>
           <span className="text-sm font-semibold">/</span>
-          <span className="font-title leading-none">{uom}</span>
+          <span className="font-title leading-none">{actualUom}</span>
         </div>
 
-        {discount > 0 && (
+        {!isLaminateItem && discount > 0 && (
           <div className="font-semibold text-green-700">
             You save ${formatNumberToPrice(listPrice - currentPrice)}
           </div>
