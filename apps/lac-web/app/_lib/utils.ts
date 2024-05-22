@@ -81,3 +81,17 @@ export const checkPasswordComplexity = ({
     });
   }
 };
+
+/**
+ * Format a number to price
+ */
+export const formatNumberToPrice = (value?: number) => {
+  if (!value) {
+    return "";
+  }
+
+  return value.toLocaleString(undefined, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+};
