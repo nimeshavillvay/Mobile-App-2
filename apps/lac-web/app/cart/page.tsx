@@ -5,6 +5,7 @@ import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { Suspense } from "react";
+import AddMoreItemsForm from "./_add-more-items/add-more-items-form";
 import CartList from "./_cart-list";
 import CheckoutButton from "./_checkout-button";
 import CartDetails from "./cart-details";
@@ -62,6 +63,9 @@ const CartPage = async () => {
               shippingMethods={shippingMethods}
               plants={plants}
             />
+
+            {/* <CartList shippingMethods={shippingMethods} /> */}
+            <AddMoreItemsForm />
           </Suspense>
         </div>
 

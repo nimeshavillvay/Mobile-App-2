@@ -123,7 +123,7 @@ const Header = async () => {
         <div className="ml-auto flex flex-row items-center gap-4 md:ml-0 md:gap-6">
           {/* Mobile */}
           <Suspense fallback={<UserProfileSkeleton type="mobile" />}>
-            <UserProfile type="mobile" />
+            {/* <UserProfile type="mobile" /> */}
           </Suspense>
 
           <Link
@@ -143,7 +143,7 @@ const Header = async () => {
 
           {/* Desktop */}
           <Suspense fallback={<UserProfileSkeleton type="desktop" />}>
-            <UserProfile type="desktop" />
+            {/* <UserProfile type="desktop" /> */}
           </Suspense>
 
           <Link

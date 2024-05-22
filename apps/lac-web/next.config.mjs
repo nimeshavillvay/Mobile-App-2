@@ -25,6 +25,10 @@ const nextConfig = {
         protocol: "https",
         hostname: "www.wurthmachinery.com",
       },
+      {
+        protocol: "https",
+        hostname: "wurthlac.local",
+      },
     ],
     minimumCacheTTL: 60 * 60 * 24 * 30, // 1 month
   },
