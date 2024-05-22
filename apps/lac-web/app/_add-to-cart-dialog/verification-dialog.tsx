@@ -2,6 +2,7 @@
 
 import useAddToCartMutation from "@/_hooks/cart/use-add-to-cart-mutation.hook";
 import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
+import useDebouncedState from "@/_hooks/misc/use-debounced-state.hook";
 import useItemInfo from "@/_hooks/product/use-item-info.hook";
 import useSuspenseCheckAvailability from "@/_hooks/product/use-suspense-check-availability.hook";
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
@@ -69,6 +70,8 @@ const VerificationDialog = ({ token }: VerificationDialogProps) => {
     },
     resolver: zodResolver(verificationDialogSchema),
   });
+  const quantity = methods.watch("quantity");
+  const delayedQuantity = useDebouncedState(quantity);
 
   return (
     <FormProvider {...methods}>
@@ -129,6 +132,7 @@ const VerificationDialog = ({ token }: VerificationDialogProps) => {
                   <LocationStocks
                     token={token}
                     productId={itemInfo.productId}
+                    quantity={delayedQuantity}
                   />
                 </Suspense>
               ) : (
@@ -378,18 +382,21 @@ const AddToCart = ({
 const LocationStocks = ({
   token,
   productId,
+  quantity,
 }: {
   token: string;
   productId: number;
+  quantity: number;
 }) => {
   const checkAvailabilityQuery = useSuspenseCheckAvailability(token, {
     productId,
-    qty: 1,
+    qty: quantity,
   });
   const firstLocation = checkAvailabilityQuery.data.availableLocations[0];
   const otherLocations =
     checkAvailabilityQuery.data.availableLocations.slice(1);
   const isBackordered = checkAvailabilityQuery.data.status === "notInStock";
+  const isLimitedStock = checkAvailabilityQuery.data.status === "limitedStock";
 
   return (
     <Collapsible className="flex flex-col gap-1">
@@ -398,12 +405,16 @@ const LocationStocks = ({
           <div
             className={cn(
               "rounded px-4 py-2 text-sm font-semibold leading-4 md:px-2 md:py-1",
-              isBackordered
+              isBackordered || isLimitedStock
                 ? "bg-yellow-50 text-yellow-700"
                 : "bg-green-50 text-green-700",
             )}
           >
-            {isBackordered ? "Backordered" : "In Stock"}
+            {isBackordered
+              ? "Backordered"
+              : isLimitedStock
+                ? "Limited Stock"
+                : "In Stock"}
           </div>
 
           {!isBackordered && (

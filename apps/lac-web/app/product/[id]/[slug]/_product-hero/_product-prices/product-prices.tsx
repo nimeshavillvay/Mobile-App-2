@@ -1,5 +1,6 @@
 "use client";
 
+import useDebouncedState from "@/_hooks/misc/use-debounced-state.hook";
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import { cn, formatNumberToPrice } from "@/_lib/utils";
 import useAddToCartForm from "../use-add-to-cart-form.hook";
@@ -21,9 +22,10 @@ const ProductPrices = ({
 }: ProductPricesProps) => {
   const { watch } = useAddToCartForm();
   const quantity = watch("quantity");
+  const delayedQuantity = useDebouncedState(quantity);
 
   const priceCheckQuery = useSuspensePriceCheck(token, [
-    { productId, qty: quantity },
+    { productId, qty: delayedQuantity },
   ]);
   const priceData = priceCheckQuery.data.productPrices[0];
   const currentPrice = priceData?.price ?? 0;
