@@ -32,6 +32,7 @@ type OrderItemForMobileProps = {
     image?: string;
     productTitle?: string;
     isExcludedProduct?: boolean;
+    productName?: string;
   };
   shippingMethods: ShippingMethod[];
   plants: Plant[];
@@ -54,6 +55,7 @@ const OrderItemForMobile = ({
     productTitle,
     lineItems,
     isExcludedProduct,
+    productName,
   } = orderItem;
 
   const generateItemUrl = ({
@@ -83,7 +85,7 @@ const OrderItemForMobile = ({
               {image ? (
                 <Image
                   src={image}
-                  alt={itemDescription}
+                  alt={productName ?? itemDescription}
                   width={92}
                   height={92}
                 />
@@ -99,8 +101,8 @@ const OrderItemForMobile = ({
 
           <div className="flex flex-col space-y-0.5">
             <div>{sku ?? "N/A"}</div>
-            <div className="font-bold text-black">
-              {itemDescription ?? productTitle ?? "Description N/A"}
+            <div className="line-clamp-3 font-bold text-black">
+              {productName ?? productTitle ?? "Description N/A"}
             </div>
             <div className="font-bold text-brand-secondary">
               {lineItems?.length ? lineItems[0]?.itemStatus : "N/A"}

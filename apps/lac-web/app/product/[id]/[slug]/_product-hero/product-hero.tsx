@@ -10,6 +10,7 @@ import Balancer from "react-wrap-balancer";
 import "server-only";
 import { getProduct } from "../apis";
 import ProductPrices from "./_product-prices";
+import ProductVariants from "./_product-variants";
 import SaleBadges from "./_sale-badges";
 import AddToCart from "./add-to-cart";
 import AddToCartFormProvider from "./add-to-cart-form-provider";
@@ -21,7 +22,6 @@ import {
   ProductNumbers,
   ProductSpecifications,
 } from "./product-hero-sections";
-import ProductVariants from "./product-variants";
 
 type ProductHeroProps = {
   id: string;
@@ -93,6 +93,7 @@ const ProductHero = async ({ id, slug }: ProductHeroProps) => {
             productId={parseInt(id)}
             minQty={product.selectedProduct.minimumOrderQuantity}
             incQty={product.selectedProduct.quantityByIncrements}
+            uom={product.selectedProduct.unitOfMeasure}
           />
 
           {product.selectedProduct.isDirectlyShippedFromVendor && (
@@ -156,6 +157,7 @@ const ProductHero = async ({ id, slug }: ProductHeroProps) => {
           productId={parseInt(id)}
           minQty={product.selectedProduct.minimumOrderQuantity}
           incQty={product.selectedProduct.quantityByIncrements}
+          uom={product.selectedProduct.unitOfMeasure}
           className="container my-6 md:hidden"
         />
 

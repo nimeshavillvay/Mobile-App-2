@@ -11,7 +11,6 @@ import { AddToCart as AddToCartIcon } from "@repo/web-ui/components/icons/add-to
 import { ChevronRight } from "@repo/web-ui/components/icons/chevron-right";
 import { Minus } from "@repo/web-ui/components/icons/minus";
 import { Plus } from "@repo/web-ui/components/icons/plus";
-import { Badge } from "@repo/web-ui/components/ui/badge";
 import { Button } from "@repo/web-ui/components/ui/button";
 import {
   Collapsible,
@@ -181,6 +180,7 @@ const VerificationDialog = ({ token }: VerificationDialogProps) => {
                   minAmount={itemInfo.minimumOrderQuantity}
                   increments={itemInfo.quantityByIncrements}
                   formId={formId}
+                  uom={itemInfo.unitOfMeasure}
                 />
               ) : (
                 <Skeleton className="h-[3.75rem]" />
@@ -279,12 +279,14 @@ const AddToCart = ({
   minAmount,
   increments,
   formId,
+  uom,
 }: {
   token: string;
   productId: number;
   minAmount: number;
   increments: number;
   formId: string;
+  uom: string;
 }) => {
   const { watch, setValue, register, handleSubmit } =
     useFormContext<VerificationDialogSchema>();
@@ -322,7 +324,7 @@ const AddToCart = ({
     >
       <div className="flex-[4] rounded-md border border-wurth-gray-250 p-0.5 md:flex-1">
         <div className="text-center text-xs font-medium uppercase leading-none text-wurth-gray-400">
-          Qty / Each
+          Qty / {uom}
         </div>
 
         <div className="flex flex-row items-center justify-between gap-2 shadow-sm">
@@ -391,21 +393,28 @@ const LocationStocks = ({
   const firstLocation = checkAvailabilityQuery.data.availableLocations[0];
   const otherLocations =
     checkAvailabilityQuery.data.availableLocations.slice(1);
+  const isBackordered = checkAvailabilityQuery.data.status === "notInStock";
 
   return (
     <Collapsible className="flex flex-col gap-1">
       <div className="flex flex-row items-center justify-between gap-2 rounded-lg bg-wurth-gray-50 p-2">
-        <div className="flex flex-row items-center gap-2">
-          <Badge
-            variant="success-alt"
-            className="rounded px-2 py-1 text-sm font-semibold leading-4 shadow-none"
+        <div className="flex shrink-0 flex-row items-center gap-2">
+          <div
+            className={cn(
+              "rounded px-4 py-2 text-sm font-semibold leading-4 md:px-2 md:py-1",
+              isBackordered
+                ? "bg-yellow-50 text-yellow-700"
+                : "bg-green-50 text-green-700",
+            )}
           >
-            In Stock
-          </Badge>
-
-          <div className="text-sm font-medium text-wurth-gray-800">
-            {firstLocation?.amount} in stock at {firstLocation?.name}
+            {isBackordered ? "Backordered" : "In Stock"}
           </div>
+
+          {!isBackordered && (
+            <div className="text-sm font-medium text-wurth-gray-800">
+              {firstLocation?.amount} in stock at {firstLocation?.name}
+            </div>
+          )}
         </div>
 
         <CollapsibleTrigger

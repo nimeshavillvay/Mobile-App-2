@@ -7,6 +7,7 @@ import { Label } from "@repo/web-ui/components/ui/label";
 import { useId, type ComponentProps } from "react";
 
 type FormContentProps = {
+  uom?: string;
   formProps: Omit<ComponentProps<"form">, "className">;
   decrementButtonProps: Omit<
     ComponentProps<typeof Button>,
@@ -24,6 +25,7 @@ type FormContentProps = {
 };
 
 const FormContent = ({
+  uom,
   formProps,
   decrementButtonProps,
   inputProps,
@@ -37,7 +39,7 @@ const FormContent = ({
     <form className="flex flex-row items-stretch gap-2" {...formProps}>
       <div className="flex-[4] rounded-md border border-wurth-gray-250 p-0.5 md:flex-1">
         <div className="text-center text-xs font-medium uppercase leading-none text-wurth-gray-400">
-          Qty / Each
+          Qty / {uom}
         </div>
 
         <div className="flex flex-row items-center justify-between gap-2 shadow-sm">

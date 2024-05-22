@@ -62,6 +62,9 @@ const useAddShippingAddressMutation = () => {
             "country-name": shippingAddressFormData.country,
             county: shippingAddressFormData.county,
             zip4: shippingAddressFormData.zip4,
+            ...(shippingAddressFormData.skipAddressCheck !== undefined && {
+              skip_address_check: shippingAddressFormData.skipAddressCheck,
+            }),
           },
         })
         .json<ShippingAddressSuggestionsResponse | ShippingAddressResponse>();
