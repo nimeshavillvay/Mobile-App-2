@@ -41,26 +41,32 @@ const useAddToCartMutation = (
         configuration.backorder_all = selectedOption.backOrder ? "C" : "";
         configuration.hashvalue = selectedOption.hash;
 
+        // Keep track of the added plants(indexes)
+        const addedIndexes: number[] = [];
+
         // Add the plants
-        for (let i = 1; i <= 5; i++) {
-          if (selectedOption.plants[i.toString()]) {
-            const selectedPlant = selectedOption.plants[i.toString()];
+        for (let i = 0; i < 5; i++) {
+          if (selectedOption.plants[i]) {
+            const selectedPlant = selectedOption.plants[i];
 
             if (selectedPlant) {
               const quantity = selectedOption.backOrder
                 ? selectedPlant.backOrderQuantity
                 : selectedPlant.quantity;
+              const index = selectedPlant.index;
+              addedIndexes.push(index);
 
-              configuration[`avail_${i}`] = quantity?.toString() ?? "";
-              configuration[`plant_${i}`] = selectedPlant.plant ?? "";
-              configuration[`shipping_method_${i}`] =
-                selectedPlant.shippingMethods?.find(
-                  // TODO Temporary fix
-                  // Exclude the same day shipping option
-                  (method) => method.code !== "0",
-                )?.code ?? "";
+              configuration[`avail_${index}`] = quantity?.toString() ?? "";
+              configuration[`plant_${index}`] = selectedPlant.plant ?? "";
+              configuration[`shipping_method_${index}`] =
+                selectedPlant.shippingMethods[0]?.code ?? "";
             }
-          } else {
+          }
+        }
+
+        // Add the missing plants
+        for (let i = 1; i <= 5; i++) {
+          if (!addedIndexes.includes(i)) {
             configuration[`avail_${i}`] = "";
             configuration[`plant_${i}`] = "";
             configuration[`shipping_method_${i}`] = "";
