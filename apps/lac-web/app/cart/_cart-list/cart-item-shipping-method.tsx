@@ -269,7 +269,6 @@ const CartItemShippingMethod = ({
           backorder_all: "F",
         });
       }
-
       if (shipToMe === ALTERNATIVE_BRANCHES) {
         onSave({
           avail_1: (
