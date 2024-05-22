@@ -10,15 +10,14 @@ export type Availability = {
   options: {
     backOrder: boolean;
     plants: {
-      [key: string]: {
-        isSameDayAvail: boolean;
-        plant: string;
-        quantity?: number;
-        backOrderQuantity?: number;
-        backOrderDate?: string;
-        shippingMethods: ShippingMethod[];
-      };
-    };
+      index: number;
+      isSameDayAvail: boolean;
+      plant: string;
+      quantity?: number;
+      backOrderQuantity?: number;
+      backOrderDate?: string;
+      shippingMethods: ShippingMethod[];
+    }[];
     type: string;
     hash: string;
   }[];

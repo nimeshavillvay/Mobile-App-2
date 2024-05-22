@@ -20,7 +20,6 @@ import { useForm } from "react-hook-form";
 import Balancer from "react-wrap-balancer";
 import { z } from "zod";
 import CartItemShippingMethod from "./cart-item-shipping-method";
-import type { CartItemConfigurationOptional } from "./types";
 
 const cartItemSchema = z.object({
   quantity: z.number(),
@@ -97,8 +96,17 @@ const CartItem = ({
     ]);
   };
 
-  const handleSaveShippingMethod = (config: CartItemConfigurationOptional) => {
+  const handleSaveShippingMethod = (config: Partial<CartItemConfiguration>) => {
     const data = getValues();
+
+    console.log("config", {
+      productId: product.id,
+      quantity: data.quantity,
+      config: {
+        ...product.configuration,
+        ...config,
+      },
+    });
 
     updateCartConfigMutation.mutate([
       {

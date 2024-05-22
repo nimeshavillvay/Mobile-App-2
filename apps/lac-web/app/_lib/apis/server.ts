@@ -203,18 +203,6 @@ export const getPlants = async () => {
     .json<Plant[]>();
 };
 
-export const getWillCallPlant = async () => {
-  return await api
-    .get("rest/my-account/will-call-plant", {
-      next: {
-        revalidate: DEFAULT_REVALIDATE,
-      },
-    })
-    .json<{
-      plant: string;
-    }>();
-};
-
 export const getOrderDetails = async (token: string, orderId: string) => {
   try {
     const response = await api
