@@ -10,6 +10,7 @@ type AddToCartFormProps = {
   productId: number;
   minQty: number;
   incQty: number;
+  uom: string;
 };
 
 const AddToCartForm = ({
@@ -17,6 +18,7 @@ const AddToCartForm = ({
   productId,
   minQty,
   incQty,
+  uom,
 }: AddToCartFormProps) => {
   const { watch, setValue, register, handleSubmit } = useAddToCartForm();
   const quantity = watch("quantity");
@@ -45,6 +47,7 @@ const AddToCartForm = ({
 
   return (
     <FormContent
+      uom={uom}
       formProps={{ onSubmit }}
       decrementButtonProps={{
         onClick: reduceQuantity,
