@@ -1,7 +1,7 @@
 "use client";
 
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
-import { cn } from "@/_lib/utils";
+import { cn, formatNumberToPrice } from "@/_lib/utils";
 
 type ProductPricesProps = {
   token: string;
@@ -30,12 +30,14 @@ const ProductPrices = ({
         <div className="text-xl font-semibold leading-none">
           $
           <span className="font-title text-[1.75rem] leading-8">
-            {currentPrice}
+            {formatNumberToPrice(currentPrice)}
           </span>
         </div>
 
         {discount > 0 && (
-          <div className="text-wurth-gray-400 line-through">${listPrice}</div>
+          <div className="text-wurth-gray-400 line-through">
+            ${formatNumberToPrice(listPrice)}
+          </div>
         )}
 
         <div>
@@ -45,7 +47,7 @@ const ProductPrices = ({
 
         {discount > 0 && (
           <div className="font-semibold text-green-700">
-            You save ${(listPrice - currentPrice).toFixed(2)}
+            You save ${formatNumberToPrice(listPrice - currentPrice)}
           </div>
         )}
       </div>
@@ -62,7 +64,7 @@ const ProductPrices = ({
 
             <div className="text-sm font-semibold leading-none text-wurth-gray-800">
               <span className="text-base font-bold leading-6">
-                ${item.price}
+                ${formatNumberToPrice(item.price)}
               </span>
               /{uom}
             </div>

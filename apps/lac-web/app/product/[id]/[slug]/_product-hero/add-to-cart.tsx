@@ -11,6 +11,7 @@ type AddToCartProps = {
   incQty: number;
   isFavourite: boolean;
   favoriteIds: string[];
+  uom: string;
   className?: string;
 };
 
@@ -20,6 +21,7 @@ const AddToCart = ({
   incQty,
   isFavourite,
   favoriteIds,
+  uom,
   className,
 }: AddToCartProps) => {
   return (
@@ -27,7 +29,12 @@ const AddToCart = ({
       <section className={cn("space-y-3", className)}>
         <LocationStocks productId={productId} />
 
-        <AddToCartForm productId={productId} minQty={minQty} incQty={incQty} />
+        <AddToCartForm
+          productId={productId}
+          minQty={minQty}
+          incQty={incQty}
+          uom={uom}
+        />
 
         <div className="flex flex-row items-center justify-between gap-2">
           <div className="flex-1 text-sm text-wurth-gray-500 md:flex md:flex-row md:items-center md:gap-4">

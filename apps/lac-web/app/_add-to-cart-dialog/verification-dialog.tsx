@@ -176,6 +176,7 @@ const VerificationDialog = ({ token }: VerificationDialogProps) => {
                   minAmount={itemInfo.minimumOrderQuantity}
                   increments={itemInfo.quantityByIncrements}
                   formId={formId}
+                  uom={itemInfo.unitOfMeasure}
                 />
               ) : (
                 <Skeleton className="h-[3.75rem]" />
@@ -274,12 +275,14 @@ const AddToCart = ({
   minAmount,
   increments,
   formId,
+  uom,
 }: {
   token: string;
   productId: number;
   minAmount: number;
   increments: number;
   formId: string;
+  uom: string;
 }) => {
   const { watch, setValue, register, handleSubmit } =
     useFormContext<VerificationDialogSchema>();
@@ -317,7 +320,7 @@ const AddToCart = ({
     >
       <div className="flex-[4] rounded-md border border-wurth-gray-250 p-0.5 md:flex-1">
         <div className="text-center text-xs font-medium uppercase leading-none text-wurth-gray-400">
-          Qty / Each
+          Qty / {uom}
         </div>
 
         <div className="flex flex-row items-center justify-between gap-2 shadow-sm">

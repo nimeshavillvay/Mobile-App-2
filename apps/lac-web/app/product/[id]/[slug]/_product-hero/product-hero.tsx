@@ -77,8 +77,8 @@ const ProductHero = async ({ id, slug }: ProductHeroProps) => {
         <div className="space-y-6">
           <div className="space-y-2">
             <ProductNumbers
-              groupId={product.groupId}
-              productId={product.selectedProduct.productId}
+              sku={product.selectedProduct.productSku}
+              manufacturerNo={product.selectedProduct.mfrPartNo}
             />
 
             <ProductDescription>
@@ -100,6 +100,7 @@ const ProductHero = async ({ id, slug }: ProductHeroProps) => {
             incQty={product.selectedProduct.quantityByIncrements}
             isFavourite={product.selectedProduct.isFavourite}
             favoriteIds={product.selectedProduct.favoriteIds}
+            uom={product.selectedProduct.unitOfMeasure}
           />
 
           {product.selectedProduct.isDirectlyShippedFromVendor && (
@@ -122,8 +123,8 @@ const ProductHero = async ({ id, slug }: ProductHeroProps) => {
       {/* Mobile view */}
       <>
         <ProductNumbers
-          groupId={product.groupId}
-          productId={product.selectedProduct.productId}
+          sku={product.selectedProduct.productSku}
+          manufacturerNo={product.selectedProduct.mfrPartNo}
           className="container my-2 md:hidden"
         />
 
@@ -163,6 +164,7 @@ const ProductHero = async ({ id, slug }: ProductHeroProps) => {
           productId={parseInt(id)}
           minQty={product.selectedProduct.minimumOrderQuantity}
           incQty={product.selectedProduct.quantityByIncrements}
+          uom={product.selectedProduct.unitOfMeasure}
           className="container my-6 md:hidden"
           isFavourite={product.selectedProduct.isFavourite}
           favoriteIds={product.selectedProduct.favoriteIds}
