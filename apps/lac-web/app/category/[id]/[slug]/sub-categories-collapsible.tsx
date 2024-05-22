@@ -8,26 +8,20 @@ import {
 } from "@repo/web-ui/components/ui/collapsible";
 import { useState } from "react";
 import { CategoriesGrid } from "./categories-grid";
-
-type SubCategory = {
-  id: number;
-  slug: string;
-  title: string;
-  image: string;
-};
+import { SubCategory } from "./types";
 
 const SubCategoriesCollapsible = ({
   hiddenSubCategories,
 }: {
   hiddenSubCategories: SubCategory[];
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   return (
     <Collapsible
       className="flex flex-col gap-6 space-y-6 md:space-y-9"
-      open={isOpen}
-      onOpenChange={setIsOpen}
+      open={isExpanded}
+      onOpenChange={setIsExpanded}
     >
       <CollapsibleContent asChild>
         <CategoriesGrid categories={hiddenSubCategories} />
@@ -38,7 +32,7 @@ const SubCategoriesCollapsible = ({
           variant="outline"
           className="self-center py-2.5 font-bold text-black"
         >
-          {isOpen ? "Show less" : "Show all"}
+          {isExpanded ? "Show less" : "Show all"}
         </Button>
       </CollapsibleTrigger>
     </Collapsible>

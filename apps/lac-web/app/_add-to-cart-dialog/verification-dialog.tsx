@@ -58,6 +58,10 @@ const VerificationDialog = ({ token }: VerificationDialogProps) => {
     } else {
       setOpen(open);
     }
+    methods.reset({
+      poOrJobName: "",
+      quantity: itemInfo?.minimumOrderQuantity ?? 1,
+    });
   };
 
   const itemInfoQuery = useItemInfo(productId ? [productId] : []);
@@ -70,13 +74,6 @@ const VerificationDialog = ({ token }: VerificationDialogProps) => {
     },
     resolver: zodResolver(verificationDialogSchema),
   });
-
-  useEffect(() => {
-    methods.reset({
-      poOrJobName: "",
-      quantity: itemInfo?.minimumOrderQuantity ?? 1,
-    });
-  }, [open]);
 
   return (
     <FormProvider {...methods}>

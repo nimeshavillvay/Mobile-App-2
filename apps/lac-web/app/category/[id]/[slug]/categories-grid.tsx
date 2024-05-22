@@ -1,13 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import Balancer from "react-wrap-balancer";
+import { SubCategory } from "./types";
 
-type SubCategory = {
-  id: number;
-  slug: string;
-  title: string;
-  image: string;
-};
 export const CategoriesGrid = ({
   categories,
   priorityImages = false,

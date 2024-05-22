@@ -25,16 +25,9 @@ import ProductsList from "./_products-list";
 import { getCategory } from "./apis";
 import { CategoriesGrid } from "./categories-grid";
 import SubCategoriesCollapsible from "./sub-categories-collapsible";
-import type { CategoryPageProps } from "./types";
+import type { CategoryPageProps, SubCategory } from "./types";
 
 const VISIBLE_SUB_CATEGORIES_LENGTH = 6;
-
-type SubCategory = {
-  id: number;
-  slug: string;
-  title: string;
-  image: string;
-};
 
 export const generateMetadata = async ({
   params: { id, slug },
