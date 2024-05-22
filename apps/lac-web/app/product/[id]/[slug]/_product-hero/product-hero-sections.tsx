@@ -11,12 +11,12 @@ import swap from "ultrahtml/transformers/swap";
 import { getProduct } from "../apis";
 
 export const ProductNumbers = ({
-  groupId,
-  productId,
+  sku,
+  manufacturerNo,
   className,
 }: {
-  groupId: string;
-  productId: number;
+  sku: string;
+  manufacturerNo: string;
   className?: string;
 }) => {
   return (
@@ -27,13 +27,13 @@ export const ProductNumbers = ({
       )}
     >
       <div>
-        Item # <span className="font-medium">{groupId}</span>
+        Item # <span className="font-medium">{sku}</span>
       </div>
 
       <span className="select-none">•</span>
 
       <div>
-        Model # <span className="font-medium">{productId}</span>
+        Model # <span className="font-medium">{manufacturerNo}</span>
       </div>
     </div>
   );
