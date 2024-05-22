@@ -20,21 +20,46 @@ import {
   FormMessage,
 } from "@repo/web-ui/components/ui/form";
 import { Input, inputStyles } from "@repo/web-ui/components/ui/input";
+import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import useAddCreditCardMutation from "./use-add-credit-card-mutation.hook";
 import useSuspenseCreditCardSignature from "./use-suspense-credit-card-signature.hook";
 
-const formSchema = z.object({
-  name: z.string().min(2),
-  token: z.string().min(16, {
-    message: "Please enter a valid card number.",
-  }),
-  brand: z.string().min(1),
-  date: z.string().min(5),
-  save: z.boolean(),
-});
+const formSchema = z
+  .object({
+    name: z.string().min(2),
+    token: z.string().min(16, {
+      message: "Please enter a valid card number.",
+    }),
+    brand: z.string().min(1),
+    date: z.string().min(5),
+    save: z.boolean(),
+  })
+  .superRefine((data, ctx) => {
+    const [month, year] = data.date.split("/");
+
+    if (month && year) {
+      const date = dayjs()
+        .set("month", parseInt(month))
+        .set("year", parseInt(year));
+
+      if (!date.isValid() || date.isBefore(dayjs(), "month")) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Please enter a valid Expiration date",
+          path: ["date"],
+        });
+      }
+    } else {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Please enter a valid Expiration date",
+        path: ["date"],
+      });
+    }
+  });
 
 type AddCreditCardDialogProps = {
   token: string;
