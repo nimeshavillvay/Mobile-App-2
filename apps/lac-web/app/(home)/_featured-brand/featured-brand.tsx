@@ -10,7 +10,7 @@ const FeaturedBrandList = async () => {
   const cookiesStore = cookies();
   const sessionToken = cookiesStore.get(SESSION_TOKEN_COOKIE);
 
-  const { groups } = await getFeaturedBrand();
+  const { groups } = await getFeaturedBrand(sessionToken?.value);
 
   if (!sessionToken?.value) {
     return null;
@@ -40,7 +40,10 @@ const FeaturedBrandList = async () => {
 };
 
 const FeaturedBrand = async () => {
-  const { details } = await getFeaturedBrand();
+  const cookiesStore = cookies();
+  const sessionToken = cookiesStore.get(SESSION_TOKEN_COOKIE);
+
+  const { details } = await getFeaturedBrand(sessionToken?.value);
 
   return (
     <section

@@ -47,6 +47,9 @@ const ProductCard = ({
 }: ProductProps) => {
   const [selectedId, setSelectedId] = useState<string | undefined>();
   const [showShoppingListsDialog, setShowShoppingListsDialog] = useState(false);
+  const [isFavourite, setIsFavourite] = useState(
+    product.variants[0]?.isFavourite ?? false,
+  );
 
   const router = useRouter();
 
@@ -88,13 +91,11 @@ const ProductCard = ({
   }
 
   let title = "";
-  let isFavourite = false;
   let favoriteIds: string[] = [];
 
   if (product.variants.length === 1 && defaultVariant) {
     // If there is just one variant, use its title
     title = defaultVariant.title;
-    isFavourite = defaultVariant.isFavourite;
     favoriteIds = defaultVariant.favoriteIds;
   } else if (product.variants.length > 1) {
     if (selectedVariant) {
@@ -172,6 +173,12 @@ const ProductCard = ({
               title: variant.title,
             }))}
             addToCart={addToCart}
+            isFavourite={isFavourite}
+            onClickShoppingList={() => {
+              isLoggedInUser
+                ? setShowShoppingListsDialog(true)
+                : router.push("/sign-in");
+            }}
           />
         ) : (
           <>
@@ -197,6 +204,9 @@ const ProductCard = ({
                 setOpenAddToShoppingListDialog={setShowShoppingListsDialog}
                 productId={parseInt(id)}
                 favoriteIds={favoriteIds}
+                setUpdatedIsFavorite={(isFavourite) => {
+                  setIsFavourite(isFavourite);
+                }}
               />
             )}
           </>

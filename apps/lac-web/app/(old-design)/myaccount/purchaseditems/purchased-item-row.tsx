@@ -45,6 +45,10 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
   const [showItemAttributes, setShowItemAttributes] = useState(false);
   const [showMyPrice, setShowMyPrice] = useState(false);
   const [showShoppingListsDialog, setShowShoppingListsDialog] = useState(false);
+  const [isFavouriteItem, setIsFavouriteItem] = useState(
+    item.isFavorite ?? false,
+  );
+
   const id = useId();
   const quantityId = `quantity-${id}`;
   const formId = `purchase-add-to-cart-form-${id}`;
@@ -384,7 +388,7 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
                   variant="ghost"
                   onClick={() => setShowShoppingListsDialog(true)}
                 >
-                  {item?.isFavorite ? (
+                  {isFavouriteItem ? (
                     <IoMdHeart className="text-2xl text-brand-primary" />
                   ) : (
                     <IoMdHeartEmpty className="text-2xl text-brand-gray-500" />
@@ -414,6 +418,9 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
         setOpenAddToShoppingListDialog={setShowShoppingListsDialog}
         productId={item.productId}
         favoriteIds={item.favoriteIds}
+        setUpdatedIsFavorite={(isFavourite) => {
+          setIsFavouriteItem(isFavourite);
+        }}
       />
     </>
   );

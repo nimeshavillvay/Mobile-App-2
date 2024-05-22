@@ -10,7 +10,7 @@ const FlashSaleList = async () => {
   const cookiesStore = cookies();
   const sessionToken = cookiesStore.get(SESSION_TOKEN_COOKIE);
 
-  const saleItems = await getSaleItems();
+  const saleItems = await getSaleItems(sessionToken?.value);
 
   if (!sessionToken?.value) {
     return null;

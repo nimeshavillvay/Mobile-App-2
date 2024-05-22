@@ -22,7 +22,7 @@ type Product = {
     item_name: string;
     img: string;
     slug: string;
-    is_favourite: null;
+    is_favourite: boolean;
     favoriteIds: string[];
     is_comparison: null;
     txt_hazardous: string;

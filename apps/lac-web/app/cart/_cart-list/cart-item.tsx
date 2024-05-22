@@ -246,6 +246,7 @@ const CartItem = ({
           </Button>
 
           <FavoriteButton
+            display="desktop"
             productId={product.id}
             isFavourite={product.isFavourite}
             favoriteIds={product.favoriteIds}

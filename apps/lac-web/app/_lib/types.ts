@@ -166,7 +166,7 @@ export type GroupList = {
     item_name: string;
     img: string;
     slug: string;
-    is_favourite: null;
+    is_favourite: boolean;
     favoriteIds: string[];
     is_comparison: null;
     "SKU-attribute": string;
@@ -275,7 +275,7 @@ export type Cart = {
       item_name: string;
       img: string;
       url: string;
-      is_favourite: null;
+      is_favourite: boolean;
       favoriteIds: string[];
       is_comparison: null;
       txt_hazardous: string;

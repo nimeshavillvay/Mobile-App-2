@@ -27,11 +27,18 @@ type FeatureProduct = {
   categoryName: string;
   subCategoryId: string;
   subCategoryName: string;
+  is_favourite: boolean;
+  favoriteIds: string[];
 };
 
-export const getSaleItems = async () => {
+export const getSaleItems = async (token?: string) => {
   const response = await api
     .get("rest/getfeatureproducts", {
+      headers: token
+        ? {
+            Authorization: `Bearer ${token}`,
+          }
+        : {},
       next: { revalidate: DEFAULT_REVALIDATE },
     })
     .json<{
@@ -67,8 +74,7 @@ export const getSaleItems = async () => {
     categoryName: data.categoryName,
     subCategoryId: Number(data.subCategoryId),
     subCategoryName: data.subCategoryName,
-    // TODO: Set correct values for below 2 fields
-    isFavourite: false,
-    favoriteIds: [],
+    isFavourite: !!data.is_favourite,
+    favoriteIds: data.favoriteIds,
   }));
 };

@@ -271,11 +271,15 @@ const ProductCardVariantSelector = ({
   onValueChange,
   addToCart,
   disabled,
+  isFavourite,
+  onClickShoppingList,
 }: {
   href: string;
   variants: { value: string; title: string }[];
   value?: string;
   onValueChange: (value: string) => void;
+  isFavourite: boolean;
+  onClickShoppingList: () => void;
 } & ComponentProps<typeof ProductCardActions>) => {
   return (
     <div className="mt-auto space-y-1">
@@ -299,7 +303,12 @@ const ProductCardVariantSelector = ({
       </Select>
 
       {value ? (
-        <ProductCardActions addToCart={addToCart} disabled={disabled} />
+        <ProductCardActions
+          addToCart={addToCart}
+          disabled={disabled}
+          isFavourite={isFavourite}
+          onClickShoppingList={() => onClickShoppingList}
+        />
       ) : (
         <Link
           href={href}

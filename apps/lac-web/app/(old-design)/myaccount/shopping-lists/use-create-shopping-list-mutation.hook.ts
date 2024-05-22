@@ -20,7 +20,7 @@ const useCreateShoppingListMutation = () => {
             list: listName,
           },
         })
-        .json(),
+        .json<{ list_id: string }>(),
     onMutate: () => {
       toast({ description: "Creating shopping list" });
     },

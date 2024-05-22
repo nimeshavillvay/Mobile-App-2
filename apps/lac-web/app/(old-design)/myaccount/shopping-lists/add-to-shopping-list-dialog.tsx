@@ -17,6 +17,7 @@ import {
 } from "@repo/web-ui/components/ui/form";
 import { Input } from "@repo/web-ui/components/ui/input";
 import { useToast } from "@repo/web-ui/components/ui/toast";
+import dayjs from "dayjs";
 import { LoaderCircle } from "lucide-react";
 import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import { useForm } from "react-hook-form";
@@ -32,6 +33,7 @@ type AddToShoppingListDialogProps = {
   setOpenAddToShoppingListDialog: Dispatch<SetStateAction<boolean>>;
   productId: number;
   favoriteIds: string[];
+  setUpdatedIsFavorite: Dispatch<SetStateAction<boolean>>;
 };
 
 const AddToShoppingListDialog = ({
@@ -39,6 +41,7 @@ const AddToShoppingListDialog = ({
   setOpenAddToShoppingListDialog,
   productId,
   favoriteIds,
+  setUpdatedIsFavorite,
 }: AddToShoppingListDialogProps) => {
   const { toast } = useToast();
 
@@ -77,7 +80,13 @@ const AddToShoppingListDialog = ({
       await createShoppingListMutation.mutateAsync(formData.shoppingListName, {
         onSuccess: (data: { list_id: string }) => {
           form.reset();
-          selectedShoppingLists.push(data.list_id);
+          selectedShoppingLists.push(data.list_id.toString());
+          shoppingLists.lists.push({
+            listId: data.list_id.toString(),
+            listName: formData.shoppingListName,
+            date: dayjs().format("MM/DD/YYYY"),
+            totalItem: "1",
+          });
         },
       });
     }
@@ -96,6 +105,7 @@ const AddToShoppingListDialog = ({
           });
           setOpenAddToShoppingListDialog(false);
           setIsLoading(false);
+          setUpdatedIsFavorite(selectedShoppingLists.length > 0);
         },
       },
     );

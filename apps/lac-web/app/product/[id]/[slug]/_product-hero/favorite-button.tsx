@@ -22,6 +22,7 @@ const FavoriteButton = ({
   isFavourite,
   favoriteIds,
 }: FavoriteButtonProps) => {
+  const [isFavouriteItem, setIsFavouriteItem] = useState(isFavourite ?? false);
   const [showShoppingListsDialog, setShowShoppingListsDialog] = useState(false);
   const router = useRouter();
 
@@ -42,7 +43,7 @@ const FavoriteButton = ({
             : router.push("/sign-in");
         }}
       >
-        {isFavourite ? (
+        {isFavouriteItem ? (
           <HeartFilled className="size-4" />
         ) : (
           <HeartOutline className="size-4" />
@@ -57,6 +58,9 @@ const FavoriteButton = ({
           setOpenAddToShoppingListDialog={setShowShoppingListsDialog}
           productId={productId}
           favoriteIds={favoriteIds}
+          setUpdatedIsFavorite={(isFavourite) => {
+            setIsFavouriteItem(isFavourite);
+          }}
         />
       )}
     </>
