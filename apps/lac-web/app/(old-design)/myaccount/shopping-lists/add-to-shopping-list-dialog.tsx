@@ -1,5 +1,7 @@
+import { cn } from "@/_lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@repo/web-ui/components/ui/button";
+import { Checkbox } from "@repo/web-ui/components/ui/checkbox";
 import {
   Dialog,
   DialogContent,
@@ -22,8 +24,6 @@ import { LoaderCircle } from "lucide-react";
 import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { Checkbox } from "~/components/ui/checkbox";
-import { cn } from "~/lib/utils";
 import useCreateShoppingListMutation from "./use-create-shopping-list-mutation.hook";
 import useSuspenseShoppingList from "./use-suspense-shopping-list.hook";
 import useUpdateShoppingListItemMutation from "./use-update-shopping-list-item-mutation.hook";
