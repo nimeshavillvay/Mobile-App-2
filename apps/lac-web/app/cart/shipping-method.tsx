@@ -24,8 +24,8 @@ type ShippingMethodProps = {
 
 const ShippingMethod = ({ token, options }: ShippingMethodProps) => {
   const id = useId();
-  const shipToMeId = `ship-to-me-${id}`;
-  const willCallId = `will-call-${id}`;
+  const shipToMeId = `${SHIP_TO_ME}-${id}`;
+  const willCallId = `${WILL_CALL}-${id}`;
 
   const [selectedSection, setSelectedSection] = useState<string>();
 
