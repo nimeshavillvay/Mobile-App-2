@@ -4,8 +4,6 @@ import { cn } from "@/_lib/utils";
 import { Download } from "@repo/web-ui/components/icons/download";
 import { Truck } from "@repo/web-ui/components/icons/truck";
 import { Button } from "@repo/web-ui/components/ui/button";
-import { type ReactNode } from "react";
-import Balancer from "react-wrap-balancer";
 import { html, transform } from "ultrahtml";
 import swap from "ultrahtml/transformers/swap";
 import { getProduct } from "../apis";
@@ -43,13 +41,14 @@ export const ProductDescription = ({
   children,
   className,
 }: {
-  children?: ReactNode;
+  children: string;
   className?: string;
 }) => {
   return (
-    <p className={cn("text-base text-wurth-gray-500", className)}>
-      <Balancer>{children}</Balancer>
-    </p>
+    <div
+      className={cn("text-base text-wurth-gray-500", className)}
+      dangerouslySetInnerHTML={{ __html: children }}
+    />
   );
 };
 
