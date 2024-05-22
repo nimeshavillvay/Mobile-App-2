@@ -28,7 +28,7 @@ import { Input } from "@repo/web-ui/components/ui/input";
 import { Label } from "@repo/web-ui/components/ui/label";
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import Image from "next/image";
-import { Suspense, useEffect, useId } from "react";
+import { Suspense, useId } from "react";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import { z } from "zod";
 
@@ -53,20 +53,20 @@ const VerificationDialog = ({ token }: VerificationDialogProps) => {
 
   const onOpenChange = (newOpen: boolean) => {
     if (!newOpen) {
+      addToCartForm.reset({
+        poOrJobName: "",
+        quantity: itemInfo?.minimumOrderQuantity ?? 1,
+      });
       setOpen("closed");
     } else {
       setOpen(open);
     }
-    methods.reset({
-      poOrJobName: "",
-      quantity: itemInfo?.minimumOrderQuantity ?? 1,
-    });
   };
 
   const itemInfoQuery = useItemInfo(productId ? [productId] : []);
   const itemInfo = itemInfoQuery.data?.[0];
 
-  const methods = useForm<VerificationDialogSchema>({
+  const addToCartForm = useForm<VerificationDialogSchema>({
     values: {
       poOrJobName: "",
       quantity: itemInfo?.minimumOrderQuantity ?? 1,
@@ -75,7 +75,7 @@ const VerificationDialog = ({ token }: VerificationDialogProps) => {
   });
 
   return (
-    <FormProvider {...methods}>
+    <FormProvider {...addToCartForm}>
       <Dialog open={open === "verification"} onOpenChange={onOpenChange}>
         <DialogContent className="max-w-[31.625rem]">
           <DialogHeader className="sr-only">
@@ -145,7 +145,7 @@ const VerificationDialog = ({ token }: VerificationDialogProps) => {
                 </Label>
 
                 <Input
-                  {...methods.register("poOrJobName")}
+                  {...addToCartForm.register("poOrJobName")}
                   id={jobNameId}
                   form={formId}
                   type="text"
