@@ -169,6 +169,136 @@ const CartItemShippingMethod = ({
     takeOnHandPlant = Object.values(takeOnHand?.plants)?.at(0) ?? undefined;
   }
 
+  const handleShipToMeMethod = (method: string) => {
+    setSelectedShippingMethod(method);
+    if (method) {
+      // TODO: Update this to a proper logic
+      if (selectedShipToMe === ALL_AVAILABLE) {
+        onSave({
+          avail_1: (availableAllPlant?.quantity ?? 0).toString(),
+          avail_2: "",
+          avail_3: "",
+          avail_4: "",
+          avail_5: "",
+          plant_1: availableAllPlant?.plant ?? "",
+          plant_2: "",
+          plant_3: "",
+          plant_4: "",
+          plant_5: "",
+          shipping_method_1: method,
+          shipping_method_2: "",
+          shipping_method_3: "",
+          shipping_method_4: "",
+          shipping_method_5: "",
+          backorder_all: "F",
+        });
+      }
+      if (selectedShipToMe === TAKE_ON_HAND) {
+        onSave({
+          avail_1: (takeOnHandPlant?.quantity ?? 0).toString(),
+          avail_2: "",
+          avail_3: "",
+          avail_4: "",
+          avail_5: "",
+          plant_1: takeOnHandPlant?.plant ?? "",
+          plant_2: "",
+          plant_3: "",
+          plant_4: "",
+          plant_5: "",
+          shipping_method_1: method,
+          shipping_method_2: "",
+          shipping_method_3: "",
+          shipping_method_4: "",
+          shipping_method_5: "",
+          backorder_all: "F",
+        });
+      }
+      if (selectedShipToMe === ALTERNATIVE_BRANCHES) {
+        onSave({
+          avail_1: (
+            shipAlternativeBranch?.plants["1"]?.quantity ?? 0
+          ).toString(),
+          avail_2: (
+            shipAlternativeBranch?.plants["2"]?.quantity ?? 0
+          ).toString(),
+          avail_3: (
+            shipAlternativeBranch?.plants["3"]?.quantity ?? 0
+          ).toString(),
+          avail_4: "",
+          avail_5: "",
+          plant_1: shipAlternativeBranch?.plants["1"]?.plant ?? "",
+          plant_2: shipAlternativeBranch?.plants["2"]?.plant ?? "",
+          plant_3: shipAlternativeBranch?.plants["3"]?.plant ?? "",
+          plant_4: "",
+          plant_5: "",
+          shipping_method_1: method,
+          shipping_method_2: method,
+          shipping_method_3: method,
+          shipping_method_4: "",
+          shipping_method_5: "",
+          backorder_all: "F",
+        });
+      }
+    }
+  };
+
+  const handleShipToMeOptions = (shipToMe: string) => {
+    setSelectedShipToMe(shipToMe);
+    // Reset the selected shipping method to default
+    if (defaultShippingOption?.code) {
+      setSelectedShippingMethod(defaultShippingOption.code);
+
+      // TODO: Update this to a proper logic
+      if (shipToMe === TAKE_ON_HAND) {
+        onSave({
+          avail_1: (takeOnHandPlant?.quantity ?? 0).toString(),
+          avail_2: "",
+          avail_3: "",
+          avail_4: "",
+          avail_5: "",
+          plant_1: takeOnHandPlant?.plant ?? "",
+          plant_2: "",
+          plant_3: "",
+          plant_4: "",
+          plant_5: "",
+          shipping_method_1: defaultShippingOption.code,
+          shipping_method_2: "",
+          shipping_method_3: "",
+          shipping_method_4: "",
+          shipping_method_5: "",
+          backorder_all: "F",
+        });
+      }
+
+      if (shipToMe === ALTERNATIVE_BRANCHES) {
+        onSave({
+          avail_1: (
+            shipAlternativeBranch?.plants["1"]?.quantity ?? 0
+          ).toString(),
+          avail_2: (
+            shipAlternativeBranch?.plants["2"]?.quantity ?? 0
+          ).toString(),
+          avail_3: (
+            shipAlternativeBranch?.plants["3"]?.quantity ?? 0
+          ).toString(),
+          avail_4: "",
+          avail_5: "",
+          plant_1: shipAlternativeBranch?.plants["1"]?.plant ?? "",
+          plant_2: shipAlternativeBranch?.plants["2"]?.plant ?? "",
+          plant_3: shipAlternativeBranch?.plants["3"]?.plant ?? "",
+          plant_4: "",
+          plant_5: "",
+          shipping_method_1: defaultShippingOption.code,
+          shipping_method_2: defaultShippingOption.code,
+          shipping_method_3: defaultShippingOption.code,
+          shipping_method_4: "",
+          shipping_method_5: "",
+          backorder_all: "F",
+        });
+      }
+    }
+  };
+
   // Back Order all logics
   const getBackOrderAllDate = (
     plants: {
@@ -252,78 +382,7 @@ const CartItemShippingMethod = ({
               selectedSection !== SHIP_TO_ME || availableOptions?.length === 0
             }
             value={selectedShippingMethod}
-            onValueChange={(method) => {
-              setSelectedShippingMethod(method);
-              if (method) {
-                // TODO: Update this to a proper logic
-                if (selectedShipToMe === ALL_AVAILABLE) {
-                  onSave({
-                    avail_1: (availableAllPlant?.quantity ?? 0).toString(),
-                    avail_2: "",
-                    avail_3: "",
-                    avail_4: "",
-                    avail_5: "",
-                    plant_1: availableAllPlant?.plant ?? "",
-                    plant_2: "",
-                    plant_3: "",
-                    plant_4: "",
-                    plant_5: "",
-                    shipping_method_1: method,
-                    shipping_method_2: "",
-                    shipping_method_3: "",
-                    shipping_method_4: "",
-                    shipping_method_5: "",
-                    backorder_all: "F",
-                  });
-                }
-                if (selectedShipToMe === TAKE_ON_HAND) {
-                  onSave({
-                    avail_1: (takeOnHandPlant?.quantity ?? 0).toString(),
-                    avail_2: "",
-                    avail_3: "",
-                    avail_4: "",
-                    avail_5: "",
-                    plant_1: takeOnHandPlant?.plant ?? "",
-                    plant_2: "",
-                    plant_3: "",
-                    plant_4: "",
-                    plant_5: "",
-                    shipping_method_1: method,
-                    shipping_method_2: "",
-                    shipping_method_3: "",
-                    shipping_method_4: "",
-                    shipping_method_5: "",
-                    backorder_all: "F",
-                  });
-                }
-                if (selectedShipToMe === ALTERNATIVE_BRANCHES) {
-                  onSave({
-                    avail_1: (
-                      shipAlternativeBranch?.plants["1"]?.quantity ?? 0
-                    ).toString(),
-                    avail_2: (
-                      shipAlternativeBranch?.plants["2"]?.quantity ?? 0
-                    ).toString(),
-                    avail_3: (
-                      shipAlternativeBranch?.plants["3"]?.quantity ?? 0
-                    ).toString(),
-                    avail_4: "",
-                    avail_5: "",
-                    plant_1: shipAlternativeBranch?.plants["1"]?.plant ?? "",
-                    plant_2: shipAlternativeBranch?.plants["2"]?.plant ?? "",
-                    plant_3: shipAlternativeBranch?.plants["3"]?.plant ?? "",
-                    plant_4: "",
-                    plant_5: "",
-                    shipping_method_1: method,
-                    shipping_method_2: method,
-                    shipping_method_3: method,
-                    shipping_method_4: "",
-                    shipping_method_5: "",
-                    backorder_all: "F",
-                  });
-                }
-              }
-            }}
+            onValueChange={(method) => handleShipToMeMethod(method)}
           >
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Select a delivery method" />
@@ -348,60 +407,7 @@ const CartItemShippingMethod = ({
           {selectedSection === SHIP_TO_ME && (
             <RadioGroup
               value={selectedShipToMe}
-              onValueChange={(shipToMe) => {
-                setSelectedShipToMe(shipToMe);
-                // Reset the selected shipping method to default
-                if (defaultShippingOption?.code) {
-                  setSelectedShippingMethod(defaultShippingOption.code);
-                  if (shipToMe === TAKE_ON_HAND) {
-                    onSave({
-                      avail_1: (takeOnHandPlant?.quantity ?? 0).toString(),
-                      avail_2: "",
-                      avail_3: "",
-                      avail_4: "",
-                      avail_5: "",
-                      plant_1: takeOnHandPlant?.plant ?? "",
-                      plant_2: "",
-                      plant_3: "",
-                      plant_4: "",
-                      plant_5: "",
-                      shipping_method_1: defaultShippingOption.code,
-                      shipping_method_2: "",
-                      shipping_method_3: "",
-                      shipping_method_4: "",
-                      shipping_method_5: "",
-                      backorder_all: "F",
-                    });
-                  }
-                  // TODO: Update this to a proper logic
-                  if (shipToMe === ALTERNATIVE_BRANCHES) {
-                    onSave({
-                      avail_1: (
-                        shipAlternativeBranch?.plants["1"]?.quantity ?? 0
-                      ).toString(),
-                      avail_2: (
-                        shipAlternativeBranch?.plants["2"]?.quantity ?? 0
-                      ).toString(),
-                      avail_3: (
-                        shipAlternativeBranch?.plants["3"]?.quantity ?? 0
-                      ).toString(),
-                      avail_4: "",
-                      avail_5: "",
-                      plant_1: shipAlternativeBranch?.plants["1"]?.plant ?? "",
-                      plant_2: shipAlternativeBranch?.plants["2"]?.plant ?? "",
-                      plant_3: shipAlternativeBranch?.plants["3"]?.plant ?? "",
-                      plant_4: "",
-                      plant_5: "",
-                      shipping_method_1: defaultShippingOption.code,
-                      shipping_method_2: defaultShippingOption.code,
-                      shipping_method_3: defaultShippingOption.code,
-                      shipping_method_4: "",
-                      shipping_method_5: "",
-                      backorder_all: "F",
-                    });
-                  }
-                }
-              }}
+              onValueChange={(shipToMe) => handleShipToMeOptions(shipToMe)}
             >
               {/* All available option */}
               {availableAll && (
