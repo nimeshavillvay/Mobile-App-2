@@ -2,6 +2,7 @@
 
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import { cn, formatNumberToPrice } from "@/_lib/utils";
+import useAddToCartForm from "../use-add-to-cart-form.hook";
 
 type ProductPricesProps = {
   token: string;
@@ -18,7 +19,12 @@ const ProductPrices = ({
   token,
   className,
 }: ProductPricesProps) => {
-  const priceCheckQuery = useSuspensePriceCheck(token, [{ productId, qty: 1 }]);
+  const { watch } = useAddToCartForm();
+  const quantity = watch("quantity");
+
+  const priceCheckQuery = useSuspensePriceCheck(token, [
+    { productId, qty: quantity },
+  ]);
   const priceData = priceCheckQuery.data.productPrices[0];
   const currentPrice = priceData?.price ?? 0;
 
