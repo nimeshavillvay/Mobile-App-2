@@ -43,8 +43,8 @@ const useAddToCartMutation = (
 
         // Add the plants
         for (let i = 1; i <= 5; i++) {
-          if (selectedOption.plants[i.toString()]) {
-            const selectedPlant = selectedOption.plants[i.toString()];
+          if (selectedOption.plants[i]) {
+            const selectedPlant = selectedOption.plants[i];
 
             if (selectedPlant) {
               const quantity = selectedOption.backOrder

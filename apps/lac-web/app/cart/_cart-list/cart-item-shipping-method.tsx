@@ -147,29 +147,13 @@ const CartItemShippingMethod = ({
     return foundPlant?.name ?? "Plant N/A";
   };
 
-  const checkVendorShipped = () => {
-    // Check if the vendor ships the item
-    if (
-      availableAll?.plants["1"]?.shippingMethods?.find(
-        (method) => method.code === VENDOR_DIRECT_CODE,
-      )
-    ) {
-      return true;
-    }
-    return false;
-  };
+  const isVendorShipped = !!availableAll?.plants
+    ?.at(0)
+    ?.shippingMethods?.find((method) => method.code === VENDOR_DIRECT_CODE);
 
-  const checkSameDayShippingEnabled = () => {
-    // Check if same day shipping is enabled
-    if (availableAll?.plants) {
-      const isSameDayAvail = Object.values(availableAll?.plants)?.find(
-        (value) => value?.isSameDayAvail,
-      );
-
-      return isSameDayAvail?.isSameDayAvail ?? false;
-    }
-    return false;
-  };
+  const isSameDayShippingEnabled =
+    !!availableAll?.plants?.find((value) => value?.isSameDayAvail)
+      ?.isSameDayAvail ?? false;
 
   // Ship to me logics
   let availableAllPlant: OptionPlant | undefined = undefined;
@@ -216,7 +200,7 @@ const CartItemShippingMethod = ({
 
   return (
     <ul className="flex flex-col gap-3">
-      {checkVendorShipped() && (
+      {isVendorShipped && (
         <li className="text-sm text-wurth-gray-500">
           This item is shipped by the vender
         </li>
@@ -355,7 +339,7 @@ const CartItemShippingMethod = ({
             </SelectContent>
           </Select>
 
-          {checkSameDayShippingEnabled() && (
+          {isSameDayShippingEnabled && (
             <div className="text-sm">
               Get it by <b>today</b> if you order before noon
             </div>
