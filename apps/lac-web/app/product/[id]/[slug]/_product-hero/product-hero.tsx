@@ -12,6 +12,7 @@ import Balancer from "react-wrap-balancer";
 import "server-only";
 import { getProduct } from "../apis";
 import ProductPrices from "./_product-prices";
+import ProductVariants from "./_product-variants";
 import SaleBadges from "./_sale-badges";
 import AddToCart from "./add-to-cart";
 import AddToCartFormProvider from "./add-to-cart-form-provider";
@@ -23,7 +24,6 @@ import {
   ProductNumbers,
   ProductSpecifications,
 } from "./product-hero-sections";
-import ProductVariants from "./product-variants";
 
 type ProductHeroProps = {
   id: string;

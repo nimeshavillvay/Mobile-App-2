@@ -35,6 +35,7 @@ const RelatedProductsList = ({ products }: RelatedProductsListProps) => {
         ],
       }}
       token={sessionToken.value}
+      orientation="horizontal"
     />
   ));
 };

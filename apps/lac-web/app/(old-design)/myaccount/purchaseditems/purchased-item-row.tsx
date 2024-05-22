@@ -150,6 +150,64 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
                   MRF Part# : {item.mfrPartNo !== "" ? item.mfrPartNo : "N/A"}
                 </div>
 
+                <h4 className="line-clamp-3 text-wrap font-bold">
+                  {item.productTitle}
+                </h4>
+
+                <div className="text-sm text-brand-gray-500">
+                  Category :&nbsp;
+                  {item.productCategory !== "" ? item.productCategory : "N/A"}
+                </div>
+              </>
+            )}
+          </TableCell>
+
+          <TableCell className="min-w-[76px]">
+            <Link
+              href={generateItemUrl(item)}
+              className={
+                isItemError(item)
+                  ? "pointer-events-none"
+                  : "pointer-events-auto"
+              }
+            >
+              {item.image ? (
+                <Image
+                  src={item.image}
+                  alt={item.productTitle}
+                  width={76}
+                  height={76}
+                  className="border border-brand-gray-200 object-contain"
+                />
+              ) : (
+                <WurthFullBlack
+                  width={76}
+                  height={76}
+                  className="border border-brand-gray-200 px-2"
+                />
+              )}
+            </Link>
+          </TableCell>
+
+          <TableCell className="flex flex-col gap-0.5">
+            <Link
+              href={generateItemUrl(item)}
+              className={cn(
+                "text-sm text-brand-gray-500",
+                isItemError(item)
+                  ? "pointer-events-none"
+                  : "pointer-events-auto",
+              )}
+            >
+              Item# : {item.productSku !== "" ? item.productSku : "N/A"}
+            </Link>
+
+            {!isItemNotAdded && (
+              <>
+                <div className="text-sm text-brand-gray-500">
+                  MRF Part# : {item.mfrPartNo !== "" ? item.mfrPartNo : "N/A"}
+                </div>
+
                 <h4 className="text-wrap font-bold">{item.productTitle}</h4>
 
                 <div className="text-sm text-brand-gray-500">

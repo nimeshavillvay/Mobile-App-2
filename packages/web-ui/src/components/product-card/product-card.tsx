@@ -225,48 +225,6 @@ const ProductCardPrice = ({
   );
 };
 
-const ProductCardVariantSelector = ({
-  href,
-  variants,
-  value,
-  onValueChange,
-}: {
-  href: string;
-  variants: { value: string; title: string }[];
-  value?: string;
-  onValueChange: (value: string) => void;
-}) => {
-  return (
-    <div className="mt-auto space-y-1">
-      <h4 className="text-sm font-normal text-wurth-gray-800">
-        {variants.length} variations
-      </h4>
-
-      <Select value={value} onValueChange={onValueChange}>
-        <SelectTrigger className="w-full">
-          <SelectValue placeholder="Select a variation" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectGroup>
-            {variants.map((variant) => (
-              <SelectItem key={variant.value} value={variant.value}>
-                {variant.title}
-              </SelectItem>
-            ))}
-          </SelectGroup>
-        </SelectContent>
-      </Select>
-
-      <Link
-        href={href}
-        className={cn(buttonVariants({ variant: "default" }), "w-full")}
-      >
-        View item
-      </Link>
-    </div>
-  );
-};
-
 const ProductCardActions = ({
   addToCart,
   isFavourite,
@@ -302,6 +260,54 @@ const ProductCardActions = ({
           <HeartOutline className="size-4" />
         )}
       </Button>
+    </div>
+  );
+};
+
+const ProductCardVariantSelector = ({
+  href,
+  variants,
+  value,
+  onValueChange,
+  addToCart,
+  disabled,
+}: {
+  href: string;
+  variants: { value: string; title: string }[];
+  value?: string;
+  onValueChange: (value: string) => void;
+} & ComponentProps<typeof ProductCardActions>) => {
+  return (
+    <div className="mt-auto space-y-1">
+      <h4 className="text-sm font-normal text-wurth-gray-800">
+        {variants.length} variations
+      </h4>
+
+      <Select value={value} onValueChange={onValueChange}>
+        <SelectTrigger className="w-full">
+          <SelectValue placeholder="Select a variation" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectGroup>
+            {variants.map((variant) => (
+              <SelectItem key={variant.value} value={variant.value}>
+                {variant.title}
+              </SelectItem>
+            ))}
+          </SelectGroup>
+        </SelectContent>
+      </Select>
+
+      {value ? (
+        <ProductCardActions addToCart={addToCart} disabled={disabled} />
+      ) : (
+        <Link
+          href={href}
+          className={cn(buttonVariants({ variant: "default" }), "h-10 w-full")}
+        >
+          View item
+        </Link>
+      )}
     </div>
   );
 };
