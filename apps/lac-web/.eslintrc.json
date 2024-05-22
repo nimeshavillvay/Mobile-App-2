@@ -1,3 +1,16 @@
 {
-  "extends": ["@repo/eslint-config/next.js"]
+  "extends": ["@repo/eslint-config/next.js"],
+  "rules": {
+    "no-restricted-imports": [
+      "error",
+      {
+        "patterns": [
+          {
+            "group": ["~/*"],
+            "message": "Direct importing from the web-ui package is not allowed. Import from \"@repo/web-ui\" instead."
+          }
+        ]
+      }
+    ]
+  }
 }
