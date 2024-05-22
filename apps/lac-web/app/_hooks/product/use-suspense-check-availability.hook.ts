@@ -1,4 +1,5 @@
 import { api } from "@/_lib/api";
+import type { ShippingMethod } from "@/_lib/types";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
 export type CheckAvailability = {
@@ -7,18 +8,14 @@ export type CheckAvailability = {
   options: {
     backOrder: boolean;
     plants: {
-      [key: string]: {
-        plant: string;
-        quantity?: number;
-        backOrderQuantity?: number;
-        backOrderDate?: string;
-        shippingMethods: {
-          code: string;
-          name: string;
-        }[];
-        isSameDayAvail?: boolean;
-      };
-    };
+      index: number;
+      isSameDayAvail: boolean;
+      plant: string;
+      quantity?: number;
+      backOrderQuantity?: number;
+      backOrderDate?: string;
+      shippingMethods: ShippingMethod[];
+    }[];
     type: string;
     hash: string;
   }[];

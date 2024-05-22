@@ -93,6 +93,7 @@ const ProductHero = async ({ id, slug }: ProductHeroProps) => {
             productId={parseInt(id)}
             minQty={product.selectedProduct.minimumOrderQuantity}
             incQty={product.selectedProduct.quantityByIncrements}
+            uom={product.selectedProduct.unitOfMeasure}
           />
 
           {product.selectedProduct.isDirectlyShippedFromVendor && (
@@ -156,6 +157,7 @@ const ProductHero = async ({ id, slug }: ProductHeroProps) => {
           productId={parseInt(id)}
           minQty={product.selectedProduct.minimumOrderQuantity}
           incQty={product.selectedProduct.quantityByIncrements}
+          uom={product.selectedProduct.unitOfMeasure}
           className="container my-6 md:hidden"
         />
 
