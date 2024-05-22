@@ -2,6 +2,7 @@
 
 import useSuspenseCheckAvailability from "@/_hooks/product/use-suspense-check-availability.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
+import { cn } from "@/_lib/utils";
 import { ChevronRight } from "@repo/web-ui/components/icons/chevron-right";
 import { Button } from "@repo/web-ui/components/ui/button";
 import {
@@ -23,6 +24,7 @@ const LocationStocks = ({ token, productId }: LocationStocksProps) => {
   const firstLocation = checkAvailabilityQuery.data.availableLocations[0];
   const otherLocations =
     checkAvailabilityQuery.data.availableLocations.slice(1);
+  const isBackordered = checkAvailabilityQuery.data.status === "notInStock";
 
   const checkLoginQuery = useSuspenseCheckLogin(token);
 
@@ -30,13 +32,22 @@ const LocationStocks = ({ token, productId }: LocationStocksProps) => {
     <Collapsible className="flex flex-col gap-1">
       <div className="space-y-2 py-1 md:flex md:flex-row md:items-center md:justify-between md:space-y-0">
         <div className="flex shrink-0 flex-row items-center gap-2">
-          <div className="rounded bg-green-50 px-4 py-2 text-sm font-semibold leading-4 text-green-700 md:px-2 md:py-1">
-            In Stock
+          <div
+            className={cn(
+              "rounded px-4 py-2 text-sm font-semibold leading-4 md:px-2 md:py-1",
+              isBackordered
+                ? "bg-yellow-50 text-yellow-700"
+                : "bg-green-50 text-green-700",
+            )}
+          >
+            {isBackordered ? "Backordered" : "In Stock"}
           </div>
 
-          <div className="text-sm font-medium text-wurth-gray-800">
-            {firstLocation?.amount} in stock at {firstLocation?.name}
-          </div>
+          {!isBackordered && (
+            <div className="text-sm font-medium text-wurth-gray-800">
+              {firstLocation?.amount} in stock at {firstLocation?.name}
+            </div>
+          )}
         </div>
 
         {checkLoginQuery.data.status_code === "OK" && (
