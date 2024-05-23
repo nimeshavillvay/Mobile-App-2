@@ -8,27 +8,16 @@ import {
   PaginationPrevious,
 } from "@repo/web-ui/components/ui/pagination";
 import { usePathname, useSearchParams } from "next/navigation";
-import useSuspenseShoppingListItemCount from "./use-suspense-shopping-list-item-count.hook";
 
 const ShoppingListPagination = ({
-  token,
   page,
-  perPage,
+  totalPages,
   shoppingListId,
 }: {
-  token: string;
   page: number;
-  perPage: number;
+  totalPages: number;
   shoppingListId: string;
 }) => {
-  const shoppingListItemCountQuery = useSuspenseShoppingListItemCount(
-    token,
-    shoppingListId,
-  );
-
-  const shoppingListItemCount = shoppingListItemCountQuery?.data;
-
-  const totalPages = Math.ceil(shoppingListItemCount.count / perPage);
   const previousPage = page - 1 < 1 ? 1 : page - 1;
   let nextPage;
   if (totalPages == 0) {
