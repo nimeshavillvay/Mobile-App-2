@@ -1,8 +1,10 @@
 import { cn } from "@/_lib/utils";
 import { Check } from "@repo/web-ui/components/icons/check";
 import { Button } from "@repo/web-ui/components/ui/button";
+import { Suspense } from "react";
 import AddToCartForm from "./_add-to-cart-form";
 import LocationStocks from "./_location-stocks";
+import RegionalExclusionNotice from "./_regional-exclusion-notice";
 import FavoriteButton from "./favorite-button";
 
 type AddToCartProps = {
@@ -56,6 +58,10 @@ const AddToCart = ({
 
           <FavoriteButton productId={productId} />
         </div>
+
+        <Suspense>
+          <RegionalExclusionNotice productId={productId} />
+        </Suspense>
       </section>
     </>
   );
