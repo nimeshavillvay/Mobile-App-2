@@ -1,5 +1,6 @@
 import { getPasswordPolicies } from "@/_lib/apis/server";
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 import { checkPasswordReset } from "./api";
 import PasswordResetForm from "./password-reset-form";
 
@@ -12,8 +13,12 @@ type PasswordResetProps = {
 };
 
 const PasswordReset = async ({ searchParams }: PasswordResetProps) => {
-  const userKey = searchParams.password_reset_key!.toString();
-  const userId = searchParams.user!.toString();
+  if (!searchParams.password_reset_key || !searchParams.user) {
+    redirect("/sign-in");
+  }
+
+  const userKey = searchParams.password_reset_key.toString();
+  const userId = searchParams.user.toString();
   const passwordResetCheck = await checkPasswordReset(userKey, userId);
 
   if (passwordResetCheck.statusCode !== "OK") {
