@@ -18,14 +18,16 @@ export const CategoriesGrid = ({
             href={`/category/${category.id}/${category.slug}`}
             className="flex flex-col items-center gap-4"
           >
-            <Image
-              src={category.image}
-              alt={`An image of ${category.title}`}
-              width={112}
-              height={112}
-              className="size-28 rounded-full object-contain"
-              priority={priorityImages}
-            />
+            <div className="grid size-28 place-items-center rounded-full bg-gradient-to-t from-[#EBEFF5] to-[#F7FAFF] md:size-[11.25rem]">
+              <Image
+                src={category.image}
+                alt={`An image of ${category.title}`}
+                width={127}
+                height={127}
+                className="size-[79px] object-contain mix-blend-multiply md:size-[127px]"
+                priority={priorityImages}
+              />
+            </div>
 
             <h2 className="text-center text-[0.9375rem] font-semibold leading-5 text-black">
               <Balancer>{category.title}</Balancer>
