@@ -1,5 +1,6 @@
 "use client";
 
+import useDebouncedState from "@/_hooks/misc/use-debounced-state.hook";
 import useSuspenseCheckAvailability from "@/_hooks/product/use-suspense-check-availability.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
 import { cn } from "@/_lib/utils";
@@ -10,6 +11,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@repo/web-ui/components/ui/collapsible";
+import useAddToCartForm from "../use-add-to-cart-form.hook";
 
 type LocationStocksProps = {
   token: string;
@@ -17,14 +19,19 @@ type LocationStocksProps = {
 };
 
 const LocationStocks = ({ token, productId }: LocationStocksProps) => {
+  const { watch } = useAddToCartForm();
+  const quantity = watch("quantity");
+  const delayedQuantity = useDebouncedState(quantity);
+
   const checkAvailabilityQuery = useSuspenseCheckAvailability(token, {
     productId,
-    qty: 1,
+    qty: delayedQuantity,
   });
   const firstLocation = checkAvailabilityQuery.data.availableLocations[0];
   const otherLocations =
     checkAvailabilityQuery.data.availableLocations.slice(1);
   const isBackordered = checkAvailabilityQuery.data.status === "notInStock";
+  const isLimitedStock = checkAvailabilityQuery.data.status === "limitedStock";
 
   const checkLoginQuery = useSuspenseCheckLogin(token);
 
@@ -35,12 +42,16 @@ const LocationStocks = ({ token, productId }: LocationStocksProps) => {
           <div
             className={cn(
               "rounded px-4 py-2 text-sm font-semibold leading-4 md:px-2 md:py-1",
-              isBackordered
+              isBackordered || isLimitedStock
                 ? "bg-yellow-50 text-yellow-700"
                 : "bg-green-50 text-green-700",
             )}
           >
-            {isBackordered ? "Backordered" : "In Stock"}
+            {isBackordered
+              ? "Backordered"
+              : isLimitedStock
+                ? "Limited Stock"
+                : "In Stock"}
           </div>
 
           {!isBackordered && (

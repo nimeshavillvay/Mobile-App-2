@@ -113,19 +113,20 @@ const ProductCard = ({
       qty: 1,
     },
   ]);
+  const priceData = priceCheckQuery.data.productPrices[0];
 
+  let listPrice = 0;
   let currentPrice = 0;
-  let previousPrice = 0;
   let discountPercent = 0;
 
-  if (priceCheckQuery.data.productPrices[0]) {
-    currentPrice = priceCheckQuery.data.productPrices[0].price;
-    previousPrice = priceCheckQuery.data.productPrices[0].extendedPrice;
+  if (priceData) {
+    listPrice = priceData.listPrice;
+    currentPrice = priceData?.uomPrice ?? priceData?.price;
   }
 
-  if (currentPrice !== previousPrice) {
+  if (currentPrice !== listPrice) {
     discountPercent = Math.floor(
-      ((currentPrice - previousPrice) / previousPrice) * 100,
+      ((listPrice - currentPrice) / listPrice) * 100,
     );
   }
 
@@ -185,7 +186,7 @@ const ProductCard = ({
             <ProductCardPrice
               price={currentPrice}
               uom={uom}
-              actualPrice={previousPrice}
+              actualPrice={listPrice}
             />
 
             <ProductCardActions
