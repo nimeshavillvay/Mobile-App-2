@@ -22,6 +22,7 @@ import {
 } from "@repo/web-ui/components/ui/dialog";
 import { useState } from "react";
 import { cn } from "~/lib/utils";
+// import { throwError } from "./action";
 import useScanBarcodeMutation from "./use-scan-barcode-mutation.hook";
 
 const BarcodeScannerDialog = () => {
@@ -30,7 +31,6 @@ const BarcodeScannerDialog = () => {
   const [isDiscontinued, setIsDiscontinued] = useState(false);
   const [categoryId, setCategoryId] = useState("");
   const [categorySlug, setCategorySlug] = useState("");
-  const [isGroupEmpty, setIsGroupEmpty] = useState(false);
   const [textChanged, setTextChanged] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -40,14 +40,12 @@ const BarcodeScannerDialog = () => {
     setIsDiscontinued,
     setCategoryId,
     setCategorySlug,
-    setIsGroupEmpty,
     setSearchQuery,
   });
 
   const onScanSuccess = (query: string) => {
     scanBarcodeMutation.mutate(query);
   };
-  console.log(isGroupEmpty);
 
   return (
     <>

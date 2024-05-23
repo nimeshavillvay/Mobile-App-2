@@ -48,7 +48,6 @@ const useScanBarcodeMutation = ({
   setIsDiscontinued,
   setCategoryId,
   setCategorySlug,
-  setIsGroupEmpty,
   setSearchQuery,
 }: {
   setOpen: (open: boolean) => void;
@@ -56,7 +55,6 @@ const useScanBarcodeMutation = ({
   setIsDiscontinued: (open: boolean) => void;
   setCategoryId: (open: string) => void;
   setCategorySlug: (open: string) => void;
-  setIsGroupEmpty: (open: boolean) => void;
   setSearchQuery: (searchQuery: string) => void;
 }) => {
   const router = useRouter();
@@ -71,17 +69,17 @@ const useScanBarcodeMutation = ({
         .json<SearchData>();
 
       const firstProduct = searchResults.results;
+      const isPlp = searchResults.summary.plp;
       if (
-        searchResults.summary.plp &&
-        !Array.isArray(searchResults.results) &&
-        searchResults.results.productStatus != "discontinued" &&
-        (searchResults.results.groupId === "0" ||
-          searchResults.results.categoryName === "")
+        isPlp &&
+        !Array.isArray(firstProduct) &&
+        firstProduct.productStatus != "discontinued" &&
+        (firstProduct.groupId === "0" || firstProduct.categoryName === "")
       ) {
         setOpen(false);
-        setIsGroupEmpty(true);
+        router.push(`search?query=${firstProduct.MFRPartNo}`);
       } else if (
-        searchResults.summary.plp &&
+        isPlp &&
         firstProduct.productStatus === "discontinued" &&
         firstProduct.categoryId &&
         firstProduct.categorySlug
@@ -90,7 +88,7 @@ const useScanBarcodeMutation = ({
         setCategoryId(firstProduct.categoryId);
         setCategorySlug(firstProduct.categorySlug);
         setOpen(false);
-      } else if (searchResults.summary.plp && firstProduct) {
+      } else if (isPlp && firstProduct) {
         const productPath = `/product/${firstProduct.id}/${firstProduct.slug}`;
         setOpen(false);
         setProductNotFound(false);
