@@ -34,6 +34,16 @@ const DiscontinuedItemNotice = ({
     }
   };
 
+  const onClickNo = () => {
+    setOpen(false);
+    router.push(`/`);
+  };
+
+  const onClickYes = () => {
+    setOpen(false);
+    router.push(`/category/${categoryId}/${slug}`);
+  };
+
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent>
@@ -45,13 +55,10 @@ const DiscontinuedItemNotice = ({
           </DialogDescription>
         </DialogHeader>
         <div className="flex flex-row items-center justify-end space-x-4">
-          <Button variant="outline" onClick={() => router.push(`/`)}>
+          <Button variant="outline" onClick={() => onClickNo()}>
             No
           </Button>
-          <Button
-            variant="default"
-            onClick={() => router.push(`/category/${categoryId}/${slug}`)}
-          >
+          <Button variant="default" onClick={() => onClickYes()}>
             Yes
           </Button>
         </div>

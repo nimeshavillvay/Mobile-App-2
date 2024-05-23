@@ -23,6 +23,12 @@ type SearchResult = {
   attributes: string[] | null;
   itemImage: string;
   slug: string;
+  uom?: string;
+  groupId?: string;
+  categoryId?: string;
+  categorySlug?: string;
+  brandId?: string;
+  brandSlug?: string;
 };
 
 type SearchData = {
@@ -39,9 +45,17 @@ type SearchData = {
 const useScanBarcodeMutation = ({
   setOpen,
   setProductNotFound,
+  setIsDiscontinued,
+  setCategoryId,
+  setCategorySlug,
+  setIsGroupEmpty,
 }: {
   setOpen: (open: boolean) => void;
   setProductNotFound: (open: boolean) => void;
+  setIsDiscontinued: (open: boolean) => void;
+  setCategoryId: (open: string) => void;
+  setCategorySlug: (open: string) => void;
+  setIsGroupEmpty: (open: boolean) => void;
 }) => {
   const router = useRouter();
 
@@ -54,7 +68,26 @@ const useScanBarcodeMutation = ({
         .json<SearchData>();
 
       const firstProduct = searchResults.results;
-      if (searchResults.summary.plp && firstProduct) {
+      if (
+        searchResults.summary.plp &&
+        !Array.isArray(searchResults.results) &&
+        searchResults.results.productStatus != "discontinued" &&
+        (searchResults.results.groupId === "0" ||
+          searchResults.results.categoryName === "")
+      ) {
+        setOpen(false);
+        setIsGroupEmpty(true);
+      } else if (
+        searchResults.summary.plp &&
+        firstProduct.productStatus === "discontinued" &&
+        firstProduct.categoryId &&
+        firstProduct.categorySlug
+      ) {
+        setIsDiscontinued(true);
+        setCategoryId(firstProduct.categoryId);
+        setCategorySlug(firstProduct.categorySlug);
+        setOpen(false);
+      } else if (searchResults.summary.plp && firstProduct) {
         const productPath = `/product/${firstProduct.id}/${firstProduct.slug}`;
         setOpen(false);
         setProductNotFound(false);
