@@ -9,7 +9,6 @@ import type {
   SearchData,
   SearchDropDownItem,
 } from "~/components/search-box/types";
-// correct
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
 
