@@ -1,5 +1,4 @@
 import { cn } from "@/_lib/utils";
-import { Check } from "@repo/web-ui/components/icons/check";
 import { HeartOutline } from "@repo/web-ui/components/icons/heart-outline";
 import { Button } from "@repo/web-ui/components/ui/button";
 import { Suspense } from "react";
@@ -45,11 +44,6 @@ const AddToCart = ({
             <span className="font-semibold text-wurth-gray-800">{incQty}</span>
           </div>
         </div>
-
-        <Button variant="outline" disabled className="gap-1 md:py-2">
-          <Check className="size-4" />
-          <span>Compare</span>
-        </Button>
 
         <Button variant="outline" size="icon">
           <HeartOutline className="size-4" />
