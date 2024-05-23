@@ -4,11 +4,11 @@ import Link from "next/link";
 import { type ComponentProps } from "react";
 import { Close } from "~/components/icons/close";
 import { MagnifyingGlass } from "~/components/icons/magnifying-glass";
-import {
+import type {
   Result,
   SearchData,
   SearchDropDownItem,
-} from "~/components/search-box/types.ts";
+} from "~/components/search-box/types";
 // correct
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
