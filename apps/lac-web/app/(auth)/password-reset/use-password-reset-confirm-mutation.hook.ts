@@ -16,7 +16,7 @@ const usePasswordResetConfirmMutation = () => {
       password: string;
     }) =>
       api
-        .post("rest/register/password-reset-check", {
+        .post("rest/register/password-reset-confirm", {
           json: {
             user_key: userKey,
             userid: userId,
