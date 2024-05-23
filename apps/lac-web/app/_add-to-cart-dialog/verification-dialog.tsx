@@ -80,7 +80,7 @@ const VerificationDialog = ({ token }: VerificationDialogProps) => {
     },
     resolver: zodResolver(verificationDialogSchema),
   });
-  const quantity = methods.watch("quantity");
+  const quantity = addToCartForm.watch("quantity");
   const delayedQuantity = useDebouncedState(quantity);
 
   return (
