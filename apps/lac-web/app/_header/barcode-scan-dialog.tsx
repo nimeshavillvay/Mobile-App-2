@@ -32,6 +32,7 @@ const BarcodeScannerDialog = () => {
   const [categorySlug, setCategorySlug] = useState("");
   const [isGroupEmpty, setIsGroupEmpty] = useState(false);
   const [textChanged, setTextChanged] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const scanBarcodeMutation = useScanBarcodeMutation({
     setOpen,
@@ -40,6 +41,7 @@ const BarcodeScannerDialog = () => {
     setCategoryId,
     setCategorySlug,
     setIsGroupEmpty,
+    setSearchQuery,
   });
 
   const onScanSuccess = (query: string) => {
@@ -64,6 +66,7 @@ const BarcodeScannerDialog = () => {
               setCategoryId("");
               setCategorySlug("");
               setIsDiscontinued(false);
+              setSearchQuery("");
             }}
           >
             <BarcodeScan className="size-5" />
@@ -93,6 +96,16 @@ const BarcodeScannerDialog = () => {
               be fully observed.
             </DialogDescription>
           </DialogHeader>
+
+          <div
+            className={cn(
+              "flex justify-center rounded-md border border-wurth-blue-450 bg-sky-50",
+            )}
+          >
+            <p className={cn("font-bold text-wurth-blue-450")}>
+              {!searchQuery ? "Searching..." : "Search Completed"}
+            </p>
+          </div>
 
           <BarcodeScanner
             setTextChanged={setTextChanged}

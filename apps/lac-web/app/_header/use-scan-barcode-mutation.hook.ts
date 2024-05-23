@@ -49,6 +49,7 @@ const useScanBarcodeMutation = ({
   setCategoryId,
   setCategorySlug,
   setIsGroupEmpty,
+  setSearchQuery,
 }: {
   setOpen: (open: boolean) => void;
   setProductNotFound: (open: boolean) => void;
@@ -56,11 +57,13 @@ const useScanBarcodeMutation = ({
   setCategoryId: (open: string) => void;
   setCategorySlug: (open: string) => void;
   setIsGroupEmpty: (open: boolean) => void;
+  setSearchQuery: (searchQuery: string) => void;
 }) => {
   const router = useRouter();
 
   return useMutation({
     mutationFn: async (query: string) => {
+      setSearchQuery("");
       const searchResults = await searchApi
         .get("barcode", {
           searchParams: { query },
@@ -95,6 +98,7 @@ const useScanBarcodeMutation = ({
       } else {
         setProductNotFound(true);
       }
+      setSearchQuery(query);
     },
   });
 };
