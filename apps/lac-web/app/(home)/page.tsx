@@ -100,7 +100,7 @@ const HomePage = async () => {
               </h3>
 
               {ad.type === "spotlight" && (
-                <div className="text-xs font-medium text-[var(--text-color)] md:mt-2 md:text-base">
+                <div className="text-wrap text-xs font-medium text-[var(--text-color)] md:mt-2 md:text-base">
                   {ad.subtitle}
                 </div>
               )}
