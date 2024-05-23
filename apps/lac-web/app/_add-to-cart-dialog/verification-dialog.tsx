@@ -1,7 +1,9 @@
 "use client";
 
+import QuantityInputField from "@/_components/quantity-input-field";
 import useAddToCartMutation from "@/_hooks/cart/use-add-to-cart-mutation.hook";
 import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
+import useDebouncedState from "@/_hooks/misc/use-debounced-state.hook";
 import useItemInfo from "@/_hooks/product/use-item-info.hook";
 import useSuspenseCheckAvailability from "@/_hooks/product/use-suspense-check-availability.hook";
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
@@ -11,7 +13,6 @@ import { AddToCart as AddToCartIcon } from "@repo/web-ui/components/icons/add-to
 import { ChevronRight } from "@repo/web-ui/components/icons/chevron-right";
 import { Minus } from "@repo/web-ui/components/icons/minus";
 import { Plus } from "@repo/web-ui/components/icons/plus";
-import { Badge } from "@repo/web-ui/components/ui/badge";
 import { Button } from "@repo/web-ui/components/ui/button";
 import {
   Collapsible,
@@ -30,7 +31,12 @@ import { Label } from "@repo/web-ui/components/ui/label";
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import Image from "next/image";
 import { Suspense, useId } from "react";
-import { FormProvider, useForm, useFormContext } from "react-hook-form";
+import {
+  Controller,
+  FormProvider,
+  useForm,
+  useFormContext,
+} from "react-hook-form";
 import { z } from "zod";
 
 const verificationDialogSchema = z.object({
@@ -54,6 +60,10 @@ const VerificationDialog = ({ token }: VerificationDialogProps) => {
 
   const onOpenChange = (newOpen: boolean) => {
     if (!newOpen) {
+      addToCartForm.reset({
+        poOrJobName: "",
+        quantity: itemInfo?.minimumOrderQuantity ?? 1,
+      });
       setOpen("closed");
     } else {
       setOpen(open);
@@ -63,16 +73,18 @@ const VerificationDialog = ({ token }: VerificationDialogProps) => {
   const itemInfoQuery = useItemInfo(productId ? [productId] : []);
   const itemInfo = itemInfoQuery.data?.[0];
 
-  const methods = useForm<VerificationDialogSchema>({
+  const addToCartForm = useForm<VerificationDialogSchema>({
     values: {
       poOrJobName: "",
       quantity: itemInfo?.minimumOrderQuantity ?? 1,
     },
     resolver: zodResolver(verificationDialogSchema),
   });
+  const quantity = addToCartForm.watch("quantity");
+  const delayedQuantity = useDebouncedState(quantity);
 
   return (
-    <FormProvider {...methods}>
+    <FormProvider {...addToCartForm}>
       <Dialog open={open === "verification"} onOpenChange={onOpenChange}>
         <DialogContent className="max-w-[31.625rem]">
           <DialogHeader className="sr-only">
@@ -130,6 +142,7 @@ const VerificationDialog = ({ token }: VerificationDialogProps) => {
                   <LocationStocks
                     token={token}
                     productId={itemInfo.productId}
+                    quantity={delayedQuantity}
                   />
                 </Suspense>
               ) : (
@@ -142,7 +155,7 @@ const VerificationDialog = ({ token }: VerificationDialogProps) => {
                 </Label>
 
                 <Input
-                  {...methods.register("poOrJobName")}
+                  {...addToCartForm.register("poOrJobName")}
                   id={jobNameId}
                   form={formId}
                   type="text"
@@ -177,6 +190,7 @@ const VerificationDialog = ({ token }: VerificationDialogProps) => {
                   minAmount={itemInfo.minimumOrderQuantity}
                   increments={itemInfo.quantityByIncrements}
                   formId={formId}
+                  uom={itemInfo.unitOfMeasure}
                 />
               ) : (
                 <Skeleton className="h-[3.75rem]" />
@@ -275,25 +289,28 @@ const AddToCart = ({
   minAmount,
   increments,
   formId,
+  uom,
 }: {
   token: string;
   productId: number;
   minAmount: number;
   increments: number;
   formId: string;
+  uom: string;
 }) => {
-  const { watch, setValue, register, handleSubmit } =
+  const { watch, setValue, handleSubmit, control } =
     useFormContext<VerificationDialogSchema>();
   const { setQuantity } = useAddToCartDialog((state) => state.actions);
 
   const quantity = watch("quantity");
 
   const reduceQuantity = () => {
-    setValue("quantity", quantity - increments);
+    // Use `Number(quantity)` because `quantity` is a string at runtime
+    setValue("quantity", Number(quantity) - increments);
   };
-
   const increaseQuantity = () => {
-    setValue("quantity", quantity + increments);
+    // Use `Number(quantity)` because `quantity` is a string at runtime
+    setValue("quantity", Number(quantity) + increments);
   };
 
   const addToCartMutation = useAddToCartMutation(token, {
@@ -318,7 +335,7 @@ const AddToCart = ({
     >
       <div className="flex-[4] rounded-md border border-wurth-gray-250 p-0.5 md:flex-1">
         <div className="text-center text-xs font-medium uppercase leading-none text-wurth-gray-400">
-          Qty / Each
+          Qty / {uom}
         </div>
 
         <div className="flex flex-row items-center justify-between gap-2 shadow-sm">
@@ -334,15 +351,19 @@ const AddToCart = ({
             <span className="sr-only">Reduce quantity</span>
           </Button>
 
-          <Input
-            {...register("quantity", {
-              valueAsNumber: true,
-            })}
-            type="number"
-            className="flex-1 rounded-sm border-0 p-0 text-center text-lg font-semibold text-wurth-gray-800 shadow-none"
-            min={minAmount}
-            step={increments}
-            disabled={addToCartMutation.isPending}
+          <Controller
+            control={control}
+            name="quantity"
+            render={({ field: { onChange, onBlur, value, name, ref } }) => (
+              <QuantityInputField
+                onBlur={onBlur}
+                onChange={onChange}
+                value={value}
+                ref={ref}
+                name={name}
+                disabled={addToCartMutation.isPending}
+              />
+            )}
           />
 
           <Button
@@ -376,32 +397,46 @@ const AddToCart = ({
 const LocationStocks = ({
   token,
   productId,
+  quantity,
 }: {
   token: string;
   productId: number;
+  quantity: number;
 }) => {
   const checkAvailabilityQuery = useSuspenseCheckAvailability(token, {
     productId,
-    qty: 1,
+    qty: quantity,
   });
   const firstLocation = checkAvailabilityQuery.data.availableLocations[0];
   const otherLocations =
     checkAvailabilityQuery.data.availableLocations.slice(1);
+  const isBackordered = checkAvailabilityQuery.data.status === "notInStock";
+  const isLimitedStock = checkAvailabilityQuery.data.status === "limitedStock";
 
   return (
     <Collapsible className="flex flex-col gap-1">
       <div className="flex flex-row items-center justify-between gap-2 rounded-lg bg-wurth-gray-50 p-2">
-        <div className="flex flex-row items-center gap-2">
-          <Badge
-            variant="success-alt"
-            className="rounded px-2 py-1 text-sm font-semibold leading-4 shadow-none"
+        <div className="flex shrink-0 flex-row items-center gap-2">
+          <div
+            className={cn(
+              "rounded px-4 py-2 text-sm font-semibold leading-4 md:px-2 md:py-1",
+              isBackordered || isLimitedStock
+                ? "bg-yellow-50 text-yellow-700"
+                : "bg-green-50 text-green-700",
+            )}
           >
-            In Stock
-          </Badge>
-
-          <div className="text-sm font-medium text-wurth-gray-800">
-            {firstLocation?.amount} in stock at {firstLocation?.name}
+            {isBackordered
+              ? "Backordered"
+              : isLimitedStock
+                ? "Limited Stock"
+                : "In Stock"}
           </div>
+
+          {!isBackordered && (
+            <div className="text-sm font-medium text-wurth-gray-800">
+              {firstLocation?.amount} in stock at {firstLocation?.name}
+            </div>
+          )}
         </div>
 
         <CollapsibleTrigger

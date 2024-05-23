@@ -11,11 +11,14 @@ type SaleBadgesProps = {
 
 const SaleBadges = ({ token, productId, listPrice }: SaleBadgesProps) => {
   const priceCheckQuery = useSuspensePriceCheck(token, [{ productId, qty: 1 }]);
-  const currentPrice = priceCheckQuery.data.productPrices[0]?.price ?? 0;
+  const priceData = priceCheckQuery.data.productPrices[0];
+  const currentPrice = priceData?.uomPrice ?? priceData?.price ?? 0;
 
   const discount = Math.round(((listPrice - currentPrice) / listPrice) * 100);
 
-  if (discount === 0) {
+  const isLaminateItem = !!priceData?.uomPrice && !!priceData?.uomPriceUnit;
+
+  if (discount === 0 || isLaminateItem) {
     return null;
   }
 

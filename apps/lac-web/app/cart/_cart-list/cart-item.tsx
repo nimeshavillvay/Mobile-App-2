@@ -1,4 +1,3 @@
-import productItemImage from "@/_assets/images/product-item-image.png";
 import useUpdateCartItemMutation from "@/_hooks/cart/use-update-cart-item-mutation.hook";
 import useSuspenseCheckAvailability from "@/_hooks/product/use-suspense-check-availability.hook";
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
@@ -7,10 +6,12 @@ import type {
   Plant,
   ShippingMethod,
 } from "@/_lib/types";
+import { formatNumberToPrice } from "@/_lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { HeartOutline } from "@repo/web-ui/components/icons/heart-outline";
 import { Save } from "@repo/web-ui/components/icons/save";
 import { Trash } from "@repo/web-ui/components/icons/trash";
+import { WurthFullBlack } from "@repo/web-ui/components/logos/wurth-full-black";
 import { Button } from "@repo/web-ui/components/ui/button";
 import { Input } from "@repo/web-ui/components/ui/input";
 import { Label } from "@repo/web-ui/components/ui/label";
@@ -37,6 +38,7 @@ type CartItemProps = {
     configuration: CartItemConfiguration;
     minAmount: number;
     increment: number;
+    image: string;
   };
   shippingMethods: ShippingMethod[];
   plants: Plant[];
@@ -95,17 +97,40 @@ const CartItem = ({
     ]);
   };
 
+  const handleSaveShippingMethod = (config: Partial<CartItemConfiguration>) => {
+    const data = getValues();
+
+    updateCartConfigMutation.mutate([
+      {
+        productId: product.id,
+        quantity: data.quantity,
+        config: {
+          ...product.configuration,
+          ...config,
+        },
+      },
+    ]);
+  };
+
   return (
     <div className="flex flex-col gap-6 md:flex-row">
       <div className="flex flex-row items-start gap-3 md:flex-1">
         <div className="flex w-[4.5rem] shrink-0 flex-col gap-2 md:w-[7.5rem]">
-          <Image
-            src={productItemImage}
-            alt={`A picture of ${product.title}`}
-            width={120}
-            height={120}
-            className="size-[4.5rem] rounded border border-wurth-gray-250 object-contain shadow-sm md:size-[7.5rem]"
-          />
+          {product.image !== "" ? (
+            <Image
+              src={product.image}
+              alt={`A picture of ${product.title}`}
+              width={120}
+              height={120}
+              className="size-[4.5rem] rounded border border-wurth-gray-250 object-contain shadow-sm md:size-[7.5rem]"
+            />
+          ) : (
+            <WurthFullBlack
+              width={120}
+              height={120}
+              className="border border-brand-gray-200 px-2"
+            />
+          )}
 
           <div className="flex flex-col gap-1 md:hidden">
             <Button variant="subtle" className="w-full">
@@ -206,19 +231,22 @@ const CartItem = ({
           availability={checkAvailabilityQuery.data}
           setSelectedWillCallPlant={setSelectedWillCallPlant}
           selectedWillCallPlant={selectedWillCallPlant}
+          onSave={handleSaveShippingMethod}
         />
       </div>
 
       <div className="hidden space-y-3 md:block md:shrink-0">
         <div className="flex flex-col items-end text-right">
-          <div className="text-lg text-green-700">${price?.extendedPrice}</div>
+          <div className="text-lg text-green-700">
+            ${formatNumberToPrice(price?.extendedPrice)}
+          </div>
 
           <div className="ml-2 text-sm font-medium text-wurth-gray-500">
-            $34.11/{price?.priceUnit}
+            ${formatNumberToPrice(34.11)}/{price?.priceUnit}
           </div>
 
           <div className="ml-1 text-[13px] leading-5 text-wurth-gray-500 line-through">
-            $38.11/{price?.priceUnit}
+            ${formatNumberToPrice(38.11)}/{price?.priceUnit}
           </div>
         </div>
 

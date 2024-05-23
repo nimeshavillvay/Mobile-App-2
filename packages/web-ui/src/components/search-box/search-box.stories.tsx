@@ -7,6 +7,16 @@ import {
   SearchClearButton,
 } from "./search-box";
 
+/**
+ * Represents the metadata for the `SearchBox` component.
+ * This is for storybook purpose only
+ *
+ * @typedef {object} Meta
+ * @property {string} title - The title of the component. (Default: "Components/Search Box")
+ * @property {typeof SearchBox} component - The component to be displayed.
+ * @property {object} parameters - The parameters for the component.
+ * @property {string} parameters.layout - The layout style of the component. (Default: "centered")
+ */
 const meta: Meta<typeof SearchBox> = {
   title: "Components/Search Box",
   component: SearchBox,

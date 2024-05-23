@@ -3,7 +3,7 @@
 import { Button } from "@repo/web-ui/components/ui/button";
 import useEmblaCarousel from "embla-carousel-react";
 import Image from "next/image";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, type CSSProperties } from "react";
 
 type ProductDesktopCarouselProps = {
   images: { src: string; alt: string }[];
@@ -40,31 +40,34 @@ const ProductDesktopCarousel = ({ images }: ProductDesktopCarouselProps) => {
   }, [emblaApi, onSelect]);
 
   return (
-    <div className="flex flex-row items-start gap-3 pr-4">
-      <div className="flex shrink-0 flex-col gap-2">
-        {images.map((image, index) => (
-          <Button
-            key={image.src}
-            type="button"
-            variant="outline"
-            className="h-fit rounded-md border border-wurth-gray-250 p-1 shadow-sm data-[selected=true]:border-2 data-[selected=true]:border-black data-[selected=true]:p-[3px]"
-            onClick={() => onThumbClick(index)}
-            data-selected={index === selectedIndex}
-          >
-            <Image
-              src={image.src}
-              alt={image.alt}
-              width={76}
-              height={76}
-              className="aspect-1 overflow-hidden rounded object-contain"
-              priority={index === 0}
-            />
-          </Button>
-        ))}
+    <div className="relative pr-4">
+      <div className="absolute bottom-0 left-0 top-0 h-full overflow-y-auto">
+        <div className="flex flex-col gap-2">
+          {images.map((image, index) => (
+            <Button
+              key={image.src}
+              type="button"
+              variant="outline"
+              className="h-fit rounded-md border border-wurth-gray-250 p-1 shadow-sm data-[selected=true]:border-2 data-[selected=true]:border-black data-[selected=true]:p-[3px]"
+              onClick={() => onThumbClick(index)}
+              data-selected={index === selectedIndex}
+            >
+              <Image
+                src={image.src}
+                alt={image.alt}
+                width={76}
+                height={76}
+                className="aspect-1 overflow-hidden rounded object-contain"
+                priority={index === 0}
+              />
+            </Button>
+          ))}
+        </div>
       </div>
 
       <div
-        className="overflow-hidden rounded border border-wurth-gray-250 shadow-md"
+        style={{ "--thumbnail-list-width": "98px" } as CSSProperties}
+        className="ml-[var(--thumbnail-list-width)] w-[calc(100%-var(--thumbnail-list-width))] overflow-hidden rounded border border-wurth-gray-250 shadow-md"
         ref={emblaRef}
       >
         <div className="flex rounded-lg">

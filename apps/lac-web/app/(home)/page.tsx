@@ -88,7 +88,7 @@ const HomePage = async () => {
             }
             className="flex w-[11.75rem] shrink-0 snap-start flex-col justify-between overflow-hidden rounded-lg bg-[var(--background-color)] md:relative md:max-h-[21.25rem] md:w-auto md:snap-align-none"
           >
-            <div className="shrink-1 z-10 min-h-0 flex-1 truncate px-4 pt-4 md:max-w-56 md:px-9 md:pt-9">
+            <div className="shrink-1 z-[1] min-h-0 flex-1 truncate px-4 pt-4 md:max-w-56 md:px-9 md:pt-9">
               {ad.type === "sale" && (
                 <div className="font-title text-sm tracking-[-0.00438rem] text-[var(--text-color)] md:text-lg md:tracking-[-0.00625rem]">
                   Super Sale!
@@ -100,7 +100,7 @@ const HomePage = async () => {
               </h3>
 
               {ad.type === "spotlight" && (
-                <div className="text-xs font-medium text-[var(--text-color)] md:mt-2 md:text-base">
+                <div className="text-wrap text-xs font-medium text-[var(--text-color)] md:mt-2 md:text-base">
                   {ad.subtitle}
                 </div>
               )}
@@ -116,7 +116,7 @@ const HomePage = async () => {
 
             <div
               style={{ "--accent-color": ad.colors.accent } as CSSProperties}
-              className="z-10 flex flex-row items-center gap-2 bg-[var(--accent-color)] px-4 py-2 text-sm font-bold text-white"
+              className="z-[1] flex flex-row items-center gap-2 bg-[var(--accent-color)] px-4 py-2 text-sm font-bold text-white"
             >
               <span>Shop Now</span>
 

@@ -4,3 +4,10 @@ export type CategoryPageProps = {
     slug: string;
   };
 };
+
+export type SubCategory = {
+  id: number;
+  slug: string;
+  title: string;
+  image: string;
+};

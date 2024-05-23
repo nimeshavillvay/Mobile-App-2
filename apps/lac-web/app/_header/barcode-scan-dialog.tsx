@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from "@/_lib/utils";
 import DiscontinuedItemNotice from "@/search/discontinued-item-notice";
 import { BarcodeScanner } from "@repo/web-ui/components/barcode-scanner";
 import { Alert as AlertIcon } from "@repo/web-ui/components/icons/alert";
@@ -21,8 +22,6 @@ import {
   DialogTrigger,
 } from "@repo/web-ui/components/ui/dialog";
 import { useState } from "react";
-import { cn } from "~/lib/utils";
-// import { throwError } from "./action";
 import useScanBarcodeMutation from "./use-scan-barcode-mutation.hook";
 
 const BarcodeScannerDialog = () => {
