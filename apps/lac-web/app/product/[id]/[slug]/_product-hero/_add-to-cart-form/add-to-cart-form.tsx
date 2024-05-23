@@ -1,9 +1,11 @@
 "use client";
 
+import QuantityInputField from "@/_components/quantity-input-field";
 import useAddToCartMutation from "@/_hooks/cart/use-add-to-cart-mutation.hook";
 import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
 import useSuspenseProductExcluded from "@/_hooks/product/use-suspense-product-excluded.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
+import { Controller } from "react-hook-form";
 import useAddToCartForm from "../use-add-to-cart-form.hook";
 import FormContent from "./form-content";
 
@@ -24,16 +26,18 @@ const AddToCartForm = ({
 }: AddToCartFormProps) => {
   const checkLoginQuery = useSuspenseCheckLogin(token);
 
-  const { watch, setValue, register, handleSubmit } = useAddToCartForm();
+  const { watch, setValue, handleSubmit, control } = useAddToCartForm();
   const quantity = watch("quantity");
 
   const { setQuantity } = useAddToCartDialog((state) => state.actions);
 
   const reduceQuantity = () => {
-    setValue("quantity", quantity - incQty);
+    // Use `Number(quantity)` because `quantity` is a string at runtime
+    setValue("quantity", Number(quantity) - incQty);
   };
   const increaseQuantity = () => {
-    setValue("quantity", quantity + incQty);
+    // Use `Number(quantity)` because `quantity` is a string at runtime
+    setValue("quantity", Number(quantity) + incQty);
   };
 
   const addToCartMutation = useAddToCartMutation(token, {
@@ -71,12 +75,6 @@ const AddToCartForm = ({
         onClick: reduceQuantity,
         disabled: quantity === minQty || addToCartMutation.isPending,
       }}
-      inputProps={{
-        ...register("quantity", { valueAsNumber: true }),
-        min: minQty,
-        step: incQty,
-        disabled: addToCartMutation.isPending,
-      }}
       incrementButtonProps={{
         onClick: increaseQuantity,
         disabled: addToCartMutation.isPending,
@@ -84,7 +82,22 @@ const AddToCartForm = ({
       submitButtonProps={{
         disabled: addToCartMutation.isPending,
       }}
-    />
+    >
+      <Controller
+        control={control}
+        name="quantity"
+        render={({ field: { onChange, onBlur, value, name, ref } }) => (
+          <QuantityInputField
+            onBlur={onBlur}
+            onChange={onChange}
+            value={value}
+            ref={ref}
+            name={name}
+            disabled={addToCartMutation.isPending}
+          />
+        )}
+      />
+    </FormContent>
   );
 };
 
@@ -102,16 +115,18 @@ const AddToCartFormLoggedIn = ({
   const productExcludedQuery = useSuspenseProductExcluded(token, productId);
 
   // TODO Try to remove the duplicated code
-  const { watch, setValue, register, handleSubmit } = useAddToCartForm();
+  const { watch, setValue, handleSubmit, control } = useAddToCartForm();
   const quantity = watch("quantity");
 
   const { setQuantity } = useAddToCartDialog((state) => state.actions);
 
   const reduceQuantity = () => {
-    setValue("quantity", quantity - incQty);
+    // Use `Number(quantity)` because `quantity` is a string at runtime
+    setValue("quantity", Number(quantity) - incQty);
   };
   const increaseQuantity = () => {
-    setValue("quantity", quantity + incQty);
+    // Use `Number(quantity)` because `quantity` is a string at runtime
+    setValue("quantity", Number(quantity) + incQty);
   };
 
   const addToCartMutation = useAddToCartMutation(token, {
@@ -138,13 +153,6 @@ const AddToCartFormLoggedIn = ({
           addToCartMutation.isPending ||
           productExcludedQuery.data.isExcluded,
       }}
-      inputProps={{
-        ...register("quantity", { valueAsNumber: true }),
-        min: minQty,
-        step: incQty,
-        disabled:
-          addToCartMutation.isPending || productExcludedQuery.data.isExcluded,
-      }}
       incrementButtonProps={{
         onClick: increaseQuantity,
         disabled:
@@ -154,6 +162,24 @@ const AddToCartFormLoggedIn = ({
         disabled:
           addToCartMutation.isPending || productExcludedQuery.data.isExcluded,
       }}
-    />
+    >
+      <Controller
+        control={control}
+        name="quantity"
+        render={({ field: { onChange, onBlur, value, name, ref } }) => (
+          <QuantityInputField
+            onBlur={onBlur}
+            onChange={onChange}
+            value={value}
+            ref={ref}
+            name={name}
+            disabled={
+              addToCartMutation.isPending ||
+              productExcludedQuery.data.isExcluded
+            }
+          />
+        )}
+      />
+    </FormContent>
   );
 };

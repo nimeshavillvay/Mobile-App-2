@@ -1,5 +1,6 @@
 "use client";
 
+import QuantityInputField from "@/_components/quantity-input-field";
 import useAddToCartMutation from "@/_hooks/cart/use-add-to-cart-mutation.hook";
 import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
 import useDebouncedState from "@/_hooks/misc/use-debounced-state.hook";
@@ -30,7 +31,12 @@ import { Label } from "@repo/web-ui/components/ui/label";
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import Image from "next/image";
 import { Suspense, useId } from "react";
-import { FormProvider, useForm, useFormContext } from "react-hook-form";
+import {
+  Controller,
+  FormProvider,
+  useForm,
+  useFormContext,
+} from "react-hook-form";
 import { z } from "zod";
 
 const verificationDialogSchema = z.object({
@@ -288,18 +294,19 @@ const AddToCart = ({
   formId: string;
   uom: string;
 }) => {
-  const { watch, setValue, register, handleSubmit } =
+  const { watch, setValue, handleSubmit, control } =
     useFormContext<VerificationDialogSchema>();
   const { setQuantity } = useAddToCartDialog((state) => state.actions);
 
   const quantity = watch("quantity");
 
   const reduceQuantity = () => {
-    setValue("quantity", quantity - increments);
+    // Use `Number(quantity)` because `quantity` is a string at runtime
+    setValue("quantity", Number(quantity) - increments);
   };
-
   const increaseQuantity = () => {
-    setValue("quantity", quantity + increments);
+    // Use `Number(quantity)` because `quantity` is a string at runtime
+    setValue("quantity", Number(quantity) + increments);
   };
 
   const addToCartMutation = useAddToCartMutation(token, {
@@ -340,15 +347,19 @@ const AddToCart = ({
             <span className="sr-only">Reduce quantity</span>
           </Button>
 
-          <Input
-            {...register("quantity", {
-              valueAsNumber: true,
-            })}
-            type="number"
-            className="flex-1 rounded-sm border-0 p-0 text-center text-lg font-semibold text-wurth-gray-800 shadow-none"
-            min={minAmount}
-            step={increments}
-            disabled={addToCartMutation.isPending}
+          <Controller
+            control={control}
+            name="quantity"
+            render={({ field: { onChange, onBlur, value, name, ref } }) => (
+              <QuantityInputField
+                onBlur={onBlur}
+                onChange={onChange}
+                value={value}
+                ref={ref}
+                name={name}
+                disabled={addToCartMutation.isPending}
+              />
+            )}
           />
 
           <Button
