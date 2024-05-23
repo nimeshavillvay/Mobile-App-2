@@ -42,7 +42,6 @@ export type ItemInfo = {
   productSummary: string;
   brand: string;
   productCategory: string;
-  favoriteIds: string[];
 };
 
 export type OldPurchasedProduct = {
@@ -166,8 +165,6 @@ export type GroupList = {
     item_name: string;
     img: string;
     slug: string;
-    is_favourite: boolean;
-    favoriteIds: string[];
     is_comparison: null;
     "SKU-attribute": string;
     txt_hazardous: string;
@@ -275,8 +272,6 @@ export type Cart = {
       item_name: string;
       img: string;
       url: string;
-      is_favourite: boolean;
-      favoriteIds: string[];
       is_comparison: null;
       txt_hazardous: string;
       txt_special_shipping: string;

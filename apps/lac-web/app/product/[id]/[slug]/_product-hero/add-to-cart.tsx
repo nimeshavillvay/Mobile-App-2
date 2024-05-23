@@ -9,8 +9,6 @@ type AddToCartProps = {
   productId: number;
   minQty: number;
   incQty: number;
-  isFavourite: boolean;
-  favoriteIds: string[];
   uom: string;
   className?: string;
 };
@@ -19,8 +17,6 @@ const AddToCart = ({
   productId,
   minQty,
   incQty,
-  isFavourite,
-  favoriteIds,
   uom,
   className,
 }: AddToCartProps) => {
@@ -58,11 +54,7 @@ const AddToCart = ({
             <span>Compare</span>
           </Button>
 
-          <FavoriteButton
-            productId={productId}
-            isFavourite={isFavourite}
-            favoriteIds={favoriteIds}
-          />
+          <FavoriteButton productId={productId} />
         </div>
       </section>
     </>

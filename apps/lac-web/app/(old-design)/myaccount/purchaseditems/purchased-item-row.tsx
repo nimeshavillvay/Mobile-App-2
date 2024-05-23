@@ -417,7 +417,7 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
         open={showShoppingListsDialog}
         setOpenAddToShoppingListDialog={setShowShoppingListsDialog}
         productId={item.productId}
-        favoriteIds={item.favoriteIds}
+        favouriteIds={item.favouriteIds}
         setUpdatedIsFavorite={(isFavourite) => {
           setIsFavouriteItem(isFavourite);
         }}

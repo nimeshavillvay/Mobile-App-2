@@ -145,7 +145,6 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
         productSummary: "",
         brand: "",
         productCategory: "",
-        favoriteIds: [],
       };
 
       detailedPurchasedItems.push({

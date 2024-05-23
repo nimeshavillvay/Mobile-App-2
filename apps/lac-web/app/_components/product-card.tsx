@@ -1,6 +1,7 @@
 "use client";
 
 import AddToShoppingListDialog from "@/(old-design)/myaccount/shopping-lists/add-to-shopping-list-dialog";
+import useSuspenseFavouriteSKUs from "@/(old-design)/myaccount/shopping-lists/use-suspense-favourite-skus.hook";
 import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
@@ -31,8 +32,6 @@ type ProductProps = {
       title: string;
       image: string;
       uom: string;
-      isFavourite: boolean;
-      favoriteIds: string[];
     }[];
   };
   token: string;
@@ -47,8 +46,14 @@ const ProductCard = ({
 }: ProductProps) => {
   const [selectedId, setSelectedId] = useState<string | undefined>();
   const [showShoppingListsDialog, setShowShoppingListsDialog] = useState(false);
+
+  const productId = product.variants[0]?.id ?? "";
+
+  const { data: favouriteSKUs } = useSuspenseFavouriteSKUs(token, [productId]);
+  const favouriteSKU = favouriteSKUs[0];
+
   const [isFavourite, setIsFavourite] = useState(
-    product.variants[0]?.isFavourite ?? false,
+    favouriteSKU?.isFavourite ?? false,
   );
 
   const router = useRouter();
@@ -91,12 +96,12 @@ const ProductCard = ({
   }
 
   let title = "";
-  let favoriteIds: string[] = [];
+  let favouriteIds: string[] = [];
 
   if (product.variants.length === 1 && defaultVariant) {
     // If there is just one variant, use its title
     title = defaultVariant.title;
-    favoriteIds = defaultVariant.favoriteIds;
+    favouriteIds = favouriteSKU?.favouriteIds ?? [];
   } else if (product.variants.length > 1) {
     if (selectedVariant) {
       // If there are multiple variants and one of them has been selected, use its title
@@ -204,7 +209,7 @@ const ProductCard = ({
                 open={showShoppingListsDialog}
                 setOpenAddToShoppingListDialog={setShowShoppingListsDialog}
                 productId={parseInt(id)}
-                favoriteIds={favoriteIds}
+                favouriteIds={favouriteIds}
                 setUpdatedIsFavorite={(isFavourite) => {
                   setIsFavourite(isFavourite);
                 }}

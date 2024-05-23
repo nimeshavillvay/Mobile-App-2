@@ -38,8 +38,6 @@ type CartItemProps = {
     configuration: CartItemConfiguration;
     minAmount: number;
     increment: number;
-    isFavourite: boolean;
-    favoriteIds: string[];
     image: string;
   };
   shippingMethods: ShippingMethod[];
@@ -135,12 +133,7 @@ const CartItem = ({
           )}
 
           <div className="flex flex-col gap-1 md:hidden">
-            <FavoriteButton
-              display="mobile"
-              productId={product.id}
-              isFavourite={product.isFavourite}
-              favoriteIds={product.favoriteIds}
-            />
+            <FavoriteButton display="mobile" productId={product.id} />
 
             <Button variant="subtle" className="w-full">
               <Save className="size-4" />
@@ -229,7 +222,6 @@ const CartItem = ({
 
       <div className="md:w-80">
         <CartItemShippingMethod
-          display="desktop"
           shippingMethods={shippingMethods}
           plants={plants}
           availability={checkAvailabilityQuery.data}
@@ -273,12 +265,7 @@ const CartItem = ({
             <Save className="size-4" />
           </Button>
 
-          <FavoriteButton
-            display="desktop"
-            productId={product.id}
-            isFavourite={product.isFavourite}
-            favoriteIds={product.favoriteIds}
-          />
+          <FavoriteButton display="desktop" productId={product.id} />
         </div>
       </div>
     </div>

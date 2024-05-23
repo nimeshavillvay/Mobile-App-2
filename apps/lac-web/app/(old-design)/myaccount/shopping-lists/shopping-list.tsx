@@ -33,8 +33,6 @@ const ShoppingList = ({ token }: { token: string }) => {
   const searchParams = useSearchParams();
 
   if (searchParams.get("list-id") == null && shoppingLists.lists.length > 0) {
-    console.log("redirect");
-
     const newSearchParams = new URLSearchParams(searchParams);
 
     newSearchParams.set("list-id", shoppingLists.lists[0]?.listId ?? "");

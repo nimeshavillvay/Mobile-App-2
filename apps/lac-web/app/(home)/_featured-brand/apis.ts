@@ -3,14 +3,9 @@ import { DEFAULT_REVALIDATE } from "@/_lib/constants";
 import type { GroupList } from "@/_lib/types";
 import "server-only";
 
-export const getFeaturedBrand = async (token?: string) => {
+export const getFeaturedBrand = async () => {
   const featuredBrand = await api
     .get("rest/getrandomgroups", {
-      headers: token
-        ? {
-            Authorization: `Bearer ${token}`,
-          }
-        : {},
       next: {
         revalidate: DEFAULT_REVALIDATE,
       },
@@ -62,8 +57,6 @@ export const getFeaturedBrand = async (token?: string) => {
       productName: item.item_name,
       image: item.img,
       slug: item.slug,
-      isFavourite: !!item.is_favourite,
-      favoriteIds: item.favoriteIds,
       isComparison: !!item.is_comparison,
       skuAttribute: item["SKU-attribute"],
       isHazardous: item.txt_hazardous === "Y",

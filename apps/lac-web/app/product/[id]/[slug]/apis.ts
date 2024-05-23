@@ -22,8 +22,6 @@ type Product = {
     item_name: string;
     img: string;
     slug: string;
-    is_favourite: boolean;
-    favoriteIds: string[];
     is_comparison: null;
     txt_hazardous: string;
     txt_special_shipping: string;
@@ -72,10 +70,9 @@ type Product = {
   };
 };
 
-export const getProduct = async (id: string, slug: string, token?: string) => {
+export const getProduct = async (id: string, slug: string) => {
   const response = await api
     .get("rest/landinginfo", {
-      headers: token ? { Authorization: `Bearer ${token}` } : {},
       searchParams: {
         productid: id,
       },
@@ -108,8 +105,6 @@ export const getProduct = async (id: string, slug: string, token?: string) => {
       productName: selected_item.item_name,
       image: selected_item.img,
       slug: selected_item.slug,
-      isFavourite: !!selected_item.is_favourite,
-      favoriteIds: selected_item.favoriteIds,
       isComparison: !!selected_item.is_comparison,
       isDirectlyShippedFromVendor:
         selected_item.is_directly_shipped_from_vendor ?? false,

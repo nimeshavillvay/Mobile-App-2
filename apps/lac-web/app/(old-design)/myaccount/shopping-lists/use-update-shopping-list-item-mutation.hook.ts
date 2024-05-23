@@ -8,6 +8,7 @@ const useUpdateShoppingListItemMutation = () => {
   const queryClient = useQueryClient();
   const [cookies] = useCookies();
   const { toast } = useToast();
+  const token = cookies[SESSION_TOKEN_COOKIE];
 
   return useMutation({
     mutationFn: ({
@@ -20,7 +21,7 @@ const useUpdateShoppingListItemMutation = () => {
       api
         .put("rest/my-favourite/list-items/", {
           headers: {
-            authorization: `Bearer ${cookies[SESSION_TOKEN_COOKIE]}`,
+            authorization: `Bearer ${token}`,
           },
           json: {
             productid: productId,
@@ -43,9 +44,9 @@ const useUpdateShoppingListItemMutation = () => {
         variant: "destructive",
       });
     },
-    onSettled: () => {
+    onSettled: (productId, token) => {
       queryClient.invalidateQueries({
-        queryKey: ["my-account", "shopping-list-items"],
+        queryKey: ["user", "favourite-skus", token, [productId]],
       });
     },
   });

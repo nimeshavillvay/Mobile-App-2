@@ -10,7 +10,7 @@ const FeaturedBrandList = async () => {
   const cookiesStore = cookies();
   const sessionToken = cookiesStore.get(SESSION_TOKEN_COOKIE);
 
-  const { groups } = await getFeaturedBrand(sessionToken?.value);
+  const { groups } = await getFeaturedBrand();
 
   if (!sessionToken?.value) {
     return null;
@@ -29,8 +29,6 @@ const FeaturedBrandList = async () => {
             title: item.productName,
             image: item.image,
             uom: item.unitOfMeasure,
-            isFavourite: item.isFavourite,
-            favoriteIds: item.favoriteIds,
           })),
         }}
         token={sessionToken.value}
@@ -40,10 +38,7 @@ const FeaturedBrandList = async () => {
 };
 
 const FeaturedBrand = async () => {
-  const cookiesStore = cookies();
-  const sessionToken = cookiesStore.get(SESSION_TOKEN_COOKIE);
-
-  const { details } = await getFeaturedBrand(sessionToken?.value);
+  const { details } = await getFeaturedBrand();
 
   return (
     <section

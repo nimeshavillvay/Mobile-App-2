@@ -9,25 +9,29 @@ import { HeartOutline } from "@repo/web-ui/components/icons/heart-outline";
 import { Button } from "@repo/web-ui/components/ui/button";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import useSuspenseFavouriteSKUs from "../../../../(old-design)/myaccount/shopping-lists/use-suspense-favourite-skus.hook";
 
 type FavoriteButtonProps = {
   productId: number;
-  isFavourite: boolean;
-  favoriteIds: string[];
   className?: string;
 };
 
-const FavoriteButton = ({
-  productId,
-  isFavourite,
-  favoriteIds,
-}: FavoriteButtonProps) => {
-  const [isFavouriteItem, setIsFavouriteItem] = useState(isFavourite ?? false);
-  const [showShoppingListsDialog, setShowShoppingListsDialog] = useState(false);
-  const router = useRouter();
-
+const FavoriteButton = ({ productId }: FavoriteButtonProps) => {
   const [cookies] = useCookies();
   const sessionToken = cookies[SESSION_TOKEN_COOKIE];
+
+  const { data: favouriteSKUs } = useSuspenseFavouriteSKUs(sessionToken, [
+    productId.toString(),
+  ]);
+
+  const favouriteSKU = favouriteSKUs[0];
+
+  const [isFavourite, setIsFavourite] = useState(
+    favouriteSKU?.isFavourite ?? false,
+  );
+  const [showShoppingListsDialog, setShowShoppingListsDialog] = useState(false);
+
+  const router = useRouter();
 
   const checkLoginQuery = useSuspenseCheckLogin(sessionToken);
   const isLoggedInUser = checkLoginQuery.data.status_code === "OK";
@@ -43,7 +47,7 @@ const FavoriteButton = ({
             : router.push("/sign-in");
         }}
       >
-        {isFavouriteItem ? (
+        {isFavourite ? (
           <HeartFilled className="size-4" />
         ) : (
           <HeartOutline className="size-4" />
@@ -57,9 +61,9 @@ const FavoriteButton = ({
           open={showShoppingListsDialog}
           setOpenAddToShoppingListDialog={setShowShoppingListsDialog}
           productId={productId}
-          favoriteIds={favoriteIds}
+          favouriteIds={favouriteSKU?.favouriteIds ?? []}
           setUpdatedIsFavorite={(isFavourite) => {
-            setIsFavouriteItem(isFavourite);
+            setIsFavourite(isFavourite);
           }}
         />
       )}

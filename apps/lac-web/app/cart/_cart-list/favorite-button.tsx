@@ -1,6 +1,7 @@
 "use client";
 
 import AddToShoppingListDialog from "@/(old-design)/myaccount/shopping-lists/add-to-shopping-list-dialog";
+import useSuspenseFavouriteSKUs from "@/(old-design)/myaccount/shopping-lists/use-suspense-favourite-skus.hook";
 import useCookies from "@/_hooks/storage/use-cookies.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
@@ -12,24 +13,26 @@ import { useState } from "react";
 
 type FavoriteButtonProps = {
   productId: number;
-  isFavourite: boolean;
-  favoriteIds: string[];
   display: "mobile" | "desktop";
 };
 
-const FavoriteButton = ({
-  productId,
-  isFavourite,
-  favoriteIds,
-  display,
-}: FavoriteButtonProps) => {
-  const [showShoppingListsDialog, setShowShoppingListsDialog] = useState(false);
-  const [isFavouriteItem, setIsFavouriteItem] = useState(isFavourite ?? false);
-
-  const router = useRouter();
-
+const FavoriteButton = ({ productId, display }: FavoriteButtonProps) => {
   const [cookies] = useCookies();
   const sessionToken = cookies[SESSION_TOKEN_COOKIE];
+
+  const { data: favouriteSKUs } = useSuspenseFavouriteSKUs(sessionToken, [
+    productId.toString(),
+  ]);
+
+  const favouriteSKU = favouriteSKUs[0];
+
+  const [isFavourite, setIsFavourite] = useState(
+    favouriteSKU?.isFavourite ?? false,
+  );
+
+  const [showShoppingListsDialog, setShowShoppingListsDialog] = useState(false);
+
+  const router = useRouter();
 
   const checkLoginQuery = useSuspenseCheckLogin(sessionToken);
   const isLoggedInUser = checkLoginQuery.data.status_code === "OK";
@@ -48,7 +51,7 @@ const FavoriteButton = ({
         >
           <span className="text-[13px] leading-5">Add to favorite</span>
 
-          {isFavouriteItem ? (
+          {isFavourite ? (
             <HeartFilled className="size-4" />
           ) : (
             <HeartOutline className="size-4" />
@@ -66,7 +69,7 @@ const FavoriteButton = ({
               : router.push("/sign-in");
           }}
         >
-          {isFavouriteItem ? (
+          {isFavourite ? (
             <HeartFilled className="size-4" />
           ) : (
             <HeartOutline className="size-4" />
@@ -81,9 +84,9 @@ const FavoriteButton = ({
           open={showShoppingListsDialog}
           setOpenAddToShoppingListDialog={setShowShoppingListsDialog}
           productId={productId}
-          favoriteIds={favoriteIds}
+          favouriteIds={favouriteSKU?.favouriteIds ?? []}
           setUpdatedIsFavorite={(isFavourite) => {
-            setIsFavouriteItem(isFavourite);
+            setIsFavourite(isFavourite);
           }}
         />
       )}

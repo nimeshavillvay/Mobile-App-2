@@ -10,7 +10,7 @@ const FlashSaleList = async () => {
   const cookiesStore = cookies();
   const sessionToken = cookiesStore.get(SESSION_TOKEN_COOKIE);
 
-  const saleItems = await getSaleItems(sessionToken?.value);
+  const saleItems = await getSaleItems();
 
   if (!sessionToken?.value) {
     return null;
@@ -32,8 +32,6 @@ const FlashSaleList = async () => {
               title: product.productTitle,
               image: product.productImage,
               uom: product.unitOfMeasure,
-              isFavourite: product.isFavourite,
-              favoriteIds: product.favoriteIds,
             },
           ],
         }}

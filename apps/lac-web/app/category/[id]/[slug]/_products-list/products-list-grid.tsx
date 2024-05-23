@@ -35,8 +35,6 @@ const ProductListGrid = ({ token, categoryId, type }: ProductListGridProps) => {
           title: variant.productName,
           image: variant.image,
           uom: variant.unitOfMeasure,
-          isFavourite: variant.isFavourite,
-          favoriteIds: variant.favoriteIds,
         })),
       },
       info: {

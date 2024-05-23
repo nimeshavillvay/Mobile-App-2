@@ -15,8 +15,6 @@ export const getItemInfo = async (productIdList: number[], token?: string) => {
         item_name: string;
         img: string;
         slug: string;
-        is_favourite: boolean;
-        favoriteIds: string[];
         is_comparison: boolean;
         txt_hazardous: string;
         txt_special_shipping: string;
@@ -98,7 +96,6 @@ export const getItemInfo = async (productIdList: number[], token?: string) => {
     productSummary: item.product_summary,
     brand: item.brand_name,
     productCategory: item.category_name,
-    favoriteIds: item.favoriteIds,
   }));
 
   return transformedResponse;
