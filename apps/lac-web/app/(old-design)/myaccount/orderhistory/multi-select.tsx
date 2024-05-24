@@ -9,20 +9,24 @@ import type { Option } from "./types";
 type MultiSelectProps = {
   label: string;
   data: Option[];
+  isResetSelected: boolean;
   placeholder?: string;
   flag?: string;
   onValuesChange?: (selectedItems: Option[]) => void;
   onClear?: () => void;
+  setIsResetSelected: (isResetSelected: boolean) => void;
 };
 
 // TODO: This component can be optimized further
 const MultiSelect = ({
   label,
   data,
+  isResetSelected,
   placeholder = "Select item",
   flag = "multiselect",
   onValuesChange,
   onClear,
+  setIsResetSelected,
 }: MultiSelectProps) => {
   const initialSelectedItems: Option[] = [];
 
@@ -102,6 +106,11 @@ const MultiSelect = ({
     }
     selectedItems.forEach(removeSelectedItem);
   };
+
+  if (isResetSelected) {
+    removeAllSelectedItems();
+    setIsResetSelected(false);
+  }
 
   return (
     <div className="w-full">
