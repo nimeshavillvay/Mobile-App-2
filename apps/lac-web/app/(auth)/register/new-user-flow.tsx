@@ -597,6 +597,7 @@ const NewUserFlow = ({ passwordPolicies }: NewUserFlowProps) => {
             <StepContainerOpen
               steps={{ current: 2, total: 2 }}
               onSubmit={handleAddressOnSubmit}
+              disableSubmit={registerNewUserMutation.isPending}
             >
               <div className="grid grid-cols-3 gap-5 md:grid-cols-6">
                 <FormField

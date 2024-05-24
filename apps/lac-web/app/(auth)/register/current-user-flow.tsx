@@ -273,6 +273,7 @@ const CurrentUserFlow = ({ passwordPolicies }: CurrentUserFlowProps) => {
           allFieldsRequired
           submitBtnText="Create account"
           onSubmit={onSubmit}
+          disableSubmit={createUserMutation.isPending}
           className={cn(step !== "personal" && "hidden")}
           id={formId}
         >
