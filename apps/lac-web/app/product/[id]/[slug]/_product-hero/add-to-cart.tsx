@@ -1,9 +1,10 @@
 import { cn } from "@/_lib/utils";
-import { Check } from "@repo/web-ui/components/icons/check";
 import { HeartOutline } from "@repo/web-ui/components/icons/heart-outline";
 import { Button } from "@repo/web-ui/components/ui/button";
+import { Suspense } from "react";
 import AddToCartForm from "./_add-to-cart-form";
 import LocationStocks from "./_location-stocks";
+import RegionalExclusionNotice from "./_regional-exclusion-notice";
 
 type AddToCartProps = {
   productId: number;
@@ -44,17 +45,16 @@ const AddToCart = ({
           </div>
         </div>
 
-        <Button variant="outline" disabled className="gap-1 md:py-2">
-          <Check className="size-4" />
-          <span>Compare</span>
-        </Button>
-
         <Button variant="outline" size="icon">
           <HeartOutline className="size-4" />
 
           <span className="sr-only">Add to favorites</span>
         </Button>
       </div>
+
+      <Suspense>
+        <RegionalExclusionNotice productId={productId} />
+      </Suspense>
     </section>
   );
 };
