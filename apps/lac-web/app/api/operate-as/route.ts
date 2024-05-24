@@ -7,21 +7,25 @@ import { z } from "zod";
 // This endpoint is used by X-Cart users to directly log into the site as
 // an admin
 export const POST = async (request: NextRequest) => {
-  const bodySchema = z.object({
+  const paramsSchema = z.object({
     "X-AUTH-TOKEN": z.literal(process.env.NEXT_PUBLIC_WURTH_LAC_API_KEY),
     name: z.literal(SESSION_TOKEN_COOKIE),
     value: z.string(),
     expires: z.string(),
   });
 
+  const params: { [key: string]: string | string[] } = {};
+  for (const [key, value] of request.nextUrl.searchParams.entries()) {
+    params[key] = value;
+  }
+
   try {
-    const json = await request.json();
-    const body = await bodySchema.parseAsync(json);
+    const { name, value, expires } = await paramsSchema.parseAsync(params);
 
     // Set the cookie
     const cookiesStore = cookies();
-    cookiesStore.set(body.name, body.value, {
-      expires: new Date(body.expires),
+    cookiesStore.set(name, value, {
+      expires: new Date(expires),
       path: "/",
     });
   } catch {

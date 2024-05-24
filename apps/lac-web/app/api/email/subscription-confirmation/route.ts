@@ -9,7 +9,6 @@ export const GET = async (request: NextRequest) => {
   });
 
   const params: { [key: string]: string | string[] } = {};
-
   for (const [key, value] of request.nextUrl.searchParams.entries()) {
     params[key] = value;
   }
