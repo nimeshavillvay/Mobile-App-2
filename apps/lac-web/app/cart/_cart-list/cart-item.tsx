@@ -81,14 +81,14 @@ const CartItem = ({
     plant: selectedWillCallPlant !== "" ? selectedWillCallPlant : undefined,
   });
 
-  const updateCartConfigMutation = useUpdateCartItemMutation();
+  const updateCartConfigMutation = useUpdateCartItemMutation(token);
 
   const handleSave = () => {
     const data = getValues();
 
     updateCartConfigMutation.mutate([
       {
-        productId: product.id,
+        cartItemId: product.cartItemId,
         quantity: data.quantity,
         config: {
           ...product.configuration,
@@ -103,7 +103,7 @@ const CartItem = ({
 
     updateCartConfigMutation.mutate([
       {
-        productId: product.id,
+        cartItemId: product.cartItemId,
         quantity: data.quantity,
         config: {
           ...product.configuration,

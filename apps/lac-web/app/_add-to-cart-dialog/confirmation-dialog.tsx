@@ -69,7 +69,7 @@ const ConfirmationDialog = ({ token }: ConfirmationDialogProps) => {
     resolver: zodResolver(AddToCartDialogSchema),
   });
 
-  const updateCartItemMutation = useUpdateCartItemMutation();
+  const updateCartItemMutation = useUpdateCartItemMutation(token);
 
   const handleSave = () => {
     const data = getValues();
@@ -77,7 +77,7 @@ const ConfirmationDialog = ({ token }: ConfirmationDialogProps) => {
     if (productId && quantity && itemInCart) {
       updateCartItemMutation.mutate([
         {
-          productId,
+          cartItemId: itemInCart.cartItemId,
           quantity: quantity,
           config: {
             ...itemInCart.configuration,

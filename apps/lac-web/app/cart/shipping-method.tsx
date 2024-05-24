@@ -31,12 +31,12 @@ const ShippingMethod = ({ token, options }: ShippingMethodProps) => {
 
   const cartQuery = useSuspenseCart(token);
 
-  const updateCartItemMutation = useUpdateCartItemMutation();
+  const updateCartItemMutation = useUpdateCartItemMutation(token);
 
   const handleSelectValueChange = (value: string) => {
     updateCartItemMutation.mutate(
       cartQuery.data.cartItems.map((item) => ({
-        productId: item.itemInfo.productId,
+        cartItemId: item.cartItemId,
         quantity: item.quantity,
         config: {
           ...item.configuration,
