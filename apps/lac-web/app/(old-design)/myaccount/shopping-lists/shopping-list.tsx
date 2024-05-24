@@ -12,6 +12,7 @@ import { MdOutlineAdd } from "react-icons/md";
 import ShoppingListDialog from "./shopping-list-dialog";
 import ShoppingListItems from "./shopping-list-items";
 import ShoppingListPagination from "./shopping-list-pagination";
+import useSuspenseShoppingListItemCount from "./use-suspense-shopping-list-item-count.hook";
 import useSuspenseShoppingListMutation from "./use-suspense-shopping-list.hook";
 
 const ShoppingList = ({ token }: { token: string }) => {
@@ -21,6 +22,7 @@ const ShoppingList = ({ token }: { token: string }) => {
     useState(false);
 
   const perPage = 20;
+
   const shoppingListsQuery = useSuspenseShoppingListMutation(
     token,
     "name",
@@ -30,17 +32,19 @@ const ShoppingList = ({ token }: { token: string }) => {
   const shoppingLists = shoppingListsQuery?.data;
 
   const searchParams = useSearchParams();
-
-  const pageNoValue = searchParams.get("page") ?? "1";
-  const page = !isNaN(parseInt(pageNoValue)) ? parseInt(pageNoValue) : 1;
-
-  let shoppingList;
   const shoppingListIdValue = searchParams.get("shoppingListId");
+
+  let page = 1;
+  let shoppingList;
+
   if (shoppingListIdValue == selectedAddressShoppingListId) {
     // for selecting shopping list during pagination
     shoppingList = shoppingLists.lists.find(
       (list) => shoppingListIdValue == list?.listId,
     );
+
+    const pageNoValue = searchParams.get("page") ?? "1";
+    page = !isNaN(parseInt(pageNoValue)) ? parseInt(pageNoValue) : 1;
   } else if (selectedAddressShoppingListId) {
     // for selecting shopping list during tab selection
     shoppingList = shoppingLists.lists.find(
@@ -48,27 +52,41 @@ const ShoppingList = ({ token }: { token: string }) => {
     );
   }
 
-  if (!shoppingList) {
+  if (!shoppingList && shoppingLists.lists.length > 0) {
     // for selecting the first shopping list when another shopping list is deleted
     shoppingList = shoppingLists.lists[0];
   }
 
+  let listId = "id";
+  if (shoppingList && shoppingList.listId) {
+    listId = shoppingList.listId;
+  }
+
+  const shoppingListItemCountQuery = useSuspenseShoppingListItemCount(
+    token,
+    listId,
+  );
+  const shoppingListItemCount = shoppingListItemCountQuery?.data;
+  const totalPages = Math.ceil(shoppingListItemCount.count / perPage);
+
   return (
     <>
       <div className="flex flex-row justify-center">
-        <Tabs
-          onValueChange={setSelectedAddressShoppingListId}
-          defaultValue={shoppingLists.lists[0]?.listId}
-          className="overflow-y-auto"
-        >
-          <TabsList>
-            {shoppingLists.lists.map((list) => (
-              <TabsTrigger key={list.listId} value={list?.listId}>
-                {list?.listName}
-              </TabsTrigger>
-            ))}
-          </TabsList>
-        </Tabs>
+        {shoppingLists.lists.length > 0 && (
+          <Tabs
+            onValueChange={setSelectedAddressShoppingListId}
+            defaultValue={shoppingLists.lists[0]?.listId}
+            className="max-w-screen-md overflow-x-auto overflow-y-hidden"
+          >
+            <TabsList>
+              {shoppingLists.lists.map((list) => (
+                <TabsTrigger key={list.listId} value={list?.listId}>
+                  {list?.listName}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+          </Tabs>
+        )}
         <Button
           variant="ghost"
           className="mx-5 my-auto px-0 py-0 hover:bg-transparent"
@@ -83,6 +101,7 @@ const ShoppingList = ({ token }: { token: string }) => {
         <ShoppingListItems
           token={token}
           page={page}
+          totalPages={totalPages}
           perPage={perPage}
           shoppingList={shoppingList}
         />
@@ -90,9 +109,8 @@ const ShoppingList = ({ token }: { token: string }) => {
 
       {!!shoppingList?.listId && (
         <ShoppingListPagination
-          token={token}
           page={page}
-          perPage={perPage}
+          totalPages={totalPages}
           shoppingListId={shoppingList?.listId}
         />
       )}
