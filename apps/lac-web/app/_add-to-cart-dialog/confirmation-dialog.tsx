@@ -5,6 +5,7 @@ import useUpdateCartItemMutation from "@/_hooks/cart/use-update-cart-item-mutati
 import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
 import useItemInfo from "@/_hooks/product/use-item-info.hook";
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
+import { formatNumberToPrice } from "@/_lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckCircle } from "@repo/web-ui/components/icons/check-circle";
 import { Button } from "@repo/web-ui/components/ui/button";
@@ -211,12 +212,14 @@ const PriceDisplay = ({
   return (
     <>
       <div className="font-normal text-wurth-gray-800">
-        <span className="text-base">${priceData?.price}</span>
+        <span className="text-base">
+          ${formatNumberToPrice(priceData?.price)}
+        </span>
         <span className="text-sm font-medium">/{unitOfMeasure}</span>
       </div>
 
       <div className="text-lg text-wurth-gray-800">
-        ${priceData?.extendedPrice}
+        ${formatNumberToPrice(priceData?.extendedPrice)}
       </div>
     </>
   );

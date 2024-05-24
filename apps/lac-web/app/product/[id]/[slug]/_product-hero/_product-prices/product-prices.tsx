@@ -1,7 +1,9 @@
 "use client";
 
+import useDebouncedState from "@/_hooks/misc/use-debounced-state.hook";
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
-import { cn } from "@/_lib/utils";
+import { cn, formatNumberToPrice } from "@/_lib/utils";
+import useAddToCartForm from "../use-add-to-cart-form.hook";
 
 type ProductPricesProps = {
   token: string;
@@ -18,11 +20,21 @@ const ProductPrices = ({
   token,
   className,
 }: ProductPricesProps) => {
-  const priceCheckQuery = useSuspensePriceCheck(token, [{ productId, qty: 1 }]);
+  const { watch } = useAddToCartForm();
+  const quantity = watch("quantity");
+  const delayedQuantity = useDebouncedState(quantity);
+
+  const priceCheckQuery = useSuspensePriceCheck(token, [
+    { productId, qty: delayedQuantity },
+  ]);
   const priceData = priceCheckQuery.data.productPrices[0];
-  const currentPrice = priceData?.price ?? 0;
+  const currentPrice = priceData?.uomPrice ?? priceData?.price ?? 0;
 
   const discount = Math.round(((listPrice - currentPrice) / listPrice) * 100);
+
+  const actualUom = priceData?.uomPriceUnit ?? uom;
+
+  const isLaminateItem = !!priceData?.uomPrice && !!priceData?.uomPriceUnit;
 
   return (
     <section className={cn("space-y-3 md:space-y-4", className)}>
@@ -30,22 +42,24 @@ const ProductPrices = ({
         <div className="text-xl font-semibold leading-none">
           $
           <span className="font-title text-[1.75rem] leading-8">
-            {currentPrice}
+            {formatNumberToPrice(currentPrice)}
           </span>
         </div>
 
-        {discount > 0 && (
-          <div className="text-wurth-gray-400 line-through">${listPrice}</div>
+        {!isLaminateItem && discount > 0 && (
+          <div className="text-wurth-gray-400 line-through">
+            ${formatNumberToPrice(listPrice)}
+          </div>
         )}
 
         <div>
           <span className="text-sm font-semibold">/</span>
-          <span className="font-title leading-none">{uom}</span>
+          <span className="font-title leading-none">{actualUom}</span>
         </div>
 
-        {discount > 0 && (
+        {!isLaminateItem && discount > 0 && (
           <div className="font-semibold text-green-700">
-            You save ${(listPrice - currentPrice).toFixed(2)}
+            You save ${formatNumberToPrice(listPrice - currentPrice)}
           </div>
         )}
       </div>
@@ -62,7 +76,7 @@ const ProductPrices = ({
 
             <div className="text-sm font-semibold leading-none text-wurth-gray-800">
               <span className="text-base font-bold leading-6">
-                ${item.price}
+                ${formatNumberToPrice(item.price)}
               </span>
               /{uom}
             </div>

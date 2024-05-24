@@ -6,6 +6,7 @@ import type {
   Plant,
   ShippingMethod,
 } from "@/_lib/types";
+import { formatNumberToPrice } from "@/_lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { HeartOutline } from "@repo/web-ui/components/icons/heart-outline";
 import { Save } from "@repo/web-ui/components/icons/save";
@@ -236,14 +237,16 @@ const CartItem = ({
 
       <div className="hidden space-y-3 md:block md:shrink-0">
         <div className="flex flex-col items-end text-right">
-          <div className="text-lg text-green-700">${price?.extendedPrice}</div>
+          <div className="text-lg text-green-700">
+            ${formatNumberToPrice(price?.extendedPrice)}
+          </div>
 
           <div className="ml-2 text-sm font-medium text-wurth-gray-500">
-            $34.11/{price?.priceUnit}
+            ${formatNumberToPrice(34.11)}/{price?.priceUnit}
           </div>
 
           <div className="ml-1 text-[13px] leading-5 text-wurth-gray-500 line-through">
-            $38.11/{price?.priceUnit}
+            ${formatNumberToPrice(38.11)}/{price?.priceUnit}
           </div>
         </div>
 

@@ -46,7 +46,7 @@ const useRegisterExistingUserMutation = () => {
     },
     onError: async (error) => {
       if (error?.response?.status === 400) {
-        const errorResponse = await error.response.json();
+        const errorResponse = await error.response.clone().json();
 
         if (isErrorResponse(errorResponse)) {
           toast({

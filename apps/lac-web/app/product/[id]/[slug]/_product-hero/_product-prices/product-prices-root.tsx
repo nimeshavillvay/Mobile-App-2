@@ -24,7 +24,9 @@ const ProductPricesRoot = ({
 }: ComponentProps<typeof ProductPricesWrapper>) => {
   return (
     <Suspense
-      fallback={<Skeleton className={cn(className, "h-28 md:h-[6.75rem]")} />}
+      fallback={
+        <Skeleton className={cn(className, "h-[138px] md:h-[170px]")} />
+      }
     >
       <ProductPricesWrapper className={className} {...delegated} />
     </Suspense>

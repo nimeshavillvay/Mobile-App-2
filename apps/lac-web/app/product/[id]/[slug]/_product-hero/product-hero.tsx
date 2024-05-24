@@ -72,8 +72,8 @@ const ProductHero = async ({ id, slug }: ProductHeroProps) => {
         <div className="space-y-6">
           <div className="space-y-2">
             <ProductNumbers
-              groupId={product.groupId}
-              productId={product.selectedProduct.productId}
+              sku={product.selectedProduct.productSku}
+              manufacturerNo={product.selectedProduct.mfrPartNo}
             />
 
             <ProductDescription>
@@ -116,8 +116,8 @@ const ProductHero = async ({ id, slug }: ProductHeroProps) => {
       {/* Mobile view */}
       <>
         <ProductNumbers
-          groupId={product.groupId}
-          productId={product.selectedProduct.productId}
+          sku={product.selectedProduct.productSku}
+          manufacturerNo={product.selectedProduct.mfrPartNo}
           className="container my-2 md:hidden"
         />
 

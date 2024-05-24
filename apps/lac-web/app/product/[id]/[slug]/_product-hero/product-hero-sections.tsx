@@ -1,22 +1,19 @@
 import { api } from "@/_lib/api";
 import { DEFAULT_REVALIDATE } from "@/_lib/constants";
 import { cn } from "@/_lib/utils";
-import { Download } from "@repo/web-ui/components/icons/download";
 import { Truck } from "@repo/web-ui/components/icons/truck";
-import { Button } from "@repo/web-ui/components/ui/button";
-import { type ReactNode } from "react";
-import Balancer from "react-wrap-balancer";
 import { html, transform } from "ultrahtml";
 import swap from "ultrahtml/transformers/swap";
 import { getProduct } from "../apis";
+import ProductDownloads from "./product-downloads";
 
 export const ProductNumbers = ({
-  groupId,
-  productId,
+  sku,
+  manufacturerNo,
   className,
 }: {
-  groupId: string;
-  productId: number;
+  sku: string;
+  manufacturerNo: string;
   className?: string;
 }) => {
   return (
@@ -27,13 +24,13 @@ export const ProductNumbers = ({
       )}
     >
       <div>
-        Item # <span className="font-medium">{groupId}</span>
+        Item # <span className="font-medium">{sku}</span>
       </div>
 
       <span className="select-none">•</span>
 
       <div>
-        Model # <span className="font-medium">{productId}</span>
+        Model # <span className="font-medium">{manufacturerNo}</span>
       </div>
     </div>
   );
@@ -43,13 +40,14 @@ export const ProductDescription = ({
   children,
   className,
 }: {
-  children?: ReactNode;
+  children: string;
   className?: string;
 }) => {
   return (
-    <p className={cn("text-base text-wurth-gray-500", className)}>
-      <Balancer>{children}</Balancer>
-    </p>
+    <div
+      className={cn("text-base text-wurth-gray-500", className)}
+      dangerouslySetInnerHTML={{ __html: children }}
+    />
   );
 };
 
@@ -184,31 +182,13 @@ export const ProductDetails = async ({
         </ul>
       )}
 
-      {attachments.group_assets_doc.length > 0 && (
-        <div className="space-y-2">
-          <h3 className="text-lg font-semibold">Downloads</h3>
-
-          <div className="grid grid-cols-2 gap-2">
-            {attachments.group_assets_doc.map((attachment) => (
-              <Button
-                key={attachment.file_path}
-                variant="outline"
-                className="flex h-fit max-w-full flex-col items-start gap-2 rounded-lg border-wurth-gray-250 p-3 shadow-sm"
-              >
-                <Download width={20} height={20} className="mt-1 shrink-0" />
-
-                <span className="text-wrap text-left text-sm font-semibold text-wurth-gray-800">
-                  {attachment.title}
-                </span>
-              </Button>
-            ))}
-          </div>
-
-          <Button variant="link" className="h-fit p-0 text-sm font-medium">
-            View all downloads
-          </Button>
-        </div>
-      )}
+      <ProductDownloads
+        attachments={attachments.group_assets_doc.map((asset) => ({
+          path: asset.file_path,
+          name: asset.file_name,
+          title: asset.title,
+        }))}
+      />
     </section>
   );
 };

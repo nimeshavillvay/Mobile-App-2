@@ -4,47 +4,27 @@ import Link from "next/link";
 import { type ComponentProps } from "react";
 import { Close } from "~/components/icons/close";
 import { MagnifyingGlass } from "~/components/icons/magnifying-glass";
+import type {
+  Result,
+  SearchData,
+  SearchDropDownItem,
+} from "~/components/search-box/types";
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
 
-type SearchData = {
-  summary: {
-    total: number;
-    page_size: number;
-    page_no: number;
-    plp: boolean;
-  };
-  results: {
-    id: string;
-    categoryName?: string;
-    categoryPath?: string;
-    parentCategoryList?: string;
-    subCategoryList?: string;
-    slug: string;
-    brandName?: string;
-    brandImage?: string;
-    lastUpdatedDate?: string | null;
-    MFRPartNo?: string;
-    sellingBookSequenceNo?: string;
-    UPCCode?: string;
-    alias?: string;
-    materialNumber?: string;
-    productTitle?: string;
-    Status?: string;
-    productStatus?: string;
-    createDate?: string;
-    keywords?: string;
-    minimumOrderQuantity?: string;
-    orderQuantityByIncrements?: string;
-    attributes?: [];
-    itemImage?: string;
-    uom?: string;
-    groupId?: string;
-    categoryId?: string;
-    categorySlug?: string;
-    brandId?: string;
-    brandSlug?: string;
-  }[];
+type SearchableFields = "productTitle" | "brandName" | "categoryName";
+
+const INVALID_SEARCH_VALUES = {
+  productStatus: "discontinued",
+  groupId: "0",
+  categoryName: "",
+};
+
+const isValidProduct = (result: Result): boolean => {
+  return Object.entries(INVALID_SEARCH_VALUES).every(([key, invalidValue]) => {
+    const resultValue = result[key as keyof Result];
+    return resultValue !== invalidValue;
+  });
 };
 
 export const SearchBox = ({
@@ -62,6 +42,20 @@ export const SearchBox = ({
   );
 };
 
+/**
+ * This method renders a search box with autocomplete functionality.
+ *
+ * @param {ComponentProps<"input"> & {
+ *   data: {
+ *     products: SearchData;
+ *     categories: SearchData;
+ *     brands: SearchData;
+ *   };
+ *   value: string;
+ *   setValue: (value: string) => void;
+ *   onEnterPressed: () => void;
+ * }} props - The input and data properties for the search box.
+ */
 export const SearchBoxInput = ({
   className,
   data,
@@ -88,6 +82,13 @@ export const SearchBoxInput = ({
   };
 
   const { products, categories, brands } = data;
+  const validSearches = products.results
+    .filter(isValidProduct)
+    .map((product, index) => ({
+      product,
+      index,
+    }));
+
   const { isOpen, getMenuProps, getInputProps, getItemProps, closeMenu } =
     useCombobox({
       inputValue: value,
@@ -97,41 +98,41 @@ export const SearchBoxInput = ({
       items: [
         ...brands.results,
         ...categories.results,
-        ...products.results,
-      ].map((item) => item),
-      itemToString(
-        item: {
-          id: string;
-          categoryName?: string;
-          categoryPath?: string;
-          parentCategoryList?: string;
-          subCategoryList?: string;
-          slug: string;
-          brandName?: string;
-          productTitle?: string;
-          itemImage?: string;
-        } | null,
-      ): string {
-        if (!item) return "";
+        ...validSearches.map(({ product }) => product),
+      ].map((result) => result as SearchDropDownItem),
+      itemToString(result: SearchDropDownItem | null): string {
+        if (!result) return "";
 
-        if (item.productTitle && item.brandName && item.categoryPath) {
-          return item.productTitle;
-        } else if (item.brandName && !item.productTitle && !item.categoryPath) {
-          return item.brandName;
-        } else if (item.categoryName && !item.brandName && !item.productTitle) {
-          return item.categoryName;
-        }
+        const searchableFieldsPriority: Array<SearchableFields> = [
+          "productTitle",
+          "brandName",
+          "categoryName",
+        ];
 
-        return "";
+        //TODO - You are discriminating the result type
+        return getFirstSearchableFieldValue(result, searchableFieldsPriority);
       },
     });
 
-  const validProducts = products.results.filter(
-    (product) =>
-      product.productStatus !== "discontinued" &&
-      product.groupId !== "0" &&
-      product.categoryName !== "",
-  );
+  /**
+   * This function takes an result (object) and an array of searchable field names.
+   * It checks each field in the result in provided order and returns the value
+   * of the first searchable field it finds that has a truthy value.
+   * If no valid field is found, it returns an empty string.
+   *
+   * @param result - The object to be checked.
+   * @param fields - The array of searchable field names.
+   * @return The value of the first valid searchable field found or an empty string
+   */
+  const getFirstSearchableFieldValue = (
+    result: Result,
+    fields: Array<SearchableFields>,
+  ): string => {
+    for (const field of fields) {
+      if (result && result[field]) return result[field] as string;
+    }
+    return "";
+  };
 
   return (
     <div className="relative w-full rounded-md">
@@ -224,13 +225,13 @@ export const SearchBoxInput = ({
               </ul>
             )}
 
-            {products.summary.total > 0 && validProducts.length > 0 && (
+            {products.summary.total > 0 && validSearches.length > 0 && (
               <>
                 <li className="text-black-500 whitespace-normal break-all px-3 py-1 font-semibold">
                   Products for &quot;{value}&quot;
                 </li>
                 <ul className="grid grid-cols-1 gap-4 break-words md:grid-cols-1 lg:grid-cols-2">
-                  {validProducts.slice(0, 10).map((product, index) => (
+                  {validSearches.slice(0, 10).map(({ product, index }) => (
                     <li
                       key={product.id}
                       {...getItemProps({

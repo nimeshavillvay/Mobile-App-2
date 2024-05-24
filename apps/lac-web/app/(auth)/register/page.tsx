@@ -1,6 +1,7 @@
 import { getPasswordPolicies } from "@/_lib/apis/server";
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
+import { getIndustries } from "./apis";
 import Register from "./register";
 
 export const metadata: Metadata = {
@@ -19,9 +20,14 @@ const RegisterPage = async ({ searchParams }: RegisterPageProps) => {
     redirect("/sign-in");
   }
 
-  const passwordPolicies = await getPasswordPolicies();
+  const [passwordPolicies, industries] = await Promise.all([
+    getPasswordPolicies(),
+    getIndustries(),
+  ]);
 
-  return <Register passwordPolicies={passwordPolicies} />;
+  return (
+    <Register passwordPolicies={passwordPolicies} industries={industries} />
+  );
 };
 
 export default RegisterPage;

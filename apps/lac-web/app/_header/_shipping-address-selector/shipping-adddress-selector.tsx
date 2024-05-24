@@ -84,9 +84,7 @@ const ShippingAddressSelectorButton = ({ token }: { token: string }) => {
         >
           <Truck width={16} height={16} />
 
-          <span>
-            #{defaultAddress?.shipTo}, {defaultAddress?.soldTo}
-          </span>
+          <span>#{defaultAddress?.postalCode}</span>
         </Button>
       </DialogTrigger>
 
