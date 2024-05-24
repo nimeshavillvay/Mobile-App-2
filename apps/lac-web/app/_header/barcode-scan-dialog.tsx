@@ -40,6 +40,7 @@ const BarcodeScannerDialog = () => {
     setCategoryId,
     setCategorySlug,
     setSearchQuery,
+    setTextChanged,
   });
 
   const onScanSuccess = (query: string) => {
@@ -104,10 +105,7 @@ const BarcodeScannerDialog = () => {
             </p>
           </div>
 
-          <BarcodeScanner
-            setTextChanged={setTextChanged}
-            onScanSuccess={onScanSuccess}
-          />
+          <BarcodeScanner onScanSuccess={onScanSuccess} />
 
           <DialogFooter>
             <Button onClick={() => setOpen(false)}>Cancel</Button>

@@ -1,6 +1,7 @@
 import { searchApi } from "@/_lib/api";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 type SearchResult = {
   brandName: string;
@@ -49,19 +50,27 @@ const useScanBarcodeMutation = ({
   setCategoryId,
   setCategorySlug,
   setSearchQuery,
+  setTextChanged,
 }: {
   setOpen: (open: boolean) => void;
-  setProductNotFound: (open: boolean) => void;
-  setIsDiscontinued: (open: boolean) => void;
-  setCategoryId: (open: string) => void;
-  setCategorySlug: (open: string) => void;
+  setProductNotFound: (productNotFound: boolean) => void;
+  setIsDiscontinued: (isDiscounted: boolean) => void;
+  setCategoryId: (categoryId: string) => void;
+  setCategorySlug: (categorySlug: string) => void;
   setSearchQuery: (searchQuery: string) => void;
+  setTextChanged: (textChanged: boolean) => void;
 }) => {
   const router = useRouter();
+  const [oldQuery, setOldQuery] = useState("");
 
   return useMutation({
     mutationFn: async (query: string) => {
       setSearchQuery("");
+      setTextChanged(false);
+      if (oldQuery !== query) {
+        setTextChanged(true);
+        setOldQuery(query);
+      }
       const searchResults = await searchApi
         .get("barcode", {
           searchParams: { query },
@@ -77,7 +86,7 @@ const useScanBarcodeMutation = ({
         (firstProduct.groupId === "0" || firstProduct.categoryName === "")
       ) {
         setOpen(false);
-        router.push(`search?query=${firstProduct.MFRPartNo}`);
+        router.push(`/search?query=${firstProduct.MFRPartNo}`);
       } else if (
         isPlp &&
         firstProduct.productStatus === "discontinued" &&
