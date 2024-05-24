@@ -5,15 +5,17 @@ import { cn } from "@/old/_utils/helpers";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import type { ComponentProps } from "react";
 import { DayPicker } from "react-day-picker";
-
 export type CalendarProps = ComponentProps<typeof DayPicker>;
 
 function Calendar({
   className,
   classNames,
+  selectedDate,
   showOutsideDays = true,
   ...props
-}: CalendarProps) {
+}: CalendarProps & {
+  selectedDate: Date;
+}) {
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
@@ -60,6 +62,7 @@ function Calendar({
         ),
       }}
       {...props}
+      defaultMonth={selectedDate}
     />
   );
 }
