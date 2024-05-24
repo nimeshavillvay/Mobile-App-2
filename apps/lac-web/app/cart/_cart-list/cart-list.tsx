@@ -40,6 +40,7 @@ const CartList = ({ token, shippingMethods, plants }: CartListProps) => {
               }}
               shippingMethods={shippingMethods}
               plants={plants}
+              cartConfiguration={data.configuration}
             />
           </Suspense>
         </li>

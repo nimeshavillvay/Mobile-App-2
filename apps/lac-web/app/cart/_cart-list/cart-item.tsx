@@ -2,6 +2,7 @@ import useUpdateCartItemMutation from "@/_hooks/cart/use-update-cart-item-mutati
 import useSuspenseCheckAvailability from "@/_hooks/product/use-suspense-check-availability.hook";
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import type {
+  CartConfiguration,
   CartItemConfiguration,
   Plant,
   ShippingMethod,
@@ -43,6 +44,7 @@ type CartItemProps = {
   };
   shippingMethods: ShippingMethod[];
   plants: Plant[];
+  cartConfiguration: CartConfiguration;
 };
 
 const CartItem = ({
@@ -50,6 +52,7 @@ const CartItem = ({
   product,
   shippingMethods,
   plants,
+  cartConfiguration,
 }: CartItemProps) => {
   const id = useId();
   const quantityId = `quantity-${id}`;
@@ -233,6 +236,7 @@ const CartItem = ({
           setSelectedWillCallPlant={setSelectedWillCallPlant}
           selectedWillCallPlant={selectedWillCallPlant}
           onSave={handleSaveShippingMethod}
+          cartConfiguration={cartConfiguration}
         />
       </div>
 

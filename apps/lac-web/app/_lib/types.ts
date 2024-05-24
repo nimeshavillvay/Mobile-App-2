@@ -131,6 +131,7 @@ export type CartConfiguration = {
   overridden_email: null;
   osr: null;
   "first-name": null;
+  default_shipping: boolean | string;
   delivering_plant: null;
   avail_payment_options: string;
   attnName: string | null;

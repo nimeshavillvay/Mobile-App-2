@@ -1,4 +1,5 @@
 import type {
+  CartConfiguration,
   CartItemConfiguration,
   Plant,
   ShippingMethod,
@@ -33,7 +34,7 @@ import {
   TableRow,
 } from "@repo/web-ui/components/ui/table";
 import dayjs from "dayjs";
-import { useId, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import type { Availability, AvailabilityOption } from "../types";
 import type { OptionPlant } from "./types";
 
@@ -59,6 +60,7 @@ type CartItemShippingMethodProps = {
   setSelectedWillCallPlant: (plant: string) => void;
   selectedWillCallPlant: string;
   onSave: (config: Partial<CartItemConfiguration>) => void;
+  cartConfiguration: CartConfiguration;
 };
 
 const EMPTY_STRING = "";
@@ -144,6 +146,7 @@ const CartItemShippingMethod = ({
   );
 
   const [selectedShipToMe, setSelectedShipToMe] = useState(() => {
+    // TODO - Not setting the state properly when changing the qty
     if (availableAll) {
       return ALL_AVAILABLE;
     } else if (takeOnHand) {
@@ -171,7 +174,7 @@ const CartItemShippingMethod = ({
   );
 
   // Find the default option (available first option)
-  // TODO-  This should be either the first item or the one set in the API in cart config
+  // TODO -  This should be either the first item or the one set in the API in cart config
   const defaultShippingOption = shippingMethods?.at(0);
 
   // User selected shipping method
@@ -217,6 +220,44 @@ const CartItemShippingMethod = ({
     // Find take on hand plant details within plants object
     takeOnHandPlant = Object.values(takeOnHand?.plants)?.at(0) ?? undefined;
   }
+
+  const handleDeliveryOptionSelect = ({
+    checked,
+    selectedOption,
+  }: {
+    checked: boolean;
+    selectedOption: typeof SHIP_TO_ME | typeof WILL_CALL | typeof BACK_ORDER;
+  }) => {
+    if (checked) {
+      setSelectedSection(selectedOption);
+      // Save the line item config
+      if (selectedOption === SHIP_TO_ME) {
+        // TODO: Ship to me can have different default configs based on the availability
+        onSave(
+          createCartItemConfig({
+            method: selectedShippingMethod,
+            quantity: availableAllPlant?.quantity ?? 0,
+            plant: availableAllPlant?.plant ?? "",
+          }),
+        );
+      }
+      // Back order all can have only this config
+      if (selectedOption === BACK_ORDER && backOrderAll) {
+        onSave(
+          createCartItemConfig({
+            method: getFirstShippingCodeFromShippingMethod(
+              backOrderAll?.plants,
+            ),
+            quantity: 0,
+            plant: getFirstPlantFromPlants(backOrderAll?.plants),
+            backOrderAll: true,
+          }),
+        );
+      }
+    } else {
+      setSelectedSection(undefined);
+    }
+  };
 
   const handleShipToMeMethod = (shippingMethod: string) => {
     setSelectedShippingMethod(shippingMethod);
@@ -339,6 +380,18 @@ const CartItemShippingMethod = ({
     return firstMethod?.code ?? "";
   };
 
+  useEffect(() => {
+    // TODO - Couldn't find a better way of updating the pre selected state
+    // without using useEffect hook
+    if (availableAll) {
+      setSelectedShipToMe(ALL_AVAILABLE);
+    } else if (takeOnHand) {
+      setSelectedShipToMe(TAKE_ON_HAND);
+    } else if (shipAlternativeBranch) {
+      setSelectedShipToMe(ALTERNATIVE_BRANCHES);
+    }
+  }, [availableAll, takeOnHand, shipAlternativeBranch]);
+
   return (
     <ul className="flex flex-col gap-3">
       {isVendorShipped && (
@@ -354,33 +407,12 @@ const CartItemShippingMethod = ({
             className="size-5 rounded-full"
             iconClassName="size-4"
             checked={selectedSection === SHIP_TO_ME}
-            onCheckedChange={(checked) => {
-              if (checked === true) {
-                setSelectedSection(SHIP_TO_ME);
-
-                //TODO - can be done here as well
-                onSave({
-                  avail_1: (availableAllPlant?.quantity ?? 0).toString(),
-                  avail_2: "",
-                  avail_3: "",
-                  avail_4: "",
-                  avail_5: "",
-                  plant_1: availableAllPlant?.plant ?? "",
-                  plant_2: "",
-                  plant_3: "",
-                  plant_4: "",
-                  plant_5: "",
-                  shipping_method_1: selectedShippingMethod,
-                  shipping_method_2: "",
-                  shipping_method_3: "",
-                  shipping_method_4: "",
-                  shipping_method_5: "",
-                  backorder_all: "F",
-                });
-              } else {
-                setSelectedSection(undefined);
-              }
-            }}
+            onCheckedChange={(checked) =>
+              handleDeliveryOptionSelect({
+                checked: checked === true,
+                selectedOption: SHIP_TO_ME,
+              })
+            }
             disabled={status !== "inStock" && status !== "limitedStock"}
           />
 
@@ -390,26 +422,27 @@ const CartItemShippingMethod = ({
         </div>
 
         <div className="ml-[1.625rem] flex flex-col gap-2">
-          <Select
-            disabled={
-              selectedSection !== SHIP_TO_ME || shippingMethods?.length === 0
-            }
-            value={selectedShippingMethod}
-            onValueChange={(method) => handleShipToMeMethod(method)}
-          >
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder="Select a delivery method" />
-            </SelectTrigger>
+          {shippingMethods?.length > 0 && (
+            <Select
+              disabled={
+                selectedSection !== SHIP_TO_ME || shippingMethods?.length <= 1
+              }
+              value={selectedShippingMethod}
+              onValueChange={(method) => handleShipToMeMethod(method)}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select a delivery method" />
+              </SelectTrigger>
 
-            <SelectContent>
-              {shippingMethods?.length > 0 &&
-                shippingMethods.map((option) => (
+              <SelectContent>
+                {shippingMethods.map((option) => (
                   <SelectItem key={option.code} value={option.code}>
                     {option.name}
                   </SelectItem>
                 ))}
-            </SelectContent>
-          </Select>
+              </SelectContent>
+            </Select>
+          )}
 
           {isSameDayShippingEnabled && (
             <div className="text-sm">
@@ -596,13 +629,12 @@ const CartItemShippingMethod = ({
             className="size-5 rounded-full"
             iconClassName="size-4"
             checked={selectedSection === WILL_CALL}
-            onCheckedChange={(checked) => {
-              if (checked === true) {
-                setSelectedSection(WILL_CALL);
-              } else {
-                setSelectedSection(undefined);
-              }
-            }}
+            onCheckedChange={(checked) =>
+              handleDeliveryOptionSelect({
+                checked: checked === true,
+                selectedOption: WILL_CALL,
+              })
+            }
             disabled={false}
           />
 
@@ -715,23 +747,12 @@ const CartItemShippingMethod = ({
               className="size-5 rounded-full"
               iconClassName="size-4"
               checked={selectedSection === BACK_ORDER}
-              onCheckedChange={(checked) => {
-                if (checked === true) {
-                  setSelectedSection(BACK_ORDER);
-                  onSave(
-                    createCartItemConfig({
-                      method: getFirstShippingCodeFromShippingMethod(
-                        backOrderAll?.plants,
-                      ),
-                      quantity: 0,
-                      plant: getFirstPlantFromPlants(backOrderAll?.plants),
-                      backOrderAll: true,
-                    }),
-                  );
-                } else {
-                  setSelectedSection(undefined);
-                }
-              }}
+              onCheckedChange={(checked) =>
+                handleDeliveryOptionSelect({
+                  checked: checked === true,
+                  selectedOption: BACK_ORDER,
+                })
+              }
               disabled={!backOrderAll}
             />
 
