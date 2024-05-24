@@ -24,49 +24,43 @@ const AddToCart = ({
   className,
 }: AddToCartProps) => {
   return (
-    <>
-      <section className={cn("space-y-3", className)}>
-        <LocationStocks productId={productId} />
+    <section className={cn("space-y-3", className)}>
+      <LocationStocks productId={productId} />
 
-        <AddToCartForm
-          productId={productId}
-          minQty={minQty}
-          incQty={incQty}
-          uom={uom}
-        />
+      <AddToCartForm
+        productId={productId}
+        minQty={minQty}
+        incQty={incQty}
+        uom={uom}
+      />
 
-        <div className="flex flex-row items-center justify-between gap-2">
-          <div className="flex-1 text-sm text-wurth-gray-500 md:flex md:flex-row md:items-center md:gap-4">
-            <div>
-              Min Order:{" "}
-              <span className="font-semibold text-wurth-gray-800">
-                {minQty}
-              </span>
-            </div>
-
-            <div>
-              Quantity Multiple by:{" "}
-              <span className="font-semibold text-wurth-gray-800">
-                {incQty}
-              </span>
-            </div>
+      <div className="flex flex-row items-center justify-between gap-2">
+        <div className="flex-1 text-sm text-wurth-gray-500 md:flex md:flex-row md:items-center md:gap-4">
+          <div>
+            Min Order:{" "}
+            <span className="font-semibold text-wurth-gray-800">{minQty}</span>
           </div>
 
-          <Button variant="outline" disabled className="gap-1 md:py-2">
-            <Check className="size-4" />
-            <span>Compare</span>
-          </Button>
-
-          <Suspense fallback={<FavoriteButtonSkeleton />}>
-            <FavoriteButton productId={productId} />
-          </Suspense>
+          <div>
+            Quantity Multiple by:{" "}
+            <span className="font-semibold text-wurth-gray-800">{incQty}</span>
+          </div>
         </div>
 
-        <Suspense>
-          <RegionalExclusionNotice productId={productId} />
+        <Button variant="outline" disabled className="gap-1 md:py-2">
+          <Check className="size-4" />
+          <span>Compare</span>
+        </Button>
+
+        <Suspense fallback={<FavoriteButtonSkeleton />}>
+          <FavoriteButton productId={productId} />
         </Suspense>
-      </section>
-    </>
+      </div>
+
+      <Suspense>
+        <RegionalExclusionNotice productId={productId} />
+      </Suspense>
+    </section>
   );
 };
 

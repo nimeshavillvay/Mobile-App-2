@@ -11,14 +11,16 @@ import { useState } from "react";
 import Balancer from "react-wrap-balancer";
 import CurrentUserFlow from "./current-user-flow";
 import NewUserFlow from "./new-user-flow";
+import type { Industry } from "./types";
 
 const IS_CURRENT_USER = ["Yes", "No"] as const;
 
 type RegisterProps = {
   passwordPolicies: PasswordPolicies;
+  industries: Industry[];
 };
 
-const Register = ({ passwordPolicies }: RegisterProps) => {
+const Register = ({ passwordPolicies, industries }: RegisterProps) => {
   const [isCurrentUser, setIsCurrentUser] = useState<string>();
 
   const searchParams = useSearchParams();
@@ -92,7 +94,10 @@ const Register = ({ passwordPolicies }: RegisterProps) => {
         )}
 
         {isCurrentUser === "No" && (
-          <NewUserFlow passwordPolicies={passwordPolicies} />
+          <NewUserFlow
+            passwordPolicies={passwordPolicies}
+            industries={industries}
+          />
         )}
       </div>
     </div>

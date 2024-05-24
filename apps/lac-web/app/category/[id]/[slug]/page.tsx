@@ -127,9 +127,10 @@ const CategoryPage = async ({ params: { id, slug } }: CategoryPageProps) => {
             </h1>
 
             {!!category.description && (
-              <p className="text-base text-wurth-gray-800 md:line-clamp-3 md:text-lg">
-                {category.description}
-              </p>
+              <div
+                className="text-base text-wurth-gray-800 md:line-clamp-3 md:text-lg"
+                dangerouslySetInnerHTML={{ __html: category.description }}
+              />
             )}
           </div>
 

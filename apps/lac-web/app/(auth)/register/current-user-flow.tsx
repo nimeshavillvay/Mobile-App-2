@@ -1,5 +1,5 @@
 import type { PasswordPolicies } from "@/_lib/types";
-import { cn } from "@/_lib/utils";
+import { cn, isErrorResponse } from "@/_lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckCircle } from "@repo/web-ui/components/icons/check-circle";
 import { Button } from "@repo/web-ui/components/ui/button";
@@ -109,14 +109,40 @@ const CurrentUserFlow = ({ passwordPolicies }: CurrentUserFlowProps) => {
 
   const createUserMutation = useRegisterExistingUserMutation();
   const onSubmit = form.handleSubmit((data) => {
-    createUserMutation.mutate({
-      accountNo: data.soldToAccount,
-      documentId: data.invoiceNo,
-      firstName: data.firstName,
-      lastName: data.lastName,
-      email: email ?? "",
-      password: data.password,
-    });
+    createUserMutation.mutate(
+      {
+        accountNo: data.soldToAccount,
+        documentId: data.invoiceNo,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        email: email ?? "",
+        password: data.password,
+      },
+      {
+        onError: async (error) => {
+          if (error.response) {
+            const response = await error.response.json();
+
+            if (
+              isErrorResponse(response) &&
+              response.message ===
+                "Sorry, the account/document combination is invalid."
+            ) {
+              // Set errors on fields
+              form.setError("soldToAccount", {
+                message: response.message,
+              });
+              form.setError("invoiceNo", {
+                message: response.message,
+              });
+
+              // Move back a step
+              setStep("account");
+            }
+          }
+        },
+      },
+    );
   });
 
   return (
@@ -273,6 +299,7 @@ const CurrentUserFlow = ({ passwordPolicies }: CurrentUserFlowProps) => {
           allFieldsRequired
           submitBtnText="Create account"
           onSubmit={onSubmit}
+          disableSubmit={createUserMutation.isPending}
           className={cn(step !== "personal" && "hidden")}
           id={formId}
         >
