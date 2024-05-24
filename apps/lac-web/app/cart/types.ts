@@ -7,20 +7,7 @@ export type ShippingMethod = {
 export type Availability = {
   productId: number;
   status: string;
-  options: {
-    backOrder: boolean;
-    plants: {
-      index: number;
-      isSameDayAvail: boolean;
-      plant: string;
-      quantity?: number;
-      backOrderQuantity?: number;
-      backOrderDate?: string;
-      shippingMethods: ShippingMethod[];
-    }[];
-    type: string;
-    hash: string;
-  }[];
+  options: AvailabilityOption[],
   willCallAnywhere: {
     hash: string;
     status: string;
@@ -42,4 +29,20 @@ export type Availability = {
     name: string;
     amount: number;
   }[];
+};
+
+
+export type AvailabilityOption = {
+  backOrder: boolean;
+  plants: {
+    index: number;
+    isSameDayAvail: boolean;
+    plant: string;
+    quantity?: number;
+    backOrderQuantity?: number;
+    backOrderDate?: string;
+    shippingMethods: ShippingMethod[];
+  }[];
+  type: string;
+  hash: string;
 };
