@@ -7,7 +7,7 @@ export type ShippingMethod = {
 export type Availability = {
   productId: number;
   status: string;
-  options: AvailabilityOption[],
+  options: AvailabilityOption[];
   willCallAnywhere: {
     hash: string;
     status: string;
@@ -30,7 +30,6 @@ export type Availability = {
     amount: number;
   }[];
 };
-
 
 export type AvailabilityOption = {
   backOrder: boolean;
