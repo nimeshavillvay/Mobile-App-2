@@ -264,7 +264,7 @@ export type Cart = {
   cartItems: {
     code: string;
     quantity: number;
-    cartid: number;
+    cart_item_id: number;
     configuration: CartItemConfiguration;
     itemInfo: {
       productid: string;

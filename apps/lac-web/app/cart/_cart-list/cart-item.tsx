@@ -39,6 +39,7 @@ type CartItemProps = {
     minAmount: number;
     increment: number;
     image: string;
+    cartItemId: number;
   };
   shippingMethods: ShippingMethod[];
   plants: Plant[];
