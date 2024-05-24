@@ -37,6 +37,7 @@ import {
   StepContainerClosed,
   StepContainerOpen,
 } from "./step-container";
+import type { Industry } from "./types";
 import useRegisterNewUserMutation, {
   ResponseAddress,
   isVerifyAddressResponse,
@@ -85,9 +86,10 @@ type AddressSchema = z.infer<typeof addressSchema>;
 
 type NewUserFlowProps = {
   passwordPolicies: PasswordPolicies;
+  industries: Industry[];
 };
 
-const NewUserFlow = ({ passwordPolicies }: NewUserFlowProps) => {
+const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const email = searchParams.get("email");
@@ -532,14 +534,28 @@ const NewUserFlow = ({ passwordPolicies }: NewUserFlowProps) => {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Industry</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="text"
-                          required={type === "C"}
-                          disabled={registerNewUserMutation.isPending}
-                          {...field}
-                        />
-                      </FormControl>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                        disabled={registerNewUserMutation.isPending}
+                        required={type === "C"}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {industries.map((industry) => (
+                            <SelectItem
+                              key={industry.code}
+                              value={industry.code}
+                            >
+                              {industry.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                       <FormDescription className="sr-only">
                         This is the industry of your company.
                       </FormDescription>
