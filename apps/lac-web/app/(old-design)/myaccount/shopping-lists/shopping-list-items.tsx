@@ -14,11 +14,13 @@ import useSuspenseShoppingListItems from "./use-suspense-shopping-list-item.hook
 const ShoppingListItems = ({
   token,
   page,
+  totalPages,
   perPage,
   shoppingList,
 }: {
   token: string;
   page: number;
+  totalPages: number;
   perPage: number;
   shoppingList: ShoppingListElement;
 }) => {
@@ -71,6 +73,10 @@ const ShoppingListItems = ({
           </Button>
         </div>
       </div>
+
+      <p className="text-right text-sm font-normal md:text-base">
+        Page {page} of {totalPages == 0 ? 1 : totalPages}
+      </p>
 
       {shoppingListItems.items.map((item) => (
         <div key={item.productId} className="inline-grid p-2">
