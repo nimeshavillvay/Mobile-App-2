@@ -47,6 +47,15 @@ const BarcodeScannerDialog = () => {
     scanBarcodeMutation.mutate(query);
   };
 
+  const resetOnOpen = () => {
+    setOpen(true);
+    setProductNotFound(false);
+    setCategoryId("");
+    setCategorySlug("");
+    setIsDiscontinued(false);
+    setSearchQuery("");
+  };
+
   return (
     <>
       {!open && textChanged && isDiscontinued && (
@@ -58,14 +67,7 @@ const BarcodeScannerDialog = () => {
             variant="ghost"
             size="icon"
             className={cn("mx-0.5 rounded-full px-2")}
-            onClick={() => {
-              setOpen(true);
-              setProductNotFound(false);
-              setCategoryId("");
-              setCategorySlug("");
-              setIsDiscontinued(false);
-              setSearchQuery("");
-            }}
+            onClick={() => resetOnOpen}
           >
             <BarcodeScan className="size-5" />
             <span className="sr-only">Scan barcode</span>

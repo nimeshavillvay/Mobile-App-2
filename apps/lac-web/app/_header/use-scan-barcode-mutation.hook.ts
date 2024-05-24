@@ -43,6 +43,16 @@ type SearchData = {
   results: SearchResult;
 };
 
+type BarcodeSearchProps = {
+  setOpen: (open: boolean) => void;
+  setProductNotFound: (productNotFound: boolean) => void;
+  setIsDiscontinued: (isDiscounted: boolean) => void;
+  setCategoryId: (categoryId: string) => void;
+  setCategorySlug: (categorySlug: string) => void;
+  setSearchQuery: (searchQuery: string) => void;
+  setTextChanged: (textChanged: boolean) => void;
+};
+
 const useScanBarcodeMutation = ({
   setOpen,
   setProductNotFound,
@@ -51,17 +61,10 @@ const useScanBarcodeMutation = ({
   setCategorySlug,
   setSearchQuery,
   setTextChanged,
-}: {
-  setOpen: (open: boolean) => void;
-  setProductNotFound: (productNotFound: boolean) => void;
-  setIsDiscontinued: (isDiscounted: boolean) => void;
-  setCategoryId: (categoryId: string) => void;
-  setCategorySlug: (categorySlug: string) => void;
-  setSearchQuery: (searchQuery: string) => void;
-  setTextChanged: (textChanged: boolean) => void;
-}) => {
+}: BarcodeSearchProps) => {
   const router = useRouter();
   const [oldQuery, setOldQuery] = useState("");
+  const PRODUCT_DISCONTINUED_STATUS = "discontinued";
 
   return useMutation({
     mutationFn: async (query: string) => {
@@ -78,30 +81,35 @@ const useScanBarcodeMutation = ({
         .json<SearchData>();
 
       const firstProduct = searchResults.results;
-      const isPlp = searchResults.summary.plp;
-      if (
-        isPlp &&
-        !Array.isArray(firstProduct) &&
-        firstProduct.productStatus != "discontinued" &&
-        (firstProduct.groupId === "0" || firstProduct.categoryName === "")
-      ) {
-        setOpen(false);
-        router.push(`/search?query=${firstProduct.MFRPartNo}`);
-      } else if (
-        isPlp &&
-        firstProduct.productStatus === "discontinued" &&
+
+      const isDiscontinuedProduct =
+        firstProduct.productStatus === PRODUCT_DISCONTINUED_STATUS &&
         firstProduct.categoryId &&
-        firstProduct.categorySlug
-      ) {
+        firstProduct.categorySlug;
+
+      const isCategoryMissingProduct =
+        !Array.isArray(firstProduct) &&
+        firstProduct.productStatus !== PRODUCT_DISCONTINUED_STATUS &&
+        (firstProduct.groupId === "0" || firstProduct.categoryName === "");
+
+      const actionForDiscontinuedProduct = () => {
         setIsDiscontinued(true);
-        setCategoryId(firstProduct.categoryId);
-        setCategorySlug(firstProduct.categorySlug);
+        setCategoryId(firstProduct.categoryId ?? "");
+        setCategorySlug(firstProduct.categorySlug ?? "");
         setOpen(false);
-      } else if (isPlp && firstProduct) {
-        const productPath = `/product/${firstProduct.id}/${firstProduct.slug}`;
-        setOpen(false);
-        setProductNotFound(false);
-        router.push(productPath);
+      };
+
+      if (searchResults.summary.plp) {
+        if (isCategoryMissingProduct) {
+          setOpen(false);
+          router.push(`/search?query=${firstProduct.MFRPartNo}`);
+        } else if (isDiscontinuedProduct) {
+          actionForDiscontinuedProduct();
+        } else if (firstProduct) {
+          setOpen(false);
+          setProductNotFound(false);
+          router.push(`/product/${firstProduct.id}/${firstProduct.slug}`);
+        }
       } else {
         setProductNotFound(true);
       }

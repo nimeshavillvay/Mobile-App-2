@@ -34,12 +34,12 @@ const DiscontinuedItemNotice = ({
     }
   };
 
-  const onClickNo = () => {
+  const onCancelHandler = () => {
     setOpen(false);
     router.push(`/`);
   };
 
-  const onClickYes = () => {
+  const onAcceptHandler = () => {
     setOpen(false);
     router.push(`/category/${categoryId}/${slug}`);
   };
@@ -55,10 +55,10 @@ const DiscontinuedItemNotice = ({
           </DialogDescription>
         </DialogHeader>
         <div className="flex flex-row items-center justify-end space-x-4">
-          <Button variant="outline" onClick={() => onClickNo()}>
+          <Button variant="outline" onClick={() => onCancelHandler()}>
             No
           </Button>
-          <Button variant="default" onClick={() => onClickYes()}>
+          <Button variant="default" onClick={() => onAcceptHandler()}>
             Yes
           </Button>
         </div>
