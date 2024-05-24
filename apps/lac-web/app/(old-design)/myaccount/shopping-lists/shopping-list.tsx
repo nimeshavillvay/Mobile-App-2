@@ -52,14 +52,19 @@ const ShoppingList = ({ token }: { token: string }) => {
     );
   }
 
-  if (!shoppingList) {
+  if (!shoppingList && shoppingLists.lists.length > 0) {
     // for selecting the first shopping list when another shopping list is deleted
     shoppingList = shoppingLists.lists[0];
   }
 
+  let listId = "id";
+  if (shoppingList && shoppingList.listId) {
+    listId = shoppingList.listId;
+  }
+
   const shoppingListItemCountQuery = useSuspenseShoppingListItemCount(
     token,
-    shoppingList!.listId,
+    listId,
   );
   const shoppingListItemCount = shoppingListItemCountQuery?.data;
   const totalPages = Math.ceil(shoppingListItemCount.count / perPage);
@@ -67,19 +72,21 @@ const ShoppingList = ({ token }: { token: string }) => {
   return (
     <>
       <div className="flex flex-row justify-center">
-        <Tabs
-          onValueChange={setSelectedAddressShoppingListId}
-          defaultValue={shoppingLists.lists[0]?.listId}
-          className="overflow-y-auto"
-        >
-          <TabsList>
-            {shoppingLists.lists.map((list) => (
-              <TabsTrigger key={list.listId} value={list?.listId}>
-                {list?.listName}
-              </TabsTrigger>
-            ))}
-          </TabsList>
-        </Tabs>
+        {shoppingLists.lists.length > 0 && (
+          <Tabs
+            onValueChange={setSelectedAddressShoppingListId}
+            defaultValue={shoppingLists.lists[0]?.listId}
+            className="overflow-y-auto"
+          >
+            <TabsList>
+              {shoppingLists.lists.map((list) => (
+                <TabsTrigger key={list.listId} value={list?.listId}>
+                  {list?.listName}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+          </Tabs>
+        )}
         <Button
           variant="ghost"
           className="mx-5 my-auto px-0 py-0 hover:bg-transparent"
