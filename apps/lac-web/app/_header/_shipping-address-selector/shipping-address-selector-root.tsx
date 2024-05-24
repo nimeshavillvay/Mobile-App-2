@@ -17,7 +17,7 @@ const ShippingAddressSelectorMain = () => {
 
 const ShippingAddressSelectorRoot = () => {
   return (
-    <Suspense fallback={<Skeleton className="h-5 w-32" />}>
+    <Suspense fallback={<Skeleton className="h-5 w-20" />}>
       <ShippingAddressSelectorMain />
     </Suspense>
   );

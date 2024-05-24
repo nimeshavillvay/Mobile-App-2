@@ -147,6 +147,12 @@ const ProductCard = ({
       <ProductCardContent>
         <ProductCardDetails title={title} sku={sku} href={href} />
 
+        <ProductCardPrice
+          price={currentPrice}
+          uom={uom}
+          actualPrice={listPrice}
+        />
+
         {product.variants.length > 1 ? (
           <ProductCardVariantSelector
             href={href}
@@ -159,15 +165,7 @@ const ProductCard = ({
             addToCart={addToCart}
           />
         ) : (
-          <>
-            <ProductCardPrice
-              price={currentPrice}
-              uom={uom}
-              actualPrice={listPrice}
-            />
-
-            <ProductCardActions addToCart={addToCart} />
-          </>
+          <ProductCardActions addToCart={addToCart} />
         )}
       </ProductCardContent>
     </ProductCardRoot>

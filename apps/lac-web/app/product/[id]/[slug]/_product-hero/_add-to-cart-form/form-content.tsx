@@ -2,9 +2,7 @@ import { AddToCart as AddToCartIcon } from "@repo/web-ui/components/icons/add-to
 import { Minus } from "@repo/web-ui/components/icons/minus";
 import { Plus } from "@repo/web-ui/components/icons/plus";
 import { Button } from "@repo/web-ui/components/ui/button";
-import { Input } from "@repo/web-ui/components/ui/input";
-import { Label } from "@repo/web-ui/components/ui/label";
-import { useId, type ComponentProps } from "react";
+import { type ComponentProps, type ReactNode } from "react";
 
 type FormContentProps = {
   uom?: string;
@@ -13,7 +11,7 @@ type FormContentProps = {
     ComponentProps<typeof Button>,
     "type" | "variant" | "size" | "className"
   >;
-  inputProps: Omit<ComponentProps<typeof Input>, "id" | "type" | "className">;
+  children: ReactNode;
   incrementButtonProps: Omit<
     ComponentProps<typeof Button>,
     "type" | "variant" | "size" | "className"
@@ -28,13 +26,10 @@ const FormContent = ({
   uom,
   formProps,
   decrementButtonProps,
-  inputProps,
+  children,
   incrementButtonProps,
   submitButtonProps,
 }: FormContentProps) => {
-  const id = useId();
-  const quantityId = `quantity-${id}`;
-
   return (
     <form className="flex flex-row items-stretch gap-2" {...formProps}>
       <div className="flex-[4] rounded-md border border-wurth-gray-250 p-0.5 md:flex-1">
@@ -54,18 +49,7 @@ const FormContent = ({
             <span className="sr-only">Reduce quantity</span>
           </Button>
 
-          <div>
-            <Label htmlFor={quantityId} className="sr-only">
-              Quantity
-            </Label>
-
-            <Input
-              id={quantityId}
-              type="number"
-              className="flex-1 rounded-sm border-0 p-0 text-center text-lg font-semibold text-wurth-gray-800 shadow-none"
-              {...inputProps}
-            />
-          </div>
+          {children}
 
           <Button
             type="button"
