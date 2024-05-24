@@ -63,25 +63,69 @@ const personalDetailsSchema = z.object({
   industry: z.string(),
   employees: z.number(),
 });
-const addressSchema = z.object({
-  billingAddress: z.string(),
-  billingCity: z.string(),
-  billingCountry: z.string(),
-  billingState: z.string(),
-  billingCounty: z.string().optional(),
-  billingPostCode: z.string(),
-  billingZipCode: z.string().optional(),
+const addressSchema = z
+  .object({
+    billingAddress: z.string().min(6, "Please enter a valid address"),
+    billingCity: z.string().min(6, "Please enter a valid City"),
+    billingCountry: z.string().min(2, "Please select a valid country"),
+    billingState: z.string().min(2, "Please select a valid state"),
+    billingCounty: z.string().optional(),
+    billingPostCode: z.string().min(5, "Please enter a valid Zip/Postal code"),
+    billingZipCode: z.string().optional(),
 
-  same: z.boolean(),
+    same: z.boolean(),
 
-  shippingAddress: z.string(),
-  shippingCity: z.string(),
-  shippingCountry: z.string(),
-  shippingState: z.string(),
-  shippingCounty: z.string().optional(),
-  shippingPostCode: z.string(),
-  shippingZipCode: z.string().optional(),
-});
+    shippingAddress: z.string(),
+    shippingCity: z.string(),
+    shippingCountry: z.string(),
+    shippingState: z.string(),
+    shippingCounty: z.string().optional(),
+    shippingPostCode: z.string(),
+    shippingZipCode: z.string().optional(),
+  })
+  .superRefine((values, ctx) => {
+    if (!values.same) {
+      if (values.shippingAddress.length < 6) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["shippingAddress"],
+          message: "Please enter a valid address",
+        });
+      }
+
+      if (values.shippingCity.length < 6) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["shippingCity"],
+          message: "Please enter a valid address",
+        });
+      }
+
+      if (values.shippingCountry.length < 2) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["shippingCountry"],
+          message: "Please select a valid country",
+        });
+      }
+
+      if (values.shippingState.length < 2) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["shippingState"],
+          message: "Please select a valid state",
+        });
+      }
+
+      if (values.shippingPostCode.length < 5) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["shippingPostCode"],
+          message: "Please enter a valid Zip/Postal code",
+        });
+      }
+    }
+  });
 type AddressSchema = z.infer<typeof addressSchema>;
 
 type NewUserFlowProps = {
