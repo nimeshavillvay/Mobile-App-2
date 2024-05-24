@@ -62,13 +62,21 @@ type CartItemShippingMethodProps = {
 };
 
 const EMPTY_STRING = "";
+const TRUE_STRING = "T";
+const FALSE_STRING = "F";
 
-const createShippingDetails = (
-  method: string,
-  quantity = 0,
-  plant = EMPTY_STRING,
-) => ({
-  avail_1: quantity.toString(),
+const createCartItemConfig = ({
+  method,
+  quantity,
+  plant,
+  backOrderAll = false,
+}: {
+  method: string;
+  quantity: number;
+  plant: string;
+  backOrderAll?: boolean;
+}) => ({
+  avail_1: quantity ? quantity.toString() : EMPTY_STRING,
   avail_2: EMPTY_STRING,
   avail_3: EMPTY_STRING,
   avail_4: EMPTY_STRING,
@@ -83,9 +91,8 @@ const createShippingDetails = (
   shipping_method_3: EMPTY_STRING,
   shipping_method_4: EMPTY_STRING,
   shipping_method_5: EMPTY_STRING,
-  backorder_all: "F", // TODO - What does 'F' stand for
+  backorder_all: backOrderAll ? TRUE_STRING : FALSE_STRING,
 });
-
 
 // [] First each change should be send a put to the cart config
 // [] After each change do an availability check render shipping method and options
@@ -95,7 +102,7 @@ const createShippingDetails = (
 
 const getShippingMethods = (
   selectedOption: string | undefined,
-  availableOptions: { [key: string]: AvailabilityOption | undefined; },
+  availableOptions: { [key: string]: AvailabilityOption | undefined },
 ) => {
   if (!selectedOption) return [];
 
@@ -121,7 +128,10 @@ const CartItemShippingMethod = ({
 
   const { options, status, willCallAnywhere } = availability;
 
-  function findAvailabilityOptionForType(options: AvailabilityOption[], type: string) {
+  function findAvailabilityOptionForType(
+    options: AvailabilityOption[],
+    type: string,
+  ) {
     return options.find((option) => option.type === type) ?? undefined;
   }
 
@@ -155,7 +165,10 @@ const CartItemShippingMethod = ({
   };
 
   // use the new function to determine the available options
-  const shippingMethods = getShippingMethods(selectedShipToMe, AVAILABLE_OPTIONS_MAP);
+  const shippingMethods = getShippingMethods(
+    selectedShipToMe,
+    AVAILABLE_OPTIONS_MAP,
+  );
 
   // Find the default option (available first option)
   // TODO-  This should be either the first item or the one set in the API in cart config
@@ -209,18 +222,14 @@ const CartItemShippingMethod = ({
     setSelectedShippingMethod(shippingMethod);
 
     const alternativeBranchShippingDetails = {
-      ...createShippingDetails(
-          shippingMethod,
-          shipAlternativeBranch?.plants["1"]?.quantity,
-          shipAlternativeBranch?.plants["1"]?.plant,
-      ),
-      avail_2: (
-          shipAlternativeBranch?.plants["2"]?.quantity ?? 0
-      ).toString(),
+      ...createCartItemConfig({
+        method: shippingMethod,
+        quantity: shipAlternativeBranch?.plants["1"]?.quantity ?? 0,
+        plant: shipAlternativeBranch?.plants["1"]?.plant ?? "",
+      }),
+      avail_2: (shipAlternativeBranch?.plants["2"]?.quantity ?? 0).toString(),
       plant_2: shipAlternativeBranch?.plants["2"]?.plant ?? "",
-      avail_3: (
-          shipAlternativeBranch?.plants["3"]?.quantity ?? 0
-      ).toString(),
+      avail_3: (shipAlternativeBranch?.plants["3"]?.quantity ?? 0).toString(),
       plant_3: shipAlternativeBranch?.plants["3"]?.plant ?? "",
       shipping_method_2: shippingMethod,
       shipping_method_3: shippingMethod,
@@ -237,20 +246,20 @@ const CartItemShippingMethod = ({
       switch (selectedShipToMe) {
         case ALL_AVAILABLE:
           onSave(
-            createShippingDetails(
-              shippingMethod,
-              availableAllPlant?.quantity,
-              availableAllPlant?.plant,
-            ),
+            createCartItemConfig({
+              method: shippingMethod,
+              quantity: availableAllPlant?.quantity ?? 0,
+              plant: availableAllPlant?.plant ?? "",
+            }),
           );
           break;
         case TAKE_ON_HAND:
           onSave(
-            createShippingDetails(
-              shippingMethod,
-              takeOnHandPlant?.quantity,
-              takeOnHandPlant?.plant,
-            ),
+            createCartItemConfig({
+              method: shippingMethod,
+              quantity: takeOnHandPlant?.quantity ?? 0,
+              plant: takeOnHandPlant?.plant ?? "",
+            }),
           );
           break;
         case ALTERNATIVE_BRANCHES:
@@ -270,15 +279,28 @@ const CartItemShippingMethod = ({
 
       switch (shipToMe) {
         case TAKE_ON_HAND:
-          onSave(createShippingDetails(defaultMethod, takeOnHandPlant?.quantity, takeOnHandPlant?.plant));
+          onSave(
+            createCartItemConfig({
+              method: defaultMethod,
+              quantity: takeOnHandPlant?.quantity ?? 0,
+              plant: takeOnHandPlant?.plant ?? "",
+            }),
+          );
           break;
         case ALTERNATIVE_BRANCHES:
-
           onSave({
-            ...createShippingDetails(defaultMethod, shipAlternativeBranch?.plants["1"]?.quantity, shipAlternativeBranch?.plants["1"]?.plant),
-            avail_2: (shipAlternativeBranch?.plants["2"]?.quantity ?? 0).toString(),
+            ...createCartItemConfig({
+              method: defaultMethod,
+              quantity: shipAlternativeBranch?.plants["1"]?.quantity ?? 0,
+              plant: shipAlternativeBranch?.plants["1"]?.plant ?? "",
+            }),
+            avail_2: (
+              shipAlternativeBranch?.plants["2"]?.quantity ?? 0
+            ).toString(),
             plant_2: shipAlternativeBranch?.plants["2"]?.plant ?? "",
-            avail_3: (shipAlternativeBranch?.plants["3"]?.quantity ?? 0).toString(),
+            avail_3: (
+              shipAlternativeBranch?.plants["3"]?.quantity ?? 0
+            ).toString(),
             plant_3: shipAlternativeBranch?.plants["3"]?.plant ?? "",
             shipping_method_2: defaultMethod,
             shipping_method_3: defaultMethod,
@@ -696,21 +718,16 @@ const CartItemShippingMethod = ({
               onCheckedChange={(checked) => {
                 if (checked === true) {
                   setSelectedSection(BACK_ORDER);
-                  onSave({
-                    plant_1: getFirstPlantFromPlants(backOrderAll?.plants),
-                    plant_2: "",
-                    plant_3: "",
-                    plant_4: "",
-                    plant_5: "",
-                    shipping_method_1: getFirstShippingCodeFromShippingMethod(
-                      backOrderAll?.plants,
-                    ),
-                    shipping_method_2: "",
-                    shipping_method_3: "",
-                    shipping_method_4: "",
-                    shipping_method_5: "",
-                    backorder_all: "T",
-                  });
+                  onSave(
+                    createCartItemConfig({
+                      method: getFirstShippingCodeFromShippingMethod(
+                        backOrderAll?.plants,
+                      ),
+                      quantity: 0,
+                      plant: getFirstPlantFromPlants(backOrderAll?.plants),
+                      backOrderAll: true,
+                    }),
+                  );
                 } else {
                   setSelectedSection(undefined);
                 }
@@ -726,7 +743,9 @@ const CartItemShippingMethod = ({
           {selectedSection === BACK_ORDER && (
             <div className="ml-[1.625rem]">
               <BackOrderInfoBanner
-                date={getFirstBackOrderDateFromPlants(backOrderAll?.plants) ?? "N/A"}
+                date={
+                  getFirstBackOrderDateFromPlants(backOrderAll?.plants) ?? "N/A"
+                }
               />
             </div>
           )}
