@@ -76,7 +76,7 @@ const ShoppingList = ({ token }: { token: string }) => {
           <Tabs
             onValueChange={setSelectedAddressShoppingListId}
             defaultValue={shoppingLists.lists[0]?.listId}
-            className="overflow-y-auto"
+            className="max-w-screen-md overflow-x-auto overflow-y-hidden"
           >
             <TabsList>
               {shoppingLists.lists.map((list) => (
