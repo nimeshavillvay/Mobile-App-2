@@ -14,19 +14,19 @@ import { TableCell, TableRow } from "@/old/_components/ui/table";
 import { cn } from "@/old/_utils/helpers";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { WurthFullBlack } from "@repo/web-ui/components/logos/wurth-full-black";
+import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import dayjs from "dayjs";
 import Image from "next/image";
 import Link from "next/link";
 import { Suspense, useId, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { IoMdHeart, IoMdHeartEmpty } from "react-icons/io";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import * as z from "zod";
-import AddToShoppingListDialog from "../shopping-lists/add-to-shopping-list-dialog";
 import ItemAttributes from "./_item-attributes/item-attributes";
 import ItemPrices from "./_item-prices/item-prices";
 import { generateItemUrl, isItemError } from "./client-helpers";
 import { DATE_FORMAT } from "./constants";
+import FavoriteButton from "./favorite-button";
 import type { DetailedPurchasedItem } from "./types";
 
 const schema = z.object({
@@ -44,10 +44,6 @@ type PurchasedItemRowProps = {
 const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
   const [showItemAttributes, setShowItemAttributes] = useState(false);
   const [showMyPrice, setShowMyPrice] = useState(false);
-  const [showShoppingListsDialog, setShowShoppingListsDialog] = useState(false);
-  const [isFavouriteItem, setIsFavouriteItem] = useState(
-    item.isFavorite ?? false,
-  );
 
   const id = useId();
   const quantityId = `quantity-${id}`;
@@ -383,17 +379,9 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
                   Add to cart
                 </Button>
 
-                <Button
-                  type="button"
-                  variant="ghost"
-                  onClick={() => setShowShoppingListsDialog(true)}
-                >
-                  {isFavouriteItem ? (
-                    <IoMdHeart className="text-2xl text-brand-primary" />
-                  ) : (
-                    <IoMdHeartEmpty className="text-2xl text-brand-gray-500" />
-                  )}
-                </Button>
+                <Suspense fallback={<Skeleton className="h-9 w-14" />}>
+                  <FavoriteButton productId={item.productId} />
+                </Suspense>
               </form>
             </TableCell>
           </TableRow>
@@ -412,16 +400,6 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
           </TableRow>
         )}
       </FormProvider>
-
-      <AddToShoppingListDialog
-        open={showShoppingListsDialog}
-        setOpenAddToShoppingListDialog={setShowShoppingListsDialog}
-        productId={item.productId}
-        favouriteIds={item.favouriteIds}
-        setUpdatedIsFavorite={(isFavourite) => {
-          setIsFavouriteItem(isFavourite);
-        }}
-      />
     </>
   );
 };

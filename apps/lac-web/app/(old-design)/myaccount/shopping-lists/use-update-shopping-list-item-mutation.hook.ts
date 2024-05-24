@@ -44,9 +44,11 @@ const useUpdateShoppingListItemMutation = () => {
         variant: "destructive",
       });
     },
-    onSettled: (productId, token) => {
+    onSettled: (data, error, variables) => {
+      const productIdsAsString = [variables.productId].join("-");
+
       queryClient.invalidateQueries({
-        queryKey: ["user", "favourite-skus", token, [productId]],
+        queryKey: ["user", `favourite-skus-${productIdsAsString}`],
       });
     },
   });

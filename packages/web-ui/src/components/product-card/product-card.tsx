@@ -307,7 +307,7 @@ const ProductCardVariantSelector = ({
           addToCart={addToCart}
           disabled={disabled}
           isFavourite={isFavourite}
-          onClickShoppingList={() => onClickShoppingList}
+          onClickShoppingList={onClickShoppingList}
         />
       ) : (
         <Link

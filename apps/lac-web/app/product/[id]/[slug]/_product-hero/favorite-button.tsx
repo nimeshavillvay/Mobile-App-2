@@ -20,16 +20,14 @@ const FavoriteButton = ({ productId }: FavoriteButtonProps) => {
   const [cookies] = useCookies();
   const sessionToken = cookies[SESSION_TOKEN_COOKIE];
 
+  const [showShoppingListsDialog, setShowShoppingListsDialog] = useState(false);
+
   const { data: favouriteSKUs } = useSuspenseFavouriteSKUs(sessionToken, [
     productId.toString(),
   ]);
 
   const favouriteSKU = favouriteSKUs[0];
-
-  const [isFavourite, setIsFavourite] = useState(
-    favouriteSKU?.isFavourite ?? false,
-  );
-  const [showShoppingListsDialog, setShowShoppingListsDialog] = useState(false);
+  const isFavourite = favouriteSKU?.isFavourite ?? false;
 
   const router = useRouter();
 
@@ -62,9 +60,6 @@ const FavoriteButton = ({ productId }: FavoriteButtonProps) => {
           setOpenAddToShoppingListDialog={setShowShoppingListsDialog}
           productId={productId}
           favouriteIds={favouriteSKU?.favouriteIds ?? []}
-          setUpdatedIsFavorite={(isFavourite) => {
-            setIsFavourite(isFavourite);
-          }}
         />
       )}
     </>

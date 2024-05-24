@@ -1,11 +1,25 @@
 import { api } from "@/_lib/api";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
+type FavouriteSku = {
+  productid: number;
+  isFavourite: boolean;
+  favoriteIds: string[];
+};
+
 const useSuspenseFavouriteSKUs = (token: string, productIds: string[]) => {
+  const productIdsAsString = productIds.join("-");
+
   return useSuspenseQuery({
-    queryKey: ["user", "favourite-skus", token, productIds],
-    queryFn: () =>
-      api
+    queryKey: [
+      "user",
+      `favourite-skus-${productIdsAsString}`,
+      productIds,
+      token,
+    ],
+    queryFn: async () => {
+      await new Promise((resolve) => setTimeout(resolve, 5000)); // Add a 5-second timeout
+      return api
         .post("rest/my-favourite/favourite-skus", {
           headers: {
             authorization: `Bearer ${token}`,
@@ -14,12 +28,8 @@ const useSuspenseFavouriteSKUs = (token: string, productIds: string[]) => {
             products: productIds,
           },
         })
-        .json<
-          {
-            productid: number;
-            isFavourite: boolean;
-          }[]
-        >(),
+        .json<FavouriteSku[]>();
+    },
     select: (
       data,
     ): {
@@ -27,10 +37,10 @@ const useSuspenseFavouriteSKUs = (token: string, productIds: string[]) => {
       isFavourite: boolean;
       favouriteIds: string[];
     }[] => {
-      return data.map((data: { productid: number; isFavourite: boolean }) => ({
+      return data.map((data: FavouriteSku) => ({
         productId: data.productid,
         isFavourite: !!data.isFavourite,
-        favouriteIds: ["124", "114", "115"],
+        favouriteIds: data.favoriteIds,
       }));
     },
   });

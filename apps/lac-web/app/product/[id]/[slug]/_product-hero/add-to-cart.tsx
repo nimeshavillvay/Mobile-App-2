@@ -6,6 +6,7 @@ import AddToCartForm from "./_add-to-cart-form";
 import LocationStocks from "./_location-stocks";
 import RegionalExclusionNotice from "./_regional-exclusion-notice";
 import FavoriteButton from "./favorite-button";
+import FavoriteButtonSkeleton from "./favorite-button-skeleton";
 
 type AddToCartProps = {
   productId: number;
@@ -56,7 +57,9 @@ const AddToCart = ({
             <span>Compare</span>
           </Button>
 
-          <FavoriteButton productId={productId} />
+          <Suspense fallback={<FavoriteButtonSkeleton />}>
+            <FavoriteButton productId={productId} />
+          </Suspense>
         </div>
 
         <Suspense>

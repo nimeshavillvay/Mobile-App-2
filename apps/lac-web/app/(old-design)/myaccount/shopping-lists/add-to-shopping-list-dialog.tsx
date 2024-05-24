@@ -33,7 +33,6 @@ type AddToShoppingListDialogProps = {
   setOpenAddToShoppingListDialog: Dispatch<SetStateAction<boolean>>;
   productId: number;
   favouriteIds: string[];
-  setUpdatedIsFavorite: Dispatch<SetStateAction<boolean>>;
 };
 
 const AddToShoppingListDialog = ({
@@ -41,7 +40,6 @@ const AddToShoppingListDialog = ({
   setOpenAddToShoppingListDialog,
   productId,
   favouriteIds,
-  setUpdatedIsFavorite,
 }: AddToShoppingListDialogProps) => {
   const { toast } = useToast();
 
@@ -105,7 +103,6 @@ const AddToShoppingListDialog = ({
           });
           setOpenAddToShoppingListDialog(false);
           setIsLoading(false);
-          setUpdatedIsFavorite(selectedShoppingLists.length > 0);
         },
       },
     );
