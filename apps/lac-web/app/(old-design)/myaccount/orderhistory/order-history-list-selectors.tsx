@@ -14,7 +14,7 @@ import {
 import { updateSearchParams } from "@/old/_utils/client-helpers";
 import dayjs from "dayjs";
 import { useSearchParams } from "next/navigation";
-import { useId, useState } from "react";
+import { useId, useRef, useState } from "react";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import {
   CUSTOM_DURATION,
@@ -75,10 +75,12 @@ const OrderHistoryListSelectors = ({
   const [poNos, setPoNos] = useState<number[]>([]);
   const [jobNames, setJobNames] = useState<number[]>([]);
 
-  const [isResetSelected, setIsResetSelected] = useState(false);
-
   const formattedFromDate = dayjs(fromDate).format(URL_DATE_FORMAT);
   const formattedToDate = dayjs(toDate).format(URL_DATE_FORMAT);
+
+  const resetPoNosRef = useRef(false);
+  const resetOrderStatusesRef = useRef(false);
+  const resetJobNamesRef = useRef(false);
 
   const id = useId();
   const durationId = `duration-${id}`;
@@ -155,7 +157,9 @@ const OrderHistoryListSelectors = ({
     setOrderTypes([]);
     setPoNos([]);
     setJobNames([]);
-    setIsResetSelected(true);
+    resetPoNosRef.current = true;
+    resetJobNamesRef.current = true;
+    resetOrderStatusesRef.current = true;
 
     const params = new URLSearchParams();
 
@@ -278,31 +282,25 @@ const OrderHistoryListSelectors = ({
             <MultiSelect
               label="PO No."
               flag="po"
-              isResetSelected={isResetSelected}
-              setIsResetSelected={setIsResetSelected}
               data={poNoFilter?.values ?? []}
               onValuesChange={(values) => handlePONosChange(values)}
-              onClear={() => setPoNos([])}
+              resetRef={resetPoNosRef}
             />
 
             <MultiSelect
               label="Job Name"
               flag="job"
-              isResetSelected={isResetSelected}
-              setIsResetSelected={setIsResetSelected}
               data={jobNameFilter?.values ?? []}
               onValuesChange={(values) => handleJobNamesChange(values)}
-              onClear={() => setJobNames([])}
+              resetRef={resetJobNamesRef}
             />
 
             <MultiSelect
               label="Order Status"
               flag="status"
-              isResetSelected={isResetSelected}
-              setIsResetSelected={setIsResetSelected}
               data={statusFilter?.values ?? []}
               onValuesChange={(values) => handleOrderStatusChange(values)}
-              onClear={() => setOrderStatuses([])}
+              resetRef={resetOrderStatusesRef}
             />
           </div>
         </div>
