@@ -266,6 +266,30 @@ const CartItemShippingMethod = ({
     return shippingMethods?.at(0)?.code ?? "";
   };
 
+  const getAlternativeBranchesConfig = ({
+    plants,
+    method,
+  }: {
+    plants: {
+      index: number;
+      quantity?: number;
+      plant: string;
+    }[];
+    method: string;
+  }) => {
+    let config: Partial<CartItemConfiguration> = {};
+
+    const data = plants?.map((plant) => ({
+      [`avail_${plant?.index}`]: (plant?.quantity ?? 0).toString(),
+      [`plant_${plant?.index}`]: plant?.plant ?? "",
+      [`shipping_method_${plant?.index}`]: method,
+    }));
+
+    config = Object.assign(config, ...data);
+
+    return config;
+  };
+
   const handleDeliveryOptionSelect = ({
     checked,
     selectedOption,
@@ -294,25 +318,12 @@ const CartItemShippingMethod = ({
             }),
           );
         } else if (shipAlternativeBranch) {
-          const alternativeBranchShippingDetails = {
-            avail_1: (
-              shipAlternativeBranch?.plants[0]?.quantity ?? 0
-            ).toString(),
-            avail_2: (
-              shipAlternativeBranch?.plants[1]?.quantity ?? 0
-            ).toString(),
-            avail_3: (
-              shipAlternativeBranch?.plants[2]?.quantity ?? 0
-            ).toString(),
-            plant_1: shipAlternativeBranch?.plants[0]?.plant ?? "",
-            plant_2: shipAlternativeBranch?.plants[1]?.plant ?? "",
-            plant_3: shipAlternativeBranch?.plants[2]?.plant ?? "",
-            shipping_method_1: selectedShippingMethod,
-            shipping_method_2: selectedShippingMethod,
-            shipping_method_3: selectedShippingMethod,
-          };
-          console.log(alternativeBranchShippingDetails);
-          onSave(alternativeBranchShippingDetails);
+          onSave(
+            getAlternativeBranchesConfig({
+              plants: shipAlternativeBranch.plants,
+              method: selectedShippingMethod,
+            }),
+          );
         }
       }
       // Back order all can have only this config
@@ -336,27 +347,6 @@ const CartItemShippingMethod = ({
   const handleShipToMeMethod = (shippingMethod: string) => {
     setSelectedShippingMethod(shippingMethod);
 
-    const alternativeBranchShippingDetails = {
-      ...createCartItemConfig({
-        method: shippingMethod,
-        quantity: shipAlternativeBranch?.plants[0]?.quantity ?? 0,
-        plant: shipAlternativeBranch?.plants[0]?.plant ?? "",
-      }),
-      avail_2: (shipAlternativeBranch?.plants[1]?.quantity ?? 0).toString(),
-      avail_3: (shipAlternativeBranch?.plants[2]?.quantity ?? 0).toString(),
-      plant_2: shipAlternativeBranch?.plants[1]?.plant ?? "",
-      plant_3: shipAlternativeBranch?.plants[2]?.plant ?? "",
-      shipping_method_2: shippingMethod,
-      shipping_method_3: shippingMethod,
-    };
-
-    // TODO - CHECK IF THIS IS POSSIBLE ?
-    // shipAlternativeBranch?.plants?.forEach(plant => {
-    //   alternativeBranchShippingDetails[`avail_${plant.index}` ] = plant.quantity ?? 0;
-    //   alternativeBranchShippingDetails[`plant_1`] = plant.plant ?? "";
-    //
-    // })
-
     if (shippingMethod) {
       switch (selectedShipToMe) {
         case ALL_AVAILABLE:
@@ -378,7 +368,14 @@ const CartItemShippingMethod = ({
           );
           break;
         case ALTERNATIVE_BRANCHES:
-          onSave(alternativeBranchShippingDetails);
+          if (shipAlternativeBranch) {
+            onSave(
+              getAlternativeBranchesConfig({
+                plants: shipAlternativeBranch.plants,
+                method: shippingMethod,
+              }),
+            );
+          }
           break;
       }
     }
@@ -386,41 +383,30 @@ const CartItemShippingMethod = ({
 
   const handleShipToMeOptions = (shipToMe: string) => {
     setSelectedShipToMe(shipToMe);
+    // TODO - Check if there is ship-to default shipping
     // Reset the selected shipping method to default
     const defaultMethod = defaultShippingOption?.code;
 
     if (defaultMethod) {
       setSelectedShippingMethod(defaultMethod);
 
-      switch (shipToMe) {
-        case TAKE_ON_HAND:
-          onSave(
-            createCartItemConfig({
-              method: defaultMethod,
-              quantity: takeOnHandPlant?.quantity ?? 0,
-              plant: takeOnHandPlant?.plant ?? "",
-            }),
-          );
-          break;
-        case ALTERNATIVE_BRANCHES:
-          onSave({
-            ...createCartItemConfig({
-              method: defaultMethod,
-              quantity: shipAlternativeBranch?.plants[0]?.quantity ?? 0,
-              plant: shipAlternativeBranch?.plants[0]?.plant ?? "",
-            }),
-            avail_2: (
-              shipAlternativeBranch?.plants[1]?.quantity ?? 0
-            ).toString(),
-            plant_2: shipAlternativeBranch?.plants[1]?.plant ?? "",
-            avail_3: (
-              shipAlternativeBranch?.plants[2]?.quantity ?? 0
-            ).toString(),
-            plant_3: shipAlternativeBranch?.plants[2]?.plant ?? "",
-            shipping_method_2: defaultMethod,
-            shipping_method_3: defaultMethod,
-          });
-          break;
+      if (shipToMe === TAKE_ON_HAND && takeOnHand) {
+        onSave(
+          createCartItemConfig({
+            method: defaultMethod,
+            quantity: takeOnHandPlant?.quantity ?? 0,
+            plant: takeOnHandPlant?.plant ?? "",
+          }),
+        );
+      }
+
+      if (shipToMe === ALTERNATIVE_BRANCHES && shipAlternativeBranch) {
+        onSave(
+          getAlternativeBranchesConfig({
+            plants: shipAlternativeBranch?.plants,
+            method: defaultMethod,
+          }),
+        );
       }
     }
   };
