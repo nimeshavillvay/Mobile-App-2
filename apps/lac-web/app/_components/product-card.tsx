@@ -147,7 +147,7 @@ const ProductCard = ({
                 title: variant.title,
               }))}
               addToCart={addToCart}
-              isFavourite={false}
+              isFavorite={false}
               onClickShoppingList={() => {
                 router.push("/sign-in");
               }}
@@ -166,7 +166,7 @@ const ProductCard = ({
             ) : (
               <ProductCardActions
                 addToCart={addToCart}
-                isFavourite={false}
+                isFavorite={false}
                 onClickShoppingList={() => {
                   router.push("/sign-in");
                 }}

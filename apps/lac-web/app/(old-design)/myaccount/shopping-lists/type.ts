@@ -60,7 +60,7 @@ export type ShoppingListItemsElement = {
   itemName?: string;
   img?: string;
   slug?: string;
-  isFavourite?: boolean;
+  isFavorite?: boolean;
   isComparison?: boolean;
   txtHazardous?: string;
   txtSpecialShipping?: string;

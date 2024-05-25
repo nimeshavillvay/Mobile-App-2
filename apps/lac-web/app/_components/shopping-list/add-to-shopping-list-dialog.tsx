@@ -34,7 +34,7 @@ type AddToShoppingListDialogProps = {
   open: boolean;
   setOpenAddToShoppingListDialog: Dispatch<SetStateAction<boolean>>;
   productId: number;
-  favouriteListIds: string[];
+  favoriteListIds: string[];
   token: string;
 };
 
@@ -42,7 +42,7 @@ const AddToShoppingListDialog = ({
   open,
   setOpenAddToShoppingListDialog,
   productId,
-  favouriteListIds,
+  favoriteListIds,
   token,
 }: AddToShoppingListDialogProps) => {
   const { toast } = useToast();
@@ -55,7 +55,7 @@ const AddToShoppingListDialog = ({
   const shoppingLists = shoppingListsQuery?.data;
 
   const [selectedShoppingLists, setSelectedShoppingLists] =
-    useState<string[]>(favouriteListIds);
+    useState<string[]>(favoriteListIds);
   const [isLoading, setIsLoading] = useState(false);
 
   const shoppingListNameSchema = z.object({

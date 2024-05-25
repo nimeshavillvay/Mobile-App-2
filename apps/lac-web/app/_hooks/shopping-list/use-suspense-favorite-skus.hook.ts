@@ -1,19 +1,19 @@
 import { api } from "@/_lib/api";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
-type FavouriteSku = {
+type FavoriteSku = {
   productid: number;
   isFavourite: boolean;
   favoriteIds: string[];
 };
 
-const useSuspenseFavouriteSKUs = (token: string, productIds: string[]) => {
+const useSuspenseFavoriteSKUs = (token: string, productIds: string[]) => {
   const productIdsAsString = productIds.join("-");
 
   return useSuspenseQuery({
     queryKey: [
       "user",
-      `favourite-skus-${productIdsAsString}`,
+      `favorite-skus-${productIdsAsString}`,
       productIds,
       token,
     ],
@@ -27,22 +27,22 @@ const useSuspenseFavouriteSKUs = (token: string, productIds: string[]) => {
             products: productIds,
           },
         })
-        .json<FavouriteSku[]>();
+        .json<FavoriteSku[]>();
     },
     select: (
       data,
     ): {
       productId: number;
-      isFavourite: boolean;
-      favouriteListIds: string[];
+      isFavorite: boolean;
+      favoriteListIds: string[];
     }[] => {
-      return data.map((data: FavouriteSku) => ({
+      return data.map((data: FavoriteSku) => ({
         productId: data.productid,
-        isFavourite: !!data.isFavourite,
-        favouriteListIds: data.favoriteIds,
+        isFavorite: !!data.isFavourite,
+        favoriteListIds: data.favoriteIds,
       }));
     },
   });
 };
 
-export default useSuspenseFavouriteSKUs;
+export default useSuspenseFavoriteSKUs;

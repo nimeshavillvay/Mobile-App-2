@@ -227,12 +227,12 @@ const ProductCardPrice = ({
 
 const ProductCardActions = ({
   addToCart,
-  isFavourite,
+  isFavorite,
   onClickShoppingList,
   disabled = false,
 }: {
   addToCart: () => void;
-  isFavourite: boolean;
+  isFavorite: boolean;
   onClickShoppingList: () => void;
   disabled?: boolean;
 }) => {
@@ -254,7 +254,7 @@ const ProductCardActions = ({
         disabled={disabled}
         onClick={onClickShoppingList}
       >
-        {isFavourite ? (
+        {isFavorite ? (
           <HeartFilled className="size-4" />
         ) : (
           <HeartOutline className="size-4" />
@@ -271,14 +271,14 @@ const ProductCardVariantSelector = ({
   onValueChange,
   addToCart,
   disabled,
-  isFavourite,
+  isFavorite,
   onClickShoppingList,
 }: {
   href: string;
   variants: { value: string; title: string }[];
   value?: string;
   onValueChange: (value: string) => void;
-  isFavourite: boolean;
+  isFavorite: boolean;
   onClickShoppingList: () => void;
 } & ComponentProps<typeof ProductCardActions>) => {
   return (
@@ -306,7 +306,7 @@ const ProductCardVariantSelector = ({
         <ProductCardActions
           addToCart={addToCart}
           disabled={disabled}
-          isFavourite={isFavourite}
+          isFavorite={isFavorite}
           onClickShoppingList={onClickShoppingList}
         />
       ) : (

@@ -1,5 +1,5 @@
 import AddToShoppingListDialog from "@/_components/shopping-list/add-to-shopping-list-dialog";
-import useSuspenseFavouriteSKUs from "@/_hooks/shopping-list/use-suspense-favourite-skus.hook";
+import useSuspenseFavoriteSKUs from "@/_hooks/shopping-list/use-suspense-favorite-skus.hook";
 import { ProductCardVariantSelector } from "@repo/web-ui/components/product-card";
 import { useState } from "react";
 
@@ -29,12 +29,12 @@ const ProductCardVariantSelectorForLoggedIn = ({
 }) => {
   const [showShoppingListsDialog, setShowShoppingListsDialog] = useState(false);
 
-  const { data: favouriteSKUs } = useSuspenseFavouriteSKUs(token, [
+  const { data: favoriteSKUs } = useSuspenseFavoriteSKUs(token, [
     selectedId ?? productVariantId,
   ]);
 
-  const favouriteSKU = favouriteSKUs[0];
-  const isFavourite = favouriteSKU?.isFavourite ?? false;
+  const favoriteSKU = favoriteSKUs[0];
+  const isFavorite = favoriteSKU?.isFavorite ?? false;
 
   return (
     <>
@@ -47,7 +47,7 @@ const ProductCardVariantSelectorForLoggedIn = ({
           title: variant.title,
         }))}
         addToCart={addToCart}
-        isFavourite={isFavourite}
+        isFavorite={isFavorite}
         onClickShoppingList={() => {
           setShowShoppingListsDialog(true);
         }}
@@ -57,7 +57,7 @@ const ProductCardVariantSelectorForLoggedIn = ({
         open={showShoppingListsDialog}
         setOpenAddToShoppingListDialog={setShowShoppingListsDialog}
         productId={parseInt(productVariantId)}
-        favouriteListIds={favouriteSKU?.favouriteListIds ?? []}
+        favoriteListIds={favoriteSKU?.favoriteListIds ?? []}
         token={token}
       />
     </>

@@ -45,7 +45,7 @@ const useUpdateShoppingListItemMutation = () => {
       const productIdsAsString = [variables.productId].join("-");
 
       queryClient.invalidateQueries({
-        queryKey: ["user", `favourite-skus-${productIdsAsString}`],
+        queryKey: ["user", `favorite-skus-${productIdsAsString}`],
       });
     },
   });

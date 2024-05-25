@@ -48,7 +48,7 @@ export type OldPurchasedProduct = {
   product: string;
   id: string;
   isDiscontinued: boolean;
-  isFavourite: boolean;
+  isFavorite: boolean;
   orderDate: string;
   sku: string;
   totalItem: string;

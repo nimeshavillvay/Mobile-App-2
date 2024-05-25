@@ -1,7 +1,7 @@
 "use client";
 
 import AddToShoppingListDialog from "@/_components/shopping-list/add-to-shopping-list-dialog";
-import useSuspenseFavouriteSKUs from "@/_hooks/shopping-list/use-suspense-favourite-skus.hook";
+import useSuspenseFavoriteSKUs from "@/_hooks/shopping-list/use-suspense-favorite-skus.hook";
 import { HeartFilled } from "@repo/web-ui/components/icons/heart-filled";
 import { HeartOutline } from "@repo/web-ui/components/icons/heart-outline";
 import { Button } from "@repo/web-ui/components/ui/button";
@@ -20,13 +20,13 @@ const FavoriteButtonForLoggedIn = ({
 }: FavoriteButtonProps) => {
   const [showShoppingListsDialog, setShowShoppingListsDialog] = useState(false);
 
-  const { data: favouriteSKUs } = useSuspenseFavouriteSKUs(token, [
+  const { data: favoriteSKUs } = useSuspenseFavoriteSKUs(token, [
     productId.toString(),
   ]);
 
-  const favouriteSKU = favouriteSKUs[0];
-  const isFavourite = favouriteSKU?.isFavourite ?? false;
-  const favoriteListIds = favouriteSKU?.favouriteListIds ?? [];
+  const favoriteSKU = favoriteSKUs[0];
+  const isFavorite = favoriteSKU?.isFavorite ?? false;
+  const favoriteListIds = favoriteSKU?.favoriteListIds ?? [];
 
   return (
     <>
@@ -40,7 +40,7 @@ const FavoriteButtonForLoggedIn = ({
         >
           <span className="text-[13px] leading-5">Add to favorite</span>
 
-          {isFavourite ? (
+          {isFavorite ? (
             <HeartFilled className="size-4" />
           ) : (
             <HeartOutline className="size-4" />
@@ -56,7 +56,7 @@ const FavoriteButtonForLoggedIn = ({
             setShowShoppingListsDialog(true);
           }}
         >
-          {isFavourite ? (
+          {isFavorite ? (
             <HeartFilled className="size-4" />
           ) : (
             <HeartOutline className="size-4" />
@@ -70,7 +70,7 @@ const FavoriteButtonForLoggedIn = ({
         open={showShoppingListsDialog}
         setOpenAddToShoppingListDialog={setShowShoppingListsDialog}
         productId={productId}
-        favouriteListIds={favoriteListIds}
+        favoriteListIds={favoriteListIds}
         token={token}
       />
     </>
