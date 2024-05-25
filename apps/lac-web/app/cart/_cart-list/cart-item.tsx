@@ -1,3 +1,4 @@
+import useDeleteCartItemMutation from "@/_hooks/cart/use-delete-cart-item-mutation.hook";
 import useUpdateCartItemMutation from "@/_hooks/cart/use-update-cart-item-mutation.hook";
 import useSuspenseCheckAvailability from "@/_hooks/product/use-suspense-check-availability.hook";
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
@@ -85,6 +86,7 @@ const CartItem = ({
   });
 
   const updateCartConfigMutation = useUpdateCartItemMutation(token);
+  const deleteCartItemMutation = useDeleteCartItemMutation(token);
 
   const handleSave = () => {
     const data = getValues();
@@ -114,6 +116,12 @@ const CartItem = ({
         },
       },
     ]);
+  };
+
+  const handleDeleteCartItem = () => {
+    deleteCartItemMutation.mutate({
+      products: [{ cartid: product.cartItemId }],
+    });
   };
 
   return (
@@ -259,6 +267,7 @@ const CartItem = ({
           <Button
             variant="ghost"
             className="h-fit w-full justify-end px-0 py-0 text-wurth-red-650"
+            onClick={() => handleDeleteCartItem()}
           >
             <span className="text-[13px] leading-5">Delete</span>
 
