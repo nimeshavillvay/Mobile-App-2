@@ -1,19 +1,20 @@
 "use client";
 
+import useSuspenseWillCallPlant from "@/_header/_will-call-plant/use-suspense-will-call-plant.hook";
 import useSuspenseCart from "@/_hooks/cart/use-suspense-cart.hook";
-import type { Plant, ShippingMethod } from "@/_lib/types";
+import type { Plant } from "@/_lib/types";
 import { Suspense } from "react";
 import CartItemFallback from "../cart-item-fallback";
 import CartItem from "./cart-item";
 
 type CartListProps = {
   token: string;
-  shippingMethods: ShippingMethod[];
   plants: Plant[];
 };
 
-const CartList = ({ token, shippingMethods, plants }: CartListProps) => {
+const CartList = ({ token, plants }: CartListProps) => {
   const { data } = useSuspenseCart(token);
+  const willCallPlantQuery = useSuspenseWillCallPlant(token);
 
   return (
     <ul className="flex flex-col">
@@ -38,9 +39,9 @@ const CartList = ({ token, shippingMethods, plants }: CartListProps) => {
                 image: item.itemInfo.image,
                 cartItemId: item.cartItemId,
               }}
-              shippingMethods={shippingMethods}
               plants={plants}
               cartConfiguration={data.configuration}
+              willCallPlant={willCallPlantQuery?.data}
             />
           </Suspense>
         </li>

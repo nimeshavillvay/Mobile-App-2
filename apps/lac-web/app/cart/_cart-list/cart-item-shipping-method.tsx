@@ -64,7 +64,6 @@ const LIMITED_STOCK = "limitedStock";
 const NOT_IN_STOCK = "notInStock";
 
 type CartItemShippingMethodProps = {
-  shippingMethods: ShippingMethod[];
   plants: Plant[];
   availability: Availability;
   setSelectedWillCallPlant: (plant: string) => void;
@@ -299,14 +298,14 @@ const CartItemShippingMethod = ({
   }) => {
     if (checked) {
       setSelectedSection(selectedOption);
-      // Save the line item config
+      // Ship to me configs
       if (selectedOption === SHIP_TO_ME) {
         if (availableAll) {
           onSave(
             createCartItemConfig({
               method: selectedShippingMethod,
               quantity: availableAllPlant?.quantity ?? 0,
-              plant: availableAllPlant?.plant ?? "",
+              plant: availableAllPlant?.plant ?? EMPTY_STRING,
             }),
           );
         } else if (takeOnHand) {
@@ -314,7 +313,7 @@ const CartItemShippingMethod = ({
             createCartItemConfig({
               method: selectedShippingMethod,
               quantity: takeOnHandPlant?.quantity ?? 0,
-              plant: takeOnHandPlant?.plant ?? "",
+              plant: takeOnHandPlant?.plant ?? EMPTY_STRING,
             }),
           );
         } else if (shipAlternativeBranch) {
@@ -325,6 +324,21 @@ const CartItemShippingMethod = ({
             }),
           );
         }
+      }
+      // Will call pickup configs
+      if (selectedOption === WILL_CALL && willCallAnywhere) {
+        onSave({
+          ...createCartItemConfig({
+            method: EMPTY_STRING,
+            quantity: 0,
+            plant: EMPTY_STRING,
+          }),
+          will_call_avail: (willCallAnywhere?.status === NOT_IN_STOCK
+            ? 0
+            : willCallAnywhere?.willCallQuantity ?? 0
+          ).toString(),
+          will_call_plant: willCallAnywhere?.willCallPlant ?? EMPTY_STRING,
+        });
       }
       // Back order all can have only this config
       if (selectedOption === BACK_ORDER && backOrderAll) {
@@ -354,7 +368,7 @@ const CartItemShippingMethod = ({
             createCartItemConfig({
               method: shippingMethod,
               quantity: availableAllPlant?.quantity ?? 0,
-              plant: availableAllPlant?.plant ?? "",
+              plant: availableAllPlant?.plant ?? EMPTY_STRING,
             }),
           );
           break;
@@ -363,7 +377,7 @@ const CartItemShippingMethod = ({
             createCartItemConfig({
               method: shippingMethod,
               quantity: takeOnHandPlant?.quantity ?? 0,
-              plant: takeOnHandPlant?.plant ?? "",
+              plant: takeOnHandPlant?.plant ?? EMPTY_STRING,
             }),
           );
           break;
@@ -395,7 +409,7 @@ const CartItemShippingMethod = ({
           createCartItemConfig({
             method: defaultMethod,
             quantity: takeOnHandPlant?.quantity ?? 0,
-            plant: takeOnHandPlant?.plant ?? "",
+            plant: takeOnHandPlant?.plant ?? EMPTY_STRING,
           }),
         );
       }
@@ -422,6 +436,23 @@ const CartItemShippingMethod = ({
       setSelectedShipToMe(ALTERNATIVE_BRANCHES);
     }
   }, [availableAll, takeOnHand, shipAlternativeBranch]);
+
+  useEffect(() => {
+    if (willCallAnywhere) {
+      onSave({
+        ...createCartItemConfig({
+          method: EMPTY_STRING,
+          quantity: 0,
+          plant: EMPTY_STRING,
+        }),
+        will_call_avail: (willCallAnywhere?.status === NOT_IN_STOCK
+          ? 0
+          : willCallAnywhere?.willCallQuantity ?? 0
+        ).toString(),
+        will_call_plant: willCallAnywhere?.willCallPlant ?? EMPTY_STRING,
+      });
+    }
+  }, [willCallAnywhere]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <ul className="flex flex-col gap-3">
@@ -684,7 +715,7 @@ const CartItemShippingMethod = ({
             <Select
               disabled={selectedSection !== WILL_CALL}
               value={selectedWillCallPlant}
-              onValueChange={(val) => setSelectedWillCallPlant(val)}
+              onValueChange={(plant) => setSelectedWillCallPlant(plant)}
             >
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select a store" />
