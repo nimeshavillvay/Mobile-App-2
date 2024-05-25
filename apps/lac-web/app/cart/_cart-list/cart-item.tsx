@@ -271,6 +271,7 @@ const CartItem = ({
             variant="ghost"
             className="h-fit w-full justify-end px-0 py-0 text-wurth-red-650"
             onClick={() => handleDeleteCartItem()}
+            disabled={deleteCartItemMutation.isPending}
           >
             <span className="text-[13px] leading-5">Delete</span>
 

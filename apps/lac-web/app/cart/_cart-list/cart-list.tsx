@@ -20,12 +20,12 @@ const CartList = ({ token, plants }: CartListProps) => {
     <ul className="flex flex-col">
       {data.cartItems.map((item) => (
         <li
-          key={item.itemInfo.productId}
+          key={`${item.itemInfo.productId}-${item.cartItemId}`}
           className="border-b border-b-wurth-gray-250 px-4 pb-7 md:px-0 [&:not(:first-child)]:pt-7"
         >
           <Suspense fallback={<CartItemFallback />}>
             <CartItem
-              key={item.itemInfo.productId}
+              key={`${item.itemInfo.productId}-${item.cartItemId}`}
               token={token}
               product={{
                 id: item.itemInfo.productId,

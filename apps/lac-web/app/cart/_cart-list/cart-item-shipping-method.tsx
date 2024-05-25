@@ -34,7 +34,7 @@ import {
   TableRow,
 } from "@repo/web-ui/components/ui/table";
 import dayjs from "dayjs";
-import { useEffect, useId, useState } from "react";
+import { useEffect, useId, useMemo, useState } from "react";
 import type { Availability, AvailabilityOption } from "../types";
 import type { OptionPlant } from "./types";
 
@@ -152,6 +152,7 @@ const CartItemShippingMethod = ({
   );
 
   const [selectedShipToMe, setSelectedShipToMe] = useState(() => {
+    // State initialization based on availability options
     if (availableAll) {
       return ALL_AVAILABLE;
     } else if (takeOnHand) {
@@ -159,7 +160,7 @@ const CartItemShippingMethod = ({
     } else if (shipAlternativeBranch) {
       return ALTERNATIVE_BRANCHES;
     }
-
+    // Return a default value here if none of the conditions match
     return undefined;
   });
 
@@ -425,9 +426,8 @@ const CartItemShippingMethod = ({
     }
   };
 
-  useEffect(() => {
-    // TODO - Will remove this once found a better solution.
-    // Keeping this for now to unblock QAs
+  // Compute selectedShipToMe value whenever options change
+  useMemo(() => {
     if (availableAll) {
       setSelectedShipToMe(ALL_AVAILABLE);
     } else if (takeOnHand) {
@@ -438,7 +438,9 @@ const CartItemShippingMethod = ({
   }, [availableAll, takeOnHand, shipAlternativeBranch]);
 
   useEffect(() => {
-    if (willCallAnywhere) {
+    // TODO - Will remove useEffect hook once found a better solution.
+    // Keeping this for now to unblock QAs
+    if (selectedSection === WILL_CALL && willCallAnywhere) {
       onSave({
         ...createCartItemConfig({
           method: EMPTY_STRING,
@@ -452,7 +454,7 @@ const CartItemShippingMethod = ({
         will_call_plant: willCallAnywhere?.willCallPlant ?? EMPTY_STRING,
       });
     }
-  }, [willCallAnywhere]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [selectedSection, willCallAnywhere]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <ul className="flex flex-col gap-3">
