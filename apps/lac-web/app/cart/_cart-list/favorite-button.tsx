@@ -1,90 +1,70 @@
 "use client";
 
-import AddToShoppingListDialog from "@/(old-design)/myaccount/shopping-lists/add-to-shopping-list-dialog";
-import useSuspenseFavouriteSKUs from "@/(old-design)/myaccount/shopping-lists/use-suspense-favourite-skus.hook";
-import useCookies from "@/_hooks/storage/use-cookies.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
-import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
-import { HeartFilled } from "@repo/web-ui/components/icons/heart-filled";
 import { HeartOutline } from "@repo/web-ui/components/icons/heart-outline";
 import { Button } from "@repo/web-ui/components/ui/button";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { Suspense } from "react";
+import FavoriteButtonForLoggedIn from "./favorite-button-for-logged-in";
+import FavoriteButtonSkeleton from "./favorite-button-skeleton";
 
 type FavoriteButtonProps = {
+  token: string;
   productId: number;
   display: "mobile" | "desktop";
 };
 
-const FavoriteButton = ({ productId, display }: FavoriteButtonProps) => {
-  const [cookies] = useCookies();
-  const sessionToken = cookies[SESSION_TOKEN_COOKIE];
-
-  const [showShoppingListsDialog, setShowShoppingListsDialog] = useState(false);
-
-  const { data: favouriteSKUs } = useSuspenseFavouriteSKUs(sessionToken, [
-    productId.toString(),
-  ]);
-
-  const favouriteSKU = favouriteSKUs[0];
-  const isFavourite = favouriteSKU?.isFavourite ?? false;
-  const favoriteIds = favouriteSKU?.favouriteIds ?? [];
-
+const FavoriteButton = ({ token, productId, display }: FavoriteButtonProps) => {
   const router = useRouter();
 
-  const checkLoginQuery = useSuspenseCheckLogin(sessionToken);
+  const checkLoginQuery = useSuspenseCheckLogin(token);
   const isLoggedInUser = checkLoginQuery.data.status_code === "OK";
 
   return (
     <>
-      {display === "desktop" && (
-        <Button
-          variant="ghost"
-          className="h-fit w-full justify-end px-0 py-0"
-          onClick={() => {
-            isLoggedInUser
-              ? setShowShoppingListsDialog(true)
-              : router.push("/sign-in");
-          }}
-        >
-          <span className="text-[13px] leading-5">Add to favorite</span>
-
-          {isFavourite ? (
-            <HeartFilled className="size-4" />
-          ) : (
+      {display === "desktop" &&
+        (isLoggedInUser ? (
+          <Suspense fallback={<FavoriteButtonSkeleton display="desktop" />}>
+            <FavoriteButtonForLoggedIn
+              display="desktop"
+              productId={productId}
+              token={token}
+            />
+          </Suspense>
+        ) : (
+          <Button
+            variant="ghost"
+            className="h-fit w-full justify-end px-0 py-0"
+            onClick={() => {
+              router.push("/sign-in");
+            }}
+          >
+            <span className="text-[13px] leading-5">Add to favorite</span>
             <HeartOutline className="size-4" />
-          )}
-        </Button>
-      )}
+          </Button>
+        ))}
 
-      {display === "mobile" && (
-        <Button
-          variant="subtle"
-          className="w-full"
-          onClick={() => {
-            isLoggedInUser
-              ? setShowShoppingListsDialog(true)
-              : router.push("/sign-in");
-          }}
-        >
-          {isFavourite ? (
-            <HeartFilled className="size-4" />
-          ) : (
+      {display === "mobile" &&
+        (isLoggedInUser ? (
+          <Suspense fallback={<FavoriteButtonSkeleton display="mobile" />}>
+            <FavoriteButtonForLoggedIn
+              display="mobile"
+              productId={productId}
+              token={token}
+            />
+          </Suspense>
+        ) : (
+          <Button
+            variant="subtle"
+            className="w-full"
+            onClick={() => {
+              router.push("/sign-in");
+            }}
+          >
             <HeartOutline className="size-4" />
-          )}
-
-          <span className="sr-only">Add to favorites</span>
-        </Button>
-      )}
-
-      {isLoggedInUser && (
-        <AddToShoppingListDialog
-          open={showShoppingListsDialog}
-          setOpenAddToShoppingListDialog={setShowShoppingListsDialog}
-          productId={productId}
-          favouriteIds={favoriteIds}
-        />
-      )}
+            <span className="sr-only">Add to favorites</span>
+          </Button>
+        ))}
     </>
   );
 };

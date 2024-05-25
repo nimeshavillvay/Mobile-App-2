@@ -1,31 +1,24 @@
-import useCookies from "@/_hooks/storage/use-cookies.hook";
 import { api } from "@/_lib/api";
-import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
-import type { Pagination } from "@/_lib/types";
-import { useSuspenseQuery } from "@tanstack/react-query";
 import type {
+  Pagination,
   ShoppingList,
   ShoppingListElement,
   ShoppingListElementResponse,
   ShoppingListResponse,
-} from "./type";
+} from "@/_lib/types";
+import { useSuspenseQuery } from "@tanstack/react-query";
 
-const useSuspenseShoppingList = (sort: string, sortDirection: string) => {
-  const [cookies] = useCookies();
-
+const useSuspenseShoppingList = (
+  token: string,
+  { sort, sortDirection }: { sort: string; sortDirection: string },
+) => {
   return useSuspenseQuery({
-    queryKey: [
-      "my-account",
-      "shopping-list",
-      cookies[SESSION_TOKEN_COOKIE],
-      sort,
-      sortDirection,
-    ],
+    queryKey: ["my-account", "shopping-list", token, sort, sortDirection],
     queryFn: () =>
       api
         .get("rest/my-favourite/lists", {
           headers: {
-            Authorization: `Bearer ${cookies[SESSION_TOKEN_COOKIE]}`,
+            Authorization: `Bearer ${token}`,
           },
           searchParams: {
             sort: sort,

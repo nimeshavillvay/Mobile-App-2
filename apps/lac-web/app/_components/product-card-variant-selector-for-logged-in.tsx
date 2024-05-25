@@ -1,5 +1,5 @@
-import AddToShoppingListDialog from "@/(old-design)/myaccount/shopping-lists/add-to-shopping-list-dialog";
-import useSuspenseFavouriteSKUs from "@/(old-design)/myaccount/shopping-lists/use-suspense-favourite-skus.hook";
+import AddToShoppingListDialog from "@/_components/shopping-list/add-to-shopping-list-dialog";
+import useSuspenseFavouriteSKUs from "@/_hooks/shopping-list/use-suspense-favourite-skus.hook";
 import { ProductCardVariantSelector } from "@repo/web-ui/components/product-card";
 import { useState } from "react";
 
@@ -57,7 +57,8 @@ const ProductCardVariantSelectorForLoggedIn = ({
         open={showShoppingListsDialog}
         setOpenAddToShoppingListDialog={setShowShoppingListsDialog}
         productId={parseInt(productVariantId)}
-        favouriteIds={favouriteSKU?.favouriteIds ?? []}
+        favouriteListIds={favouriteSKU?.favouriteListIds ?? []}
+        token={token}
       />
     </>
   );

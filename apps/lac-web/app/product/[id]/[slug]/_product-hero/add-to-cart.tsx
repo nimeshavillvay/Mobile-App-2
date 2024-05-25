@@ -1,12 +1,13 @@
+import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import { cn } from "@/_lib/utils";
 import { Check } from "@repo/web-ui/components/icons/check";
 import { Button } from "@repo/web-ui/components/ui/button";
+import { cookies } from "next/headers";
 import { Suspense } from "react";
 import AddToCartForm from "./_add-to-cart-form";
 import LocationStocks from "./_location-stocks";
 import RegionalExclusionNotice from "./_regional-exclusion-notice";
 import FavoriteButton from "./favorite-button";
-import FavoriteButtonSkeleton from "./favorite-button-skeleton";
 
 type AddToCartProps = {
   productId: number;
@@ -23,6 +24,13 @@ const AddToCart = ({
   uom,
   className,
 }: AddToCartProps) => {
+  const cookiesStore = cookies();
+  const sessionCookie = cookiesStore.get(SESSION_TOKEN_COOKIE);
+
+  if (!sessionCookie?.value) {
+    return null;
+  }
+
   return (
     <section className={cn("space-y-3", className)}>
       <LocationStocks productId={productId} />
@@ -52,9 +60,7 @@ const AddToCart = ({
           <span>Compare</span>
         </Button>
 
-        <Suspense fallback={<FavoriteButtonSkeleton />}>
-          <FavoriteButton productId={productId} />
-        </Suspense>
+        <FavoriteButton productId={productId} token={sessionCookie.value} />
       </div>
 
       <Suspense>

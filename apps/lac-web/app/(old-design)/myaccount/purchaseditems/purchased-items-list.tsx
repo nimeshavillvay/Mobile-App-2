@@ -86,7 +86,7 @@ const PurchasedItemsList = ({ token }: { token: string }) => {
     });
   }
 
-  const getItemInfo = useItemInfo(productIds, token);
+  const getItemInfo = useItemInfo(productIds);
   if (purchasedItemsList && getItemInfo) {
     isLoading = false;
   }

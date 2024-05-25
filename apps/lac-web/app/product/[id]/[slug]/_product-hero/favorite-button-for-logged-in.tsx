@@ -1,18 +1,21 @@
 "use client";
 
-import { IoMdHeart, IoMdHeartEmpty } from "react-icons/io";
-
 import AddToShoppingListDialog from "@/_components/shopping-list/add-to-shopping-list-dialog";
-import useSuspenseFavouriteSKUs from "@/_hooks/shopping-list/use-suspense-favourite-skus.hook";
+import { HeartFilled } from "@repo/web-ui/components/icons/heart-filled";
+import { HeartOutline } from "@repo/web-ui/components/icons/heart-outline";
 import { Button } from "@repo/web-ui/components/ui/button";
 import { useState } from "react";
+import useSuspenseFavouriteSKUs from "../../../../_hooks/shopping-list/use-suspense-favourite-skus.hook";
 
-type FavoriteButtonProps = {
-  token: string;
+type FavoriteButtonForLoggedInProps = {
   productId: number;
+  token: string;
 };
 
-const FavoriteButton = ({ token, productId }: FavoriteButtonProps) => {
+const FavoriteButtonForLoggedIn = ({
+  productId,
+  token,
+}: FavoriteButtonForLoggedInProps) => {
   const [showShoppingListsDialog, setShowShoppingListsDialog] = useState(false);
 
   const { data: favouriteSKUs } = useSuspenseFavouriteSKUs(token, [
@@ -21,31 +24,34 @@ const FavoriteButton = ({ token, productId }: FavoriteButtonProps) => {
 
   const favouriteSKU = favouriteSKUs[0];
   const isFavourite = favouriteSKU?.isFavourite ?? false;
-  const favoriteListIds = favouriteSKU?.favouriteListIds ?? [];
 
   return (
     <>
       <Button
-        type="button"
-        variant="ghost"
-        onClick={() => setShowShoppingListsDialog(true)}
+        variant="outline"
+        size="icon"
+        onClick={() => {
+          setShowShoppingListsDialog(true);
+        }}
       >
         {isFavourite ? (
-          <IoMdHeart className="text-2xl text-brand-primary" />
+          <HeartFilled className="size-4" />
         ) : (
-          <IoMdHeartEmpty className="text-2xl text-brand-gray-500" />
+          <HeartOutline className="size-4" />
         )}
+
+        <span className="sr-only">Add to favorites</span>
       </Button>
 
       <AddToShoppingListDialog
         open={showShoppingListsDialog}
         setOpenAddToShoppingListDialog={setShowShoppingListsDialog}
         productId={productId}
-        favouriteListIds={favoriteListIds}
+        favouriteListIds={favouriteSKU?.favouriteListIds ?? []}
         token={token}
       />
     </>
   );
 };
 
-export default FavoriteButton;
+export default FavoriteButtonForLoggedIn;

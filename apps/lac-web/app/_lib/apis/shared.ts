@@ -1,10 +1,9 @@
 import { SPECIAL_SHIPPING_FLAG } from "@/_lib/constants";
 import { api } from "../api";
 
-export const getItemInfo = async (productIdList: number[], token?: string) => {
+export const getItemInfo = async (productIdList: number[]) => {
   const response = await api
     .get("rest/getiteminfo", {
-      headers: token ? { Authorization: `Bearer ${token}` } : {},
       searchParams: { productids: productIdList.toString() },
     })
     .json<

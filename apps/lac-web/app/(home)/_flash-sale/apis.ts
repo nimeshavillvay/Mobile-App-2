@@ -1,9 +1,8 @@
 import { api } from "@/_lib/api";
 import { DEFAULT_REVALIDATE, SPECIAL_SHIPPING_FLAG } from "@/_lib/constants";
 import "server-only";
-import { FeatureProduct } from "./types";
 
-type OldFeatureProduct = {
+type FeatureProduct = {
   productTitle: string;
   slug: string;
   txt_description_name: string;
@@ -38,37 +37,34 @@ export const getSaleItems = async () => {
     .json<{
       bestsellers: unknown[];
       featured: unknown[];
-      on_sale: OldFeatureProduct[];
+      on_sale: FeatureProduct[];
       quick_ship: unknown[];
     }>();
-
-  return response.on_sale.map(
-    (data): FeatureProduct => ({
-      productTitle: data.productTitle,
-      productDescription: data.txt_description_name,
-      mfrPartNo: data.txt_mfn,
-      isHazardous: data.txt_hazardous === "Y",
-      isDirectlyShippedFromVendor: data.txt_web_direct === "Y",
-      specialShipping: !!SPECIAL_SHIPPING_FLAG.find(
-        (flag) => flag === data.txt_special_shipping,
-      ),
-      groupId: Number(data.groupId),
-      productId: data.productId,
-      slug: data.slug,
-      groupImage: data.group_img,
-      productImage: data.product_img,
-      productSku: data.sku,
-      unitOfMeasure: data.txt_uom_label,
-      isSaleItem: data.is_sale,
-      isNewItem: data.is_new,
-      minimumOrderQuantity: Number(data.min_order_amount) ?? 1,
-      quantityByIncrements: Number(data.order_qty_increments) ?? 1,
-      brandId: Number(data.brandId),
-      brandName: data.brandName,
-      categoryId: Number(data.categoryId),
-      categoryName: data.categoryName,
-      subCategoryId: Number(data.subCategoryId),
-      subCategoryName: data.subCategoryName,
-    }),
-  );
+  return response.on_sale.map((data) => ({
+    productTitle: data.productTitle,
+    productDescription: data.txt_description_name,
+    mfrPartNo: data.txt_mfn,
+    isHazardous: data.txt_hazardous === "Y",
+    isDirectlyShippedFromVendor: data.txt_web_direct === "Y",
+    specialShipping: !!SPECIAL_SHIPPING_FLAG.find(
+      (flag) => flag === data.txt_special_shipping,
+    ),
+    groupId: Number(data.groupId),
+    productId: data.productId,
+    slug: data.slug,
+    groupImage: data.group_img,
+    productImage: data.product_img,
+    productSku: data.sku,
+    unitOfMeasure: data.txt_uom_label,
+    isSaleItem: data.is_sale,
+    isNewItem: data.is_new,
+    minimumOrderQuantity: Number(data.min_order_amount) ?? 1,
+    quantityByIncrements: Number(data.order_qty_increments) ?? 1,
+    brandId: Number(data.brandId),
+    brandName: data.brandName,
+    categoryId: Number(data.categoryId),
+    categoryName: data.categoryName,
+    subCategoryId: Number(data.subCategoryId),
+    subCategoryName: data.subCategoryName,
+  }));
 };

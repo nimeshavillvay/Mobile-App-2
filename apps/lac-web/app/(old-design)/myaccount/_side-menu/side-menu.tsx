@@ -13,7 +13,7 @@ import { cn } from "@/old/_utils/helpers";
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import { cva } from "cva";
 import Link from "next/link";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Suspense } from "react";
 import FavoritesFilters from "./favorites-filters";
 import PurchasesFilters from "./purchases-filters";
@@ -42,8 +42,6 @@ const LINKS = [
 const SideMenu = ({ token }: { token: string }) => {
   const pathname = usePathname();
   const router = useRouter();
-
-  const searchParams = useSearchParams();
 
   const checkLoginQuery = useSuspenseCheckLogin(token);
   const isOsr =
@@ -96,12 +94,7 @@ const SideMenu = ({ token }: { token: string }) => {
 
           <AccordionContent className="pb-0">
             <Suspense fallback={<Skeleton className="mb-4 h-32" />}>
-              {searchParams.get("list-id") != null && (
-                <FavoritesFilters
-                  listId={searchParams.get("list-id") ?? ""}
-                  token={token}
-                />
-              )}
+              <FavoritesFilters token={token} />
             </Suspense>
           </AccordionContent>
         </AccordionItem>

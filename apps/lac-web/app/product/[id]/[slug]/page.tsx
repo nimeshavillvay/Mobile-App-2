@@ -1,7 +1,7 @@
 import ProductCardSkeleton from "@/_components/product-card-skeleton";
 import { api } from "@/_lib/api";
 import { getBreadcrumbs } from "@/_lib/apis/server";
-import { DEFAULT_REVALIDATE, SESSION_TOKEN_COOKIE } from "@/_lib/constants";
+import { DEFAULT_REVALIDATE } from "@/_lib/constants";
 import { ChevronLeft } from "@repo/web-ui/components/icons/chevron-left";
 import {
   Breadcrumb,
@@ -12,7 +12,6 @@ import {
 } from "@repo/web-ui/components/ui/breadcrumb";
 import { Button, buttonVariants } from "@repo/web-ui/components/ui/button";
 import type { Metadata } from "next";
-import { cookies } from "next/headers";
 import Link from "next/link";
 import { Fragment, Suspense } from "react";
 import Balancer from "react-wrap-balancer";
@@ -33,10 +32,6 @@ export const generateMetadata = async ({
 };
 
 const ProductPage = async ({ params: { id, slug } }: ProductPageProps) => {
-  const cookiesStore = cookies();
-  const sessionCookie = cookiesStore.get(SESSION_TOKEN_COOKIE);
-  const token = sessionCookie?.value;
-
   // Just to check if the product exists
   await getProduct(id, slug);
 
@@ -44,11 +39,6 @@ const ProductPage = async ({ params: { id, slug } }: ProductPageProps) => {
     getBreadcrumbs(id, "product"),
     api
       .get("rest/landingrelatedproduct", {
-        headers: token
-          ? {
-              Authorization: `Bearer ${token}`,
-            }
-          : {},
         searchParams: {
           productid: id,
         },

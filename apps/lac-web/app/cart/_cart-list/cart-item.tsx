@@ -135,7 +135,11 @@ const CartItem = ({
 
           <div className="flex flex-col gap-1 md:hidden">
             <Suspense fallback={<FavoriteButtonSkeleton display="mobile" />}>
-              <FavoriteButton display="mobile" productId={product.id} />
+              <FavoriteButton
+                display="mobile"
+                productId={product.id}
+                token={token}
+              />
             </Suspense>
 
             <Button variant="subtle" className="w-full">
@@ -268,9 +272,11 @@ const CartItem = ({
             <Save className="size-4" />
           </Button>
 
-          <Suspense fallback={<FavoriteButtonSkeleton display="desktop" />}>
-            <FavoriteButton display="desktop" productId={product.id} />
-          </Suspense>
+          <FavoriteButton
+            display="desktop"
+            productId={product.id}
+            token={token}
+          />
         </div>
       </div>
     </div>

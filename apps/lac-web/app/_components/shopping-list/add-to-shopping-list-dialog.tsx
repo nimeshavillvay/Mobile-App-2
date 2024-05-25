@@ -1,3 +1,8 @@
+"use client";
+
+import useCreateShoppingListMutation from "@/(old-design)/myaccount/shopping-lists/use-create-shopping-list-mutation.hook";
+import useUpdateShoppingListItemMutation from "@/(old-design)/myaccount/shopping-lists/use-update-shopping-list-item-mutation.hook";
+import useSuspenseShoppingList from "@/_hooks/shopping-list/use-suspense-shopping-list.hook";
 import { cn } from "@/_lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@repo/web-ui/components/ui/button";
@@ -21,40 +26,37 @@ import { Input } from "@repo/web-ui/components/ui/input";
 import { useToast } from "@repo/web-ui/components/ui/toast";
 import dayjs from "dayjs";
 import { LoaderCircle } from "lucide-react";
-import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
-import { useForm } from "react-hook-form";
+import { Fragment, useState, type Dispatch, type SetStateAction } from "react";
+import { Control, useForm } from "react-hook-form";
 import * as z from "zod";
-import useCreateShoppingListMutation from "./use-create-shopping-list-mutation.hook";
-import useSuspenseShoppingList from "./use-suspense-shopping-list.hook";
-import useUpdateShoppingListItemMutation from "./use-update-shopping-list-item-mutation.hook";
 
 type AddToShoppingListDialogProps = {
   open: boolean;
   setOpenAddToShoppingListDialog: Dispatch<SetStateAction<boolean>>;
   productId: number;
-  favouriteIds: string[];
+  favouriteListIds: string[];
+  token: string;
 };
 
 const AddToShoppingListDialog = ({
   open,
   setOpenAddToShoppingListDialog,
   productId,
-  favouriteIds,
+  favouriteListIds,
+  token,
 }: AddToShoppingListDialogProps) => {
   const { toast } = useToast();
 
-  const shoppingListsQuery = useSuspenseShoppingList("name", "desc");
+  const shoppingListsQuery = useSuspenseShoppingList(token, {
+    sort: "name",
+    sortDirection: "desc",
+  });
 
   const shoppingLists = shoppingListsQuery?.data;
 
-  const [selectedShoppingLists, setSelectedShoppingLists] = useState<string[]>(
-    [],
-  );
+  const [selectedShoppingLists, setSelectedShoppingLists] =
+    useState<string[]>(favouriteListIds);
   const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    setSelectedShoppingLists(favouriteIds);
-  }, [favouriteIds]);
 
   const shoppingListNameSchema = z.object({
     shoppingListName: z.string().trim(),
@@ -72,24 +74,31 @@ const AddToShoppingListDialog = ({
   const createShoppingListMutation = useCreateShoppingListMutation();
   const updateShoppingListItemMutation = useUpdateShoppingListItemMutation();
 
-  const onShoppingListNameSubmit = async (formData: ShoppingListNameSchema) => {
-    setIsLoading(true);
-    if (formData.shoppingListName !== "") {
-      await createShoppingListMutation.mutateAsync(formData.shoppingListName, {
+  const createShoppingList = async (shoppingListName: string) => {
+    const { list_id } = await createShoppingListMutation.mutateAsync(
+      shoppingListName,
+      {
         onSuccess: (data: { list_id: string }) => {
           form.reset();
-          selectedShoppingLists.push(data.list_id.toString());
+
           shoppingLists.lists.push({
             listId: data.list_id.toString(),
-            listName: formData.shoppingListName,
+            listName: shoppingListName,
             date: dayjs().format("MM/DD/YYYY"),
             totalItem: "1",
           });
         },
-      });
-    }
+      },
+    );
 
-    updateShoppingListItemMutation.mutate(
+    return list_id;
+  };
+
+  const updateShoppingList = async (
+    productId: number,
+    selectedShoppingLists: string[],
+  ) => {
+    return updateShoppingListItemMutation.mutate(
       {
         listIds: selectedShoppingLists.map((shoppingListId) =>
           parseInt(shoppingListId),
@@ -106,6 +115,24 @@ const AddToShoppingListDialog = ({
         },
       },
     );
+  };
+
+  const handleShoppingListNameSubmit = async (
+    formData: ShoppingListNameSchema,
+  ) => {
+    setIsLoading(true);
+
+    const updatedShoppingLists = selectedShoppingLists;
+
+    if (formData.shoppingListName !== "") {
+      const newShoppingListId = await createShoppingList(
+        formData.shoppingListName,
+      );
+
+      updatedShoppingLists.push(newShoppingListId.toString());
+    }
+
+    updateShoppingList(productId, updatedShoppingLists);
   };
 
   const handleShoppingListCheckedChanged = (
@@ -128,46 +155,24 @@ const AddToShoppingListDialog = ({
 
         <Form {...form}>
           <form
-            onSubmit={form.handleSubmit(onShoppingListNameSubmit)}
+            onSubmit={form.handleSubmit(handleShoppingListNameSubmit)}
             className="space-y-4"
           >
             <div className="grid max-h-52 grid-cols-1 overflow-y-scroll border px-3 py-1">
               {shoppingLists.lists.map((list, index) => {
                 return (
-                  <div
-                    className={cn(
-                      "flex flex-row items-center gap-2 py-2",
-                      index != shoppingLists.lists.length - 1 ? "border-b" : "",
-                    )}
-                    key={list.listId}
-                  >
-                    <FormField
-                      control={form.control}
-                      name="shoppingListName"
-                      render={() => (
-                        <FormItem className="flex flex-row">
-                          <Checkbox
-                            id={`list-${list.listId}`}
-                            checked={selectedShoppingLists.includes(
-                              list.listId,
-                            )}
-                            onCheckedChange={(checked: boolean) => {
-                              handleShoppingListCheckedChanged(
-                                list.listId,
-                                checked,
-                              );
-                            }}
-                          />
-                          <FormLabel
-                            htmlFor={`list-${list.listId}`}
-                            className="cursor-pointer"
-                          >
-                            {list.listName}
-                          </FormLabel>
-                        </FormItem>
-                      )}
+                  <Fragment key={list.listId}>
+                    <ShoppingListItem
+                      index={index}
+                      shoppingLists={shoppingLists.lists}
+                      list={list}
+                      formControl={form.control}
+                      selectedShoppingLists={selectedShoppingLists}
+                      handleShoppingListCheckedChanged={
+                        handleShoppingListCheckedChanged
+                      }
                     />
-                  </div>
+                  </Fragment>
                 );
               })}
             </div>
@@ -216,3 +221,58 @@ const AddToShoppingListDialog = ({
 };
 
 export default AddToShoppingListDialog;
+
+const ShoppingListItem = ({
+  index,
+  shoppingLists,
+  list,
+  formControl,
+  selectedShoppingLists,
+  handleShoppingListCheckedChanged,
+}: {
+  index: number;
+  shoppingLists: {
+    listId: string;
+    listName: string;
+    date: string;
+    totalItem: string;
+  }[];
+  list: {
+    listId: string;
+    listName: string;
+  };
+  formControl: Control<{ shoppingListName: string }>;
+  selectedShoppingLists: string[];
+  handleShoppingListCheckedChanged: (listId: string, checked: boolean) => void;
+}) => {
+  return (
+    <div
+      className={cn(
+        "flex flex-row items-center gap-2 py-2",
+        index != shoppingLists.length - 1 ? "border-b" : "",
+      )}
+    >
+      <FormField
+        control={formControl}
+        name="shoppingListName"
+        render={() => (
+          <FormItem className="flex flex-row">
+            <Checkbox
+              id={`list-${list.listId}`}
+              checked={selectedShoppingLists.includes(list.listId)}
+              onCheckedChange={(checked: boolean) => {
+                handleShoppingListCheckedChanged(list.listId, checked);
+              }}
+            />
+            <FormLabel
+              htmlFor={`list-${list.listId}`}
+              className="cursor-pointer"
+            >
+              {list.listName}
+            </FormLabel>
+          </FormItem>
+        )}
+      />
+    </div>
+  );
+};
