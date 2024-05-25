@@ -1,7 +1,9 @@
+import useDeleteCartItemMutation from "@/_hooks/cart/use-delete-cart-item-mutation.hook";
 import useUpdateCartItemMutation from "@/_hooks/cart/use-update-cart-item-mutation.hook";
 import useSuspenseCheckAvailability from "@/_hooks/product/use-suspense-check-availability.hook";
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import type {
+  CartConfiguration,
   CartItemConfiguration,
   Plant,
   ShippingMethod,
@@ -39,9 +41,11 @@ type CartItemProps = {
     minAmount: number;
     increment: number;
     image: string;
+    cartItemId: number;
   };
   shippingMethods: ShippingMethod[];
   plants: Plant[];
+  cartConfiguration: CartConfiguration;
 };
 
 const CartItem = ({
@@ -49,6 +53,7 @@ const CartItem = ({
   product,
   shippingMethods,
   plants,
+  cartConfiguration,
 }: CartItemProps) => {
   const id = useId();
   const quantityId = `quantity-${id}`;
@@ -80,14 +85,15 @@ const CartItem = ({
     plant: selectedWillCallPlant !== "" ? selectedWillCallPlant : undefined,
   });
 
-  const updateCartConfigMutation = useUpdateCartItemMutation();
+  const updateCartConfigMutation = useUpdateCartItemMutation(token);
+  const deleteCartItemMutation = useDeleteCartItemMutation(token);
 
   const handleSave = () => {
     const data = getValues();
 
     updateCartConfigMutation.mutate([
       {
-        productId: product.id,
+        cartItemId: product.cartItemId,
         quantity: data.quantity,
         config: {
           ...product.configuration,
@@ -102,7 +108,7 @@ const CartItem = ({
 
     updateCartConfigMutation.mutate([
       {
-        productId: product.id,
+        cartItemId: product.cartItemId,
         quantity: data.quantity,
         config: {
           ...product.configuration,
@@ -110,6 +116,12 @@ const CartItem = ({
         },
       },
     ]);
+  };
+
+  const handleDeleteCartItem = () => {
+    deleteCartItemMutation.mutate({
+      products: [{ cartid: product.cartItemId }],
+    });
   };
 
   return (
@@ -232,6 +244,7 @@ const CartItem = ({
           setSelectedWillCallPlant={setSelectedWillCallPlant}
           selectedWillCallPlant={selectedWillCallPlant}
           onSave={handleSaveShippingMethod}
+          cartConfiguration={cartConfiguration}
         />
       </div>
 
@@ -254,6 +267,7 @@ const CartItem = ({
           <Button
             variant="ghost"
             className="h-fit w-full justify-end px-0 py-0 text-wurth-red-650"
+            onClick={() => handleDeleteCartItem()}
           >
             <span className="text-[13px] leading-5">Delete</span>
 
