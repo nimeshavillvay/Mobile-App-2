@@ -53,6 +53,16 @@ const ALTERNATIVE_BRANCHES = "alternative-branches";
 // Vendor Direct Shipping Method
 const VENDOR_DIRECT_CODE = "D";
 
+// Cart config values
+const EMPTY_STRING = "";
+const TRUE_STRING = "T";
+const FALSE_STRING = "F";
+
+// Availability statuses
+const IN_STOCK = "inStock";
+const LIMITED_STOCK = "limitedStock";
+const NOT_IN_STOCK = "notInStock";
+
 type CartItemShippingMethodProps = {
   shippingMethods: ShippingMethod[];
   plants: Plant[];
@@ -62,10 +72,6 @@ type CartItemShippingMethodProps = {
   onSave: (config: Partial<CartItemConfiguration>) => void;
   cartConfiguration: CartConfiguration;
 };
-
-const EMPTY_STRING = "";
-const TRUE_STRING = "T";
-const FALSE_STRING = "F";
 
 const createCartItemConfig = ({
   method,
@@ -122,6 +128,7 @@ const CartItemShippingMethod = ({
   setSelectedWillCallPlant,
   selectedWillCallPlant,
   onSave,
+  cartConfiguration,
 }: CartItemShippingMethodProps) => {
   const id = useId();
   const shipToMeId = `${SHIP_TO_ME}-${id}`;
@@ -176,9 +183,18 @@ const CartItemShippingMethod = ({
   const defaultShippingOption = shippingMethods?.at(0);
 
   // User selected shipping method
-  const [selectedShippingMethod, setSelectedShippingMethod] = useState(
-    defaultShippingOption?.code ?? "",
-  );
+  const [selectedShippingMethod, setSelectedShippingMethod] = useState(() => {
+    // Check if there is default shipping method for users ship-to address
+    if (cartConfiguration?.default_shipping) {
+      const shipToDefaultMethod = shippingMethods?.find(
+        (method) => method?.code === cartConfiguration.default_shipping,
+      );
+      if (shipToDefaultMethod) {
+        return shipToDefaultMethod.code;
+      }
+    }
+    return defaultShippingOption?.code ?? "";
+  });
 
   const calculateAllPlantsQuantity = (
     plants: {
@@ -206,7 +222,7 @@ const CartItemShippingMethod = ({
       ?.isSameDayAvail ?? false;
 
   // Ship to me logics
-  const isShipToMeEnabled = status === "inStock" || status === "limitedStock";
+  const isShipToMeEnabled = status === IN_STOCK || status === LIMITED_STOCK;
 
   let availableAllPlant: OptionPlant | undefined = undefined;
   let takeOnHandPlant: OptionPlant | undefined = undefined;
@@ -261,14 +277,43 @@ const CartItemShippingMethod = ({
       setSelectedSection(selectedOption);
       // Save the line item config
       if (selectedOption === SHIP_TO_ME) {
-        // TODO: Ship to me can have different default configs based on the availability
-        onSave(
-          createCartItemConfig({
-            method: selectedShippingMethod,
-            quantity: availableAllPlant?.quantity ?? 0,
-            plant: availableAllPlant?.plant ?? "",
-          }),
-        );
+        if (availableAll) {
+          onSave(
+            createCartItemConfig({
+              method: selectedShippingMethod,
+              quantity: availableAllPlant?.quantity ?? 0,
+              plant: availableAllPlant?.plant ?? "",
+            }),
+          );
+        } else if (takeOnHand) {
+          onSave(
+            createCartItemConfig({
+              method: selectedShippingMethod,
+              quantity: takeOnHandPlant?.quantity ?? 0,
+              plant: takeOnHandPlant?.plant ?? "",
+            }),
+          );
+        } else if (shipAlternativeBranch) {
+          const alternativeBranchShippingDetails = {
+            avail_1: (
+              shipAlternativeBranch?.plants[0]?.quantity ?? 0
+            ).toString(),
+            avail_2: (
+              shipAlternativeBranch?.plants[1]?.quantity ?? 0
+            ).toString(),
+            avail_3: (
+              shipAlternativeBranch?.plants[2]?.quantity ?? 0
+            ).toString(),
+            plant_1: shipAlternativeBranch?.plants[0]?.plant ?? "",
+            plant_2: shipAlternativeBranch?.plants[1]?.plant ?? "",
+            plant_3: shipAlternativeBranch?.plants[2]?.plant ?? "",
+            shipping_method_1: selectedShippingMethod,
+            shipping_method_2: selectedShippingMethod,
+            shipping_method_3: selectedShippingMethod,
+          };
+          console.log(alternativeBranchShippingDetails);
+          onSave(alternativeBranchShippingDetails);
+        }
       }
       // Back order all can have only this config
       if (selectedOption === BACK_ORDER && backOrderAll) {
@@ -294,13 +339,13 @@ const CartItemShippingMethod = ({
     const alternativeBranchShippingDetails = {
       ...createCartItemConfig({
         method: shippingMethod,
-        quantity: shipAlternativeBranch?.plants["1"]?.quantity ?? 0,
-        plant: shipAlternativeBranch?.plants["1"]?.plant ?? "",
+        quantity: shipAlternativeBranch?.plants[0]?.quantity ?? 0,
+        plant: shipAlternativeBranch?.plants[0]?.plant ?? "",
       }),
-      avail_2: (shipAlternativeBranch?.plants["2"]?.quantity ?? 0).toString(),
-      plant_2: shipAlternativeBranch?.plants["2"]?.plant ?? "",
-      avail_3: (shipAlternativeBranch?.plants["3"]?.quantity ?? 0).toString(),
-      plant_3: shipAlternativeBranch?.plants["3"]?.plant ?? "",
+      avail_2: (shipAlternativeBranch?.plants[1]?.quantity ?? 0).toString(),
+      avail_3: (shipAlternativeBranch?.plants[2]?.quantity ?? 0).toString(),
+      plant_2: shipAlternativeBranch?.plants[1]?.plant ?? "",
+      plant_3: shipAlternativeBranch?.plants[2]?.plant ?? "",
       shipping_method_2: shippingMethod,
       shipping_method_3: shippingMethod,
     };
@@ -361,17 +406,17 @@ const CartItemShippingMethod = ({
           onSave({
             ...createCartItemConfig({
               method: defaultMethod,
-              quantity: shipAlternativeBranch?.plants["1"]?.quantity ?? 0,
-              plant: shipAlternativeBranch?.plants["1"]?.plant ?? "",
+              quantity: shipAlternativeBranch?.plants[0]?.quantity ?? 0,
+              plant: shipAlternativeBranch?.plants[0]?.plant ?? "",
             }),
             avail_2: (
-              shipAlternativeBranch?.plants["2"]?.quantity ?? 0
+              shipAlternativeBranch?.plants[1]?.quantity ?? 0
             ).toString(),
-            plant_2: shipAlternativeBranch?.plants["2"]?.plant ?? "",
+            plant_2: shipAlternativeBranch?.plants[1]?.plant ?? "",
             avail_3: (
-              shipAlternativeBranch?.plants["3"]?.quantity ?? 0
+              shipAlternativeBranch?.plants[2]?.quantity ?? 0
             ).toString(),
-            plant_3: shipAlternativeBranch?.plants["3"]?.plant ?? "",
+            plant_3: shipAlternativeBranch?.plants[2]?.plant ?? "",
             shipping_method_2: defaultMethod,
             shipping_method_3: defaultMethod,
           });
@@ -671,7 +716,7 @@ const CartItemShippingMethod = ({
 
             {willCallAnywhere && (
               <div className="flex flex-col gap-1">
-                {willCallAnywhere.status === "inStock" && (
+                {willCallAnywhere.status === IN_STOCK && (
                   <div className="flex items-center text-sm">
                     <ItemCountBadge count={willCallAnywhere.willCallQuantity} />
                     &nbsp;<span className="font-medium">pick up at</span>
@@ -680,7 +725,7 @@ const CartItemShippingMethod = ({
                   </div>
                 )}
 
-                {willCallAnywhere.status === "limitedStock" && (
+                {willCallAnywhere.status === LIMITED_STOCK && (
                   <>
                     <div className="flex items-center text-sm">
                       <ItemCountBadge
@@ -714,7 +759,7 @@ const CartItemShippingMethod = ({
                   </>
                 )}
 
-                {willCallAnywhere.status === "notInStock" && (
+                {willCallAnywhere.status === NOT_IN_STOCK && (
                   <>
                     <div className="rounded bg-red-800/10 px-2 py-1 text-sm text-red-800">
                       This item is out of stock at&nbsp;
@@ -735,7 +780,7 @@ const CartItemShippingMethod = ({
               />
             )}
 
-            {willCallAnywhere?.status === "notInStock" && (
+            {willCallAnywhere?.status === NOT_IN_STOCK && (
               <BackOrderInfoBanner
                 date={willCallAnywhere?.willCallBackOrder ?? ""}
               />
