@@ -27,6 +27,7 @@ import { HeartOutline } from "./heart-outline";
 import { Instagram } from "./instagram";
 import { LinkedIn } from "./linkedin";
 import { MagnifyingGlass } from "./magnifying-glass";
+import { Map } from "./map";
 import { Menu } from "./menu";
 import { Minus } from "./minus";
 import { PackageDelivery } from "./package-delivery";
@@ -43,6 +44,7 @@ import { Shop } from "./shop";
 import { ShoppingCart } from "./shopping-cart";
 import { Switch } from "./switch";
 import { TikTok } from "./tiktok";
+import { Timetable } from "./timetable";
 import { Trash } from "./trash";
 import { Truck } from "./truck";
 import { TruckWithClock } from "./truck-with-clock";
@@ -282,6 +284,14 @@ export const Showcase: Story = {
 
         <IconContainer name="Receipt">
           <Receipt />
+        </IconContainer>
+
+        <IconContainer name="Map">
+          <Map />
+        </IconContainer>
+
+        <IconContainer name="Timetable">
+          <Timetable />
         </IconContainer>
       </ul>
     );
