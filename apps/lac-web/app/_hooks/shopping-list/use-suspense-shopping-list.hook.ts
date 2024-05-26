@@ -1,17 +1,16 @@
 import { api } from "@/_lib/api";
-import type { Pagination } from "@/_lib/types";
-import { useSuspenseQuery } from "@tanstack/react-query";
 import type {
+  Pagination,
   ShoppingList,
   ShoppingListElement,
   ShoppingListElementResponse,
   ShoppingListResponse,
-} from "./type";
+} from "@/_lib/types";
+import { useSuspenseQuery } from "@tanstack/react-query";
 
 const useSuspenseShoppingList = (
   token: string,
-  sort: string,
-  sortDirection: string,
+  { sort, sortDirection }: { sort: string; sortDirection: string },
 ) => {
   return useSuspenseQuery({
     queryKey: ["my-account", "shopping-list", token, sort, sortDirection],
@@ -19,7 +18,7 @@ const useSuspenseShoppingList = (
       api
         .get("rest/my-favourite/lists", {
           headers: {
-            authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
           },
           searchParams: {
             sort: sort,

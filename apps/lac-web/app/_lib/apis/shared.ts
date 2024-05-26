@@ -14,7 +14,6 @@ export const getItemInfo = async (productIdList: number[]) => {
         item_name: string;
         img: string;
         slug: string;
-        is_favourite: boolean;
         is_comparison: boolean;
         txt_hazardous: string;
         txt_special_shipping: string;

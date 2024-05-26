@@ -52,7 +52,7 @@ const useSuspenseShoppingListItems = (
           itemName: item.item_name,
           img: item.img,
           slug: item.slug,
-          isFavourite: item.is_favourite,
+          isFavorite: item.is_favourite,
           isComparison: item.is_comparison,
           txtHazardous: item.txt_hazardous,
           txtSpecialShipping: item.txt_special_shipping,

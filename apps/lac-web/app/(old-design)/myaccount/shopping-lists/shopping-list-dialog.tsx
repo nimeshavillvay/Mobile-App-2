@@ -1,3 +1,4 @@
+import { ShoppingListElement } from "@/_lib/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@repo/web-ui/components/ui/button";
 import {
@@ -19,7 +20,6 @@ import { Input } from "@repo/web-ui/components/ui/input";
 import type { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import type { ShoppingListElement } from "./type";
 import useCreateShoppingListMutation from "./use-create-shopping-list-mutation.hook";
 import useUpdateShoppingListMutation from "./use-update-shopping-list-mutation.hook";
 

@@ -14,7 +14,7 @@ const useSuspenseWillCallPlant = (token: string) => {
         })
         .json<{
           plant: string;
-          address: {
+          address?: {
             "country-name": string;
             locality: string;
             "phone-number": string;
@@ -22,8 +22,8 @@ const useSuspenseWillCallPlant = (token: string) => {
             "street-address": string;
             "postal-code": string;
           };
-          operation_hours: string;
-          gmap: string;
+          operation_hours?: string;
+          gmap?: string;
         }>(),
   });
 };

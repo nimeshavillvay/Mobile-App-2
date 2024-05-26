@@ -22,7 +22,6 @@ type Product = {
     item_name: string;
     img: string;
     slug: string;
-    is_favourite: null;
     is_comparison: null;
     txt_hazardous: string;
     txt_special_shipping: string;
@@ -106,7 +105,6 @@ export const getProduct = async (id: string, slug: string) => {
       productName: selected_item.item_name,
       image: selected_item.img,
       slug: selected_item.slug,
-      isFavourite: !!selected_item.is_favourite,
       isComparison: !!selected_item.is_comparison,
       isDirectlyShippedFromVendor:
         selected_item.is_directly_shipped_from_vendor ?? false,

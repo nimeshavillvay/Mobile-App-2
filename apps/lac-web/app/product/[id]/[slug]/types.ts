@@ -12,7 +12,6 @@ export type RelatedProduct = {
   item_name: string;
   img: string;
   url: string;
-  is_favourite: null;
   is_comparison: null;
   txt_hazardous: string;
   txt_special_shipping: string;
