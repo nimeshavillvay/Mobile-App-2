@@ -69,7 +69,6 @@ const ForgotPasswordForm = ({ email }: ForgotPasswordFormProps) => {
 
           <Button
             type="submit"
-            variant="secondary"
             className="w-full p-2.5 font-bold"
             disabled={resetPasswordMutation.isPending}
           >
