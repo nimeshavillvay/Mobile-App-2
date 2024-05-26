@@ -107,6 +107,7 @@ const MultiSelect = ({
   };
 
   if (resetRef.current) {
+    // eslint-disable-next-line react-compiler/react-compiler
     resetRef.current = false;
     removeAllSelectedItems();
   }

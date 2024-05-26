@@ -10,9 +10,13 @@ module.exports = {
     "prettier",
     "eslint-config-turbo",
   ],
+  plugins: ["react-compiler"],
   settings: {
     react: {
       version: "detect",
     },
+  },
+  rules: {
+    "react-compiler/react-compiler": "error",
   },
 };
