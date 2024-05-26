@@ -1,3 +1,4 @@
+import { getPlants } from "@/_lib/apis/server";
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import { cookies } from "next/headers";
@@ -20,9 +21,11 @@ const WillCallPlantMain = (
 const WillCallPlantRoot = async (
   props: Omit<ComponentProps<typeof WillCallPlantMain>, "plants">,
 ) => {
+  const plants = await getPlants();
+
   return (
     <Suspense fallback={<Skeleton className="h-5 w-20" />}>
-      <WillCallPlantMain {...props} />
+      <WillCallPlantMain plants={plants} {...props} />
     </Suspense>
   );
 };
