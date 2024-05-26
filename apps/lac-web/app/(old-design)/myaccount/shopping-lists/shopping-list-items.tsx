@@ -1,5 +1,6 @@
 "use client";
 
+import { ShoppingListElement } from "@/_lib/types";
 import { Button } from "@repo/web-ui/components/ui/button";
 import { useState } from "react";
 import { MdOutlineDelete } from "react-icons/md";
@@ -7,7 +8,6 @@ import { PiPenNibDuotone } from "react-icons/pi";
 import ActionConfirmationDialog from "./action-confirmation-dialog";
 import ProductCard from "./product-card";
 import ShoppingListDialog from "./shopping-list-dialog";
-import type { ShoppingListElement } from "./type";
 import useDeleteShoppingListMutation from "./use-delete-shopping-list-mutation.hook";
 import useSuspenseShoppingListItems from "./use-suspense-shopping-list-item.hook";
 
