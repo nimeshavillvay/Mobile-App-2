@@ -9,7 +9,6 @@ import type {
 } from "@/_lib/types";
 import { formatNumberToPrice } from "@/_lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { HeartOutline } from "@repo/web-ui/components/icons/heart-outline";
 import { Save } from "@repo/web-ui/components/icons/save";
 import { Trash } from "@repo/web-ui/components/icons/trash";
 import { WurthFullBlack } from "@repo/web-ui/components/logos/wurth-full-black";
@@ -17,11 +16,13 @@ import { Button } from "@repo/web-ui/components/ui/button";
 import { Input } from "@repo/web-ui/components/ui/input";
 import { Label } from "@repo/web-ui/components/ui/label";
 import Image from "next/image";
-import { useId, useState } from "react";
+import { Suspense, useId, useState } from "react";
 import { useForm } from "react-hook-form";
 import Balancer from "react-wrap-balancer";
 import { z } from "zod";
 import CartItemShippingMethod from "./cart-item-shipping-method";
+import FavoriteButton from "./favorite-button";
+import FavoriteButtonSkeleton from "./favorite-button-skeleton";
 
 const cartItemSchema = z.object({
   quantity: z.number(),
@@ -149,11 +150,13 @@ const CartItem = ({
           )}
 
           <div className="flex flex-col gap-1 md:hidden">
-            <Button variant="subtle" className="w-full">
-              <HeartOutline className="size-4" />
-
-              <span className="sr-only">Add to favorites</span>
-            </Button>
+            <Suspense fallback={<FavoriteButtonSkeleton display="mobile" />}>
+              <FavoriteButton
+                display="mobile"
+                productId={product.id}
+                token={token}
+              />
+            </Suspense>
 
             <Button variant="subtle" className="w-full">
               <Save className="size-4" />
@@ -287,14 +290,11 @@ const CartItem = ({
             <Save className="size-4" />
           </Button>
 
-          <Button
-            variant="ghost"
-            className="h-fit w-full justify-end px-0 py-0"
-          >
-            <span className="text-[13px] leading-5">Add to favorite</span>
-
-            <HeartOutline className="size-4" />
-          </Button>
+          <FavoriteButton
+            display="desktop"
+            productId={product.id}
+            token={token}
+          />
         </div>
       </div>
     </div>

@@ -17,6 +17,7 @@ import {
 import type { SkeletonProps } from "~/components/ui/skeleton";
 import { Skeleton } from "~/components/ui/skeleton";
 import { cn, formatNumberToPrice } from "~/lib/utils";
+import { HeartFilled } from "../icons/heart-filled";
 
 type Orientation = "vertical" | "horizontal";
 
@@ -226,9 +227,13 @@ const ProductCardPrice = ({
 
 const ProductCardActions = ({
   addToCart,
+  isFavorite,
+  onClickShoppingList,
   disabled = false,
 }: {
   addToCart: () => void;
+  isFavorite: boolean;
+  onClickShoppingList: () => void;
   disabled?: boolean;
 }) => {
   return (
@@ -247,8 +252,13 @@ const ProductCardActions = ({
         className="size-10"
         aria-label="Add to favorites"
         disabled={disabled}
+        onClick={onClickShoppingList}
       >
-        <HeartOutline className="size-4 fill-black" />
+        {isFavorite ? (
+          <HeartFilled className="size-4" />
+        ) : (
+          <HeartOutline className="size-4" />
+        )}
       </Button>
     </div>
   );
@@ -261,11 +271,15 @@ const ProductCardVariantSelector = ({
   onValueChange,
   addToCart,
   disabled,
+  isFavorite,
+  onClickShoppingList,
 }: {
   href: string;
   variants: { value: string; title: string }[];
   value?: string;
   onValueChange: (value: string) => void;
+  isFavorite: boolean;
+  onClickShoppingList: () => void;
 } & ComponentProps<typeof ProductCardActions>) => {
   return (
     <div className="mt-auto space-y-1">
@@ -289,7 +303,12 @@ const ProductCardVariantSelector = ({
       </Select>
 
       {value ? (
-        <ProductCardActions addToCart={addToCart} disabled={disabled} />
+        <ProductCardActions
+          addToCart={addToCart}
+          disabled={disabled}
+          isFavorite={isFavorite}
+          onClickShoppingList={onClickShoppingList}
+        />
       ) : (
         <Link
           href={href}

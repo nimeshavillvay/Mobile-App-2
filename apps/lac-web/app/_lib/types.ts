@@ -48,7 +48,7 @@ export type OldPurchasedProduct = {
   product: string;
   id: string;
   isDiscontinued: boolean;
-  isFavourite: boolean;
+  isFavorite: boolean;
   orderDate: string;
   sku: string;
   totalItem: string;
@@ -166,7 +166,7 @@ export type GroupList = {
     item_name: string;
     img: string;
     slug: string;
-    is_favourite: null;
+    is_favourite: boolean;
     is_comparison: null;
     "SKU-attribute": string;
     txt_hazardous: string;
@@ -317,4 +317,43 @@ export type Cart = {
   }[];
   configuration: CartConfiguration;
   "total-quantity": number;
+};
+
+export type ShoppingList = {
+  lists: ShoppingListElement[];
+  pagination: Pagination;
+};
+
+export type ShoppingListElement = {
+  listId: string;
+  listName: string;
+  date: string;
+  totalItem: string;
+};
+
+export type ShoppingListResponse = {
+  lists: ShoppingListElementResponse[];
+  pagination: OldPagination;
+};
+
+export type ShoppingListElementResponse = {
+  list: string;
+  list_id: string;
+  date: string;
+  totalItem: string;
+};
+
+export type ProductVariant = {
+  id: string;
+  slug: string;
+  sku: string;
+  title: string;
+  image: string;
+  uom: string;
+};
+
+export type Product = {
+  groupName: string;
+  groupImage: string;
+  variants: ProductVariant[];
 };

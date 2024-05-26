@@ -14,19 +14,19 @@ import { TableCell, TableRow } from "@/old/_components/ui/table";
 import { cn } from "@/old/_utils/helpers";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { WurthFullBlack } from "@repo/web-ui/components/logos/wurth-full-black";
+import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import dayjs from "dayjs";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { Suspense, useId, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { IoMdHeart, IoMdHeartEmpty } from "react-icons/io";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import * as z from "zod";
 import ItemAttributes from "./_item-attributes/item-attributes";
 import ItemPrices from "./_item-prices/item-prices";
 import { generateItemUrl, isItemError } from "./client-helpers";
 import { DATE_FORMAT } from "./constants";
+import FavoriteButton from "./favorite-button";
 import type { DetailedPurchasedItem } from "./types";
 
 const schema = z.object({
@@ -44,8 +44,8 @@ type PurchasedItemRowProps = {
 const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
   const [showItemAttributes, setShowItemAttributes] = useState(false);
   const [showMyPrice, setShowMyPrice] = useState(false);
+
   const id = useId();
-  const router = useRouter();
   const quantityId = `quantity-${id}`;
   const formId = `purchase-add-to-cart-form-${id}`;
 
@@ -80,14 +80,6 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
       );
     }
   });
-
-  const onAddToFavorites = () => {
-    if (item.isFavorite) {
-      router.push("/myaccount/myfavorites");
-    } else {
-      // TODO: Logic needs to be finalized.
-    }
-  };
 
   const isEligible = (item: DetailedPurchasedItem) => {
     return (
@@ -156,6 +148,58 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
               <h4 className="line-clamp-3 text-wrap font-bold">
                 {item.productTitle}
               </h4>
+
+              <div className="text-sm text-brand-gray-500">
+                Category :&nbsp;
+                {item.productCategory !== "" ? item.productCategory : "N/A"}
+              </div>
+            </>
+          )}
+        </TableCell>
+
+        <TableCell className="min-w-[76px]">
+          <Link
+            href={generateItemUrl(item)}
+            className={
+              isItemError(item) ? "pointer-events-none" : "pointer-events-auto"
+            }
+          >
+            {item.image ? (
+              <Image
+                src={item.image}
+                alt={item.productTitle}
+                width={76}
+                height={76}
+                className="border border-brand-gray-200 object-contain"
+              />
+            ) : (
+              <WurthFullBlack
+                width={76}
+                height={76}
+                className="border border-brand-gray-200 px-2"
+              />
+            )}
+          </Link>
+        </TableCell>
+
+        <TableCell className="flex flex-col gap-0.5">
+          <Link
+            href={generateItemUrl(item)}
+            className={cn(
+              "text-sm text-brand-gray-500",
+              isItemError(item) ? "pointer-events-none" : "pointer-events-auto",
+            )}
+          >
+            Item# : {item.productSku !== "" ? item.productSku : "N/A"}
+          </Link>
+
+          {!isItemNotAdded && (
+            <>
+              <div className="text-sm text-brand-gray-500">
+                MRF Part# : {item.mfrPartNo !== "" ? item.mfrPartNo : "N/A"}
+              </div>
+
+              <h4 className="text-wrap font-bold">{item.productTitle}</h4>
 
               <div className="text-sm text-brand-gray-500">
                 Category :&nbsp;
@@ -326,17 +370,9 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
                 Add to cart
               </Button>
 
-              <Button
-                type="button"
-                variant="ghost"
-                onClick={() => onAddToFavorites()}
-              >
-                {item?.isFavorite ? (
-                  <IoMdHeart className="text-2xl text-brand-primary" />
-                ) : (
-                  <IoMdHeartEmpty className="text-2xl text-brand-gray-500" />
-                )}
-              </Button>
+              <Suspense fallback={<Skeleton className="h-9 w-14" />}>
+                <FavoriteButton productId={item.productId} token={token} />
+              </Suspense>
             </form>
           </TableCell>
         </TableRow>
