@@ -48,6 +48,7 @@ const DatePicker = ({
         <Calendar
           mode="single"
           selected={date}
+          selectedDate={date}
           onSelect={(selectedDate) => {
             if (selectedDate) {
               onSelectDate(selectedDate);
