@@ -34,7 +34,7 @@ import {
   TableRow,
 } from "@repo/web-ui/components/ui/table";
 import dayjs from "dayjs";
-import { useEffect, useId, useState } from "react";
+import { useEffect, useId, useMemo, useState } from "react";
 import type { Availability, AvailabilityOption } from "../types";
 import type { OptionPlant } from "./types";
 
@@ -53,8 +53,17 @@ const ALTERNATIVE_BRANCHES = "alternative-branches";
 // Vendor Direct Shipping Method
 const VENDOR_DIRECT_CODE = "D";
 
+// Cart config values
+const EMPTY_STRING = "";
+const TRUE_STRING = "T";
+const FALSE_STRING = "F";
+
+// Availability statuses
+const IN_STOCK = "inStock";
+const LIMITED_STOCK = "limitedStock";
+const NOT_IN_STOCK = "notInStock";
+
 type CartItemShippingMethodProps = {
-  shippingMethods: ShippingMethod[];
   plants: Plant[];
   availability: Availability;
   setSelectedWillCallPlant: (plant: string) => void;
@@ -62,10 +71,6 @@ type CartItemShippingMethodProps = {
   onSave: (config: Partial<CartItemConfiguration>) => void;
   cartConfiguration: CartConfiguration;
 };
-
-const EMPTY_STRING = "";
-const TRUE_STRING = "T";
-const FALSE_STRING = "F";
 
 const createCartItemConfig = ({
   method,
@@ -122,6 +127,7 @@ const CartItemShippingMethod = ({
   setSelectedWillCallPlant,
   selectedWillCallPlant,
   onSave,
+  cartConfiguration,
 }: CartItemShippingMethodProps) => {
   const id = useId();
   const shipToMeId = `${SHIP_TO_ME}-${id}`;
@@ -146,6 +152,7 @@ const CartItemShippingMethod = ({
   );
 
   const [selectedShipToMe, setSelectedShipToMe] = useState(() => {
+    // State initialization based on availability options
     if (availableAll) {
       return ALL_AVAILABLE;
     } else if (takeOnHand) {
@@ -153,7 +160,7 @@ const CartItemShippingMethod = ({
     } else if (shipAlternativeBranch) {
       return ALTERNATIVE_BRANCHES;
     }
-
+    // Return a default value here if none of the conditions match
     return undefined;
   });
 
@@ -176,9 +183,18 @@ const CartItemShippingMethod = ({
   const defaultShippingOption = shippingMethods?.at(0);
 
   // User selected shipping method
-  const [selectedShippingMethod, setSelectedShippingMethod] = useState(
-    defaultShippingOption?.code ?? "",
-  );
+  const [selectedShippingMethod, setSelectedShippingMethod] = useState(() => {
+    // Check if there is default shipping method for users ship-to address
+    if (cartConfiguration?.default_shipping) {
+      const shipToDefaultMethod = shippingMethods?.find(
+        (method) => method?.code === cartConfiguration.default_shipping,
+      );
+      if (shipToDefaultMethod) {
+        return shipToDefaultMethod.code;
+      }
+    }
+    return defaultShippingOption?.code ?? "";
+  });
 
   const calculateAllPlantsQuantity = (
     plants: {
@@ -206,7 +222,7 @@ const CartItemShippingMethod = ({
       ?.isSameDayAvail ?? false;
 
   // Ship to me logics
-  const isShipToMeEnabled = status === "inStock" || status === "limitedStock";
+  const isShipToMeEnabled = status === IN_STOCK || status === LIMITED_STOCK;
 
   let availableAllPlant: OptionPlant | undefined = undefined;
   let takeOnHandPlant: OptionPlant | undefined = undefined;
@@ -250,6 +266,30 @@ const CartItemShippingMethod = ({
     return shippingMethods?.at(0)?.code ?? "";
   };
 
+  const getAlternativeBranchesConfig = ({
+    plants,
+    method,
+  }: {
+    plants: {
+      index: number;
+      quantity?: number;
+      plant: string;
+    }[];
+    method: string;
+  }) => {
+    let config: Partial<CartItemConfiguration> = {};
+
+    const data = plants?.map((plant) => ({
+      [`avail_${plant?.index}`]: (plant?.quantity ?? 0).toString(),
+      [`plant_${plant?.index}`]: plant?.plant ?? "",
+      [`shipping_method_${plant?.index}`]: method,
+    }));
+
+    config = Object.assign(config, ...data);
+
+    return config;
+  };
+
   const handleDeliveryOptionSelect = ({
     checked,
     selectedOption,
@@ -259,16 +299,47 @@ const CartItemShippingMethod = ({
   }) => {
     if (checked) {
       setSelectedSection(selectedOption);
-      // Save the line item config
+      // Ship to me configs
       if (selectedOption === SHIP_TO_ME) {
-        // TODO: Ship to me can have different default configs based on the availability
-        onSave(
-          createCartItemConfig({
-            method: selectedShippingMethod,
-            quantity: availableAllPlant?.quantity ?? 0,
-            plant: availableAllPlant?.plant ?? "",
+        if (availableAll) {
+          onSave(
+            createCartItemConfig({
+              method: selectedShippingMethod,
+              quantity: availableAllPlant?.quantity ?? 0,
+              plant: availableAllPlant?.plant ?? EMPTY_STRING,
+            }),
+          );
+        } else if (takeOnHand) {
+          onSave(
+            createCartItemConfig({
+              method: selectedShippingMethod,
+              quantity: takeOnHandPlant?.quantity ?? 0,
+              plant: takeOnHandPlant?.plant ?? EMPTY_STRING,
+            }),
+          );
+        } else if (shipAlternativeBranch) {
+          onSave(
+            getAlternativeBranchesConfig({
+              plants: shipAlternativeBranch.plants,
+              method: selectedShippingMethod,
+            }),
+          );
+        }
+      }
+      // Will call pickup configs
+      if (selectedOption === WILL_CALL && willCallAnywhere) {
+        onSave({
+          ...createCartItemConfig({
+            method: EMPTY_STRING,
+            quantity: 0,
+            plant: EMPTY_STRING,
           }),
-        );
+          will_call_avail: (willCallAnywhere?.status === NOT_IN_STOCK
+            ? 0
+            : willCallAnywhere?.willCallQuantity ?? 0
+          ).toString(),
+          will_call_plant: willCallAnywhere?.willCallPlant ?? EMPTY_STRING,
+        });
       }
       // Back order all can have only this config
       if (selectedOption === BACK_ORDER && backOrderAll) {
@@ -291,27 +362,6 @@ const CartItemShippingMethod = ({
   const handleShipToMeMethod = (shippingMethod: string) => {
     setSelectedShippingMethod(shippingMethod);
 
-    const alternativeBranchShippingDetails = {
-      ...createCartItemConfig({
-        method: shippingMethod,
-        quantity: shipAlternativeBranch?.plants["1"]?.quantity ?? 0,
-        plant: shipAlternativeBranch?.plants["1"]?.plant ?? "",
-      }),
-      avail_2: (shipAlternativeBranch?.plants["2"]?.quantity ?? 0).toString(),
-      plant_2: shipAlternativeBranch?.plants["2"]?.plant ?? "",
-      avail_3: (shipAlternativeBranch?.plants["3"]?.quantity ?? 0).toString(),
-      plant_3: shipAlternativeBranch?.plants["3"]?.plant ?? "",
-      shipping_method_2: shippingMethod,
-      shipping_method_3: shippingMethod,
-    };
-
-    // TODO - CHECK IF THIS IS POSSIBLE ?
-    // shipAlternativeBranch?.plants?.forEach(plant => {
-    //   alternativeBranchShippingDetails[`avail_${plant.index}` ] = plant.quantity ?? 0;
-    //   alternativeBranchShippingDetails[`plant_1`] = plant.plant ?? "";
-    //
-    // })
-
     if (shippingMethod) {
       switch (selectedShipToMe) {
         case ALL_AVAILABLE:
@@ -319,7 +369,7 @@ const CartItemShippingMethod = ({
             createCartItemConfig({
               method: shippingMethod,
               quantity: availableAllPlant?.quantity ?? 0,
-              plant: availableAllPlant?.plant ?? "",
+              plant: availableAllPlant?.plant ?? EMPTY_STRING,
             }),
           );
           break;
@@ -328,12 +378,19 @@ const CartItemShippingMethod = ({
             createCartItemConfig({
               method: shippingMethod,
               quantity: takeOnHandPlant?.quantity ?? 0,
-              plant: takeOnHandPlant?.plant ?? "",
+              plant: takeOnHandPlant?.plant ?? EMPTY_STRING,
             }),
           );
           break;
         case ALTERNATIVE_BRANCHES:
-          onSave(alternativeBranchShippingDetails);
+          if (shipAlternativeBranch) {
+            onSave(
+              getAlternativeBranchesConfig({
+                plants: shipAlternativeBranch.plants,
+                method: shippingMethod,
+              }),
+            );
+          }
           break;
       }
     }
@@ -341,48 +398,36 @@ const CartItemShippingMethod = ({
 
   const handleShipToMeOptions = (shipToMe: string) => {
     setSelectedShipToMe(shipToMe);
+    // TODO - Check if there is ship-to default shipping
     // Reset the selected shipping method to default
     const defaultMethod = defaultShippingOption?.code;
 
     if (defaultMethod) {
       setSelectedShippingMethod(defaultMethod);
 
-      switch (shipToMe) {
-        case TAKE_ON_HAND:
-          onSave(
-            createCartItemConfig({
-              method: defaultMethod,
-              quantity: takeOnHandPlant?.quantity ?? 0,
-              plant: takeOnHandPlant?.plant ?? "",
-            }),
-          );
-          break;
-        case ALTERNATIVE_BRANCHES:
-          onSave({
-            ...createCartItemConfig({
-              method: defaultMethod,
-              quantity: shipAlternativeBranch?.plants["1"]?.quantity ?? 0,
-              plant: shipAlternativeBranch?.plants["1"]?.plant ?? "",
-            }),
-            avail_2: (
-              shipAlternativeBranch?.plants["2"]?.quantity ?? 0
-            ).toString(),
-            plant_2: shipAlternativeBranch?.plants["2"]?.plant ?? "",
-            avail_3: (
-              shipAlternativeBranch?.plants["3"]?.quantity ?? 0
-            ).toString(),
-            plant_3: shipAlternativeBranch?.plants["3"]?.plant ?? "",
-            shipping_method_2: defaultMethod,
-            shipping_method_3: defaultMethod,
-          });
-          break;
+      if (shipToMe === TAKE_ON_HAND && takeOnHand) {
+        onSave(
+          createCartItemConfig({
+            method: defaultMethod,
+            quantity: takeOnHandPlant?.quantity ?? 0,
+            plant: takeOnHandPlant?.plant ?? EMPTY_STRING,
+          }),
+        );
+      }
+
+      if (shipToMe === ALTERNATIVE_BRANCHES && shipAlternativeBranch) {
+        onSave(
+          getAlternativeBranchesConfig({
+            plants: shipAlternativeBranch?.plants,
+            method: defaultMethod,
+          }),
+        );
       }
     }
   };
 
-  useEffect(() => {
-    // TODO - Will remove this once found a better solution.
-    // Keeping this for now to unblock QAs
+  // Compute selectedShipToMe value whenever options change
+  useMemo(() => {
     if (availableAll) {
       setSelectedShipToMe(ALL_AVAILABLE);
     } else if (takeOnHand) {
@@ -391,6 +436,25 @@ const CartItemShippingMethod = ({
       setSelectedShipToMe(ALTERNATIVE_BRANCHES);
     }
   }, [availableAll, takeOnHand, shipAlternativeBranch]);
+
+  useEffect(() => {
+    // TODO - Will remove useEffect hook once found a better solution.
+    // Keeping this for now to unblock QAs
+    if (selectedSection === WILL_CALL && willCallAnywhere) {
+      onSave({
+        ...createCartItemConfig({
+          method: EMPTY_STRING,
+          quantity: 0,
+          plant: EMPTY_STRING,
+        }),
+        will_call_avail: (willCallAnywhere?.status === NOT_IN_STOCK
+          ? 0
+          : willCallAnywhere?.willCallQuantity ?? 0
+        ).toString(),
+        will_call_plant: willCallAnywhere?.willCallPlant ?? EMPTY_STRING,
+      });
+    }
+  }, [selectedSection, willCallAnywhere]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <ul className="flex flex-col gap-3">
@@ -653,7 +717,7 @@ const CartItemShippingMethod = ({
             <Select
               disabled={selectedSection !== WILL_CALL}
               value={selectedWillCallPlant}
-              onValueChange={(val) => setSelectedWillCallPlant(val)}
+              onValueChange={(plant) => setSelectedWillCallPlant(plant)}
             >
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select a store" />
@@ -671,7 +735,7 @@ const CartItemShippingMethod = ({
 
             {willCallAnywhere && (
               <div className="flex flex-col gap-1">
-                {willCallAnywhere.status === "inStock" && (
+                {willCallAnywhere.status === IN_STOCK && (
                   <div className="flex items-center text-sm">
                     <ItemCountBadge count={willCallAnywhere.willCallQuantity} />
                     &nbsp;<span className="font-medium">pick up at</span>
@@ -680,7 +744,7 @@ const CartItemShippingMethod = ({
                   </div>
                 )}
 
-                {willCallAnywhere.status === "limitedStock" && (
+                {willCallAnywhere.status === LIMITED_STOCK && (
                   <>
                     <div className="flex items-center text-sm">
                       <ItemCountBadge
@@ -714,7 +778,7 @@ const CartItemShippingMethod = ({
                   </>
                 )}
 
-                {willCallAnywhere.status === "notInStock" && (
+                {willCallAnywhere.status === NOT_IN_STOCK && (
                   <>
                     <div className="rounded bg-red-800/10 px-2 py-1 text-sm text-red-800">
                       This item is out of stock at&nbsp;
@@ -735,7 +799,7 @@ const CartItemShippingMethod = ({
               />
             )}
 
-            {willCallAnywhere?.status === "notInStock" && (
+            {willCallAnywhere?.status === NOT_IN_STOCK && (
               <BackOrderInfoBanner
                 date={willCallAnywhere?.willCallBackOrder ?? ""}
               />

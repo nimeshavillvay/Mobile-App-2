@@ -6,7 +6,6 @@ import type {
   CartConfiguration,
   CartItemConfiguration,
   Plant,
-  ShippingMethod,
 } from "@/_lib/types";
 import { formatNumberToPrice } from "@/_lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -43,23 +42,28 @@ type CartItemProps = {
     image: string;
     cartItemId: number;
   };
-  shippingMethods: ShippingMethod[];
   plants: Plant[];
   cartConfiguration: CartConfiguration;
+  willCallPlant: { plant: string };
 };
 
 const CartItem = ({
   token,
   product,
-  shippingMethods,
   plants,
   cartConfiguration,
+  willCallPlant,
 }: CartItemProps) => {
   const id = useId();
   const quantityId = `quantity-${id}`;
   const poId = `po-${id}`;
 
-  const [selectedWillCallPlant, setSelectedWillCallPlant] = useState("");
+  const [selectedWillCallPlant, setSelectedWillCallPlant] = useState(() => {
+    if (willCallPlant?.plant) {
+      return willCallPlant.plant;
+    }
+    return plants?.at(0)?.code ?? "";
+  });
 
   const priceCheckQuery = useSuspensePriceCheck("token", [
     { productId: product.id, qty: product.quantity },
@@ -238,7 +242,6 @@ const CartItem = ({
 
       <div className="md:w-80">
         <CartItemShippingMethod
-          shippingMethods={shippingMethods}
           plants={plants}
           availability={checkAvailabilityQuery.data}
           setSelectedWillCallPlant={setSelectedWillCallPlant}
@@ -268,6 +271,7 @@ const CartItem = ({
             variant="ghost"
             className="h-fit w-full justify-end px-0 py-0 text-wurth-red-650"
             onClick={() => handleDeleteCartItem()}
+            disabled={deleteCartItemMutation.isPending}
           >
             <span className="text-[13px] leading-5">Delete</span>
 

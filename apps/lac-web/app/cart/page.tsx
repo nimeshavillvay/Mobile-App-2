@@ -57,11 +57,7 @@ const CartPage = async () => {
               </ul>
             }
           >
-            <CartList
-              token={sessionToken.value}
-              shippingMethods={shippingMethods}
-              plants={plants}
-            />
+            <CartList token={sessionToken.value} plants={plants} />
           </Suspense>
         </div>
 
