@@ -79,7 +79,7 @@ const SelectorsForMobileDialog = ({
 
     if (value !== "0") {
       const newFromDate = dayjs()
-        .subtract(Number(value), "months")
+        .subtract(Number(value), "days")
         .format(URL_DATE_FORMAT);
       const newToDate = dayjs().format(URL_DATE_FORMAT);
 

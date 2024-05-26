@@ -44,7 +44,7 @@ const useSuspenseCart = (token: string) => {
         cartItems: data.cartItems.map((item) => ({
           code: item.code,
           quantity: item.quantity,
-          cartId: item.cartid,
+          cartItemId: item.cart_item_id,
           configuration: item.configuration,
           mappedConfiguration: {
             availability: getConfigAvailability(item.configuration),
@@ -62,7 +62,6 @@ const useSuspenseCart = (token: string) => {
             productName: item.itemInfo.item_name,
             image: item.itemInfo.img,
             slug: item.itemInfo.url,
-            isFavourite: !!item.itemInfo.is_favourite,
             isComparison: !!item.itemInfo.is_comparison,
             isHazardous: item.itemInfo.txt_hazardous === "Y",
             specialShipping: SPECIAL_SHIPPING_FLAG.includes(
@@ -108,6 +107,7 @@ const useSuspenseCart = (token: string) => {
           overriddenEmail: data.configuration.overridden_email,
           osr: data.configuration.osr,
           firstName: data.configuration["first-name"],
+          defaultShipping: data.configuration.default_shipping,
           deliveringPlant: data.configuration.delivering_plant,
           availablePaymentOptions: data.configuration.avail_payment_options,
           attnName: data.configuration.attnName,

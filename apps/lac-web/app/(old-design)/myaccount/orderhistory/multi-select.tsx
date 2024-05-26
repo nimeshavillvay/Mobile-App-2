@@ -4,6 +4,7 @@ import { Label } from "@/old/_components/ui/label";
 import { cn } from "@/old/_utils/helpers";
 import { useMultipleSelection, useSelect } from "downshift";
 import { ChevronDown, X } from "lucide-react";
+import { MutableRefObject } from "react";
 import type { Option } from "./types";
 
 type MultiSelectProps = {
@@ -13,6 +14,7 @@ type MultiSelectProps = {
   flag?: string;
   onValuesChange?: (selectedItems: Option[]) => void;
   onClear?: () => void;
+  resetRef: MutableRefObject<boolean>;
 };
 
 // TODO: This component can be optimized further
@@ -23,6 +25,7 @@ const MultiSelect = ({
   flag = "multiselect",
   onValuesChange,
   onClear,
+  resetRef,
 }: MultiSelectProps) => {
   const initialSelectedItems: Option[] = [];
 
@@ -102,6 +105,11 @@ const MultiSelect = ({
     }
     selectedItems.forEach(removeSelectedItem);
   };
+
+  if (resetRef.current) {
+    resetRef.current = false;
+    removeAllSelectedItems();
+  }
 
   return (
     <div className="w-full">

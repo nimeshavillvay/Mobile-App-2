@@ -1,10 +1,13 @@
+import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import { cn } from "@/_lib/utils";
-import { HeartOutline } from "@repo/web-ui/components/icons/heart-outline";
+import { Check } from "@repo/web-ui/components/icons/check";
 import { Button } from "@repo/web-ui/components/ui/button";
+import { cookies } from "next/headers";
 import { Suspense } from "react";
 import AddToCartForm from "./_add-to-cart-form";
 import LocationStocks from "./_location-stocks";
 import RegionalExclusionNotice from "./_regional-exclusion-notice";
+import FavoriteButton from "./favorite-button";
 
 type AddToCartProps = {
   productId: number;
@@ -21,6 +24,13 @@ const AddToCart = ({
   uom,
   className,
 }: AddToCartProps) => {
+  const cookiesStore = cookies();
+  const sessionCookie = cookiesStore.get(SESSION_TOKEN_COOKIE);
+
+  if (!sessionCookie?.value) {
+    return null;
+  }
+
   return (
     <section className={cn("space-y-3", className)}>
       <LocationStocks productId={productId} />
@@ -45,11 +55,12 @@ const AddToCart = ({
           </div>
         </div>
 
-        <Button variant="outline" size="icon">
-          <HeartOutline className="size-4" />
-
-          <span className="sr-only">Add to favorites</span>
+        <Button variant="outline" disabled className="gap-1 md:py-2">
+          <Check className="size-4" />
+          <span>Compare</span>
         </Button>
+
+        <FavoriteButton productId={productId} token={sessionCookie.value} />
       </div>
 
       <Suspense>

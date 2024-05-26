@@ -1,4 +1,3 @@
-import { getPasswordPolicies } from "@/_lib/apis/server";
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import type { Metadata } from "next";
 import { Suspense } from "react";
@@ -8,9 +7,7 @@ export const metadata: Metadata = {
   title: "Sign In",
 };
 
-const SignInPage = async () => {
-  const passwordPolicies = await getPasswordPolicies();
-
+const SignInPage = () => {
   return (
     <Suspense
       fallback={
@@ -19,7 +16,7 @@ const SignInPage = async () => {
         </div>
       }
     >
-      <SignIn passwordPolicies={passwordPolicies} />
+      <SignIn />
     </Suspense>
   );
 };

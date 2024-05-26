@@ -1,8 +1,8 @@
 "use client";
 
+import { PasswordInput } from "@/_components/password-input";
 import useCheckEmailMutation from "@/_hooks/user/use-check-email-mutation.hook";
-import type { PasswordPolicies } from "@/_lib/types";
-import { checkPasswordComplexity, cn, isErrorResponse } from "@/_lib/utils";
+import { cn, isErrorResponse } from "@/_lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, buttonVariants } from "@repo/web-ui/components/ui/button";
 import { Input } from "@repo/web-ui/components/ui/input";
@@ -10,7 +10,7 @@ import { Label } from "@repo/web-ui/components/ui/label";
 import { HTTPError } from "ky";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useId, useMemo } from "react";
+import { useId } from "react";
 import { useForm } from "react-hook-form";
 import Balancer from "react-wrap-balancer";
 import { z } from "zod";
@@ -24,11 +24,7 @@ const loginFormSchema = z.object({
   password: z.string(),
 });
 
-type SignInProps = {
-  passwordPolicies: PasswordPolicies;
-};
-
-const SignIn = ({ passwordPolicies }: SignInProps) => {
+const SignIn = () => {
   const id = useId();
   const emailId = `email-${id}`;
   const passwordId = `password-${id}`;
@@ -79,19 +75,12 @@ const SignIn = ({ passwordPolicies }: SignInProps) => {
     });
   });
 
-  const refinedLoginFormSchema = useMemo(
-    () =>
-      loginFormSchema.superRefine(({ password }, context) =>
-        checkPasswordComplexity({ password, passwordPolicies, context }),
-      ),
-    [passwordPolicies],
-  );
-  const loginForm = useForm<z.infer<typeof refinedLoginFormSchema>>({
+  const loginForm = useForm<z.infer<typeof loginFormSchema>>({
     values: {
       email: email ?? "",
       password: "",
     },
-    resolver: zodResolver(refinedLoginFormSchema),
+    resolver: zodResolver(loginFormSchema),
   });
 
   const clearEmail = () => {
@@ -171,15 +160,16 @@ const SignIn = ({ passwordPolicies }: SignInProps) => {
           Welcome back!
         </h1>
 
-        <div className="space-y-1 text-center">
+        <div className="flex flex-row items-center justify-between p-2.5">
           <h2 className="text-lg">{email}</h2>
 
-          <button
-            className="text-sm text-red-800 underline"
+          <Button
+            className="w-20 flex-none text-sm font-bold"
+            variant="outline"
             onClick={clearEmail}
           >
-            Use a different email
-          </button>
+            Change
+          </Button>
         </div>
 
         <form onSubmit={onSubmitLogin} className="flex flex-col gap-6 p-2.5">
@@ -200,12 +190,12 @@ const SignIn = ({ passwordPolicies }: SignInProps) => {
               Password
             </Label>
 
-            <Input
+            <PasswordInput
               {...loginForm.register("password")}
               id={passwordId}
-              type="password"
               autoComplete="password"
               required
+              placeholder="Password"
               className="rounded border-wurth-gray-250 px-3 py-2 text-base shadow-sm"
               disabled={signInMutation.isPending}
             />
@@ -220,7 +210,6 @@ const SignIn = ({ passwordPolicies }: SignInProps) => {
           <div className="flex flex-col items-center gap-2">
             <Button
               type="submit"
-              variant="secondary"
               className="w-full p-2.5 font-bold"
               disabled={signInMutation.isPending}
             >

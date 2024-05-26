@@ -11,9 +11,12 @@ export type CalendarProps = ComponentProps<typeof DayPicker>;
 function Calendar({
   className,
   classNames,
+  selectedDate,
   showOutsideDays = true,
   ...props
-}: CalendarProps) {
+}: CalendarProps & {
+  selectedDate: Date;
+}) {
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
@@ -60,6 +63,7 @@ function Calendar({
         ),
       }}
       {...props}
+      defaultMonth={selectedDate}
     />
   );
 }

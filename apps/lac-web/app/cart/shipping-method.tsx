@@ -24,19 +24,19 @@ type ShippingMethodProps = {
 
 const ShippingMethod = ({ token, options }: ShippingMethodProps) => {
   const id = useId();
-  const shipToMeId = `ship-to-me-${id}`;
-  const willCallId = `will-call-${id}`;
+  const shipToMeId = `${SHIP_TO_ME}-${id}`;
+  const willCallId = `${WILL_CALL}-${id}`;
 
   const [selectedSection, setSelectedSection] = useState<string>();
 
   const cartQuery = useSuspenseCart(token);
 
-  const updateCartItemMutation = useUpdateCartItemMutation();
+  const updateCartItemMutation = useUpdateCartItemMutation(token);
 
   const handleSelectValueChange = (value: string) => {
     updateCartItemMutation.mutate(
       cartQuery.data.cartItems.map((item) => ({
-        productId: item.itemInfo.productId,
+        cartItemId: item.cartItemId,
         quantity: item.quantity,
         config: {
           ...item.configuration,

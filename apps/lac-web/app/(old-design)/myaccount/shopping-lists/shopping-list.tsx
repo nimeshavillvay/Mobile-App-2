@@ -9,11 +9,11 @@ import { Button } from "@repo/web-ui/components/ui/button";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { MdOutlineAdd } from "react-icons/md";
+import useSuspenseShoppingList from "../../../_hooks/shopping-list/use-suspense-shopping-list.hook";
 import ShoppingListDialog from "./shopping-list-dialog";
 import ShoppingListItems from "./shopping-list-items";
 import ShoppingListPagination from "./shopping-list-pagination";
 import useSuspenseShoppingListItemCount from "./use-suspense-shopping-list-item-count.hook";
-import useSuspenseShoppingListMutation from "./use-suspense-shopping-list.hook";
 
 const ShoppingList = ({ token }: { token: string }) => {
   const [selectedAddressShoppingListId, setSelectedAddressShoppingListId] =
@@ -23,11 +23,10 @@ const ShoppingList = ({ token }: { token: string }) => {
 
   const perPage = 20;
 
-  const shoppingListsQuery = useSuspenseShoppingListMutation(
-    token,
-    "name",
-    "desc",
-  );
+  const shoppingListsQuery = useSuspenseShoppingList(token, {
+    sort: "name",
+    sortDirection: "desc",
+  });
 
   const shoppingLists = shoppingListsQuery?.data;
 

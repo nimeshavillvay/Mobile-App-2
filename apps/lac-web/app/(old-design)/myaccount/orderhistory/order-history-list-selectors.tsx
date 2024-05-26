@@ -14,7 +14,7 @@ import {
 import { updateSearchParams } from "@/old/_utils/client-helpers";
 import dayjs from "dayjs";
 import { useSearchParams } from "next/navigation";
-import { useId, useState } from "react";
+import { useId, useRef, useState } from "react";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import {
   CUSTOM_DURATION,
@@ -77,6 +77,10 @@ const OrderHistoryListSelectors = ({
 
   const formattedFromDate = dayjs(fromDate).format(URL_DATE_FORMAT);
   const formattedToDate = dayjs(toDate).format(URL_DATE_FORMAT);
+
+  const resetPoNosRef = useRef(false);
+  const resetOrderStatusesRef = useRef(false);
+  const resetJobNamesRef = useRef(false);
 
   const id = useId();
   const durationId = `duration-${id}`;
@@ -151,6 +155,11 @@ const OrderHistoryListSelectors = ({
     setToDate(new Date(INIT_TO_DATE));
     setOrderStatuses([]);
     setOrderTypes([]);
+    setPoNos([]);
+    setJobNames([]);
+    resetPoNosRef.current = true;
+    resetJobNamesRef.current = true;
+    resetOrderStatusesRef.current = true;
 
     const params = new URLSearchParams();
 
@@ -275,7 +284,7 @@ const OrderHistoryListSelectors = ({
               flag="po"
               data={poNoFilter?.values ?? []}
               onValuesChange={(values) => handlePONosChange(values)}
-              onClear={() => setPoNos([])}
+              resetRef={resetPoNosRef}
             />
 
             <MultiSelect
@@ -283,7 +292,7 @@ const OrderHistoryListSelectors = ({
               flag="job"
               data={jobNameFilter?.values ?? []}
               onValuesChange={(values) => handleJobNamesChange(values)}
-              onClear={() => setJobNames([])}
+              resetRef={resetJobNamesRef}
             />
 
             <MultiSelect
@@ -291,7 +300,7 @@ const OrderHistoryListSelectors = ({
               flag="status"
               data={statusFilter?.values ?? []}
               onValuesChange={(values) => handleOrderStatusChange(values)}
-              onClear={() => setOrderStatuses([])}
+              resetRef={resetOrderStatusesRef}
             />
           </div>
         </div>

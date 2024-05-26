@@ -1,29 +1,5 @@
 import type { OldPagination, Pagination } from "@/_lib/types";
 
-export type ShoppingListResponse = {
-  lists: ShoppingListElementResponse[];
-  pagination: OldPagination;
-};
-
-export type ShoppingListElementResponse = {
-  list: string;
-  list_id: string;
-  date: string;
-  totalItem: string;
-};
-
-export type ShoppingList = {
-  lists: ShoppingListElement[];
-  pagination: Pagination;
-};
-
-export type ShoppingListElement = {
-  listId: string;
-  listName: string;
-  date: string;
-  totalItem: string;
-};
-
 export type ShoppingListItemsResponse = {
   items: ShoppingListItemsElementResponse[];
   pagination: OldPagination;
@@ -84,7 +60,7 @@ export type ShoppingListItemsElement = {
   itemName?: string;
   img?: string;
   slug?: string;
-  isFavourite?: boolean;
+  isFavorite?: boolean;
   isComparison?: boolean;
   txtHazardous?: string;
   txtSpecialShipping?: string;
