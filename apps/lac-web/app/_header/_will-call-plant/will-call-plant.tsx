@@ -27,80 +27,76 @@ const WillCallPlantDrawer = ({ token }: WillCallPlantProps) => {
   const plant = willCallPlantQuery.data;
 
   return (
-    <div>
-      {plant.address && (
-        <Drawer>
-          <DrawerTrigger asChild>
-            <Button
-              variant="ghost"
-              className="flex h-fit flex-row items-center gap-2 p-0 text-black"
-            >
-              <Shop width={16} height={16} />
+    <Drawer>
+      <DrawerTrigger asChild>
+        <Button
+          variant="ghost"
+          className="flex h-fit flex-row items-center gap-2 p-0 text-black"
+        >
+          <Shop width={16} height={16} />
 
-              <span>{`${plant.address.locality}, ${plant.address.region}`}</span>
-            </Button>
-          </DrawerTrigger>
+          <span>{`${plant.address.locality}, ${plant.address.region}`}</span>
+        </Button>
+      </DrawerTrigger>
 
-          <DrawerContent>
-            <div className="mx-auto w-full max-w-[26.75rem]">
-              <DrawerHeader>
-                <DrawerTitle>My Pickup Branch</DrawerTitle>
+      <DrawerContent>
+        <div className="mx-auto w-full max-w-[26.75rem]">
+          <DrawerHeader>
+            <DrawerTitle>My Pickup Branch</DrawerTitle>
 
-                <DrawerDescription className="sr-only">
-                  See details of your pickup branch.
-                </DrawerDescription>
-              </DrawerHeader>
+            <DrawerDescription className="sr-only">
+              See details of your pickup branch.
+            </DrawerDescription>
+          </DrawerHeader>
 
-              <div className="px-4 pb-0">
-                <div className="mb-4 mt-6 grid grid-cols-2 gap-4 text-sm font-medium text-wurth-gray-800">
-                  <div className="flex flex-row items-start gap-2">
-                    <Map
-                      width={20}
-                      height={20}
-                      className="mt-1 shrink-0 stroke-wurth-gray-800"
-                    />
+          <div className="px-4 pb-0">
+            <div className="mb-4 mt-6 grid grid-cols-2 gap-4 text-sm font-medium text-wurth-gray-800">
+              <div className="flex flex-row items-start gap-2">
+                <Map
+                  width={20}
+                  height={20}
+                  className="mt-1 shrink-0 stroke-wurth-gray-800"
+                />
 
-                    <div>
-                      <div>{plant.address["street-address"]}</div>
-                      <div>{plant.address.locality}</div>
-                      <div>{`${plant.address.region} ${plant.address["postal-code"]}, ${plant.address["country-name"]}`}</div>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col gap-3">
-                    <div className="flex flex-row items-center gap-2">
-                      <Phone
-                        width={20}
-                        height={20}
-                        className="shrink-0 stroke-wurth-gray-800"
-                      />
-
-                      <span>{plant.address["phone-number"]}</span>
-                    </div>
-
-                    <div className="flex flex-row items-start gap-2">
-                      <Timetable
-                        width={20}
-                        height={20}
-                        className="shrink-0 stroke-wurth-gray-800"
-                      />
-
-                      <span>{plant.operation_hours}</span>
-                    </div>
-                  </div>
+                <div>
+                  <div>{plant.address["street-address"]}</div>
+                  <div>{plant.address.locality}</div>
+                  <div>{`${plant.address.region} ${plant.address["postal-code"]}, ${plant.address["country-name"]}`}</div>
                 </div>
               </div>
 
-              <DrawerFooter className="pb-9">
-                <DrawerClose asChild>
-                  <Button>Done</Button>
-                </DrawerClose>
-              </DrawerFooter>
+              <div className="flex flex-col gap-3">
+                <div className="flex flex-row items-center gap-2">
+                  <Phone
+                    width={20}
+                    height={20}
+                    className="shrink-0 stroke-wurth-gray-800"
+                  />
+
+                  <span>{plant.address["phone-number"]}</span>
+                </div>
+
+                <div className="flex flex-row items-start gap-2">
+                  <Timetable
+                    width={20}
+                    height={20}
+                    className="shrink-0 stroke-wurth-gray-800"
+                  />
+
+                  <span>{plant.operation_hours}</span>
+                </div>
+              </div>
             </div>
-          </DrawerContent>
-        </Drawer>
-      )}
-    </div>
+          </div>
+
+          <DrawerFooter className="pb-9">
+            <DrawerClose asChild>
+              <Button>Done</Button>
+            </DrawerClose>
+          </DrawerFooter>
+        </div>
+      </DrawerContent>
+    </Drawer>
   );
 };
 
