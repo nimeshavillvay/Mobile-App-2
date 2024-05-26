@@ -7,4 +7,8 @@ module.exports = {
     "prettier",
     "eslint-config-turbo",
   ],
+  plugins: ["react-compiler"],
+  rules: {
+    "react-compiler/react-compiler": "error",
+  },
 };
