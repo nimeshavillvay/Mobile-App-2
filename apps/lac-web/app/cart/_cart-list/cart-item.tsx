@@ -18,11 +18,26 @@ import { Button } from "@repo/web-ui/components/ui/button";
 import { Input } from "@repo/web-ui/components/ui/input";
 import { Label } from "@repo/web-ui/components/ui/label";
 import Image from "next/image";
-import { useId, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { useForm } from "react-hook-form";
 import Balancer from "react-wrap-balancer";
 import { z } from "zod";
+import {
+  ALTERNATIVE_BRANCHES,
+  AVAILABLE_ALL,
+  BACK_ORDER_ALL,
+  EMPTY_STRING,
+  MAIN_OPTIONS,
+  NOT_IN_STOCK,
+  TAKE_ON_HAND,
+} from "../constants";
 import CartItemShippingMethod from "./cart-item-shipping-method";
+import {
+  createCartItemConfig,
+  findAvailabilityOptionForType,
+  getAlternativeBranchesConfig,
+} from "./helpers";
+import type { MainOption } from "./types";
 
 const cartItemSchema = z.object({
   quantity: z.number(),
@@ -59,12 +74,17 @@ const CartItem = ({
   const quantityId = `quantity-${id}`;
   const poId = `po-${id}`;
 
+  const itemConfigHash = product?.configuration?.hashvalue;
+
   const [selectedWillCallPlant, setSelectedWillCallPlant] = useState(() => {
     if (willCallPlant?.plant) {
       return willCallPlant.plant;
     }
     return plants?.at(0)?.code ?? "";
   });
+
+  const [selectedShippingOption, setSelectedShippingOption] =
+    useState<MainOption>();
 
   const { register, getValues, watch } = useForm<
     z.infer<typeof cartItemSchema>
@@ -94,33 +114,21 @@ const CartItem = ({
     plant: selectedWillCallPlant !== "" ? selectedWillCallPlant : undefined,
   });
 
-  const firstLocation = checkAvailabilityQuery.data.availableLocations[0];
-  const isNotInStock = checkAvailabilityQuery.data.status === "notInStock";
+  const { options, status, availableLocations, willCallAnywhere } =
+    checkAvailabilityQuery.data;
+  const firstLocation = availableLocations[0];
+  const isNotInStock = status === NOT_IN_STOCK;
 
-  const handleSave = () => {
+  const handleSave = (config?: Partial<CartItemConfiguration>) => {
     const data = getValues();
 
     updateCartConfigMutation.mutate([
       {
         cartItemId: product.cartItemId,
-        quantity: data.quantity,
+        quantity: Number(data.quantity),
         config: {
           ...product.configuration,
           poOrJobName: data.po,
-        },
-      },
-    ]);
-  };
-
-  const handleSaveShippingMethod = (config: Partial<CartItemConfiguration>) => {
-    const data = getValues();
-
-    updateCartConfigMutation.mutate([
-      {
-        cartItemId: product.cartItemId,
-        quantity: data.quantity,
-        config: {
-          ...product.configuration,
           ...config,
         },
       },
@@ -132,6 +140,93 @@ const CartItem = ({
       products: [{ cartid: product.cartItemId }],
     });
   };
+
+  // TODO - Need to optimize this logic based on priority to set the default option
+  const setDefaultOptionByPriority = () => {
+    const availableAll = findAvailabilityOptionForType(options, AVAILABLE_ALL);
+    const takeOnHand = findAvailabilityOptionForType(options, TAKE_ON_HAND);
+    const backOrderAll = findAvailabilityOptionForType(options, BACK_ORDER_ALL);
+    const shipAlternativeBranch = findAvailabilityOptionForType(
+      options,
+      ALTERNATIVE_BRANCHES,
+    );
+
+    if (availableAll) {
+      handleSave(
+        createCartItemConfig({
+          method:
+            availableAll.plants?.at(0)?.shippingMethods?.at(0)?.code ??
+            EMPTY_STRING,
+          quantity: availableAll.plants?.at(0)?.quantity ?? 0,
+          plant: availableAll.plants?.at(0)?.plant ?? EMPTY_STRING,
+          hash: availableAll.hash,
+        }),
+      );
+    } else if (takeOnHand) {
+      handleSave(
+        createCartItemConfig({
+          method:
+            takeOnHand.plants?.at(0)?.shippingMethods?.at(0)?.code ??
+            EMPTY_STRING,
+          quantity: takeOnHand.plants?.at(0)?.quantity ?? 0,
+          plant: takeOnHand.plants?.at(0)?.plant ?? EMPTY_STRING,
+          hash: takeOnHand.hash,
+        }),
+      );
+    } else if (shipAlternativeBranch) {
+      handleSave(
+        getAlternativeBranchesConfig({
+          plants: shipAlternativeBranch.plants,
+          method:
+            shipAlternativeBranch.plants?.at(0)?.shippingMethods?.at(0)?.code ??
+            EMPTY_STRING,
+          hash: shipAlternativeBranch.hash,
+        }),
+      );
+    } else if (backOrderAll) {
+      handleSave(
+        createCartItemConfig({
+          method:
+            backOrderAll.plants?.at(0)?.shippingMethods?.at(0)?.code ??
+            EMPTY_STRING,
+          quantity: 0,
+          plant: backOrderAll.plants?.at(0)?.plant ?? EMPTY_STRING,
+          hash: backOrderAll.hash,
+        }),
+      );
+    }
+  };
+
+  // TODO - Will remove useEffect hook once we found a better solution.
+  // keeping this for now to unblock QAs
+  useEffect(() => {
+    if (options?.length > 0) {
+      const matchedOption = options.find(
+        (option) => option.hash === itemConfigHash,
+      );
+
+      // Check if matched option exists
+      if (matchedOption) {
+        if (
+          [AVAILABLE_ALL, TAKE_ON_HAND, ALTERNATIVE_BRANCHES].includes(
+            matchedOption.type,
+          )
+        ) {
+          setSelectedShippingOption(MAIN_OPTIONS.SHIP_TO_ME);
+        } else if (matchedOption.type === BACK_ORDER_ALL) {
+          setSelectedShippingOption(MAIN_OPTIONS.BACK_ORDER);
+        }
+      } else {
+        // Check if hash matches with the will call hash
+        if (willCallAnywhere?.hash === itemConfigHash) {
+          setSelectedShippingOption(MAIN_OPTIONS.WILL_CALL);
+        } else {
+          // Update the cart config with default option based on the priority
+          setDefaultOptionByPriority();
+        }
+      }
+    }
+  }, [options, itemConfigHash, willCallAnywhere]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className="flex flex-col gap-6 md:flex-row">
@@ -257,7 +352,9 @@ const CartItem = ({
           availability={checkAvailabilityQuery.data}
           setSelectedWillCallPlant={setSelectedWillCallPlant}
           selectedWillCallPlant={selectedWillCallPlant}
-          onSave={handleSaveShippingMethod}
+          setSelectedShippingOption={setSelectedShippingOption}
+          selectedShippingOption={selectedShippingOption}
+          onSave={handleSave}
           cartConfiguration={cartConfiguration}
         />
       </div>
