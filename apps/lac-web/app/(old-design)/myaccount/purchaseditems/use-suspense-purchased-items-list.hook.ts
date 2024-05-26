@@ -89,6 +89,7 @@ const useSuspensePurchasedItemsList = (
           totalItem,
           orderDate,
           isDiscontinued,
+          isFavorite,
         }): PurchasedProduct => ({
           productTitle: product,
           productSku: sku,
@@ -96,6 +97,7 @@ const useSuspensePurchasedItemsList = (
           totalItem: Number(totalItem),
           purchaseOrderDate: orderDate,
           isDiscontinued,
+          isFavorite,
         }),
       );
 
