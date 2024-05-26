@@ -1,5 +1,6 @@
 import useDeleteCartItemMutation from "@/_hooks/cart/use-delete-cart-item-mutation.hook";
 import useUpdateCartItemMutation from "@/_hooks/cart/use-update-cart-item-mutation.hook";
+import useDebouncedState from "@/_hooks/misc/use-debounced-state.hook";
 import useSuspenseCheckAvailability from "@/_hooks/product/use-suspense-check-availability.hook";
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import type {
@@ -65,12 +66,6 @@ const CartItem = ({
     return plants?.at(0)?.code ?? "";
   });
 
-  const priceCheckQuery = useSuspensePriceCheck("token", [
-    { productId: product.id, qty: product.quantity },
-  ]);
-
-  const price = priceCheckQuery.data.productPrices[0];
-
   const { register, getValues, watch } = useForm<
     z.infer<typeof cartItemSchema>
   >({
@@ -82,15 +77,25 @@ const CartItem = ({
   });
 
   const quantity = watch("quantity");
-
-  const checkAvailabilityQuery = useSuspenseCheckAvailability(token, {
-    productId: product.id,
-    qty: Number(quantity),
-    plant: selectedWillCallPlant !== "" ? selectedWillCallPlant : undefined,
-  });
+  const delayedQuantity = useDebouncedState(quantity);
 
   const updateCartConfigMutation = useUpdateCartItemMutation(token);
   const deleteCartItemMutation = useDeleteCartItemMutation(token);
+
+  const priceCheckQuery = useSuspensePriceCheck(token, [
+    { productId: product.id, qty: delayedQuantity },
+  ]);
+
+  const priceData = priceCheckQuery.data.productPrices[0];
+
+  const checkAvailabilityQuery = useSuspenseCheckAvailability(token, {
+    productId: product.id,
+    qty: delayedQuantity,
+    plant: selectedWillCallPlant !== "" ? selectedWillCallPlant : undefined,
+  });
+
+  const firstLocation = checkAvailabilityQuery.data.availableLocations[0];
+  const isNotInStock = checkAvailabilityQuery.data.status === "notInStock";
 
   const handleSave = () => {
     const data = getValues();
@@ -175,15 +180,16 @@ const CartItem = ({
         <form className="flex-1 space-y-2 md:space-y-1">
           <div className="flex flex-row items-center md:hidden">
             <div className="text-lg text-green-700">
-              ${price?.extendedPrice}
+              ${formatNumberToPrice(priceData?.extendedPrice)}
             </div>
 
             <div className="ml-2 text-sm font-medium text-wurth-gray-500">
-              $34.11/{price?.priceUnit}
+              ${formatNumberToPrice(priceData?.price)}/{priceData?.priceUnit}
             </div>
 
             <div className="ml-1 text-[13px] leading-5 text-wurth-gray-500 line-through">
-              $38.11/{price?.priceUnit}
+              ${formatNumberToPrice(priceData?.listPrice)}/
+              {priceData?.priceUnit}
             </div>
           </div>
 
@@ -208,6 +214,7 @@ const CartItem = ({
               <Input
                 {...register("quantity", {
                   onBlur: handleSave,
+                  disabled: checkAvailabilityQuery.isPending,
                 })}
                 id={quantityId}
                 type="number"
@@ -218,10 +225,14 @@ const CartItem = ({
               />
             </div>
 
-            <div className="text-sm text-wurth-gray-800">
-              <span className="text-yellow-700">Only 150 in stock</span> at
-              Brea, CA
-            </div>
+            {!isNotInStock && (
+              <div className="text-sm text-wurth-gray-800">
+                <span className="text-yellow-700">
+                  Only {firstLocation?.amount} in stock
+                </span>
+                &nbsp;at&nbsp;{firstLocation?.name}
+              </div>
+            )}
           </div>
 
           <div className="pt-2">
@@ -254,15 +265,15 @@ const CartItem = ({
       <div className="hidden space-y-3 md:block md:shrink-0">
         <div className="flex flex-col items-end text-right">
           <div className="text-lg text-green-700">
-            ${formatNumberToPrice(price?.extendedPrice)}
+            ${formatNumberToPrice(priceData?.extendedPrice)}
           </div>
 
           <div className="ml-2 text-sm font-medium text-wurth-gray-500">
-            ${formatNumberToPrice(34.11)}/{price?.priceUnit}
+            ${formatNumberToPrice(priceData?.price)}/{priceData?.priceUnit}
           </div>
 
           <div className="ml-1 text-[13px] leading-5 text-wurth-gray-500 line-through">
-            ${formatNumberToPrice(38.11)}/{price?.priceUnit}
+            ${formatNumberToPrice(priceData?.listPrice)}/{priceData?.priceUnit}
           </div>
         </div>
 
@@ -281,6 +292,7 @@ const CartItem = ({
           <Button
             variant="ghost"
             className="h-fit w-full justify-end px-0 py-0"
+            disabled={true}
           >
             <span className="text-[13px] leading-5">Save for later</span>
 
@@ -290,6 +302,7 @@ const CartItem = ({
           <Button
             variant="ghost"
             className="h-fit w-full justify-end px-0 py-0"
+            disabled={true}
           >
             <span className="text-[13px] leading-5">Add to favorite</span>
 
