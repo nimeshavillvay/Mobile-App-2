@@ -16,11 +16,11 @@ const CompanyInformationLayout = ({
 }: CompanyInformationLayoutProps) => {
   return (
     <section className="py-8">
-        {/* Navigation bar for company information pages */}
-        <CompanyNavigation links={NAV_LINKS} />
+      {/* Navigation bar for company information pages */}
+      <CompanyNavigation links={NAV_LINKS} />
 
-        {children}
-      </section>
+      {children}
+    </section>
   );
 };
 

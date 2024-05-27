@@ -32,4 +32,4 @@ export const Toaster = () => {
       <ToastViewport />
     </ToastProvider>
   );
-}
+};

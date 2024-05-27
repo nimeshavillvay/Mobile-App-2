@@ -5,9 +5,7 @@ export const metadata: Metadata = {
 };
 
 const PersonalNavigationPage = () => {
-  return (
-    <h2>Personal Navigation</h2>
-  );
+  return <h2>Personal Navigation</h2>;
 };
 
 export default PersonalNavigationPage;

@@ -47,7 +47,13 @@ const ItemAttributes = ({ productId }: ItemAttributesProps) => {
 
 export default ItemAttributes;
 
-const Attribute = ({ label, value }: { readonly label: string; readonly value: string }) => (
+const Attribute = ({
+  label,
+  value,
+}: {
+  readonly label: string;
+  readonly value: string;
+}) => (
   <div className="flex flex-row">
     <div className="flex-1 font-bold">{label}:</div>
     <div className="flex-1" dangerouslySetInnerHTML={{ __html: value }} />

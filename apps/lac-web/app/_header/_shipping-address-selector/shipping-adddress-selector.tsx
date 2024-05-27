@@ -35,7 +35,11 @@ const ShippingAddressSelector = ({ token }: ShippingAddressSelectorProps) => {
 
 export default ShippingAddressSelector;
 
-const ShippingAddressSelectorButton = ({ token }: { readonly token: string }) => {
+const ShippingAddressSelectorButton = ({
+  token,
+}: {
+  readonly token: string;
+}) => {
   const shippingAddressListQuery = useSuspenseShippingAddressList(token);
   const { toast } = useToast();
 

@@ -38,8 +38,7 @@ import {
   StepContainerOpen,
 } from "./step-container";
 import type { Industry } from "./types";
-import type {
-  ResponseAddress} from "./use-register-new-user-mutation.hook";
+import type { ResponseAddress } from "./use-register-new-user-mutation.hook";
 import useRegisterNewUserMutation, {
   isVerifyAddressResponse,
 } from "./use-register-new-user-mutation.hook";

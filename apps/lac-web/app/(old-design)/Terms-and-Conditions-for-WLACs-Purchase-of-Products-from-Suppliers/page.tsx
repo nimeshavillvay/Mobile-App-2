@@ -8,9 +8,8 @@ export const metadata: Metadata = {
 const TermsAndConditionsPage = () => {
   return (
     <h1>
-        Terms & Conditions for Würth Louis and Company&apos;s Purchase of
-        Products
-      </h1>
+      Terms & Conditions for Würth Louis and Company&apos;s Purchase of Products
+    </h1>
   );
 };
 

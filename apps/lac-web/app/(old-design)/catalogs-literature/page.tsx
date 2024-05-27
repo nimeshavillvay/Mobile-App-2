@@ -5,9 +5,7 @@ export const metadata: Metadata = {
 };
 
 const CatalogsLiteraturePage = () => {
-  return (
-    <h1>Catalogs & Literature</h1>
-  );
+  return <h1>Catalogs & Literature</h1>;
 };
 
 export default CatalogsLiteraturePage;

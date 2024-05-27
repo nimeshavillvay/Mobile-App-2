@@ -5,9 +5,7 @@ export const metadata: Metadata = {
 };
 
 const BranchFinderPage = () => {
-  return (
-    <h1>Our Branches</h1>
-  );
+  return <h1>Our Branches</h1>;
 };
 
 export default BranchFinderPage;

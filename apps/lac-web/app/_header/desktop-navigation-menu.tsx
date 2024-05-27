@@ -115,7 +115,9 @@ const NavigationLink = ({
   readonly name: string;
   readonly primary?: boolean;
   readonly showArrow?: boolean;
-  readonly onMouseOver?: ComponentProps<typeof NavigationMenuLink>["onMouseOver"];
+  readonly onMouseOver?: ComponentProps<
+    typeof NavigationMenuLink
+  >["onMouseOver"];
 }) => {
   return (
     <NavigationMenuLink

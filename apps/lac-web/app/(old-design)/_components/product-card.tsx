@@ -65,6 +65,10 @@ export const ProductCardDetails = ({
   );
 };
 
-export const ProductCardActions = ({ children }: { readonly children?: ReactNode }) => {
+export const ProductCardActions = ({
+  children,
+}: {
+  readonly children?: ReactNode;
+}) => {
   return <div>{children}</div>;
 };

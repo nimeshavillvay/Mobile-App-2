@@ -32,7 +32,11 @@ const arialFont = localFont({
   display: "swap",
 });
 
-const OldDesignRootLayout = ({ children }: { readonly children: ReactNode }) => {
+const OldDesignRootLayout = ({
+  children,
+}: {
+  readonly children: ReactNode;
+}) => {
   return (
     <div
       className={cn(
