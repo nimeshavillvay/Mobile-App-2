@@ -1,5 +1,3 @@
-"use client";
-
 import { cn } from "@/_lib/utils";
 import {
   Accordion,
@@ -10,7 +8,6 @@ import {
 import { buttonVariants } from "@repo/web-ui/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import Balancer from "react-wrap-balancer";
 import { SECTIONS, SOCIAL_LINKS } from "./constants";
 import ScrollToTopBtn from "./scroll-to-top-btn";
@@ -19,16 +16,9 @@ import vikingCloudLogo from "./viking-cloud.png";
 import WhyShopWithUs from "./why-shop-with-us";
 
 const Footer = () => {
-  const whyShopWithUsShowPages = ["/category", "/product"];
-  const homePage = "/";
-  const currentPage = usePathname();
-  const isShowWhyShopWithUs =
-    currentPage === homePage ||
-    whyShopWithUsShowPages.some((page) => currentPage.startsWith(page));
-
   return (
     <footer className="mt-14 md:mt-20">
-      {isShowWhyShopWithUs && <WhyShopWithUs />}
+      <WhyShopWithUs />
       <div className="space-y-6 pb-7 pt-10 md:space-y-10">
         <div className="container flex flex-row items-center justify-between md:border-b md:border-b-wurth-gray-250 md:py-3">
           <div className="hidden text-base text-wurth-gray-800 md:block">
