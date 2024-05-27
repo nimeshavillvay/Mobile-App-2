@@ -54,7 +54,6 @@ const DatePicker = ({
               onSelectDate(selectedDate);
             }
           }}
-          initialFocus
         />
       </PopoverContent>
     </Popover>
