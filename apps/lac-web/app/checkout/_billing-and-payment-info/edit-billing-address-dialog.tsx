@@ -34,7 +34,7 @@ import {
   SelectValue,
 } from "@repo/web-ui/components/ui/select";
 import { nanoid } from "nanoid";
-import { useState } from "react";
+import { useState, type ComponentProps } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -78,6 +78,13 @@ const EditBillingAddressDialog = ({ token }: EditBillingAddressDialogProps) => {
 
   const updateBillingAddressMutation = useUpdateBillingAddressMutation();
 
+  const closeDialog = () => {
+    setOpen(false);
+
+    // Reset the form when the dialog is closed
+    form.reset();
+  };
+
   const onSubmit = (values: FormSchema) => {
     updateBillingAddressMutation.mutate(
       {
@@ -92,7 +99,7 @@ const EditBillingAddressDialog = ({ token }: EditBillingAddressDialogProps) => {
       {
         onSuccess: (data) => {
           if ("xcAddressId" in data) {
-            setOpen(false);
+            closeDialog();
           } else if ("suggestions" in data) {
             setSuggestions(
               data.suggestions.map((address) => ({
@@ -125,7 +132,7 @@ const EditBillingAddressDialog = ({ token }: EditBillingAddressDialogProps) => {
         {
           onSuccess: (data) => {
             if ("xcAddressId" in data) {
-              setOpen(false);
+              closeDialog();
             } else if ("suggestions" in data) {
               setSuggestions(
                 data.suggestions.map((address) => ({
@@ -144,8 +151,19 @@ const EditBillingAddressDialog = ({ token }: EditBillingAddressDialogProps) => {
   const statesQuery = useStates(country);
   const countiesQuery = useCounties(state);
 
+  const onOpenChange: ComponentProps<typeof Dialog>["onOpenChange"] = (
+    open: boolean,
+  ) => {
+    setOpen(open);
+
+    if (!open) {
+      // Reset the form when the dialog is closed
+      form.reset();
+    }
+  };
+
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>
         <Button variant="outline" className="max-w-fit font-bold shadow-md">
           Edit Address
@@ -362,9 +380,7 @@ const EditBillingAddressDialog = ({ token }: EditBillingAddressDialogProps) => {
                   type="button"
                   className="font-bold shadow-md"
                   disabled={updateBillingAddressMutation.isPending}
-                  onClick={() => {
-                    setOpen(false);
-                  }}
+                  onClick={closeDialog}
                 >
                   Back
                 </Button>
