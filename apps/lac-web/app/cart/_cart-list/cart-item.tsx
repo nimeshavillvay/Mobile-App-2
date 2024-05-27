@@ -305,46 +305,42 @@ const CartItem = ({
 
   // TODO - Will remove useEffect hook once we found a better solution.
   // This is used as intermittent UI state which is much more complicated to be managed inside a mutation ATM
-  useEffect(
-    () => {
-      // Check if matched availability option exists
-      if (matchedAvailabilityOption) {
-        if (matchedAvailabilityOption.type === AVAILABLE_ALL) {
-          setSelectedShippingOption(MAIN_OPTIONS.SHIP_TO_ME);
-          setSelectedShipToMe(AVAILABLE_ALL);
-        } else if (matchedAvailabilityOption.type === TAKE_ON_HAND) {
-          setSelectedShippingOption(MAIN_OPTIONS.SHIP_TO_ME);
-          setSelectedShipToMe(TAKE_ON_HAND);
-        } else if (matchedAvailabilityOption.type === ALTERNATIVE_BRANCHES) {
-          setSelectedShippingOption(MAIN_OPTIONS.SHIP_TO_ME);
-          setSelectedShipToMe(ALTERNATIVE_BRANCHES);
-        } else if (matchedAvailabilityOption.type === BACK_ORDER_ALL) {
-          setSelectedShippingOption(MAIN_OPTIONS.BACK_ORDER);
-        }
-        // Check if there is a selected shipping method
-        if (itemConfigShippingMethod !== "") {
-          setSelectedShippingMethod(itemConfigShippingMethod);
-        }
-      } else {
-        // Check if hash matches with the will call hash
-        if (willCallHash === itemConfigHash) {
-          setSelectedShippingOption(MAIN_OPTIONS.WILL_CALL);
-          // setSelectedWillCallPlant(willCallAnywhere?.willCallPlant);
-        } else {
-          // Update the cart config with default option based on the priority
-          // TODO - There is a mismatch in hashes when initial page load due to selectedWillCallPlant state reset to default
-          setDefaultsForCartConfig();
-        }
+  useEffect(() => {
+    // Check if matched availability option exists
+    if (matchedAvailabilityOption) {
+      if (matchedAvailabilityOption.type === AVAILABLE_ALL) {
+        setSelectedShippingOption(MAIN_OPTIONS.SHIP_TO_ME);
+        setSelectedShipToMe(AVAILABLE_ALL);
+      } else if (matchedAvailabilityOption.type === TAKE_ON_HAND) {
+        setSelectedShippingOption(MAIN_OPTIONS.SHIP_TO_ME);
+        setSelectedShipToMe(TAKE_ON_HAND);
+      } else if (matchedAvailabilityOption.type === ALTERNATIVE_BRANCHES) {
+        setSelectedShippingOption(MAIN_OPTIONS.SHIP_TO_ME);
+        setSelectedShipToMe(ALTERNATIVE_BRANCHES);
+      } else if (matchedAvailabilityOption.type === BACK_ORDER_ALL) {
+        setSelectedShippingOption(MAIN_OPTIONS.BACK_ORDER);
       }
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [
-      itemConfigShippingMethod,
-      itemConfigHash,
-      willCallHash,
-      matchedAvailabilityOption,
-    ],
-  );
+      // Check if there is a selected shipping method
+      if (itemConfigShippingMethod !== "") {
+        setSelectedShippingMethod(itemConfigShippingMethod);
+      }
+    } else {
+      // Check if hash matches with the will call hash
+      if (willCallHash === itemConfigHash) {
+        setSelectedShippingOption(MAIN_OPTIONS.WILL_CALL);
+        // setSelectedWillCallPlant(willCallAnywhere?.willCallPlant);
+      } else {
+        // Update the cart config with default option based on the priority
+        // TODO - There is a mismatch in hashes when initial page load due to selectedWillCallPlant state reset to default
+        setDefaultsForCartConfig();
+      }
+    }
+  }, [
+    itemConfigShippingMethod,
+    itemConfigHash,
+    willCallHash,
+    matchedAvailabilityOption,
+  ]);
 
   return (
     <div className="flex flex-col gap-6 md:flex-row">

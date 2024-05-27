@@ -1,5 +1,5 @@
 import type { ShippingMethod } from "@/_lib/types";
-import {
+import type {
   ALTERNATIVE_BRANCHES,
   AVAILABLE_ALL,
   MAIN_OPTIONS,

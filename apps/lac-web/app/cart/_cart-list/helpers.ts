@@ -68,7 +68,9 @@ export const getShippingMethods = (
   selectedOption: string | undefined,
   availableOptions: { [key: string]: AvailabilityOption | undefined },
 ) => {
-  if (!selectedOption) return [];
+  if (!selectedOption) {
+    return [];
+  }
 
   const availableOption = availableOptions[selectedOption];
   if (availableOption) {
