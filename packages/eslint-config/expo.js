@@ -41,5 +41,6 @@ module.exports = {
       },
     ],
     "react/jsx-pascal-case": "error",
+    "prefer-arrow-callback": ["error", { allowNamedFunctions: true }],
   },
 };
