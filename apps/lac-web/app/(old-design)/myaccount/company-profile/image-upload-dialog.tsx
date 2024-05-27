@@ -5,6 +5,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/old/_components/ui/dialog";
+import { useState } from "react";
 import { useDropzone } from "react-dropzone";
 import useUpdateCompanyProfileImageMutation from "./use-update-company-profile-image-mutation.hook";
 
@@ -23,23 +24,28 @@ const ImageUploadDialog = ({
   const acceptableImageTypesErrorMsg =
     "Invalid file type. Only JPG, JPEG and PNG types are accepted.";
 
-  const { getRootProps, getInputProps, open, acceptedFiles } = useDropzone({
+  const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+
+  const { getRootProps, getInputProps, open } = useDropzone({
     noClick: true,
     noKeyboard: true,
+    onDrop: (files) => {
+      setUploadedFiles(files);
+    },
   });
 
   let errorMsg = "";
-  if (acceptedFiles.length > 0) {
+  if (uploadedFiles.length > 0) {
     if (
-      !acceptedFiles.find((file) => acceptableImageTypes.includes(file.type))
+      !uploadedFiles.find((file) => acceptableImageTypes.includes(file.type))
     ) {
       errorMsg = acceptableImageTypesErrorMsg;
-    } else if (acceptedFiles.find((file) => file.size > maxFileSize)) {
+    } else if (uploadedFiles.find((file) => file.size > maxFileSize)) {
       errorMsg = maxFileSizeErrorMsg;
     }
   }
 
-  const files = acceptedFiles.filter(
+  const files = uploadedFiles.filter(
     (file) =>
       acceptableImageTypes.includes(file.type) && file.size <= maxFileSize,
   );
@@ -49,11 +55,12 @@ const ImageUploadDialog = ({
 
   const submitImage = () => {
     const formData = new FormData();
-    formData.append("File", acceptedFiles[0] as File);
+    formData.append("File", uploadedFiles[0] as File);
 
     updateCompanyProfileImageMutation.mutate(formData, {
       onSuccess: () => {
         setOpenImageUploadDialog(false);
+        setUploadedFiles([]);
       },
       onError: () => {
         errorMsg = "File upload error";
@@ -64,8 +71,7 @@ const ImageUploadDialog = ({
   const handleOpenChange = (open: boolean) => {
     setOpenImageUploadDialog(open);
     if (!open) {
-      acceptedFiles.pop();
-      errorMsg = "";
+      setUploadedFiles([]);
     }
   };
 
