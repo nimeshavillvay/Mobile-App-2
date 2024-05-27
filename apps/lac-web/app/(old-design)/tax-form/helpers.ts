@@ -1,4 +1,4 @@
-import { TaxFormItems } from "./types";
+import type { TaxFormItems } from "./types";
 
 export const downloadFile = async (
   taxFormDetails: TaxFormItems,

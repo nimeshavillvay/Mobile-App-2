@@ -5,11 +5,7 @@ export const metadata: Metadata = {
 };
 
 const SupplyChainPage = () => {
-  return (
-    <>
-      <h1>Supply Chain</h1>
-    </>
-  );
+  return <h1>Supply Chain</h1>;
 };
 
 export default SupplyChainPage;

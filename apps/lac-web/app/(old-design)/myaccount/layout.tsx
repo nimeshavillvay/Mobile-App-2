@@ -10,7 +10,7 @@ import SideMenu from "./_side-menu";
 import Profile from "./profile";
 
 type MyAccountLayoutProps = {
-  children: ReactNode;
+  readonly children: ReactNode;
 };
 
 const MyAccountLayout = ({ children }: MyAccountLayoutProps) => {

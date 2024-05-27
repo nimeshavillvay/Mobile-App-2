@@ -8,9 +8,9 @@ const ProductCardActionsForLoggedIn = ({
   productVariantId,
   addToCart,
 }: {
-  productVariantId: string;
-  token: string;
-  addToCart: () => void;
+  readonly productVariantId: string;
+  readonly token: string;
+  readonly addToCart: () => void;
 }) => {
   const [showShoppingListsDialog, setShowShoppingListsDialog] = useState(false);
 

@@ -9,8 +9,8 @@ const ProductsGridListContainer = ({
   type,
   children,
 }: {
-  type: "mobile" | "desktop";
-  children: ReactNode;
+  readonly type: "mobile" | "desktop";
+  readonly children: ReactNode;
 }) => {
   return (
     <div
@@ -30,12 +30,12 @@ export const ProductsGridList = ({
   products,
   token,
 }: {
-  type: ComponentProps<typeof ProductsGridListContainer>["type"];
-  products: {
+  readonly type: ComponentProps<typeof ProductsGridListContainer>["type"];
+  readonly products: {
     prop: ComponentProps<typeof ProductCard>["product"];
     info: { groupId: string };
   }[];
-  token: string;
+  readonly token: string;
 }) => {
   const orientation = type === "mobile" ? "horizontal" : "vertical";
 
@@ -66,7 +66,7 @@ export const ProductsGridList = ({
 export const ProductsGridListSkeleton = ({
   type,
 }: {
-  type: ComponentProps<typeof ProductsGridListContainer>["type"];
+  readonly type: ComponentProps<typeof ProductsGridListContainer>["type"];
 }) => {
   return (
     <ProductsGridListContainer type={type}>

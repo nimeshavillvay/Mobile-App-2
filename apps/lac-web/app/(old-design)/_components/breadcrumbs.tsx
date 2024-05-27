@@ -4,7 +4,7 @@ import Link from "next/link";
 import { MdOutlineHome } from "react-icons/md";
 
 type BreadcrumbsProps = {
-  links: { href: string; label: string }[];
+  readonly links: { href: string; label: string }[];
 };
 
 const Breadcrumbs = ({ links }: BreadcrumbsProps) => {

@@ -18,10 +18,10 @@ export const INIT_PAGE_NUMBER = "1";
 export const INIT_PER_PAGE = "10";
 
 type FiltersForMobileProps = {
-  open: boolean;
-  setOpen: Dispatch<SetStateAction<boolean>>;
-  userId: string;
-  customerEmail: string;
+  readonly open: boolean;
+  readonly setOpen: Dispatch<SetStateAction<boolean>>;
+  readonly userId: string;
+  readonly customerEmail: string;
 };
 
 const SignAsCustomerDialog = ({

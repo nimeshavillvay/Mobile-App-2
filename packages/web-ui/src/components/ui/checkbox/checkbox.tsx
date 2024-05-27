@@ -2,11 +2,11 @@
 
 import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
 import { CheckIcon } from "@radix-ui/react-icons";
-import { ComponentProps } from "react";
+import { type ComponentProps } from "react";
 import { cn } from "~/lib/utils";
 
 type CheckboxProps = ComponentProps<typeof CheckboxPrimitive.Root> & {
-  iconClassName?: string;
+  readonly iconClassName?: string;
 };
 
 const Checkbox = ({

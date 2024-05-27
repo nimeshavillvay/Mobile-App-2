@@ -1,7 +1,7 @@
 import { compose, cva } from "@/_lib/cva.config";
 import { Profile } from "@repo/web-ui/components/icons/profile";
 import { buttonVariants } from "@repo/web-ui/components/ui/button";
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 
 export const buttonClasses = compose(
   buttonVariants,
@@ -17,7 +17,7 @@ export const buttonClasses = compose(
 );
 
 type ButtonContentProps = {
-  children?: ReactNode;
+  readonly children?: ReactNode;
 };
 
 const ButtonContent = ({

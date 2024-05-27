@@ -10,11 +10,11 @@ import RegionalExclusionNotice from "./_regional-exclusion-notice";
 import FavoriteButton from "./favorite-button";
 
 type AddToCartProps = {
-  productId: number;
-  minQty: number;
-  incQty: number;
-  uom: string;
-  className?: string;
+  readonly productId: number;
+  readonly minQty: number;
+  readonly incQty: number;
+  readonly uom: string;
+  readonly className?: string;
 };
 
 const AddToCart = ({

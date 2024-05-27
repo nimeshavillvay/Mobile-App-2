@@ -31,7 +31,7 @@ const dividerStyles = cva({
 });
 
 type MobileNavigationMenuProps = {
-  categories: TransformedCategory[];
+  readonly categories: TransformedCategory[];
 };
 
 const MobileNavigationMenu = ({ categories }: MobileNavigationMenuProps) => {

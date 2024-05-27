@@ -4,10 +4,10 @@ import useSuspenseFilters from "@/_hooks/search/use-suspense-filters.hook";
 import OrderHistoryListSelectors from "./order-history-list-selectors";
 
 type OrderHistoryListFiltersProps = {
-  token: string;
-  fromDate: string;
-  toDate: string;
-  totalItems: number;
+  readonly token: string;
+  readonly fromDate: string;
+  readonly toDate: string;
+  readonly totalItems: number;
 };
 
 const OrderHistoryListFilters = ({

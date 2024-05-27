@@ -8,7 +8,7 @@ import { CookiesProvider } from "react-cookie";
 import { Provider as WrapBalancer } from "react-wrap-balancer";
 
 type ProvidersProps = {
-  children: ReactNode;
+  readonly children: ReactNode;
 };
 
 const Providers = ({ children }: ProvidersProps) => {
@@ -44,12 +44,14 @@ const getQueryClient = () => {
     // This is very important so we don't re-make a new client if React
     // suspends during the initial render. This may not be needed if we
     // have a suspense boundary BELOW the creation of the query client
-    if (!browserQueryClient) browserQueryClient = makeQueryClient();
+    if (!browserQueryClient) {
+      browserQueryClient = makeQueryClient();
+    }
     return browserQueryClient;
   }
 };
 
-const ReactQueryProvider = ({ children }: { children: ReactNode }) => {
+const ReactQueryProvider = ({ children }: { readonly children: ReactNode }) => {
   const queryClient = getQueryClient();
 
   return (

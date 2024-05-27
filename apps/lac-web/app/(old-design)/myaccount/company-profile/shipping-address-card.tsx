@@ -1,6 +1,5 @@
 import useUpdateShippingAddressMutation from "@/_hooks/address/use-update-shipping-address-mutation.hook";
-import type { AddressFormData } from "@/_lib/types";
-import { Address } from "@/_lib/types";
+import type { Address, AddressFormData } from "@/_lib/types";
 import { Button } from "@/old/_components/ui/button";
 import { useState } from "react";
 import { MdOutlineDelete, MdOutlineEdit } from "react-icons/md";
@@ -12,7 +11,7 @@ import useDeleteShippingAddressMutation from "./use-delete-shipping-address-muta
 const ShippingAddressCard = ({
   shippingAddress,
 }: {
-  shippingAddress: Address;
+  readonly shippingAddress: Address;
 }) => {
   const [openShippingAddressDialog, setOpenShippingAddressDialog] =
     useState(false);

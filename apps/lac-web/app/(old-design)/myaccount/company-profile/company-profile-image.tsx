@@ -8,7 +8,7 @@ import defaultAvatar from "../default-avatar.png";
 import ImageUploadDialog from "./image-upload-dialog";
 import useSuspenseCompanyProfileDetails from "./use-suspense-company-profile-details.hook";
 
-const CompanyProfileImage = ({ token }: { token: string }) => {
+const CompanyProfileImage = ({ token }: { readonly token: string }) => {
   const [openImageUploadDialog, setOpenImageUploadDialog] = useState(false);
 
   const companyDetailsQuery = useSuspenseCompanyProfileDetails(token);

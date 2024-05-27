@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 };
 
 type PasswordResetProps = {
-  searchParams: { [key: string]: string | string[] | undefined };
+  readonly searchParams: { [key: string]: string | string[] | undefined };
 };
 
 const PasswordReset = async ({ searchParams }: PasswordResetProps) => {

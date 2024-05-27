@@ -14,7 +14,7 @@ const emailFormSchema = z.object({
 });
 
 type ForgotPasswordFormProps = {
-  email: string;
+  readonly email: string;
 };
 
 const ForgotPasswordForm = ({ email }: ForgotPasswordFormProps) => {

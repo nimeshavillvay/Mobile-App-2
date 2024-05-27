@@ -16,7 +16,7 @@ const detailsSchema = z.object({
 });
 
 type CartDetailsProps = {
-  token: string;
+  readonly token: string;
 };
 
 const CartDetails = ({ token }: CartDetailsProps) => {

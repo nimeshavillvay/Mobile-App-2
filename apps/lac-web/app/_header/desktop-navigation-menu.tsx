@@ -17,7 +17,7 @@ import { useState, type ComponentProps } from "react";
 import type { TransformedCategory } from "./types";
 
 type DesktopNavigationMenuProps = {
-  categories: TransformedCategory[];
+  readonly categories: TransformedCategory[];
 };
 
 const DesktopNavigationMenu = ({ categories }: DesktopNavigationMenuProps) => {
@@ -110,12 +110,14 @@ const NavigationLink = ({
   showArrow = false,
   onMouseOver,
 }: {
-  id: number;
-  slug: string;
-  name: string;
-  primary?: boolean;
-  showArrow?: boolean;
-  onMouseOver?: ComponentProps<typeof NavigationMenuLink>["onMouseOver"];
+  readonly id: number;
+  readonly slug: string;
+  readonly name: string;
+  readonly primary?: boolean;
+  readonly showArrow?: boolean;
+  readonly onMouseOver?: ComponentProps<
+    typeof NavigationMenuLink
+  >["onMouseOver"];
 }) => {
   return (
     <NavigationMenuLink

@@ -4,8 +4,8 @@ import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
 import { Button } from "@/old/_components/ui/button";
 
 type BuyAgainButtonProps = {
-  productId: number;
-  disabled?: boolean;
+  readonly productId: number;
+  readonly disabled?: boolean;
 };
 
 const BuyAgainButton = ({ productId, ...delegated }: BuyAgainButtonProps) => {

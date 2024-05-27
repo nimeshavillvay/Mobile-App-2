@@ -8,21 +8,19 @@ const NAV_LINKS = [
 ];
 
 type CompanyInformationLayoutProps = {
-  children: ReactNode;
+  readonly children: ReactNode;
 };
 
 const CompanyInformationLayout = ({
   children,
 }: CompanyInformationLayoutProps) => {
   return (
-    <>
-      <section className="py-8">
-        {/* Navigation bar for company information pages */}
-        <CompanyNavigation links={NAV_LINKS} />
+    <section className="py-8">
+      {/* Navigation bar for company information pages */}
+      <CompanyNavigation links={NAV_LINKS} />
 
-        {children}
-      </section>
-    </>
+      {children}
+    </section>
   );
 };
 

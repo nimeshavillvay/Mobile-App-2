@@ -11,7 +11,7 @@ import { Label } from "@repo/web-ui/components/ui/label";
 import { useId } from "react";
 import useFilterParams from "./use-filter-params.hook";
 
-const FiltersDropdown = ({ filters }: { filters: Filters[] }) => {
+const FiltersDropdown = ({ filters }: { readonly filters: Filters[] }) => {
   const id = useId();
   const { selectedValues, searchParams } = useFilterParams(filters);
 

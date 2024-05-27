@@ -26,8 +26,8 @@ const UserProfileButton = ({
   token,
   type,
 }: {
-  token: string;
-  type: ViewportTypes;
+  readonly token: string;
+  readonly type: ViewportTypes;
 }) => {
   const checkLoginQuery = useSuspenseCheckLogin(token);
 
@@ -84,10 +84,10 @@ const UserProfileDropdown = ({
   isOSRLoggedInAsCustomer,
   customerDetails,
 }: {
-  token: string;
-  isOSRUser: boolean;
-  isOSRLoggedInAsCustomer: boolean;
-  customerDetails: string;
+  readonly token: string;
+  readonly isOSRUser: boolean;
+  readonly isOSRLoggedInAsCustomer: boolean;
+  readonly customerDetails: string;
 }) => {
   const router = useRouter();
   const usersListQuery = useSuspenseUsersList(token);

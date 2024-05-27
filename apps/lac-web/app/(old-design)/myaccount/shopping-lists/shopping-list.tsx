@@ -15,7 +15,7 @@ import ShoppingListItems from "./shopping-list-items";
 import ShoppingListPagination from "./shopping-list-pagination";
 import useSuspenseShoppingListItemCount from "./use-suspense-shopping-list-item-count.hook";
 
-const ShoppingList = ({ token }: { token: string }) => {
+const ShoppingList = ({ token }: { readonly token: string }) => {
   const [selectedAddressShoppingListId, setSelectedAddressShoppingListId] =
     useState("");
   const [isOpenShoppingListDialog, setIsOpenShoppingListDialog] =

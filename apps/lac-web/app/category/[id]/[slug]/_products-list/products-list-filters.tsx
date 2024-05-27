@@ -4,8 +4,8 @@ import { ProductsGridFilters } from "@/_components/products-grid";
 import useSuspenseFilters from "@/_hooks/search/use-suspense-filters.hook";
 
 type ProductsListFiltersProps = {
-  token: string;
-  categoryId: string;
+  readonly token: string;
+  readonly categoryId: string;
 };
 
 const ProductsListFilters = ({

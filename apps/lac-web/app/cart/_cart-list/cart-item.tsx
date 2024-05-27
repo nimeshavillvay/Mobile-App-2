@@ -48,8 +48,8 @@ const cartItemSchema = z.object({
 });
 
 type CartItemProps = {
-  token: string;
-  product: {
+  readonly token: string;
+  readonly product: {
     id: number;
     title: string;
     sku: string;
@@ -61,9 +61,9 @@ type CartItemProps = {
     image: string;
     cartItemId: number;
   };
-  plants: Plant[];
-  cartConfiguration: CartConfiguration;
-  willCallPlant: { plant: string };
+  readonly plants: Plant[];
+  readonly cartConfiguration: CartConfiguration;
+  readonly willCallPlant: { plant: string };
 };
 
 const CartItem = ({

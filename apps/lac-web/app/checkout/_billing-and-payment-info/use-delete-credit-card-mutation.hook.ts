@@ -16,7 +16,6 @@ const useDeleteCreditCardMutation = () => {
           headers: {
             Authorization: `Bearer ${cookies[SESSION_TOKEN_COOKIE]}`,
           },
-
           json: {
             card_id: id,
           },
@@ -29,7 +28,7 @@ const useDeleteCreditCardMutation = () => {
     },
     onError: () => {
       toast({
-        title: "Error removing card.",
+        title: "Failed to remove card.",
         variant: "destructive",
       });
     },

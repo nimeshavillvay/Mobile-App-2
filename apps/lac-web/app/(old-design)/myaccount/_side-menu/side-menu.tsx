@@ -39,7 +39,7 @@ const LINKS = [
   },
 ];
 
-const SideMenu = ({ token }: { token: string }) => {
+const SideMenu = ({ token }: { readonly token: string }) => {
   const pathname = usePathname();
   const router = useRouter();
 

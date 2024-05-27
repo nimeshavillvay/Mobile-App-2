@@ -6,9 +6,9 @@ import { type ComponentProps } from "react";
 import useSuspenseSearchProductList from "./use-suspense-search-product-list.hook";
 
 type ProductListGridProps = {
-  token: string;
-  categoryId: string;
-  type: ComponentProps<typeof ProductsGridList>["type"];
+  readonly token: string;
+  readonly categoryId: string;
+  readonly type: ComponentProps<typeof ProductsGridList>["type"];
 };
 
 const ProductListGrid = ({ token, categoryId, type }: ProductListGridProps) => {

@@ -2,7 +2,7 @@
 
 import useSuspenseCart from "@/_hooks/cart/use-suspense-cart.hook";
 import useSuspenseSimulationCheckout from "@/_hooks/cart/use-suspense-simulation-checkout.hook";
-import { Plant } from "@/_lib/types";
+import type { Plant } from "@/_lib/types";
 import { cn } from "@/_lib/utils";
 import { ChevronDown } from "@repo/web-ui/components/icons/chevron-down";
 import { Button, buttonVariants } from "@repo/web-ui/components/ui/button";
@@ -11,8 +11,8 @@ import Link from "next/link";
 import { useState } from "react";
 
 type CartSummaryProps = {
-  token: string;
-  plants: Plant[];
+  readonly token: string;
+  readonly plants: Plant[];
 };
 
 const CartSummary = ({ token, plants }: CartSummaryProps) => {

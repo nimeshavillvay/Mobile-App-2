@@ -1,6 +1,6 @@
 "use client";
 
-import { ShoppingListElement } from "@/_lib/types";
+import type { ShoppingListElement } from "@/_lib/types";
 import { Button } from "@repo/web-ui/components/ui/button";
 import { useState } from "react";
 import { MdOutlineDelete } from "react-icons/md";
@@ -18,11 +18,11 @@ const ShoppingListItems = ({
   perPage,
   shoppingList,
 }: {
-  token: string;
-  page: number;
-  totalPages: number;
-  perPage: number;
-  shoppingList: ShoppingListElement;
+  readonly token: string;
+  readonly page: number;
+  readonly totalPages: number;
+  readonly perPage: number;
+  readonly shoppingList: ShoppingListElement;
 }) => {
   const [isOpenDeleteDialog, setIsOpenDeleteDialog] = useState(false);
   const [isOpenShoppingListDialog, setIsOpenShoppingListDialog] =

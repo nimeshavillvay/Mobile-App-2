@@ -6,8 +6,8 @@ import { useRouter } from "next/navigation";
 import { FaArrowLeft } from "react-icons/fa";
 
 type BackButtonProps = {
-  title: string;
-  className?: string;
+  readonly title: string;
+  readonly className?: string;
 };
 
 const BackButton = ({ title = "Back", className }: BackButtonProps) => {

@@ -7,7 +7,7 @@ import { Button } from "@repo/web-ui/components/ui/button";
 import { useRouter } from "next/navigation";
 
 type CheckoutButtonProps = {
-  token: string;
+  readonly token: string;
 };
 
 const CheckoutButton = ({ token }: CheckoutButtonProps) => {

@@ -5,17 +5,17 @@ import { useState } from "react";
 import type { ResponseAddress } from "./use-register-new-user-mutation.hook";
 
 type AddressSelectorProps = {
-  billingAddresses: ResponseAddress[];
-  shippingAddresses: ResponseAddress[];
-  clearSuggestions: () => void;
-  updateAddress: ({
+  readonly billingAddresses: ResponseAddress[];
+  readonly shippingAddresses: ResponseAddress[];
+  readonly clearSuggestions: () => void;
+  readonly updateAddress: ({
     billing,
     shipping,
   }: {
     billing?: ResponseAddress;
     shipping?: ResponseAddress;
   }) => void;
-  disabled: boolean;
+  readonly disabled: boolean;
 };
 
 const AddressSelector = ({
@@ -114,11 +114,11 @@ const AddressList = ({
   setSelectedIndex,
   disabled,
 }: {
-  type: "Billing" | "Shipping";
-  addresses: ResponseAddress[];
-  selectedIndex?: number;
-  setSelectedIndex: (index: number) => void;
-  disabled: boolean;
+  readonly type: "Billing" | "Shipping";
+  readonly addresses: ResponseAddress[];
+  readonly selectedIndex?: number;
+  readonly setSelectedIndex: (index: number) => void;
+  readonly disabled: boolean;
 }) => {
   return (
     <div className="space-y-1">

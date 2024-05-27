@@ -12,9 +12,9 @@ const ProductCardVariantSelectorForLoggedIn = ({
   addToCart,
   token,
 }: {
-  productVariantId: string;
-  href: string;
-  variants: {
+  readonly productVariantId: string;
+  readonly href: string;
+  readonly variants: {
     id: string;
     slug: string;
     sku: string;
@@ -22,10 +22,10 @@ const ProductCardVariantSelectorForLoggedIn = ({
     image: string;
     uom: string;
   }[];
-  selectedId?: string;
-  setSelectedId: (value: string) => void;
-  addToCart: () => void;
-  token: string;
+  readonly selectedId?: string;
+  readonly setSelectedId: (value: string) => void;
+  readonly addToCart: () => void;
+  readonly token: string;
 }) => {
   const [showShoppingListsDialog, setShowShoppingListsDialog] = useState(false);
 

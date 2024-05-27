@@ -1,5 +1,5 @@
 import { api } from "@/_lib/api";
-import { PriceBreakDowns } from "@/_lib/types";
+import type { PriceBreakDowns } from "@/_lib/types";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
 type ItemPrice = {

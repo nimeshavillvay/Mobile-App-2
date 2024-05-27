@@ -5,7 +5,7 @@ import { Suspense, type ReactNode } from "react";
 import FormContent from "./form-content";
 
 type SuspenseFallbackProps = {
-  children: ReactNode;
+  readonly children: ReactNode;
 };
 
 const SuspenseFallback = ({ children }: SuspenseFallbackProps) => {

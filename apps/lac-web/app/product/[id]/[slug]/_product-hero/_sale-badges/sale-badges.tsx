@@ -4,9 +4,9 @@ import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hoo
 import { Zap } from "@repo/web-ui/components/icons/zap";
 
 type SaleBadgesProps = {
-  token: string;
-  productId: number;
-  listPrice: number;
+  readonly token: string;
+  readonly productId: number;
+  readonly listPrice: number;
 };
 
 const SaleBadges = ({ token, productId, listPrice }: SaleBadgesProps) => {

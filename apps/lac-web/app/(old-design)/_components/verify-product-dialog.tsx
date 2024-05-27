@@ -44,9 +44,9 @@ const formSchema = z.object({
 type FormSchema = z.infer<typeof formSchema>;
 
 type VerifyProductDialogProps = {
-  open: boolean;
-  onOpenChange: ComponentProps<typeof Dialog>["onOpenChange"];
-  product: {
+  readonly open: boolean;
+  readonly onOpenChange: ComponentProps<typeof Dialog>["onOpenChange"];
+  readonly product: {
     image: {
       src: string;
       alt: string;
@@ -56,7 +56,7 @@ type VerifyProductDialogProps = {
     uom: string;
     price?: string;
   };
-  quantity: number;
+  readonly quantity: number;
 };
 
 const VerifyProductDialog = ({

@@ -34,9 +34,9 @@ import type { Option } from "./types";
 import { useFilterParams, type SelectedValues } from "./use-filter-params.hook";
 
 type OrderHistoryListSelectorsProps = {
-  filters: Filters[];
-  isLoading: boolean;
-  totalItems: number;
+  readonly filters: Filters[];
+  readonly isLoading: boolean;
+  readonly totalItems: number;
 };
 
 const OrderHistoryListSelectors = ({
@@ -201,7 +201,7 @@ const OrderHistoryListSelectors = ({
 
               <Select
                 value={duration?.value}
-                onValueChange={function (value) {
+                onValueChange={(value) => {
                   handleDurationChange(value);
                 }}
               >
@@ -358,10 +358,10 @@ const OrderTypeCheckbox = ({
   active,
   onCheckedChanged,
 }: {
-  id: number;
-  value: string;
-  active: boolean;
-  onCheckedChanged: (checked: boolean) => void;
+  readonly id: number;
+  readonly value: string;
+  readonly active: boolean;
+  readonly onCheckedChanged: (checked: boolean) => void;
 }) => {
   return (
     <div className="flex flex-row items-center gap-2">
@@ -383,8 +383,8 @@ const FilterDetailsBoxForMobile = ({
   label,
   value,
 }: {
-  label: string;
-  value: string;
+  readonly label: string;
+  readonly value: string;
 }) => {
   return (
     <div className="w-fit rounded-md bg-gray-100 p-2">

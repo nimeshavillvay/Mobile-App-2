@@ -36,9 +36,9 @@ const schema = z.object({
 type Schema = z.infer<typeof schema>;
 
 type PurchasedItemRowProps = {
-  token: string;
-  item: DetailedPurchasedItem;
-  index: number;
+  readonly token: string;
+  readonly item: DetailedPurchasedItem;
+  readonly index: number;
 };
 
 const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
@@ -310,7 +310,7 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
           index % 2 === 0 ? "bg-white" : "bg-brand-gray-100",
         )}
       >
-        <TableCell></TableCell>
+        <TableCell />
         <TableCell colSpan={3} className={isEligible(item) ? "py-2" : ""}>
           <Collapsible
             open={showItemAttributes}
@@ -346,7 +346,7 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
           </Collapsible>
         </TableCell>
 
-        <TableCell colSpan={2}></TableCell>
+        <TableCell colSpan={2} />
       </TableRow>
 
       {isEligible(item) && (
@@ -396,7 +396,7 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
 
 export default PurchasedItemRow;
 
-const ErrorAlert = ({ item }: { item: DetailedPurchasedItem }) => {
+const ErrorAlert = ({ item }: { readonly item: DetailedPurchasedItem }) => {
   if (!item?.productSku) {
     return (
       <AlertInline

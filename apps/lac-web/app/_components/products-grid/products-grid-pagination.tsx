@@ -16,7 +16,7 @@ import { useFilterParams } from "./use-filter-params.hook";
 export const ProductsGridPagination = ({
   totalPages,
 }: {
-  totalPages: number;
+  readonly totalPages: number;
 }) => {
   const pathname = usePathname();
   const { pageNo, searchParams } = useFilterParams();

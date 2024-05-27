@@ -14,9 +14,9 @@ const ShoppingListPagination = ({
   totalPages,
   shoppingListId,
 }: {
-  page: number;
-  totalPages: number;
-  shoppingListId: string;
+  readonly page: number;
+  readonly totalPages: number;
+  readonly shoppingListId: string;
 }) => {
   const previousPage = page - 1 < 1 ? 1 : page - 1;
   let nextPage;

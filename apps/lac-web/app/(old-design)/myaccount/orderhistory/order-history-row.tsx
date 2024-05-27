@@ -8,8 +8,8 @@ import { UI_DATE_FORMAT } from "./constants";
 import type { Order } from "./types";
 
 type OrderHistoryRowProps = {
-  index: number;
-  order: Order;
+  readonly index: number;
+  readonly order: Order;
 };
 
 const OrderHistoryRow = ({ index, order }: OrderHistoryRowProps) => {

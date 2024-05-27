@@ -24,8 +24,8 @@ import {
 } from "./product-hero-sections";
 
 type ProductHeroProps = {
-  id: string;
-  slug: string;
+  readonly id: string;
+  readonly slug: string;
 };
 
 const ProductHero = async ({ id, slug }: ProductHeroProps) => {
@@ -67,7 +67,10 @@ const ProductHero = async ({ id, slug }: ProductHeroProps) => {
 
       {/* Desktop view */}
       <div className="hidden md:container md:grid md:grid-cols-[minmax(0,3fr)_minmax(26rem,2fr)] md:gap-x-8 md:gap-y-[3.75rem]">
-        <ProductDesktopCarousel images={images} />
+        <ProductDesktopCarousel
+          title={product.selectedProduct.productName}
+          images={images}
+        />
 
         <div className="space-y-6">
           <div className="space-y-2">

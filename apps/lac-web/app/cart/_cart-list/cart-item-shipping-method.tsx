@@ -59,19 +59,19 @@ const UI_DATE_FORMAT = "ddd, MMM. DD YYYY";
 const VENDOR_DIRECT_CODE = "D";
 
 type CartItemShippingMethodProps = {
-  plants: Plant[];
-  availability: Availability;
-  setSelectedWillCallPlant: (plant: string) => void;
-  selectedWillCallPlant: string;
-  setSelectedShippingOption: (option: MainOption | undefined) => void;
-  selectedShippingOption: MainOption | undefined;
-  setSelectedShipToMe: (shipToMe: ShipToMeOption) => void;
-  selectedShipToMe: ShipToMeOption;
-  setSelectedShippingMethod: (method: string) => void;
-  selectedShippingMethod: string;
-  onSave: (config: Partial<CartItemConfiguration>) => void;
-  defaultShippingMethod: ShippingMethod | undefined;
-  shippingMethods: ShippingMethod[];
+  readonly plants: Plant[];
+  readonly availability: Availability;
+  readonly setSelectedWillCallPlant: (plant: string) => void;
+  readonly selectedWillCallPlant: string;
+  readonly setSelectedShippingOption: (option: MainOption | undefined) => void;
+  readonly selectedShippingOption: MainOption | undefined;
+  readonly setSelectedShipToMe: (shipToMe: ShipToMeOption) => void;
+  readonly selectedShipToMe: ShipToMeOption;
+  readonly setSelectedShippingMethod: (method: string) => void;
+  readonly selectedShippingMethod: string;
+  readonly onSave: (config: Partial<CartItemConfiguration>) => void;
+  readonly defaultShippingMethod: ShippingMethod | undefined;
+  readonly shippingMethods: ShippingMethod[];
 };
 
 const CartItemShippingMethod = ({
@@ -728,8 +728,8 @@ const ItemCountBadge = ({
   count = 0,
   className,
 }: {
-  count: number;
-  className?: string;
+  readonly count: number;
+  readonly className?: string;
 }) => {
   return (
     <span
@@ -743,7 +743,7 @@ const ItemCountBadge = ({
   );
 };
 
-const BackOrderItemCountLabel = ({ count }: { count: number }) => {
+const BackOrderItemCountLabel = ({ count }: { readonly count: number }) => {
   return (
     <div className="text-sm font-medium">
       <span className="rounded bg-yellow-700/10 px-1 text-yellow-700">
@@ -754,7 +754,7 @@ const BackOrderItemCountLabel = ({ count }: { count: number }) => {
   );
 };
 
-const BackOrderInfoBanner = ({ date }: { date: string }) => {
+const BackOrderInfoBanner = ({ date }: { readonly date: string }) => {
   return (
     <div className="flex flex-col items-center gap-1 rounded-xl bg-yellow-50 px-4 py-2 text-sm">
       <div>
@@ -771,7 +771,7 @@ const BackOrderInfoBanner = ({ date }: { date: string }) => {
 const ShipToMeBOInfoBanner = ({
   option,
 }: {
-  option:
+  readonly option:
     | {
         backOrder: boolean;
         plants: {

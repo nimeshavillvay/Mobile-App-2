@@ -14,9 +14,9 @@ import UserStatusBadge from "./user-status-badge";
 import UserUpdateForm from "./user-update-form";
 
 type UserRowProps = {
-  user: UserProfile;
-  index: number;
-  jobRoles: Role[];
+  readonly user: UserProfile;
+  readonly index: number;
+  readonly jobRoles: Role[];
 };
 
 const UserRow = ({ user, index, jobRoles }: UserRowProps) => {

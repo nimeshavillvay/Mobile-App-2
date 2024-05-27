@@ -38,9 +38,9 @@ const UsersList = ({
   jobRoles,
   passwordPolicies,
 }: {
-  token: string;
-  jobRoles: Role[];
-  passwordPolicies: PasswordPolicies;
+  readonly token: string;
+  readonly jobRoles: Role[];
+  readonly passwordPolicies: PasswordPolicies;
 }) => {
   const [showYourProfile, setShowYourProfile] = useState(false);
   const [showCurrentUsers, setShowCurrentUsers] = useState(false);
@@ -99,7 +99,7 @@ const UsersList = ({
 
               <TableHead className="text-center">Status</TableHead>
 
-              <TableHead></TableHead>
+              <TableHead />
             </TableRow>
           </TableHeader>
 
@@ -194,7 +194,7 @@ const UsersList = ({
 
                     <TableHead className="text-center">Status</TableHead>
 
-                    <TableHead></TableHead>
+                    <TableHead />
                   </TableRow>
                 </TableHeader>
 

@@ -4,7 +4,7 @@ import { INIT_FROM_DATE, INIT_TO_DATE } from "./constants";
 import FiltersDropdown from "./filters-dropdown";
 
 type PurchasesFiltersProps = {
-  token: string;
+  readonly token: string;
 };
 
 const PurchasesFilters = ({ token }: PurchasesFiltersProps) => {

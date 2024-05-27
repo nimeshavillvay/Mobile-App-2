@@ -29,7 +29,7 @@ import {
 } from "@/old/_components/ui/select";
 import type { Role } from "@/old/_lib/types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Dispatch, SetStateAction } from "react";
+import type { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
 import { MdPermIdentity } from "react-icons/md";
 import * as z from "zod";
@@ -55,11 +55,11 @@ const addUserDataSchema = z
   });
 
 type AddUserDataProps = {
-  jobRoles: Role[];
-  open: boolean;
-  email: string;
-  setOpen: Dispatch<SetStateAction<boolean>>;
-  passwordPolicies: PasswordPolicies;
+  readonly jobRoles: Role[];
+  readonly open: boolean;
+  readonly email: string;
+  readonly setOpen: Dispatch<SetStateAction<boolean>>;
+  readonly passwordPolicies: PasswordPolicies;
 };
 
 const AddUserDataDialog = ({

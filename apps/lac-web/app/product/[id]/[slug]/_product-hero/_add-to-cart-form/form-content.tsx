@@ -5,18 +5,18 @@ import { Button } from "@repo/web-ui/components/ui/button";
 import { type ComponentProps, type ReactNode } from "react";
 
 type FormContentProps = {
-  uom?: string;
-  formProps: Omit<ComponentProps<"form">, "className">;
-  decrementButtonProps: Omit<
+  readonly uom?: string;
+  readonly formProps: Omit<ComponentProps<"form">, "className">;
+  readonly decrementButtonProps: Omit<
     ComponentProps<typeof Button>,
     "type" | "variant" | "size" | "className"
   >;
-  children: ReactNode;
-  incrementButtonProps: Omit<
+  readonly children: ReactNode;
+  readonly incrementButtonProps: Omit<
     ComponentProps<typeof Button>,
     "type" | "variant" | "size" | "className"
   >;
-  submitButtonProps: Omit<
+  readonly submitButtonProps: Omit<
     ComponentProps<typeof Button>,
     "type" | "variant" | "className"
   >;

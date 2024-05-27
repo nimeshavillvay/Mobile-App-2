@@ -15,8 +15,8 @@ const OSRDashboardCustomersLoading = ({
   selfOnly,
   columnsChecked,
 }: {
-  selfOnly: boolean;
-  columnsChecked: string[];
+  readonly selfOnly: boolean;
+  readonly columnsChecked: string[];
 }) => {
   return (
     <div className="my-5">

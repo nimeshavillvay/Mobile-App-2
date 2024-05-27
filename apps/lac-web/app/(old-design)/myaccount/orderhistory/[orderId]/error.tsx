@@ -4,7 +4,7 @@ import Separator from "@/old/_components/separator";
 import BackButton from "../back-button";
 
 type DetailedOrderErrorProps = {
-  params: {
+  readonly params: {
     orderId: string;
   };
 };

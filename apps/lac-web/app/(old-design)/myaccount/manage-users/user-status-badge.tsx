@@ -16,7 +16,7 @@ const getStatusClass = (status: Status) => {
 };
 
 type UserStatusBadgeProps = {
-  status: Status;
+  readonly status: Status;
 };
 
 const UserStatusBadge = ({ status }: UserStatusBadgeProps) => {

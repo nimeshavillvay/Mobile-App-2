@@ -54,7 +54,7 @@ import { YouTube } from "./youtube";
 import { Zap } from "./zap";
 
 const Icon = () => {
-  return <svg></svg>;
+  return <svg />;
 };
 
 const meta: Meta<typeof Icon> = {
@@ -71,8 +71,8 @@ const IconContainer = ({
   name,
   children,
 }: {
-  name: string;
-  children: ReactNode;
+  readonly name: string;
+  readonly children: ReactNode;
 }) => {
   return (
     <li className="flex flex-col items-center">

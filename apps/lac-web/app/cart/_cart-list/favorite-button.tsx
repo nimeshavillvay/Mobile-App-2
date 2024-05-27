@@ -9,9 +9,9 @@ import FavoriteButtonForLoggedIn from "./favorite-button-for-logged-in";
 import FavoriteButtonSkeleton from "./favorite-button-skeleton";
 
 type FavoriteButtonProps = {
-  token: string;
-  productId: number;
-  display: "mobile" | "desktop";
+  readonly token: string;
+  readonly productId: number;
+  readonly display: "mobile" | "desktop";
 };
 
 const FavoriteButton = ({ token, productId, display }: FavoriteButtonProps) => {

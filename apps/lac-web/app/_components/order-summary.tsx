@@ -26,8 +26,8 @@ const promoSchema = z.object({
 });
 
 type OrderSummaryProps = {
-  token: string;
-  children?: ReactNode;
+  readonly token: string;
+  readonly children?: ReactNode;
 };
 
 /**

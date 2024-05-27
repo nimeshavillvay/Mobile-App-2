@@ -17,8 +17,8 @@ import { UI_DATE_FORMAT } from "../constants";
 import BuyAgainButton from "./buy-again-button";
 
 type OrderItemProps = {
-  index: number;
-  orderItem: {
+  readonly index: number;
+  readonly orderItem: {
     sku: string;
     productId: number;
     slug?: string;
@@ -51,8 +51,8 @@ type OrderItemProps = {
     isExcludedProduct?: boolean;
     productName?: string;
   };
-  getShippingMethodName: (shippingCode: string) => string;
-  getPlantName: (plantId: string) => string;
+  readonly getShippingMethodName: (shippingCode: string) => string;
+  readonly getPlantName: (plantId: string) => string;
 };
 
 const OrderItem = ({
