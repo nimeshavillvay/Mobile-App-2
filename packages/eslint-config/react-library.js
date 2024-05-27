@@ -58,5 +58,6 @@ module.exports = {
         singleReturnOnly: false,
       },
     ],
+    curly: ["error", "all"],
   },
 };

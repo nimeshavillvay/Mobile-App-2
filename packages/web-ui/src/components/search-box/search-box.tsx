@@ -102,7 +102,9 @@ export const SearchBoxInput = ({
       ].map((result) => result as SearchDropDownItem),
       // eslint-disable-next-line prefer-arrow-functions/prefer-arrow-functions
       itemToString(result: SearchDropDownItem | null): string {
-        if (!result) return "";
+        if (!result) {
+          return "";
+        }
 
         const searchableFieldsPriority: Array<SearchableFields> = [
           "productTitle",
@@ -130,7 +132,9 @@ export const SearchBoxInput = ({
     fields: Array<SearchableFields>,
   ): string => {
     for (const field of fields) {
-      if (result && result[field]) return result[field] as string;
+      if (result && result[field]) {
+        return result[field] as string;
+      }
     }
     return "";
   };

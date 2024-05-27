@@ -16,7 +16,9 @@ export const BarcodeScanner = ({
   }, [onScanSuccess]);
 
   useEffect(() => {
-    if (!videoRef.current) return;
+    if (!videoRef.current) {
+      return;
+    }
     const currentReader = reader.current;
     currentReader.decodeFromConstraints(
       {

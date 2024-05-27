@@ -60,7 +60,9 @@ const FiltersForMobileDialog = ({ open, setOpen }: FiltersForMobileProps) => {
       setDuration(duration);
     }
 
-    if (value == "0") return;
+    if (value == "0") {
+      return;
+    }
 
     setFromDate(
       new Date(dayjs().subtract(Number(value), "months").format("YYYY-MM-DD")),

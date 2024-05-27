@@ -89,7 +89,9 @@ const UserUpdateForm = ({
   };
 
   const hasEditPermissions = (status: Status) => {
-    if (status === "SUSPENDED") return false;
+    if (status === "SUSPENDED") {
+      return false;
+    }
     return true;
   };
 

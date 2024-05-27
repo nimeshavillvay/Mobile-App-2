@@ -51,7 +51,9 @@ const AddUserEmailDialog = ({
           const userExists = currentUsers.find((currentUser) => {
             return currentUser.email === email;
           });
-          if (userExists) return false;
+          if (userExists) {
+            return false;
+          }
           return true;
         },
         {
