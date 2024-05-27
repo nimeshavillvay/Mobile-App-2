@@ -133,7 +133,7 @@ const MultiSelect = ({
               <Button
                 variant="ghost"
                 className="h-4 gap-0 px-0.5"
-                onClick={removeAllSelectedItems}
+                onClick={() => removeAllSelectedItems()}
               >
                 <X className="h-3 w-3 opacity-50" />
               </Button>
