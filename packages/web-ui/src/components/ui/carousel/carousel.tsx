@@ -44,7 +44,7 @@ type CarouselContextProps = {
 
 const CarouselContext = createContext<CarouselContextProps | null>(null);
 
-function useCarousel() {
+const useCarousel = () => {
   const context = useContext(CarouselContext);
 
   if (!context) {
@@ -52,7 +52,7 @@ function useCarousel() {
   }
 
   return context;
-}
+};
 
 const Carousel = forwardRef<
   HTMLDivElement,

@@ -65,7 +65,7 @@ const MyCustomerDetails = ({
     selfOnly: selfOnly,
   });
 
-  const getColumnData = function (column: string, customer: Customer) {
+  const getColumnData = (column: string, customer: Customer) => {
     switch (column) {
       case columnAccount:
         return customer.billTo;

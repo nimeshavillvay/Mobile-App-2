@@ -13,7 +13,7 @@ module.exports = {
     "prettier",
     "eslint-config-turbo",
   ],
-  plugins: ["react-compiler"],
+  plugins: ["react-compiler", "prefer-arrow-functions"],
   settings: {
     "import/resolver": {
       typescript: {
@@ -43,5 +43,15 @@ module.exports = {
     ],
     "react/jsx-pascal-case": "error",
     "prefer-arrow-callback": ["error", { allowNamedFunctions: true }],
+    "prefer-arrow-functions/prefer-arrow-functions": [
+      "warn",
+      {
+        allowNamedFunctions: false,
+        classPropertiesAllowed: false,
+        disallowPrototype: false,
+        returnStyle: "unchanged",
+        singleReturnOnly: false,
+      },
+    ],
   },
 };

@@ -100,6 +100,7 @@ export const SearchBoxInput = ({
         ...categories.results,
         ...validSearches.map(({ product }) => product),
       ].map((result) => result as SearchDropDownItem),
+      // eslint-disable-next-line prefer-arrow-functions/prefer-arrow-functions
       itemToString(result: SearchDropDownItem | null): string {
         if (!result) return "";
 

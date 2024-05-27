@@ -69,7 +69,7 @@ const FiltersForMobileDialog = ({ open, setOpen }: FiltersForMobileProps) => {
     setToDate(new Date(dayjs().format("YYYY-MM-DD")));
   };
 
-  function onResetFiltersMobile() {
+  const onResetFiltersMobile = () => {
     setDuration(INIT_DURATION);
     setFromDate(new Date(INIT_FROM_DATE));
     setToDate(new Date(INIT_TO_DATE));
@@ -78,7 +78,7 @@ const FiltersForMobileDialog = ({ open, setOpen }: FiltersForMobileProps) => {
     updateSearchParams(params);
 
     setOpen(false);
-  }
+  };
 
   const onSearchMobileFilters = () => {
     const [orderBy = null, orderType = null] = activeFilter.split("-");

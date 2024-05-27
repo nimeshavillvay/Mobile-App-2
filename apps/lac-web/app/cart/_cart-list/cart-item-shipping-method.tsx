@@ -136,12 +136,10 @@ const CartItemShippingMethod = ({
 
   const { options, status, willCallAnywhere } = availability;
 
-  function findAvailabilityOptionForType(
+  const findAvailabilityOptionForType = (
     options: AvailabilityOption[],
     type: string,
-  ) {
-    return options.find((option) => option.type === type) ?? undefined;
-  }
+  ) => options.find((option) => option.type === type) ?? undefined;
 
   const availableAll = findAvailabilityOptionForType(options, "availableAll");
   const takeOnHand = findAvailabilityOptionForType(options, "takeOnHand");

@@ -115,7 +115,7 @@ const PurchasedItemsSelectors = ({
 
           <Select
             value={duration?.value}
-            onValueChange={function (value) {
+            onValueChange={(value) => {
               handleDurationChange(value);
             }}
           >

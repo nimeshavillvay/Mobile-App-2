@@ -81,7 +81,7 @@ const MultiSelect = ({
     },
   });
 
-  function actionPermitted(type: string) {
+  const actionPermitted = (type: string) => {
     const {
       ToggleButtonKeyDownEnter,
       ToggleButtonKeyDownSpaceButton,
@@ -92,9 +92,9 @@ const MultiSelect = ({
       ToggleButtonKeyDownSpaceButton,
       ItemClick,
     ].includes(type);
-  }
+  };
 
-  function updateSelections(selectedItem: Option | null | undefined) {
+  const updateSelections = (selectedItem: Option | null | undefined) => {
     if (selectedItem && selectedItem.active) {
       let newSelectedItems;
       if (isItemSelected(selectedItem)) {
@@ -104,17 +104,17 @@ const MultiSelect = ({
       }
       onValuesChange && onValuesChange(newSelectedItems);
     }
-  }
+  };
 
-  function deselectItem(selectedItem: Option) {
+  const deselectItem = (selectedItem: Option) => {
     removeSelectedItem(selectedItem);
     return selectedItems.filter((item) => item.id !== selectedItem.id);
-  }
+  };
 
-  function selectItem(selectedItem: Option) {
+  const selectItem = (selectedItem: Option) => {
     addSelectedItem(selectedItem);
     return [...selectedItems, selectedItem];
-  }
+  };
 
   const removeAllSelectedItems = () => {
     if (onClear) {
