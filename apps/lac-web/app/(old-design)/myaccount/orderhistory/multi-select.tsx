@@ -38,9 +38,7 @@ const MultiSelect = ({
 
   const filteredItems = data;
 
-  const isItemSelected = (item: Option) => {
-    return selectedItems?.includes(item);
-  };
+  const isItemSelected = (item: Option) => selectedItems?.includes(item);
 
   const {
     isOpen,
@@ -87,13 +85,17 @@ const MultiSelect = ({
         type === ItemClick
       ) {
         if (selectedItem && selectedItem.active) {
+          let newSelectedItems;
           if (isItemSelected(selectedItem)) {
-            onValuesChange && onValuesChange(selectedItems);
+            newSelectedItems = selectedItems.filter(
+              (item) => item.id !== selectedItem.id,
+            );
             removeSelectedItem(selectedItem);
           } else {
-            onValuesChange && onValuesChange([...selectedItems, selectedItem]);
+            newSelectedItems = [...selectedItems, selectedItem];
             addSelectedItem(selectedItem);
           }
+          onValuesChange && onValuesChange(newSelectedItems);
         }
       }
     },
@@ -103,7 +105,12 @@ const MultiSelect = ({
     if (onClear) {
       onClear();
     }
-    selectedItems.forEach(removeSelectedItem);
+
+    selectedItems.forEach((item) => {
+      removeSelectedItem(item);
+    });
+
+    onValuesChange && onValuesChange([]);
   };
 
   if (resetRef.current) {
@@ -126,7 +133,7 @@ const MultiSelect = ({
               <Button
                 variant="ghost"
                 className="h-4 gap-0 px-0.5"
-                onClick={() => removeAllSelectedItems()}
+                onClick={removeAllSelectedItems}
               >
                 <X className="h-3 w-3 opacity-50" />
               </Button>
