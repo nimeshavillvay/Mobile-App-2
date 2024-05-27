@@ -54,18 +54,20 @@ const ImageUploadDialog = ({
     useUpdateCompanyProfileImageMutation();
 
   const submitImage = () => {
-    const formData = new FormData();
-    formData.append("File", uploadedFiles[0] as File);
+    if (uploadedFiles[0]) {
+      const formData = new FormData();
+      formData.append("File", uploadedFiles[0]);
 
-    updateCompanyProfileImageMutation.mutate(formData, {
-      onSuccess: () => {
-        setOpenImageUploadDialog(false);
-        setUploadedFiles([]);
-      },
-      onError: () => {
-        errorMsg = "File upload error";
-      },
-    });
+      updateCompanyProfileImageMutation.mutate(formData, {
+        onSuccess: () => {
+          setOpenImageUploadDialog(false);
+          setUploadedFiles([]);
+        },
+        onError: () => {
+          errorMsg = "File upload error";
+        },
+      });
+    }
   };
 
   const handleOpenChange = (open: boolean) => {
