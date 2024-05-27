@@ -37,8 +37,10 @@ import {
   createCartItemConfig,
   findAvailabilityOptionForType,
   getAlternativeBranchesConfig,
+  getShippingMethods,
 } from "./helpers";
-import type { MainOption } from "./types";
+import type { MainOption, ShipToMeOption } from "./types";
+import useCheckAvailabilityMutation from "./use-check-availability-mutation.hook";
 
 const cartItemSchema = z.object({
   quantity: z.number(),
@@ -75,8 +77,6 @@ const CartItem = ({
   const quantityId = `quantity-${id}`;
   const poId = `po-${id}`;
 
-  const itemConfigHash = product?.configuration?.hashvalue;
-
   const [selectedWillCallPlant, setSelectedWillCallPlant] = useState(() => {
     if (willCallPlant?.plant) {
       return willCallPlant.plant;
@@ -102,6 +102,7 @@ const CartItem = ({
 
   const updateCartConfigMutation = useUpdateCartItemMutation(token);
   const deleteCartItemMutation = useDeleteCartItemMutation(token);
+  const checkAvailabilityMutation = useCheckAvailabilityMutation(token);
 
   const priceCheckQuery = useSuspensePriceCheck(token, [
     { productId: product.id, qty: delayedQuantity },
@@ -111,14 +112,82 @@ const CartItem = ({
 
   const checkAvailabilityQuery = useSuspenseCheckAvailability(token, {
     productId: product.id,
-    qty: delayedQuantity,
+    qty: Number(delayedQuantity ?? product.quantity),
     plant: selectedWillCallPlant !== "" ? selectedWillCallPlant : undefined,
   });
 
-  const { options, status, availableLocations, willCallAnywhere } =
-    checkAvailabilityQuery.data;
+  const {
+    options: availabilityOptions,
+    status,
+    availableLocations,
+    willCallAnywhere,
+  } = checkAvailabilityQuery.data;
   const firstLocation = availableLocations[0];
   const isNotInStock = status === NOT_IN_STOCK;
+
+  const availableAll = findAvailabilityOptionForType(
+    availabilityOptions,
+    AVAILABLE_ALL,
+  );
+  const takeOnHand = findAvailabilityOptionForType(
+    availabilityOptions,
+    TAKE_ON_HAND,
+  );
+  const backOrderAll = findAvailabilityOptionForType(
+    availabilityOptions,
+    BACK_ORDER_ALL,
+  );
+  const shipAlternativeBranch = findAvailabilityOptionForType(
+    availabilityOptions,
+    ALTERNATIVE_BRANCHES,
+  );
+
+  // Select the available shipping options based on the priority
+  const AVAILABLE_OPTIONS_MAP = {
+    [AVAILABLE_ALL]: availableAll,
+    [TAKE_ON_HAND]: takeOnHand,
+    [ALTERNATIVE_BRANCHES]: shipAlternativeBranch,
+  };
+
+  const [selectedShipToMe, setSelectedShipToMe] = useState<ShipToMeOption>(
+    () => {
+      // State initialization based on availability options
+      if (availableAll) {
+        return AVAILABLE_ALL;
+      } else if (takeOnHand) {
+        return TAKE_ON_HAND;
+      } else if (shipAlternativeBranch) {
+        return ALTERNATIVE_BRANCHES;
+      }
+      // Return a default value here if none of the conditions match
+      return undefined;
+    },
+  );
+
+  // use the new function to determine the available options
+  const shippingMethods = getShippingMethods(
+    selectedShipToMe,
+    AVAILABLE_OPTIONS_MAP,
+  );
+
+  // Find the default option (available first option)
+  let defaultShippingMethod = shippingMethods?.at(0);
+
+  if (shippingMethods?.length > 0 && cartConfiguration?.default_shipping) {
+    const shipToDefaultShippingMethod = shippingMethods.find(
+      (method) => method?.code === cartConfiguration.default_shipping,
+    );
+    if (shipToDefaultShippingMethod) {
+      defaultShippingMethod = shipToDefaultShippingMethod;
+    } else {
+      shippingMethods.at(0);
+    }
+  }
+
+  // User selected shipping method (ship-to-me)
+  const [selectedShippingMethod, setSelectedShippingMethod] = useState(
+    defaultShippingMethod?.code ?? "",
+  );
 
   const handleSave = (config?: Partial<CartItemConfiguration>) => {
     const data = getValues();
@@ -142,16 +211,44 @@ const CartItem = ({
     });
   };
 
-  // TODO - Need to optimize this logic based on priority to set the default option
-  const setDefaultOptionByPriority = () => {
-    const availableAll = findAvailabilityOptionForType(options, AVAILABLE_ALL);
-    const takeOnHand = findAvailabilityOptionForType(options, TAKE_ON_HAND);
-    const backOrderAll = findAvailabilityOptionForType(options, BACK_ORDER_ALL);
-    const shipAlternativeBranch = findAvailabilityOptionForType(
-      options,
-      ALTERNATIVE_BRANCHES,
-    );
+  const handleSelectWillCallPlant = (plant: string) => {
+    if (plant !== "") {
+      setSelectedWillCallPlant(plant);
 
+      checkAvailabilityMutation.mutate(
+        {
+          productId: product.id,
+          qty: quantity,
+          plant: plant,
+        },
+        {
+          onSuccess({ willCallAnywhere }) {
+            if (willCallAnywhere) {
+              const willCallAvailableQty =
+                willCallAnywhere.status === NOT_IN_STOCK
+                  ? 0
+                  : willCallAnywhere.willCallQuantity ?? 0;
+              const willCallPlant =
+                willCallAnywhere?.willCallPlant ?? EMPTY_STRING;
+              handleSave({
+                ...createCartItemConfig({
+                  method: EMPTY_STRING,
+                  quantity: 0,
+                  plant: EMPTY_STRING,
+                  hash: willCallAnywhere.hash,
+                }),
+                will_call_avail: willCallAvailableQty.toString(),
+                will_call_plant: willCallPlant,
+              });
+            }
+          },
+        },
+      );
+    }
+  };
+
+  // // TODO - Need to optimize this logic based on priority to set the default option
+  const setDefaultsForCartConfig = () => {
     if (availableAll) {
       handleSave(
         createCartItemConfig({
@@ -198,36 +295,56 @@ const CartItem = ({
     }
   };
 
-  // TODO - Will remove useEffect hook once we found a better solution.
-  // keeping this for now to unblock QAs
-  useEffect(() => {
-    if (options?.length > 0) {
-      const matchedOption = options.find(
-        (option) => option.hash === itemConfigHash,
-      );
+  const itemConfigHash = product?.configuration?.hashvalue;
+  const itemConfigShippingMethod = product?.configuration?.shipping_method_1;
+  const willCallHash = willCallAnywhere?.hash;
 
-      // Check if matched option exists
-      if (matchedOption) {
-        if (
-          [AVAILABLE_ALL, TAKE_ON_HAND, ALTERNATIVE_BRANCHES].includes(
-            matchedOption.type,
-          )
-        ) {
+  const matchedAvailabilityOption = availabilityOptions.find(
+    (option) => option.hash === itemConfigHash,
+  );
+
+  // TODO - Will remove useEffect hook once we found a better solution.
+  // This is used as intermittent UI state which is much more complicated to be managed inside a mutation ATM
+  useEffect(
+    () => {
+      // Check if matched availability option exists
+      if (matchedAvailabilityOption) {
+        if (matchedAvailabilityOption.type === AVAILABLE_ALL) {
           setSelectedShippingOption(MAIN_OPTIONS.SHIP_TO_ME);
-        } else if (matchedOption.type === BACK_ORDER_ALL) {
+          setSelectedShipToMe(AVAILABLE_ALL);
+        } else if (matchedAvailabilityOption.type === TAKE_ON_HAND) {
+          setSelectedShippingOption(MAIN_OPTIONS.SHIP_TO_ME);
+          setSelectedShipToMe(TAKE_ON_HAND);
+        } else if (matchedAvailabilityOption.type === ALTERNATIVE_BRANCHES) {
+          setSelectedShippingOption(MAIN_OPTIONS.SHIP_TO_ME);
+          setSelectedShipToMe(ALTERNATIVE_BRANCHES);
+        } else if (matchedAvailabilityOption.type === BACK_ORDER_ALL) {
           setSelectedShippingOption(MAIN_OPTIONS.BACK_ORDER);
+        }
+        // Check if there is a selected shipping method
+        if (itemConfigShippingMethod !== "") {
+          setSelectedShippingMethod(itemConfigShippingMethod);
         }
       } else {
         // Check if hash matches with the will call hash
-        if (willCallAnywhere?.hash === itemConfigHash) {
+        if (willCallHash === itemConfigHash) {
           setSelectedShippingOption(MAIN_OPTIONS.WILL_CALL);
+          // setSelectedWillCallPlant(willCallAnywhere?.willCallPlant);
         } else {
           // Update the cart config with default option based on the priority
-          setDefaultOptionByPriority();
+          // TODO - There is a mismatch in hashes when initial page load due to selectedWillCallPlant state reset to default
+          setDefaultsForCartConfig();
         }
       }
-    }
-  }, [options, itemConfigHash, willCallAnywhere]); // eslint-disable-line react-hooks/exhaustive-deps
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [
+      itemConfigShippingMethod,
+      itemConfigHash,
+      willCallHash,
+      matchedAvailabilityOption,
+    ],
+  );
 
   return (
     <div className="flex flex-col gap-6 md:flex-row">
@@ -353,12 +470,17 @@ const CartItem = ({
         <CartItemShippingMethod
           plants={plants}
           availability={checkAvailabilityQuery.data}
-          setSelectedWillCallPlant={setSelectedWillCallPlant}
+          setSelectedWillCallPlant={handleSelectWillCallPlant}
           selectedWillCallPlant={selectedWillCallPlant}
           setSelectedShippingOption={setSelectedShippingOption}
           selectedShippingOption={selectedShippingOption}
+          setSelectedShipToMe={setSelectedShipToMe}
+          selectedShipToMe={selectedShipToMe}
+          setSelectedShippingMethod={setSelectedShippingMethod}
+          selectedShippingMethod={selectedShippingMethod}
           onSave={handleSave}
-          cartConfiguration={cartConfiguration}
+          defaultShippingMethod={defaultShippingMethod}
+          shippingMethods={shippingMethods}
         />
       </div>
 

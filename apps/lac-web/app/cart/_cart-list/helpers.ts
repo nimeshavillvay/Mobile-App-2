@@ -72,7 +72,7 @@ export const getShippingMethods = (
 
   const availableOption = availableOptions[selectedOption];
   if (availableOption) {
-    return Object.values(availableOption?.plants)?.at(0)?.shippingMethods ?? [];
+    return availableOption.plants?.at(0)?.shippingMethods ?? [];
   }
 
   return [];

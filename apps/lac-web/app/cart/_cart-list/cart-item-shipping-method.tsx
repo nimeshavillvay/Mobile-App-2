@@ -1,5 +1,4 @@
 import type {
-  CartConfiguration,
   CartItemConfiguration,
   Plant,
   ShippingMethod,
@@ -34,7 +33,7 @@ import {
   TableRow,
 } from "@repo/web-ui/components/ui/table";
 import dayjs from "dayjs";
-import { useEffect, useId, useMemo, useState } from "react";
+import { useId } from "react";
 import {
   ALTERNATIVE_BRANCHES,
   AVAILABLE_ALL,
@@ -51,7 +50,6 @@ import {
   createCartItemConfig,
   findAvailabilityOptionForType,
   getAlternativeBranchesConfig,
-  getShippingMethods,
 } from "./helpers";
 import type { MainOption, OptionPlant, ShipToMeOption } from "./types";
 
@@ -67,15 +65,14 @@ type CartItemShippingMethodProps = {
   selectedWillCallPlant: string;
   setSelectedShippingOption: (option: MainOption | undefined) => void;
   selectedShippingOption: MainOption | undefined;
+  setSelectedShipToMe: (shipToMe: ShipToMeOption) => void;
+  selectedShipToMe: ShipToMeOption;
+  setSelectedShippingMethod: (method: string) => void;
+  selectedShippingMethod: string;
   onSave: (config: Partial<CartItemConfiguration>) => void;
-  cartConfiguration: CartConfiguration;
+  defaultShippingMethod: ShippingMethod | undefined;
+  shippingMethods: ShippingMethod[];
 };
-
-// [] First each change should be send a put to the cart config
-// [] After each change do an availability check render shipping method and options
-// [] Get the cart items and check the hashes on the config, if the hashes match set the props
-// [] Else you set the default form the config or if not default provided then you set the firstItem
-// [] Skeleton should be shown when the put is happening for the first time
 
 const CartItemShippingMethod = ({
   plants,
@@ -84,68 +81,41 @@ const CartItemShippingMethod = ({
   selectedWillCallPlant,
   setSelectedShippingOption,
   selectedShippingOption,
+  setSelectedShipToMe,
+  selectedShipToMe,
+  setSelectedShippingMethod,
+  selectedShippingMethod,
   onSave,
-  cartConfiguration,
+  defaultShippingMethod,
+  shippingMethods,
 }: CartItemShippingMethodProps) => {
   const id = useId();
   const shipToMeId = `${MAIN_OPTIONS.SHIP_TO_ME}-${id}`;
   const willCallId = `${MAIN_OPTIONS.WILL_CALL}-${id}`;
   const backOrderId = `${MAIN_OPTIONS.BACK_ORDER}-${id}`;
 
-  const { options, status, willCallAnywhere } = availability;
+  const {
+    options: availabilityOptions,
+    status,
+    willCallAnywhere,
+  } = availability;
 
-  const availableAll = findAvailabilityOptionForType(options, AVAILABLE_ALL);
-  const takeOnHand = findAvailabilityOptionForType(options, TAKE_ON_HAND);
-  const backOrderAll = findAvailabilityOptionForType(options, BACK_ORDER_ALL);
+  const availableAll = findAvailabilityOptionForType(
+    availabilityOptions,
+    AVAILABLE_ALL,
+  );
+  const takeOnHand = findAvailabilityOptionForType(
+    availabilityOptions,
+    TAKE_ON_HAND,
+  );
+  const backOrderAll = findAvailabilityOptionForType(
+    availabilityOptions,
+    BACK_ORDER_ALL,
+  );
   const shipAlternativeBranch = findAvailabilityOptionForType(
-    options,
+    availabilityOptions,
     ALTERNATIVE_BRANCHES,
   );
-
-  const [selectedShipToMe, setSelectedShipToMe] = useState<ShipToMeOption>(
-    () => {
-      // State initialization based on availability options
-      if (availableAll) {
-        return AVAILABLE_ALL;
-      } else if (takeOnHand) {
-        return TAKE_ON_HAND;
-      } else if (shipAlternativeBranch) {
-        return ALTERNATIVE_BRANCHES;
-      }
-      // Return a default value here if none of the conditions match
-      return undefined;
-    },
-  );
-
-  // Select the available shipping options based on the priority
-  const AVAILABLE_OPTIONS_MAP = {
-    [AVAILABLE_ALL]: availableAll,
-    [TAKE_ON_HAND]: takeOnHand,
-    [ALTERNATIVE_BRANCHES]: shipAlternativeBranch,
-  };
-
-  // use the new function to determine the available options
-  const shippingMethods = getShippingMethods(
-    selectedShipToMe,
-    AVAILABLE_OPTIONS_MAP,
-  );
-
-  // Find the default option (available first option)
-  const defaultShippingOption = shippingMethods?.at(0);
-
-  // User selected shipping method
-  const [selectedShippingMethod, setSelectedShippingMethod] = useState(() => {
-    // Check if there is default shipping method for users ship-to address
-    if (cartConfiguration?.default_shipping) {
-      const shipToDefaultMethod = shippingMethods?.find(
-        (method) => method?.code === cartConfiguration.default_shipping,
-      );
-      if (shipToDefaultMethod) {
-        return shipToDefaultMethod.code;
-      }
-    }
-    return defaultShippingOption?.code ?? "";
-  });
 
   const calculateAllPlantsQuantity = (
     plants: {
@@ -333,17 +303,14 @@ const CartItemShippingMethod = ({
 
   const handleShipToMeOptions = (shipToMe: ShipToMeOption) => {
     setSelectedShipToMe(shipToMe);
-    // TODO - Check if there is ship-to default shipping
     // Reset the selected shipping method to default
-    const defaultMethod = defaultShippingOption?.code;
-
-    if (defaultMethod) {
-      setSelectedShippingMethod(defaultMethod);
+    if (defaultShippingMethod) {
+      setSelectedShippingMethod(defaultShippingMethod.code);
 
       if (shipToMe === TAKE_ON_HAND && takeOnHand) {
         onSave(
           createCartItemConfig({
-            method: defaultMethod,
+            method: defaultShippingMethod.code,
             quantity: takeOnHandPlant?.quantity ?? 0,
             plant: takeOnHandPlant?.plant ?? EMPTY_STRING,
             hash: takeOnHand.hash,
@@ -355,44 +322,13 @@ const CartItemShippingMethod = ({
         onSave(
           getAlternativeBranchesConfig({
             plants: shipAlternativeBranch?.plants,
-            method: defaultMethod,
+            method: defaultShippingMethod.code,
             hash: shipAlternativeBranch.hash,
           }),
         );
       }
     }
   };
-
-  // Compute selectedShipToMe value whenever options change
-  useMemo(() => {
-    if (availableAll) {
-      setSelectedShipToMe(AVAILABLE_ALL);
-    } else if (takeOnHand) {
-      setSelectedShipToMe(TAKE_ON_HAND);
-    } else if (shipAlternativeBranch) {
-      setSelectedShipToMe(ALTERNATIVE_BRANCHES);
-    }
-  }, [availableAll, takeOnHand, shipAlternativeBranch]);
-
-  // TODO - Will remove useEffect hook once we found a better solution.
-  // keeping this for now to unblock QAs
-  useEffect(() => {
-    if (selectedShippingOption === MAIN_OPTIONS.WILL_CALL && willCallAnywhere) {
-      onSave({
-        ...createCartItemConfig({
-          method: EMPTY_STRING,
-          quantity: 0,
-          plant: EMPTY_STRING,
-          hash: willCallAnywhere.hash,
-        }),
-        will_call_avail: (willCallAnywhere?.status === NOT_IN_STOCK
-          ? 0
-          : willCallAnywhere?.willCallQuantity ?? 0
-        ).toString(),
-        will_call_plant: willCallAnywhere?.willCallPlant ?? EMPTY_STRING,
-      });
-    }
-  }, [selectedShippingOption, willCallAnywhere]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <ul className="flex flex-col gap-3">
@@ -602,7 +538,7 @@ const CartItemShippingMethod = ({
                                               option.code ===
                                               selectedShippingMethod,
                                           )?.name ??
-                                            defaultShippingOption?.name}
+                                            defaultShippingMethod?.name}
                                         </div>
                                       </TableCell>
                                       <TableCell className="text-end">
