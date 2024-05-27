@@ -19,6 +19,7 @@ const Footer = () => {
   return (
     <footer className="mt-14 md:mt-20">
       <WhyShopWithUs />
+
       <div className="space-y-6 pb-7 pt-10 md:space-y-10">
         <div className="container flex flex-row items-center justify-between md:border-b md:border-b-wurth-gray-250 md:py-3">
           <div className="hidden text-base text-wurth-gray-800 md:block">
