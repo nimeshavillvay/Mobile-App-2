@@ -1,3 +1,8 @@
+const { resolve } = require("node:path");
+
+const project = resolve(process.cwd(), "tsconfig.json");
+
+/** @type {import("eslint").Linter.Config} */
 module.exports = {
   extends: [
     "eslint:recommended",
@@ -8,6 +13,13 @@ module.exports = {
     "eslint-config-turbo",
   ],
   plugins: ["react-compiler"],
+  settings: {
+    "import/resolver": {
+      typescript: {
+        project,
+      },
+    },
+  },
   rules: {
     "react-compiler/react-compiler": "error",
   },
