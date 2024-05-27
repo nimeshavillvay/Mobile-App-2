@@ -10,7 +10,10 @@ const WhyShopWithUs = () => {
     !!["/category", "/product"].find((publicPage) =>
       currentPage.startsWith(publicPage),
     );
-  if (!isShowWhyShopWithUs) return;
+
+  if (!isShowWhyShopWithUs) {
+    return null;
+  }
 
   return (
     <section className="container space-y-6 pb-3 md:space-y-12 md:pb-9">
