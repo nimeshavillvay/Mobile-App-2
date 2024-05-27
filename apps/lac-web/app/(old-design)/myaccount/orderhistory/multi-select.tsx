@@ -75,35 +75,57 @@ const MultiSelect = ({
       }
     },
     onStateChange: ({ type, selectedItem }) => {
-      const {
-        ToggleButtonKeyDownEnter,
-        ToggleButtonKeyDownSpaceButton,
-        ItemClick,
-      } = useSelect.stateChangeTypes;
-
-      if (
-        type === ToggleButtonKeyDownEnter ||
-        type === ToggleButtonKeyDownSpaceButton ||
-        type === ItemClick
-      ) {
-        if (selectedItem && selectedItem.active) {
-          if (isItemSelected(selectedItem)) {
-            onValuesChange && onValuesChange(selectedItems);
-            removeSelectedItem(selectedItem);
-          } else {
-            onValuesChange && onValuesChange([...selectedItems, selectedItem]);
-            addSelectedItem(selectedItem);
-          }
-        }
+      if (actionPermitted(type)) {
+        updateSelections(selectedItem);
       }
     },
   });
+
+  function actionPermitted(type: string) {
+    const {
+      ToggleButtonKeyDownEnter,
+      ToggleButtonKeyDownSpaceButton,
+      ItemClick,
+    } = useSelect.stateChangeTypes;
+    return [
+      ToggleButtonKeyDownEnter,
+      ToggleButtonKeyDownSpaceButton,
+      ItemClick,
+    ].includes(type);
+  }
+
+  function updateSelections(selectedItem: Option | null | undefined) {
+    if (selectedItem && selectedItem.active) {
+      let newSelectedItems;
+      if (isItemSelected(selectedItem)) {
+        newSelectedItems = deselectItem(selectedItem);
+      } else {
+        newSelectedItems = selectItem(selectedItem);
+      }
+      onValuesChange && onValuesChange(newSelectedItems);
+    }
+  }
+
+  function deselectItem(selectedItem: Option) {
+    removeSelectedItem(selectedItem);
+    return selectedItems.filter((item) => item.id !== selectedItem.id);
+  }
+
+  function selectItem(selectedItem: Option) {
+    addSelectedItem(selectedItem);
+    return [...selectedItems, selectedItem];
+  }
 
   const removeAllSelectedItems = () => {
     if (onClear) {
       onClear();
     }
-    selectedItems.forEach(removeSelectedItem);
+
+    selectedItems.forEach((item) => {
+      removeSelectedItem(item);
+    });
+
+    onValuesChange && onValuesChange([]);
   };
 
   if (resetRef.current) {
