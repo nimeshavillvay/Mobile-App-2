@@ -90,6 +90,10 @@ const useUpdateBillingAddressMutation = () => {
 
         return suggestionsResponse;
       } else {
+        toast({
+          description: "Billing address updated",
+        });
+
         const shippingResponse: Address = {
           xcAddressId: response["xc-addressid"],
           soldTo: response.soldto,
@@ -109,11 +113,6 @@ const useUpdateBillingAddressMutation = () => {
     },
     onMutate: () => {
       toast({ description: "Updating billing address" });
-    },
-    onSuccess: () => {
-      toast({
-        description: "Billing address updated",
-      });
     },
     onError: () => {
       toast({
