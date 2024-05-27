@@ -12,8 +12,8 @@ const CheckboxList = ({
   values,
   onCheckedChange,
 }: {
-  values: { id: string; name: string; isActive?: boolean; checked: boolean }[];
-  onCheckedChange?: (valueId: string, checked: CheckedState) => void;
+  readonly values: { id: string; name: string; isActive?: boolean; checked: boolean }[];
+  readonly onCheckedChange?: (valueId: string, checked: CheckedState) => void;
 }) => {
   const shownValues = values.slice(0, 10);
   const hiddenValues = values.slice(10);

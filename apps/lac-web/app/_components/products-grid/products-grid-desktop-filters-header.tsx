@@ -9,7 +9,7 @@ import { useFilterParams, type SelectedValues } from "./use-filter-params.hook";
 export const ProductsGridDesktopFiltersHeader = ({
   filters,
 }: {
-  filters: Filters[];
+  readonly filters: Filters[];
 }) => {
   const { selectedValues, searchParams } = useFilterParams(filters);
   const mappedSelectedValues: (SelectedValues[string] & { id: string })[] = [];
@@ -68,10 +68,10 @@ const AttributePill = ({
   values,
   clear,
 }: {
-  id: string;
-  name: string;
-  values: { name: string; id: string }[];
-  clear: (attributeId: string, valueId?: string) => void;
+  readonly id: string;
+  readonly name: string;
+  readonly values: { name: string; id: string }[];
+  readonly clear: (attributeId: string, valueId?: string) => void;
 }) => {
   return (
     <div className="flex flex-row items-center gap-2 rounded-full border border-wurth-gray-250 bg-white px-4 py-2.5 shadow-sm">

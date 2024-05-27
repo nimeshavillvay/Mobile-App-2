@@ -14,7 +14,7 @@ import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import { useId } from "react";
 import { useFilterParams } from "./use-filter-params.hook";
 
-export const ProductsGridFilters = ({ filters }: { filters: Filters[] }) => {
+export const ProductsGridFilters = ({ filters }: { readonly filters: Filters[] }) => {
   const id = useId();
   const getCheckboxId = (filterId: string, valueId: number) => {
     return `${id}-checkbox-${filterId}-${valueId}`;

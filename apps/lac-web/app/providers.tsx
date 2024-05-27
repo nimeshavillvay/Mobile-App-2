@@ -8,7 +8,7 @@ import { CookiesProvider } from "react-cookie";
 import { Provider as WrapBalancer } from "react-wrap-balancer";
 
 type ProvidersProps = {
-  children: ReactNode;
+  readonly children: ReactNode;
 };
 
 const Providers = ({ children }: ProvidersProps) => {
@@ -49,7 +49,7 @@ const getQueryClient = () => {
   }
 };
 
-const ReactQueryProvider = ({ children }: { children: ReactNode }) => {
+const ReactQueryProvider = ({ children }: { readonly children: ReactNode }) => {
   const queryClient = getQueryClient();
 
   return (

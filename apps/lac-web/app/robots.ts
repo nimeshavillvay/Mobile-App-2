@@ -1,5 +1,5 @@
 import { BASE_URL } from "@/_lib/constants";
-import { MetadataRoute } from "next";
+import type { MetadataRoute } from "next";
 
 const robots = (): MetadataRoute.Robots => {
   return {

@@ -1,4 +1,4 @@
-import { ShoppingListElement } from "@/_lib/types";
+import type { ShoppingListElement } from "@/_lib/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@repo/web-ui/components/ui/button";
 import {
@@ -24,10 +24,10 @@ import useCreateShoppingListMutation from "./use-create-shopping-list-mutation.h
 import useUpdateShoppingListMutation from "./use-update-shopping-list-mutation.hook";
 
 type ShoppingListDialogProps = {
-  open: boolean;
-  setOpenShoppingListDialog: Dispatch<SetStateAction<boolean>>;
-  isShoppingListNameUpdate: boolean;
-  shoppingList: ShoppingListElement;
+  readonly open: boolean;
+  readonly setOpenShoppingListDialog: Dispatch<SetStateAction<boolean>>;
+  readonly isShoppingListNameUpdate: boolean;
+  readonly shoppingList: ShoppingListElement;
 };
 
 const ShoppingListDialog = ({

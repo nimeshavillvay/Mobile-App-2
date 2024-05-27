@@ -62,7 +62,7 @@ const formSchema = z
   });
 
 type AddCreditCardDialogProps = {
-  token: string;
+  readonly token: string;
 };
 
 const AddCreditCardDialog = ({ token }: AddCreditCardDialogProps) => {

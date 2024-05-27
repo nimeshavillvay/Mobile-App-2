@@ -14,8 +14,8 @@ import {
 import useAddToCartForm from "../use-add-to-cart-form.hook";
 
 type LocationStocksProps = {
-  token: string;
-  productId: number;
+  readonly token: string;
+  readonly productId: number;
 };
 
 const LocationStocks = ({ token, productId }: LocationStocksProps) => {

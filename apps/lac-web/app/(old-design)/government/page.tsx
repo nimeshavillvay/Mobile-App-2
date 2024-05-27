@@ -6,9 +6,7 @@ export const metadata: Metadata = {
 
 const GovernmentPage = () => {
   return (
-    <>
-      <h1>Government</h1>
-    </>
+    <h1>Government</h1>
   );
 };
 

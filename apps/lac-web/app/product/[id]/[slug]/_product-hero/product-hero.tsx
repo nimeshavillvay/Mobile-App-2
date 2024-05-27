@@ -24,8 +24,8 @@ import {
 } from "./product-hero-sections";
 
 type ProductHeroProps = {
-  id: string;
-  slug: string;
+  readonly id: string;
+  readonly slug: string;
 };
 
 const ProductHero = async ({ id, slug }: ProductHeroProps) => {

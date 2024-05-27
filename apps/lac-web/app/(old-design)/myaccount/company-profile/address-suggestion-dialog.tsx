@@ -2,7 +2,7 @@ import useAddShippingAddressMutation from "@/_hooks/address/use-add-shipping-add
 import useUpdateBillingAddressMutation from "@/_hooks/address/use-update-billing-address-mutation.hook";
 import useUpdateShippingAddressMutation from "@/_hooks/address/use-update-shipping-address-mutation.hook";
 import type { AddressCheckSuggestions, AddressFormData } from "@/_lib/types";
-import { Address } from "@/_lib/types";
+import type { Address } from "@/_lib/types";
 import {
   Dialog,
   DialogContent,
@@ -11,20 +11,21 @@ import {
 } from "@/old/_components/ui/dialog";
 import { RadioGroup, RadioGroupItem } from "@/old/_components/ui/radio-group";
 import { nanoid } from "nanoid";
-import { Dispatch, SetStateAction, useState } from "react";
+import type { Dispatch, SetStateAction} from "react";
+import { useState } from "react";
 import type { AddressCheckSuggestionsWithUuid } from "./types";
 
 type AddressDialogProps = {
-  open: boolean;
-  setOpenAddressSuggestionDialog: Dispatch<SetStateAction<boolean>>;
-  setOpenAddressDialog: Dispatch<SetStateAction<boolean>>;
-  setAddressCheckSuggestions: (
+  readonly open: boolean;
+  readonly setOpenAddressSuggestionDialog: Dispatch<SetStateAction<boolean>>;
+  readonly setOpenAddressDialog: Dispatch<SetStateAction<boolean>>;
+  readonly setAddressCheckSuggestions: (
     addressCheckSuggestions?: AddressCheckSuggestionsWithUuid,
   ) => void;
-  addressCheckSuggestions: AddressCheckSuggestionsWithUuid;
-  isShippingAddress: boolean;
-  isShippingAddressUpdate: boolean;
-  address: AddressFormData;
+  readonly addressCheckSuggestions: AddressCheckSuggestionsWithUuid;
+  readonly isShippingAddress: boolean;
+  readonly isShippingAddressUpdate: boolean;
+  readonly address: AddressFormData;
 };
 
 const AddressSuggestionDialog = ({

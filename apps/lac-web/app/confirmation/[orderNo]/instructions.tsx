@@ -1,7 +1,7 @@
 import { cn } from "@/_lib/utils";
 
 type InstructionsProps = {
-  type: "desktop" | "mobile";
+  readonly type: "desktop" | "mobile";
 };
 
 const Instructions = ({ type }: InstructionsProps) => {

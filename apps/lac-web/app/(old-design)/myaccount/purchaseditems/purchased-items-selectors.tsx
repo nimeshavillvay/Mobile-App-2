@@ -30,8 +30,8 @@ import {
 import FiltersForMobileDialog from "./filters-for-mobile-dialog";
 
 type PurchasedItemsSelectorProps = {
-  isLoading: boolean;
-  totalItems: number;
+  readonly isLoading: boolean;
+  readonly totalItems: number;
 };
 
 const PurchasedItemsSelectors = ({

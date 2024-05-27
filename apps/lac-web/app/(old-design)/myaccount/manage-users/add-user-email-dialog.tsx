@@ -20,17 +20,17 @@ import {
 } from "@/old/_components/ui/form";
 import { Input } from "@/old/_components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Dispatch, SetStateAction } from "react";
+import type { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import type { CurrentUser } from "./types";
 
 type AddUserEmailProps = {
-  currentUsers: CurrentUser[];
-  open: boolean;
-  setOpen: Dispatch<SetStateAction<boolean>>;
-  setOpenAddUserDataDialog: Dispatch<SetStateAction<boolean>>;
-  setEmail: Dispatch<SetStateAction<string>>;
+  readonly currentUsers: CurrentUser[];
+  readonly open: boolean;
+  readonly setOpen: Dispatch<SetStateAction<boolean>>;
+  readonly setOpenAddUserDataDialog: Dispatch<SetStateAction<boolean>>;
+  readonly setEmail: Dispatch<SetStateAction<string>>;
 };
 
 const AddUserEmailDialog = ({

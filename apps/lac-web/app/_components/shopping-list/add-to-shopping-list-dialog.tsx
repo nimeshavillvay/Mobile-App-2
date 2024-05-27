@@ -27,15 +27,16 @@ import { useToast } from "@repo/web-ui/components/ui/toast";
 import dayjs from "dayjs";
 import { LoaderCircle } from "lucide-react";
 import { Fragment, useState, type Dispatch, type SetStateAction } from "react";
-import { Control, useForm } from "react-hook-form";
+import type { Control} from "react-hook-form";
+import { useForm } from "react-hook-form";
 import * as z from "zod";
 
 type AddToShoppingListDialogProps = {
-  open: boolean;
-  setOpenAddToShoppingListDialog: Dispatch<SetStateAction<boolean>>;
-  productId: number;
-  favoriteListIds: string[];
-  token: string;
+  readonly open: boolean;
+  readonly setOpenAddToShoppingListDialog: Dispatch<SetStateAction<boolean>>;
+  readonly productId: number;
+  readonly favoriteListIds: string[];
+  readonly token: string;
 };
 
 const AddToShoppingListDialog = ({
@@ -230,20 +231,20 @@ const ShoppingListItem = ({
   selectedShoppingLists,
   handleShoppingListCheckedChanged,
 }: {
-  index: number;
-  shoppingLists: {
+  readonly index: number;
+  readonly shoppingLists: {
     listId: string;
     listName: string;
     date: string;
     totalItem: string;
   }[];
-  list: {
+  readonly list: {
     listId: string;
     listName: string;
   };
-  formControl: Control<{ shoppingListName: string }>;
-  selectedShoppingLists: string[];
-  handleShoppingListCheckedChanged: (listId: string, checked: boolean) => void;
+  readonly formControl: Control<{ shoppingListName: string }>;
+  readonly selectedShoppingLists: string[];
+  readonly handleShoppingListCheckedChanged: (listId: string, checked: boolean) => void;
 }) => {
   return (
     <div

@@ -2,9 +2,9 @@ import { formatNumberToPrice } from "@/old/_utils/helpers";
 import { calculatePriceDetails } from "@/old/_utils/price-utils";
 
 type UnitPriceRowForMobileProps = {
-  price: number;
-  salePrice: number;
-  uom: string;
+  readonly price: number;
+  readonly salePrice: number;
+  readonly uom: string;
 };
 
 const UnitPriceRowForMobile = ({

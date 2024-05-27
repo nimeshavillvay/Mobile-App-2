@@ -6,9 +6,7 @@ export const metadata: Metadata = {
 
 const FAQPage = () => {
   return (
-    <>
-      <h1>Frequently Asked Questions (FAQs)</h1>
-    </>
+    <h1>Frequently Asked Questions (FAQs)</h1>
   );
 };
 

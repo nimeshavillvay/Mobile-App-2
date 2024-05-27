@@ -6,9 +6,7 @@ export const metadata: Metadata = {
 
 const SupplyChainPage = () => {
   return (
-    <>
-      <h1>Supply Chain</h1>
-    </>
+    <h1>Supply Chain</h1>
   );
 };
 

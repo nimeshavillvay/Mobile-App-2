@@ -6,7 +6,7 @@ import Image from "next/image";
 import { useCallback, useEffect, useState, type CSSProperties } from "react";
 
 type ProductDesktopCarouselProps = {
-  images: { src: string; alt: string }[];
+  readonly images: { src: string; alt: string }[];
 };
 
 const ProductDesktopCarousel = ({ images }: ProductDesktopCarouselProps) => {

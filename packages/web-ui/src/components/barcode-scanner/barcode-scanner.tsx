@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 export const BarcodeScanner = ({
   onScanSuccess,
 }: {
-  onScanSuccess: (code: string) => void;
+  readonly onScanSuccess: (code: string) => void;
 }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const reader = useRef(new BrowserMultiFormatReader());

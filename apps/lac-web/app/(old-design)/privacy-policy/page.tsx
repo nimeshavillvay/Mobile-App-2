@@ -6,9 +6,7 @@ export const metadata: Metadata = {
 
 const PrivacyPolicyPage = () => {
   return (
-    <>
-      <h1>Privacy Policy</h1>
-    </>
+    <h1>Privacy Policy</h1>
   );
 };
 

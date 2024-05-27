@@ -6,9 +6,7 @@ export const metadata: Metadata = {
 
 const CatalogsLiteraturePage = () => {
   return (
-    <>
-      <h1>Catalogs & Literature</h1>
-    </>
+    <h1>Catalogs & Literature</h1>
   );
 };
 

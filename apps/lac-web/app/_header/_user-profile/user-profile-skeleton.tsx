@@ -2,7 +2,7 @@ import { cn } from "@/_lib/utils";
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 
 type UserProfileSkeletonProps = {
-  type: "desktop" | "mobile";
+  readonly type: "desktop" | "mobile";
 };
 
 export const UserProfileSkeleton = ({ type }: UserProfileSkeletonProps) => {

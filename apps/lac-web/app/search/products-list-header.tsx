@@ -1,7 +1,7 @@
 import { ProductsGridHeader } from "@/_components/products-grid";
 
 type ProductsListHeaderProps = {
-  total: number;
+  readonly total: number;
 };
 
 const ProductsListHeader = async ({ total }: ProductsListHeaderProps) => {

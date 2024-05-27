@@ -8,7 +8,7 @@ import {
   getProductTitle,
   getVariantData,
 } from "@/_lib/client-helpers";
-import { Product } from "@/_lib/types";
+import type { Product } from "@/_lib/types";
 import { cn } from "@/_lib/utils";
 import {
   ProductCardActions,
@@ -29,10 +29,10 @@ import ProductCardVariantSelectorForLoggedIn from "./product-card-variant-select
 import ProductCardVariantSelectorSkeleton from "./product-card-variant-selector-skeleton";
 
 type ProductProps = {
-  orientation?: ComponentProps<typeof ProductCardRoot>["orientation"];
-  product: Product;
-  token: string;
-  stretchWidth?: boolean;
+  readonly orientation?: ComponentProps<typeof ProductCardRoot>["orientation"];
+  readonly product: Product;
+  readonly token: string;
+  readonly stretchWidth?: boolean;
 };
 
 const ProductCard = ({
@@ -153,26 +153,22 @@ const ProductCard = ({
               }}
             />
           )
+        ) : isLoggedInUser ? (
+          <Suspense fallback={<Skeleton className="h-5 w-full" />}>
+            <ProductCardActionsForLoggedIn
+              token={token}
+              productVariantId={id}
+              addToCart={addToCart}
+            />
+          </Suspense>
         ) : (
-          <>
-            {isLoggedInUser ? (
-              <Suspense fallback={<Skeleton className="h-5 w-full" />}>
-                <ProductCardActionsForLoggedIn
-                  token={token}
-                  productVariantId={id}
-                  addToCart={addToCart}
-                />
-              </Suspense>
-            ) : (
-              <ProductCardActions
-                addToCart={addToCart}
-                isFavorite={false}
-                onClickShoppingList={() => {
-                  router.push("/sign-in");
-                }}
-              />
-            )}
-          </>
+          <ProductCardActions
+            addToCart={addToCart}
+            isFavorite={false}
+            onClickShoppingList={() => {
+              router.push("/sign-in");
+            }}
+          />
         )}
       </ProductCardContent>
     </ProductCardRoot>

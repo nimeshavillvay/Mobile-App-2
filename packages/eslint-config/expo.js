@@ -22,5 +22,24 @@ module.exports = {
   },
   rules: {
     "react-compiler/react-compiler": "error",
+    "@typescript-eslint/consistent-type-imports": "error",
+    "react/jsx-no-useless-fragment": "error",
+    "react/no-children-prop": "error",
+    "react/prefer-read-only-props": "error",
+    "react/function-component-definition": [
+      "error",
+      {
+        namedComponents: "arrow-function",
+        unnamedComponents: "arrow-function",
+      },
+    ],
+    "react/self-closing-comp": [
+      "error",
+      {
+        component: true,
+        html: true,
+      },
+    ],
+    "react/jsx-pascal-case": "error",
   },
 };

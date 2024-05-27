@@ -24,7 +24,7 @@ const tableValueStyles = cva({
 });
 
 type MobileViewProps = {
-  orderNo: string;
+  readonly orderNo: string;
 };
 
 const MobileView = async ({ orderNo }: MobileViewProps) => {

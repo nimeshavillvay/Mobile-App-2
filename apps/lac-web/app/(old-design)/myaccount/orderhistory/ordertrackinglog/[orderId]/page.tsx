@@ -8,7 +8,7 @@ import OrderTrackingCard from "./order-tracking-card";
 import SelectedShippingName from "./selected-shipping-name";
 
 type OrderTrackingLogPageProps = {
-  params: {
+  readonly params: {
     orderId: string;
   };
 };

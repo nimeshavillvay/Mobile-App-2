@@ -6,11 +6,11 @@ import { cn, formatNumberToPrice } from "@/_lib/utils";
 import useAddToCartForm from "../use-add-to-cart-form.hook";
 
 type ProductPricesProps = {
-  token: string;
-  productId: number;
-  listPrice: number;
-  uom: string;
-  className?: string;
+  readonly token: string;
+  readonly productId: number;
+  readonly listPrice: number;
+  readonly uom: string;
+  readonly className?: string;
 };
 
 const ProductPrices = ({

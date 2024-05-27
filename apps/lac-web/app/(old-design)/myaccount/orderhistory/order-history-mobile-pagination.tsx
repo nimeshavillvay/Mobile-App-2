@@ -16,9 +16,9 @@ import { changeSearchParams } from "../_utils/client-helpers";
 import { INIT_PAGE_NUMBER, QUERY_KEYS } from "./constants";
 
 type OrderHistoryMobilePaginationProps = {
-  open: boolean;
-  setOpen: Dispatch<SetStateAction<boolean>>;
-  totalPagesCount: number;
+  readonly open: boolean;
+  readonly setOpen: Dispatch<SetStateAction<boolean>>;
+  readonly totalPagesCount: number;
 };
 
 const OrderHistoryMobilePagination = ({

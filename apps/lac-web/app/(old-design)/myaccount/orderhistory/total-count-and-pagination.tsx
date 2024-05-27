@@ -26,8 +26,8 @@ import {
 import OrderHistoryMobilePagination from "./order-history-mobile-pagination";
 
 type TotalCountAndPaginationProps = {
-  isLoading: boolean;
-  totalItems: number;
+  readonly isLoading: boolean;
+  readonly totalItems: number;
 };
 
 const TotalCountAndPagination = ({
@@ -119,7 +119,7 @@ const TotalCountAndPagination = ({
             searchParams={urlSearchParams}
           />
         ) : (
-          <div></div>
+          <div />
         )}
       </div>
 

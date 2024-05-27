@@ -2,7 +2,7 @@
 
 import useSuspenseShippingAddressList from "@/_hooks/address/use-suspense-shipping-address-list.hook";
 import type { AddressFormData } from "@/_lib/types";
-import { Address } from "@/_lib/types";
+import type { Address } from "@/_lib/types";
 import Separator from "@/old/_components/separator";
 import Title from "@/old/_components/title";
 import { useState } from "react";
@@ -26,7 +26,7 @@ const emptyShippingAddress: Address = {
   default: false,
 };
 
-const ShippingAddress = ({ token }: { token: string }) => {
+const ShippingAddress = ({ token }: { readonly token: string }) => {
   const [openShippingAddressDialog, setOpenShippingAddressDialog] =
     useState(false);
 

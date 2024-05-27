@@ -6,9 +6,7 @@ export const metadata: Metadata = {
 
 const PersonalNavigationPage = () => {
   return (
-    <>
-      <h2>Personal Navigation</h2>
-    </>
+    <h2>Personal Navigation</h2>
   );
 };
 

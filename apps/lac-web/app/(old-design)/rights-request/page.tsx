@@ -6,9 +6,7 @@ export const metadata: Metadata = {
 
 const PrivacyRightsRequestPage = () => {
   return (
-    <>
-      <h1>Privacy Rights Request</h1>
-    </>
+    <h1>Privacy Rights Request</h1>
   );
 };
 

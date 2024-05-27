@@ -10,8 +10,8 @@ export const ProductsGridHeader = ({
   totalCount,
   totalPages,
 }: {
-  totalCount: number;
-  totalPages: number;
+  readonly totalCount: number;
+  readonly totalPages: number;
 }) => {
   const { pageNo } = useFilterParams([]);
 
@@ -52,7 +52,7 @@ export const ProductsGridHeader = ({
   );
 };
 
-const MobileAttributePill = ({ children }: { children: ReactNode }) => {
+const MobileAttributePill = ({ children }: { readonly children: ReactNode }) => {
   return (
     <button className="flex shrink-0 snap-start flex-row items-center gap-2 rounded-full border border-wurth-gray-250 px-4 py-3 text-sm font-medium text-wurth-gray-800 shadow-sm">
       {children}

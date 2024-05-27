@@ -50,7 +50,7 @@ const formSchema = z.object({
 type FormSchema = z.infer<typeof formSchema>;
 
 type EditBillingAddressDialogProps = {
-  token: string;
+  readonly token: string;
 };
 
 const EditBillingAddressDialog = ({ token }: EditBillingAddressDialogProps) => {

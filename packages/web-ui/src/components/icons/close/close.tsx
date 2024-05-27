@@ -12,7 +12,7 @@ export const Close = ({ className, ...delegated }: ComponentProps<"svg">) => {
       className={cn("stroke-black", className)}
       {...delegated}
     >
-      <path strokeLinecap="square" d="M4.5 4.5l15 15m0-15l-15 15"></path>
+      <path strokeLinecap="square" d="M4.5 4.5l15 15m0-15l-15 15" />
     </svg>
   );
 };

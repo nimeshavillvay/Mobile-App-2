@@ -15,7 +15,7 @@ import type { TaxFormItems } from "./types";
 const StateSelector = ({
   taxFormDetails,
 }: {
-  taxFormDetails: TaxFormItems;
+  readonly taxFormDetails: TaxFormItems;
 }) => {
   const onSelectState = (stateName: keyof TaxFormItems) => {
     const splitStateDetails = stateName.split("-");

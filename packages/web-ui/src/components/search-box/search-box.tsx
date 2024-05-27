@@ -65,14 +65,14 @@ export const SearchBoxInput = ({
   children,
   ...delegated
 }: ComponentProps<"input"> & {
-  data: {
+  readonly data: {
     products: SearchData;
     categories: SearchData;
     brands: SearchData;
   };
-  value: string;
-  setValue: (value: string) => void;
-  onEnterPressed: () => void;
+  readonly value: string;
+  readonly setValue: (value: string) => void;
+  readonly onEnterPressed: () => void;
 }) => {
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
@@ -186,7 +186,7 @@ export const SearchBoxInput = ({
                           />
                         )}
                         {!brand.brandImage && (
-                          <div className="h-10 w-10 rounded-full"></div>
+                          <div className="h-10 w-10 rounded-full" />
                         )}
                         <span className="break-all">{brand.brandName}</span>
                       </Link>
@@ -257,7 +257,7 @@ export const SearchBoxInput = ({
                               height={80}
                             />
                           ) : (
-                            <div className="h-20 w-20 rounded-full"></div>
+                            <div className="h-20 w-20 rounded-full" />
                           )}
                         </div>
                         <div>

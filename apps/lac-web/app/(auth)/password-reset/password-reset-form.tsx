@@ -19,9 +19,9 @@ import * as z from "zod";
 import usePasswordResetConfirmMutation from "./use-password-reset-confirm-mutation.hook";
 
 type PasswordResetFormProps = {
-  userKey: string;
-  userId: string;
-  passwordPolicies: PasswordPolicies;
+  readonly userKey: string;
+  readonly userId: string;
+  readonly passwordPolicies: PasswordPolicies;
 };
 
 const PasswordResetForm = ({

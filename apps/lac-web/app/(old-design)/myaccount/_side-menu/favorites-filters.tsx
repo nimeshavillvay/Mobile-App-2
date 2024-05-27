@@ -4,7 +4,7 @@ import FiltersDropdown from "./filters-dropdown";
 
 // TODO: Remove disable ESLint line
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const FavoritesFilters = ({ token }: { token: string }) => {
+const FavoritesFilters = ({ token }: { readonly token: string }) => {
   // TODO: This feature is not supported
   // const filtersQuery = useSuspenseFilters(token, {
   //   type: "Favorites",

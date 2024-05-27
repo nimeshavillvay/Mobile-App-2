@@ -1,7 +1,7 @@
 import { ProductsGridPagination } from "@/_components/products-grid";
 
 type ProductsListPaginationProps = {
-  total: number;
+  readonly total: number;
 };
 
 const ProductsListPagination = async ({

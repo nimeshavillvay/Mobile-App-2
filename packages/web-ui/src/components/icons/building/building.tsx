@@ -18,7 +18,7 @@ export const Building = ({
       <path
         strokeLinecap="square"
         d="M3.5 19.5h11m-11 0v-16h11v4m-11 12h-2m13 0h6m-6 0v-12m0 0h6v12m0 0h2m-12-11h-3m0 4h3"
-      ></path>
+       />
     </svg>
   );
 };

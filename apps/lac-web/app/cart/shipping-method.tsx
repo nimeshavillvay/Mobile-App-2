@@ -18,8 +18,8 @@ const SHIP_TO_ME = "ship-to-me";
 const WILL_CALL = "will-call";
 
 type ShippingMethodProps = {
-  token: string;
-  options: ShippingMethod[];
+  readonly token: string;
+  readonly options: ShippingMethod[];
 };
 
 const ShippingMethod = ({ token, options }: ShippingMethodProps) => {

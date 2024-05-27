@@ -34,22 +34,22 @@ import {
 } from "@/old/_components/ui/select";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { nanoid } from "nanoid";
-import { Dispatch, SetStateAction } from "react";
+import type { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import type { AddressCheckSuggestionsWithUuid } from "./types";
 
 type AddressDialogProps = {
-  open: boolean;
-  setOpenAddressDialog: Dispatch<SetStateAction<boolean>>;
-  setOpenAddressSuggestionDialog: Dispatch<SetStateAction<boolean>>;
-  setAddress: (address?: AddressFormData) => void;
-  setAddressCheckSuggestions: (
+  readonly open: boolean;
+  readonly setOpenAddressDialog: Dispatch<SetStateAction<boolean>>;
+  readonly setOpenAddressSuggestionDialog: Dispatch<SetStateAction<boolean>>;
+  readonly setAddress: (address?: AddressFormData) => void;
+  readonly setAddressCheckSuggestions: (
     addressCheckSuggestions?: AddressCheckSuggestionsWithUuid,
   ) => void;
-  isShippingAddress: boolean;
-  isShippingAddressUpdate: boolean;
-  address: Address;
+  readonly isShippingAddress: boolean;
+  readonly isShippingAddressUpdate: boolean;
+  readonly address: Address;
 };
 
 const AddressDialog = ({

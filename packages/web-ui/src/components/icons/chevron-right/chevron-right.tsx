@@ -15,7 +15,7 @@ export const ChevronRight = ({
       className={cn("stroke-black", className)}
       {...delegated}
     >
-      <path strokeLinecap="square" d="M9 4l8 8-8 8"></path>
+      <path strokeLinecap="square" d="M9 4l8 8-8 8" />
     </svg>
   );
 };

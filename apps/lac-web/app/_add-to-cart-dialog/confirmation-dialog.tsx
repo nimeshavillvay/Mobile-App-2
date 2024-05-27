@@ -31,7 +31,7 @@ const AddToCartDialogSchema = z.object({
 });
 
 type ConfirmationDialogProps = {
-  token: string;
+  readonly token: string;
 };
 
 const ConfirmationDialog = ({ token }: ConfirmationDialogProps) => {
@@ -199,10 +199,10 @@ const PriceDisplay = ({
   unitOfMeasure,
   quantity,
 }: {
-  token: string;
-  productId: number;
-  unitOfMeasure: string;
-  quantity: number;
+  readonly token: string;
+  readonly productId: number;
+  readonly unitOfMeasure: string;
+  readonly quantity: number;
 }) => {
   const priceCheckQuery = useSuspensePriceCheck(token, [
     { productId, qty: quantity },

@@ -8,8 +8,8 @@ import { useState } from "react";
 import useSuspenseFavoriteSKUs from "../../../../_hooks/shopping-list/use-suspense-favorite-skus.hook";
 
 type FavoriteButtonForLoggedInProps = {
-  productId: number;
-  token: string;
+  readonly productId: number;
+  readonly token: string;
 };
 
 const FavoriteButtonForLoggedIn = ({

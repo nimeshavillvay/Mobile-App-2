@@ -18,7 +18,7 @@ export const MagnifyingGlass = ({
       <path
         strokeLinecap="square"
         d="M20.25 20.25L16.3 16.3m2.2-5.3a7.5 7.5 0 11-15 0 7.5 7.5 0 0115 0z"
-      ></path>
+       />
     </svg>
   );
 };

@@ -3,10 +3,10 @@ import { ProductCardSkeleton as ProductCardSkeletonPrimitive } from "@repo/web-u
 import { type ComponentProps } from "react";
 
 type ProductCardSkeletonProps = {
-  orientation?: ComponentProps<
+  readonly orientation?: ComponentProps<
     typeof ProductCardSkeletonPrimitive
   >["orientation"];
-  stretchWidth?: boolean;
+  readonly stretchWidth?: boolean;
 };
 
 const ProductCardSkeleton = ({

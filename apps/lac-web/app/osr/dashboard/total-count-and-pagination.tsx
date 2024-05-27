@@ -14,9 +14,9 @@ const TotalCountAndPagination = ({
   page,
   totalItems,
 }: {
-  isLoading: boolean;
-  page: number;
-  totalItems: number;
+  readonly isLoading: boolean;
+  readonly page: number;
+  readonly totalItems: number;
 }) => {
   const searchParams = useSearchParams();
   const totalPagesCount = Math.ceil(totalItems / PER_PAGE);

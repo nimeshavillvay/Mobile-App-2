@@ -38,8 +38,9 @@ import {
   StepContainerOpen,
 } from "./step-container";
 import type { Industry } from "./types";
+import type {
+  ResponseAddress} from "./use-register-new-user-mutation.hook";
 import useRegisterNewUserMutation, {
-  ResponseAddress,
   isVerifyAddressResponse,
 } from "./use-register-new-user-mutation.hook";
 
@@ -129,8 +130,8 @@ const addressSchema = z
 type AddressSchema = z.infer<typeof addressSchema>;
 
 type NewUserFlowProps = {
-  passwordPolicies: PasswordPolicies;
-  industries: Industry[];
+  readonly passwordPolicies: PasswordPolicies;
+  readonly industries: Industry[];
 };
 
 const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {

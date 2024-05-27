@@ -39,8 +39,8 @@ const formSchema = z.object({
 });
 
 type BillingAndPaymentInfoProps = {
-  token: string;
-  paymentMethods: PaymentMethod[];
+  readonly token: string;
+  readonly paymentMethods: PaymentMethod[];
 };
 
 const BillingAndPaymentInfo = ({

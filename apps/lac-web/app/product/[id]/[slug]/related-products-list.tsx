@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 import type { RelatedProduct } from "./types";
 
 type RelatedProductsListProps = {
-  products: RelatedProduct[];
+  readonly products: RelatedProduct[];
 };
 
 const RelatedProductsList = ({ products }: RelatedProductsListProps) => {

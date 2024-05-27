@@ -2,7 +2,7 @@ import useItemInfo from "@/_hooks/product/use-item-info.hook";
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 
 type ItemAttributesProps = {
-  productId: number;
+  readonly productId: number;
 };
 
 const ItemAttributes = ({ productId }: ItemAttributesProps) => {
@@ -47,7 +47,7 @@ const ItemAttributes = ({ productId }: ItemAttributesProps) => {
 
 export default ItemAttributes;
 
-const Attribute = ({ label, value }: { label: string; value: string }) => (
+const Attribute = ({ label, value }: { readonly label: string; readonly value: string }) => (
   <div className="flex flex-row">
     <div className="flex-1 font-bold">{label}:</div>
     <div className="flex-1" dangerouslySetInnerHTML={{ __html: value }} />

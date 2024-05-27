@@ -1,4 +1,4 @@
-import { Status } from "@/_lib/types";
+import type { Status } from "@/_lib/types";
 import { Button } from "@/old/_components/ui/button";
 import {
   Form,
@@ -18,9 +18,9 @@ import {
   SelectValue,
 } from "@/old/_components/ui/select";
 import useForgetPasswordMutation from "@/old/_hooks/account/use-forget-password-mutation.hook";
-import { Role } from "@/old/_lib/types";
+import type { Role } from "@/old/_lib/types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Dispatch, SetStateAction } from "react";
+import type { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { USER_PERMISSIONS, USER_STATUSES } from "./constants";
@@ -46,10 +46,10 @@ const updateUserSchema = z.object({
 type UpdateUserSchema = z.infer<typeof updateUserSchema>;
 
 type UpdateUserProps = {
-  user: UserProfile;
-  jobRoles: Role[];
-  setMessage: Dispatch<SetStateAction<string>>;
-  setMessageOpen: Dispatch<SetStateAction<boolean>>;
+  readonly user: UserProfile;
+  readonly jobRoles: Role[];
+  readonly setMessage: Dispatch<SetStateAction<string>>;
+  readonly setMessageOpen: Dispatch<SetStateAction<boolean>>;
 };
 
 const UserUpdateForm = ({

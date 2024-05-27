@@ -39,10 +39,10 @@ const MyCustomerDetails = ({
   selfOnly,
   columnsChecked,
 }: {
-  token: string;
-  searchText: string;
-  selfOnly: boolean;
-  columnsChecked: string[];
+  readonly token: string;
+  readonly searchText: string;
+  readonly selfOnly: boolean;
+  readonly columnsChecked: string[];
 }) => {
   const [signAsCustomerDialogOpen, setSignAsCustomerDialogOpen] =
     useState(false);

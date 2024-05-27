@@ -6,9 +6,9 @@ import OrderTrackingCardForMobile from "./order-tracking-card-for-mobile";
 import type { TrackingInfo } from "./types";
 
 type OrderTrackingCardProps = {
-  trackingInfo: TrackingInfo;
-  shippingMethods: ShippingMethod[];
-  plants: Plant[];
+  readonly trackingInfo: TrackingInfo;
+  readonly shippingMethods: ShippingMethod[];
+  readonly plants: Plant[];
 };
 
 const OrderTrackingCard = ({

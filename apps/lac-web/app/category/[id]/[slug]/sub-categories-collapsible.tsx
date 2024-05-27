@@ -8,12 +8,12 @@ import {
 } from "@repo/web-ui/components/ui/collapsible";
 import { useState } from "react";
 import { CategoriesGrid } from "./categories-grid";
-import { SubCategory } from "./types";
+import type { SubCategory } from "./types";
 
 const SubCategoriesCollapsible = ({
   hiddenSubCategories,
 }: {
-  hiddenSubCategories: SubCategory[];
+  readonly hiddenSubCategories: SubCategory[];
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 

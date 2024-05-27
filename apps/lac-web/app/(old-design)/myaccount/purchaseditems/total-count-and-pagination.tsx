@@ -30,9 +30,9 @@ const TotalCountAndPagination = ({
   totalItems,
   itemCountOnly = false,
 }: {
-  isLoading: boolean;
-  totalItems: number;
-  itemCountOnly?: boolean;
+  readonly isLoading: boolean;
+  readonly totalItems: number;
+  readonly itemCountOnly?: boolean;
 }) => {
   const urlSearchParams = useSearchParams();
   const page = Number(urlSearchParams.get(QUERY_KEYS.PAGE) ?? INIT_PAGE_NUMBER);
@@ -119,7 +119,7 @@ const TotalCountAndPagination = ({
                   searchParams={urlSearchParams}
                 />
               ) : (
-                <div></div>
+                <div />
               )}
             </>
           )}

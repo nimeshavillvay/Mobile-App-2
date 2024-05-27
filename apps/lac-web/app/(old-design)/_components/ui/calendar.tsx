@@ -8,15 +8,15 @@ import { DayPicker } from "react-day-picker";
 
 export type CalendarProps = ComponentProps<typeof DayPicker>;
 
-function Calendar({
+const Calendar = ({
   className,
   classNames,
   selectedDate,
   showOutsideDays = true,
   ...props
 }: CalendarProps & {
-  selectedDate: Date;
-}) {
+  readonly selectedDate: Date;
+}) => {
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}

@@ -2,7 +2,7 @@
 
 import useItemInfo from "@/_hooks/product/use-item-info.hook";
 import useSuspenseFilters from "@/_hooks/search/use-suspense-filters.hook";
-import { ItemInfo } from "@/_lib/types";
+import type { ItemInfo } from "@/_lib/types";
 import {
   Select,
   SelectContent,
@@ -35,10 +35,10 @@ import PurchasedItemRow from "./purchased-item-row";
 import PurchasedItemsListForMobile from "./purchased-items-list-for-mobile";
 import PurchasedItemsSelectors from "./purchased-items-selectors";
 import TotalCountAndPagination from "./total-count-and-pagination";
-import { DetailedPurchasedItem } from "./types";
+import type { DetailedPurchasedItem } from "./types";
 import useSuspensePurchasedItemsList from "./use-suspense-purchased-items-list.hook";
 
-const PurchasedItemsList = ({ token }: { token: string }) => {
+const PurchasedItemsList = ({ token }: { readonly token: string }) => {
   const searchParams = useSearchParams();
   const fromDate = searchParams.get(QUERY_KEYS.FROM_DATE) ?? INIT_FROM_DATE;
   const toDate = searchParams.get(QUERY_KEYS.TO_DATE) ?? INIT_TO_DATE;

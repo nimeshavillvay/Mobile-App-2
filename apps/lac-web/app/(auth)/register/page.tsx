@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 };
 
 type RegisterPageProps = {
-  searchParams: { [key: string]: string | string[] | undefined };
+  readonly searchParams: { [key: string]: string | string[] | undefined };
 };
 
 const RegisterPage = async ({ searchParams }: RegisterPageProps) => {

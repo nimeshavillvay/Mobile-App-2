@@ -21,7 +21,8 @@ import { updateSearchParams } from "@/old/_utils/client-helpers";
 import { cn } from "@/old/_utils/helpers";
 import dayjs from "dayjs";
 import { useSearchParams } from "next/navigation";
-import { Dispatch, SetStateAction, useState } from "react";
+import type { Dispatch, SetStateAction} from "react";
+import { useState } from "react";
 import { MdCheck } from "react-icons/md";
 import { changeSearchParams } from "./client-helpers";
 import {
@@ -38,8 +39,8 @@ import {
 const customDuration = DURATIONS[DURATIONS.length - 1]; // Custom duration: last item in the `DURATIONS` array
 
 type FiltersForMobileProps = {
-  open: boolean;
-  setOpen: Dispatch<SetStateAction<boolean>>;
+  readonly open: boolean;
+  readonly setOpen: Dispatch<SetStateAction<boolean>>;
 };
 
 const FiltersForMobileDialog = ({ open, setOpen }: FiltersForMobileProps) => {
@@ -251,7 +252,7 @@ const FiltersForMobileDialog = ({ open, setOpen }: FiltersForMobileProps) => {
 
 export default FiltersForMobileDialog;
 
-const MobileFilterSortItem = ({ title }: { title: string }) => {
+const MobileFilterSortItem = ({ title }: { readonly title: string }) => {
   return (
     <div className="bg-gray-200 px-5 py-3 text-base font-bold ">{title}</div>
   );
@@ -263,10 +264,10 @@ const MobileFilterSortItemOption = ({
   activeFilter,
   setActiveFilter,
 }: {
-  title: string;
-  sortingType: string;
-  activeFilter: string;
-  setActiveFilter: Dispatch<SetStateAction<string>>;
+  readonly title: string;
+  readonly sortingType: string;
+  readonly activeFilter: string;
+  readonly setActiveFilter: Dispatch<SetStateAction<string>>;
 }) => {
   return (
     <div

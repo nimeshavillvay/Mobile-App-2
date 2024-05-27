@@ -46,7 +46,7 @@ const verificationDialogSchema = z.object({
 type VerificationDialogSchema = z.infer<typeof verificationDialogSchema>;
 
 type VerificationDialogProps = {
-  token: string;
+  readonly token: string;
 };
 
 const VerificationDialog = ({ token }: VerificationDialogProps) => {
@@ -210,9 +210,9 @@ const PriceCheck = ({
   productId,
   uom,
 }: {
-  token: string;
-  productId: number;
-  uom: string;
+  readonly token: string;
+  readonly productId: number;
+  readonly uom: string;
 }) => {
   const { watch } = useFormContext<VerificationDialogSchema>();
   const quantity = watch("quantity");
@@ -291,12 +291,12 @@ const AddToCart = ({
   formId,
   uom,
 }: {
-  token: string;
-  productId: number;
-  minAmount: number;
-  increments: number;
-  formId: string;
-  uom: string;
+  readonly token: string;
+  readonly productId: number;
+  readonly minAmount: number;
+  readonly increments: number;
+  readonly formId: string;
+  readonly uom: string;
 }) => {
   const { watch, setValue, handleSubmit, control } =
     useFormContext<VerificationDialogSchema>();
@@ -399,9 +399,9 @@ const LocationStocks = ({
   productId,
   quantity,
 }: {
-  token: string;
-  productId: number;
-  quantity: number;
+  readonly token: string;
+  readonly productId: number;
+  readonly quantity: number;
 }) => {
   const checkAvailabilityQuery = useSuspenseCheckAvailability(token, {
     productId,

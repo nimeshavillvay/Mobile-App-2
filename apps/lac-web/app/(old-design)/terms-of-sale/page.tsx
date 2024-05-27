@@ -9,8 +9,7 @@ export const metadata: Metadata = {
 
 const TermsOfSalePage = () => {
   return (
-    <>
-      <section className="py-8">
+    <section className="py-8">
         {/* Section heading with line */}
         <div className="mb-4 flex flex-row items-center gap-2.5">
           <Title className="text-brand-primary">Terms of Sale</Title>
@@ -274,7 +273,6 @@ const TermsOfSalePage = () => {
           <p>Revised November 2019</p>
         </div>
       </section>
-    </>
   );
 };
 

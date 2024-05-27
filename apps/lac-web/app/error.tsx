@@ -8,8 +8,8 @@ const ErrorPage = ({
   error,
   reset,
 }: {
-  error: Error & { digest?: string };
-  reset: () => void;
+  readonly error: Error & { digest?: string };
+  readonly reset: () => void;
 }) => {
   useEffect(() => {
     // Log the error to an error reporting service

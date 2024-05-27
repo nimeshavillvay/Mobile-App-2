@@ -9,8 +9,8 @@ import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import AvailabilityOption from "./availability-option";
 
 type ShippingOptionsProps = {
-  sku: string;
-  quantity: number;
+  readonly sku: string;
+  readonly quantity: number;
 };
 
 const ShippingOptions = ({ sku, quantity }: ShippingOptionsProps) => {
@@ -67,6 +67,6 @@ const ShippingOptions = ({ sku, quantity }: ShippingOptionsProps) => {
 
 export default ShippingOptions;
 
-const Container = ({ children }: { children?: ReactNode }) => {
+const Container = ({ children }: { readonly children?: ReactNode }) => {
   return <div className="w-full max-w-[322px]">{children}</div>;
 };

@@ -21,7 +21,7 @@ import OrderItem from "./order-item";
 import OrderItemForMobile from "./order-item-for-mobile";
 
 type DetailedOrderPageProps = {
-  params: {
+  readonly params: {
     orderId: string;
   };
 };

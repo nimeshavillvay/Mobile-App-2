@@ -47,8 +47,8 @@ const formSchema = z.object({
 });
 
 type AddShippingAddressDialogProps = {
-  open: boolean;
-  closeDialog: () => void;
+  readonly open: boolean;
+  readonly closeDialog: () => void;
 };
 
 const AddShippingAddressDialog = ({

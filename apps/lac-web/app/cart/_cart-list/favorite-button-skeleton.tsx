@@ -3,7 +3,7 @@ import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 const FavoriteButtonSkeleton = ({
   display,
 }: {
-  display: "mobile" | "desktop";
+  readonly display: "mobile" | "desktop";
 }) => {
   return (
     <>

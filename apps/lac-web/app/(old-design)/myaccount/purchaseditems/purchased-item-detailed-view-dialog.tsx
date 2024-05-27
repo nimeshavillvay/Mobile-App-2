@@ -44,10 +44,10 @@ const schema = z.object({
 type Schema = z.infer<typeof schema>;
 
 type ActionConfirmationDialogProps = {
-  open: boolean;
-  onOpenChange: Dispatch<SetStateAction<boolean>>;
-  item: DetailedPurchasedItem;
-  token: string;
+  readonly open: boolean;
+  readonly onOpenChange: Dispatch<SetStateAction<boolean>>;
+  readonly item: DetailedPurchasedItem;
+  readonly token: string;
 };
 
 const PurchasedItemDetailedViewDialog = ({

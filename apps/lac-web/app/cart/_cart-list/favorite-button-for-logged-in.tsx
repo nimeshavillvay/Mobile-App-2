@@ -8,9 +8,9 @@ import { Button } from "@repo/web-ui/components/ui/button";
 import { useState } from "react";
 
 type FavoriteButtonProps = {
-  token: string;
-  productId: number;
-  display: "mobile" | "desktop";
+  readonly token: string;
+  readonly productId: number;
+  readonly display: "mobile" | "desktop";
 };
 
 const FavoriteButtonForLoggedIn = ({

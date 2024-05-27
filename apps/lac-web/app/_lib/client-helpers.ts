@@ -1,5 +1,5 @@
 import "client-only";
-import { Product, ProductVariant } from "./types";
+import type { Product, ProductVariant } from "./types";
 
 export function getVariantData(variant: ProductVariant | undefined) {
   if (variant) {

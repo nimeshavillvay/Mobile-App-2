@@ -6,8 +6,8 @@ import { FormProvider, useForm } from "react-hook-form";
 import { addToCartSchema, type AddToCartSchema } from "./helpers";
 
 type AddToCartFormProviderProps = {
-  minQuantity: number;
-  children: ReactNode;
+  readonly minQuantity: number;
+  readonly children: ReactNode;
 };
 
 const AddToCartFormProvider = ({

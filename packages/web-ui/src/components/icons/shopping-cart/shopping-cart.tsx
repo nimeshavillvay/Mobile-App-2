@@ -18,7 +18,7 @@ export const ShoppingCart = ({
       <path
         strokeLinecap="square"
         d="M1.5 2.5h2l.692 3m0 0l2.308 10h13l2-10H4.192zM10.5 19a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zm8 0a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"
-      ></path>
+       />
     </svg>
   );
 };

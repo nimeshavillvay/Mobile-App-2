@@ -4,17 +4,17 @@ import { Label } from "@/old/_components/ui/label";
 import { cn } from "@/old/_utils/helpers";
 import { useMultipleSelection, useSelect } from "downshift";
 import { ChevronDown, X } from "lucide-react";
-import { MutableRefObject } from "react";
+import type { MutableRefObject } from "react";
 import type { Option } from "./types";
 
 type MultiSelectProps = {
-  label: string;
-  data: Option[];
-  placeholder?: string;
-  flag?: string;
-  onValuesChange?: (selectedItems: Option[]) => void;
-  onClear?: () => void;
-  resetRef: MutableRefObject<boolean>;
+  readonly label: string;
+  readonly data: Option[];
+  readonly placeholder?: string;
+  readonly flag?: string;
+  readonly onValuesChange?: (selectedItems: Option[]) => void;
+  readonly onClear?: () => void;
+  readonly resetRef: MutableRefObject<boolean>;
 };
 
 // TODO: This component can be optimized further
