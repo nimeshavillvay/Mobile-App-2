@@ -27,7 +27,7 @@ import { useToast } from "@repo/web-ui/components/ui/toast";
 import dayjs from "dayjs";
 import { LoaderCircle } from "lucide-react";
 import { Fragment, useState, type Dispatch, type SetStateAction } from "react";
-import type { Control} from "react-hook-form";
+import type { Control } from "react-hook-form";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
@@ -244,7 +244,10 @@ const ShoppingListItem = ({
   };
   readonly formControl: Control<{ shoppingListName: string }>;
   readonly selectedShoppingLists: string[];
-  readonly handleShoppingListCheckedChanged: (listId: string, checked: boolean) => void;
+  readonly handleShoppingListCheckedChanged: (
+    listId: string,
+    checked: boolean,
+  ) => void;
 }) => {
   return (
     <div

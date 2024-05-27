@@ -1,8 +1,11 @@
 import useCookies from "@/_hooks/storage/use-cookies.hook";
 import { api } from "@/_lib/api";
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
-import type { AddressCheckSuggestions, AddressFormData } from "@/_lib/types";
-import type { Address } from "@/_lib/types";
+import type {
+  Address,
+  AddressCheckSuggestions,
+  AddressFormData,
+} from "@/_lib/types";
 import { useToast } from "@/old/_components/ui/use-toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 

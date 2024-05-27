@@ -1,7 +1,6 @@
 import { cn } from "@/old/_utils/helpers";
 import { Slot } from "@radix-ui/react-slot";
-import type {
-  ForwardedRef} from "react";
+import type { ForwardedRef } from "react";
 import {
   forwardRef,
   type ComponentPropsWithoutRef,

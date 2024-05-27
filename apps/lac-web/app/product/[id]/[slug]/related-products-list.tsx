@@ -26,7 +26,7 @@ const RelatedProductsList = ({ products }: RelatedProductsListProps) => {
             id: item.productid,
             image: item.img,
             sku: item.txt_wurth_lac_item,
-            slug: item.url,
+            slug: item.slug,
             title: item.item_name,
             uom: item.txt_uom,
           },

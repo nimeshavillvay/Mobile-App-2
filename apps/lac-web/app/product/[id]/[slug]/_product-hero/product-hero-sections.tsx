@@ -51,7 +51,11 @@ export const ProductDescription = ({
   );
 };
 
-export const DropShipItemNotice = ({ className }: { readonly className?: string }) => {
+export const DropShipItemNotice = ({
+  className,
+}: {
+  readonly className?: string;
+}) => {
   return (
     <section className={className}>
       <div className="flex flex-row gap-2 rounded-lg bg-wurth-gray-50 p-4">

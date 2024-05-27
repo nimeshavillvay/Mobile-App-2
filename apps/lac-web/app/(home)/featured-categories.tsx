@@ -75,7 +75,12 @@ export default FeaturedCategories;
 const CategoriesGrid = ({
   categories,
 }: {
-  readonly categories: { id: string; slug: string; image: string; name: string }[];
+  readonly categories: {
+    id: string;
+    slug: string;
+    image: string;
+    name: string;
+  }[];
 }) => {
   return (
     <ul className="grid grid-cols-3 gap-x-4 gap-y-10 pb-4 lg:grid-cols-5 xl:grid-cols-7 2xl:grid-cols-9">

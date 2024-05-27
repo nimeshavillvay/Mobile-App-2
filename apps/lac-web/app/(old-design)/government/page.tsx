@@ -5,9 +5,7 @@ export const metadata: Metadata = {
 };
 
 const GovernmentPage = () => {
-  return (
-    <h1>Government</h1>
-  );
+  return <h1>Government</h1>;
 };
 
 export default GovernmentPage;

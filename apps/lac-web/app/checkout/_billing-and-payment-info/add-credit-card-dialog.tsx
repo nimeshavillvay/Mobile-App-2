@@ -42,8 +42,8 @@ const formSchema = z
 
     if (month && year) {
       const date = dayjs()
-        .set("month", parseInt(month))
-        .set("year", parseInt(year));
+        .set("month", parseInt(month) - 1)
+        .set("year", parseInt(year) + 2000);
 
       if (!date.isValid() || date.isBefore(dayjs(), "month")) {
         ctx.addIssue({

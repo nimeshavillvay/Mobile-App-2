@@ -21,7 +21,7 @@ import { updateSearchParams } from "@/old/_utils/client-helpers";
 import { cn } from "@/old/_utils/helpers";
 import dayjs from "dayjs";
 import { useSearchParams } from "next/navigation";
-import type { Dispatch, SetStateAction} from "react";
+import type { Dispatch, SetStateAction } from "react";
 import { useState } from "react";
 import { MdCheck } from "react-icons/md";
 import { changeSearchParams } from "./client-helpers";

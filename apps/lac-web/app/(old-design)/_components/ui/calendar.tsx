@@ -66,7 +66,7 @@ const Calendar = ({
       defaultMonth={selectedDate}
     />
   );
-}
+};
 Calendar.displayName = "Calendar";
 
 export { Calendar };

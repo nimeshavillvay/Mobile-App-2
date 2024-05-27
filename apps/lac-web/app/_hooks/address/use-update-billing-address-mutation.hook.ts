@@ -1,8 +1,11 @@
 import useCookies from "@/_hooks/storage/use-cookies.hook";
 import { api } from "@/_lib/api";
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
-import type { AddressCheckSuggestions, AddressFormData } from "@/_lib/types";
-import type { Address } from "@/_lib/types";
+import type {
+  Address,
+  AddressCheckSuggestions,
+  AddressFormData,
+} from "@/_lib/types";
 import { useToast } from "@repo/web-ui/components/ui/toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
@@ -87,6 +90,10 @@ const useUpdateBillingAddressMutation = () => {
 
         return suggestionsResponse;
       } else {
+        toast({
+          description: "Billing address updated",
+        });
+
         const shippingResponse: Address = {
           xcAddressId: response["xc-addressid"],
           soldTo: response.soldto,
@@ -106,11 +113,6 @@ const useUpdateBillingAddressMutation = () => {
     },
     onMutate: () => {
       toast({ description: "Updating billing address" });
-    },
-    onSuccess: () => {
-      toast({
-        description: "Billing address updated",
-      });
     },
     onError: () => {
       toast({

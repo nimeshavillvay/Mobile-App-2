@@ -3,11 +3,6 @@
 import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
-import {
-  getProductDetails,
-  getProductTitle,
-  getVariantData,
-} from "@/_lib/client-helpers";
 import type { Product } from "@/_lib/types";
 import { cn } from "@/_lib/utils";
 import {
@@ -53,13 +48,47 @@ const ProductCard = ({
     (variant) => variant.id === selectedId,
   );
 
-  const { href, image } = getProductDetails(product.variants, selectedVariant);
+  // Get Product Details
+  let href = "";
+  let image = "";
+  if (
+    (product.variants.length === 1 ||
+      (product.variants.length > 1 && !selectedVariant)) &&
+    defaultVariant
+  ) {
+    href = `/product/${defaultVariant.id}/${defaultVariant.slug}`;
+    image = defaultVariant.image;
+  } else if (selectedVariant) {
+    href = `/product/${selectedVariant.id}/${selectedVariant.slug}`;
+    image = selectedVariant.image;
+  }
 
-  const { id, sku, uom } = selectedVariant
-    ? getVariantData(selectedVariant)
-    : getVariantData(defaultVariant);
+  // Get Variant Data
+  let id = "";
+  let sku = "";
+  let uom = "";
+  if (selectedVariant) {
+    id = selectedVariant.id;
+    sku = selectedVariant.sku;
+    uom = selectedVariant.uom;
+  } else if (defaultVariant) {
+    id = defaultVariant.id;
+    sku = defaultVariant.sku;
+    uom = defaultVariant.uom;
+  }
 
-  const title = getProductTitle(product, selectedVariant);
+  // Get Product Title
+  let title = "";
+  if (product.variants.length === 1 && defaultVariant) {
+    title = defaultVariant.title;
+  }
+  if (product.variants.length > 1) {
+    if (selectedVariant) {
+      title = selectedVariant.title;
+    } else {
+      title = product.groupName;
+    }
+  }
 
   const priceCheckQuery = useSuspensePriceCheck(token, [
     {

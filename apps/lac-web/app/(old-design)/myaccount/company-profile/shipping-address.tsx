@@ -1,8 +1,7 @@
 "use client";
 
 import useSuspenseShippingAddressList from "@/_hooks/address/use-suspense-shipping-address-list.hook";
-import type { AddressFormData } from "@/_lib/types";
-import type { Address } from "@/_lib/types";
+import type { Address, AddressFormData } from "@/_lib/types";
 import Separator from "@/old/_components/separator";
 import Title from "@/old/_components/title";
 import { useState } from "react";
