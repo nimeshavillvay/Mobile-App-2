@@ -54,6 +54,7 @@ const BarcodeScannerDialog = () => {
     setCategorySlug("");
     setIsDiscontinued(false);
     setSearchQuery("");
+    setTextChanged(false);
   };
 
   return (
@@ -67,7 +68,7 @@ const BarcodeScannerDialog = () => {
             variant="ghost"
             size="icon"
             className={cn("mx-0.5 rounded-full px-2")}
-            onClick={() => resetOnOpen}
+            onClick={() => resetOnOpen()}
           >
             <BarcodeScan className="size-5" />
             <span className="sr-only">Scan barcode</span>
