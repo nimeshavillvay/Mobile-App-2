@@ -510,15 +510,18 @@ const CartItem = ({
             <Trash className="size-4 fill-wurth-red-650" />
           </Button>
 
+          {/* This is not implemented as this will be rolled out in phase 2
           <Button
             variant="ghost"
             className="h-fit w-full justify-end px-0 py-0"
             disabled={true}
+            hidden={true}
           >
             <span className="text-[13px] leading-5">Save for later</span>
 
             <Save className="size-4" />
           </Button>
+          */}
 
           <FavoriteButton
             display="desktop"
