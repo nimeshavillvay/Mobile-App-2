@@ -21,6 +21,7 @@ import { Close } from "./close";
 import { Download } from "./download";
 import { Exit } from "./exit";
 import { Facebook } from "./facebook";
+import { FileDownload } from "./file-download";
 import { Headset } from "./headset";
 import { HeartFilled } from "./heart-filled";
 import { HeartOutline } from "./heart-outline";
@@ -292,6 +293,10 @@ export const Showcase: Story = {
 
         <IconContainer name="Timetable">
           <Timetable />
+        </IconContainer>
+
+        <IconContainer name="FileDownload">
+          <FileDownload className="h-6 w-6" />
         </IconContainer>
       </ul>
     );

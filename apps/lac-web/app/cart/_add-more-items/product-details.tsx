@@ -1,20 +1,74 @@
-import { useEffect, useState } from "react";
+import { Alert } from "@repo/web-ui/components/icons/alert";
+import { WurthFullBlack } from "@repo/web-ui/components/logos/wurth-full-black";
+import Image from "next/image";
 
 function ProductDetails({
+  product,
   isLoading,
   isLastEditedIndex,
 }: {
+  product: {
+    isInvalid?: boolean | null;
+    info?: {
+      title: string;
+      minQuantity: number;
+      orderIncrementBy: number;
+      image: string;
+    };
+  };
   isLoading: boolean;
   isLastEditedIndex: boolean;
 }) {
-  if (!isLastEditedIndex) {
-    return <>Product Details</>;
-  }
-  if (isLoading) {
-    return <>Loading...</>;
+  if (isLoading && isLastEditedIndex) {
+    return (
+      <div className="flex h-10 items-center px-3 font-medium">
+        Please wait...
+      </div>
+    );
   }
 
-  return <>Item not found.</>;
+  if (product.isInvalid) {
+    return (
+      <div className="flex h-10 items-center gap-2 rounded bg-[#FEF2F2] p-3 text-sm font-medium text-wurth-red-650">
+        <Alert
+          className="mt-1 shrink-0 stroke-wurth-red-650"
+          width={18}
+          height={18}
+        />
+        Item not found. Try again.
+      </div>
+    );
+  }
+
+  if (product.info) {
+    return (
+      <div className="flex items-center gap-2 text-sm">
+        <div className="min-w-16 text-xs">
+          <div>Min qty: {product.info.minQuantity}</div>
+          <div>Sold in: {product.info.orderIncrementBy}</div>
+        </div>
+
+        {product.info.image ? (
+          <Image
+            src={product.info?.image}
+            alt={product.info?.title}
+            width={40}
+            height={40}
+          />
+        ) : (
+          <WurthFullBlack className="max-w-10" />
+        )}
+
+        <div>
+          {product.info.title.length > 65
+            ? product.info.title.substring(0, 65) + "..."
+            : product.info.title}
+        </div>
+      </div>
+    );
+  }
+
+  return;
 }
 
 export default ProductDetails;

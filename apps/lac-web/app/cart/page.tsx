@@ -6,6 +6,7 @@ import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { Suspense } from "react";
 import AddMoreItemsForm from "./_add-more-items/add-more-items-form";
+import AddMoreItemsFormMobile from "./_add-more-items/add-more-items-form-mobile";
 import CartList from "./_cart-list";
 import CheckoutButton from "./_checkout-button";
 import CartDetails from "./cart-details";
@@ -64,8 +65,15 @@ const CartPage = async () => {
               plants={plants}
             />
 
-            {/* <CartList shippingMethods={shippingMethods} /> */}
-            <AddMoreItemsForm />
+            <div className="hidden md:block">
+              <AddMoreItemsForm />
+            </div>
+            <div className="flex gap-2 px-4 md:hidden">
+              <div className="w-1/2">{/* delete cart button goes here*/}</div>
+              <div className="w-1/2">
+                <AddMoreItemsFormMobile />
+              </div>
+            </div>
           </Suspense>
         </div>
 

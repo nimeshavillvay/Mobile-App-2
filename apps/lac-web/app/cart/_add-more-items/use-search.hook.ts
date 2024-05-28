@@ -1,13 +1,10 @@
-import useCookies from "@/(old-design)/_hooks/storage/use-cookies.hook";
 import { searchApi } from "@/_lib/api";
 import { useQuery } from "@tanstack/react-query";
 import type { Product, SearchResults } from "./types";
 
 const useSearch = (searchText: string) => {
-  const [cookies] = useCookies();
-
   return useQuery({
-    queryKey: ["search", cookies.token, searchText],
+    queryKey: ["search", searchText],
     queryFn: () =>
       searchApi
         .get("search", {

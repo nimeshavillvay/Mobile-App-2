@@ -1,31 +1,33 @@
 "use client";
 
 import { cn } from "@/(old-design)/_utils/helpers";
+import { Alert } from "@repo/web-ui/components/icons/alert";
+import { CheckCircle } from "@repo/web-ui/components/icons/check-circle";
+import { WurthFullBlack } from "@repo/web-ui/components/logos/wurth-full-black";
 import { Input } from "@repo/web-ui/components/ui/input";
 import { useCombobox } from "downshift";
-import React, { useEffect, useState } from "react";
-import { UseFormRegisterReturn } from "react-hook-form";
+import Image from "next/image";
 import { Product } from "./types";
 
 type ItemSelectorInputProps = {
-  searchResultProducts: Product[];
+  items: Product[];
   onTextChange: (selection: string, type: string) => void;
   onSelectedItemChange: (value: Product) => void;
   id: string;
   isPopupOpen: boolean;
-  register: UseFormRegisterReturn<string>;
+  isInvalid: boolean | null;
+  value: string;
 };
 
 const ItemSelectorInput = ({
-  searchResultProducts = [],
+  items = [],
   onTextChange,
   onSelectedItemChange,
   id,
   isPopupOpen,
-  register,
+  isInvalid,
+  value,
 }: ItemSelectorInputProps) => {
-  const [items, setItems] = useState(searchResultProducts);
-
   const {
     isOpen,
     getMenuProps,
@@ -34,6 +36,7 @@ const ItemSelectorInput = ({
     getItemProps,
     selectedItem,
   } = useCombobox({
+    inputValue: value,
     isOpen: isPopupOpen,
     onInputValueChange({ type, inputValue }) {
       onTextChange(inputValue, type);
@@ -41,31 +44,46 @@ const ItemSelectorInput = ({
     onSelectedItemChange({ selectedItem }) {
       onSelectedItemChange(selectedItem);
     },
-    items,
+    items: items,
     itemToString(item) {
-      return item ? item.sku : "";
+      return item ? item.sku : "abc";
     },
   });
 
-  useEffect(() => {
-    setItems(searchResultProducts);
-  }, [searchResultProducts]);
-
   return (
     <div>
-      <div className="flex w-72 flex-col gap-1">
-        <div className="flex gap-0.5 bg-white shadow-sm">
+      <div className="flex w-48 flex-col gap-1">
+        <div className="relative flex gap-0.5 bg-white shadow-sm">
           <Input
             id={id}
             placeholder="Item #"
-            className="h-10 w-full"
-            {...register}
+            className={cn(
+              "h-10 w-full",
+              isInvalid === true && "border-wurth-red-650 text-wurth-red-650",
+            )}
             {...getInputProps()}
           />
+
+          {isInvalid === false && (
+            <CheckCircle
+              className="absolute right-2 top-2.5 shrink-0 stroke-green-700"
+              width={20}
+              height={20}
+            />
+          )}
+
+          {isInvalid === true && (
+            <Alert
+              className="absolute right-2 top-2.5 shrink-0 stroke-wurth-red-650"
+              width={20}
+              height={20}
+            />
+          )}
         </div>
       </div>
+
       <ul
-        className={`absolute z-50 mt-1 max-h-80 w-72 overflow-x-hidden overflow-y-scroll  bg-white p-0 ${
+        className={`absolute z-50 max-h-80 w-72 overflow-x-hidden overflow-y-scroll  bg-white p-0 ${
           !(isOpen && items.length) && "hidden"
         }`}
         {...getMenuProps()}
@@ -77,13 +95,12 @@ const ItemSelectorInput = ({
               className={cn(
                 highlightedIndex === index && "bg-blue-300",
                 selectedItem === item && "font-bold",
-                "flex flex-col px-3 py-2 shadow-sm",
+                "cursor-pointer px-3 py-2 shadow-sm hover:bg-gray-100",
               )}
               key={item.sku}
               {...getItemProps({ item, index })}
             >
-              <span>{item.sku}</span>
-              <span className="text-sm text-gray-700">{item.sku}</span>
+              <SearchResultProductData item={item} />
             </li>
           ))}
       </ul>
@@ -92,3 +109,27 @@ const ItemSelectorInput = ({
 };
 
 export default ItemSelectorInput;
+
+const SearchResultProductData = ({ item }: { item: Product }) => {
+  return (
+    <div className="flex gap-2">
+      {item.image ? (
+        <Image
+          src={item.image}
+          height={64}
+          width={64}
+          alt={item.sku}
+          className="min-w-16"
+        />
+      ) : (
+        <WurthFullBlack className="max-w-16" />
+      )}
+
+      <div>
+        <div className="text-md">{item.sku}</div>
+
+        <span className="text-sm font-medium text-gray-500">{item.title}</span>
+      </div>
+    </div>
+  );
+};
