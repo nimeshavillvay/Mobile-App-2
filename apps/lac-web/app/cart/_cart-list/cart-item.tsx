@@ -350,8 +350,8 @@ const CartItem = ({
     <div className="flex flex-col gap-6 md:flex-row">
       <div className="flex flex-row items-start gap-3 md:flex-1">
         <div className="flex w-[4.5rem] shrink-0 flex-col gap-2 md:w-[7.5rem]">
-          {product.image !== "" ? (
-            <Link href={`/product/${product.id}/${product.slug}`}>
+          <Link href={`/product/${product.id}/${product.slug}`}>
+            {product.image !== "" ? (
               <Image
                 src={product.image}
                 alt={`A picture of ${product.title}`}
@@ -359,16 +359,14 @@ const CartItem = ({
                 height={120}
                 className="size-[4.5rem] rounded border border-wurth-gray-250 object-contain shadow-sm md:size-[7.5rem]"
               />
-            </Link>
-          ) : (
-            <Link href={`/product/${product.id}/${product.slug}`}>
+            ) : (
               <WurthFullBlack
                 width={120}
                 height={120}
                 className="border border-brand-gray-200 px-2"
               />
-            </Link>
-          )}
+            )}
+          </Link>
 
           <div className="flex flex-col gap-1 md:hidden">
             <Suspense fallback={<FavoriteButtonSkeleton display="mobile" />}>
