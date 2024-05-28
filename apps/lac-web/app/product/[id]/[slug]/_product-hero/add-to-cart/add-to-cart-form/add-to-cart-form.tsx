@@ -44,13 +44,11 @@ const AddToCartForm = ({
     productId,
   });
 
-  const onSubmit = handleSubmit(() => {
+  const onSubmit = handleSubmit((values) => {
     // Update the quantity in add to cart dialog
     setQuantity(quantity);
 
-    addToCartMutation.mutate({
-      quantity,
-    });
+    addToCartMutation.mutate(values);
   });
 
   if (checkLoginQuery.data.status_code === "OK") {
@@ -133,13 +131,11 @@ const AddToCartFormLoggedIn = ({
     productId,
   });
 
-  const onSubmit = handleSubmit(() => {
+  const onSubmit = handleSubmit((values) => {
     // Update the quantity in add to cart dialog
     setQuantity(quantity);
 
-    addToCartMutation.mutate({
-      quantity,
-    });
+    addToCartMutation.mutate(values);
   });
 
   return (
