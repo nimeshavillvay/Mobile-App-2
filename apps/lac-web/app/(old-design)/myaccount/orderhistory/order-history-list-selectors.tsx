@@ -75,8 +75,12 @@ const OrderHistoryListSelectors = ({
   const [poNos, setPoNos] = useState<number[]>([]);
   const [jobNames, setJobNames] = useState<number[]>([]);
 
-  const formattedFromDate = dayjs(fromDate).format(URL_DATE_FORMAT);
-  const formattedToDate = dayjs(toDate).format(URL_DATE_FORMAT);
+  const formattedFromDate = urlFromDate
+    ? dayjs(urlFromDate).format(URL_DATE_FORMAT)
+    : dayjs(fromDate).format(URL_DATE_FORMAT);
+  const formattedToDate = urlToDate
+    ? dayjs(urlToDate).format(URL_DATE_FORMAT)
+    : dayjs(toDate).format(URL_DATE_FORMAT);
 
   const resetPoNosRef = useRef(false);
   const resetOrderStatusesRef = useRef(false);
@@ -285,6 +289,7 @@ const OrderHistoryListSelectors = ({
               data={poNoFilter?.values ?? []}
               onValuesChange={(values) => handlePONosChange(values)}
               resetRef={resetPoNosRef}
+              placeholder="None selected"
             />
 
             <MultiSelect
@@ -293,6 +298,7 @@ const OrderHistoryListSelectors = ({
               data={jobNameFilter?.values ?? []}
               onValuesChange={(values) => handleJobNamesChange(values)}
               resetRef={resetJobNamesRef}
+              placeholder="None selected"
             />
 
             <MultiSelect
@@ -301,6 +307,7 @@ const OrderHistoryListSelectors = ({
               data={statusFilter?.values ?? []}
               onValuesChange={(values) => handleOrderStatusChange(values)}
               resetRef={resetOrderStatusesRef}
+              placeholder="None selected"
             />
           </div>
         </div>
