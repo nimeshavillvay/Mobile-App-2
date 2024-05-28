@@ -360,6 +360,8 @@ export const getOrderDetails = async (token: string, orderId: string) => {
                   itemDescription: lineItem.itemDescription,
                   itemTotalQuantity: lineItem.itemTotalQuantity,
                   price: lineItem.price,
+                  totalPrice:
+                    lineItem.price * parseInt(lineItem.itemTotalQuantity),
                   deliveryDate: lineItem.deliveryDate ?? "",
                   plant: lineItem.plant,
                   shippingCondition: lineItem.shippingCondition,
