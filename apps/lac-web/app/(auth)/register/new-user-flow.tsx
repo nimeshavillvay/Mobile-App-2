@@ -2,6 +2,7 @@ import useCounties from "@/_hooks/registration/use-counties.hook";
 import useCountries from "@/_hooks/registration/use-countries.hook";
 import useStates from "@/_hooks/registration/use-states.hook";
 import type { PasswordPolicies } from "@/_lib/types";
+import { NUMBER_TYPE } from "@/_lib/zod-helper";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Checkbox } from "@repo/web-ui/components/ui/checkbox";
 import {
@@ -61,7 +62,7 @@ const personalDetailsSchema = z.object({
   type: z.enum(REGISTRATION_TYPES_VALUES),
   companyName: z.string(),
   industry: z.string(),
-  employees: z.number(),
+  employees: NUMBER_TYPE,
 });
 const addressSchema = z
   .object({
