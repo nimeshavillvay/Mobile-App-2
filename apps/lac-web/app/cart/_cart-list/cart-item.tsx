@@ -41,9 +41,10 @@ import {
 } from "./helpers";
 import type { MainOption, ShipToMeOption } from "./types";
 import useCheckAvailabilityMutation from "./use-check-availability-mutation.hook";
+import {NUMBER_TYPE} from "@/_lib/zod-helper";
 
 const cartItemSchema = z.object({
-  quantity: z.number(),
+  quantity: NUMBER_TYPE,
   po: z.string().optional(),
 });
 

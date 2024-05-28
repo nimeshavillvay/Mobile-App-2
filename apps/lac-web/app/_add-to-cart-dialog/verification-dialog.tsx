@@ -38,10 +38,11 @@ import {
   useFormContext,
 } from "react-hook-form";
 import { z } from "zod";
+import {NUMBER_TYPE} from "@/_lib/zod-helper";
 
 const verificationDialogSchema = z.object({
   poOrJobName: z.string(),
-  quantity: z.number(),
+  quantity: NUMBER_TYPE,
 });
 type VerificationDialogSchema = z.infer<typeof verificationDialogSchema>;
 

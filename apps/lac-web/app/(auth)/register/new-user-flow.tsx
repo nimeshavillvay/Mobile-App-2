@@ -42,6 +42,7 @@ import type { ResponseAddress } from "./use-register-new-user-mutation.hook";
 import useRegisterNewUserMutation, {
   isVerifyAddressResponse,
 } from "./use-register-new-user-mutation.hook";
+import {NUMBER_TYPE} from "@/_lib/zod-helper";
 
 type Step = "personal" | "address";
 
@@ -61,7 +62,7 @@ const personalDetailsSchema = z.object({
   type: z.enum(REGISTRATION_TYPES_VALUES),
   companyName: z.string(),
   industry: z.string(),
-  employees: z.number(),
+  employees: NUMBER_TYPE,
 });
 const addressSchema = z
   .object({
