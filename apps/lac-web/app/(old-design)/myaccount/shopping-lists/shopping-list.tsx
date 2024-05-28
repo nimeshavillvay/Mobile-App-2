@@ -99,7 +99,7 @@ const ShoppingList = ({ token }: { readonly token: string }) => {
         </Button>
       </div>
 
-      {!!shoppingList ? (
+      {shoppingList ? (
         <ShoppingListItems
           token={token}
           page={page}
