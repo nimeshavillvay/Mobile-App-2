@@ -31,7 +31,7 @@ const AddToCartDialogSchema = z.object({
 });
 
 type ConfirmationDialogProps = {
-  token: string;
+  readonly token: string;
 };
 
 const ConfirmationDialog = ({ token }: ConfirmationDialogProps) => {
@@ -69,7 +69,7 @@ const ConfirmationDialog = ({ token }: ConfirmationDialogProps) => {
     resolver: zodResolver(AddToCartDialogSchema),
   });
 
-  const updateCartItemMutation = useUpdateCartItemMutation();
+  const updateCartItemMutation = useUpdateCartItemMutation(token);
 
   const handleSave = () => {
     const data = getValues();
@@ -77,7 +77,7 @@ const ConfirmationDialog = ({ token }: ConfirmationDialogProps) => {
     if (productId && quantity && itemInCart) {
       updateCartItemMutation.mutate([
         {
-          productId,
+          cartItemId: itemInCart.cartItemId,
           quantity: quantity,
           config: {
             ...itemInCart.configuration,
@@ -199,10 +199,10 @@ const PriceDisplay = ({
   unitOfMeasure,
   quantity,
 }: {
-  token: string;
-  productId: number;
-  unitOfMeasure: string;
-  quantity: number;
+  readonly token: string;
+  readonly productId: number;
+  readonly unitOfMeasure: string;
+  readonly quantity: number;
 }) => {
   const priceCheckQuery = useSuspensePriceCheck(token, [
     { productId, qty: quantity },

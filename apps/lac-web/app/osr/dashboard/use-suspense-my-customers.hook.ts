@@ -41,7 +41,7 @@ type OldPagination = {
   perPage: number;
 };
 
-const getSortFieldNameForAPI = function (sortColumnName: string) {
+const getSortFieldNameForAPI = (sortColumnName: string) => {
   switch (sortColumnName) {
     case columnEmailAndPhone:
       return "email";

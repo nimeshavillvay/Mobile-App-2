@@ -1,3 +1,8 @@
+const { resolve } = require("node:path");
+
+const project = resolve(process.cwd(), "tsconfig.json");
+
+/** @type {import("eslint").Linter.Config} */
 module.exports = {
   extends: [
     "eslint:recommended",
@@ -10,9 +15,49 @@ module.exports = {
     "prettier",
     "eslint-config-turbo",
   ],
+  plugins: ["react-compiler", "prefer-arrow-functions"],
   settings: {
     react: {
       version: "detect",
     },
+    "import/resolver": {
+      typescript: {
+        project,
+      },
+    },
+  },
+  rules: {
+    "react-compiler/react-compiler": "error",
+    "@typescript-eslint/consistent-type-imports": "error",
+    "react/jsx-no-useless-fragment": "error",
+    "react/no-children-prop": "error",
+    "react/prefer-read-only-props": "error",
+    "react/function-component-definition": [
+      "error",
+      {
+        namedComponents: "arrow-function",
+        unnamedComponents: "arrow-function",
+      },
+    ],
+    "react/self-closing-comp": [
+      "error",
+      {
+        component: true,
+        html: true,
+      },
+    ],
+    "react/jsx-pascal-case": "error",
+    "prefer-arrow-callback": ["error", { allowNamedFunctions: true }],
+    "prefer-arrow-functions/prefer-arrow-functions": [
+      "warn",
+      {
+        allowNamedFunctions: false,
+        classPropertiesAllowed: false,
+        disallowPrototype: false,
+        returnStyle: "unchanged",
+        singleReturnOnly: false,
+      },
+    ],
+    curly: ["error", "all"],
   },
 };

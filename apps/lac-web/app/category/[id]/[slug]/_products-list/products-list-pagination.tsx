@@ -5,8 +5,8 @@ import useSuspenseFilters from "@/_hooks/search/use-suspense-filters.hook";
 import useSuspenseSearchProductList from "./use-suspense-search-product-list.hook";
 
 type ProductsListPaginationProps = {
-  token: string;
-  categoryId: string;
+  readonly token: string;
+  readonly categoryId: string;
 };
 
 const ProductsListPagination = ({

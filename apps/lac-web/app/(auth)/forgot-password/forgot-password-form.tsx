@@ -14,7 +14,7 @@ const emailFormSchema = z.object({
 });
 
 type ForgotPasswordFormProps = {
-  email: string;
+  readonly email: string;
 };
 
 const ForgotPasswordForm = ({ email }: ForgotPasswordFormProps) => {
@@ -69,7 +69,6 @@ const ForgotPasswordForm = ({ email }: ForgotPasswordFormProps) => {
 
           <Button
             type="submit"
-            variant="secondary"
             className="w-full p-2.5 font-bold"
             disabled={resetPasswordMutation.isPending}
           >

@@ -1,4 +1,4 @@
-import { ORDER_STATUS, ORDER_TYPES } from "./constants";
+import type { ORDER_STATUS, ORDER_TYPES } from "./constants";
 // Types used in old design
 export type MyOrdersOld = {
   order_status: unknown[];

@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { Fragment } from "react";
 
 type CompanyNavigationProps = {
-  links: Array<{ label: string; href: string }>;
+  readonly links: Array<{ label: string; href: string }>;
 };
 
 const CompanyNavigation = ({ links }: CompanyNavigationProps) => {

@@ -1,5 +1,9 @@
-import { api } from "@/_lib/api";
-import type { ShippingMethod } from "@/_lib/types";
+import { checkAvailability } from "@/_lib/apis/shared";
+import type {
+  AvailabilityParameters,
+  ShippingMethod,
+  Token,
+} from "@/_lib/types";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
 export type CheckAvailability = {
@@ -40,41 +44,6 @@ export type CheckAvailability = {
     name: string;
     amount: number;
   }[];
-};
-
-type Token = string;
-type AvailabilityParameters = {
-  productId: number;
-  qty: number;
-  plant?: string;
-};
-
-export const checkAvailability = async (
-  token: Token,
-  { productId, qty, plant }: AvailabilityParameters,
-) => {
-  const response = await api
-    .post("rest/availability-check", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      json: {
-        productid: productId,
-        qty,
-        plant,
-      },
-      cache: "no-store",
-    })
-    .json<CheckAvailability>();
-
-  return {
-    productId: response.productid,
-    status: response.status,
-    options: response.options,
-    willCallAnywhere: response.willcallanywhere,
-    xplant: response.xplant,
-    availableLocations: response.available_locations,
-  };
 };
 
 const useSuspenseCheckAvailability = (

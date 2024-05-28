@@ -1,5 +1,10 @@
 import { SPECIAL_SHIPPING_FLAG } from "@/_lib/constants";
 import { api } from "../api";
+import type {
+  AvailabilityParameters,
+  CheckAvailability,
+  Token,
+} from "../types";
 
 export const getItemInfo = async (productIdList: number[]) => {
   const response = await api
@@ -14,7 +19,6 @@ export const getItemInfo = async (productIdList: number[]) => {
         item_name: string;
         img: string;
         slug: string;
-        is_favourite: boolean;
         is_comparison: boolean;
         txt_hazardous: string;
         txt_special_shipping: string;
@@ -99,4 +103,32 @@ export const getItemInfo = async (productIdList: number[]) => {
   }));
 
   return transformedResponse;
+};
+
+export const checkAvailability = async (
+  token: Token,
+  { productId, qty, plant }: AvailabilityParameters,
+) => {
+  const response = await api
+    .post("rest/availability-check", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      json: {
+        productid: productId,
+        qty,
+        plant,
+      },
+      cache: "no-store",
+    })
+    .json<CheckAvailability>();
+
+  return {
+    productId: response.productid,
+    status: response.status,
+    options: response.options,
+    willCallAnywhere: response.willcallanywhere,
+    xplant: response.xplant,
+    availableLocations: response.available_locations,
+  };
 };

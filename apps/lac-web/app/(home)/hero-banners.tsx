@@ -10,7 +10,12 @@ import Autoplay from "embla-carousel-autoplay";
 import Image from "next/image";
 
 type HeroBannersProps = {
-  banners: { id: string; alt: string; image: string; pdfLink: string }[];
+  readonly banners: {
+    id: string;
+    alt: string;
+    image: string;
+    pdfLink: string;
+  }[];
 };
 
 const HeroBanners = ({ banners }: HeroBannersProps) => {

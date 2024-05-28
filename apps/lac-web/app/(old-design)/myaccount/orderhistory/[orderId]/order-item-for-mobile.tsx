@@ -6,7 +6,7 @@ import Link from "next/link";
 import MoreItemDetailsForMobile from "./more-item-details-for-mobile";
 
 type OrderItemForMobileProps = {
-  orderItem: {
+  readonly orderItem: {
     productId: number;
     slug?: string;
     sku: string;
@@ -34,8 +34,8 @@ type OrderItemForMobileProps = {
     isExcludedProduct?: boolean;
     productName?: string;
   };
-  shippingMethods: ShippingMethod[];
-  plants: Plant[];
+  readonly shippingMethods: ShippingMethod[];
+  readonly plants: Plant[];
 };
 
 const OrderItemForMobile = ({

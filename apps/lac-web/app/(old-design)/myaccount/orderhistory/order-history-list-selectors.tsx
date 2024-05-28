@@ -14,7 +14,7 @@ import {
 import { updateSearchParams } from "@/old/_utils/client-helpers";
 import dayjs from "dayjs";
 import { useSearchParams } from "next/navigation";
-import { useId, useState } from "react";
+import { useId, useRef, useState } from "react";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import {
   CUSTOM_DURATION,
@@ -34,9 +34,9 @@ import type { Option } from "./types";
 import { useFilterParams, type SelectedValues } from "./use-filter-params.hook";
 
 type OrderHistoryListSelectorsProps = {
-  filters: Filters[];
-  isLoading: boolean;
-  totalItems: number;
+  readonly filters: Filters[];
+  readonly isLoading: boolean;
+  readonly totalItems: number;
 };
 
 const OrderHistoryListSelectors = ({
@@ -75,8 +75,16 @@ const OrderHistoryListSelectors = ({
   const [poNos, setPoNos] = useState<number[]>([]);
   const [jobNames, setJobNames] = useState<number[]>([]);
 
-  const formattedFromDate = dayjs(fromDate).format(URL_DATE_FORMAT);
-  const formattedToDate = dayjs(toDate).format(URL_DATE_FORMAT);
+  const formattedFromDate = urlFromDate
+    ? dayjs(urlFromDate).format(URL_DATE_FORMAT)
+    : dayjs(fromDate).format(URL_DATE_FORMAT);
+  const formattedToDate = urlToDate
+    ? dayjs(urlToDate).format(URL_DATE_FORMAT)
+    : dayjs(toDate).format(URL_DATE_FORMAT);
+
+  const resetPoNosRef = useRef(false);
+  const resetOrderStatusesRef = useRef(false);
+  const resetJobNamesRef = useRef(false);
 
   const id = useId();
   const durationId = `duration-${id}`;
@@ -151,6 +159,11 @@ const OrderHistoryListSelectors = ({
     setToDate(new Date(INIT_TO_DATE));
     setOrderStatuses([]);
     setOrderTypes([]);
+    setPoNos([]);
+    setJobNames([]);
+    resetPoNosRef.current = true;
+    resetJobNamesRef.current = true;
+    resetOrderStatusesRef.current = true;
 
     const params = new URLSearchParams();
 
@@ -192,7 +205,7 @@ const OrderHistoryListSelectors = ({
 
               <Select
                 value={duration?.value}
-                onValueChange={function (value) {
+                onValueChange={(value) => {
                   handleDurationChange(value);
                 }}
               >
@@ -275,7 +288,8 @@ const OrderHistoryListSelectors = ({
               flag="po"
               data={poNoFilter?.values ?? []}
               onValuesChange={(values) => handlePONosChange(values)}
-              onClear={() => setPoNos([])}
+              resetRef={resetPoNosRef}
+              placeholder="None selected"
             />
 
             <MultiSelect
@@ -283,7 +297,8 @@ const OrderHistoryListSelectors = ({
               flag="job"
               data={jobNameFilter?.values ?? []}
               onValuesChange={(values) => handleJobNamesChange(values)}
-              onClear={() => setJobNames([])}
+              resetRef={resetJobNamesRef}
+              placeholder="None selected"
             />
 
             <MultiSelect
@@ -291,7 +306,8 @@ const OrderHistoryListSelectors = ({
               flag="status"
               data={statusFilter?.values ?? []}
               onValuesChange={(values) => handleOrderStatusChange(values)}
-              onClear={() => setOrderStatuses([])}
+              resetRef={resetOrderStatusesRef}
+              placeholder="None selected"
             />
           </div>
         </div>
@@ -349,10 +365,10 @@ const OrderTypeCheckbox = ({
   active,
   onCheckedChanged,
 }: {
-  id: number;
-  value: string;
-  active: boolean;
-  onCheckedChanged: (checked: boolean) => void;
+  readonly id: number;
+  readonly value: string;
+  readonly active: boolean;
+  readonly onCheckedChanged: (checked: boolean) => void;
 }) => {
   return (
     <div className="flex flex-row items-center gap-2">
@@ -374,8 +390,8 @@ const FilterDetailsBoxForMobile = ({
   label,
   value,
 }: {
-  label: string;
-  value: string;
+  readonly label: string;
+  readonly value: string;
 }) => {
   return (
     <div className="w-fit rounded-md bg-gray-100 p-2">

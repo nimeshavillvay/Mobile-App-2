@@ -5,7 +5,7 @@ import UserProfileButton from "./user-profile-button";
 import { UserProfileSkeleton } from "./user-profile-skeleton";
 
 type UserProfileProps = {
-  type: ComponentProps<typeof UserProfileButton>["type"];
+  readonly type: ComponentProps<typeof UserProfileButton>["type"];
 };
 
 const UserProfile = ({ type }: UserProfileProps) => {

@@ -41,6 +41,9 @@ const useLoginAsCustomerMutation = () => {
       queryClient.invalidateQueries({
         queryKey: ["user", "login-status"],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["cart"],
+      });
     },
   });
 };

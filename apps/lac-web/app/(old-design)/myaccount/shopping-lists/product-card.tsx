@@ -19,10 +19,10 @@ import type { ShoppingListItemsElement } from "./type";
 import useRemoveShoppingListItemMutation from "./use-remove-shopping-list-item-mutation.hook";
 
 type ProductProps = {
-  orientation?: ComponentProps<typeof ProductCardRoot>["orientation"];
-  token: string;
-  product: ShoppingListItemsElement;
-  listId: string;
+  readonly orientation?: ComponentProps<typeof ProductCardRoot>["orientation"];
+  readonly token: string;
+  readonly product: ShoppingListItemsElement;
+  readonly listId: string;
 };
 
 const ProductCard = ({ orientation, token, product, listId }: ProductProps) => {
@@ -121,9 +121,9 @@ const ShoppingListProductCardActions = ({
   removeFromShoppingList,
   disabled = false,
 }: {
-  addToCart: () => void;
-  removeFromShoppingList: () => void;
-  disabled?: boolean;
+  readonly addToCart: () => void;
+  readonly removeFromShoppingList: () => void;
+  readonly disabled?: boolean;
 }) => {
   return (
     <div className="mt-auto flex flex-row items-center gap-1 md:gap-2">

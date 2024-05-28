@@ -8,7 +8,7 @@ import { type ComponentProps } from "react";
 import { MdClose } from "react-icons/md";
 
 type SelectedFiltersListProps = {
-  sections: {
+  readonly sections: {
     id: string;
     name: string;
     values: {

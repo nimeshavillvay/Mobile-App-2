@@ -12,9 +12,9 @@ export const ProductNumbers = ({
   manufacturerNo,
   className,
 }: {
-  sku: string;
-  manufacturerNo: string;
-  className?: string;
+  readonly sku: string;
+  readonly manufacturerNo: string;
+  readonly className?: string;
 }) => {
   return (
     <div
@@ -40,8 +40,8 @@ export const ProductDescription = ({
   children,
   className,
 }: {
-  children: string;
-  className?: string;
+  readonly children: string;
+  readonly className?: string;
 }) => {
   return (
     <div
@@ -51,7 +51,11 @@ export const ProductDescription = ({
   );
 };
 
-export const DropShipItemNotice = ({ className }: { className?: string }) => {
+export const DropShipItemNotice = ({
+  className,
+}: {
+  readonly className?: string;
+}) => {
   return (
     <section className={className}>
       <div className="flex flex-row gap-2 rounded-lg bg-wurth-gray-50 p-4">
@@ -72,7 +76,7 @@ export const DropShipItemNotice = ({ className }: { className?: string }) => {
   );
 };
 
-const Prop65Warning = async ({ warning }: { warning: string }) => {
+const Prop65Warning = async ({ warning }: { readonly warning: string }) => {
   const transformedWarning = await transform(warning, [
     swap({
       a: (props, children) =>
@@ -126,9 +130,9 @@ export const ProductDetails = async ({
   slug,
   className,
 }: {
-  id: string;
-  slug: string;
-  className?: string;
+  readonly id: string;
+  readonly slug: string;
+  readonly className?: string;
 }) => {
   const [product, attachments] = await Promise.all([
     getProduct(id, slug),
@@ -197,8 +201,8 @@ export const ProductSpecifications = ({
   attributes,
   className,
 }: {
-  attributes: { name: string; value: string }[];
-  className?: string;
+  readonly attributes: { name: string; value: string }[];
+  readonly className?: string;
 }) => {
   return (
     <section className={cn("space-y-4", className)}>

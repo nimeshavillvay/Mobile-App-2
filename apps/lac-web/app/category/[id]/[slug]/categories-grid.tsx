@@ -1,14 +1,14 @@
 import Image from "next/image";
 import Link from "next/link";
 import Balancer from "react-wrap-balancer";
-import { SubCategory } from "./types";
+import type { SubCategory } from "./types";
 
 export const CategoriesGrid = ({
   categories,
   priorityImages = false,
 }: {
-  categories: SubCategory[];
-  priorityImages?: boolean;
+  readonly categories: SubCategory[];
+  readonly priorityImages?: boolean;
 }) => {
   return (
     <ul className="grid grid-cols-3 justify-items-center gap-y-10 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">

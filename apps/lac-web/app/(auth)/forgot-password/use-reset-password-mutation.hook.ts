@@ -22,8 +22,8 @@ const useResetPasswordMutation = () => {
         }>(),
     onSuccess: () => {
       toast({
-        title: "An email has been sent to your address.",
-        description: "Please check your inbox.",
+        title: "Check your inbox",
+        description: "An email to reset your password has been sent",
       });
     },
   });

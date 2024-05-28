@@ -24,7 +24,7 @@ const tableValueStyles = cva({
 });
 
 type DesktopViewProps = {
-  orderNo: string;
+  readonly orderNo: string;
 };
 
 const DesktopView = async ({ orderNo }: DesktopViewProps) => {

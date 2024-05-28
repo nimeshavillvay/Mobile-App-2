@@ -24,8 +24,8 @@ import {
 } from "./product-hero-sections";
 
 type ProductHeroProps = {
-  id: string;
-  slug: string;
+  readonly id: string;
+  readonly slug: string;
 };
 
 const ProductHero = async ({ id, slug }: ProductHeroProps) => {
@@ -55,6 +55,13 @@ const ProductHero = async ({ id, slug }: ProductHeroProps) => {
           Shop <span className="font-semibold">{product.brand}</span>
         </Link>
 
+        {product.selectedProduct.isSaleItem && (
+          <SaleBadges
+            productId={parseInt(id)}
+            listPrice={product.selectedProduct.listPrice}
+          />
+        )}
+
         <SaleBadges
           productId={parseInt(id)}
           listPrice={product.selectedProduct.listPrice}
@@ -67,7 +74,10 @@ const ProductHero = async ({ id, slug }: ProductHeroProps) => {
 
       {/* Desktop view */}
       <div className="hidden md:container md:grid md:grid-cols-[minmax(0,3fr)_minmax(26rem,2fr)] md:gap-x-8 md:gap-y-[3.75rem]">
-        <ProductDesktopCarousel images={images} />
+        <ProductDesktopCarousel
+          title={product.selectedProduct.productName}
+          images={images}
+        />
 
         <div className="space-y-6">
           <div className="space-y-2">
@@ -85,6 +95,7 @@ const ProductHero = async ({ id, slug }: ProductHeroProps) => {
             productId={parseInt(id)}
             listPrice={product.selectedProduct.listPrice}
             uom={product.selectedProduct.unitOfMeasure}
+            hasDiscount={product.selectedProduct.isSaleItem}
           />
 
           <ProductVariants id={id} />
@@ -148,6 +159,7 @@ const ProductHero = async ({ id, slug }: ProductHeroProps) => {
           productId={parseInt(id)}
           listPrice={product.selectedProduct.listPrice}
           uom={product.selectedProduct.unitOfMeasure}
+          hasDiscount={product.selectedProduct.isSaleItem}
           className="container my-6 md:hidden"
         />
 

@@ -14,10 +14,10 @@ import {
 } from "react-icons/md";
 
 type PaginationProps = {
-  pageSize: number;
-  totalSize: number;
-  currentPage: number;
-  searchParams?: ReadonlyURLSearchParams;
+  readonly pageSize: number;
+  readonly totalSize: number;
+  readonly currentPage: number;
+  readonly searchParams?: ReadonlyURLSearchParams;
 };
 
 const Pagination = ({
@@ -117,8 +117,8 @@ const PaginationLink = ({
   isCurrent,
   ...delegated
 }: Omit<LinkProps, "className" | "scroll"> & {
-  children?: ReactNode;
-  isCurrent?: boolean;
+  readonly children?: ReactNode;
+  readonly isCurrent?: boolean;
 }) => {
   return (
     <Link

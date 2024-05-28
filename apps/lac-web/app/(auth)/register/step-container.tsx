@@ -23,9 +23,9 @@ const useStepContext = () => {
 };
 
 type StepContainerProps = {
-  title: string;
-  children: ReactNode;
-  state: StepState;
+  readonly title: string;
+  readonly children: ReactNode;
+  readonly state: StepState;
 };
 
 export const StepContainer = ({
@@ -54,13 +54,13 @@ export const StepContainerOpen = ({
   allFieldsRequired = false,
   ...delegated
 }: ComponentProps<"form"> & {
-  steps: {
+  readonly steps: {
     current: number;
     total: number;
   };
-  submitBtnText?: string;
-  disableSubmit?: boolean;
-  allFieldsRequired?: boolean;
+  readonly submitBtnText?: string;
+  readonly disableSubmit?: boolean;
+  readonly allFieldsRequired?: boolean;
 }) => {
   const { state, title } = useStepContext();
 
@@ -110,9 +110,9 @@ export const StepContainerClosed = ({
   onClick,
   disabled = false,
 }: {
-  children?: ReactNode;
-  onClick?: ComponentProps<typeof Button>["onClick"];
-  disabled?: boolean;
+  readonly children?: ReactNode;
+  readonly onClick?: ComponentProps<typeof Button>["onClick"];
+  readonly disabled?: boolean;
 }) => {
   const { state, title } = useStepContext();
 

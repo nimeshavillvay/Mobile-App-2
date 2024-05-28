@@ -20,7 +20,7 @@ import { useToast } from "@repo/web-ui/components/ui/toast";
 import { useState } from "react";
 
 type ShippingAddressSelectorProps = {
-  token: string;
+  readonly token: string;
 };
 
 const ShippingAddressSelector = ({ token }: ShippingAddressSelectorProps) => {
@@ -35,7 +35,11 @@ const ShippingAddressSelector = ({ token }: ShippingAddressSelectorProps) => {
 
 export default ShippingAddressSelector;
 
-const ShippingAddressSelectorButton = ({ token }: { token: string }) => {
+const ShippingAddressSelectorButton = ({
+  token,
+}: {
+  readonly token: string;
+}) => {
   const shippingAddressListQuery = useSuspenseShippingAddressList(token);
   const { toast } = useToast();
 

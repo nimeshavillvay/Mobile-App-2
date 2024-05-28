@@ -6,7 +6,7 @@ import { Button, buttonVariants } from "@repo/web-ui/components/ui/button";
 import { useState } from "react";
 
 type ProductDownloadsProps = {
-  attachments: {
+  readonly attachments: {
     path: string;
     name: string;
     title: string;
@@ -62,9 +62,9 @@ const DownloadLink = ({
   name,
   title,
 }: {
-  path: string;
-  name: string;
-  title: string;
+  readonly path: string;
+  readonly name: string;
+  readonly title: string;
 }) => {
   return (
     <a

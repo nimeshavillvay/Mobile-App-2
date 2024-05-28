@@ -40,9 +40,9 @@ import { useFilterParams } from "./use-filter-params.hook";
 const customDuration = DURATIONS.at(-1);
 
 type SelectorsForMobileDialogProps = {
-  open: boolean;
-  filters: Filters[];
-  onOpenChange: Dispatch<SetStateAction<boolean>>;
+  readonly open: boolean;
+  readonly filters: Filters[];
+  readonly onOpenChange: Dispatch<SetStateAction<boolean>>;
 };
 
 const SelectorsForMobileDialog = ({
@@ -79,7 +79,7 @@ const SelectorsForMobileDialog = ({
 
     if (value !== "0") {
       const newFromDate = dayjs()
-        .subtract(Number(value), "months")
+        .subtract(Number(value), "days")
         .format(URL_DATE_FORMAT);
       const newToDate = dayjs().format(URL_DATE_FORMAT);
 
@@ -426,12 +426,12 @@ const CheckboxWithLabel = ({
   checked,
   onCheckedChanged,
 }: {
-  id: number;
-  flag: string;
-  value: string;
-  active: boolean;
-  checked: boolean;
-  onCheckedChanged: (checked: boolean) => void;
+  readonly id: number;
+  readonly flag: string;
+  readonly value: string;
+  readonly active: boolean;
+  readonly checked: boolean;
+  readonly onCheckedChanged: (checked: boolean) => void;
 }) => {
   return (
     <div className="flex flex-row items-center gap-2">
@@ -449,7 +449,7 @@ const CheckboxWithLabel = ({
   );
 };
 
-const MobileSortFilterHeading = ({ title }: { title: string }) => {
+const MobileSortFilterHeading = ({ title }: { readonly title: string }) => {
   return (
     <div className="bg-brand-gray-200 px-5 py-3 text-base text-brand-gray-500">
       {title}
@@ -462,9 +462,9 @@ const MobileSortFilterOption = ({
   active,
   onChecked,
 }: {
-  title: string;
-  active: boolean;
-  onChecked: () => void;
+  readonly title: string;
+  readonly active: boolean;
+  readonly onChecked: () => void;
 }) => {
   return (
     <div

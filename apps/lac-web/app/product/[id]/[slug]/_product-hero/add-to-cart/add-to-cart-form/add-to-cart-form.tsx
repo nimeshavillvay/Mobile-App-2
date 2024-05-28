@@ -6,15 +6,15 @@ import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
 import useSuspenseProductExcluded from "@/_hooks/product/use-suspense-product-excluded.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
 import { Controller } from "react-hook-form";
-import useAddToCartForm from "../use-add-to-cart-form.hook";
+import useAddToCartForm from "../../use-add-to-cart-form.hook";
 import FormContent from "./form-content";
 
 type AddToCartFormProps = {
-  token: string;
-  productId: number;
-  minQty: number;
-  incQty: number;
-  uom: string;
+  readonly token: string;
+  readonly productId: number;
+  readonly minQty: number;
+  readonly incQty: number;
+  readonly uom: string;
 };
 
 const AddToCartForm = ({

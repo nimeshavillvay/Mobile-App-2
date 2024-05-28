@@ -11,8 +11,8 @@ import type { Value } from "./types";
 import VariantSelect from "./variant-select";
 
 type ProductVariantsProps = {
-  id: string;
-  className?: string;
+  readonly id: string;
+  readonly className?: string;
 };
 
 const ProductVariants = async ({ id, className }: ProductVariantsProps) => {
@@ -118,11 +118,11 @@ const VariantLink = <Valid extends boolean>({
   valid,
   href,
 }: {
-  children: ReactNode;
-  type: "icon" | "text";
-  selected: boolean;
-  valid: Valid;
-  href: Valid extends true ? string : null;
+  readonly children: ReactNode;
+  readonly type: "icon" | "text";
+  readonly selected: boolean;
+  readonly valid: Valid;
+  readonly href: Valid extends true ? string : null;
 }) => {
   if (!valid || !href) {
     return (

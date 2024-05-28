@@ -11,8 +11,8 @@ import PurchasedItemDetailedViewDialog from "./purchased-item-detailed-view-dial
 import type { DetailedPurchasedItem } from "./types";
 
 type PurchasedItemsListForMobileProps = {
-  items: DetailedPurchasedItem[];
-  token: string;
+  readonly items: DetailedPurchasedItem[];
+  readonly token: string;
 };
 
 const PurchasedItemsListForMobile = ({
@@ -56,8 +56,8 @@ const PurchasedItemRowForMobile = ({
   item,
   onClick,
 }: {
-  item: DetailedPurchasedItem;
-  onClick: () => void;
+  readonly item: DetailedPurchasedItem;
+  readonly onClick: () => void;
 }) => {
   return (
     <div className="flex min-h-[180px] flex-row justify-between bg-white p-4">
@@ -106,7 +106,7 @@ const PurchasedItemRowForMobile = ({
           </div>
           <div className="flex-1">
             <div className="text-nowrap">Order Count</div>
-            <div className="font-bold">1</div>
+            <div className="font-bold">{item.totalItem ?? "N/A"}</div>
           </div>
         </div>
       </div>

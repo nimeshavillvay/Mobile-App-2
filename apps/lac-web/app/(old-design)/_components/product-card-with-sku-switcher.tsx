@@ -17,8 +17,8 @@ import Link from "next/link";
 import { useState, type ComponentProps } from "react";
 
 type ProductCardWithSkuSwitcherProps = {
-  details: ComponentProps<typeof ProductCardDetails>;
-  variations: { sku: string; image: string; name: string }[];
+  readonly details: ComponentProps<typeof ProductCardDetails>;
+  readonly variations: { sku: string; image: string; name: string }[];
 };
 
 const ProductCardWithSkuSwitcher = ({

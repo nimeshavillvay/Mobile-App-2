@@ -42,10 +42,10 @@ export const ProductCardDetails = ({
   brand,
   title,
 }: {
-  href: LinkProps["href"];
-  image: Pick<ImageProps, "src" | "alt" | "priority">;
-  brand: string;
-  title: string;
+  readonly href: LinkProps["href"];
+  readonly image: Pick<ImageProps, "src" | "alt" | "priority">;
+  readonly brand: string;
+  readonly title: string;
 }) => {
   return (
     <Link href={href} className="block text-center">
@@ -65,6 +65,10 @@ export const ProductCardDetails = ({
   );
 };
 
-export const ProductCardActions = ({ children }: { children?: ReactNode }) => {
+export const ProductCardActions = ({
+  children,
+}: {
+  readonly children?: ReactNode;
+}) => {
   return <div>{children}</div>;
 };

@@ -168,6 +168,8 @@ export const WithVariantSelector: Story = {
             value={id}
             onValueChange={onVariantSelect}
             addToCart={addToCart}
+            isFavorite={false}
+            onClickShoppingList={() => {}}
           />
         </ProductCardContent>
       </ProductCard>

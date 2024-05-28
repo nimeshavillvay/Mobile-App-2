@@ -9,7 +9,7 @@ import { FaArrowRight } from "react-icons/fa";
 import { MdOutlineModeEdit, MdOutlineSwapHoriz } from "react-icons/md";
 import defaultAvatar from "./default-avatar.png";
 
-const Profile = ({ token }: { token: string }) => {
+const Profile = ({ token }: { readonly token: string }) => {
   const usersListQuery = useSuspenseUsersList(token);
   const userProfile = usersListQuery.data?.manageContact?.yourProfile;
 

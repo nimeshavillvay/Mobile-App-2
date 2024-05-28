@@ -65,14 +65,14 @@ export const SearchBoxInput = ({
   children,
   ...delegated
 }: ComponentProps<"input"> & {
-  data: {
+  readonly data: {
     products: SearchData;
     categories: SearchData;
     brands: SearchData;
   };
-  value: string;
-  setValue: (value: string) => void;
-  onEnterPressed: () => void;
+  readonly value: string;
+  readonly setValue: (value: string) => void;
+  readonly onEnterPressed: () => void;
 }) => {
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
@@ -100,8 +100,11 @@ export const SearchBoxInput = ({
         ...categories.results,
         ...validSearches.map(({ product }) => product),
       ].map((result) => result as SearchDropDownItem),
+      // eslint-disable-next-line prefer-arrow-functions/prefer-arrow-functions
       itemToString(result: SearchDropDownItem | null): string {
-        if (!result) return "";
+        if (!result) {
+          return "";
+        }
 
         const searchableFieldsPriority: Array<SearchableFields> = [
           "productTitle",
@@ -129,7 +132,9 @@ export const SearchBoxInput = ({
     fields: Array<SearchableFields>,
   ): string => {
     for (const field of fields) {
-      if (result && result[field]) return result[field] as string;
+      if (result && result[field]) {
+        return result[field] as string;
+      }
     }
     return "";
   };
@@ -186,7 +191,7 @@ export const SearchBoxInput = ({
                           />
                         )}
                         {!brand.brandImage && (
-                          <div className="h-10 w-10 rounded-full"></div>
+                          <div className="h-10 w-10 rounded-full" />
                         )}
                         <span className="break-all">{brand.brandName}</span>
                       </Link>
@@ -257,7 +262,7 @@ export const SearchBoxInput = ({
                               height={80}
                             />
                           ) : (
-                            <div className="h-20 w-20 rounded-full"></div>
+                            <div className="h-20 w-20 rounded-full" />
                           )}
                         </div>
                         <div>

@@ -59,11 +59,7 @@ const CartPage = async () => {
               </ul>
             }
           >
-            <CartList
-              token={sessionToken.value}
-              shippingMethods={shippingMethods}
-              plants={plants}
-            />
+            <CartList token={sessionToken.value} plants={plants} />
 
             <div className="hidden md:block">
               <AddMoreItemsForm />

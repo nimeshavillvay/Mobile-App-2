@@ -1,5 +1,6 @@
 "use client";
 
+import { PasswordInput } from "@/_components/password-input";
 import type { PasswordPolicies } from "@/_lib/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@repo/web-ui/components/ui/button";
@@ -12,16 +13,15 @@ import {
   FormLabel,
   FormMessage,
 } from "@repo/web-ui/components/ui/form";
-import { Input } from "@repo/web-ui/components/ui/input";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import usePasswordResetConfirmMutation from "./use-password-reset-confirm-mutation.hook";
 
 type PasswordResetFormProps = {
-  userKey: string;
-  userId: string;
-  passwordPolicies: PasswordPolicies;
+  readonly userKey: string;
+  readonly userId: string;
+  readonly passwordPolicies: PasswordPolicies;
 };
 
 const PasswordResetForm = ({
@@ -114,7 +114,7 @@ const PasswordResetForm = ({
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input type="password" autoComplete="password" {...field} />
+                  <PasswordInput autoComplete="password" {...field} />
                 </FormControl>
                 <FormDescription className="sr-only">
                   This is your password.
@@ -132,7 +132,7 @@ const PasswordResetForm = ({
               <FormItem>
                 <FormLabel>Confirm password</FormLabel>
                 <FormControl>
-                  <Input type="password" autoComplete="password" {...field} />
+                  <PasswordInput autoComplete="password" {...field} />
                 </FormControl>
                 <FormDescription className="sr-only">
                   This is to confirm your password.
@@ -144,10 +144,7 @@ const PasswordResetForm = ({
         </div>
 
         <div className="text-right">
-          <Button
-            type="submit"
-            className="h-9 rounded-[3px] bg-brand-primary px-4 text-base font-normal uppercase text-white"
-          >
+          <Button type="submit" className="w-full p-2.5 font-bold">
             Reset Password
           </Button>
         </div>

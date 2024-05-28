@@ -23,7 +23,7 @@ const dividerStyles = cva({
 });
 
 type UserMobileNavigationProps = {
-  token: string;
+  readonly token: string;
 };
 
 const UserMobileNavigation = ({ token }: UserMobileNavigationProps) => {
@@ -68,7 +68,7 @@ const UserMobileNavigation = ({ token }: UserMobileNavigationProps) => {
 
 export default UserMobileNavigation;
 
-const UserMobileProfileNavigation = ({ token }: { token: string }) => {
+const UserMobileProfileNavigation = ({ token }: { readonly token: string }) => {
   const usersListQuery = useSuspenseUsersList(token);
   const userProfile = usersListQuery.data.manageContact.yourProfile;
 

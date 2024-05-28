@@ -31,7 +31,7 @@ import OrderHistoryRow from "./order-history-row";
 import TotalCountAndPagination from "./total-count-and-pagination";
 import useSuspenseOrderHistorySearch from "./use-suspense-order-history-search.hook";
 
-const OrderHistoryList = ({ token }: { token: string }) => {
+const OrderHistoryList = ({ token }: { readonly token: string }) => {
   const searchParams = useSearchParams();
 
   const fromDate = searchParams.get(QUERY_KEYS.FROM_DATE) ?? INIT_FROM_DATE;
@@ -224,10 +224,10 @@ const HeaderSortButtons = ({
   onClickDesc,
   onClickAsc,
 }: {
-  active: boolean;
-  direction?: string;
-  onClickDesc: () => void;
-  onClickAsc: () => void;
+  readonly active: boolean;
+  readonly direction?: string;
+  readonly onClickDesc: () => void;
+  readonly onClickAsc: () => void;
 }) => (
   <div className="flex flex-col">
     <Button
