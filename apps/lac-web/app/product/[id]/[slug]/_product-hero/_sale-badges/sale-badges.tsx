@@ -14,11 +14,14 @@ const SaleBadges = ({ token, productId, listPrice }: SaleBadgesProps) => {
   const priceData = priceCheckQuery.data.productPrices[0];
   const currentPrice = priceData?.uomPrice ?? priceData?.price ?? 0;
 
+  // We don't want to show the discount badge, if the list price is 0 or the product is an laminate item
+  if (listPrice === 0 || (priceData?.uomPrice && priceData?.uomPriceUnit)) {
+    return null;
+  }
+
   const discount = Math.round(((listPrice - currentPrice) / listPrice) * 100);
 
-  const isLaminateItem = !!priceData?.uomPrice && !!priceData?.uomPriceUnit;
-
-  if (discount === 0 || isLaminateItem) {
+  if (discount === 0) {
     return null;
   }
 
