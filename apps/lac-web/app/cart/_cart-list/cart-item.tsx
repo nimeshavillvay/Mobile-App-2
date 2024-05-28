@@ -17,7 +17,7 @@ import { Button } from "@repo/web-ui/components/ui/button";
 import { Input } from "@repo/web-ui/components/ui/input";
 import { Label } from "@repo/web-ui/components/ui/label";
 import Image from "next/image";
-import Link, { type LinkProps } from "next/link";
+import Link from "next/link";
 import { Suspense, useEffect, useId, useState } from "react";
 import { useForm } from "react-hook-form";
 import Balancer from "react-wrap-balancer";
