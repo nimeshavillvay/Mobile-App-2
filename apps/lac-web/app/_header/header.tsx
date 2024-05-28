@@ -8,7 +8,7 @@ import { Button, buttonVariants } from "@repo/web-ui/components/ui/button";
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import Link from "next/link";
 import { Suspense } from "react";
-import ShippingAddressSelector from "./_shipping-address-selector";
+import ShippingDetailsDialog from "./_shipping-details-dialog";
 import UserProfile, { UserProfileSkeleton } from "./_user-profile";
 import WillCallPlant from "./_will-call-plant";
 import DesktopNavigationMenu from "./desktop-navigation-menu";
@@ -76,7 +76,7 @@ const Header = async () => {
           <div className="flex items-center gap-5">
             <WillCallPlant />
 
-            <ShippingAddressSelector />
+            <ShippingDetailsDialog />
 
             <Suspense fallback={<Skeleton className="h-5 w-60" />}>
               <OSRDetails />

@@ -2,9 +2,9 @@ import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import { cookies } from "next/headers";
 import { Suspense } from "react";
-import ShippingAddressSelector from "./shipping-adddress-selector";
+import ShippingDetailsDialog from "./shipping-details-dialog";
 
-const ShippingAddressSelectorMain = () => {
+const ShippingDetailsDialogMain = () => {
   const cookiesStore = cookies();
   const sessionCookies = cookiesStore.get(SESSION_TOKEN_COOKIE);
 
@@ -12,15 +12,15 @@ const ShippingAddressSelectorMain = () => {
     return null;
   }
 
-  return <ShippingAddressSelector token={sessionCookies.value} />;
+  return <ShippingDetailsDialog token={sessionCookies.value} />;
 };
 
-const ShippingAddressSelectorRoot = () => {
+const ShippingDetailsDialogRoot = () => {
   return (
     <Suspense fallback={<Skeleton className="h-5 w-20" />}>
-      <ShippingAddressSelectorMain />
+      <ShippingDetailsDialogMain />
     </Suspense>
   );
 };
 
-export default ShippingAddressSelectorRoot;
+export default ShippingDetailsDialogRoot;

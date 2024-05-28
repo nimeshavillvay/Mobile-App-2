@@ -2,11 +2,9 @@
 
 import useSuspenseShippingAddressList from "@/_hooks/address/use-suspense-shipping-address-list.hook";
 import useUpdateShippingAddressMutation from "@/_hooks/address/use-update-shipping-address-mutation.hook";
-import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
 import { cn } from "@/_lib/utils";
 import { CheckCircle } from "@repo/web-ui/components/icons/check-circle";
 import { CheckCircleFilled } from "@repo/web-ui/components/icons/check-circle-filled";
-import { Truck } from "@repo/web-ui/components/icons/truck";
 import { Button } from "@repo/web-ui/components/ui/button";
 import {
   Dialog,
@@ -17,29 +15,17 @@ import {
   DialogTrigger,
 } from "@repo/web-ui/components/ui/dialog";
 import { useToast } from "@repo/web-ui/components/ui/toast";
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 
 type ShippingAddressSelectorProps = {
   readonly token: string;
+  readonly children: ReactNode;
 };
 
-const ShippingAddressSelector = ({ token }: ShippingAddressSelectorProps) => {
-  const checkLoginQuery = useSuspenseCheckLogin(token);
-
-  if (checkLoginQuery.data.status_code === "NOT_LOGGED_IN") {
-    return null;
-  }
-
-  return <ShippingAddressSelectorButton token={token} />;
-};
-
-export default ShippingAddressSelector;
-
-const ShippingAddressSelectorButton = ({
+const ShippingAddressSelector = ({
   token,
-}: {
-  readonly token: string;
-}) => {
+  children,
+}: ShippingAddressSelectorProps) => {
   const shippingAddressListQuery = useSuspenseShippingAddressList(token);
   const { toast } = useToast();
 
@@ -80,17 +66,7 @@ const ShippingAddressSelectorButton = ({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button
-          variant="ghost"
-          size="sm"
-          className="h-fit px-0 py-0 text-sm font-medium leading-5"
-        >
-          <Truck width={16} height={16} />
-
-          <span>#{defaultAddress?.postalCode}</span>
-        </Button>
-      </DialogTrigger>
+      <DialogTrigger asChild>{children}</DialogTrigger>
 
       <DialogContent className="max-w-[34.375rem]">
         <DialogHeader>
@@ -124,8 +100,11 @@ const ShippingAddressSelectorButton = ({
                 )}
 
                 <span className="text-base text-wurth-gray-800">
-                  {address.streetAddress}, {address.locality},{" "}
-                  {address.postalCode}-{address.zip4}
+                  {address?.streetAddress && `${address?.streetAddress}, `}
+                  {address?.locality && `${address?.locality}, `}
+                  {address?.region && `${address?.region} `}
+                  {address?.postalCode}
+                  {address?.zip4 && `-${address.zip4}`}
                 </span>
               </Button>
             </li>
@@ -145,3 +124,5 @@ const ShippingAddressSelectorButton = ({
     </Dialog>
   );
 };
+
+export default ShippingAddressSelector;
