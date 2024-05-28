@@ -2,8 +2,6 @@ import useAddToCartMutation from "@/_hooks/cart/use-add-to-cart-mutation.hook";
 import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
 import ErrorBoundary from "@/old/_components/error-boundary";
 import AddToCartIcon from "@/old/_components/icons/add-to-cart";
-import AddToFavoritesIcon from "@/old/_components/icons/add-to-favorites";
-import FavoriteIcon from "@/old/_components/icons/favorite";
 import Separator from "@/old/_components/separator";
 import { Button } from "@/old/_components/ui/button";
 import {
@@ -35,6 +33,7 @@ import * as z from "zod";
 import ItemPrices from "./_item-prices/item-prices";
 import { generateItemUrl, isItemError } from "./client-helpers";
 import { DATE_FORMAT } from "./constants";
+import MobileFavoriteButton from "./mobile-favorite-button";
 import type { DetailedPurchasedItem } from "./types";
 
 const schema = z.object({
@@ -93,14 +92,6 @@ const PurchasedItemDetailedViewDialog = ({
       );
     }
   });
-
-  const onAddToFavorites = () => {
-    if (item.isFavorite) {
-      router.push("/myaccount/myfavorites");
-    } else {
-      // TODO: Logic needs to be finalized.
-    }
-  };
 
   const isItemNotAdded = !item.productSku;
   const isValidQuantity = !!(quantity && quantity >= 1);
@@ -310,26 +301,9 @@ const PurchasedItemDetailedViewDialog = ({
 
           {/* Action Buttons Section */}
           <div className="flex flex-col gap-4 px-6 pt-6">
-            <Button
-              variant="secondary"
-              className={cn(
-                "h-12",
-                item.isFavorite
-                  ? "border-brand-success text-brand-success"
-                  : "",
-              )}
-              onClick={() => onAddToFavorites()}
-            >
-              {item.isFavorite ? (
-                <>
-                  <FavoriteIcon /> In My Favorites
-                </>
-              ) : (
-                <>
-                  <AddToFavoritesIcon /> Add to Favorites
-                </>
-              )}
-            </Button>
+            <Suspense fallback={<Skeleton className="h-12" />}>
+              <MobileFavoriteButton productId={item.productId} token={token} />
+            </Suspense>
 
             <form
               id={formId}
