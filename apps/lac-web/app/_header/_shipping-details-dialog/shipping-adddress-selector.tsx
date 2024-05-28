@@ -102,7 +102,7 @@ const ShippingAddressSelector = ({
                   )}
                 </div>
 
-                <span className="text-wrap text-start text-base text-wurth-gray-800">
+                <span className="text-wrap text-start text-sm text-wurth-gray-800 md:text-base">
                   {address?.streetAddress && `${address?.streetAddress}, `}
                   {address?.locality && `${address?.locality}, `}
                   {address?.region && `${address?.region} `}
