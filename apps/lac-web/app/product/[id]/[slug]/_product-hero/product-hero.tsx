@@ -55,6 +55,13 @@ const ProductHero = async ({ id, slug }: ProductHeroProps) => {
           Shop <span className="font-semibold">{product.brand}</span>
         </Link>
 
+        {product.selectedProduct.isSaleItem && (
+          <SaleBadges
+            productId={parseInt(id)}
+            listPrice={product.selectedProduct.listPrice}
+          />
+        )}
+
         <SaleBadges
           productId={parseInt(id)}
           listPrice={product.selectedProduct.listPrice}
@@ -88,6 +95,7 @@ const ProductHero = async ({ id, slug }: ProductHeroProps) => {
             productId={parseInt(id)}
             listPrice={product.selectedProduct.listPrice}
             uom={product.selectedProduct.unitOfMeasure}
+            hasDiscount={product.selectedProduct.isSaleItem}
           />
 
           <ProductVariants id={id} />
@@ -151,6 +159,7 @@ const ProductHero = async ({ id, slug }: ProductHeroProps) => {
           productId={parseInt(id)}
           listPrice={product.selectedProduct.listPrice}
           uom={product.selectedProduct.unitOfMeasure}
+          hasDiscount={product.selectedProduct.isSaleItem}
           className="container my-6 md:hidden"
         />
 
