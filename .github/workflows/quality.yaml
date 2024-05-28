@@ -53,5 +53,5 @@ jobs:
           cache: "pnpm"
       - name: Install dependencies
         run: pnpm install
-      - name: Check formatting with Prettier
+      - name: Run ESLint
         run: pnpm lint:ci
