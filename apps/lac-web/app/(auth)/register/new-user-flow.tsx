@@ -306,6 +306,15 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
       {
         onSuccess: (data) => {
           if (isVerifyAddressResponse(data)) {
+            if (Array.isArray(data.suggestions)) {
+              // If registration fails, data.suggestions becomes an array
+              return toast({
+                variant: "destructive",
+                title: "Registration failed.",
+                description: data.message,
+              });
+            }
+
             if (Array.isArray(data.suggestions["billing-address"])) {
               setBillingSuggestions(data.suggestions["billing-address"]);
             }
