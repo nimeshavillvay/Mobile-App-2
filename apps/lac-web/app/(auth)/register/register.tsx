@@ -62,7 +62,7 @@ const Register = ({ passwordPolicies, industries }: RegisterProps) => {
         <section className="space-y-4 rounded-lg bg-wurth-gray-50 p-6">
           <h2 className="text-center text-base font-semibold text-black">
             <Balancer>
-              Are you a current Wurth Lois & Company customer?
+              Are you a current Wurth Louis & Company customer?
             </Balancer>
           </h2>
 

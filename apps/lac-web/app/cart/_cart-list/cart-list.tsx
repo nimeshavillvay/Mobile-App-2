@@ -38,6 +38,7 @@ const CartList = ({ token, plants }: CartListProps) => {
                 increment: item.itemInfo.quantityByIncrements,
                 image: item.itemInfo.image,
                 cartItemId: item.cartItemId,
+                slug: item.itemInfo.slug,
               }}
               plants={plants}
               cartConfiguration={data.configuration}

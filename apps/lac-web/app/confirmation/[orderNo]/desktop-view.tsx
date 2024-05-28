@@ -63,14 +63,14 @@ const DesktopView = async ({ orderNo }: DesktopViewProps) => {
                   <tr>
                     <td className={tableLabelStyles()}>Order date</td>
                     <td className={tableValueStyles()}>
-                      {orderDetails.orderNo}
+                      {dayjs(orderDetails.orderDate).format("MM/DD/YYYY")}
                     </td>
                   </tr>
 
                   <tr>
                     <td className={tableLabelStyles()}>Job name</td>
                     <td className={tableValueStyles()}>
-                      {dayjs(orderDetails.orderDate).format("MM/DD/YYYY")}
+                      {orderDetails.jobName}
                     </td>
                   </tr>
 
@@ -198,7 +198,7 @@ const DesktopView = async ({ orderNo }: DesktopViewProps) => {
                         </td>
 
                         <td className="ml-2 text-right text-sm text-wurth-gray-800">
-                          ${lineItem.price}
+                          ${lineItem.totalPrice}
                         </td>
                       </tr>
 

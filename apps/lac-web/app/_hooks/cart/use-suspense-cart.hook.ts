@@ -61,7 +61,7 @@ const useSuspenseCart = (token: string) => {
             productSku: item.itemInfo.txt_wurth_lac_item,
             productName: item.itemInfo.item_name,
             image: item.itemInfo.img,
-            slug: item.itemInfo.url,
+            slug: item.itemInfo.slug,
             isComparison: !!item.itemInfo.is_comparison,
             isHazardous: item.itemInfo.txt_hazardous === "Y",
             specialShipping: SPECIAL_SHIPPING_FLAG.includes(

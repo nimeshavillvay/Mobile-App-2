@@ -7,8 +7,8 @@ type ApiProviderProps = {
    * An instance of [ky](https://github.com/sindresorhus/ky) created with the
    * [`create` function](https://github.com/sindresorhus/ky?tab=readme-ov-file#kycreatedefaultoptions)
    */
-  kyInstance: KyInstance;
-  children: ReactNode;
+  readonly kyInstance: KyInstance;
+  readonly children: ReactNode;
 };
 
 const ApiProvider = ({ kyInstance, children }: ApiProviderProps) => {
