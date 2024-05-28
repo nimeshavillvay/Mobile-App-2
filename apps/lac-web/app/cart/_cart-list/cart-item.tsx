@@ -398,15 +398,12 @@ const CartItem = ({
 
             <div className="ml-2 text-sm font-medium text-wurth-gray-500">
               ${formatNumberToPrice(priceData?.price)}/{priceData?.priceUnit}
-              ....................
             </div>
 
-            {priceData?.listPrice !== priceData?.price && (
-              <div className="ml-1 text-[13px] leading-5 text-wurth-gray-500 line-through">
-                ${formatNumberToPrice(priceData?.listPrice)}/
-                {priceData?.priceUnit}
-              </div>
-            )}
+            <div className="ml-1 text-[13px] leading-5 text-wurth-gray-500 line-through">
+              ${formatNumberToPrice(priceData?.listPrice)}/
+              {priceData?.priceUnit}
+            </div>
           </div>
 
           <h2 className="line-clamp-3 text-sm font-medium text-black">
