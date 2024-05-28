@@ -18,6 +18,7 @@ import { Button } from "@repo/web-ui/components/ui/button";
 import { Input } from "@repo/web-ui/components/ui/input";
 import { Label } from "@repo/web-ui/components/ui/label";
 import Image from "next/image";
+import Link from "next/link";
 import { Suspense, useEffect, useId, useState } from "react";
 import { useForm } from "react-hook-form";
 import Balancer from "react-wrap-balancer";
@@ -61,6 +62,7 @@ type CartItemProps = {
     increment: number;
     image: string;
     cartItemId: number;
+    slug: string;
   };
   readonly plants: Plant[];
   readonly cartConfiguration: CartConfiguration;
@@ -349,21 +351,23 @@ const CartItem = ({
     <div className="flex flex-col gap-6 md:flex-row">
       <div className="flex flex-row items-start gap-3 md:flex-1">
         <div className="flex w-[4.5rem] shrink-0 flex-col gap-2 md:w-[7.5rem]">
-          {product.image !== "" ? (
-            <Image
-              src={product.image}
-              alt={`A picture of ${product.title}`}
-              width={120}
-              height={120}
-              className="size-[4.5rem] rounded border border-wurth-gray-250 object-contain shadow-sm md:size-[7.5rem]"
-            />
-          ) : (
-            <WurthFullBlack
-              width={120}
-              height={120}
-              className="border border-brand-gray-200 px-2"
-            />
-          )}
+          <Link href={`/product/${product.id}/${product.slug}`}>
+            {product.image !== "" ? (
+              <Image
+                src={product.image}
+                alt={`A picture of ${product.title}`}
+                width={120}
+                height={120}
+                className="size-[4.5rem] rounded border border-wurth-gray-250 object-contain shadow-sm md:size-[7.5rem]"
+              />
+            ) : (
+              <WurthFullBlack
+                width={120}
+                height={120}
+                className="border border-brand-gray-200 px-2"
+              />
+            )}
+          </Link>
 
           <div className="flex flex-col gap-1 md:hidden">
             <Suspense fallback={<FavoriteButtonSkeleton display="mobile" />}>
@@ -401,10 +405,12 @@ const CartItem = ({
               ${formatNumberToPrice(priceData?.price)}/{priceData?.priceUnit}
             </div>
 
-            <div className="ml-1 text-[13px] leading-5 text-wurth-gray-500 line-through">
-              ${formatNumberToPrice(priceData?.listPrice)}/
-              {priceData?.priceUnit}
-            </div>
+            {priceData?.listPrice !== priceData?.price && (
+              <div className="ml-1 text-[13px] leading-5 text-wurth-gray-500 line-through">
+                ${formatNumberToPrice(priceData?.listPrice)}/
+                {priceData?.priceUnit}
+              </div>
+            )}
           </div>
 
           <h2 className="line-clamp-3 text-sm font-medium text-black">
@@ -493,9 +499,12 @@ const CartItem = ({
             ${formatNumberToPrice(priceData?.price)}/{priceData?.priceUnit}
           </div>
 
-          <div className="ml-1 text-[13px] leading-5 text-wurth-gray-500 line-through">
-            ${formatNumberToPrice(priceData?.listPrice)}/{priceData?.priceUnit}
-          </div>
+          {priceData?.listPrice !== priceData?.price && (
+            <div className="ml-1 text-[13px] leading-5 text-wurth-gray-500 line-through">
+              ${formatNumberToPrice(priceData?.listPrice)}/
+              {priceData?.priceUnit}
+            </div>
+          )}
         </div>
 
         <div className="flex flex-col gap-2">
