@@ -222,7 +222,7 @@ const CartItem = ({
           plant: plant,
         },
         {
-          onSuccess({ willCallAnywhere }) {
+          onSuccess: ({ willCallAnywhere }) => {
             if (willCallAnywhere) {
               const willCallAvailableQty =
                 willCallAnywhere.status === NOT_IN_STOCK
@@ -335,6 +335,8 @@ const CartItem = ({
         setDefaultsForCartConfig();
       }
     }
+    // eslint-disable-next-line react-compiler/react-compiler
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     itemConfigShippingMethod,
     itemConfigHash,

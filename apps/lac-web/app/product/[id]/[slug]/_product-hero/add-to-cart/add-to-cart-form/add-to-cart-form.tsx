@@ -6,7 +6,7 @@ import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
 import useSuspenseProductExcluded from "@/_hooks/product/use-suspense-product-excluded.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
 import { Controller } from "react-hook-form";
-import useAddToCartForm from "../use-add-to-cart-form.hook";
+import useAddToCartForm from "../../use-add-to-cart-form.hook";
 import FormContent from "./form-content";
 
 type AddToCartFormProps = {

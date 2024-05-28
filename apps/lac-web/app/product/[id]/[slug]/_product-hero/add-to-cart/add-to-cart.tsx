@@ -4,10 +4,10 @@ import { Check } from "@repo/web-ui/components/icons/check";
 import { Button } from "@repo/web-ui/components/ui/button";
 import { cookies } from "next/headers";
 import { Suspense } from "react";
-import AddToCartForm from "./_add-to-cart-form";
-import LocationStocks from "./_location-stocks";
-import RegionalExclusionNotice from "./_regional-exclusion-notice";
+import AddToCartForm from "./add-to-cart-form";
 import FavoriteButton from "./favorite-button";
+import LocationStocks from "./location-stocks";
+import RegionalExclusionNotice from "./regional-exclusion-notice";
 
 type AddToCartProps = {
   readonly productId: number;
