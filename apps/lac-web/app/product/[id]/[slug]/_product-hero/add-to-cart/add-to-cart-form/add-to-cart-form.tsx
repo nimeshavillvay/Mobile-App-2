@@ -3,7 +3,6 @@
 import QuantityInputField from "@/_components/quantity-input-field";
 import useAddToCartMutation from "@/_hooks/cart/use-add-to-cart-mutation.hook";
 import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
-import useSuspenseProductExcluded from "@/_hooks/product/use-suspense-product-excluded.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
 import { Controller } from "react-hook-form";
 import useAddToCartForm from "../../use-add-to-cart-form.hook";
@@ -110,8 +109,6 @@ const AddToCartFormLoggedIn = ({
   incQty,
   uom,
 }: AddToCartFormProps) => {
-  const productExcludedQuery = useSuspenseProductExcluded(token, productId);
-
   // TODO Try to remove the duplicated code
   const { watch, setValue, handleSubmit, control } = useAddToCartForm();
   const quantity = watch("quantity");
@@ -144,19 +141,14 @@ const AddToCartFormLoggedIn = ({
       formProps={{ onSubmit }}
       decrementButtonProps={{
         onClick: reduceQuantity,
-        disabled:
-          quantity === minQty ||
-          addToCartMutation.isPending ||
-          productExcludedQuery.data.isExcluded,
+        disabled: quantity === minQty || addToCartMutation.isPending,
       }}
       incrementButtonProps={{
         onClick: increaseQuantity,
-        disabled:
-          addToCartMutation.isPending || productExcludedQuery.data.isExcluded,
+        disabled: addToCartMutation.isPending,
       }}
       submitButtonProps={{
-        disabled:
-          addToCartMutation.isPending || productExcludedQuery.data.isExcluded,
+        disabled: addToCartMutation.isPending,
       }}
     >
       <Controller
@@ -169,10 +161,7 @@ const AddToCartFormLoggedIn = ({
             value={value}
             ref={ref}
             name={name}
-            disabled={
-              addToCartMutation.isPending ||
-              productExcludedQuery.data.isExcluded
-            }
+            disabled={addToCartMutation.isPending}
           />
         )}
       />
