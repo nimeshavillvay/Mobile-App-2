@@ -308,10 +308,22 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
           if (isVerifyAddressResponse(data)) {
             if (Array.isArray(data.suggestions["billing-address"])) {
               setBillingSuggestions(data.suggestions["billing-address"]);
+            } else {
+              toast({
+                variant: "destructive",
+                title: "Registration failed.",
+                description: data.message,
+              });
             }
 
             if (Array.isArray(data.suggestions["shipping-address"])) {
               setShippingSuggestions(data.suggestions["shipping-address"]);
+            } else {
+              toast({
+                variant: "destructive",
+                title: "Registration failed.",
+                description: data.message,
+              });
             }
           } else {
             toast({
