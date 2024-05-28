@@ -5,6 +5,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/old/_components/ui/dialog";
+import { useState } from "react";
 import { useDropzone } from "react-dropzone";
 import useUpdateCompanyProfileImageMutation from "./use-update-company-profile-image-mutation.hook";
 
@@ -23,19 +24,28 @@ const ImageUploadDialog = ({
   const acceptableImageTypesErrorMsg =
     "Invalid file type. Only JPG, JPEG and PNG types are accepted.";
 
-  const { getRootProps, getInputProps, open, acceptedFiles } = useDropzone({
+  const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+
+  const { getRootProps, getInputProps, open } = useDropzone({
     noClick: true,
     noKeyboard: true,
+    onDrop: (files) => {
+      setUploadedFiles(files);
+    },
   });
 
   let errorMsg = "";
-  if (!acceptedFiles.find((file) => acceptableImageTypes.includes(file.type))) {
-    errorMsg = acceptableImageTypesErrorMsg;
-  } else if (acceptedFiles.find((file) => file.size > maxFileSize)) {
-    errorMsg = maxFileSizeErrorMsg;
+  if (uploadedFiles.length > 0) {
+    if (
+      !uploadedFiles.find((file) => acceptableImageTypes.includes(file.type))
+    ) {
+      errorMsg = acceptableImageTypesErrorMsg;
+    } else if (uploadedFiles.find((file) => file.size > maxFileSize)) {
+      errorMsg = maxFileSizeErrorMsg;
+    }
   }
 
-  const files = acceptedFiles.filter(
+  const files = uploadedFiles.filter(
     (file) =>
       acceptableImageTypes.includes(file.type) && file.size <= maxFileSize,
   );
@@ -44,21 +54,31 @@ const ImageUploadDialog = ({
     useUpdateCompanyProfileImageMutation();
 
   const submitImage = () => {
-    const formData = new FormData();
-    formData.append("File", acceptedFiles[0] as File);
+    if (uploadedFiles[0]) {
+      const formData = new FormData();
+      formData.append("File", uploadedFiles[0]);
 
-    updateCompanyProfileImageMutation.mutate(formData, {
-      onSuccess: () => {
-        setOpenImageUploadDialog(false);
-      },
-      onError: () => {
-        errorMsg = "File upload error";
-      },
-    });
+      updateCompanyProfileImageMutation.mutate(formData, {
+        onSuccess: () => {
+          setOpenImageUploadDialog(false);
+          setUploadedFiles([]);
+        },
+        onError: () => {
+          errorMsg = "File upload error";
+        },
+      });
+    }
+  };
+
+  const handleOpenChange = (open: boolean) => {
+    setOpenImageUploadDialog(open);
+    if (!open) {
+      setUploadedFiles([]);
+    }
   };
 
   return (
-    <Dialog open={openDialog} onOpenChange={setOpenImageUploadDialog}>
+    <Dialog open={openDialog} onOpenChange={handleOpenChange}>
       <DialogContent className="old-design-text-base max-w-[500px]">
         <DialogHeader>
           <DialogTitle>Upload Image</DialogTitle>
