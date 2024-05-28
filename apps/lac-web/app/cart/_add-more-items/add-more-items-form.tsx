@@ -6,16 +6,18 @@ import { AddToCart } from "@repo/web-ui/components/icons/add-to-cart";
 import { Close } from "@repo/web-ui/components/icons/close";
 import { Button } from "@repo/web-ui/components/ui/button";
 import { Input } from "@repo/web-ui/components/ui/input";
+import { Skull } from "lucide-react";
 import { useEffect, useId, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { MdAdd } from "react-icons/md";
 import * as z from "zod";
-import GetStatus from "./apis";
+import getStatus from "./apis";
 import BulkUpload from "./bulk-upload";
 import useCustomDebounce from "./custom-debounce";
 import ItemSelectorInput from "./item-selector-input";
 import ProductDetails from "./product-details";
 import { Product } from "./types";
+import useAddMultipleToCartMutation from "./use-add-multiple-to-cart-mutation.hook";
 import useSearch from "./use-search.hook";
 
 const formSchema = z.object({
@@ -35,6 +37,7 @@ const formSchema = z.object({
           orderIncrementBy: z.number(),
           title: z.string(),
           image: z.string(),
+          productId: z.number().optional(),
         })
         .optional(),
     })
@@ -42,7 +45,7 @@ const formSchema = z.object({
 });
 type FormSchema = z.infer<typeof formSchema>;
 
-const AddMoreItemsForm = () => {
+const AddMoreItemsForm = ({ token }: { token: string }) => {
   const [searchInput, setSearchInput] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -54,20 +57,21 @@ const AddMoreItemsForm = () => {
   const [isBulkUploadDone, setIsBulkUploadDone] = useState(false);
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
   const [isFormInvalid, setIsFormInvalid] = useState(false);
-
+  const [isFileProcessing, setIsFileProcessing] = useState(false);
+  const [file, setFile] = useState<File | null>(null);
   const [bulkUploadItems, setBulkUploadItems] = useState<
     { sku: string; quantity: string; jobName: string }[]
   >([]);
 
-  useEffect(() => {
-    console.log("searchTerm", searchTerm);
-  }, [searchTerm]);
+  const addMultipleToCartMutation = useAddMultipleToCartMutation(token);
+
+  useEffect(() => {}, [searchTerm]);
 
   const debouncedSearchInput = useCustomDebounce(searchInput, 1000);
 
   const id = useId();
 
-  const { control, handleSubmit, register, watch, setValue } =
+  const { control, handleSubmit, register, watch, setValue, reset } =
     useForm<FormSchema>({
       defaultValues: {
         cart: [
@@ -125,14 +129,12 @@ const AddMoreItemsForm = () => {
 
   const onChange = (value: string, type: string, index: number) => {
     if (type === "__input_change__") {
-      console.log("input change", value);
-
       setValue(`cart.${index}.sku`, value);
       setSearchInput(value);
     }
   };
 
-  const onSelectedItemChange = (value: Product, index: number) => {
+  const onSelectedItemChange = async (value: Product, index: number) => {
     setIsPopupOpen(false);
 
     setValue(`cart.${index}.sku`, value.sku);
@@ -143,6 +145,18 @@ const AddMoreItemsForm = () => {
       orderIncrementBy: value.orderQuantityByIncrements,
       image: value.image,
     });
+
+    const validatedCartItems = await getStatus({
+      products: [{ sku: value.sku }],
+    });
+
+    if (validatedCartItems != undefined && validatedCartItems.length > 0) {
+      const validatedCartItem = validatedCartItems?.[0] ?? { productId: "" };
+      setValue(
+        `cart.${index}.info.productId`,
+        parseInt(validatedCartItem.productId),
+      );
+    }
   };
 
   const setBulkUploadCSVDataToForm = async (
@@ -152,6 +166,7 @@ const AddMoreItemsForm = () => {
       jobName: string;
     }[],
   ) => {
+    setIsFileProcessing(true);
     const cart = watch("cart");
     if (cart && cart[0]?.sku == "") {
       remove(0);
@@ -172,6 +187,7 @@ const AddMoreItemsForm = () => {
 
     await getItemsStatuses();
     setIsBulkUploadDone(true);
+    setIsFileProcessing(false);
   };
 
   useEffect(() => {
@@ -197,7 +213,7 @@ const AddMoreItemsForm = () => {
       poOrJobName: item.jobName,
     }));
 
-    const validatedCartItems = await GetStatus({
+    const validatedCartItems = await getStatus({
       products: cartItems,
     });
 
@@ -214,6 +230,7 @@ const AddMoreItemsForm = () => {
           orderIncrementBy: parseInt(validatedItem.qm),
           title: validatedItem.txt_product_summary,
           image: validatedItem.product_image,
+          productId: parseInt(validatedItem.productId),
         });
       } else {
         setValue(`cart.${index}.isInvalid`, true);
@@ -242,7 +259,6 @@ const AddMoreItemsForm = () => {
     let i = 0;
 
     while (isValidForm && i < cartItems.length) {
-      console.log("cartItems", cartItems?.[i]);
       const cartItem = cartItems?.[i];
 
       if (cartItem?.sku == "" || isInvalidQuantity(i) || cartItem?.isInvalid) {
@@ -256,8 +272,6 @@ const AddMoreItemsForm = () => {
 
   const onSubmit = async (values: FormSchema) => {
     setIsFormInvalid(false);
-
-    console.log("form submitted", values);
     setIsFormSubmitted(true);
 
     if (!isFormValid(values?.cart)) {
@@ -265,7 +279,25 @@ const AddMoreItemsForm = () => {
       return;
     }
 
-    //send api call
+    const cartItemDetails = values.cart.map((item, index) => {
+      return {
+        productId: item.info?.productId,
+        quantity: item.quantity,
+        poOrJobName: item.jobName,
+      };
+    });
+
+    addMultipleToCartMutation.mutateAsync(cartItemDetails, {
+      onSuccess: () => {
+        reset();
+        setLastEditedIndex(0);
+        setIsBulkUploadDone(false);
+        setIsFormSubmitted(false);
+        setIsFormInvalid(false);
+        setBulkUploadItems([]);
+        setFile(null);
+      },
+    });
   };
 
   const isInvalidQuantity = (index: number) => {
@@ -396,8 +428,11 @@ const AddMoreItemsForm = () => {
         </button>
 
         <BulkUpload
+          file={file}
+          setFile={setFile}
           setBulkUploadItems={setBulkUploadItems}
           isBulkUploadDone={isBulkUploadDone}
+          isFileProcessingState={isFileProcessing}
         />
 
         <div className="flex w-full min-w-[820px] items-center justify-end gap-2">

@@ -1,13 +1,13 @@
 import { api } from "@/_lib/api";
 
-const GetStatus = async ({
+const getStatus = async ({
   products,
 }: {
   products: {
     sku?: string | undefined;
     productid?: number | undefined;
-    mqt: number;
-    poOrJobName: string | undefined;
+    mqt?: number;
+    poOrJobName?: string | undefined;
   }[];
 }) => {
   const results = await api
@@ -41,6 +41,7 @@ const GetStatus = async ({
   const mappedResults = results.map((result) => {
     return {
       ...result,
+      productId: result.productid,
       brand: result.product_brand,
       minimumQuantity: result.txt_min_order_amount,
       quantityMultiplier: result.qm,
@@ -52,4 +53,4 @@ const GetStatus = async ({
   return mappedResults;
 };
 
-export default GetStatus;
+export default getStatus;

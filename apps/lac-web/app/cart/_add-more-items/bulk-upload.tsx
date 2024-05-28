@@ -13,9 +13,14 @@ import {
 import { getExcelData, validateFile } from "./client-helper";
 
 function BulkUpload({
+  file,
+  setFile,
   setBulkUploadItems,
   isBulkUploadDone = false,
+  isFileProcessingState = false,
 }: {
+  file: File | null;
+  setFile: Dispatch<SetStateAction<File | null>>;
   setBulkUploadItems: Dispatch<
     SetStateAction<
       {
@@ -26,12 +31,12 @@ function BulkUpload({
     >
   >;
   isBulkUploadDone: boolean;
+  isFileProcessingState: boolean;
 }) {
   const [fileErrorMessage, setFileErrorMessage] = useState<string | boolean>(
     false,
   );
-  const [file, setFile] = useState<File | null>();
-  const [isFileProcessing, setIsFileProcessing] = useState(false);
+  // const [file, setFile] = useState<File | null>();
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
@@ -40,7 +45,7 @@ function BulkUpload({
     }
     setFile(file);
     setFileErrorMessage("");
-    setIsFileProcessing(false);
+    // setIsFileProcessing(false);
   }, []);
 
   const { getRootProps, getInputProps } = useDropzone({
@@ -49,8 +54,6 @@ function BulkUpload({
   });
 
   const upload = async () => {
-    console.log("file", file);
-
     if (!file) {
       return;
     }
@@ -62,13 +65,10 @@ function BulkUpload({
       return;
     }
 
-    console.log("file good", file);
-    setIsFileProcessing(true);
+    // setIsFileProcessing(true);
 
     const bulkUploadItems = await getExcelData(file);
     bulkUploadItems.shift(); // remove excel header row
-
-    console.log("bulkUploadItems", bulkUploadItems);
 
     setBulkUploadItems(
       bulkUploadItems.map((item) => ({
@@ -112,7 +112,7 @@ function BulkUpload({
               <FileUploadSuccess />
             ) : (
               <>
-                {isFileProcessing ? (
+                {isFileProcessingState ? (
                   <FileUploadProgress />
                 ) : (
                   <FileInfoAndErrors
@@ -169,7 +169,7 @@ const FileInfoAndErrors = ({
   fileErrorMessage,
 }: {
   file: File;
-  setFile: Dispatch<React.SetStateAction<File | null | undefined>>;
+  setFile: Dispatch<React.SetStateAction<File | null>>;
   upload: () => void;
   fileErrorMessage: string | boolean;
 }) => {

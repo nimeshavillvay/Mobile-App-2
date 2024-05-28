@@ -59,10 +59,10 @@ const CartPage = async () => {
               </ul>
             }
           >
-            <CartList token={sessionToken.value} plants={plants} />
+            {/* <CartList token={sessionToken.value} plants={plants} /> */}
 
             <div className="hidden md:block">
-              <AddMoreItemsForm />
+              <AddMoreItemsForm token={sessionToken.value} />
             </div>
             <div className="flex gap-2 px-4 md:hidden">
               <div className="w-1/2">{/* delete cart button goes here*/}</div>
