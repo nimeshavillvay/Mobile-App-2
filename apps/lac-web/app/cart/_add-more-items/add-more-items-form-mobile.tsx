@@ -16,9 +16,10 @@ import {
 import { Input } from "@repo/web-ui/components/ui/input";
 import Image from "next/image";
 import { useState } from "react";
-import GetStatus from "./apis";
+import getStatus from "./apis";
+import useAddMultipleToCartMutation from "./use-add-multiple-to-cart-mutation.hook";
 
-const AddMoreItemsFormMobile = () => {
+const AddMoreItemsFormMobile = ({ token }: { readonly token: string }) => {
   const [sku, setSku] = useState("");
   const [quantity, setQuantity] = useState("");
   const [poJobName, setPoJobName] = useState("");
@@ -54,6 +55,8 @@ const AddMoreItemsFormMobile = () => {
   const [open, setOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
+  const addMultipleToCartMutation = useAddMultipleToCartMutation(token);
+
   const verify = async () => {
     setErrorMessage(null);
 
@@ -63,7 +66,7 @@ const AddMoreItemsFormMobile = () => {
     }
 
     try {
-      const validatedCartItem = await GetStatus({
+      const validatedCartItem = await getStatus({
         products: [
           {
             sku: sku,
@@ -108,9 +111,24 @@ const AddMoreItemsFormMobile = () => {
       return;
     }
 
-    console.log("cart api call");
-
-    //send api call
+    addMultipleToCartMutation.mutateAsync(
+      [
+        {
+          productId: parseInt(product.productid),
+          quantity: parseInt(quantity),
+          poOrJobName: poJobName,
+        },
+      ],
+      {
+        onSuccess: () => {
+          setSku("");
+          setQuantity("");
+          setPoJobName("");
+          setProduct(undefined);
+          setOpen(false);
+        },
+      },
+    );
   };
 
   return (

@@ -67,7 +67,7 @@ const CartPage = async () => {
             <div className="flex gap-2 px-4 md:hidden">
               <div className="w-1/2">{/* delete cart button goes here*/}</div>
               <div className="w-1/2">
-                <AddMoreItemsFormMobile />
+                <AddMoreItemsFormMobile token={sessionToken.value} />
               </div>
             </div>
           </Suspense>
