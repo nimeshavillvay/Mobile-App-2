@@ -316,6 +316,7 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
                 description: data.message,
               });
             }
+
             if (Array.isArray(data.suggestions["billing-address"])) {
               setBillingSuggestions(data.suggestions["billing-address"]);
             }
