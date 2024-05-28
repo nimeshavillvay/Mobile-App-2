@@ -80,27 +80,29 @@ const ShippingAddressSelector = ({
               <Button
                 variant="outline"
                 className={cn(
-                  "h-fit w-full justify-start rounded-lg border-2 border-wurth-gray-150 px-4 py-4",
+                  "flex h-fit w-full flex-row justify-start gap-2 rounded-lg border-2 border-wurth-gray-150 px-4 py-4",
                   address.xcAddressId === selectedAddress && "border-black",
                 )}
                 onClick={() => setSelectedAddress(address.xcAddressId ?? "")}
                 disabled={updateShippingAddressMutation.isPending}
               >
-                {address.xcAddressId === selectedAddress ? (
-                  <CheckCircleFilled
-                    width={20}
-                    height={20}
-                    className="fill-black"
-                  />
-                ) : (
-                  <CheckCircle
-                    width={20}
-                    height={20}
-                    className="stroke-wurth-gray-150"
-                  />
-                )}
+                <div className="flex items-start">
+                  {address.xcAddressId === selectedAddress ? (
+                    <CheckCircleFilled
+                      width={20}
+                      height={20}
+                      className="fill-black"
+                    />
+                  ) : (
+                    <CheckCircle
+                      width={20}
+                      height={20}
+                      className="stroke-wurth-gray-150"
+                    />
+                  )}
+                </div>
 
-                <span className="text-base text-wurth-gray-800">
+                <span className="text-wrap text-start text-base text-wurth-gray-800">
                   {address?.streetAddress && `${address?.streetAddress}, `}
                   {address?.locality && `${address?.locality}, `}
                   {address?.region && `${address?.region} `}
