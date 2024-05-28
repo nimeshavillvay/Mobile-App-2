@@ -56,8 +56,16 @@ const PurchasedItemsSelectors = ({
 
   const id = useId();
   const durationId = `duration-${id}`;
-  const formattedFromDate = dayjs(fromDate).format(URL_DATE_FORMAT);
-  const formattedToDate = dayjs(toDate).format(URL_DATE_FORMAT);
+
+  const urlFromDate = urlSearchParams.get(QUERY_KEYS.FROM_DATE);
+  const urlToDate = urlSearchParams.get(QUERY_KEYS.TO_DATE);
+
+  const formattedFromDate = urlFromDate
+    ? dayjs(urlFromDate).format(URL_DATE_FORMAT)
+    : dayjs(fromDate).format(URL_DATE_FORMAT);
+  const formattedToDate = urlToDate
+    ? dayjs(urlToDate).format(URL_DATE_FORMAT)
+    : dayjs(toDate).format(URL_DATE_FORMAT);
 
   const handleDurationChange = (value: string) => {
     const duration = DURATIONS.find((duration) => duration.value === value);

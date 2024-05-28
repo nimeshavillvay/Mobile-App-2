@@ -11,7 +11,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@repo/web-ui/components/ui/collapsible";
-import useAddToCartForm from "../use-add-to-cart-form.hook";
+import useAddToCartForm from "../../use-add-to-cart-form.hook";
 
 type LocationStocksProps = {
   readonly token: string;
