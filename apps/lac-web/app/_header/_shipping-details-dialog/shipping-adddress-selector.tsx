@@ -2,6 +2,7 @@
 
 import useSuspenseShippingAddressList from "@/_hooks/address/use-suspense-shipping-address-list.hook";
 import useUpdateShippingAddressMutation from "@/_hooks/address/use-update-shipping-address-mutation.hook";
+import type { Token } from "@/_lib/types";
 import { cn } from "@/_lib/utils";
 import { CheckCircle } from "@repo/web-ui/components/icons/check-circle";
 import { CheckCircleFilled } from "@repo/web-ui/components/icons/check-circle-filled";
@@ -18,7 +19,7 @@ import { useToast } from "@repo/web-ui/components/ui/toast";
 import { useState, type ReactNode } from "react";
 
 type ShippingAddressSelectorProps = {
-  readonly token: string;
+  readonly token: Token;
   readonly children: ReactNode;
 };
 
