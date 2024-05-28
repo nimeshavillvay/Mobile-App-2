@@ -306,24 +306,22 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
       {
         onSuccess: (data) => {
           if (isVerifyAddressResponse(data)) {
-            if (Array.isArray(data.suggestions["billing-address"])) {
-              setBillingSuggestions(data.suggestions["billing-address"]);
-            } else {
+            if (
+              !Array.isArray(data.suggestions["billing-address"]) ||
+              !Array.isArray(data.suggestions["shipping-address"])
+            ) {
               toast({
                 variant: "destructive",
                 title: "Registration failed.",
                 description: data.message,
               });
             }
+            if (Array.isArray(data.suggestions["billing-address"])) {
+              setBillingSuggestions(data.suggestions["billing-address"]);
+            }
 
             if (Array.isArray(data.suggestions["shipping-address"])) {
               setShippingSuggestions(data.suggestions["shipping-address"]);
-            } else {
-              toast({
-                variant: "destructive",
-                title: "Registration failed.",
-                description: data.message,
-              });
             }
           } else {
             toast({
