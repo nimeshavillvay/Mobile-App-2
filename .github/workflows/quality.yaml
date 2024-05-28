@@ -38,14 +38,10 @@ jobs:
       TURBO_TEAM: ${{ vars.TURBO_TEAM }}
       TURBO_REMOTE_ONLY: true
     steps:
-      - uses: actions/checkout@v4
-      - name: Cache turbo build setup
-        uses: actions/cache@v4
+      - name: Check out code
+        uses: actions/checkout@v4
         with:
-          path: .turbo
-          key: ${{ runner.os }}-turbo-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-turbo-
+          fetch-depth: 2
       - name: Install pnpm
         uses: pnpm/action-setup@v3
         with:
