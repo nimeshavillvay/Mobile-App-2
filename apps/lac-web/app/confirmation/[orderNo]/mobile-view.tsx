@@ -61,14 +61,14 @@ const MobileView = async ({ orderNo }: MobileViewProps) => {
 
                 <tr>
                   <td className={tableLabelStyles()}>Order date</td>
-                  <td className={tableValueStyles()}>{orderDetails.orderNo}</td>
+                  <td className={tableValueStyles()}>
+                    {dayjs(orderDetails.orderDate).format("MM/DD/YYYY")}
+                  </td>
                 </tr>
 
                 <tr>
                   <td className={tableLabelStyles()}>Job name</td>
-                  <td className={tableValueStyles()}>
-                    {dayjs(orderDetails.orderDate).format("MM/DD/YYYY")}
-                  </td>
+                  <td className={tableValueStyles()}>{orderDetails.jobName}</td>
                 </tr>
 
                 <tr>
@@ -190,7 +190,7 @@ const MobileView = async ({ orderNo }: MobileViewProps) => {
                         <div className="flex flex-row items-center justify-between text-sm text-wurth-gray-800">
                           <div>{lineItem.itemTotalQuantity} each</div>
 
-                          <div>${lineItem.price}</div>
+                          <div>${lineItem.totalPrice}</div>
                         </div>
 
                         <h4 className="text-sm font-medium text-wurth-gray-800">
