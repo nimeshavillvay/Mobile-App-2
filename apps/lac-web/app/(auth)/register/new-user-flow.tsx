@@ -2,6 +2,7 @@ import useCounties from "@/_hooks/registration/use-counties.hook";
 import useCountries from "@/_hooks/registration/use-countries.hook";
 import useStates from "@/_hooks/registration/use-states.hook";
 import type { PasswordPolicies } from "@/_lib/types";
+import { NUMBER_TYPE } from "@/_lib/zod-helper";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Checkbox } from "@repo/web-ui/components/ui/checkbox";
 import {
@@ -42,7 +43,6 @@ import type { ResponseAddress } from "./use-register-new-user-mutation.hook";
 import useRegisterNewUserMutation, {
   isVerifyAddressResponse,
 } from "./use-register-new-user-mutation.hook";
-import {NUMBER_TYPE} from "@/_lib/zod-helper";
 
 type Step = "personal" | "address";
 

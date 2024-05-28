@@ -9,6 +9,7 @@ import type {
   Plant,
 } from "@/_lib/types";
 import { formatNumberToPrice } from "@/_lib/utils";
+import { NUMBER_TYPE } from "@/_lib/zod-helper";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Save } from "@repo/web-ui/components/icons/save";
 import { Trash } from "@repo/web-ui/components/icons/trash";
@@ -41,7 +42,6 @@ import {
 } from "./helpers";
 import type { MainOption, ShipToMeOption } from "./types";
 import useCheckAvailabilityMutation from "./use-check-availability-mutation.hook";
-import {NUMBER_TYPE} from "@/_lib/zod-helper";
 
 const cartItemSchema = z.object({
   quantity: NUMBER_TYPE,

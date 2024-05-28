@@ -8,6 +8,7 @@ import useItemInfo from "@/_hooks/product/use-item-info.hook";
 import useSuspenseCheckAvailability from "@/_hooks/product/use-suspense-check-availability.hook";
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import { cn } from "@/_lib/utils";
+import { NUMBER_TYPE } from "@/_lib/zod-helper";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AddToCart as AddToCartIcon } from "@repo/web-ui/components/icons/add-to-cart";
 import { ChevronRight } from "@repo/web-ui/components/icons/chevron-right";
@@ -38,7 +39,6 @@ import {
   useFormContext,
 } from "react-hook-form";
 import { z } from "zod";
-import {NUMBER_TYPE} from "@/_lib/zod-helper";
 
 const verificationDialogSchema = z.object({
   poOrJobName: z.string(),
