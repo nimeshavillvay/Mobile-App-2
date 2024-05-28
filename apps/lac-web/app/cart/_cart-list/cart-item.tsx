@@ -342,7 +342,7 @@ const CartItem = ({
     itemConfigHash,
     willCallHash,
     matchedAvailabilityOption,
-  ]);
+  ]); // Disabling ESLint for the dependency array because it's exhaustive when including all relevant dependencies
 
   return (
     <div className="flex flex-col gap-6 md:flex-row">
