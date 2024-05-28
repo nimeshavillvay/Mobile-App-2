@@ -43,7 +43,11 @@ const ShippingAddressCard = ({
           </h3>
           <p className="text-sm font-medium md:text-base">
             {shippingAddress?.streetAddress}, {shippingAddress?.locality},{" "}
-            {shippingAddress?.region}, {shippingAddress?.postalCode}
+            {shippingAddress?.region},{" "}
+            {shippingAddress?.county?.length ?? 0 > 0
+              ? shippingAddress?.county + ", "
+              : ""}
+            {shippingAddress?.postalCode}
             <br />
             <span className="font-bold">Phone:</span>{" "}
             {shippingAddress.phoneNumber}
