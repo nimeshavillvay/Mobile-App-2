@@ -12,7 +12,7 @@ const useDeleteCreditCardMutation = () => {
   return useMutation({
     mutationFn: (id: number) =>
       api
-        .post("rest/my-account/creditcards", {
+        .delete("rest/my-account/creditcards", {
           headers: {
             Authorization: `Bearer ${cookies[SESSION_TOKEN_COOKIE]}`,
           },
