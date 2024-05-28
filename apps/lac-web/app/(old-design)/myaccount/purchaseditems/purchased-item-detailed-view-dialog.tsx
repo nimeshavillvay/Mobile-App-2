@@ -19,7 +19,6 @@ import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import dayjs from "dayjs";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import {
   Suspense,
   useId,
@@ -57,7 +56,6 @@ const PurchasedItemDetailedViewDialog = ({
 }: ActionConfirmationDialogProps) => {
   const [showPriceBreakdown, setShowPriceBreakdown] = useState(false);
   const id = useId();
-  const router = useRouter();
   const quantityId = `quantity-${id}`;
   const formId = `purchase-add-to-cart-mobile-form-${id}`;
 
