@@ -222,7 +222,7 @@ const CartItem = ({
           plant: plant,
         },
         {
-          onSuccess({ willCallAnywhere }) {
+          onSuccess: ({ willCallAnywhere }) => {
             if (willCallAnywhere) {
               const willCallAvailableQty =
                 willCallAnywhere.status === NOT_IN_STOCK
@@ -335,12 +335,14 @@ const CartItem = ({
         setDefaultsForCartConfig();
       }
     }
+    // eslint-disable-next-line react-compiler/react-compiler
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     itemConfigShippingMethod,
     itemConfigHash,
     willCallHash,
     matchedAvailabilityOption,
-  ]);
+  ]); // Disabling ESLint for the dependency array because it's exhaustive when including all relevant dependencies
 
   return (
     <div className="flex flex-col gap-6 md:flex-row">
