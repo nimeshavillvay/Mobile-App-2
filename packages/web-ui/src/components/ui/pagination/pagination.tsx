@@ -5,7 +5,7 @@ import {
 } from "@radix-ui/react-icons";
 import Link from "next/link";
 import { forwardRef, type ComponentProps } from "react";
-import { ButtonProps, buttonVariants } from "~/components/ui/button";
+import { buttonVariants, type ButtonProps } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
 
 const Pagination = ({ className, ...props }: ComponentProps<"nav">) => (
@@ -37,7 +37,7 @@ const PaginationItem = forwardRef<HTMLLIElement, ComponentProps<"li">>(
 PaginationItem.displayName = "PaginationItem";
 
 type PaginationLinkProps = {
-  isActive?: boolean;
+  readonly isActive?: boolean;
 } & Pick<ButtonProps, "size"> &
   ComponentProps<typeof Link>;
 

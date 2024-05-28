@@ -12,8 +12,8 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 type DiscontinuedItemNoticeProps = {
-  categoryId: string;
-  slug: string;
+  readonly categoryId: string;
+  readonly slug: string;
 };
 
 const DiscontinuedItemNotice = ({

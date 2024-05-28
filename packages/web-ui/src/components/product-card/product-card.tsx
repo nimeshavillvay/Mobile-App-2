@@ -4,7 +4,7 @@ import Image, { type ImageProps } from "next/image";
 import Link, { type LinkProps } from "next/link";
 import { createContext, useContext, type ComponentProps } from "react";
 import { HeartOutline } from "~/components/icons/heart-outline";
-import { Badge, BadgeProps } from "~/components/ui/badge";
+import { Badge, type BadgeProps } from "~/components/ui/badge";
 import { Button, buttonVariants } from "~/components/ui/button";
 import {
   Select,
@@ -30,7 +30,7 @@ const ProductCard = ({
   className,
   orientation = "vertical",
   ...delegated
-}: ComponentProps<"article"> & { orientation?: Orientation }) => {
+}: ComponentProps<"article"> & { readonly orientation?: Orientation }) => {
   return (
     <OrientationContext.Provider value={orientation}>
       <article
@@ -79,7 +79,7 @@ const ProductCardImage = ({
     /**
      * Title to show for screen readers
      */
-    title: string;
+    readonly title: string;
   }) => {
   const orientation = useOrientation();
 
@@ -168,9 +168,9 @@ const ProductCardDetails = ({
   sku,
   href,
 }: {
-  title: string;
-  sku: string;
-  href: LinkProps["href"];
+  readonly title: string;
+  readonly sku: string;
+  readonly href: LinkProps["href"];
 }) => {
   const orientation = useOrientation();
 
@@ -196,9 +196,9 @@ const ProductCardPrice = ({
   uom,
   actualPrice,
 }: {
-  price: number;
-  uom: string;
-  actualPrice?: number;
+  readonly price: number;
+  readonly uom: string;
+  readonly actualPrice?: number;
 }) => {
   return (
     <div className="text-xs font-normal text-wurth-gray-800 md:text-sm md:leading-none">
@@ -231,10 +231,10 @@ const ProductCardActions = ({
   onClickShoppingList,
   disabled = false,
 }: {
-  addToCart: () => void;
-  isFavorite: boolean;
-  onClickShoppingList: () => void;
-  disabled?: boolean;
+  readonly addToCart: () => void;
+  readonly isFavorite: boolean;
+  readonly onClickShoppingList: () => void;
+  readonly disabled?: boolean;
 }) => {
   return (
     <div className="mt-auto flex flex-row items-center gap-1 md:gap-2">
@@ -274,12 +274,12 @@ const ProductCardVariantSelector = ({
   isFavorite,
   onClickShoppingList,
 }: {
-  href: string;
-  variants: { value: string; title: string }[];
-  value?: string;
-  onValueChange: (value: string) => void;
-  isFavorite: boolean;
-  onClickShoppingList: () => void;
+  readonly href: string;
+  readonly variants: { value: string; title: string }[];
+  readonly value?: string;
+  readonly onValueChange: (value: string) => void;
+  readonly isFavorite: boolean;
+  readonly onClickShoppingList: () => void;
 } & ComponentProps<typeof ProductCardActions>) => {
   return (
     <div className="mt-auto space-y-1">
@@ -326,7 +326,7 @@ const ProductCardSkeleton = ({
   orientation = "vertical",
   ...delegated
 }: Omit<SkeletonProps, "children"> & {
-  orientation?: Orientation;
+  readonly orientation?: Orientation;
 }) => {
   return (
     <Skeleton

@@ -13,13 +13,13 @@ import UnitPriceRow from "./unit-price-row";
 import UnitPriceRowForMobile from "./unit-price-row-for-mobile";
 
 type ItemPricesProps = {
-  token: string;
-  productId: number;
-  quantity: number;
-  uom: string;
-  salePrice: number;
-  showUnitPrice?: boolean;
-  unitPriceOnly?: boolean;
+  readonly token: string;
+  readonly productId: number;
+  readonly quantity: number;
+  readonly uom: string;
+  readonly salePrice: number;
+  readonly showUnitPrice?: boolean;
+  readonly unitPriceOnly?: boolean;
 };
 
 const ItemPrices = ({
@@ -97,9 +97,9 @@ const PriceRow = ({
   uom,
   price,
 }: {
-  quantity: number;
-  uom: string;
-  price: string;
+  readonly quantity: number;
+  readonly uom: string;
+  readonly price: string;
 }) => (
   <TableRow className="border-b-0">
     <TableCell className="py-1 text-left">{quantity}</TableCell>

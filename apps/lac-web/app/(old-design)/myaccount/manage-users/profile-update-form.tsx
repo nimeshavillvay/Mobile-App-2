@@ -47,9 +47,9 @@ const updateProfileSchema = z
   });
 
 type UpdateProfileProps = {
-  user: UserProfile;
-  jobRoles: Role[];
-  passwordPolicies: PasswordPolicies;
+  readonly user: UserProfile;
+  readonly jobRoles: Role[];
+  readonly passwordPolicies: PasswordPolicies;
 };
 
 const ProfileUpdateForm = ({

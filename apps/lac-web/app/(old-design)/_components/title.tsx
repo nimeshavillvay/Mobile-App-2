@@ -1,7 +1,7 @@
 import { cn } from "@/old/_utils/helpers";
 import { Slot } from "@radix-ui/react-slot";
+import type { ForwardedRef } from "react";
 import {
-  ForwardedRef,
   forwardRef,
   type ComponentPropsWithoutRef,
   type ElementRef,
@@ -9,7 +9,7 @@ import {
 
 const Title = forwardRef<
   ElementRef<typeof Slot>,
-  ComponentPropsWithoutRef<typeof Slot> & { asChild?: boolean }
+  ComponentPropsWithoutRef<typeof Slot> & { readonly asChild?: boolean }
 >(({ className, asChild, ...delegated }, ref) => {
   const Comp = asChild ? Slot : "h1";
 

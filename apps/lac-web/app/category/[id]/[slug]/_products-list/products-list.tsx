@@ -16,7 +16,7 @@ import ProductsListHeader from "./products-list-header";
 import ProductsListPagination from "./products-list-pagination";
 
 type ProductsListProps = {
-  categoryId: string;
+  readonly categoryId: string;
 };
 
 const ProductsList = ({ categoryId }: ProductsListProps) => {

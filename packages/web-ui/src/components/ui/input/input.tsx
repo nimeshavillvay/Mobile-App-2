@@ -1,4 +1,4 @@
-import { ComponentPropsWithoutRef, forwardRef } from "react";
+import { forwardRef, type ComponentPropsWithoutRef } from "react";
 import { cva } from "~/lib/cva.config";
 import { cn } from "~/lib/utils";
 

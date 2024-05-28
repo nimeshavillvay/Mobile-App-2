@@ -13,11 +13,11 @@ import dayjs from "dayjs";
 import type { Dispatch, SetStateAction } from "react";
 
 type DatePickerProps = {
-  date: Date;
-  onSelectDate: Dispatch<SetStateAction<Date>>;
-  dateFormat?: "MM/DD/YYYY" | "DD/MM/YYYY";
-  placeholder?: string;
-  containerClassName?: string;
+  readonly date: Date;
+  readonly onSelectDate: Dispatch<SetStateAction<Date>>;
+  readonly dateFormat?: "MM/DD/YYYY" | "DD/MM/YYYY";
+  readonly placeholder?: string;
+  readonly containerClassName?: string;
 };
 
 const DatePicker = ({
@@ -54,7 +54,6 @@ const DatePicker = ({
               onSelectDate(selectedDate);
             }
           }}
-          initialFocus
         />
       </PopoverContent>
     </Popover>

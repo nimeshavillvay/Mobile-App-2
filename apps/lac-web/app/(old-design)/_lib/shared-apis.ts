@@ -1,4 +1,4 @@
-import { Address } from "@/_lib/types";
+import type { Address } from "@/_lib/types";
 import { api } from "./api";
 import type { Availability } from "./types";
 

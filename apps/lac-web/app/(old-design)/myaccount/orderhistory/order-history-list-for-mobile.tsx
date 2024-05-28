@@ -6,9 +6,9 @@ import { UI_DATE_FORMAT } from "./constants";
 import type { Order } from "./types";
 
 type OrderHistoryListForMobileProps = {
-  items: Order[];
-  token: string;
-  isLoading: boolean;
+  readonly items: Order[];
+  readonly token: string;
+  readonly isLoading: boolean;
 };
 
 const OrderHistoryListForMobile = ({
@@ -27,7 +27,7 @@ const OrderHistoryListForMobile = ({
 
 export default OrderHistoryListForMobile;
 
-const OrderHistoryRowForMobile = ({ order }: { order: Order }) => {
+const OrderHistoryRowForMobile = ({ order }: { readonly order: Order }) => {
   const orderDetailHref =
     order.orderNo !== "" ? `/myaccount/orderhistory/${order.orderNo}` : "#";
 
@@ -68,7 +68,7 @@ const OrderHistoryRowForMobile = ({ order }: { order: Order }) => {
   );
 };
 
-const OrderStatusBadgeMobile = ({ status }: { status: string }) => {
+const OrderStatusBadgeMobile = ({ status }: { readonly status: string }) => {
   return (
     <div className="font-bold text-brand-secondary">
       {status !== "" ? status : "N/A"}

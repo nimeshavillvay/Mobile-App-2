@@ -1,6 +1,6 @@
 import { updateSearchParams } from "@/old/_utils/client-helpers";
 import "client-only";
-import { QUERY_KEYS } from "./constants";
+import type { QUERY_KEYS } from "./constants";
 import type { DetailedPurchasedItem } from "./types";
 
 export const changeSearchParams = (

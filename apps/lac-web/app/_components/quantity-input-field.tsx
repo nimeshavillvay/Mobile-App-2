@@ -4,7 +4,7 @@ import { forwardRef, useId, type ComponentProps } from "react";
 
 const QuantityInputField = forwardRef<
   HTMLInputElement,
-  Omit<ComponentProps<typeof Input>, "id" | "type" | "className">
+  Omit<ComponentProps<typeof Input>, "id" | "type" | "className" | "onKeyDown">
 >((props, ref) => {
   const id = useId();
   const quantityId = `quantity-${id}`;
@@ -20,6 +20,12 @@ const QuantityInputField = forwardRef<
         id={quantityId}
         type="number"
         className="flex-1 rounded-sm border-0 p-0 text-center text-lg font-semibold text-wurth-gray-800 shadow-none"
+        onKeyDown={(event) => {
+          // Restrict negative values and Euler's constant
+          if (event.code === "Minus" || event.code === "KeyE") {
+            event.preventDefault();
+          }
+        }}
         {...props}
       />
     </div>

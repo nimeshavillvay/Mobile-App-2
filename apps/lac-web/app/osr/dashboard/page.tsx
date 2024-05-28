@@ -1,6 +1,6 @@
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import { Separator } from "@repo/web-ui/components/ui/separator";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import Dashboard from "./dashboard";

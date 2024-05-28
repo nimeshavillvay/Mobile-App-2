@@ -12,7 +12,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@repo/web-ui/components/ui/breadcrumb";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
 const SearchPage = async ({
   searchParams,
 }: {
-  searchParams: { [key: string]: string | string[] | undefined };
+  readonly searchParams: { [key: string]: string | string[] | undefined };
 }) => {
   const query = searchParams.query?.toString() ?? "";
   const pageNo = searchParams.page?.toString() ?? "1";

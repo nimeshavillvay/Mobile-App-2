@@ -4,7 +4,7 @@ import Link from "next/link";
 import { MdKeyboardArrowRight } from "react-icons/md";
 
 type OrderDetailsForMobileProps = {
-  orderDetail: {
+  readonly orderDetail: {
     orderNo: number;
     orderType: string;
     orderStatus: string;
@@ -40,7 +40,7 @@ type OrderDetailsForMobileProps = {
     paymentMethod: string;
     completeDelivery: boolean;
   };
-  paymentMethods: {
+  readonly paymentMethods: {
     code: string;
     name: string;
     isCreditCard: boolean;

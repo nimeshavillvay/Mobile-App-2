@@ -20,8 +20,8 @@ import {
 import useSuspenseWillCallPlant from "./use-suspense-will-call-plant.hook";
 
 type WillCallPlantProps = {
-  token: string;
-  plants: Plant[];
+  readonly token: string;
+  readonly plants: Plant[];
 };
 
 const WillCallPlantDrawer = ({ token, plants }: WillCallPlantProps) => {

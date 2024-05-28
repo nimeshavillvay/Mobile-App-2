@@ -10,15 +10,15 @@ import {
 import { type ComponentProps } from "react";
 
 type ActionConfirmationDialogProps = {
-  open: boolean;
-  onOpenChange: ComponentProps<typeof Dialog>["onOpenChange"];
-  title: string;
-  text: string;
-  textColor?: "primary" | "default";
-  onConfirm: () => void;
-  okText?: string;
-  cancelText?: string;
-  showCancelBtn?: boolean;
+  readonly open: boolean;
+  readonly onOpenChange: ComponentProps<typeof Dialog>["onOpenChange"];
+  readonly title: string;
+  readonly text: string;
+  readonly textColor?: "primary" | "default";
+  readonly onConfirm: () => void;
+  readonly okText?: string;
+  readonly cancelText?: string;
+  readonly showCancelBtn?: boolean;
 };
 
 const ActionConfirmationDialog = ({

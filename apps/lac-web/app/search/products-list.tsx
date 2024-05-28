@@ -13,9 +13,9 @@ import ProductsListHeader from "./products-list-header";
 import ProductsListPagination from "./products-list-pagination";
 
 type ProductsListProps = {
-  query: string;
-  pageNo: string;
-  total: number;
+  readonly query: string;
+  readonly pageNo: string;
+  readonly total: number;
 };
 
 const ProductsList = ({ query, pageNo, total }: ProductsListProps) => {

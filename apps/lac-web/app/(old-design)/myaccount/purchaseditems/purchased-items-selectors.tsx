@@ -30,8 +30,8 @@ import {
 import FiltersForMobileDialog from "./filters-for-mobile-dialog";
 
 type PurchasedItemsSelectorProps = {
-  isLoading: boolean;
-  totalItems: number;
+  readonly isLoading: boolean;
+  readonly totalItems: number;
 };
 
 const PurchasedItemsSelectors = ({
@@ -115,7 +115,7 @@ const PurchasedItemsSelectors = ({
 
           <Select
             value={duration?.value}
-            onValueChange={function (value) {
+            onValueChange={(value) => {
               handleDurationChange(value);
             }}
           >

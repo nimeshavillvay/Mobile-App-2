@@ -1,8 +1,8 @@
 import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
 import { api } from "@/_lib/api";
+import { checkAvailability } from "@/_lib/apis/shared";
 import { useToast } from "@repo/web-ui/components/ui/toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { checkAvailability } from "../product/use-suspense-check-availability.hook";
 
 const useAddToCartMutation = (
   token: string,

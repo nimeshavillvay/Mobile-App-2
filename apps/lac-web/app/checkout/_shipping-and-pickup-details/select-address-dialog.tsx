@@ -18,7 +18,7 @@ import { useState } from "react";
 import AddShippingAddressDialog from "./add-shipping-address-dialog";
 
 type SelectAddressDialogProps = {
-  token: string;
+  readonly token: string;
 };
 
 const SelectAddressDialog = ({ token }: SelectAddressDialogProps) => {

@@ -86,7 +86,7 @@ export const checkPasswordComplexity = ({
  * Format a number to price
  */
 export const formatNumberToPrice = (value?: number) => {
-  if (!value) {
+  if (!value && value !== 0) {
     return "";
   }
 

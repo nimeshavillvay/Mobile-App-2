@@ -33,7 +33,7 @@ const currentUserSchema = z.object({
 });
 
 type CurrentUserFlowProps = {
-  passwordPolicies: PasswordPolicies;
+  readonly passwordPolicies: PasswordPolicies;
 };
 
 const CurrentUserFlow = ({ passwordPolicies }: CurrentUserFlowProps) => {

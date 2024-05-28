@@ -13,9 +13,9 @@ import { usePathname, useSearchParams } from "next/navigation";
 import { QUERY_KEYS } from "./constants";
 
 type PaginationProps = {
-  pageSize: number;
-  totalSize: number;
-  currentPage: number;
+  readonly pageSize: number;
+  readonly totalSize: number;
+  readonly currentPage: number;
 };
 
 const Pagination = ({ pageSize, totalSize, currentPage }: PaginationProps) => {

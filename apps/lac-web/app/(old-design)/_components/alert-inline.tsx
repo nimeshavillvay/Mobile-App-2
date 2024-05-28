@@ -6,9 +6,9 @@ import {
 import { MdInfoOutline } from "react-icons/md";
 
 type AlertInlineProps = {
-  title?: string;
-  description: string;
-  variant: "destructive" | "default";
+  readonly title?: string;
+  readonly description: string;
+  readonly variant: "destructive" | "default";
 };
 
 const AlertInline = ({ title, description, variant }: AlertInlineProps) => {

@@ -35,7 +35,7 @@ import {
 import OSRDashboardCustomersLoading from "./loading";
 import MyCustomerDetails from "./my-customers-details";
 
-const Dashboard = ({ token }: { token: string }) => {
+const Dashboard = ({ token }: { readonly token: string }) => {
   const id = useId();
   const belongsTo = `belongs-to-${id}`;
 

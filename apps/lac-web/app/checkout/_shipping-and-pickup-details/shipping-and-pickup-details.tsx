@@ -23,7 +23,7 @@ import SelectAddressDialog from "./select-address-dialog";
 dayjs.extend(advancedFormat);
 
 type ShippingAndPickupDetailsProps = {
-  token: string;
+  readonly token: string;
 };
 
 const ShippingAndPickupDetails = ({ token }: ShippingAndPickupDetailsProps) => {

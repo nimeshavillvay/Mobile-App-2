@@ -16,7 +16,7 @@ export const Menu = ({ className, ...delegated }: ComponentProps<"svg">) => {
         stroke="#000"
         strokeLinecap="square"
         d="M2.5 12h19m-19-6.5h19m-19 13h19"
-      ></path>
+      />
     </svg>
   );
 };

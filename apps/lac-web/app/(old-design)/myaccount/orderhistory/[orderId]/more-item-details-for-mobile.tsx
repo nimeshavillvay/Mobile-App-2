@@ -16,8 +16,8 @@ import { UI_DATE_FORMAT } from "../constants";
 import BuyAgainButton from "./buy-again-button";
 
 type MoreItemDetailsForMobileProps = {
-  productId: number;
-  lineItems: {
+  readonly productId: number;
+  readonly lineItems: {
     itemNo: string;
     sku: string;
     productId: number;
@@ -32,9 +32,9 @@ type MoreItemDetailsForMobileProps = {
     itemStatus: string;
     promoCode: string;
   }[];
-  shippingMethods: ShippingMethod[];
-  plants: Plant[];
-  isExcludedProduct?: boolean;
+  readonly shippingMethods: ShippingMethod[];
+  readonly plants: Plant[];
+  readonly isExcludedProduct?: boolean;
 };
 
 const MoreItemDetailsForMobile = ({
@@ -143,9 +143,9 @@ const DetailedLine = ({
   value,
   isLastItem = false,
 }: {
-  title: string;
-  value: string;
-  isLastItem?: boolean;
+  readonly title: string;
+  readonly value: string;
+  readonly isLastItem?: boolean;
 }) => (
   <div
     className={cn(

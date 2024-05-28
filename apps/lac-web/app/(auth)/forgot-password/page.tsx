@@ -6,7 +6,7 @@ export const metadata: Metadata = {
 };
 
 type ForgotPasswordProps = {
-  searchParams: { [key: string]: string | string[] | undefined };
+  readonly searchParams: { [key: string]: string | string[] | undefined };
 };
 
 const ForgotPassword = ({ searchParams }: ForgotPasswordProps) => {

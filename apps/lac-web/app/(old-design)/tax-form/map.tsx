@@ -37,7 +37,7 @@ const offsets: Offsets = {
   DC: [49, 21],
 };
 
-const Map = ({ taxFormDetails }: { taxFormDetails: TaxFormItems }) => {
+const Map = ({ taxFormDetails }: { readonly taxFormDetails: TaxFormItems }) => {
   const [open, setOpen] = useState(false);
   const [hoverText, setHoverText] = useState("");
 

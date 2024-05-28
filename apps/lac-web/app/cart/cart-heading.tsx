@@ -3,7 +3,7 @@
 import useSuspenseCart from "@/_hooks/cart/use-suspense-cart.hook";
 
 type CartHeadingProps = {
-  token: string;
+  readonly token: string;
 };
 
 const CartHeading = ({ token }: CartHeadingProps) => {

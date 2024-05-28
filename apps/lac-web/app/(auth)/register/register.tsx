@@ -16,8 +16,8 @@ import type { Industry } from "./types";
 const IS_CURRENT_USER = ["Yes", "No"] as const;
 
 type RegisterProps = {
-  passwordPolicies: PasswordPolicies;
-  industries: Industry[];
+  readonly passwordPolicies: PasswordPolicies;
+  readonly industries: Industry[];
 };
 
 const Register = ({ passwordPolicies, industries }: RegisterProps) => {

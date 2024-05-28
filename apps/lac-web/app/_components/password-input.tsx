@@ -1,6 +1,7 @@
 import { cn } from "@/_lib/utils";
 import { Button } from "@repo/web-ui/components/ui/button";
-import { Input, InputProps } from "@repo/web-ui/components/ui/input";
+import type { InputProps } from "@repo/web-ui/components/ui/input";
+import { Input } from "@repo/web-ui/components/ui/input";
 import { forwardRef, useState } from "react";
 
 const PasswordInput = forwardRef<HTMLInputElement, InputProps>(

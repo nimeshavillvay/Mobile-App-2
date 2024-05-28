@@ -3,10 +3,10 @@ import { type ComponentProps } from "react";
 import { getSearchResults } from "./apis";
 
 type ProductListGridProps = {
-  token: string;
-  term: string;
-  type: ComponentProps<typeof ProductsGridList>["type"];
-  pageNo: string;
+  readonly token: string;
+  readonly term: string;
+  readonly type: ComponentProps<typeof ProductsGridList>["type"];
+  readonly pageNo: string;
 };
 
 const ProductListGrid = async ({

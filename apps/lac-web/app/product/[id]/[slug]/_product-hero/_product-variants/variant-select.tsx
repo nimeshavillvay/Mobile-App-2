@@ -12,7 +12,7 @@ import { useRouter } from "next/navigation";
 import type { Value } from "./types";
 
 type VariantSelectProps = {
-  values: Value[];
+  readonly values: Value[];
 };
 
 const VariantSelect = ({ values }: VariantSelectProps) => {

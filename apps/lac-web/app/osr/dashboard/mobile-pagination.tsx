@@ -19,9 +19,9 @@ export const INIT_PAGE_NUMBER = "1";
 export const INIT_PER_PAGE = "10";
 
 type FiltersForMobileProps = {
-  open: boolean;
-  setOpen: Dispatch<SetStateAction<boolean>>;
-  totalPagesCount: number;
+  readonly open: boolean;
+  readonly setOpen: Dispatch<SetStateAction<boolean>>;
+  readonly totalPagesCount: number;
 };
 
 const MobilePagination = ({

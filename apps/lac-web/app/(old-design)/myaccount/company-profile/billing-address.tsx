@@ -9,7 +9,7 @@ import AddressDialog from "./address-dialog";
 import AddressSuggestionDialog from "./address-suggestion-dialog";
 import type { AddressCheckSuggestionsWithUuid } from "./types";
 
-const BillingAddress = ({ token }: { token: string }) => {
+const BillingAddress = ({ token }: { readonly token: string }) => {
   const [openBillingAddressDialog, setOpenBillingAddressDialog] =
     useState(false);
 

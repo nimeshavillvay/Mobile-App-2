@@ -16,7 +16,7 @@ const searchSchema = z.object({
 type SearchSchema = z.infer<typeof searchSchema>;
 
 type SearchBarProps = {
-  className?: string;
+  readonly className?: string;
 };
 
 const SearchBar = ({ className }: SearchBarProps) => {

@@ -11,7 +11,7 @@ export type RelatedProduct = {
   txt_wurth_lac_item: string;
   item_name: string;
   img: string;
-  url: string;
+  slug: string;
   is_comparison: null;
   txt_hazardous: string;
   txt_special_shipping: string;

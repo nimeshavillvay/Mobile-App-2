@@ -5,8 +5,8 @@ import useSuspenseFilters from "@/_hooks/search/use-suspense-filters.hook";
 import useSuspenseSearchProductList from "./use-suspense-search-product-list.hook";
 
 type ProductsListHeaderProps = {
-  token: string;
-  categoryId: string;
+  readonly token: string;
+  readonly categoryId: string;
 };
 
 const ProductsListHeader = ({ token, categoryId }: ProductsListHeaderProps) => {

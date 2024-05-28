@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 };
 
 type ConfirmationPageProps = {
-  params: {
+  readonly params: {
     orderNo: string;
   };
 };

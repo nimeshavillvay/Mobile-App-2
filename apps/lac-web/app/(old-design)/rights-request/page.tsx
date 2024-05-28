@@ -5,11 +5,7 @@ export const metadata: Metadata = {
 };
 
 const PrivacyRightsRequestPage = () => {
-  return (
-    <>
-      <h1>Privacy Rights Request</h1>
-    </>
-  );
+  return <h1>Privacy Rights Request</h1>;
 };
 
 export default PrivacyRightsRequestPage;

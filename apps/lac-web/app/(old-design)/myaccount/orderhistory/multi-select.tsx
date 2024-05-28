@@ -4,17 +4,17 @@ import { Label } from "@/old/_components/ui/label";
 import { cn } from "@/old/_utils/helpers";
 import { useMultipleSelection, useSelect } from "downshift";
 import { ChevronDown, X } from "lucide-react";
-import { MutableRefObject } from "react";
+import type { MutableRefObject } from "react";
 import type { Option } from "./types";
 
 type MultiSelectProps = {
-  label: string;
-  data: Option[];
-  placeholder?: string;
-  flag?: string;
-  onValuesChange?: (selectedItems: Option[]) => void;
-  onClear?: () => void;
-  resetRef: MutableRefObject<boolean>;
+  readonly label: string;
+  readonly data: Option[];
+  readonly placeholder?: string;
+  readonly flag?: string;
+  readonly onValuesChange?: (selectedItems: Option[]) => void;
+  readonly onClear?: () => void;
+  readonly resetRef: MutableRefObject<boolean>;
 };
 
 // TODO: This component can be optimized further
@@ -75,35 +75,57 @@ const MultiSelect = ({
       }
     },
     onStateChange: ({ type, selectedItem }) => {
-      const {
-        ToggleButtonKeyDownEnter,
-        ToggleButtonKeyDownSpaceButton,
-        ItemClick,
-      } = useSelect.stateChangeTypes;
-
-      if (
-        type === ToggleButtonKeyDownEnter ||
-        type === ToggleButtonKeyDownSpaceButton ||
-        type === ItemClick
-      ) {
-        if (selectedItem && selectedItem.active) {
-          if (isItemSelected(selectedItem)) {
-            onValuesChange && onValuesChange(selectedItems);
-            removeSelectedItem(selectedItem);
-          } else {
-            onValuesChange && onValuesChange([...selectedItems, selectedItem]);
-            addSelectedItem(selectedItem);
-          }
-        }
+      if (actionPermitted(type)) {
+        updateSelections(selectedItem);
       }
     },
   });
+
+  const actionPermitted = (type: string) => {
+    const {
+      ToggleButtonKeyDownEnter,
+      ToggleButtonKeyDownSpaceButton,
+      ItemClick,
+    } = useSelect.stateChangeTypes;
+    return [
+      ToggleButtonKeyDownEnter,
+      ToggleButtonKeyDownSpaceButton,
+      ItemClick,
+    ].includes(type);
+  };
+
+  const updateSelections = (selectedItem: Option | null | undefined) => {
+    if (selectedItem && selectedItem.active) {
+      let newSelectedItems;
+      if (isItemSelected(selectedItem)) {
+        newSelectedItems = deselectItem(selectedItem);
+      } else {
+        newSelectedItems = selectItem(selectedItem);
+      }
+      onValuesChange && onValuesChange(newSelectedItems);
+    }
+  };
+
+  const deselectItem = (selectedItem: Option) => {
+    removeSelectedItem(selectedItem);
+    return selectedItems.filter((item) => item.id !== selectedItem.id);
+  };
+
+  const selectItem = (selectedItem: Option) => {
+    addSelectedItem(selectedItem);
+    return [...selectedItems, selectedItem];
+  };
 
   const removeAllSelectedItems = () => {
     if (onClear) {
       onClear();
     }
-    selectedItems.forEach(removeSelectedItem);
+
+    selectedItems.forEach((item) => {
+      removeSelectedItem(item);
+    });
+
+    onValuesChange && onValuesChange([]);
   };
 
   if (resetRef.current) {

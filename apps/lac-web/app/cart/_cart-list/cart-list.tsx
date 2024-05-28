@@ -8,8 +8,8 @@ import CartItemFallback from "../cart-item-fallback";
 import CartItem from "./cart-item";
 
 type CartListProps = {
-  token: string;
-  plants: Plant[];
+  readonly token: string;
+  readonly plants: Plant[];
 };
 
 const CartList = ({ token, plants }: CartListProps) => {

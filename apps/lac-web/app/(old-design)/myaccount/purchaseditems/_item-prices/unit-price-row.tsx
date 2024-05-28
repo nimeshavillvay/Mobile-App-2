@@ -2,9 +2,9 @@ import { formatNumberToPrice } from "@/old/_utils/helpers";
 import { calculatePriceDetails } from "@/old/_utils/price-utils";
 
 type UnitPriceRowProps = {
-  price: number;
-  salePrice: number;
-  uom: string;
+  readonly price: number;
+  readonly salePrice: number;
+  readonly uom: string;
 };
 
 // TODO: Can be reusable in other components

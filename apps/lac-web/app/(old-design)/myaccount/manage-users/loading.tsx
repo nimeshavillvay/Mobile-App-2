@@ -38,7 +38,7 @@ const ManageUsersLoading = () => {
 
             <TableHead className="text-center">Status</TableHead>
 
-            <TableHead></TableHead>
+            <TableHead />
           </TableRow>
         </TableHeader>
 

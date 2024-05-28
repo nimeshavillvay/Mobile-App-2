@@ -1,6 +1,6 @@
 "use client";
 
-import { Filters } from "@/_lib/types";
+import type { Filters } from "@/_lib/types";
 import { useSearchParams } from "next/navigation";
 import { QUERY_KEYS } from "./constants";
 

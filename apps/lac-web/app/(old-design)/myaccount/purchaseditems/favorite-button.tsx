@@ -8,8 +8,8 @@ import { Button } from "@repo/web-ui/components/ui/button";
 import { useState } from "react";
 
 type FavoriteButtonProps = {
-  token: string;
-  productId: number;
+  readonly token: string;
+  readonly productId: number;
 };
 
 const FavoriteButton = ({ token, productId }: FavoriteButtonProps) => {

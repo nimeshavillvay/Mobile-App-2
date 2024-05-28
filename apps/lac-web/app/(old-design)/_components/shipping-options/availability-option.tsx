@@ -15,12 +15,12 @@ import {
   AVAILABLE_AVAILABILITY,
   BACK_ORDERED_AVAILABILITY,
 } from "@/old/_lib/constants";
-import { Availability } from "@/old/_lib/types";
+import type { Availability } from "@/old/_lib/types";
 import { cn, getStatusLabel } from "@/old/_utils/helpers";
 import { getAvailabilityTypeLabel, getShippingMethods } from "./helpers";
 
 type AvailabilityOption = {
-  availability: Availability;
+  readonly availability: Availability;
 };
 
 const AvailabilityOption = ({ availability }: AvailabilityOption) => {
