@@ -2,12 +2,12 @@ import { Alert } from "@repo/web-ui/components/icons/alert";
 import { WurthFullBlack } from "@repo/web-ui/components/logos/wurth-full-black";
 import Image from "next/image";
 
-function ProductDetails({
+const ProductDetails = ({
   product,
   isLoading,
   isLastEditedIndex,
 }: {
-  product: {
+  readonly product: {
     isInvalid?: boolean | null;
     info?: {
       title: string;
@@ -16,9 +16,9 @@ function ProductDetails({
       image: string;
     };
   };
-  isLoading: boolean;
-  isLastEditedIndex: boolean;
-}) {
+  readonly isLoading: boolean;
+  readonly isLastEditedIndex: boolean;
+}) => {
   if (isLoading && isLastEditedIndex) {
     return (
       <div className="flex h-10 items-center px-3 font-medium">
@@ -69,6 +69,6 @@ function ProductDetails({
   }
 
   return;
-}
+};
 
 export default ProductDetails;

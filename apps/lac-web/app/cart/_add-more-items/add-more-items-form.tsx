@@ -1,22 +1,17 @@
 "use client";
 
-import { cn } from "@/_lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AddToCart } from "@repo/web-ui/components/icons/add-to-cart";
-import { Close } from "@repo/web-ui/components/icons/close";
 import { Button } from "@repo/web-ui/components/ui/button";
-import { Input } from "@repo/web-ui/components/ui/input";
-import { Skull } from "lucide-react";
 import { useEffect, useId, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { MdAdd } from "react-icons/md";
 import * as z from "zod";
+import AddMoreItemsRow from "./add-more-items-row";
 import getStatus from "./apis";
 import BulkUpload from "./bulk-upload";
 import useCustomDebounce from "./custom-debounce";
-import ItemSelectorInput from "./item-selector-input";
-import ProductDetails from "./product-details";
-import { Product } from "./types";
+import type { Product } from "./types";
 import useAddMultipleToCartMutation from "./use-add-multiple-to-cart-mutation.hook";
 import useSearch from "./use-search.hook";
 
@@ -45,7 +40,7 @@ const formSchema = z.object({
 });
 type FormSchema = z.infer<typeof formSchema>;
 
-const AddMoreItemsForm = ({ token }: { token: string }) => {
+const AddMoreItemsForm = ({ token }: { readonly token: string }) => {
   const [searchInput, setSearchInput] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -64,9 +59,6 @@ const AddMoreItemsForm = ({ token }: { token: string }) => {
   >([]);
 
   const addMultipleToCartMutation = useAddMultipleToCartMutation(token);
-
-  useEffect(() => {}, [searchTerm]);
-
   const debouncedSearchInput = useCustomDebounce(searchInput, 1000);
 
   const id = useId();
@@ -86,7 +78,7 @@ const AddMoreItemsForm = ({ token }: { token: string }) => {
       resolver: zodResolver(formSchema),
     });
 
-  const { remove, fields, append } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     name: "cart",
     control,
   });
@@ -175,7 +167,9 @@ const AddMoreItemsForm = ({ token }: { token: string }) => {
     for (let i = 0; i < bulkUploadItems.length; i++) {
       const item = bulkUploadItems[i];
 
-      if (!item) return;
+      if (!item) {
+        return;
+      }
 
       append({
         sku: item.sku,
@@ -197,14 +191,6 @@ const AddMoreItemsForm = ({ token }: { token: string }) => {
 
     setBulkUploadCSVDataToForm(bulkUploadItems);
   }, [bulkUploadItems]);
-
-  const getLineItemStatus = (index: number) => {
-    const cartItem = watch(`cart.${index}`);
-    if (cartItem.sku == "") {
-      return null;
-    }
-    return cartItem.isInvalid;
-  };
 
   const getItemsStatuses = async () => {
     const cartItems = watch("cart").map((item) => ({
@@ -279,7 +265,7 @@ const AddMoreItemsForm = ({ token }: { token: string }) => {
       return;
     }
 
-    const cartItemDetails = values.cart.map((item, index) => {
+    const cartItemDetails = values.cart.map((item) => {
       return {
         productId: item.info?.productId,
         quantity: item.quantity,
@@ -306,13 +292,13 @@ const AddMoreItemsForm = ({ token }: { token: string }) => {
     const minQuantity = watch(`cart.${index}.info.minQuantity`);
     const orderIncrementBy = watch(`cart.${index}.info.orderIncrementBy`);
 
-    function isDataComplete() {
+    const isDataComplete = () => {
       return (
         itemSKU !== "" &&
         minQuantity != undefined &&
         orderIncrementBy != undefined
       );
-    }
+    };
 
     if (
       isDataComplete() &&
@@ -325,6 +311,10 @@ const AddMoreItemsForm = ({ token }: { token: string }) => {
     }
 
     return false;
+  };
+
+  const removeLineItem = (index: number) => {
+    remove(index);
   };
 
   return (
@@ -342,69 +332,25 @@ const AddMoreItemsForm = ({ token }: { token: string }) => {
       <div className="mb-5 mt-4 overflow-x-scroll rounded-lg border p-5 shadow-md md:overflow-hidden">
         {fields.map((field, index) => (
           <div key={field.id}>
-            <div className="mb-3 flex items-center gap-2">
-              <ItemSelectorInput
-                id={id}
-                items={searchResultProducts}
-                onSelectedItemChange={(value) => {
-                  onSelectedItemChange(value, index);
-                }}
-                value={watch(`cart.${index}.sku`)}
-                isInvalid={getLineItemStatus(index) ?? null}
-                onTextChange={(value, type) => {
-                  onChange(value, type, index);
-                  setLastEditedIndex(index);
-                }}
-                isPopupOpen={isPopupOpen && lastEditedIndex == index}
-              />
-
-              <Input
-                {...register(`cart.${index}.jobName` as const, {
-                  required: true,
-                })}
-                id={`sku-${index}-${id}`}
-                placeholder="PO number / job name"
-                className="h-10 min-w-32 px-3 py-2"
-              />
-
-              <Input
-                {...register(`cart.${index}.quantity`, {
-                  valueAsNumber: true,
-                })}
-                id={`quantity-${index}-${id}`}
-                placeholder="Qty"
-                type="number"
-                className={cn(
-                  "h-10 w-20 px-3 py-2",
-                  isFormSubmitted &&
-                    isInvalidQuantity(index) &&
-                    "border-wurth-red-650 text-wurth-red-650",
-                )}
-              />
-
-              <div className="h-10 min-w-96">
-                <ProductDetails
-                  product={{
-                    isInvalid: watch("cart")[index]?.isInvalid,
-                    info: watch("cart")[index]?.info,
-                  }}
-                  isLoading={isLoading}
-                  isLastEditedIndex={lastEditedIndex == index}
-                />
-              </div>
-
-              <Button
-                variant="ghost"
-                className="h-6 w-6 cursor-pointer px-1.5"
-                onClick={() => remove(index)}
-              >
-                <Close
-                  width={12}
-                  height={12}
-                  className="stroke-2 hover:stroke-black"
-                />
-              </Button>
-            </div>
+            <AddMoreItemsRow
+              index={index}
+              id={id}
+              onSelectedItemChange={onSelectedItemChange}
+              searchResultProducts={searchResultProducts}
+              lineItemFormData={watch(`cart.${index}`)}
+              onChange={onChange}
+              lastEditedIndex={lastEditedIndex}
+              setLastEditedIndex={setLastEditedIndex}
+              isPopupOpen={isPopupOpen}
+              registerQuantityField={register(`cart.${index}.quantity`, {
+                valueAsNumber: true,
+              })}
+              registerJobNameField={register(`cart.${index}.jobName`)}
+              isFormSubmitted={isFormSubmitted}
+              isInvalidQuantity={isInvalidQuantity}
+              isLoading={isLoading}
+              removeLineItem={() => removeLineItem(index)}
+            />
 
             {fields.length != index + 1 && <hr className="mb-3" />}
           </div>

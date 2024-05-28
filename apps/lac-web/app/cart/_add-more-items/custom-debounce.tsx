@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-function useCustomDebounce(value: string, delay: number) {
+const useCustomDebounce = (value: string, delay: number) => {
   const [debouncedValue, setDebouncedValue] = useState(value);
 
   useEffect(() => {
@@ -14,6 +14,6 @@ function useCustomDebounce(value: string, delay: number) {
   }, [value, delay]);
 
   return debouncedValue;
-}
+};
 
 export default useCustomDebounce;

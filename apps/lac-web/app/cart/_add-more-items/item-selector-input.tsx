@@ -7,16 +7,16 @@ import { WurthFullBlack } from "@repo/web-ui/components/logos/wurth-full-black";
 import { Input } from "@repo/web-ui/components/ui/input";
 import { useCombobox } from "downshift";
 import Image from "next/image";
-import { Product } from "./types";
+import type { Product } from "./types";
 
 type ItemSelectorInputProps = {
-  items: Product[];
-  onTextChange: (selection: string, type: string) => void;
-  onSelectedItemChange: (value: Product) => void;
-  id: string;
-  isPopupOpen: boolean;
-  isInvalid: boolean | null;
-  value: string;
+  readonly items: Product[];
+  readonly onTextChange: (selection: string, type: string) => void;
+  readonly onSelectedItemChange: (value: Product) => void;
+  readonly id: string;
+  readonly isPopupOpen: boolean;
+  readonly isInvalid: boolean | null;
+  readonly value: string;
 };
 
 const ItemSelectorInput = ({
@@ -38,14 +38,14 @@ const ItemSelectorInput = ({
   } = useCombobox({
     inputValue: value,
     isOpen: isPopupOpen,
-    onInputValueChange({ type, inputValue }) {
+    onInputValueChange: ({ type, inputValue }) => {
       onTextChange(inputValue, type);
     },
-    onSelectedItemChange({ selectedItem }) {
+    onSelectedItemChange: ({ selectedItem }) => {
       onSelectedItemChange(selectedItem);
     },
     items: items,
-    itemToString(item) {
+    itemToString: (item) => {
       return item ? item.sku : "abc";
     },
   });
@@ -110,7 +110,7 @@ const ItemSelectorInput = ({
 
 export default ItemSelectorInput;
 
-const SearchResultProductData = ({ item }: { item: Product }) => {
+const SearchResultProductData = ({ item }: { readonly item: Product }) => {
   return (
     <div className="flex gap-2">
       {item.image ? (

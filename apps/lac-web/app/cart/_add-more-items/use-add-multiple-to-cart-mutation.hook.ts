@@ -1,16 +1,10 @@
-import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
 import { api } from "@/_lib/api";
-import { checkAvailability } from "@/_lib/apis/shared";
 import { useToast } from "@repo/web-ui/components/ui/toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const useAddMultipleToCartMutation = (token: string) => {
   const queryClient = useQueryClient();
   const { toast } = useToast();
-
-  const { setOpen, setProductId } = useAddToCartDialog(
-    (state) => state.actions,
-  );
 
   return useMutation({
     mutationFn: async (
@@ -51,7 +45,7 @@ const useAddMultipleToCartMutation = (token: string) => {
         shipping_method_5: "",
       };
 
-      let productsInfo = products.map((product) => {
+      const productsInfo = products.map((product) => {
         return {
           productid: product.productId,
           quantity: product.quantity,
@@ -86,10 +80,6 @@ const useAddMultipleToCartMutation = (token: string) => {
         error: item.error,
       }));
     },
-    onMutate: () => {
-      // Prefetch the product data for the dialog
-      // setProductId(productId);
-    },
     onSettled: () => {
       queryClient.invalidateQueries({
         queryKey: ["cart"],
@@ -97,7 +87,6 @@ const useAddMultipleToCartMutation = (token: string) => {
     },
     onError: () => {
       // Clear the selected product ID
-      setProductId(undefined);
       toast({
         variant: "destructive",
         title: "Failed to add item cart",

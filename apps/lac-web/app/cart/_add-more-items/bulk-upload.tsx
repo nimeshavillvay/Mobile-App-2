@@ -4,24 +4,30 @@ import { Close } from "@repo/web-ui/components/icons/close";
 import { Download } from "@repo/web-ui/components/icons/download";
 import { FileDownload } from "@repo/web-ui/components/icons/file-download";
 import { Button } from "@repo/web-ui/components/ui/button";
-import { Dispatch, SetStateAction, useCallback, useState } from "react";
 import {
-  DropzoneInputProps,
-  DropzoneRootProps,
+  Fragment,
+  useCallback,
+  useState,
+  type Dispatch,
+  type SetStateAction,
+} from "react";
+import {
   useDropzone,
+  type DropzoneInputProps,
+  type DropzoneRootProps,
 } from "react-dropzone";
 import { getExcelData, validateFile } from "./client-helper";
 
-function BulkUpload({
+const BulkUpload = ({
   file,
   setFile,
   setBulkUploadItems,
   isBulkUploadDone = false,
   isFileProcessingState = false,
 }: {
-  file: File | null;
-  setFile: Dispatch<SetStateAction<File | null>>;
-  setBulkUploadItems: Dispatch<
+  readonly file: File | null;
+  readonly setFile: Dispatch<SetStateAction<File | null>>;
+  readonly setBulkUploadItems: Dispatch<
     SetStateAction<
       {
         sku: string;
@@ -30,23 +36,24 @@ function BulkUpload({
       }[]
     >
   >;
-  isBulkUploadDone: boolean;
-  isFileProcessingState: boolean;
-}) {
+  readonly isBulkUploadDone: boolean;
+  readonly isFileProcessingState: boolean;
+}) => {
   const [fileErrorMessage, setFileErrorMessage] = useState<string | boolean>(
     false,
   );
-  // const [file, setFile] = useState<File | null>();
 
-  const onDrop = useCallback((acceptedFiles: File[]) => {
-    const file = acceptedFiles[0];
-    if (!file) {
-      return;
-    }
-    setFile(file);
-    setFileErrorMessage("");
-    // setIsFileProcessing(false);
-  }, []);
+  const onDrop = useCallback(
+    (acceptedFiles: File[]) => {
+      const file = acceptedFiles[0];
+      if (!file) {
+        return;
+      }
+      setFile(file);
+      setFileErrorMessage("");
+    },
+    [setFile],
+  );
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
@@ -64,8 +71,6 @@ function BulkUpload({
     if (fileErrorMessage) {
       return;
     }
-
-    // setIsFileProcessing(true);
 
     const bulkUploadItems = await getExcelData(file);
     bulkUploadItems.shift(); // remove excel header row
@@ -111,7 +116,7 @@ function BulkUpload({
             {isBulkUploadDone ? (
               <FileUploadSuccess />
             ) : (
-              <>
+              <div>
                 {isFileProcessingState ? (
                   <FileUploadProgress />
                 ) : (
@@ -122,7 +127,7 @@ function BulkUpload({
                     fileErrorMessage={fileErrorMessage}
                   />
                 )}
-              </>
+              </div>
             )}
           </div>
         ) : (
@@ -134,7 +139,7 @@ function BulkUpload({
       </div>
     </div>
   );
-}
+};
 
 export default BulkUpload;
 
@@ -142,23 +147,21 @@ const InitialUploadState = ({
   getRootProps,
   getInputProps,
 }: {
-  getRootProps: DropzoneRootProps;
-  getInputProps: DropzoneInputProps;
+  readonly getRootProps: DropzoneRootProps;
+  readonly getInputProps: DropzoneInputProps;
 }) => {
   return (
-    <>
-      <div {...getRootProps} className="">
-        <input {...getInputProps} />
+    <div {...getRootProps} className="">
+      <input {...getInputProps} />
 
-        <div className="flex min-h-[68px] items-center justify-center gap-3">
-          <Download className="h-4 w-4" />
+      <div className="flex min-h-[68px] items-center justify-center gap-3">
+        <Download className="h-4 w-4" />
 
-          <div>
-            Drag and drop or <u>choose file</u> to upload
-          </div>
+        <div>
+          Drag and drop or <u>choose file</u> to upload
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
@@ -168,10 +171,10 @@ const FileInfoAndErrors = ({
   upload,
   fileErrorMessage,
 }: {
-  file: File;
-  setFile: Dispatch<React.SetStateAction<File | null>>;
-  upload: () => void;
-  fileErrorMessage: string | boolean;
+  readonly file: File;
+  readonly setFile: Dispatch<React.SetStateAction<File | null>>;
+  readonly upload: () => void;
+  readonly fileErrorMessage: string | boolean;
 }) => {
   return (
     <>
@@ -204,7 +207,7 @@ const FileInfoAndErrors = ({
 
 const FileUploadProgress = () => {
   return (
-    <>
+    <div>
       <div className="mb-2 text-center text-sm">
         File uploading, please wait...
       </div>
@@ -213,20 +216,18 @@ const FileUploadProgress = () => {
           className={cn(
             `h-2 w-6/12 rounded-full rounded-r-none bg-wurth-red-650`,
           )}
-        ></div>
-        <div className={cn(`h-2 w-4/12 rounded-full bg-wurth-gray-50`)}></div>
+        />
+        <div className={cn(`h-2 w-4/12 rounded-full bg-wurth-gray-50`)} />
       </div>
-    </>
+    </div>
   );
 };
 
 const FileUploadSuccess = () => {
   return (
-    <>
-      <div className="relative m-auto flex max-w-72 items-center gap-2 font-semibold">
-        <CheckCircle className="stroke-green-700" />
-        <div className="text-green-700">File successfully uploaded</div>
-      </div>
-    </>
+    <div className="relative m-auto flex max-w-72 items-center gap-2 font-semibold">
+      <CheckCircle className="stroke-green-700" />
+      <div className="text-green-700">File successfully uploaded</div>
+    </div>
   );
 };
