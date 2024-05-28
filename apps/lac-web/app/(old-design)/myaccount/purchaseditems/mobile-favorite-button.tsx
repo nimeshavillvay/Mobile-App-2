@@ -7,6 +7,7 @@ import FavoriteIcon from "@/old/_components/icons/favorite";
 import { cn } from "@/old/_utils/helpers";
 import { Button } from "@repo/web-ui/components/ui/button";
 import { useState } from "react";
+
 type FavoriteButtonProps = {
   readonly token: string;
   readonly productId: number;
