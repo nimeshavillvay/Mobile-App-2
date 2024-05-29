@@ -31,7 +31,7 @@ const WillCallPlantDrawer = ({ token, plants }: WillCallPlantProps) => {
   const plant = willCallPlantQuery.data;
 
   // This is for cases where the Will Call Plant API doesn't return an address
-  const backupPlant = plants.find((item) => item.code === plant?.plant);
+  const backupPlant = plants.find((item) => item.code === plant.plant);
 
   return (
     <Drawer>

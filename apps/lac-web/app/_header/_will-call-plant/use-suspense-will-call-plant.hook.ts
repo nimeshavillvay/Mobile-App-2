@@ -4,8 +4,8 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 const useSuspenseWillCallPlant = (token: string) => {
   return useSuspenseQuery({
     queryKey: ["user", "will-call-plant", token],
-    queryFn: () => {
-      return api
+    queryFn: () =>
+      api
         .get("rest/my-account/will-call-plant", {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -24,8 +24,7 @@ const useSuspenseWillCallPlant = (token: string) => {
           };
           operation_hours?: string;
           gmap?: string;
-        }>();
-    },
+        }>(),
   });
 };
 
