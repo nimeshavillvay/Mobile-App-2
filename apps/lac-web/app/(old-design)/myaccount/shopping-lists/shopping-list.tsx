@@ -15,16 +15,12 @@ import {
   ShoppingListEmptyItems,
   ShoppingListItems,
 } from "./shopping-list-items";
-import ShoppingListPagination from "./shopping-list-pagination";
-import useSuspenseShoppingListItemCount from "./use-suspense-shopping-list-item-count.hook";
 
 const ShoppingList = ({ token }: { readonly token: string }) => {
   const [selectedAddressShoppingListId, setSelectedAddressShoppingListId] =
     useState("");
   const [isOpenShoppingListDialog, setIsOpenShoppingListDialog] =
     useState(false);
-
-  const perPage = 20;
 
   const shoppingListsQuery = useSuspenseShoppingList(token, {
     sort: "name",
@@ -36,7 +32,9 @@ const ShoppingList = ({ token }: { readonly token: string }) => {
   const searchParams = useSearchParams();
   const shoppingListIdValue = searchParams.get("shoppingListId");
 
-  let page = 1;
+  const pageNoValue = searchParams.get("page") ?? "1";
+  let page = !isNaN(parseInt(pageNoValue)) ? parseInt(pageNoValue) : 1;
+
   let shoppingList;
 
   if (shoppingListIdValue == selectedAddressShoppingListId) {
@@ -44,11 +42,9 @@ const ShoppingList = ({ token }: { readonly token: string }) => {
     shoppingList = shoppingLists.lists.find(
       (list) => shoppingListIdValue == list?.listId,
     );
-
-    const pageNoValue = searchParams.get("page") ?? "1";
-    page = !isNaN(parseInt(pageNoValue)) ? parseInt(pageNoValue) : 1;
   } else if (selectedAddressShoppingListId) {
     // for selecting shopping list during tab selection
+    page = 1;
     shoppingList = shoppingLists.lists.find(
       (list) => selectedAddressShoppingListId == list?.listId,
     );
@@ -59,24 +55,13 @@ const ShoppingList = ({ token }: { readonly token: string }) => {
     shoppingList = shoppingLists.lists[0];
   }
 
-  let listId = "id";
-  if (shoppingList && shoppingList.listId) {
-    listId = shoppingList.listId;
-  }
-
-  const shoppingListItemCountQuery = useSuspenseShoppingListItemCount(
-    token,
-    listId,
-  );
-  const shoppingListItemCount = shoppingListItemCountQuery?.data;
-  const totalPages = Math.ceil(shoppingListItemCount.count / perPage);
-
   return (
     <>
       <div className="flex flex-row justify-center">
         {shoppingLists.lists.length > 0 && (
           <Tabs
             onValueChange={setSelectedAddressShoppingListId}
+            value={shoppingList?.listId}
             defaultValue={shoppingLists.lists[0]?.listId}
             className="max-w-screen-md overflow-x-auto overflow-y-hidden"
           >
@@ -103,26 +88,16 @@ const ShoppingList = ({ token }: { readonly token: string }) => {
         <ShoppingListItems
           token={token}
           page={page}
-          totalPages={totalPages}
-          perPage={perPage}
-          itemCount={shoppingListItemCount.count}
           shoppingList={shoppingList}
         />
       ) : (
         <ShoppingListEmptyItems />
       )}
 
-      {!!shoppingList?.listId && (
-        <ShoppingListPagination
-          page={page}
-          totalPages={totalPages}
-          shoppingListId={shoppingList?.listId}
-        />
-      )}
-
       <ShoppingListDialog
         open={isOpenShoppingListDialog}
         setOpenShoppingListDialog={setIsOpenShoppingListDialog}
+        setSelectedAddressShoppingListId={setSelectedAddressShoppingListId}
         isShoppingListNameUpdate={false}
         shoppingList={{
           listId: "",

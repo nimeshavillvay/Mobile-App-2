@@ -18,14 +18,9 @@ const ShoppingListPagination = ({
   readonly totalPages: number;
   readonly shoppingListId: string;
 }) => {
-  const previousPage = page - 1 < 1 ? 1 : page - 1;
-  let nextPage;
-  if (totalPages == 0) {
-    nextPage = 1;
-  } else {
-    nextPage = page + 1 > totalPages ? totalPages : page + 1;
-  }
-
+  console.log(page);
+  console.log(totalPages);
+  console.log(shoppingListId);
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
@@ -36,53 +31,55 @@ const ShoppingListPagination = ({
     return `${pathname}?${newUrlSearchParams.toString()}`;
   };
 
+  const pages = [page - 2, page - 1, page, page + 1, page + 2].filter(
+    (page) => page >= 1 && page <= totalPages,
+  );
+
   return (
     <Pagination className="pt-4">
       <PaginationContent>
         <PaginationItem>
-          <PaginationPrevious href={getHref(previousPage)} />
+          <PaginationPrevious
+            className={`${
+              page === 1
+                ? "pointer-events-none cursor-not-allowed opacity-50"
+                : ""
+            }`}
+            isActive={page !== 1}
+            href={getHref(page - 1)}
+          />
         </PaginationItem>
 
-        {page !== previousPage && (
-          <>
-            {previousPage > 1 && (
-              <PaginationItem>
-                <PaginationEllipsis />
-              </PaginationItem>
-            )}
+        {page - 2 > 1 && (
+          <PaginationItem>
+            <PaginationEllipsis />
+          </PaginationItem>
+        )}
 
-            <PaginationItem>
-              <PaginationLink href={getHref(previousPage)}>
-                {previousPage}
-              </PaginationLink>
-            </PaginationItem>
-          </>
+        {pages.map((aPage) => (
+          <PaginationItem key={aPage}>
+            <PaginationLink href={getHref(aPage)} isActive={aPage === page}>
+              {aPage}
+            </PaginationLink>
+          </PaginationItem>
+        ))}
+
+        {page + 2 < totalPages && (
+          <PaginationItem>
+            <PaginationEllipsis />
+          </PaginationItem>
         )}
 
         <PaginationItem>
-          <PaginationLink href={getHref(page)} isActive>
-            {page}
-          </PaginationLink>
-        </PaginationItem>
-
-        {page !== nextPage && (
-          <>
-            <PaginationItem>
-              <PaginationLink href={getHref(nextPage)}>
-                {nextPage}
-              </PaginationLink>
-            </PaginationItem>
-
-            {nextPage < totalPages && (
-              <PaginationItem>
-                <PaginationEllipsis />
-              </PaginationItem>
-            )}
-          </>
-        )}
-
-        <PaginationItem>
-          <PaginationNext href={getHref(nextPage)} />
+          <PaginationNext
+            className={`${
+              page === totalPages || totalPages == 0
+                ? "pointer-events-none cursor-not-allowed opacity-50"
+                : ""
+            }`}
+            isActive={page !== totalPages && totalPages !== 0}
+            href={getHref(page + 1)}
+          />
         </PaginationItem>
       </PaginationContent>
     </Pagination>
