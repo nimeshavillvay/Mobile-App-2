@@ -45,32 +45,19 @@ const ShoppingListItems = ({
     setIsOpenShoppingListDialog(true);
   };
 
+  const deleteShoppingList = () => {
+    setIsOpenDeleteDialog(true);
+  };
+
   return (
     <>
       <div className="mx-2 my-5 flex flex-row items-center justify-between">
         <h3 className="text-2xl font-bold">{shoppingList.listName}</h3>
-
         <div className="flex flex-row items-center gap-2">
-          <Button
-            variant="outline"
-            className="rounded-lg border-gray-100 bg-transparent py-5 text-sm font-bold tracking-wide text-black shadow hover:border-gray-300"
-            aria-label="Rename shopping list"
-            onClick={renameShoppingList}
-          >
-            <PiPenNibDuotone className="size-4" />
-            <span className="sr-only">Rename shopping list</span>
-            Rename list
-          </Button>
-          <Button
-            variant="outline"
-            className="rounded-lg border-gray-100 bg-transparent py-5 text-sm font-bold tracking-wide text-brand-primary shadow hover:border-gray-300"
-            aria-label="Delete shopping list"
-            onClick={() => setIsOpenDeleteDialog(true)}
-          >
-            <MdOutlineDelete className="size-4" />
-            <span className="sr-only">Delete shopping list</span>
-            Delete list
-          </Button>
+          <ShoppingListButtons
+            renameShoppingList={renameShoppingList}
+            deleteShoppingList={deleteShoppingList}
+          />
         </div>
       </div>
 
@@ -111,4 +98,52 @@ const ShoppingListItems = ({
   );
 };
 
-export default ShoppingListItems;
+const ShoppingListButtons = ({
+  renameShoppingList,
+  deleteShoppingList,
+  disabled = false,
+}: {
+  readonly renameShoppingList?: () => void;
+  readonly deleteShoppingList?: () => void;
+  readonly disabled?: boolean;
+}) => {
+  return (
+    <>
+      <Button
+        variant="outline"
+        className="rounded-lg border-gray-100 bg-transparent py-5 text-sm font-bold tracking-wide text-black shadow hover:border-gray-300"
+        aria-label="Rename shopping list"
+        onClick={renameShoppingList}
+        disabled={disabled}
+      >
+        <PiPenNibDuotone className="size-4" />
+        <span className="sr-only">Rename shopping list</span>
+        Rename list
+      </Button>
+      <Button
+        variant="outline"
+        className="rounded-lg border-gray-100 bg-transparent py-5 text-sm font-bold tracking-wide text-brand-primary shadow hover:border-gray-300"
+        aria-label="Delete shopping list"
+        onClick={deleteShoppingList}
+        disabled={disabled}
+      >
+        <MdOutlineDelete className="size-4" />
+        <span className="sr-only">Delete shopping list</span>
+        Delete list
+      </Button>
+    </>
+  );
+};
+
+const ShoppingListEmptyItems = () => {
+  return (
+    <>
+      <div className="flex justify-end gap-2">
+        <ShoppingListButtons disabled={true} />
+      </div>
+      <p className="mt-10 text-center text-xl font-bold">No items found</p>
+    </>
+  );
+};
+
+export { ShoppingListEmptyItems, ShoppingListItems };
