@@ -112,6 +112,8 @@ const MobileNavigationMenu = ({ categories }: MobileNavigationMenuProps) => {
   );
 };
 
+export default MobileNavigationMenu;
+
 type SubCategorySheetProps = {
   readonly category: TransformedCategory;
   readonly onCloseMain: () => void;
@@ -190,4 +192,4 @@ const SubCategorySheet = ({ category, onCloseMain }: SubCategorySheetProps) => {
   );
 };
 
-export default MobileNavigationMenu;
+
