@@ -267,6 +267,8 @@ export type Cart = {
     quantity: number;
     cart_item_id: number;
     configuration: CartItemConfiguration;
+    backOrderDate: string;
+    backOrderQuantity: number;
     itemInfo: {
       productid: string;
       is_product_exclude: boolean;

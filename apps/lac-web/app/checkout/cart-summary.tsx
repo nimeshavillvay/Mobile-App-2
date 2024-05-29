@@ -6,6 +6,7 @@ import type { Plant } from "@/_lib/types";
 import { cn } from "@/_lib/utils";
 import { ChevronDown } from "@repo/web-ui/components/icons/chevron-down";
 import { Button, buttonVariants } from "@repo/web-ui/components/ui/button";
+import dayjs from "dayjs";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -113,21 +114,37 @@ const CartSummary = ({ token, plants }: CartSummaryProps) => {
                 </div>
 
                 <div className="space-y-1 text-sm text-wurth-gray-800">
-                  <div>
-                    <span className="text-green-700">
-                      {item.mappedConfiguration.availability[0]?.quantity}{" "}
-                      {item.mappedConfiguration.availability[0]?.quantity === 1
-                        ? "item"
-                        : "items"}
-                    </span>{" "}
-                    pickup at{" "}
-                    {
-                      plants.find(
-                        (plant) =>
-                          plant.code ===
-                          item.mappedConfiguration.availability[0]?.plant,
-                      )?.name
-                    }
+                  <div className="flex flex-wrap">
+                    {item.mappedConfiguration.availability.map(
+                      (itemLine, index) =>
+                        itemLine &&
+                        typeof itemLine.quantity === "number" &&
+                        itemLine.quantity !== 0 && (
+                          <div key={index} className="mb-2 mr-2">
+                            <span className="text-green-700">
+                              {itemLine.quantity}{" "}
+                              {itemLine.quantity === 1 ? "item" : "items"}
+                            </span>{" "}
+                            pickup at{" "}
+                            {plants.find(
+                              (plant) => plant.code === itemLine.plant,
+                            )?.name ?? ""}
+                          </div>
+                        ),
+                    )}
+
+                    {item.backOrderQuantity &&
+                      item.backOrderDate &&
+                      item.backOrderQuantity > 0 && (
+                        <div className="mb-4 ml-2 mr-4">
+                          &#x2022;
+                          <span className="ml-2 text-yellow-600">
+                            Backordered
+                          </span>{" "}
+                          {item.backOrderQuantity.toString()} items, ship by{" "}
+                          {dayjs(item.backOrderDate).format("ddd, MMMM, YYYY")}
+                        </div>
+                      )}
                   </div>
                 </div>
               </div>
