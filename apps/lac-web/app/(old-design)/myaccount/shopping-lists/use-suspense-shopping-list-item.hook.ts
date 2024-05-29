@@ -19,7 +19,8 @@ const useSuspenseShoppingListItems = (
   return useSuspenseQuery({
     queryKey: [
       "my-account",
-      "shopping-list-items",
+      "shopping-list",
+      "items",
       token,
       shoppingListId,
       page,
