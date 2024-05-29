@@ -149,7 +149,7 @@ const AddressList = ({
                 {address["street-address"]}, {address.locality},{" "}
                 {address.region} {address.county && `, ${address.county} `}
                 {address["postal-code"]}
-                {address.zip4.length > 0 && `-${address.zip4}`}
+                {address.zip4?.length > 0 && `-${address.zip4}`}
               </div>
             </Button>
           </li>
