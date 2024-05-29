@@ -126,11 +126,10 @@ const SubCategorySheet = ({ category, onCloseMain }: SubCategorySheetProps) => {
     <Sheet
       open={openSub}
       onOpenChange={(open) => {
+        setOpenSub(open);
+
         if (!open) {
-          setOpenSub(false);
           onCloseMain();
-        } else {
-          setOpenSub(true);
         }
       }}
     >
