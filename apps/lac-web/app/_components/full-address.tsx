@@ -13,7 +13,7 @@ const FullAddress = ({ address }: FullAddressProps) => {
     <>
       {address?.streetAddress && `${address?.streetAddress}, `}
       {address?.locality && `${address?.locality}, `}
-      {address?.region && `${address?.region} `}
+      {address?.region && `${address?.region}, `}
       {address?.county && `${address?.county} `}
       {address?.postalCode}
       {address?.zip4 && `-${address.zip4}`}
