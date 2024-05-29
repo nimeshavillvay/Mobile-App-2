@@ -28,7 +28,7 @@ const MobileFavoriteButton = ({ token, productId }: FavoriteButtonProps) => {
     <>
       <Button
         className={cn(
-          "h-12",
+          "h-12 uppercase",
           isFavorite
             ? "border-2 border-[#55a213] bg-white text-[#55a213] hover:bg-white"
             : "border-2 border-sky-500 bg-white text-brand-secondary  hover:bg-white",
@@ -38,12 +38,12 @@ const MobileFavoriteButton = ({ token, productId }: FavoriteButtonProps) => {
         {isFavorite ? (
           <>
             <FavoriteIcon className="text-2xl" />
-            <span className="uppercase">added to favorites</span>
+            added to favorites
           </>
         ) : (
           <>
             <AddToFavoritesIcon className="text-2xl" />
-            <span className="uppercase">add to favorites</span>
+            add to favorites
           </>
         )}
       </Button>
