@@ -18,9 +18,6 @@ const ShoppingListPagination = ({
   readonly totalPages: number;
   readonly shoppingListId: string;
 }) => {
-  console.log(page);
-  console.log(totalPages);
-  console.log(shoppingListId);
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
