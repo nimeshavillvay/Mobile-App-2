@@ -1,4 +1,4 @@
-import { ExpoConfig } from "expo/config";
+import type { ExpoConfig } from "expo/config";
 import "ts-node/register"; // Add this to import TypeScript files
 
 // In SDK 46 and lower, use the following import instead:

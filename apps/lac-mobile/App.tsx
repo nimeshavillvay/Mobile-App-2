@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
 });
 
 type UserProps = {
-  id: number;
+  readonly id: number;
 };
 
 const User = ({ id }: UserProps) => {

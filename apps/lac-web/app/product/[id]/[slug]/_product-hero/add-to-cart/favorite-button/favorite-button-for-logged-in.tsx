@@ -1,11 +1,11 @@
 "use client";
 
 import AddToShoppingListDialog from "@/_components/shopping-list/add-to-shopping-list-dialog";
+import useSuspenseFavoriteSKUs from "@/_hooks/shopping-list/use-suspense-favorite-skus.hook";
 import { HeartFilled } from "@repo/web-ui/components/icons/heart-filled";
 import { HeartOutline } from "@repo/web-ui/components/icons/heart-outline";
 import { Button } from "@repo/web-ui/components/ui/button";
 import { useState } from "react";
-import useSuspenseFavoriteSKUs from "../../../../_hooks/shopping-list/use-suspense-favorite-skus.hook";
 
 type FavoriteButtonForLoggedInProps = {
   readonly productId: number;
