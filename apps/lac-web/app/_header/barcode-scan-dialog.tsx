@@ -30,7 +30,6 @@ const BarcodeScannerDialog = () => {
   const [isDiscontinued, setIsDiscontinued] = useState(false);
   const [categoryId, setCategoryId] = useState("");
   const [categorySlug, setCategorySlug] = useState("");
-  const [textChanged, setTextChanged] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
   const scanBarcodeMutation = useScanBarcodeMutation({
@@ -40,7 +39,6 @@ const BarcodeScannerDialog = () => {
     setCategoryId,
     setCategorySlug,
     setSearchQuery,
-    setTextChanged,
   });
 
   const onScanSuccess = (query: string) => {
@@ -54,12 +52,11 @@ const BarcodeScannerDialog = () => {
     setCategorySlug("");
     setIsDiscontinued(false);
     setSearchQuery("");
-    setTextChanged(false);
   };
 
   return (
     <>
-      {!open && textChanged && isDiscontinued && (
+      {!open && isDiscontinued && (
         <DiscontinuedItemNotice categoryId={categoryId} slug={categorySlug} />
       )}
       <Dialog open={open} onOpenChange={setOpen}>
