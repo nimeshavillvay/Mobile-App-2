@@ -128,18 +128,14 @@ const EditBillingAddressDialog = ({ token }: EditBillingAddressDialogProps) => {
           county: selectedSuggestion.county ?? "",
           zipCode: selectedSuggestion.postalCode,
           zip4: selectedSuggestion.zip4,
+          skipAddressCheck: true, // Skip the suggestions and force save
         },
         {
           onSuccess: (data) => {
             if ("xcAddressId" in data) {
-              closeDialog();
-            } else if ("suggestions" in data) {
-              setSuggestions(
-                data.suggestions.map((address) => ({
-                  ...address,
-                  xcAddressId: nanoid(), // Give a temporary ID to each suggestion
-                })),
-              );
+              // Reset the form and clear the suggestions
+              form.reset();
+              setSuggestions([]);
             }
           },
         },
