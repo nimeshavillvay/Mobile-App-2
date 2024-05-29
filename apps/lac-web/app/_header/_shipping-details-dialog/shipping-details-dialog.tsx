@@ -1,5 +1,6 @@
 "use client";
 
+import FullAddress from "@/_components/full-address";
 import useSuspenseBillingAddress from "@/_hooks/address/use-suspense-billing-address.hook";
 import useSuspenseShippingAddressList from "@/_hooks/address/use-suspense-shipping-address-list.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
@@ -15,25 +16,36 @@ import {
   DialogTrigger,
 } from "@repo/web-ui/components/ui/dialog";
 import { useState } from "react";
-import ShippingAddressSelector from "./shipping-adddress-selector";
+import ShippingAddressSelector from "./shipping-adddress-selector"; // TODO: Move to _components and link with other places (ex: Checkout)
 
 type ShippingDetailsDialogProps = {
   readonly token: Token;
+  readonly children?: React.ReactNode;
 };
 
-const ShippingDetailsDialog = ({ token }: ShippingDetailsDialogProps) => {
+const ShippingDetailsDialog = ({
+  token,
+  children,
+}: ShippingDetailsDialogProps) => {
   const checkLoginQuery = useSuspenseCheckLogin(token);
 
   if (checkLoginQuery?.data?.status_code === "NOT_LOGGED_IN") {
     return null;
   }
 
-  return <ShippingDetailsDialogButton token={token} />;
+  return (
+    <ShippingDetailsDialogButton token={token}>
+      {children}
+    </ShippingDetailsDialogButton>
+  );
 };
 
 export default ShippingDetailsDialog;
 
-const ShippingDetailsDialogButton = ({ token }: ShippingDetailsDialogProps) => {
+const ShippingDetailsDialogButton = ({
+  token,
+  children,
+}: ShippingDetailsDialogProps) => {
   const shippingAddressListQuery = useSuspenseShippingAddressList(token);
   const billingAddressQuery = useSuspenseBillingAddress(token);
 
@@ -47,15 +59,17 @@ const ShippingDetailsDialogButton = ({ token }: ShippingDetailsDialogProps) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button
-          variant="ghost"
-          size="sm"
-          className="h-fit px-0 py-0 text-sm font-medium leading-5"
-        >
-          <Truck width={16} height={16} />
+        {children ?? (
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-fit px-0 py-0 text-sm font-medium leading-5"
+          >
+            <Truck width={16} height={16} />
 
-          <span>#{defaultAddress?.xcAddressId}</span>
-        </Button>
+            <span>#{defaultAddress?.xcAddressId}</span>
+          </Button>
+        )}
       </DialogTrigger>
 
       <DialogContent className="max-w-[26.75rem] gap-3">
@@ -80,12 +94,7 @@ const ShippingDetailsDialogButton = ({ token }: ShippingDetailsDialogProps) => {
                 Shipping Address
               </div>
               <div className="font-semibold">
-                {defaultAddress?.streetAddress &&
-                  `${defaultAddress?.streetAddress}, `}
-                {defaultAddress?.locality && `${defaultAddress?.locality}, `}
-                {defaultAddress?.region && `${defaultAddress?.region} `}
-                {defaultAddress?.postalCode}
-                {defaultAddress?.zip4 && `-${defaultAddress.zip4}`}
+                <FullAddress address={defaultAddress} />
               </div>
             </div>
 

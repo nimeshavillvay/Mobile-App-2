@@ -1,5 +1,6 @@
 "use client";
 
+import FullAddress from "@/_components/full-address";
 import useSuspenseShippingAddressList from "@/_hooks/address/use-suspense-shipping-address-list.hook";
 import useUpdateShippingAddressMutation from "@/_hooks/address/use-update-shipping-address-mutation.hook";
 import type { Token } from "@/_lib/types";
@@ -86,7 +87,7 @@ const ShippingAddressSelector = ({
                 onClick={() => setSelectedAddress(address.xcAddressId ?? "")}
                 disabled={updateShippingAddressMutation.isPending}
               >
-                <div className="flex items-start">
+                <span>
                   {address.xcAddressId === selectedAddress ? (
                     <CheckCircleFilled
                       width={20}
@@ -100,14 +101,10 @@ const ShippingAddressSelector = ({
                       className="stroke-wurth-gray-150"
                     />
                   )}
-                </div>
+                </span>
 
                 <span className="text-wrap text-start text-sm text-wurth-gray-800 md:text-base">
-                  {address?.streetAddress && `${address?.streetAddress}, `}
-                  {address?.locality && `${address?.locality}, `}
-                  {address?.region && `${address?.region} `}
-                  {address?.postalCode}
-                  {address?.zip4 && `-${address.zip4}`}
+                  <FullAddress address={address} />
                 </span>
               </Button>
             </li>

@@ -3,6 +3,7 @@ import useOSRLogoutMutation from "@/_hooks/user/use-osr-logout-mutation.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
 import useSuspenseUsersList from "@/_hooks/user/use-suspense-users-list.hook";
 import { cva } from "@/_lib/cva.config";
+import { Button } from "@repo/web-ui/components/ui/button";
 import {
   Sheet,
   SheetClose,
@@ -12,7 +13,10 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@repo/web-ui/components/ui/sheet";
+import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import Link from "next/link";
+import { Suspense } from "react";
+import ShippingDetailsDialog from "../_shipping-details-dialog/shipping-details-dialog"; // TODO: Move to _components and link with other places
 import ButtonContent, { buttonClasses } from "./button-content";
 
 const sectionLinkStyles = cva({
@@ -107,9 +111,24 @@ const UserMobileProfileNavigation = ({ token }: { readonly token: string }) => {
 
         <ul className={dividerStyles()}>
           <li>
-            <SheetClose asChild className={sectionLinkStyles()}>
-              <Link href="/myaccount/shipping-details">Shipping details</Link>
-            </SheetClose>
+            <Suspense
+              fallback={
+                <div className="w-full px-4 py-3">
+                  <Skeleton className="h-5 w-40" />
+                </div>
+              }
+            >
+              <SheetClose asChild className={sectionLinkStyles()}>
+                <ShippingDetailsDialog token={token}>
+                  <Button
+                    variant="ghost"
+                    className="flex h-full w-full flex-row items-center justify-between gap-2 bg-white px-4 py-3 text-base font-normal text-black"
+                  >
+                    Shipping Details
+                  </Button>
+                </ShippingDetailsDialog>
+              </SheetClose>
+            </Suspense>
           </li>
 
           <li>
