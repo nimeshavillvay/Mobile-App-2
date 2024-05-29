@@ -61,11 +61,6 @@ const ProductHero = async ({ id, slug }: ProductHeroProps) => {
             listPrice={product.selectedProduct.listPrice}
           />
         )}
-
-        <SaleBadges
-          productId={parseInt(id)}
-          listPrice={product.selectedProduct.listPrice}
-        />
       </div>
 
       <h1 className="container my-2 font-title text-2xl font-medium tracking-[-0.009rem] text-wurth-gray-800 md:mb-7 md:mt-1 md:tracking-[-0.144px]">

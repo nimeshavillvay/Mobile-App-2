@@ -37,11 +37,11 @@ const MobileFavoriteButton = ({ token, productId }: FavoriteButtonProps) => {
       >
         {isFavorite ? (
           <>
-            <FavoriteIcon className="  text-2xl" /> In My Favorites
+            <FavoriteIcon className="  text-2xl" /> ADDED TO FAVORITES
           </>
         ) : (
           <>
-            <AddToFavoritesIcon className="text-2xl" /> Add to Favorites
+            <AddToFavoritesIcon className="text-2xl" /> ADD TO FAVORITES
           </>
         )}
       </Button>
