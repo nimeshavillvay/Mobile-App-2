@@ -457,7 +457,7 @@ const CartItemShippingMethod = ({
 
                     <div className="flex flex-col gap-0.5">
                       <div className="text-wrap font-medium">
-                        {shipAlternativeBranch.plants?.["1"]?.quantity && (
+                        {shipAlternativeBranch.plants?.length > 0 && (
                           <ItemCountBadge
                             count={calculateAllPlantsQuantity(
                               shipAlternativeBranch.plants,
@@ -467,7 +467,7 @@ const CartItemShippingMethod = ({
                         &nbsp;from&nbsp;
                         <PlantName
                           plants={plants}
-                          plantCode={shipAlternativeBranch.plants?.["1"]?.plant}
+                          plantCode={shipAlternativeBranch.plants?.at(0)?.plant}
                         />
                         &nbsp;and&nbsp;
                         <span className="font-normal">
@@ -478,7 +478,7 @@ const CartItemShippingMethod = ({
                       {shipAlternativeBranch.backOrder && (
                         <BackOrderItemCountLabel
                           count={
-                            shipAlternativeBranch.plants?.["1"]
+                            shipAlternativeBranch.plants?.at(0)
                               ?.backOrderQuantity ?? 0
                           }
                         />

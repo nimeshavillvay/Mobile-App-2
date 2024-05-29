@@ -85,7 +85,7 @@ const CartItem = ({
   const poId = `po-${id}`;
 
   const [selectedWillCallPlant, setSelectedWillCallPlant] = useState(() => {
-    if (willCallPlant.plant) {
+    if (willCallPlant?.plant) {
       return willCallPlant.plant;
     }
     return plants?.at(0)?.code ?? "";
