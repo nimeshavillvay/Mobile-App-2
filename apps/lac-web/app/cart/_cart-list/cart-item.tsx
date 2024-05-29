@@ -27,7 +27,10 @@ import {
   ALTERNATIVE_BRANCHES,
   AVAILABLE_ALL,
   BACK_ORDER_ALL,
+  DEFAULT_PLANT,
   EMPTY_STRING,
+  IN_STOCK,
+  LIMITED_STOCK,
   MAIN_OPTIONS,
   NOT_IN_STOCK,
   TAKE_ON_HAND,
@@ -41,6 +44,7 @@ import {
   getAlternativeBranchesConfig,
   getShippingMethods,
 } from "./helpers";
+import PlantName from "./plant-name";
 import type { MainOption, ShipToMeOption } from "./types";
 import useCheckAvailabilityMutation from "./use-check-availability-mutation.hook";
 
@@ -66,7 +70,7 @@ type CartItemProps = {
   };
   readonly plants: Plant[];
   readonly cartConfiguration: CartConfiguration;
-  readonly willCallPlant: { plant: string };
+  readonly willCallPlant: { plant: string } | undefined;
 };
 
 const CartItem = ({
@@ -125,8 +129,12 @@ const CartItem = ({
     availableLocations,
     willCallAnywhere,
   } = checkAvailabilityQuery.data;
-  const firstLocation = availableLocations[0];
+
+  const firstLocation = availableLocations.at(0);
+
   const isNotInStock = status === NOT_IN_STOCK;
+  const isLimitedStock = status === LIMITED_STOCK;
+  const isInStock = status === IN_STOCK;
 
   const availableAll = findAvailabilityOptionForType(
     availabilityOptions,
@@ -445,12 +453,37 @@ const CartItem = ({
               />
             </div>
 
-            {!isNotInStock && (
+            {isInStock && (
               <div className="text-sm text-wurth-gray-800">
-                <span className="text-yellow-700">
-                  Only {firstLocation?.amount} in stock
+                <span className="font-semibold text-green-700">
+                  {firstLocation?.amount ?? 0} in stock
                 </span>
                 &nbsp;at&nbsp;{firstLocation?.name}
+              </div>
+            )}
+
+            {isLimitedStock && (
+              <div className="text-sm text-wurth-gray-800">
+                <span className="font-semibold text-yellow-700">
+                  Only {firstLocation?.amount ?? 0} in stock
+                </span>
+                &nbsp;at&nbsp;{firstLocation?.name}
+              </div>
+            )}
+
+            {/* Set default plant when there is no will call plant */}
+            {isNotInStock && (
+              <div className="text-sm text-wurth-gray-800">
+                <span className="font-semibold text-red-700">Out of stock</span>
+                &nbsp;at&nbsp;
+                <PlantName
+                  plants={plants}
+                  plantCode={
+                    willCallPlant && willCallPlant.plant !== ""
+                      ? willCallPlant?.plant
+                      : DEFAULT_PLANT
+                  }
+                />
               </div>
             )}
           </div>
