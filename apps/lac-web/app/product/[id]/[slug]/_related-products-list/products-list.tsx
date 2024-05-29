@@ -1,20 +1,12 @@
 import ProductCard from "@/_components/product-card";
-import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
-import { cookies } from "next/headers";
-import type { RelatedProduct } from "./types";
+import type { RelatedProduct } from "../types";
 
-type RelatedProductsListProps = {
+type ProductsListProps = {
+  readonly token: string;
   readonly products: RelatedProduct[];
 };
 
-const RelatedProductsList = ({ products }: RelatedProductsListProps) => {
-  const cookiesStore = cookies();
-  const sessionToken = cookiesStore.get(SESSION_TOKEN_COOKIE);
-
-  if (!sessionToken?.value) {
-    return null;
-  }
-
+const ProductsList = ({ token, products }: ProductsListProps) => {
   return products.map((item) => (
     <ProductCard
       key={item.productid}
@@ -32,10 +24,10 @@ const RelatedProductsList = ({ products }: RelatedProductsListProps) => {
           },
         ],
       }}
-      token={sessionToken.value}
+      token={token}
       orientation="horizontal"
     />
   ));
 };
 
-export default RelatedProductsList;
+export default ProductsList;
