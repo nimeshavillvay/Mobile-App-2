@@ -68,79 +68,10 @@ const MobileNavigationMenu = ({ categories }: MobileNavigationMenuProps) => {
               {categories.map((category) => (
                 <li key={category.id}>
                   {!!category.subCategory && category.subCategory.length > 0 ? (
-                    <Sheet>
-                      <SheetTrigger
-                        asChild
-                        className={cn(sectionLinkStyles(), "h-fit w-full")}
-                      >
-                        <Button variant="ghost">
-                          <span>{category.name}</span>
-
-                          <ChevronRight className="size-5" />
-                        </Button>
-                      </SheetTrigger>
-
-                      <SheetContent
-                        side="left"
-                        className="w-80 bg-wurth-gray-50"
-                      >
-                        <SheetHeader className="text-left">
-                          <SheetClose className="flex flex-row items-center gap-1">
-                            <ArrowLeft className="size-4 stroke-white" />
-
-                            <span className="text-sm font-medium text-white">
-                              Back
-                            </span>
-                          </SheetClose>
-
-                          <SheetTitle>{category.name}</SheetTitle>
-
-                          <SheetDescription className="sr-only">
-                            All subcategories of {category.name}.
-                          </SheetDescription>
-                        </SheetHeader>
-
-                        <ul className={dividerStyles()}>
-                          <li>
-                            <SheetClose
-                              asChild
-                              className={cn(
-                                sectionLinkStyles(),
-                                "font-semibold",
-                              )}
-                              onClick={() => setOpen(false)}
-                            >
-                              <Link
-                                href={`/category/${category.id}/${category.slug}`}
-                              >
-                                Shop all
-                              </Link>
-                            </SheetClose>
-                          </li>
-
-                          {category.subCategory.map((subcategory) => (
-                            <li
-                              key={subcategory.id}
-                              className="last:!border-b last:!border-b-wurth-gray-250"
-                            >
-                              <SheetClose
-                                asChild
-                                className={sectionLinkStyles()}
-                                onClick={() => setOpen(false)}
-                              >
-                                <Link
-                                  href={`/category/${subcategory.id}/${subcategory.slug}`}
-                                >
-                                  <span>{subcategory.name}</span>
-
-                                  <ChevronRight className="size-5" />
-                                </Link>
-                              </SheetClose>
-                            </li>
-                          ))}
-                        </ul>
-                      </SheetContent>
-                    </Sheet>
+                    <SubCategorySheet
+                      category={category}
+                      onCloseMain={() => setOpen(false)}
+                    />
                   ) : (
                     <SheetClose asChild className={sectionLinkStyles()}>
                       <Link href={`/category/${category.id}/${category.slug}`}>
@@ -176,6 +107,84 @@ const MobileNavigationMenu = ({ categories }: MobileNavigationMenuProps) => {
             </ul>
           </section>
         </div>
+      </SheetContent>
+    </Sheet>
+  );
+};
+
+type SubCategorySheetProps = {
+  readonly category: TransformedCategory;
+  readonly onCloseMain: () => void;
+};
+
+const SubCategorySheet = ({ category, onCloseMain }: SubCategorySheetProps) => {
+  const [openSub, setOpenSub] = useState(false);
+
+  return (
+    <Sheet
+      open={openSub}
+      onOpenChange={(open) => {
+        if (!open) {
+          setOpenSub(false);
+          onCloseMain();
+        } else {
+          setOpenSub(true);
+        }
+      }}
+    >
+      <SheetTrigger asChild className={cn(sectionLinkStyles(), "h-fit w-full")}>
+        <Button variant="ghost" onClick={() => setOpenSub(true)}>
+          <span>{category.name}</span>
+          <ChevronRight className="size-5" />
+        </Button>
+      </SheetTrigger>
+
+      <SheetContent side="left" className="w-80 bg-wurth-gray-50">
+        <SheetHeader className="text-left">
+          <button
+            className="flex flex-row items-center gap-1"
+            onClick={() => setOpenSub(false)}
+          >
+            <ArrowLeft className="size-4 stroke-white" />
+            <span className="text-sm font-medium text-white">Back</span>
+          </button>
+          <SheetTitle>{category.name}</SheetTitle>
+          <SheetDescription className="sr-only">
+            All subcategories of {category.name}.
+          </SheetDescription>
+        </SheetHeader>
+
+        <ul className={dividerStyles()}>
+          <li>
+            <SheetClose
+              asChild
+              className={cn(sectionLinkStyles(), "font-semibold")}
+              onClick={onCloseMain}
+            >
+              <Link href={`/category/${category.id}/${category.slug}`}>
+                Shop all
+              </Link>
+            </SheetClose>
+          </li>
+
+          {category.subCategory?.map((subcategory) => (
+            <li
+              key={subcategory.id}
+              className="last:!border-b last:!border-b-wurth-gray-250"
+            >
+              <SheetClose
+                asChild
+                className={sectionLinkStyles()}
+                onClick={onCloseMain}
+              >
+                <Link href={`/category/${subcategory.id}/${subcategory.slug}`}>
+                  <span>{subcategory.name}</span>
+                  <ChevronRight className="size-5" />
+                </Link>
+              </SheetClose>
+            </li>
+          ))}
+        </ul>
       </SheetContent>
     </Sheet>
   );
