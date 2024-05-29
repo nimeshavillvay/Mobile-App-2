@@ -91,7 +91,7 @@ const OrderSummary = ({ token, children }: OrderSummaryProps) => {
         <tbody>
           <tr>
             <td className="pb-1">
-              Subtotal ({simulationCheckoutQuery.data.totalQuantity} items)
+              Subtotal ({simulationCheckoutQuery.data.cartItemsCount} items)
             </td>
 
             <td className="pb-1 text-right">

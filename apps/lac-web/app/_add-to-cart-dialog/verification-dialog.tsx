@@ -32,6 +32,7 @@ import { Input } from "@repo/web-ui/components/ui/input";
 import { Label } from "@repo/web-ui/components/ui/label";
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import Image from "next/image";
+import Link from "next/link";
 import { Suspense, useId } from "react";
 import {
   Controller,
@@ -102,13 +103,18 @@ const VerificationDialog = ({ token }: VerificationDialogProps) => {
           <div className="flex flex-col gap-5">
             {itemInfo ? (
               <div className="flex flex-row items-start gap-4">
-                <Image
-                  src={itemInfo.image}
-                  alt={`An image of ${itemInfo.productName}`}
-                  width={180}
-                  height={180}
-                  className="shrink-0 rounded object-contain"
-                />
+                <Link
+                  href={`/product/${itemInfo.productId}/${itemInfo.slug}`}
+                  onClick={() => setOpen("closed")}
+                >
+                  <Image
+                    src={itemInfo.image}
+                    alt={`An image of ${itemInfo.productName}`}
+                    width={180}
+                    height={180}
+                    className="shrink-0 rounded object-contain"
+                  />
+                </Link>
 
                 <div className="space-y-2">
                   <div className="space-y-1">
