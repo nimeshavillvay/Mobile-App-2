@@ -33,6 +33,8 @@ const ProductCard = ({ orientation, token, product, listId }: ProductProps) => {
   const uom = product.txtUom;
   const href = `/product/${product.productId}/${product.slug}`;
 
+  const removeShoppingListItemMutation = useRemoveShoppingListItemMutation();
+
   const priceCheckQuery = useSuspensePriceCheck(token, [
     {
       productId: parseInt(id),
@@ -40,20 +42,20 @@ const ProductCard = ({ orientation, token, product, listId }: ProductProps) => {
     },
   ]);
 
-  const removeShoppingListItemMutation = useRemoveShoppingListItemMutation();
+  const priceData = priceCheckQuery.data.productPrices[0];
 
+  let listPrice = 0;
   let currentPrice = 0;
-  let previousPrice = 0;
   let discountPercent = 0;
 
-  if (priceCheckQuery.data.productPrices[0]) {
-    currentPrice = priceCheckQuery.data.productPrices[0].price;
-    previousPrice = priceCheckQuery.data.productPrices[0].extendedPrice;
+  if (priceData) {
+    listPrice = priceData.listPrice;
+    currentPrice = priceData?.uomPrice ?? priceData?.price;
   }
 
-  if (currentPrice !== previousPrice) {
+  if (currentPrice !== listPrice) {
     discountPercent = Math.floor(
-      ((currentPrice - previousPrice) / previousPrice) * 100,
+      ((listPrice - currentPrice) / listPrice) * 100,
     );
   }
 
@@ -100,7 +102,7 @@ const ProductCard = ({ orientation, token, product, listId }: ProductProps) => {
             <ProductCardPrice
               price={currentPrice}
               uom={uom}
-              actualPrice={previousPrice}
+              actualPrice={listPrice}
             />
           )}
 
