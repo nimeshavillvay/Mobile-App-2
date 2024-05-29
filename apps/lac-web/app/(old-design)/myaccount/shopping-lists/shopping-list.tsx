@@ -11,7 +11,10 @@ import { useState } from "react";
 import { MdOutlineAdd } from "react-icons/md";
 import useSuspenseShoppingList from "../../../_hooks/shopping-list/use-suspense-shopping-list.hook";
 import ShoppingListDialog from "./shopping-list-dialog";
-import ShoppingListItems from "./shopping-list-items";
+import {
+  ShoppingListEmptyItems,
+  ShoppingListItems,
+} from "./shopping-list-items";
 import ShoppingListPagination from "./shopping-list-pagination";
 import useSuspenseShoppingListItemCount from "./use-suspense-shopping-list-item-count.hook";
 
@@ -96,7 +99,7 @@ const ShoppingList = ({ token }: { readonly token: string }) => {
         </Button>
       </div>
 
-      {!!shoppingList && (
+      {shoppingList ? (
         <ShoppingListItems
           token={token}
           page={page}
@@ -104,6 +107,8 @@ const ShoppingList = ({ token }: { readonly token: string }) => {
           perPage={perPage}
           shoppingList={shoppingList}
         />
+      ) : (
+        <ShoppingListEmptyItems />
       )}
 
       {!!shoppingList?.listId && (

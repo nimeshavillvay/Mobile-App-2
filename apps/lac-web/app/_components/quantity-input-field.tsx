@@ -1,11 +1,12 @@
+import { cn } from "@/_lib/utils";
 import { Input } from "@repo/web-ui/components/ui/input";
 import { Label } from "@repo/web-ui/components/ui/label";
-import { forwardRef, useId, type ComponentProps } from "react";
+import { forwardRef, useId, type ComponentPropsWithoutRef } from "react";
 
 const QuantityInputField = forwardRef<
   HTMLInputElement,
-  Omit<ComponentProps<typeof Input>, "id" | "type" | "className" | "onKeyDown">
->((props, ref) => {
+  Omit<ComponentPropsWithoutRef<typeof Input>, "id" | "type" | "onKeyDown">
+>(({ className, ...delegated }, ref) => {
   const id = useId();
   const quantityId = `quantity-${id}`;
 
@@ -19,14 +20,17 @@ const QuantityInputField = forwardRef<
         ref={ref}
         id={quantityId}
         type="number"
-        className="flex-1 rounded-sm border-0 p-0 text-center text-lg font-semibold text-wurth-gray-800 shadow-none"
+        className={cn(
+          "flex-1 rounded-sm border-0 p-0 text-center text-lg font-semibold text-wurth-gray-800 shadow-none",
+          className,
+        )}
         onKeyDown={(event) => {
           // Restrict negative values and Euler's constant
           if (event.code === "Minus" || event.code === "KeyE") {
             event.preventDefault();
           }
         }}
-        {...props}
+        {...delegated}
       />
     </div>
   );

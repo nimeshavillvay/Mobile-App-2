@@ -13,7 +13,7 @@ module.exports = {
     "prettier",
     "eslint-config-turbo",
   ],
-  plugins: ["react-compiler", "prefer-arrow-functions"],
+  plugins: ["react-compiler", "prefer-arrow-functions", "import"],
   settings: {
     "import/resolver": {
       typescript: {
@@ -54,5 +54,6 @@ module.exports = {
       },
     ],
     curly: ["error", "all"],
+    "import/newline-after-import": "error",
   },
 };

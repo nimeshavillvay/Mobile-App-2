@@ -313,6 +313,7 @@ export type Cart = {
       category_name: string;
       product_summary: string;
       is_directly_shipped_from_vendor: boolean;
+      slug: string;
     };
   }[];
   configuration: CartConfiguration;
