@@ -7,6 +7,7 @@ import { Suspense } from "react";
 import AddToCartForm from "./add-to-cart-form";
 import FavoriteButton from "./favorite-button";
 import LocationStocks from "./location-stocks";
+import QuantityWarning from "./quantity-warning";
 import RegionalExclusionNotice from "./regional-exclusion-notice";
 
 type AddToCartProps = {
@@ -34,6 +35,8 @@ const AddToCart = ({
   return (
     <section className={cn("space-y-3", className)}>
       <LocationStocks productId={productId} />
+
+      <QuantityWarning minimumQuantity={minQty} incrementQuantity={incQty} />
 
       <AddToCartForm
         productId={productId}

@@ -1,8 +1,8 @@
 "use client";
 
+import Warning from "@/_components/warning";
 import useSuspenseProductExcluded from "@/_hooks/product/use-suspense-product-excluded.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
-import { Alert } from "@repo/web-ui/components/icons/alert";
 import { type ComponentProps } from "react";
 
 const RegionalExclusionNoticeWrapper = ({
@@ -35,22 +35,9 @@ const RegionalExclusionNotice = ({
   }
 
   return (
-    <div className="flex flex-row gap-2 rounded-lg bg-red-50 p-4">
-      <Alert
-        className="mt-1 shrink-0 stroke-wurth-red-650"
-        width={16}
-        height={16}
-      />
-
-      <div className="flex-1 space-y-1">
-        <h4 className="text-base font-semibold text-wurth-red-650">
-          Not Available
-        </h4>
-
-        <p className="text-sm leading-6 text-wurth-gray-800">
-          This item is not available in your territory.
-        </p>
-      </div>
-    </div>
+    <Warning
+      title="Not Available"
+      description="This item is not available in your territory."
+    />
   );
 };

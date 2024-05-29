@@ -1,5 +1,5 @@
+import { formatNumberToPrice } from "@/_lib/utils";
 import { TableCell, TableRow } from "@/old/_components/ui/table";
-import { formatNumberToPrice } from "@/old/_utils/helpers";
 import dayjs from "dayjs";
 import Link from "next/link";
 import { MdInsertDriveFile } from "react-icons/md";

@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from "@/_lib/utils";
 import { Label } from "@/old/_components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/old/_components/ui/radio-group";
 import {
@@ -16,7 +17,7 @@ import {
   BACK_ORDERED_AVAILABILITY,
 } from "@/old/_lib/constants";
 import type { Availability } from "@/old/_lib/types";
-import { cn, getStatusLabel } from "@/old/_utils/helpers";
+import { getStatusLabel } from "@/old/_utils/helpers";
 import { getAvailabilityTypeLabel, getShippingMethods } from "./helpers";
 
 type AvailabilityOption = {

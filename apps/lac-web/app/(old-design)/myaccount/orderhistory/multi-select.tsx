@@ -1,7 +1,7 @@
+import { cn } from "@/_lib/utils";
 import { Button } from "@/old/_components/ui/button";
 import { Checkbox } from "@/old/_components/ui/checkbox";
 import { Label } from "@/old/_components/ui/label";
-import { cn } from "@/old/_utils/helpers";
 import { useMultipleSelection, useSelect } from "downshift";
 import { ChevronDown, X } from "lucide-react";
 import type { MutableRefObject } from "react";
