@@ -105,6 +105,7 @@ const ShoppingList = ({ token }: { readonly token: string }) => {
           page={page}
           totalPages={totalPages}
           perPage={perPage}
+          itemCount={shoppingListItemCount.count}
           shoppingList={shoppingList}
         />
       ) : (

@@ -16,12 +16,14 @@ const ShoppingListItems = ({
   page,
   totalPages,
   perPage,
+  itemCount,
   shoppingList,
 }: {
   readonly token: string;
   readonly page: number;
   readonly totalPages: number;
   readonly perPage: number;
+  readonly itemCount: number;
   readonly shoppingList: ShoppingListElement;
 }) => {
   const [isOpenDeleteDialog, setIsOpenDeleteDialog] = useState(false);
@@ -61,9 +63,12 @@ const ShoppingListItems = ({
         </div>
       </div>
 
-      <p className="text-right text-sm font-normal md:text-base">
-        Page {page} of {totalPages == 0 ? 1 : totalPages}
-      </p>
+      <div className="mx-2 my-5 flex flex-row items-center justify-between text-sm font-normal">
+        <p>{itemCount} items</p>
+        <p>
+          Page {page} of {totalPages == 0 ? 1 : totalPages}
+        </p>
+      </div>
 
       {shoppingListItems.items.map((item) => (
         <div key={item.productId} className="inline-grid p-2">
