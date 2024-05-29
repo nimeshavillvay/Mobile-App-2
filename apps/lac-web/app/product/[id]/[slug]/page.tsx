@@ -10,14 +10,14 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "@repo/web-ui/components/ui/breadcrumb";
-import { Button, buttonVariants } from "@repo/web-ui/components/ui/button";
+import { buttonVariants } from "@repo/web-ui/components/ui/button";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Fragment, Suspense } from "react";
 import Balancer from "react-wrap-balancer";
 import ProductHero from "./_product-hero";
+import RelatedProductsList from "./_related-products-list";
 import { getProduct } from "./apis";
-import RelatedProductsList from "./related-products-list";
 import type { ProductPageProps, RelatedProduct } from "./types";
 
 export const generateMetadata = async ({
@@ -113,19 +113,20 @@ const ProductPage = async ({ params: { id, slug } }: ProductPageProps) => {
                 </h3>
               )}
 
-              <div className="container grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-4 xl:grid-cols-3 2xl:grid-cols-4">
-                <Suspense
-                  fallback={Array.from({ length: 4 }).map((_, index) => (
-                    <ProductCardSkeleton key={index} orientation="horizontal" />
-                  ))}
-                >
-                  <RelatedProductsList products={relatedSection.items} />
-                </Suspense>
-              </div>
-
-              <div className="container md:hidden">
-                <Button className="w-full font-bold">Load 4 more</Button>
-              </div>
+              <Suspense
+                fallback={
+                  <div className="container grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-4 xl:grid-cols-3 2xl:grid-cols-4">
+                    {Array.from({ length: 4 }).map((_, index) => (
+                      <ProductCardSkeleton
+                        key={index}
+                        orientation="horizontal"
+                      />
+                    ))}
+                  </div>
+                }
+              >
+                <RelatedProductsList products={relatedSection.items} />
+              </Suspense>
             </div>
           ))}
         </section>

@@ -122,6 +122,10 @@ const ShoppingListDialog = ({
               <Button
                 type="submit"
                 className="h-9 rounded-[3px] bg-brand-primary px-4 text-base font-normal uppercase text-white"
+                disabled={
+                  createShoppingListMutation.isPending ||
+                  updateShoppingListMutation.isPending
+                }
               >
                 Done
               </Button>

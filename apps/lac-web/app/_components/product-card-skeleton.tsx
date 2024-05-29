@@ -18,7 +18,7 @@ const ProductCardSkeleton = ({
       orientation={orientation}
       className={cn(
         "h-[25.75rem] shrink-0 snap-start md:h-[29.5rem]",
-        orientation === "horizontal" && "w-full",
+        orientation === "horizontal" && "h-[10.25rem] w-full md:h-[10.5rem]",
         stretchWidth && "md:w-full",
       )}
     />
