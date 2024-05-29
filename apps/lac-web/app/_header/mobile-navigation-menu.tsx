@@ -191,5 +191,3 @@ const SubCategorySheet = ({ category, onCloseMain }: SubCategorySheetProps) => {
     </Sheet>
   );
 };
-
-
