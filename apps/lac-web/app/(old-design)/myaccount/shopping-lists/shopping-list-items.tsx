@@ -53,13 +53,11 @@ const ShoppingListItems = ({
     <>
       <div className="mx-2 my-5 flex flex-row items-center justify-between">
         <h3 className="text-2xl font-bold">{shoppingList.listName}</h3>
-        <div className="mx-2 my-5 flex flex-row items-center justify-between">
-          <div className="flex flex-row items-center gap-2">
-            <ShoppingListButtons
-              renameShoppingList={renameShoppingList}
-              deleteShoppingList={deleteShoppingList}
-            />
-          </div>
+        <div className="flex flex-row items-center gap-2">
+          <ShoppingListButtons
+            renameShoppingList={renameShoppingList}
+            deleteShoppingList={deleteShoppingList}
+          />
         </div>
       </div>
 
