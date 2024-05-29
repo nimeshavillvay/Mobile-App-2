@@ -70,7 +70,7 @@ type CartItemProps = {
   };
   readonly plants: Plant[];
   readonly cartConfiguration: CartConfiguration;
-  readonly willCallPlant: { plant: string } | undefined;
+  readonly willCallPlant: { plant: string };
 };
 
 const CartItem = ({
@@ -85,7 +85,7 @@ const CartItem = ({
   const poId = `po-${id}`;
 
   const [selectedWillCallPlant, setSelectedWillCallPlant] = useState(() => {
-    if (willCallPlant?.plant) {
+    if (willCallPlant.plant) {
       return willCallPlant.plant;
     }
     return plants?.at(0)?.code ?? "";
@@ -479,7 +479,7 @@ const CartItem = ({
                 <PlantName
                   plants={plants}
                   plantCode={
-                    willCallPlant && willCallPlant.plant !== ""
+                    willCallPlant.plant !== ""
                       ? willCallPlant?.plant
                       : DEFAULT_PLANT
                   }

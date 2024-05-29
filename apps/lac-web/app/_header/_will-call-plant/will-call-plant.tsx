@@ -28,7 +28,7 @@ type WillCallPlantProps = {
 
 const WillCallPlantDrawer = ({ token, plants }: WillCallPlantProps) => {
   const willCallPlantQuery = useSuspenseWillCallPlant(token);
-  const plant = willCallPlantQuery?.data;
+  const plant = willCallPlantQuery.data;
 
   // This is for cases where the Will Call Plant API doesn't return an address
   const backupPlant = plants.find((item) => item.code === plant?.plant);
@@ -47,7 +47,7 @@ const WillCallPlantDrawer = ({ token, plants }: WillCallPlantProps) => {
       </DrawerTrigger>
 
       {/* Don't show the drawer if no address data is returned */}
-      {!!plant?.address && (
+      {!!plant.address && (
         <DrawerContent>
           <div className="mx-auto w-full max-w-[26.75rem]">
             <DrawerHeader>

@@ -42,7 +42,7 @@ const CartList = ({ token, plants }: CartListProps) => {
               }}
               plants={plants}
               cartConfiguration={data.configuration}
-              willCallPlant={willCallPlantQuery?.data}
+              willCallPlant={willCallPlantQuery.data}
             />
           </Suspense>
         </li>

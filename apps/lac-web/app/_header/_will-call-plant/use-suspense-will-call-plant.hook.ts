@@ -1,17 +1,7 @@
-import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
 import { api } from "@/_lib/api";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
 const useSuspenseWillCallPlant = (token: string) => {
-  // TODO - This is a temporary fix to prevent the page from breaking when the user is not logged in
-  const checkLoginQuery = useSuspenseCheckLogin(token);
-
-  const isNotLoggedIn = checkLoginQuery?.data?.status_code === "NOT_LOGGED_IN";
-
-  if (isNotLoggedIn) {
-    return undefined;
-  }
-
   return useSuspenseQuery({
     queryKey: ["user", "will-call-plant", token],
     queryFn: () => {
