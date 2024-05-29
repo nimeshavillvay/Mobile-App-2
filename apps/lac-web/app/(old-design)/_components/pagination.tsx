@@ -1,8 +1,8 @@
 "use client";
 
+import { cn } from "@/_lib/utils";
 import VisuallyHidden from "@/old/_components/visually-hidden";
 import { QUERY_KEYS } from "@/old/_lib/constants";
-import { cn } from "@/old/_utils/helpers";
 import Link, { type LinkProps } from "next/link";
 import { usePathname, type ReadonlyURLSearchParams } from "next/navigation";
 import { type ReactNode } from "react";

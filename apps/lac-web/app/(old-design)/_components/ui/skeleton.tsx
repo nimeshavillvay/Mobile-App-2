@@ -1,4 +1,4 @@
-import { cn } from "@/old/_utils/helpers";
+import { cn } from "@/_lib/utils";
 
 const Skeleton = ({
   className,

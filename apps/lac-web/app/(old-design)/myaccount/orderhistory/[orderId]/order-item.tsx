@@ -1,3 +1,4 @@
+import { cn, formatNumberToPrice } from "@/_lib/utils";
 import AlertInline from "@/old/_components/alert-inline";
 import {
   Table,
@@ -7,7 +8,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/old/_components/ui/table";
-import { cn, formatNumberToPrice } from "@/old/_utils/helpers";
 import { WurthFullBlack } from "@repo/web-ui/components/logos/wurth-full-black";
 import dayjs from "dayjs";
 import Image from "next/image";

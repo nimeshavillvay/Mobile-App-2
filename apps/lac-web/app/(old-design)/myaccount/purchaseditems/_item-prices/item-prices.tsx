@@ -1,4 +1,5 @@
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
+import { formatNumberToPrice } from "@/_lib/utils";
 import {
   Table,
   TableBody,
@@ -7,7 +8,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/old/_components/ui/table";
-import { formatNumberToPrice } from "@/old/_utils/helpers";
 import type { PriceRow } from "./types";
 import UnitPriceRow from "./unit-price-row";
 import UnitPriceRowForMobile from "./unit-price-row-for-mobile";

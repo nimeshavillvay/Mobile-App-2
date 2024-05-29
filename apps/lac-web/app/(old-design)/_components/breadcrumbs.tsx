@@ -1,5 +1,5 @@
+import { cn } from "@/_lib/utils";
 import VisuallyHidden from "@/old/_components/visually-hidden";
-import { cn } from "@/old/_utils/helpers";
 import Link from "next/link";
 import { MdOutlineHome } from "react-icons/md";
 

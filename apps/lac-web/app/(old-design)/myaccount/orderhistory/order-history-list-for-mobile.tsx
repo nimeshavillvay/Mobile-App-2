@@ -1,4 +1,4 @@
-import { formatNumberToPrice } from "@/old/_utils/helpers";
+import { formatNumberToPrice } from "@/_lib/utils";
 import dayjs from "dayjs";
 import Link from "next/link";
 import { MdKeyboardArrowRight } from "react-icons/md";

@@ -1,5 +1,6 @@
 import useAddToCartMutation from "@/_hooks/cart/use-add-to-cart-mutation.hook";
 import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
+import { cn } from "@/_lib/utils";
 import AlertInline from "@/old/_components/alert-inline";
 import ErrorBoundary from "@/old/_components/error-boundary";
 import { Button } from "@/old/_components/ui/button";
@@ -11,7 +12,6 @@ import {
 import { Input } from "@/old/_components/ui/input";
 import { Label } from "@/old/_components/ui/label";
 import { TableCell, TableRow } from "@/old/_components/ui/table";
-import { cn } from "@/old/_utils/helpers";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { WurthFullBlack } from "@repo/web-ui/components/logos/wurth-full-black";
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";

@@ -6,10 +6,10 @@ import {
 } from "@/_lib/apis/server";
 import { getItemInfo } from "@/_lib/apis/shared";
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
+import { formatNumberToPrice } from "@/_lib/utils";
 import AlertInline from "@/old/_components/alert-inline";
 import Separator from "@/old/_components/separator";
 import { Badge } from "@/old/_components/ui/badge";
-import { formatNumberToPrice } from "@/old/_utils/helpers";
 import dayjs from "dayjs";
 import type { Metadata } from "next";
 import { cookies } from "next/headers";

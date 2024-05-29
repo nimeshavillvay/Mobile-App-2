@@ -1,3 +1,4 @@
+import { cn } from "@/_lib/utils";
 import { Button } from "@/old/_components/ui/button";
 import {
   Dialog,
@@ -6,7 +7,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/old/_components/ui/dialog";
-import { cn } from "@/old/_utils/helpers";
 import { type ComponentProps } from "react";
 
 type ActionConfirmationDialogProps = {
