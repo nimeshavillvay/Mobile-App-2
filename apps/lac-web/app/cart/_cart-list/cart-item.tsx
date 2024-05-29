@@ -84,6 +84,9 @@ const CartItem = ({
   const quantityId = `quantity-${id}`;
   const poId = `po-${id}`;
 
+  const itemConfigHash = product?.configuration?.hashvalue;
+  const itemConfigShippingMethod = product?.configuration?.shipping_method_1;
+
   const [selectedWillCallPlant, setSelectedWillCallPlant] = useState(() => {
     if (willCallPlant?.plant) {
       return willCallPlant.plant;
@@ -135,6 +138,8 @@ const CartItem = ({
   const isNotInStock = status === NOT_IN_STOCK;
   const isLimitedStock = status === LIMITED_STOCK;
   const isInStock = status === IN_STOCK;
+
+  const willCallHash = willCallAnywhere?.hash;
 
   const availableAll = findAvailabilityOptionForType(
     availabilityOptions,
@@ -200,6 +205,88 @@ const CartItem = ({
     defaultShippingMethod?.code ?? "",
   );
 
+  const handleChangeQtyOrPO = () => {
+    checkAvailabilityMutation.mutate(
+      {
+        productId: product.id,
+        qty: quantity,
+      },
+      {
+        onSuccess: ({ options }) => {
+          if (options.length > 0) {
+            const availableAll = findAvailabilityOptionForType(
+              options,
+              AVAILABLE_ALL,
+            );
+            const takeOnHand = findAvailabilityOptionForType(
+              options,
+              TAKE_ON_HAND,
+            );
+            const shipAlternativeBranch = findAvailabilityOptionForType(
+              options,
+              ALTERNATIVE_BRANCHES,
+            );
+            const backOrderAll = findAvailabilityOptionForType(
+              options,
+              BACK_ORDER_ALL,
+            );
+            if (availableAll) {
+              setSelectedShippingOption(MAIN_OPTIONS.SHIP_TO_ME);
+              setSelectedShipToMe(AVAILABLE_ALL);
+              handleSave(
+                createCartItemConfig({
+                  method:
+                    availableAll.plants?.at(0)?.shippingMethods?.at(0)?.code ??
+                    EMPTY_STRING,
+                  quantity: availableAll.plants?.at(0)?.quantity ?? 0,
+                  plant: availableAll.plants?.at(0)?.plant ?? EMPTY_STRING,
+                  hash: availableAll.hash,
+                }),
+              );
+            } else if (takeOnHand) {
+              setSelectedShippingOption(MAIN_OPTIONS.SHIP_TO_ME);
+              setSelectedShipToMe(TAKE_ON_HAND);
+              handleSave(
+                createCartItemConfig({
+                  method:
+                    takeOnHand.plants?.at(0)?.shippingMethods?.at(0)?.code ??
+                    EMPTY_STRING,
+                  quantity: takeOnHand.plants?.at(0)?.quantity ?? 0,
+                  plant: takeOnHand.plants?.at(0)?.plant ?? EMPTY_STRING,
+                  hash: takeOnHand.hash,
+                }),
+              );
+            } else if (shipAlternativeBranch) {
+              setSelectedShippingOption(MAIN_OPTIONS.SHIP_TO_ME);
+              setSelectedShipToMe(ALTERNATIVE_BRANCHES);
+              handleSave(
+                getAlternativeBranchesConfig({
+                  plants: shipAlternativeBranch.plants,
+                  method:
+                    shipAlternativeBranch.plants?.at(0)?.shippingMethods?.at(0)
+                      ?.code ?? EMPTY_STRING,
+                  hash: shipAlternativeBranch.hash,
+                }),
+              );
+            } else if (backOrderAll) {
+              setSelectedShippingOption(MAIN_OPTIONS.BACK_ORDER);
+              handleSave(
+                createCartItemConfig({
+                  method:
+                    backOrderAll.plants?.at(0)?.shippingMethods?.at(0)?.code ??
+                    EMPTY_STRING,
+                  quantity: 0,
+                  plant: backOrderAll.plants?.at(0)?.plant ?? EMPTY_STRING,
+                  hash: backOrderAll.hash,
+                }),
+              );
+            }
+          }
+        },
+      },
+    );
+  };
+
   const handleSave = (config?: Partial<CartItemConfiguration>) => {
     const data = getValues();
 
@@ -209,8 +296,8 @@ const CartItem = ({
         quantity: Number(data.quantity),
         config: {
           ...product.configuration,
-          poOrJobName: data.po,
           ...config,
+          poOrJobName: data.po,
         },
       },
     ]);
@@ -305,10 +392,6 @@ const CartItem = ({
       );
     }
   };
-
-  const itemConfigHash = product?.configuration?.hashvalue;
-  const itemConfigShippingMethod = product?.configuration?.shipping_method_1;
-  const willCallHash = willCallAnywhere?.hash;
 
   const matchedAvailabilityOption = availabilityOptions.find(
     (option) => option.hash === itemConfigHash,
@@ -441,7 +524,7 @@ const CartItem = ({
 
               <Input
                 {...register("quantity", {
-                  onBlur: handleSave,
+                  onBlur: () => handleChangeQtyOrPO(),
                   disabled: checkAvailabilityQuery.isPending,
                 })}
                 id={quantityId}
@@ -494,7 +577,7 @@ const CartItem = ({
             </Label>
 
             <Input
-              {...register("po", { onBlur: handleSave })}
+              {...register("po", { onBlur: () => handleChangeQtyOrPO() })}
               id={poId}
               type="text"
               placeholder="PO #/ Job Name"
