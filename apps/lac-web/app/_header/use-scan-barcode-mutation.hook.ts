@@ -1,7 +1,6 @@
 import { searchApi } from "@/_lib/api";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 
 type SearchResult = {
   brandName: string;
@@ -50,7 +49,6 @@ type BarcodeSearchProps = {
   setCategoryId: (categoryId: string) => void;
   setCategorySlug: (categorySlug: string) => void;
   setSearchQuery: (searchQuery: string) => void;
-  setTextChanged: (textChanged: boolean) => void;
 };
 
 const useScanBarcodeMutation = ({
@@ -60,20 +58,13 @@ const useScanBarcodeMutation = ({
   setCategoryId,
   setCategorySlug,
   setSearchQuery,
-  setTextChanged,
 }: BarcodeSearchProps) => {
   const router = useRouter();
-  const [oldQuery, setOldQuery] = useState("");
   const PRODUCT_DISCONTINUED_STATUS = "discontinued";
 
   return useMutation({
     mutationFn: async (query: string) => {
       setSearchQuery("");
-      setTextChanged(false);
-      if (oldQuery !== query) {
-        setTextChanged(true);
-        setOldQuery(query);
-      }
       const searchResults = await searchApi
         .get("barcode", {
           searchParams: { query },
