@@ -10,7 +10,7 @@ import { Suspense } from "react";
 import ShippingAddressSelector from "./_shipping-address-selector";
 import UserProfile, { UserProfileSkeleton } from "./_user-profile";
 import WillCallPlant from "./_will-call-plant";
-import CartRoot from "./cart-root";
+import CartRoot from "./cart";
 import DesktopNavigationMenu from "./desktop-navigation-menu";
 import MobileNavigationMenu from "./mobile-navigation-menu";
 import OSRDetails from "./osr-details";
@@ -136,7 +136,7 @@ const Header = async () => {
               "size-6 md:hidden",
             )}
           >
-            <Suspense fallback={<Skeleton className="h-5 w-60" />}>
+            <Suspense fallback={<Skeleton className="h-6 w-6" />}>
               <CartRoot type="mobile" />
             </Suspense>
 
@@ -155,7 +155,7 @@ const Header = async () => {
               "hidden shrink-0 md:flex md:h-min md:flex-row md:items-center md:gap-2 md:p-0",
             )}
           >
-            <Suspense fallback={<Skeleton className="h-5 w-60" />}>
+            <Suspense fallback={<Skeleton className="h-7 w-7" />}>
               <CartRoot type="desktop" />
             </Suspense>
 
