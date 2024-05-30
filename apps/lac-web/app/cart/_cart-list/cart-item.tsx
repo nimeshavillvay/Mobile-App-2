@@ -18,6 +18,7 @@ import { Button } from "@repo/web-ui/components/ui/button";
 import { Input } from "@repo/web-ui/components/ui/input";
 import { Label } from "@repo/web-ui/components/ui/label";
 import Image from "next/image";
+import Link from "next/link";
 import { Suspense, useEffect, useId, useState } from "react";
 import { useForm } from "react-hook-form";
 import Balancer from "react-wrap-balancer";
@@ -26,7 +27,10 @@ import {
   ALTERNATIVE_BRANCHES,
   AVAILABLE_ALL,
   BACK_ORDER_ALL,
+  DEFAULT_PLANT,
   EMPTY_STRING,
+  IN_STOCK,
+  LIMITED_STOCK,
   MAIN_OPTIONS,
   NOT_IN_STOCK,
   TAKE_ON_HAND,
@@ -40,6 +44,7 @@ import {
   getAlternativeBranchesConfig,
   getShippingMethods,
 } from "./helpers";
+import PlantName from "./plant-name";
 import type { MainOption, ShipToMeOption } from "./types";
 import useCheckAvailabilityMutation from "./use-check-availability-mutation.hook";
 
@@ -61,6 +66,7 @@ type CartItemProps = {
     increment: number;
     image: string;
     cartItemId: number;
+    slug: string;
   };
   readonly plants: Plant[];
   readonly cartConfiguration: CartConfiguration;
@@ -77,6 +83,9 @@ const CartItem = ({
   const id = useId();
   const quantityId = `quantity-${id}`;
   const poId = `po-${id}`;
+
+  const itemConfigHash = product?.configuration?.hashvalue;
+  const itemConfigShippingMethod = product?.configuration?.shipping_method_1;
 
   const [selectedWillCallPlant, setSelectedWillCallPlant] = useState(() => {
     if (willCallPlant?.plant) {
@@ -123,8 +132,14 @@ const CartItem = ({
     availableLocations,
     willCallAnywhere,
   } = checkAvailabilityQuery.data;
-  const firstLocation = availableLocations[0];
+
+  const firstLocation = availableLocations.at(0);
+
   const isNotInStock = status === NOT_IN_STOCK;
+  const isLimitedStock = status === LIMITED_STOCK;
+  const isInStock = status === IN_STOCK;
+
+  const willCallHash = willCallAnywhere?.hash;
 
   const availableAll = findAvailabilityOptionForType(
     availabilityOptions,
@@ -190,6 +205,88 @@ const CartItem = ({
     defaultShippingMethod?.code ?? "",
   );
 
+  const handleChangeQtyOrPO = () => {
+    checkAvailabilityMutation.mutate(
+      {
+        productId: product.id,
+        qty: quantity,
+      },
+      {
+        onSuccess: ({ options }) => {
+          if (options.length > 0) {
+            const availableAll = findAvailabilityOptionForType(
+              options,
+              AVAILABLE_ALL,
+            );
+            const takeOnHand = findAvailabilityOptionForType(
+              options,
+              TAKE_ON_HAND,
+            );
+            const shipAlternativeBranch = findAvailabilityOptionForType(
+              options,
+              ALTERNATIVE_BRANCHES,
+            );
+            const backOrderAll = findAvailabilityOptionForType(
+              options,
+              BACK_ORDER_ALL,
+            );
+            if (availableAll) {
+              setSelectedShippingOption(MAIN_OPTIONS.SHIP_TO_ME);
+              setSelectedShipToMe(AVAILABLE_ALL);
+              handleSave(
+                createCartItemConfig({
+                  method:
+                    availableAll.plants?.at(0)?.shippingMethods?.at(0)?.code ??
+                    EMPTY_STRING,
+                  quantity: availableAll.plants?.at(0)?.quantity ?? 0,
+                  plant: availableAll.plants?.at(0)?.plant ?? EMPTY_STRING,
+                  hash: availableAll.hash,
+                }),
+              );
+            } else if (takeOnHand) {
+              setSelectedShippingOption(MAIN_OPTIONS.SHIP_TO_ME);
+              setSelectedShipToMe(TAKE_ON_HAND);
+              handleSave(
+                createCartItemConfig({
+                  method:
+                    takeOnHand.plants?.at(0)?.shippingMethods?.at(0)?.code ??
+                    EMPTY_STRING,
+                  quantity: takeOnHand.plants?.at(0)?.quantity ?? 0,
+                  plant: takeOnHand.plants?.at(0)?.plant ?? EMPTY_STRING,
+                  hash: takeOnHand.hash,
+                }),
+              );
+            } else if (shipAlternativeBranch) {
+              setSelectedShippingOption(MAIN_OPTIONS.SHIP_TO_ME);
+              setSelectedShipToMe(ALTERNATIVE_BRANCHES);
+              handleSave(
+                getAlternativeBranchesConfig({
+                  plants: shipAlternativeBranch.plants,
+                  method:
+                    shipAlternativeBranch.plants?.at(0)?.shippingMethods?.at(0)
+                      ?.code ?? EMPTY_STRING,
+                  hash: shipAlternativeBranch.hash,
+                }),
+              );
+            } else if (backOrderAll) {
+              setSelectedShippingOption(MAIN_OPTIONS.BACK_ORDER);
+              handleSave(
+                createCartItemConfig({
+                  method:
+                    backOrderAll.plants?.at(0)?.shippingMethods?.at(0)?.code ??
+                    EMPTY_STRING,
+                  quantity: 0,
+                  plant: backOrderAll.plants?.at(0)?.plant ?? EMPTY_STRING,
+                  hash: backOrderAll.hash,
+                }),
+              );
+            }
+          }
+        },
+      },
+    );
+  };
+
   const handleSave = (config?: Partial<CartItemConfiguration>) => {
     const data = getValues();
 
@@ -199,8 +296,8 @@ const CartItem = ({
         quantity: Number(data.quantity),
         config: {
           ...product.configuration,
-          poOrJobName: data.po,
           ...config,
+          poOrJobName: data.po,
         },
       },
     ]);
@@ -296,10 +393,6 @@ const CartItem = ({
     }
   };
 
-  const itemConfigHash = product?.configuration?.hashvalue;
-  const itemConfigShippingMethod = product?.configuration?.shipping_method_1;
-  const willCallHash = willCallAnywhere?.hash;
-
   const matchedAvailabilityOption = availabilityOptions.find(
     (option) => option.hash === itemConfigHash,
   );
@@ -349,21 +442,23 @@ const CartItem = ({
     <div className="flex flex-col gap-6 md:flex-row">
       <div className="flex flex-row items-start gap-3 md:flex-1">
         <div className="flex w-[4.5rem] shrink-0 flex-col gap-2 md:w-[7.5rem]">
-          {product.image !== "" ? (
-            <Image
-              src={product.image}
-              alt={`A picture of ${product.title}`}
-              width={120}
-              height={120}
-              className="size-[4.5rem] rounded border border-wurth-gray-250 object-contain shadow-sm md:size-[7.5rem]"
-            />
-          ) : (
-            <WurthFullBlack
-              width={120}
-              height={120}
-              className="border border-brand-gray-200 px-2"
-            />
-          )}
+          <Link href={`/product/${product.id}/${product.slug}`}>
+            {product.image !== "" ? (
+              <Image
+                src={product.image}
+                alt={`A picture of ${product.title}`}
+                width={120}
+                height={120}
+                className="size-[4.5rem] rounded border border-wurth-gray-250 object-contain shadow-sm md:size-[7.5rem]"
+              />
+            ) : (
+              <WurthFullBlack
+                width={120}
+                height={120}
+                className="border border-brand-gray-200 px-2"
+              />
+            )}
+          </Link>
 
           <div className="flex flex-col gap-1 md:hidden">
             <Suspense fallback={<FavoriteButtonSkeleton display="mobile" />}>
@@ -401,10 +496,12 @@ const CartItem = ({
               ${formatNumberToPrice(priceData?.price)}/{priceData?.priceUnit}
             </div>
 
-            <div className="ml-1 text-[13px] leading-5 text-wurth-gray-500 line-through">
-              ${formatNumberToPrice(priceData?.listPrice)}/
-              {priceData?.priceUnit}
-            </div>
+            {priceData?.listPrice !== priceData?.price && (
+              <div className="ml-1 text-[13px] leading-5 text-wurth-gray-500 line-through">
+                ${formatNumberToPrice(priceData?.listPrice)}/
+                {priceData?.priceUnit}
+              </div>
+            )}
           </div>
 
           <h2 className="line-clamp-3 text-sm font-medium text-black">
@@ -427,7 +524,7 @@ const CartItem = ({
 
               <Input
                 {...register("quantity", {
-                  onBlur: handleSave,
+                  onBlur: () => handleChangeQtyOrPO(),
                   disabled: checkAvailabilityQuery.isPending,
                 })}
                 id={quantityId}
@@ -439,12 +536,37 @@ const CartItem = ({
               />
             </div>
 
-            {!isNotInStock && (
+            {isInStock && (
               <div className="text-sm text-wurth-gray-800">
-                <span className="text-yellow-700">
-                  Only {firstLocation?.amount} in stock
+                <span className="font-semibold text-green-700">
+                  {firstLocation?.amount ?? 0} in stock
                 </span>
                 &nbsp;at&nbsp;{firstLocation?.name}
+              </div>
+            )}
+
+            {isLimitedStock && (
+              <div className="text-sm text-wurth-gray-800">
+                <span className="font-semibold text-yellow-700">
+                  Only {firstLocation?.amount ?? 0} in stock
+                </span>
+                &nbsp;at&nbsp;{firstLocation?.name}
+              </div>
+            )}
+
+            {/* Set default plant when there is no will call plant */}
+            {isNotInStock && (
+              <div className="text-sm text-wurth-gray-800">
+                <span className="font-semibold text-red-700">Out of stock</span>
+                &nbsp;at&nbsp;
+                <PlantName
+                  plants={plants}
+                  plantCode={
+                    willCallPlant.plant !== ""
+                      ? willCallPlant?.plant
+                      : DEFAULT_PLANT
+                  }
+                />
               </div>
             )}
           </div>
@@ -455,7 +577,7 @@ const CartItem = ({
             </Label>
 
             <Input
-              {...register("po", { onBlur: handleSave })}
+              {...register("po", { onBlur: () => handleChangeQtyOrPO() })}
               id={poId}
               type="text"
               placeholder="PO #/ Job Name"
@@ -493,9 +615,12 @@ const CartItem = ({
             ${formatNumberToPrice(priceData?.price)}/{priceData?.priceUnit}
           </div>
 
-          <div className="ml-1 text-[13px] leading-5 text-wurth-gray-500 line-through">
-            ${formatNumberToPrice(priceData?.listPrice)}/{priceData?.priceUnit}
-          </div>
+          {priceData?.listPrice !== priceData?.price && (
+            <div className="ml-1 text-[13px] leading-5 text-wurth-gray-500 line-through">
+              ${formatNumberToPrice(priceData?.listPrice)}/
+              {priceData?.priceUnit}
+            </div>
+          )}
         </div>
 
         <div className="flex flex-col gap-2">
@@ -510,15 +635,18 @@ const CartItem = ({
             <Trash className="size-4 fill-wurth-red-650" />
           </Button>
 
+          {/* This is not implemented as this will be rolled out in phase 2
           <Button
             variant="ghost"
             className="h-fit w-full justify-end px-0 py-0"
             disabled={true}
+            hidden={true}
           >
             <span className="text-[13px] leading-5">Save for later</span>
 
             <Save className="size-4" />
           </Button>
+          */}
 
           <FavoriteButton
             display="desktop"

@@ -1,5 +1,5 @@
 import type { Plant, ShippingMethod } from "@/_lib/types";
-import { formatNumberToPrice } from "@/old/_utils/helpers";
+import { formatNumberToPrice } from "@/_lib/utils";
 import { WurthFullBlack } from "@repo/web-ui/components/logos/wurth-full-black";
 import Image from "next/image";
 import Link from "next/link";

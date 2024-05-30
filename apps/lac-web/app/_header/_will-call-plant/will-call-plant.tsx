@@ -19,6 +19,8 @@ import {
 } from "@repo/web-ui/components/ui/drawer";
 import useSuspenseWillCallPlant from "./use-suspense-will-call-plant.hook";
 
+const DEFAULT_PLANT = "Brea, CA";
+
 type WillCallPlantProps = {
   readonly token: string;
   readonly plants: Plant[];
@@ -40,7 +42,7 @@ const WillCallPlantDrawer = ({ token, plants }: WillCallPlantProps) => {
         >
           <Shop width={16} height={16} />
 
-          <span>{`${backupPlant?.name}, ${backupPlant?.code}`}</span>
+          <span>{backupPlant?.name ?? DEFAULT_PLANT}</span>
         </Button>
       </DrawerTrigger>
 
@@ -116,7 +118,7 @@ const WillCallPlant = ({ token, ...delegated }: WillCallPlantProps) => {
       <div className="flex flex-row items-center gap-2 text-black">
         <Shop width={16} height={16} />
 
-        <span>Brea, CA</span>
+        <span>{DEFAULT_PLANT}</span>
       </div>
     );
   }

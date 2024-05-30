@@ -3,9 +3,13 @@
 import useSuspenseSimulationCheckout from "@/_hooks/cart/use-suspense-simulation-checkout.hook";
 import useUpdateCartConfigMutation from "@/_hooks/cart/use-update-cart-config-mutation.hook";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as Collapsible from "@radix-ui/react-collapsible";
 import { Plus } from "@repo/web-ui/components/icons/plus";
 import { Button } from "@repo/web-ui/components/ui/button";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@repo/web-ui/components/ui/collapsible";
 import {
   Form,
   FormControl,
@@ -35,8 +39,11 @@ type OrderSummaryProps = {
  * to avoid blocking the rendering of the parent component.
  */
 const OrderSummary = ({ token, children }: OrderSummaryProps) => {
-  const [openPromo, setOpenPromo] = useState(false);
   const simulationCheckoutQuery = useSuspenseSimulationCheckout(token);
+  const [openPromo, setOpenPromo] = useState(
+    // Open the promo code section if a promo code is already applied
+    !!simulationCheckoutQuery.data.configuration.coupon,
+  );
 
   const form = useForm<z.infer<typeof promoSchema>>({
     resolver: zodResolver(promoSchema),
@@ -56,8 +63,6 @@ const OrderSummary = ({ token, children }: OrderSummaryProps) => {
             form.setError("promo", {
               message: "Invalid Promo Code",
             });
-          } else {
-            form.reset();
           }
         },
       },
@@ -68,7 +73,10 @@ const OrderSummary = ({ token, children }: OrderSummaryProps) => {
     setOpenPromo(open);
 
     if (!open) {
-      // Clear form when closing
+      // Remove the promo code when cancelling
+      updateCartConfigMutation.mutate({ coupon: "" });
+
+      // Reset the form when closing
       form.reset();
     }
   };
@@ -83,7 +91,7 @@ const OrderSummary = ({ token, children }: OrderSummaryProps) => {
         <tbody>
           <tr>
             <td className="pb-1">
-              Subtotal ({simulationCheckoutQuery.data.totalQuantity} items)
+              Subtotal ({simulationCheckoutQuery.data.cartItemsCount} items)
             </td>
 
             <td className="pb-1 text-right">
@@ -125,28 +133,35 @@ const OrderSummary = ({ token, children }: OrderSummaryProps) => {
 
           <tr>
             <td colSpan={2} className="pb-3 pt-1">
-              <Collapsible.Root open={openPromo} onOpenChange={onOpenChange}>
-                <div className="flex flex-row items-center justify-between">
-                  <div className="py-1 font-medium">Promo Code</div>
+              <Form {...form}>
+                <Collapsible
+                  open={openPromo}
+                  onOpenChange={onOpenChange}
+                  disabled={
+                    updateCartConfigMutation.isPending ||
+                    simulationCheckoutQuery.isFetching
+                  }
+                >
+                  <div className="flex flex-row items-center justify-between">
+                    <div className="py-1 font-medium">Promo Code</div>
 
-                  <Collapsible.Trigger asChild>
-                    <Button
-                      variant="subtle"
-                      className="h-fit gap-1 px-2 py-0.5 font-bold"
-                    >
-                      {!openPromo ? (
-                        <>
-                          <Plus className="size-4" /> <span>Add</span>
-                        </>
-                      ) : (
-                        "Close"
-                      )}
-                    </Button>
-                  </Collapsible.Trigger>
-                </div>
+                    <CollapsibleTrigger asChild>
+                      <Button
+                        variant="subtle"
+                        className="h-fit gap-1 px-2 py-0.5 font-bold"
+                      >
+                        {!openPromo ? (
+                          <>
+                            <Plus className="size-4" /> <span>Add</span>
+                          </>
+                        ) : (
+                          "Cancel"
+                        )}
+                      </Button>
+                    </CollapsibleTrigger>
+                  </div>
 
-                <Collapsible.Content asChild>
-                  <Form {...form}>
+                  <CollapsibleContent asChild>
                     <form
                       onSubmit={onSubmit}
                       className="mt-2 flex flex-row gap-2"
@@ -154,7 +169,10 @@ const OrderSummary = ({ token, children }: OrderSummaryProps) => {
                       <FormField
                         control={form.control}
                         name="promo"
-                        disabled={updateCartConfigMutation.isPending}
+                        disabled={
+                          updateCartConfigMutation.isPending ||
+                          simulationCheckoutQuery.isFetching
+                        }
                         render={({ field }) => (
                           <FormItem className="flex-1">
                             <FormLabel className="sr-only">
@@ -182,14 +200,17 @@ const OrderSummary = ({ token, children }: OrderSummaryProps) => {
                       <Button
                         size="sm"
                         type="submit"
-                        disabled={updateCartConfigMutation.isPending}
+                        disabled={
+                          updateCartConfigMutation.isPending ||
+                          simulationCheckoutQuery.isFetching
+                        }
                       >
                         Add
                       </Button>
                     </form>
-                  </Form>
-                </Collapsible.Content>
-              </Collapsible.Root>
+                  </CollapsibleContent>
+                </Collapsible>
+              </Form>
             </td>
           </tr>
 

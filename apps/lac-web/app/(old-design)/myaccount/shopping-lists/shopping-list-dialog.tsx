@@ -26,6 +26,7 @@ import useUpdateShoppingListMutation from "./use-update-shopping-list-mutation.h
 type ShoppingListDialogProps = {
   readonly open: boolean;
   readonly setOpenShoppingListDialog: Dispatch<SetStateAction<boolean>>;
+  readonly setSelectedAddressShoppingListId?: Dispatch<SetStateAction<string>>;
   readonly isShoppingListNameUpdate: boolean;
   readonly shoppingList: ShoppingListElement;
 };
@@ -33,6 +34,7 @@ type ShoppingListDialogProps = {
 const ShoppingListDialog = ({
   open,
   setOpenShoppingListDialog,
+  setSelectedAddressShoppingListId,
   isShoppingListNameUpdate,
   shoppingList,
 }: ShoppingListDialogProps) => {
@@ -68,9 +70,12 @@ const ShoppingListDialog = ({
       );
     } else {
       createShoppingListMutation.mutate(formData.shoppingListName, {
-        onSuccess: () => {
+        onSuccess: (data) => {
           setOpenShoppingListDialog(false);
           form.reset();
+          if (setSelectedAddressShoppingListId) {
+            setSelectedAddressShoppingListId(data.list_id);
+          }
         },
       });
     }
@@ -122,6 +127,10 @@ const ShoppingListDialog = ({
               <Button
                 type="submit"
                 className="h-9 rounded-[3px] bg-brand-primary px-4 text-base font-normal uppercase text-white"
+                disabled={
+                  createShoppingListMutation.isPending ||
+                  updateShoppingListMutation.isPending
+                }
               >
                 Done
               </Button>

@@ -1,5 +1,5 @@
 "use client";
-import { cn } from "@/old/_utils/helpers";
+import { cn } from "@/_lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Fragment } from "react";

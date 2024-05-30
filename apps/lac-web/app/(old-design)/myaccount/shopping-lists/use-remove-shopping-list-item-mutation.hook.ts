@@ -44,7 +44,7 @@ const useRemoveShoppingListItemMutation = () => {
     },
     onSettled: () => {
       queryClient.invalidateQueries({
-        queryKey: ["my-account", "shopping-list-items"],
+        queryKey: ["my-account", "shopping-list"],
       });
     },
   });

@@ -1,15 +1,6 @@
 import { AVAILABILITY_STATUSES } from "@/old/_lib/constants";
 import type { UOM, UOMLabel } from "@/old/_lib/types";
-import { clsx, type ClassValue } from "clsx";
 import { JSEncrypt } from "jsencrypt";
-import { twMerge } from "tailwind-merge";
-
-/**
- * Conditionally merge Tailwind CSS classes without conflicts
- */
-export const cn = (...args: ClassValue[]) => {
-  return twMerge(clsx(args));
-};
 
 export const getMediaUrl = (path: string) => {
   return `${process.env.NEXT_PUBLIC_WURTH_LAC_OLD_API}/pim${path}`;
