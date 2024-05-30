@@ -1,3 +1,4 @@
+import QuantityInputField from "@/_components/quantity-input-field";
 import useDeleteCartItemMutation from "@/_hooks/cart/use-delete-cart-item-mutation.hook";
 import useUpdateCartItemMutation from "@/_hooks/cart/use-update-cart-item-mutation.hook";
 import useDebouncedState from "@/_hooks/misc/use-debounced-state.hook";
@@ -21,7 +22,7 @@ import { Label } from "@repo/web-ui/components/ui/label";
 import Image from "next/image";
 import Link from "next/link";
 import { Suspense, useEffect, useId, useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import Balancer from "react-wrap-balancer";
 import { z } from "zod";
 import {
@@ -83,7 +84,6 @@ const CartItem = ({
   willCallPlant,
 }: CartItemProps) => {
   const id = useId();
-  const quantityId = `quantity-${id}`;
   const poId = `po-${id}`;
 
   const itemConfigHash = product?.configuration?.hashvalue;
@@ -101,7 +101,7 @@ const CartItem = ({
   const [selectedShippingOption, setSelectedShippingOption] =
     useState<MainOption>();
 
-  const { register, getValues, watch } = useForm<
+  const { register, getValues, watch, control } = useForm<
     z.infer<typeof cartItemSchema>
   >({
     resolver: zodResolver(cartItemSchema),
@@ -210,7 +210,7 @@ const CartItem = ({
     defaultShippingMethod?.code ?? "",
   );
 
-  const handleChangeQtyOrPO = () => {
+  const handleChangeQtyOrPO = (quantity: number) => {
     checkAvailabilityMutation.mutate(
       {
         productId: product.id,
@@ -522,24 +522,35 @@ const CartItem = ({
           </div>
 
           <div className="flex flex-col gap-2 md:flex-row md:items-center">
-            <div>
-              <Label htmlFor={quantityId} className="sr-only">
-                Quantity
-              </Label>
+            <Controller
+              control={control}
+              name="quantity"
+              render={({ field: { onChange, onBlur, value, name, ref } }) => (
+                <QuantityInputField
+                  onBlur={onBlur}
+                  onChange={(event) => {
+                    if (
+                      Number(event.target.value) >= product.minAmount &&
+                      Number(event.target.value) % product.increment === 0
+                    ) {
+                      console.log("> called: ", Number(event.target.value));
+                      handleChangeQtyOrPO(Number(event.target.value));
+                    }
 
-              <Input
-                {...register("quantity", {
-                  onChange: () => handleChangeQtyOrPO(),
-                  disabled: checkAvailabilityQuery.isPending,
-                })}
-                id={quantityId}
-                type="number"
-                className="h-fit rounded px-2.5 py-1 text-base md:w-24"
-                required
-                min={product.minAmount}
-                step={product.increment}
-              />
-            </div>
+                    onChange(event);
+                  }}
+                  value={value}
+                  ref={ref}
+                  name={name}
+                  removeDefaultStyles
+                  className="h-fit rounded px-2.5 py-1 text-base md:w-24"
+                  required
+                  min={product.minAmount}
+                  step={product.increment}
+                  disabled={checkAvailabilityQuery.isPending}
+                />
+              )}
+            />
 
             {isInStock && (
               <div className="text-sm text-wurth-gray-800">
@@ -579,7 +590,7 @@ const CartItem = ({
 
             <Input
               {...register("po", {
-                onChange: () => handleChangeQtyOrPO(),
+                onChange: () => handleChangeQtyOrPO(quantity),
                 disabled: updateCartConfigMutation.isPending,
               })}
               id={poId}
