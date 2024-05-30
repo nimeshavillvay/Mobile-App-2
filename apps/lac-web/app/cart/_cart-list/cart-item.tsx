@@ -11,7 +11,6 @@ import type {
 import { formatNumberToPrice } from "@/_lib/utils";
 import { NUMBER_TYPE } from "@/_lib/zod-helper";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Save } from "@repo/web-ui/components/icons/save";
 import { Trash } from "@repo/web-ui/components/icons/trash";
 import { WurthFullBlack } from "@repo/web-ui/components/logos/wurth-full-black";
 import { Button } from "@repo/web-ui/components/ui/button";
@@ -473,15 +472,11 @@ const CartItem = ({
               />
             </Suspense>
 
-            <Button variant="subtle" className="w-full">
-              <Save className="size-4" />
-
-              <span className="sr-only">Save</span>
-            </Button>
-
             <Button
               variant="subtle"
               className="w-full bg-red-50 hover:bg-red-100"
+              onClick={() => handleDeleteCartItem()}
+              disabled={deleteCartItemMutation.isPending}
             >
               <Trash className="size-4 fill-wurth-red-650" />
 
@@ -528,7 +523,7 @@ const CartItem = ({
 
               <Input
                 {...register("quantity", {
-                  onBlur: () => handleChangeQtyOrPO(),
+                  onChange: () => handleChangeQtyOrPO(),
                   disabled: checkAvailabilityQuery.isPending,
                 })}
                 id={quantityId}
@@ -581,7 +576,10 @@ const CartItem = ({
             </Label>
 
             <Input
-              {...register("po", { onBlur: () => handleChangeQtyOrPO() })}
+              {...register("po", {
+                onChange: () => handleChangeQtyOrPO(),
+                disabled: updateCartConfigMutation.isPending,
+              })}
               id={poId}
               type="text"
               placeholder="PO #/ Job Name"
@@ -638,19 +636,6 @@ const CartItem = ({
 
             <Trash className="size-4 fill-wurth-red-650" />
           </Button>
-
-          {/* This is not implemented as this will be rolled out in phase 2
-          <Button
-            variant="ghost"
-            className="h-fit w-full justify-end px-0 py-0"
-            disabled={true}
-            hidden={true}
-          >
-            <span className="text-[13px] leading-5">Save for later</span>
-
-            <Save className="size-4" />
-          </Button>
-          */}
 
           <FavoriteButton
             display="desktop"
