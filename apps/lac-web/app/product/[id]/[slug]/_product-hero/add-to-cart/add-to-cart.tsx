@@ -16,6 +16,7 @@ type AddToCartProps = {
   readonly incQty: number;
   readonly uom: string;
   readonly className?: string;
+  readonly isExcludedProduct?: boolean;
 };
 
 const AddToCart = ({
@@ -24,6 +25,7 @@ const AddToCart = ({
   incQty,
   uom,
   className,
+  isExcludedProduct = false,
 }: AddToCartProps) => {
   const cookiesStore = cookies();
   const sessionCookie = cookiesStore.get(SESSION_TOKEN_COOKIE);
@@ -67,7 +69,10 @@ const AddToCart = ({
       </div>
 
       <Suspense>
-        <RegionalExclusionNotice productId={productId} />
+        <RegionalExclusionNotice
+          productId={productId}
+          isExcludedInLoggedOutState={isExcludedProduct}
+        />
       </Suspense>
     </section>
   );

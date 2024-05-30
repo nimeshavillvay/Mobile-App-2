@@ -3,6 +3,7 @@ import useUpdateCartItemMutation from "@/_hooks/cart/use-update-cart-item-mutati
 import useDebouncedState from "@/_hooks/misc/use-debounced-state.hook";
 import useSuspenseCheckAvailability from "@/_hooks/product/use-suspense-check-availability.hook";
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
+import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
 import type {
   CartConfiguration,
   CartItemConfiguration,
@@ -11,6 +12,7 @@ import type {
 import { formatNumberToPrice } from "@/_lib/utils";
 import { NUMBER_TYPE } from "@/_lib/zod-helper";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Alert } from "@repo/web-ui/components/icons/alert";
 import { Trash } from "@repo/web-ui/components/icons/trash";
 import { WurthFullBlack } from "@repo/web-ui/components/logos/wurth-full-black";
 import { Button } from "@repo/web-ui/components/ui/button";
@@ -34,7 +36,6 @@ import {
   NOT_IN_STOCK,
   TAKE_ON_HAND,
 } from "../constants";
-import CartItemShippingMethod from "./cart-item-shipping-method";
 import FavoriteButton from "./favorite-button";
 import FavoriteButtonSkeleton from "./favorite-button-skeleton";
 import {
@@ -44,6 +45,7 @@ import {
   getShippingMethods,
 } from "./helpers";
 import PlantName from "./plant-name";
+import RegionalExclusionAndShippingMethods from "./regional-exclusion-and-shipping-methods";
 import type { MainOption, ShipToMeOption } from "./types";
 import useCheckAvailabilityMutation from "./use-check-availability-mutation.hook";
 
@@ -66,6 +68,7 @@ type CartItemProps = {
     image: string;
     cartItemId: number;
     slug: string;
+    isExcludedProduct: boolean;
   };
   readonly plants: Plant[];
   readonly cartConfiguration: CartConfiguration;
@@ -85,6 +88,8 @@ const CartItem = ({
 
   const itemConfigHash = product?.configuration?.hashvalue;
   const itemConfigShippingMethod = product?.configuration?.shipping_method_1;
+
+  const checkLoginQuery = useSuspenseCheckLogin(token);
 
   const [selectedWillCallPlant, setSelectedWillCallPlant] = useState(() => {
     if (willCallPlant?.plantCode) {
@@ -587,21 +592,68 @@ const CartItem = ({
       </div>
 
       <div className="md:w-80">
-        <CartItemShippingMethod
-          plants={plants}
-          availability={checkAvailabilityQuery.data}
-          setSelectedWillCallPlant={handleSelectWillCallPlant}
-          selectedWillCallPlant={selectedWillCallPlant}
-          setSelectedShippingOption={setSelectedShippingOption}
-          selectedShippingOption={selectedShippingOption}
-          setSelectedShipToMe={setSelectedShipToMe}
-          selectedShipToMe={selectedShipToMe}
-          setSelectedShippingMethod={setSelectedShippingMethod}
-          selectedShippingMethod={selectedShippingMethod}
-          onSave={handleSave}
-          defaultShippingMethod={defaultShippingMethod}
-          shippingMethods={shippingMethods}
-        />
+        {checkLoginQuery.data.status_code === "NOT_LOGGED_IN" &&
+          (product.isExcludedProduct ? (
+            <div className="flex flex-row gap-2 rounded-lg bg-red-50 p-4">
+              <Alert
+                className="mt-1 shrink-0 stroke-wurth-red-650"
+                width={16}
+                height={16}
+              />
+
+              <div className="flex-1 space-y-1">
+                <h4 className="text-base font-semibold text-wurth-red-650">
+                  Not Available
+                </h4>
+
+                <div className="text-sm leading-6 text-wurth-gray-800">
+                  This item is not available in certain regions. For better
+                  experience please{" "}
+                  <Link href="/sign-in">Sign in or register</Link>.
+                </div>
+              </div>
+            </div>
+          ) : (
+            <RegionalExclusionAndShippingMethods
+              token={token}
+              productId={product.id}
+              plants={plants}
+              availability={checkAvailabilityQuery.data}
+              setSelectedWillCallPlant={handleSelectWillCallPlant}
+              selectedWillCallPlant={selectedWillCallPlant}
+              setSelectedShippingOption={setSelectedShippingOption}
+              selectedShippingOption={selectedShippingOption}
+              setSelectedShipToMe={setSelectedShipToMe}
+              selectedShipToMe={selectedShipToMe}
+              setSelectedShippingMethod={setSelectedShippingMethod}
+              selectedShippingMethod={selectedShippingMethod}
+              onSave={handleSave}
+              defaultShippingMethod={defaultShippingMethod}
+              shippingMethods={shippingMethods}
+            />
+          ))}
+
+        {checkLoginQuery.data.status_code === "OK" && (
+          <Suspense>
+            <RegionalExclusionAndShippingMethods
+              token={token}
+              productId={product.id}
+              plants={plants}
+              availability={checkAvailabilityQuery.data}
+              setSelectedWillCallPlant={handleSelectWillCallPlant}
+              selectedWillCallPlant={selectedWillCallPlant}
+              setSelectedShippingOption={setSelectedShippingOption}
+              selectedShippingOption={selectedShippingOption}
+              setSelectedShipToMe={setSelectedShipToMe}
+              selectedShipToMe={selectedShipToMe}
+              setSelectedShippingMethod={setSelectedShippingMethod}
+              selectedShippingMethod={selectedShippingMethod}
+              onSave={handleSave}
+              defaultShippingMethod={defaultShippingMethod}
+              shippingMethods={shippingMethods}
+            />
+          </Suspense>
+        )}
       </div>
 
       <div className="hidden space-y-3 md:block md:shrink-0">
