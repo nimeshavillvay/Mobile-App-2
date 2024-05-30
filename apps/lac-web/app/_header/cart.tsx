@@ -12,12 +12,7 @@ const Cart = ({
 }) => {
   const cartQuery = useSuspenseCart(token);
   const quantity = cartQuery.data.cartItems.length;
-  let displayQuantity = "0";
-  if (quantity > 99) {
-    displayQuantity = "99+";
-  } else {
-    displayQuantity = quantity.toString();
-  }
+  const displayQuantity = quantity > 99 ? "99+" : quantity.toString();
 
   return (
     <div className="relative">
