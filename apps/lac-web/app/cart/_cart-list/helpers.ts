@@ -8,12 +8,16 @@ export const createCartItemConfig = ({
   plant,
   hash,
   backOrderAll = false,
+  backOrderDate,
+  backOrderQuantity,
 }: {
   method: string;
   quantity: number;
   plant: string;
   hash: string;
   backOrderAll?: boolean;
+  backOrderQuantity?: number;
+  backOrderDate?: string;
 }) => ({
   avail_1: quantity ? quantity.toString() : EMPTY_STRING,
   avail_2: EMPTY_STRING,
@@ -34,6 +38,8 @@ export const createCartItemConfig = ({
   hashvalue: hash,
   will_call_avail: EMPTY_STRING,
   will_call_plant: EMPTY_STRING,
+  backorder_date: backOrderDate,
+  backorder_quantity: backOrderQuantity?.toString(),
 });
 
 export const getAlternativeBranchesConfig = ({
@@ -45,6 +51,8 @@ export const getAlternativeBranchesConfig = ({
     index: number;
     quantity?: number;
     plant: string;
+    backOrderQuantity?: number;
+    backOrderDate?: string;
   }[];
   method: string;
   hash: string;
@@ -57,6 +65,8 @@ export const getAlternativeBranchesConfig = ({
     [`avail_${plant?.index}`]: (plant?.quantity ?? 0).toString(),
     [`plant_${plant?.index}`]: plant?.plant ?? "",
     [`shipping_method_${plant?.index}`]: method,
+    [`backorder_quantity`]: plant?.backOrderQuantity?.toString(),
+    [`backorder_date`]: plant?.backOrderDate,
   }));
 
   config = Object.assign(config, ...data);
