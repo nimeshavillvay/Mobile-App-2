@@ -33,6 +33,7 @@ type OrderItemForMobileProps = {
     productTitle?: string;
     isExcludedProduct?: boolean;
     productName?: string;
+    price: number;
   };
   readonly shippingMethods: ShippingMethod[];
   readonly plants: Plant[];
@@ -56,6 +57,7 @@ const OrderItemForMobile = ({
     lineItems,
     isExcludedProduct,
     productName,
+    price,
   } = orderItem;
 
   const generateItemUrl = ({
@@ -111,9 +113,7 @@ const OrderItemForMobile = ({
               <div>
                 Qty: {totalQuantity} {unitOfMeasure ?? "Unit"}
               </div>
-              <div className="font-bold">
-                ${itemSubTotal ? formatNumberToPrice(itemSubTotal) : "0.00"}
-              </div>
+              <div className="font-bold">${formatNumberToPrice(price)}</div>
             </div>
           </div>
         </div>
