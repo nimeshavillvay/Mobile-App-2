@@ -1,17 +1,16 @@
 import { api } from "@/_lib/api";
-import { DEFAULT_REVALIDATE, SESSION_TOKEN_COOKIE } from "@/_lib/constants";
+import { DEFAULT_REVALIDATE } from "@/_lib/constants";
 import { cn } from "@/_lib/utils";
 import { Phone } from "@repo/web-ui/components/icons/phone";
 import { WurthFullBlack } from "@repo/web-ui/components/logos/wurth-full-black";
 import { Button, buttonVariants } from "@repo/web-ui/components/ui/button";
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
-import { cookies } from "next/headers";
 import Link from "next/link";
 import { Suspense } from "react";
 import ShippingAddressSelector from "./_shipping-address-selector";
 import UserProfile, { UserProfileSkeleton } from "./_user-profile";
 import WillCallPlant from "./_will-call-plant";
-import Cart from "./cart";
+import CartRoot from "./cart-root";
 import DesktopNavigationMenu from "./desktop-navigation-menu";
 import MobileNavigationMenu from "./mobile-navigation-menu";
 import OSRDetails from "./osr-details";
@@ -19,9 +18,6 @@ import SearchBar from "./search-bar";
 import type { Category, TransformedCategory } from "./types";
 
 const Header = async () => {
-  const cookiesStore = cookies();
-  const sessionCookie = cookiesStore.get(SESSION_TOKEN_COOKIE);
-
   const categories = await api
     .get("rest/getcategorylist/0", {
       searchParams: {
@@ -72,10 +68,6 @@ const Header = async () => {
   };
 
   const transformedCategory = categories.map(transformCategory);
-
-  if (!sessionCookie?.value) {
-    return null;
-  }
 
   return (
     <header className="flex flex-col gap-4 border-b border-b-wurth-gray-250 pb-5 shadow-[0px_1px_5px_0px_rgba(0,0,0,0.05),0px_1px_2px_-1px_rgba(0,0,0,0.05)] md:border-0 md:pb-0">
@@ -144,7 +136,7 @@ const Header = async () => {
               "size-6 md:hidden",
             )}
           >
-            <Cart type="mobile" token={sessionCookie?.value} />
+            <CartRoot type="mobile" />
 
             <span className="sr-only">Cart</span>
           </Link>
@@ -161,7 +153,7 @@ const Header = async () => {
               "hidden shrink-0 md:flex md:h-min md:flex-row md:items-center md:gap-2 md:p-0",
             )}
           >
-            <Cart type="desktop" token={sessionCookie?.value} />
+            <CartRoot type="desktop" />
 
             <span className="text-base font-semibold">Cart</span>
           </Link>

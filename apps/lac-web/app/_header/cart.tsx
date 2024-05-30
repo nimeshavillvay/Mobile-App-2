@@ -17,7 +17,7 @@ const Cart = ({
   return (
     <div className="relative">
       <ShoppingCart className={type === "desktop" ? "size-7" : ""} />
-      <span className="absolute -right-1 -top-1 min-w-5 max-w-7  rounded-full bg-wurth-red-650 p-1 text-center text-[0.625rem] font-semibold leading-none text-white">
+      <span className="absolute -right-1 -top-1 min-w-5 max-w-7 rounded-full bg-wurth-red-650 p-1 text-center text-[0.625rem] font-semibold leading-none text-white">
         {displayQuantity}
       </span>
     </div>
