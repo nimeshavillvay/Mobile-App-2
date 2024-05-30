@@ -70,6 +70,7 @@ export const ProductsGridFilters = ({
                       onCheckedChange={(checked) =>
                         toggleCheck(filter.id, value.id, checked)
                       }
+                      disabled={!value.active}
                     />
 
                     <Label htmlFor={getCheckboxId(filter.id, value.id)}>

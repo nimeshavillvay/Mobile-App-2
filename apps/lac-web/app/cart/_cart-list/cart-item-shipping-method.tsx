@@ -51,6 +51,7 @@ import {
   findAvailabilityOptionForType,
   getAlternativeBranchesConfig,
 } from "./helpers";
+import PlantName from "./plant-name";
 import type { MainOption, OptionPlant, ShipToMeOption } from "./types";
 
 const UI_DATE_FORMAT = "ddd, MMM. DD YYYY";
@@ -127,11 +128,6 @@ const CartItemShippingMethod = ({
 
     // Calculate the total quantity
     return plantValues.reduce((acc, plant) => acc + (plant.quantity ?? 0), 0);
-  };
-
-  const getPlantName = (plantCode: string) => {
-    const foundPlant = plants.find((plant) => plant.code === plantCode);
-    return foundPlant?.name ?? "Plant N/A";
   };
 
   const isVendorShipped = !!availableAll?.plants
@@ -412,9 +408,10 @@ const CartItemShippingMethod = ({
                           <ItemCountBadge count={availableAllPlant.quantity} />
                         )}
                         &nbsp;from&nbsp;
-                        {availableAllPlant?.plant
-                          ? getPlantName(availableAllPlant.plant)
-                          : "Plant N/A"}
+                        <PlantName
+                          plants={plants}
+                          plantCode={availableAllPlant?.plant}
+                        />
                       </div>
                     </div>
                   </div>
@@ -433,9 +430,10 @@ const CartItemShippingMethod = ({
                           <ItemCountBadge count={takeOnHandPlant.quantity} />
                         )}
                         &nbsp;from&nbsp;
-                        {takeOnHandPlant?.plant
-                          ? getPlantName(takeOnHandPlant?.plant)
-                          : "Plant N/A"}
+                        <PlantName
+                          plants={plants}
+                          plantCode={takeOnHandPlant?.plant}
+                        />
                       </div>
 
                       {takeOnHand.backOrder && (
@@ -459,7 +457,7 @@ const CartItemShippingMethod = ({
 
                     <div className="flex flex-col gap-0.5">
                       <div className="text-wrap font-medium">
-                        {shipAlternativeBranch.plants?.["1"]?.quantity && (
+                        {shipAlternativeBranch.plants?.length > 0 && (
                           <ItemCountBadge
                             count={calculateAllPlantsQuantity(
                               shipAlternativeBranch.plants,
@@ -467,11 +465,10 @@ const CartItemShippingMethod = ({
                           />
                         )}
                         &nbsp;from&nbsp;
-                        {shipAlternativeBranch.plants?.["1"]?.plant
-                          ? getPlantName(
-                              shipAlternativeBranch.plants?.["1"]?.plant,
-                            )
-                          : "Plant N/A"}
+                        <PlantName
+                          plants={plants}
+                          plantCode={shipAlternativeBranch.plants?.at(0)?.plant}
+                        />
                         &nbsp;and&nbsp;
                         <span className="font-normal">
                           other alternative branches
@@ -481,7 +478,7 @@ const CartItemShippingMethod = ({
                       {shipAlternativeBranch.backOrder && (
                         <BackOrderItemCountLabel
                           count={
-                            shipAlternativeBranch.plants?.["1"]
+                            shipAlternativeBranch.plants?.at(0)
                               ?.backOrderQuantity ?? 0
                           }
                         />
@@ -530,7 +527,12 @@ const CartItemShippingMethod = ({
                                   )?.map((plant) => (
                                     <TableRow key={plant.plant}>
                                       <TableCell>
-                                        <div>{getPlantName(plant.plant)}</div>
+                                        <div>
+                                          <PlantName
+                                            plants={plants}
+                                            plantCode={plant.plant}
+                                          />
+                                        </div>
                                         <div className="text-xs">
                                           via&nbsp;
                                           {shippingMethods?.find(
@@ -617,7 +619,10 @@ const CartItemShippingMethod = ({
                     <ItemCountBadge count={willCallAnywhere.willCallQuantity} />
                     &nbsp;<span className="font-medium">pick up at</span>
                     &nbsp;
-                    {getPlantName(willCallAnywhere.willCallPlant)}
+                    <PlantName
+                      plants={plants}
+                      plantCode={willCallAnywhere.willCallPlant}
+                    />
                   </div>
                 )}
 
@@ -629,23 +634,11 @@ const CartItemShippingMethod = ({
                       />
                       &nbsp;<span className="font-medium">pick up at</span>
                       &nbsp;
-                      {getPlantName(willCallAnywhere.willCallPlant)}
+                      <PlantName
+                        plants={plants}
+                        plantCode={willCallAnywhere.willCallPlant}
+                      />
                     </div>
-
-                    {willCallAnywhere.backOrderQuantity_1 &&
-                      willCallAnywhere.backOrderQuantity_1 > 0 && (
-                        <div className="flex items-center text-sm">
-                          <ItemCountBadge
-                            count={willCallAnywhere.backOrderQuantity_1}
-                            className="bg-red-600/10 text-red-600"
-                          />
-                          &nbsp;<span className="font-medium">pick up at</span>
-                          &nbsp;
-                          {willCallAnywhere.plant_1
-                            ? getPlantName(willCallAnywhere.plant_1)
-                            : "Plant N/A"}
-                        </div>
-                      )}
 
                     {willCallAnywhere?.backOrder && (
                       <BackOrderItemCountLabel
@@ -659,7 +652,10 @@ const CartItemShippingMethod = ({
                   <>
                     <div className="rounded bg-red-800/10 px-2 py-1 text-sm text-red-800">
                       This item is out of stock at&nbsp;
-                      {getPlantName(willCallAnywhere.willCallPlant)}
+                      <PlantName
+                        plants={plants}
+                        plantCode={willCallAnywhere.willCallPlant}
+                      />
                     </div>
 
                     <BackOrderItemCountLabel

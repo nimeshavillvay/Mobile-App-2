@@ -1,7 +1,7 @@
 "use client";
 
 import { ProductsGridDesktopFiltersHeader } from "@/_components/products-grid";
-import useSuspenseFilters from "@/_hooks/search/use-suspense-filters.hook";
+import useSuspenseCategoryFilters from "./use-suspense-category-filters.hook";
 
 type ProductsListDesktopFiltersHeaderProps = {
   readonly token: string;
@@ -12,13 +12,14 @@ const ProductsListDesktopFiltersHeader = ({
   token,
   categoryId,
 }: ProductsListDesktopFiltersHeaderProps) => {
-  const filtersQuery = useSuspenseFilters(token, {
-    type: "Categories",
-    id: categoryId,
-    membershipId: 0,
+  const categoryFiltersQuery = useSuspenseCategoryFilters({
+    token,
+    categoryId,
   });
 
-  return <ProductsGridDesktopFiltersHeader filters={filtersQuery.data} />;
+  return (
+    <ProductsGridDesktopFiltersHeader filters={categoryFiltersQuery.data} />
+  );
 };
 
 export default ProductsListDesktopFiltersHeader;

@@ -33,7 +33,9 @@ const useSuspenseFilters = (
     | {
         type: typeof CATEGORIES;
         id: string;
-        membershipId: number;
+        values: {
+          [key: string]: string[] | undefined;
+        };
       },
 ) => {
   return useSuspenseQuery({
@@ -41,8 +43,23 @@ const useSuspenseFilters = (
     queryFn: async () => {
       const searchParams = new URLSearchParams();
 
-      if (args.type === "Categories" && args.membershipId >= 0) {
-        searchParams.append("membershipid", args.membershipId.toString());
+      const rfData: {
+        [attributeId: string]: {
+          [valueId: string]: "Y";
+        };
+      } = {};
+
+      if (args.type === "Categories") {
+        for (const [key, values] of Object.entries(args.values)) {
+          if (values) {
+            for (const value of values) {
+              rfData[key] = {
+                ...rfData[key],
+                [value]: "Y",
+              };
+            }
+          }
+        }
       }
 
       if (
@@ -61,6 +78,9 @@ const useSuspenseFilters = (
             searchParams,
             headers: {
               Authorization: `Bearer ${token}`,
+            },
+            json: {
+              rf_data: rfData,
             },
             cache: "no-store",
           },
