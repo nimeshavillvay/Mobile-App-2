@@ -25,6 +25,7 @@ import {
 import { Input } from "@repo/web-ui/components/ui/input";
 import { useToast } from "@repo/web-ui/components/ui/toast";
 import dayjs from "dayjs";
+import isEqual from "lodash/isEqual";
 import { LoaderCircle } from "lucide-react";
 import { Fragment, useState, type Dispatch, type SetStateAction } from "react";
 import type { Control } from "react-hook-form";
@@ -121,6 +122,9 @@ const AddToShoppingListDialog = ({
   const handleShoppingListNameSubmit = async (
     formData: ShoppingListNameSchema,
   ) => {
+    if (isEqual(selectedShoppingLists, favoriteListIds)) {
+      return;
+    }
     setIsLoading(true);
 
     const updatedShoppingLists = selectedShoppingLists;
