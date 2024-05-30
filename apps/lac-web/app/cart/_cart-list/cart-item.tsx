@@ -11,7 +11,6 @@ import type {
 import { formatNumberToPrice } from "@/_lib/utils";
 import { NUMBER_TYPE } from "@/_lib/zod-helper";
 import { zodResolver } from "@hookform/resolvers/zod";
-// import { Save } from "@repo/web-ui/components/icons/save"; TODO - This is not implemented as this will be rolled out in phase 2
 import { Trash } from "@repo/web-ui/components/icons/trash";
 import { WurthFullBlack } from "@repo/web-ui/components/logos/wurth-full-black";
 import { Button } from "@repo/web-ui/components/ui/button";
@@ -473,13 +472,6 @@ const CartItem = ({
               />
             </Suspense>
 
-            {/* TODO - This is not implemented as this will be rolled out in phase 2
-            <Button variant="subtle" className="w-full">
-              <Save className="size-4" />
-
-              <span className="sr-only">Save</span>
-            </Button> */}
-
             <Button
               variant="subtle"
               className="w-full bg-red-50 hover:bg-red-100"
@@ -644,19 +636,6 @@ const CartItem = ({
 
             <Trash className="size-4 fill-wurth-red-650" />
           </Button>
-
-          {/* TODO - This is not implemented as this will be rolled out in phase 2
-          <Button
-            variant="ghost"
-            className="h-fit w-full justify-end px-0 py-0"
-            disabled={true}
-            hidden={true}
-          >
-            <span className="text-[13px] leading-5">Save for later</span>
-
-            <Save className="size-4" />
-          </Button>
-          */}
 
           <FavoriteButton
             display="desktop"
