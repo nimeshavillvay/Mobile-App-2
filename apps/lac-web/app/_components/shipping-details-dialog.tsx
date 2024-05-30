@@ -1,6 +1,7 @@
 "use client";
 
 import FullAddress from "@/_components/full-address";
+import ShippingAddressSelector from "@/_components/shipping-adddress-selector";
 import useSuspenseBillingAddress from "@/_hooks/address/use-suspense-billing-address.hook";
 import useSuspenseShippingAddressList from "@/_hooks/address/use-suspense-shipping-address-list.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
@@ -16,7 +17,6 @@ import {
   DialogTrigger,
 } from "@repo/web-ui/components/ui/dialog";
 import { useState } from "react";
-import ShippingAddressSelector from "./shipping-adddress-selector"; // TODO: Move to _components and link with other places (ex: Checkout)
 
 const WEEK_DAYS = {
   MONDAY: "Monday",

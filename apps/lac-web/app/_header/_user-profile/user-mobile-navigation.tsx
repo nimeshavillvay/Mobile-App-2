@@ -1,3 +1,4 @@
+import ShippingDetailsDialog from "@/_components/shipping-details-dialog";
 import useLogoutMutation from "@/_hooks/user/use-logout-mutation.hook";
 import useOSRLogoutMutation from "@/_hooks/user/use-osr-logout-mutation.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
@@ -17,7 +18,6 @@ import {
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import Link from "next/link";
 import { Suspense } from "react";
-import ShippingDetailsDialog from "../_shipping-details-dialog/shipping-details-dialog"; // TODO: Move to _components and link with other places
 import ButtonContent, { buttonClasses } from "./button-content";
 
 const sectionLinkStyles = cva({
