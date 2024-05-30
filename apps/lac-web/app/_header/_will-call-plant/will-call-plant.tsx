@@ -1,7 +1,6 @@
 "use client";
 
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
-import type { Plant } from "@/_lib/types";
 import { Map } from "@repo/web-ui/components/icons/map";
 import { Phone } from "@repo/web-ui/components/icons/phone";
 import { Shop } from "@repo/web-ui/components/icons/shop";
@@ -23,10 +22,9 @@ const DEFAULT_PLANT = "Brea, CA";
 
 type WillCallPlantProps = {
   readonly token: string;
-  readonly plants: Plant[];
 };
 
-const WillCallPlantDrawer = ({ token, plants }: WillCallPlantProps) => {
+const WillCallPlantDrawer = ({ token }: WillCallPlantProps) => {
   const willCallPlantQuery = useSuspenseWillCallPlant(token);
   const { plantName, address, operationHours } = willCallPlantQuery.data;
 
