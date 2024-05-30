@@ -69,7 +69,7 @@ type CartItemProps = {
   };
   readonly plants: Plant[];
   readonly cartConfiguration: CartConfiguration;
-  readonly willCallPlant: { plant: string };
+  readonly willCallPlant: { plantCode: string };
 };
 
 const CartItem = ({
@@ -87,8 +87,8 @@ const CartItem = ({
   const itemConfigShippingMethod = product?.configuration?.shipping_method_1;
 
   const [selectedWillCallPlant, setSelectedWillCallPlant] = useState(() => {
-    if (willCallPlant?.plant) {
-      return willCallPlant.plant;
+    if (willCallPlant?.plantCode) {
+      return willCallPlant.plantCode;
     }
     return plants?.at(0)?.code ?? "";
   });
@@ -130,6 +130,7 @@ const CartItem = ({
     status,
     availableLocations,
     willCallAnywhere,
+    xplant,
   } = checkAvailabilityQuery.data;
 
   const firstLocation = availableLocations.at(0);
@@ -560,11 +561,7 @@ const CartItem = ({
                 &nbsp;at&nbsp;
                 <PlantName
                   plants={plants}
-                  plantCode={
-                    willCallPlant.plant !== ""
-                      ? willCallPlant?.plant
-                      : DEFAULT_PLANT
-                  }
+                  plantCode={xplant !== "" ? xplant : DEFAULT_PLANT}
                 />
               </div>
             )}
