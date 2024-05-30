@@ -82,6 +82,8 @@ const useSuspenseSimulationCheckout = (token: string) => {
           expireDate: data.configuration.expireDate,
           shippingAddressId: data.configuration.shippingAddressId,
           paymentToken: data.configuration.paymentToken,
+          backOrderDate: data.configuration.backorder_date,
+          backOrderQuantity: data.configuration.backorder_quantity,
         },
         productslist: data.productslist.map((item) => ({
           extendedPrice: item.extendedprice,
