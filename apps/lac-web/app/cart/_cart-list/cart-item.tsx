@@ -527,7 +527,7 @@ const CartItem = ({
 
               <Input
                 {...register("quantity", {
-                  onBlur: () => handleChangeQtyOrPO(),
+                  onChange: () => handleChangeQtyOrPO(),
                   disabled: checkAvailabilityQuery.isPending,
                 })}
                 id={quantityId}
@@ -580,7 +580,10 @@ const CartItem = ({
             </Label>
 
             <Input
-              {...register("po", { onBlur: () => handleChangeQtyOrPO() })}
+              {...register("po", {
+                onChange: () => handleChangeQtyOrPO(),
+                disabled: updateCartConfigMutation.isPending,
+              })}
               id={poId}
               type="text"
               placeholder="PO #/ Job Name"
