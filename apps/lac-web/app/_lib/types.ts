@@ -237,6 +237,16 @@ export type Address = {
   shipTo?: string;
   soldTo?: string;
   default?: boolean;
+  defaultShipping?: string | boolean;
+  routeInfo?: {
+    monday: boolean;
+    tuesday: boolean;
+    wednesday: boolean;
+    thursday: boolean;
+    friday: boolean;
+    route: string | null;
+    routeName: string;
+  };
 };
 
 export type AddressCheckSuggestions = {

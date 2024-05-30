@@ -18,6 +18,14 @@ import {
 import { useState } from "react";
 import ShippingAddressSelector from "./shipping-adddress-selector"; // TODO: Move to _components and link with other places (ex: Checkout)
 
+const WEEK_DAYS = {
+  MONDAY: "Monday",
+  TUESDAY: "Tuesday",
+  WEDNESDAY: "Wednesday",
+  THURSDAY: "Thursday",
+  FRIDAY: "Friday",
+} as const;
+
 type ShippingDetailsDialogProps = {
   readonly token: Token;
   readonly children?: React.ReactNode;
@@ -111,14 +119,31 @@ const ShippingDetailsDialogButton = ({
                 Preferred Shipping Method
               </div>
               <div className="font-semibold">
-                Same Day Shipping (Order before 12 noon)
+                {defaultAddress?.defaultShipping
+                  ? defaultAddress.defaultShipping
+                  : "Not Available"}
               </div>
             </div>
             <div className="p-3">
               <div className="font-light text-wurth-gray-500">
                 Delivery Dates
               </div>
-              <div className="font-bold">Monday - Friday</div>
+              <div className="font-bold">
+                {defaultAddress?.routeInfo?.monday && `${WEEK_DAYS.MONDAY} `}
+                {defaultAddress?.routeInfo?.tuesday && `${WEEK_DAYS.TUESDAY} `}
+                {defaultAddress?.routeInfo?.wednesday &&
+                  `${WEEK_DAYS.WEDNESDAY} `}
+                {defaultAddress?.routeInfo?.thursday &&
+                  `${WEEK_DAYS.THURSDAY} `}
+                {defaultAddress?.routeInfo?.friday && WEEK_DAYS.FRIDAY}
+
+                {!defaultAddress?.routeInfo?.monday &&
+                  !defaultAddress?.routeInfo?.tuesday &&
+                  !defaultAddress?.routeInfo?.wednesday &&
+                  !defaultAddress?.routeInfo?.thursday &&
+                  !defaultAddress?.routeInfo?.friday &&
+                  "No Delivery Dates"}
+              </div>
             </div>
           </div>
         </div>
