@@ -59,7 +59,7 @@ const UI_DATE_FORMAT = "ddd, MMM. DD YYYY";
 // Vendor Direct Shipping Method
 const VENDOR_DIRECT_CODE = "D";
 
-type CartItemShippingMethodProps = {
+export type CartItemShippingMethodProps = {
   readonly plants: Plant[];
   readonly availability: Availability;
   readonly setSelectedWillCallPlant: (plant: string) => void;

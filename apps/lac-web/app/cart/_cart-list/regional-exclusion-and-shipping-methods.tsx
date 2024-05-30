@@ -1,17 +1,14 @@
 import Warning from "@/_components/warning";
 import useSuspenseProductExcluded from "@/_hooks/product/use-suspense-product-excluded.hook";
-import type { CartItemConfiguration, Plant } from "@/_lib/types";
-import type { Dispatch, SetStateAction } from "react";
-import type { Availability, ShippingMethod } from "../types";
+import type { CartItemShippingMethodProps } from "./cart-item-shipping-method";
 import CartItemShippingMethod from "./cart-item-shipping-method";
-import type { MainOption, ShipToMeOption } from "./types";
 
 const RegionalExclusionAndShippingMethods = ({
   token,
   productId,
   plants,
   availability,
-  handleSelectWillCallPlant,
+  setSelectedWillCallPlant,
   selectedWillCallPlant,
   setSelectedShippingOption,
   selectedShippingOption,
@@ -19,27 +16,12 @@ const RegionalExclusionAndShippingMethods = ({
   selectedShipToMe,
   setSelectedShippingMethod,
   selectedShippingMethod,
-  handleSave,
+  onSave,
   defaultShippingMethod,
   shippingMethods,
-}: {
+}: CartItemShippingMethodProps & {
   readonly token: string;
   readonly productId: number;
-  readonly plants: Plant[];
-  readonly availability: Availability;
-  readonly handleSelectWillCallPlant: (plant: string) => void;
-  readonly selectedWillCallPlant: string;
-  readonly setSelectedShippingOption: Dispatch<
-    SetStateAction<MainOption | undefined>
-  >;
-  readonly selectedShippingOption: MainOption | undefined;
-  readonly setSelectedShipToMe: (shipToMe: ShipToMeOption) => void;
-  readonly selectedShipToMe: ShipToMeOption;
-  readonly setSelectedShippingMethod: (method: string) => void;
-  readonly selectedShippingMethod: string;
-  readonly handleSave: (config: Partial<CartItemConfiguration>) => void;
-  readonly defaultShippingMethod: ShippingMethod | undefined;
-  readonly shippingMethods: ShippingMethod[];
 }) => {
   const productExcludedQuery = useSuspenseProductExcluded(token, productId);
 
@@ -56,7 +38,7 @@ const RegionalExclusionAndShippingMethods = ({
     <CartItemShippingMethod
       plants={plants}
       availability={availability}
-      setSelectedWillCallPlant={handleSelectWillCallPlant}
+      setSelectedWillCallPlant={setSelectedWillCallPlant}
       selectedWillCallPlant={selectedWillCallPlant}
       setSelectedShippingOption={setSelectedShippingOption}
       selectedShippingOption={selectedShippingOption}
@@ -64,7 +46,7 @@ const RegionalExclusionAndShippingMethods = ({
       selectedShipToMe={selectedShipToMe}
       setSelectedShippingMethod={setSelectedShippingMethod}
       selectedShippingMethod={selectedShippingMethod}
-      onSave={handleSave}
+      onSave={onSave}
       defaultShippingMethod={defaultShippingMethod}
       shippingMethods={shippingMethods}
     />
