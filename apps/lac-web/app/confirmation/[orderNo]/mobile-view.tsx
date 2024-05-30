@@ -265,7 +265,7 @@ const MobileView = async ({ orderNo }: MobileViewProps) => {
                     className={cn(tableValueStyles(), "text-right font-normal")}
                   >
                     {orderDetails.handlingFee > 0
-                      ? `$${orderDetails.handlingFee}`
+                      ? `$${formatNumberToPrice(orderDetails.handlingFee)}`
                       : "Free"}
                   </td>
                 </tr>
@@ -273,7 +273,7 @@ const MobileView = async ({ orderNo }: MobileViewProps) => {
                 <tr>
                   <td className={tableLabelStyles()}>Sales tax</td>
                   <td className={cn(tableValueStyles(), "text-right")}>
-                    ${orderDetails.taxAmount}
+                    ${formatNumberToPrice(orderDetails.taxAmount)}
                   </td>
                 </tr>
               </tbody>
@@ -287,7 +287,7 @@ const MobileView = async ({ orderNo }: MobileViewProps) => {
             <div className="flex flex-row items-center justify-between pb-4 text-base text-wurth-gray-800">
               <div>Estimated total</div>
 
-              <div>${orderDetails.orderTotal}</div>
+              <div>${formatNumberToPrice(orderDetails.orderTotal)}</div>
             </div>
           </div>
         </section>
