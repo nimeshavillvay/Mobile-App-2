@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 const AboutUsPage = () => {
   return (
-    <>
+    <div className="container">
       {/* Section banner */}
       <Image
         src={aboutBanner}
@@ -88,8 +88,7 @@ const AboutUsPage = () => {
           cabinetmakers, woodworkers and for architects and designers that
           specify our products.
         </p>
-
-        <div className="relative w-full pt-8 md:w-1/2">
+        <div className="relative w-full pt-8 md:w-1/2 xl:w-1/3">
           <h2 className="relative pr-3 text-lg font-medium text-brand-primary">
             Our Mission Statement
           </h2>
@@ -104,8 +103,7 @@ const AboutUsPage = () => {
           People dedicated to providing excellent service and fine-quality
           products to the woodworking industry.
         </p>
-
-        <div className="relative w-full pt-8 md:w-1/2">
+        <div className="relative w-full pt-8 md:w-1/2 xl:w-1/3">
           <h2 className="relative pr-3 text-lg font-medium text-brand-primary">
             Corporate Executives
           </h2>
@@ -116,51 +114,47 @@ const AboutUsPage = () => {
           />
         </div>
 
-        <div className="grid grid-cols-2 gap-8 md:w-1/2">
-          <div className="relative">
-            <div className="relative flex flex-col rounded border border-brand-gray-200">
-              <Image
-                src={chiefExecutiveOfficer}
-                alt="Photo of Thomas Stolmeier"
-                placeholder="blur"
-                className="w-full rounded-t"
-                priority={true}
-              />
+        <div className="grid grid-cols-1 grid-rows-2 gap-8 sm:grid-cols-2 sm:grid-rows-6 md:w-1/2 xl:w-1/3">
+          <figure className="row-span-5 flex flex-col rounded-t border border-black">
+            <Image
+              src={chiefExecutiveOfficer}
+              alt="Photo of Thomas Stolmeier"
+              placeholder="blur"
+              className="w-full rounded-t"
+              priority={true}
+            />
 
-              <div className="break-words p-4">
-                <h4 className="mb-2 text-base font-medium">Thomas Stolmeier</h4>
+            <figcaption className="row-span-1 p-2 pl-3">
+              <h3 className="font-wurth text-lg font-bold leading-5">
+                Thomas Stolmeier
+              </h3>
+              <p className="mt-2 break-words font-arial italic">
+                President and Chief Executive Officer Wurth Louis and Company
+              </p>
+            </figcaption>
+          </figure>
 
-                <p className="text-sm italic">
-                  President and Chief Executive Officer Wurth Louis and Company
-                </p>
-              </div>
-            </div>
-          </div>
+          <figure className="row-span-5 flex flex-col rounded-t border border-black">
+            <Image
+              src={chiefFinancialOfficer}
+              alt="Photo of Thomas Stolmeier"
+              placeholder="blur"
+              className="w-full rounded-t"
+              priority={true}
+            />
 
-          <div className="relative">
-            <div className="relative flex flex-col rounded border border-brand-gray-200">
-              <Image
-                src={chiefFinancialOfficer}
-                alt="Photo of Evangeline B. de Guzman"
-                placeholder="blur"
-                className="w-full rounded-t"
-                priority={true}
-              />
-
-              <div className="break-words p-4">
-                <h4 className="mb-2 text-base font-medium">
-                  Evangeline B. de Guzman
-                </h4>
-
-                <p className="text-sm italic">
-                  Chief Financial Officer Wurth Louis and Company
-                </p>
-              </div>
-            </div>
-          </div>
+            <figcaption className="row-span-1 p-2 pl-3">
+              <h3 className="font-wurth text-lg font-bold leading-5">
+                Evangeline B. de Guzman
+              </h3>
+              <p className="mt-2 break-words font-arial italic">
+                Chief Financial Officer Wurth Louis and Company
+              </p>
+            </figcaption>
+          </figure>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
