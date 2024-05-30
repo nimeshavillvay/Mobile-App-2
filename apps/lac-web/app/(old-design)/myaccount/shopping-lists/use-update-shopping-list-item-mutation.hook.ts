@@ -47,6 +47,10 @@ const useUpdateShoppingListItemMutation = () => {
       queryClient.invalidateQueries({
         queryKey: ["user", `favorite-skus-${productIdsAsString}`],
       });
+
+      queryClient.invalidateQueries({
+        queryKey: ["my-account", "shopping-list"],
+      });
     },
   });
 };
