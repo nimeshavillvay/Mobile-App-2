@@ -2,6 +2,7 @@
 
 import useSuspenseSimulationCheckout from "@/_hooks/cart/use-suspense-simulation-checkout.hook";
 import useUpdateCartConfigMutation from "@/_hooks/cart/use-update-cart-config-mutation.hook";
+import { formatNumberToPrice } from "@/_lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus } from "@repo/web-ui/components/icons/plus";
 import { Button } from "@repo/web-ui/components/ui/button";
@@ -95,7 +96,10 @@ const OrderSummary = ({ token, children }: OrderSummaryProps) => {
             </td>
 
             <td className="pb-1 text-right">
-              ${simulationCheckoutQuery.data.net.toFixed(2)}
+              $
+              {formatNumberToPrice(
+                parseFloat(simulationCheckoutQuery.data.net.toFixed(2)),
+              )}
             </td>
           </tr>
 
@@ -104,7 +108,10 @@ const OrderSummary = ({ token, children }: OrderSummaryProps) => {
               <td className="py-1">Savings</td>
 
               <td className="py-1 text-right font-medium text-green-700">
-                -${simulationCheckoutQuery.data.discount.toFixed(2)}
+                -$
+                {formatNumberToPrice(
+                  parseFloat(simulationCheckoutQuery.data.discount.toFixed(2)),
+                )}
               </td>
             </tr>
           )}
@@ -114,7 +121,7 @@ const OrderSummary = ({ token, children }: OrderSummaryProps) => {
 
             <td className="py-1 text-right">
               {simulationCheckoutQuery.data.shippingCost > 0
-                ? `$${simulationCheckoutQuery.data.shippingCost.toFixed(2)}`
+                ? `$${formatNumberToPrice(parseFloat(simulationCheckoutQuery.data.shippingCost.toFixed(2)))}`
                 : "Free"}
             </td>
           </tr>
@@ -127,7 +134,10 @@ const OrderSummary = ({ token, children }: OrderSummaryProps) => {
             </td>
 
             <td className="py-1 text-right">
-              ${simulationCheckoutQuery.data.tax.toFixed(2)}
+              $
+              {formatNumberToPrice(
+                parseFloat(simulationCheckoutQuery.data.tax.toFixed(2)),
+              )}
             </td>
           </tr>
 
@@ -218,7 +228,10 @@ const OrderSummary = ({ token, children }: OrderSummaryProps) => {
             <td className="py-4 pb-1">Estimated total</td>
 
             <td className="py-4 pb-1 text-right text-base">
-              ${simulationCheckoutQuery.data.total.toFixed(2)}
+              $
+              {formatNumberToPrice(
+                parseFloat(simulationCheckoutQuery.data.total.toFixed(2)),
+              )}
             </td>
           </tr>
         </tbody>

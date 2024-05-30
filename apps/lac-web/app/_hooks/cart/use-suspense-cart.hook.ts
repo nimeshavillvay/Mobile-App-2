@@ -44,8 +44,6 @@ const useSuspenseCart = (token: string) => {
         cartItems: data.cartItems.map((item) => ({
           code: item.code,
           quantity: item.quantity,
-          backOrderQuantity: item.backOrderQuantity,
-          backOrderDate: item.backOrderDate,
           cartItemId: item.cart_item_id,
           configuration: item.configuration,
           mappedConfiguration: {
