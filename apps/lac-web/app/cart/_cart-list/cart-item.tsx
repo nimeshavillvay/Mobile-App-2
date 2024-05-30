@@ -130,6 +130,7 @@ const CartItem = ({
     status,
     availableLocations,
     willCallAnywhere,
+    xplant,
   } = checkAvailabilityQuery.data;
 
   const firstLocation = availableLocations.at(0);
@@ -560,11 +561,7 @@ const CartItem = ({
                 &nbsp;at&nbsp;
                 <PlantName
                   plants={plants}
-                  plantCode={
-                    willCallPlant.plantCode !== ""
-                      ? willCallPlant?.plantCode
-                      : DEFAULT_PLANT
-                  }
+                  plantCode={xplant !== "" ? xplant : DEFAULT_PLANT}
                 />
               </div>
             )}
