@@ -82,11 +82,7 @@ const CartList = ({ token, plants }: CartListProps) => {
           </Button>
         )}
 
-        <Button
-          className="flex-1 font-bold md:hidden"
-          onClick={() => handleClearCart()}
-          disabled={true}
-        >
+        <Button className="flex-1 font-bold md:hidden" disabled={true}>
           <Plus className="size-4 stroke-white" />
           <span>Add an item</span>
         </Button>
