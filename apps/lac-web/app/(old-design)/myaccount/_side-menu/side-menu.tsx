@@ -3,13 +3,13 @@
 import useLogoutMutation from "@/_hooks/user/use-logout-mutation.hook";
 import useOSRLogoutMutation from "@/_hooks/user/use-osr-logout-mutation.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
+import { cn } from "@/_lib/utils";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/old/_components/ui/accordion";
-import { cn } from "@/old/_utils/helpers";
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import { cva } from "cva";
 import Link from "next/link";

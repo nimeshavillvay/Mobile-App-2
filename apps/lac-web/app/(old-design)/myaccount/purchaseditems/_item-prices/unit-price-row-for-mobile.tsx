@@ -1,4 +1,4 @@
-import { formatNumberToPrice } from "@/old/_utils/helpers";
+import { formatNumberToPrice } from "@/_lib/utils";
 import { calculatePriceDetails } from "@/old/_utils/price-utils";
 
 type UnitPriceRowForMobileProps = {

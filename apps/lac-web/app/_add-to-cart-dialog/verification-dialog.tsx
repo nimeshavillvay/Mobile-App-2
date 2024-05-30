@@ -1,6 +1,7 @@
 "use client";
 
 import QuantityInputField from "@/_components/quantity-input-field";
+import QuantityWarning from "@/_components/quantity-warning";
 import useAddToCartMutation from "@/_hooks/cart/use-add-to-cart-mutation.hook";
 import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
 import useDebouncedState from "@/_hooks/misc/use-debounced-state.hook";
@@ -31,6 +32,7 @@ import { Input } from "@repo/web-ui/components/ui/input";
 import { Label } from "@repo/web-ui/components/ui/label";
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import Image from "next/image";
+import Link from "next/link";
 import { Suspense, useId } from "react";
 import {
   Controller,
@@ -77,7 +79,9 @@ const VerificationDialog = ({ token }: VerificationDialogProps) => {
   const addToCartForm = useForm<VerificationDialogSchema>({
     values: {
       poOrJobName: "",
-      quantity: itemInfo?.minimumOrderQuantity ?? 1,
+      quantity: itemInfo?.minimumOrderQuantity ?? -1,
+      // The placeholder is set to -1 to prevent the QuantityWarning component
+      // from showing when the dialog is opened
     },
     resolver: zodResolver(verificationDialogSchema),
   });
@@ -99,13 +103,18 @@ const VerificationDialog = ({ token }: VerificationDialogProps) => {
           <div className="flex flex-col gap-5">
             {itemInfo ? (
               <div className="flex flex-row items-start gap-4">
-                <Image
-                  src={itemInfo.image}
-                  alt={`An image of ${itemInfo.productName}`}
-                  width={180}
-                  height={180}
-                  className="shrink-0 rounded object-contain"
-                />
+                <Link
+                  href={`/product/${itemInfo.productId}/${itemInfo.slug}`}
+                  onClick={() => setOpen("closed")}
+                >
+                  <Image
+                    src={itemInfo.image}
+                    alt={`An image of ${itemInfo.productName}`}
+                    width={180}
+                    height={180}
+                    className="shrink-0 rounded object-contain"
+                  />
+                </Link>
 
                 <div className="space-y-2">
                   <div className="space-y-1">
@@ -182,6 +191,14 @@ const VerificationDialog = ({ token }: VerificationDialogProps) => {
                 </div>
               ) : (
                 <Skeleton className="h-5 w-2/3" />
+              )}
+
+              {!!itemInfo && quantity >= 0 && (
+                <QuantityWarning
+                  quantity={quantity}
+                  minimumQuantity={itemInfo.minimumOrderQuantity}
+                  incrementQuantity={itemInfo.quantityByIncrements}
+                />
               )}
 
               {itemInfo ? (

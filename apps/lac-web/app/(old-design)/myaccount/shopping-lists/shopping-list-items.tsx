@@ -8,27 +8,32 @@ import { PiPenNibDuotone } from "react-icons/pi";
 import ActionConfirmationDialog from "./action-confirmation-dialog";
 import ProductCard from "./product-card";
 import ShoppingListDialog from "./shopping-list-dialog";
+import ShoppingListPagination from "./shopping-list-pagination";
 import useDeleteShoppingListMutation from "./use-delete-shopping-list-mutation.hook";
+import useSuspenseShoppingListItemCount from "./use-suspense-shopping-list-item-count.hook";
 import useSuspenseShoppingListItems from "./use-suspense-shopping-list-item.hook";
 
 const ShoppingListItems = ({
   token,
   page,
-  totalPages,
-  perPage,
-  itemCount,
   shoppingList,
 }: {
   readonly token: string;
   readonly page: number;
-  readonly totalPages: number;
-  readonly perPage: number;
-  readonly itemCount: number;
   readonly shoppingList: ShoppingListElement;
 }) => {
   const [isOpenDeleteDialog, setIsOpenDeleteDialog] = useState(false);
   const [isOpenShoppingListDialog, setIsOpenShoppingListDialog] =
     useState(false);
+
+  const perPage = 20;
+
+  const shoppingListItemCountQuery = useSuspenseShoppingListItemCount(
+    token,
+    shoppingList.listId,
+  );
+  const shoppingListItemCount = shoppingListItemCountQuery?.data;
+  const totalPages = Math.ceil(shoppingListItemCount.count / perPage);
 
   const shoppingListItemsQuery = useSuspenseShoppingListItems(
     token,
@@ -64,7 +69,7 @@ const ShoppingListItems = ({
       </div>
 
       <div className="mx-2 my-5 flex flex-row items-center justify-between text-sm font-normal">
-        <p>{itemCount} items</p>
+        <p>{shoppingListItemCount.count} items</p>
         <p>
           Page {page} of {totalPages == 0 ? 1 : totalPages}
         </p>
@@ -80,6 +85,14 @@ const ShoppingListItems = ({
           />
         </div>
       ))}
+
+      {!!shoppingList?.listId && (
+        <ShoppingListPagination
+          page={page}
+          totalPages={totalPages}
+          shoppingListId={shoppingList?.listId}
+        />
+      )}
 
       <ShoppingListDialog
         open={isOpenShoppingListDialog}
