@@ -1,7 +1,7 @@
 "use client";
 
 import { ProductsGridFilters } from "@/_components/products-grid";
-import useSuspenseFilters from "@/_hooks/search/use-suspense-filters.hook";
+import useSuspenseCategoryFilters from "./use-suspense-category-filters.hook";
 
 type ProductsListFiltersProps = {
   readonly token: string;
@@ -12,13 +12,12 @@ const ProductsListFilters = ({
   token,
   categoryId,
 }: ProductsListFiltersProps) => {
-  const filtersQuery = useSuspenseFilters(token, {
-    type: "Categories",
-    id: categoryId,
-    membershipId: 0,
+  const categoryFiltersQuery = useSuspenseCategoryFilters({
+    token,
+    categoryId,
   });
 
-  return <ProductsGridFilters filters={filtersQuery.data} />;
+  return <ProductsGridFilters filters={categoryFiltersQuery.data} />;
 };
 
 export default ProductsListFilters;
