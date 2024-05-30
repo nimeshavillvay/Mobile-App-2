@@ -17,6 +17,7 @@ import AddToCartFormProvider from "./add-to-cart-form-provider";
 import ProductDesktopCarousel from "./product-desktop-carousel";
 import {
   DropShipItemNotice,
+  HazardousMaterialNotice,
   ProductDescription,
   ProductDetails,
   ProductNumbers,
@@ -104,6 +105,8 @@ const ProductHero = async ({ id, slug }: ProductHeroProps) => {
             isExcludedProduct={product.selectedProduct.isExcludedProduct}
           />
 
+          {product.selectedProduct.isHazardous && <HazardousMaterialNotice />}
+
           {!!product.selectedProduct.specialShipping && (
             <SpecialShippingNotice />
           )}
@@ -174,6 +177,10 @@ const ProductHero = async ({ id, slug }: ProductHeroProps) => {
           className="container my-6 md:hidden"
           isExcludedProduct={product.selectedProduct.isExcludedProduct}
         />
+
+        {product.selectedProduct.isHazardous && (
+          <HazardousMaterialNotice className="container my-6 md:hidden" />
+        )}
 
         {!!product.selectedProduct.specialShipping && (
           <SpecialShippingNotice className="container my-6 md:hidden" />
