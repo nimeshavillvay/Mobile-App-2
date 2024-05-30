@@ -15,6 +15,16 @@ type AddressResponse = {
   zip4: string;
   "ship-to": string;
   default: boolean;
+  default_shipping: string | boolean;
+  route_info: {
+    monday: boolean;
+    tuesday: boolean;
+    wednesday: boolean;
+    thursday: boolean;
+    friday: boolean;
+    route: string | null;
+    routeName: string;
+  };
 };
 
 const transformAddress = (address: AddressResponse): Address => ({
@@ -30,6 +40,8 @@ const transformAddress = (address: AddressResponse): Address => ({
   zip4: address["zip4"],
   shipTo: address["ship-to"],
   default: address["default"],
+  defaultShipping: address["default_shipping"],
+  routeInfo: address.route_info,
 });
 
 const useSuspenseShippingAddressList = (token: string) => {
