@@ -136,7 +136,9 @@ const Header = async () => {
               "size-6 md:hidden",
             )}
           >
-            <CartRoot type="mobile" />
+            <Suspense fallback={<Skeleton className="h-5 w-60" />}>
+              <CartRoot type="mobile" />
+            </Suspense>
 
             <span className="sr-only">Cart</span>
           </Link>
@@ -153,7 +155,9 @@ const Header = async () => {
               "hidden shrink-0 md:flex md:h-min md:flex-row md:items-center md:gap-2 md:p-0",
             )}
           >
-            <CartRoot type="desktop" />
+            <Suspense fallback={<Skeleton className="h-5 w-60" />}>
+              <CartRoot type="desktop" />
+            </Suspense>
 
             <span className="text-base font-semibold">Cart</span>
           </Link>
