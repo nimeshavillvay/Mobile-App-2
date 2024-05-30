@@ -1,7 +1,7 @@
 "use client";
 
 import { ProductsGridPagination } from "@/_components/products-grid";
-import useSuspenseFilters from "@/_hooks/search/use-suspense-filters.hook";
+import useSuspenseCategoryFilters from "./use-suspense-category-filters.hook";
 import useSuspenseSearchProductList from "./use-suspense-search-product-list.hook";
 
 type ProductsListPaginationProps = {
@@ -13,15 +13,14 @@ const ProductsListPagination = ({
   token,
   categoryId,
 }: ProductsListPaginationProps) => {
-  const filtersQuery = useSuspenseFilters(token, {
-    type: "Categories",
-    id: categoryId,
-    membershipId: 0,
+  const categoryFiltersQuery = useSuspenseCategoryFilters({
+    token,
+    categoryId,
   });
   const searchQuery = useSuspenseSearchProductList(
     token,
     categoryId,
-    filtersQuery.data,
+    categoryFiltersQuery.data,
   );
 
   const totalPages = Math.ceil(searchQuery.data.pagination.totalCount / 20);
