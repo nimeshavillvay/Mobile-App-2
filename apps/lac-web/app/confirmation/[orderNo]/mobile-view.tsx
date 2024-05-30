@@ -6,7 +6,7 @@ import {
 } from "@/_lib/apis/server";
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import { cva } from "@/_lib/cva.config";
-import { cn } from "@/_lib/utils";
+import { cn, formatNumberToPrice } from "@/_lib/utils";
 import { Separator } from "@repo/web-ui/components/ui/separator";
 import dayjs from "dayjs";
 import { cookies } from "next/headers";
@@ -190,7 +190,7 @@ const MobileView = async ({ orderNo }: MobileViewProps) => {
                         <div className="flex flex-row items-center justify-between text-sm text-wurth-gray-800">
                           <div>{lineItem.itemTotalQuantity} each</div>
 
-                          <div>${lineItem.totalPrice}</div>
+                          <div>${formatNumberToPrice(lineItem.totalPrice)}</div>
                         </div>
 
                         <h4 className="text-sm font-medium text-wurth-gray-800">
@@ -246,7 +246,7 @@ const MobileView = async ({ orderNo }: MobileViewProps) => {
                   <td
                     className={cn(tableValueStyles(), "text-right font-normal")}
                   >
-                    ${orderDetails.subTotal}
+                    ${formatNumberToPrice(orderDetails.subTotal)}
                   </td>
                 </tr>
 
@@ -265,7 +265,7 @@ const MobileView = async ({ orderNo }: MobileViewProps) => {
                     className={cn(tableValueStyles(), "text-right font-normal")}
                   >
                     {orderDetails.handlingFee > 0
-                      ? `$${orderDetails.handlingFee}`
+                      ? `$${formatNumberToPrice(orderDetails.handlingFee)}`
                       : "Free"}
                   </td>
                 </tr>
@@ -273,7 +273,7 @@ const MobileView = async ({ orderNo }: MobileViewProps) => {
                 <tr>
                   <td className={tableLabelStyles()}>Sales tax</td>
                   <td className={cn(tableValueStyles(), "text-right")}>
-                    ${orderDetails.taxAmount}
+                    ${formatNumberToPrice(orderDetails.taxAmount)}
                   </td>
                 </tr>
               </tbody>
@@ -287,7 +287,7 @@ const MobileView = async ({ orderNo }: MobileViewProps) => {
             <div className="flex flex-row items-center justify-between pb-4 text-base text-wurth-gray-800">
               <div>Estimated total</div>
 
-              <div>${orderDetails.orderTotal}</div>
+              <div>${formatNumberToPrice(orderDetails.orderTotal)}</div>
             </div>
           </div>
         </section>
