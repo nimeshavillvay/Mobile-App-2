@@ -21,6 +21,7 @@ import {
   ProductDetails,
   ProductNumbers,
   ProductSpecifications,
+  SpecialShippingNotice,
 } from "./product-hero-sections";
 
 type ProductHeroProps = {
@@ -103,6 +104,10 @@ const ProductHero = async ({ id, slug }: ProductHeroProps) => {
             isExcludedProduct={product.selectedProduct.isExcludedProduct}
           />
 
+          {!!product.selectedProduct.specialShipping && (
+            <SpecialShippingNotice />
+          )}
+
           {product.selectedProduct.isDirectlyShippedFromVendor && (
             <DropShipItemNotice />
           )}
@@ -169,6 +174,10 @@ const ProductHero = async ({ id, slug }: ProductHeroProps) => {
           className="container my-6 md:hidden"
           isExcludedProduct={product.selectedProduct.isExcludedProduct}
         />
+
+        {!!product.selectedProduct.specialShipping && (
+          <SpecialShippingNotice className="container my-6 md:hidden" />
+        )}
 
         {product.selectedProduct.isDirectlyShippedFromVendor && (
           <DropShipItemNotice className="container my-6 md:hidden" />
