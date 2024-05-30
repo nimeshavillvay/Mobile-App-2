@@ -38,12 +38,7 @@ const useLoginAsCustomerMutation = () => {
       });
     },
     onSettled: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["user", "login-status"],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ["cart"],
-      });
+      queryClient.invalidateQueries();
     },
   });
 };
