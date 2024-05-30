@@ -367,6 +367,8 @@ const CartItem = ({
           quantity: takeOnHand.plants?.at(0)?.quantity ?? 0,
           plant: takeOnHand.plants?.at(0)?.plant ?? EMPTY_STRING,
           hash: takeOnHand.hash,
+          backOrderDate: takeOnHand.plants?.at(0)?.backOrderDate,
+          backOrderQuantity: takeOnHand.plants?.at(0)?.backOrderQuantity,
         }),
       );
     } else if (shipAlternativeBranch) {
@@ -388,6 +390,8 @@ const CartItem = ({
           quantity: 0,
           plant: backOrderAll.plants?.at(0)?.plant ?? EMPTY_STRING,
           hash: backOrderAll.hash,
+          backOrderDate: backOrderAll.plants?.at(0)?.backOrderDate,
+          backOrderQuantity: backOrderAll.plants?.at(0)?.backOrderQuantity,
         }),
       );
     }

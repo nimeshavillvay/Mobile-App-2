@@ -13,7 +13,8 @@ const useSuspenseFavoriteSKUs = (token: string, productIds: string[]) => {
   return useSuspenseQuery({
     queryKey: [
       "user",
-      `favorite-skus-${productIdsAsString}`,
+      "favorite-skus",
+      `sku-${productIdsAsString}`,
       productIds,
       token,
     ],
