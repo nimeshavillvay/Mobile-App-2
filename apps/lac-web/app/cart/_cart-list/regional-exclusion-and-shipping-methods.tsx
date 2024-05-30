@@ -1,6 +1,6 @@
 import Warning from "@/_components/warning";
 import useSuspenseProductExcluded from "@/_hooks/product/use-suspense-product-excluded.hook";
-import type { CartItemShippingMethodProps } from "./cart-item-shipping-method";
+import type { ComponentProps } from "react";
 import CartItemShippingMethod from "./cart-item-shipping-method";
 
 const RegionalExclusionAndShippingMethods = ({
@@ -19,7 +19,7 @@ const RegionalExclusionAndShippingMethods = ({
   onSave,
   defaultShippingMethod,
   shippingMethods,
-}: CartItemShippingMethodProps & {
+}: ComponentProps<typeof CartItemShippingMethod> & {
   readonly token: string;
   readonly productId: number;
 }) => {
