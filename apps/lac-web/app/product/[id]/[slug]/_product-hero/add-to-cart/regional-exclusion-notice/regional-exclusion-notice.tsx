@@ -3,20 +3,49 @@
 import Warning from "@/_components/warning";
 import useSuspenseProductExcluded from "@/_hooks/product/use-suspense-product-excluded.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
-import { type ComponentProps } from "react";
+import { Alert } from "@repo/web-ui/components/icons/alert";
+import Link from "next/link";
 
 const RegionalExclusionNoticeWrapper = ({
   token,
-  ...delegated
-}: ComponentProps<typeof RegionalExclusionNotice>) => {
+  productId,
+  isExcludedInLoggedOutState,
+}: {
+  readonly token: string;
+  readonly productId: number;
+  readonly isExcludedInLoggedOutState: boolean;
+}) => {
   const checkLoginQuery = useSuspenseCheckLogin(token);
 
-  // Don't bother trying to show notice if user is not logged in
   if (checkLoginQuery.data.status_code === "NOT_LOGGED_IN") {
+    if (isExcludedInLoggedOutState) {
+      return (
+        <div className="flex flex-row gap-2 rounded-lg bg-red-50 p-4">
+          <Alert
+            className="mt-1 shrink-0 stroke-wurth-red-650"
+            width={16}
+            height={16}
+          />
+
+          <div className="flex-1 space-y-1">
+            <h4 className="text-base font-semibold text-wurth-red-650">
+              Not Available
+            </h4>
+
+            <div className="text-sm leading-6 text-wurth-gray-800">
+              This item is not available in certain regions. For better
+              experience please <Link href="/sign-in">Sign in or register</Link>
+              .
+            </div>
+          </div>
+        </div>
+      );
+    }
+
     return null;
   }
 
-  return <RegionalExclusionNotice token={token} {...delegated} />;
+  return <RegionalExclusionNotice token={token} productId={productId} />;
 };
 
 export default RegionalExclusionNoticeWrapper;

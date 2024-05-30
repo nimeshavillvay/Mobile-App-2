@@ -61,6 +61,7 @@ const CartList = ({ token, plants }: CartListProps) => {
                 image: item.itemInfo.image,
                 cartItemId: item.cartItemId,
                 slug: item.itemInfo.slug,
+                isExcludedProduct: item.itemInfo.isExcludedProduct,
               }}
               plants={plants}
               cartConfiguration={data.configuration}
