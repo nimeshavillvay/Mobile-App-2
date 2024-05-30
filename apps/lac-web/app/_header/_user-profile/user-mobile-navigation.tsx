@@ -3,6 +3,7 @@ import useOSRLogoutMutation from "@/_hooks/user/use-osr-logout-mutation.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
 import useSuspenseUsersList from "@/_hooks/user/use-suspense-users-list.hook";
 import { cva } from "@/_lib/cva.config";
+import type { ShippingMethod } from "@/_lib/types";
 import { Button } from "@repo/web-ui/components/ui/button";
 import {
   Sheet,
@@ -28,9 +29,13 @@ const dividerStyles = cva({
 
 type UserMobileNavigationProps = {
   readonly token: string;
+  readonly shippingMethods: ShippingMethod[];
 };
 
-const UserMobileNavigation = ({ token }: UserMobileNavigationProps) => {
+const UserMobileNavigation = ({
+  token,
+  shippingMethods,
+}: UserMobileNavigationProps) => {
   const checkLoginQuery = useSuspenseCheckLogin(token);
 
   if (checkLoginQuery.data.status_code === "NOT_LOGGED_IN") {
@@ -67,12 +72,20 @@ const UserMobileNavigation = ({ token }: UserMobileNavigationProps) => {
     );
   }
 
-  return <UserMobileProfileNavigation token={token} />;
+  return (
+    <UserMobileProfileNavigation
+      token={token}
+      shippingMethods={shippingMethods}
+    />
+  );
 };
 
 export default UserMobileNavigation;
 
-const UserMobileProfileNavigation = ({ token }: { readonly token: string }) => {
+const UserMobileProfileNavigation = ({
+  token,
+  shippingMethods,
+}: UserMobileNavigationProps) => {
   const usersListQuery = useSuspenseUsersList(token);
   const userProfile = usersListQuery.data.manageContact.yourProfile;
 
@@ -119,7 +132,10 @@ const UserMobileProfileNavigation = ({ token }: { readonly token: string }) => {
               }
             >
               <SheetClose asChild className={sectionLinkStyles()}>
-                <ShippingDetailsDialog token={token}>
+                <ShippingDetailsDialog
+                  token={token}
+                  shippingMethods={shippingMethods}
+                >
                   <Button
                     variant="ghost"
                     className="flex h-full w-full flex-row items-center justify-between gap-2 bg-white px-4 py-3 text-base font-normal text-black"

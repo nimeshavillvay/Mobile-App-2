@@ -75,7 +75,7 @@ const ShippingAddressSelector = ({
           <DialogTitle>Change Shipping Address</DialogTitle>
         </DialogHeader>
 
-        <ul className="flex flex-col gap-4">
+        <ul className="flex max-h-[60vh] flex-col gap-4 overflow-y-scroll">
           {shippingAddressListQuery.data.map((address) => (
             <li key={address.xcAddressId}>
               <Button

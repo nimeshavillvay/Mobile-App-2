@@ -4,7 +4,7 @@ import FullAddress from "@/_components/full-address";
 import useSuspenseBillingAddress from "@/_hooks/address/use-suspense-billing-address.hook";
 import useSuspenseShippingAddressList from "@/_hooks/address/use-suspense-shipping-address-list.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
-import type { Token } from "@/_lib/types";
+import type { ShippingMethod, Token } from "@/_lib/types";
 import { Truck } from "@repo/web-ui/components/icons/truck";
 import { Button } from "@repo/web-ui/components/ui/button";
 import {
@@ -28,11 +28,13 @@ const WEEK_DAYS = {
 
 type ShippingDetailsDialogProps = {
   readonly token: Token;
+  readonly shippingMethods: ShippingMethod[];
   readonly children?: React.ReactNode;
 };
 
 const ShippingDetailsDialog = ({
   token,
+  shippingMethods,
   children,
 }: ShippingDetailsDialogProps) => {
   const checkLoginQuery = useSuspenseCheckLogin(token);
@@ -42,7 +44,10 @@ const ShippingDetailsDialog = ({
   }
 
   return (
-    <ShippingDetailsDialogButton token={token}>
+    <ShippingDetailsDialogButton
+      token={token}
+      shippingMethods={shippingMethods}
+    >
       {children}
     </ShippingDetailsDialogButton>
   );
@@ -52,6 +57,7 @@ export default ShippingDetailsDialog;
 
 const ShippingDetailsDialogButton = ({
   token,
+  shippingMethods,
   children,
 }: ShippingDetailsDialogProps) => {
   const shippingAddressListQuery = useSuspenseShippingAddressList(token);
@@ -61,6 +67,10 @@ const ShippingDetailsDialogButton = ({
     (address) => address.default,
   );
   const billingAddress = billingAddressQuery.data;
+
+  const shippingMethod = shippingMethods.find(
+    (method) => method.code === defaultAddress?.defaultShipping,
+  );
 
   const [open, setOpen] = useState(false);
 
@@ -119,9 +129,7 @@ const ShippingDetailsDialogButton = ({
                 Preferred Shipping Method
               </div>
               <div className="font-semibold">
-                {defaultAddress?.defaultShipping
-                  ? defaultAddress.defaultShipping
-                  : "Not Available"}
+                {shippingMethod?.name ? shippingMethod.name : "Not Available"}
               </div>
             </div>
             <div className="p-3">
