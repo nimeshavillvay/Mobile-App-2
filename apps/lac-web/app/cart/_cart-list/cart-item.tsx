@@ -469,15 +469,18 @@ const CartItem = ({
               />
             </Suspense>
 
+            {/* TODO - This is not implemented as this will be rolled out in phase 2
             <Button variant="subtle" className="w-full">
               <Save className="size-4" />
 
               <span className="sr-only">Save</span>
-            </Button>
+            </Button> */}
 
             <Button
               variant="subtle"
               className="w-full bg-red-50 hover:bg-red-100"
+              onClick={() => handleDeleteCartItem()}
+              disabled={deleteCartItemMutation.isPending}
             >
               <Trash className="size-4 fill-wurth-red-650" />
 
@@ -635,7 +638,7 @@ const CartItem = ({
             <Trash className="size-4 fill-wurth-red-650" />
           </Button>
 
-          {/* This is not implemented as this will be rolled out in phase 2
+          {/* TODO - This is not implemented as this will be rolled out in phase 2
           <Button
             variant="ghost"
             className="h-fit w-full justify-end px-0 py-0"
