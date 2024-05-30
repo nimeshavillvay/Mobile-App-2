@@ -1,8 +1,12 @@
 "use client";
 
 import useSuspenseWillCallPlant from "@/_header/_will-call-plant/use-suspense-will-call-plant.hook";
+import useDeleteCartItemMutation from "@/_hooks/cart/use-delete-cart-item-mutation.hook";
 import useSuspenseCart from "@/_hooks/cart/use-suspense-cart.hook";
 import type { Plant } from "@/_lib/types";
+import { Plus } from "@repo/web-ui/components/icons/plus";
+import { Trash } from "@repo/web-ui/components/icons/trash";
+import { Button } from "@repo/web-ui/components/ui/button";
 import { Suspense } from "react";
 import CartItemFallback from "../cart-item-fallback";
 import CartItem from "./cart-item";
@@ -15,9 +19,24 @@ type CartListProps = {
 const CartList = ({ token, plants }: CartListProps) => {
   const { data } = useSuspenseCart(token);
   const willCallPlantQuery = useSuspenseWillCallPlant(token);
+  const deleteCartItemMutation = useDeleteCartItemMutation(token);
+
+  const handleClearCart = () => {
+    if (data.cartItems.length > 0) {
+      const cartItemIds = data.cartItems.map((item) => ({
+        cartid: item.cartItemId,
+      }));
+
+      if (cartItemIds.length > 0) {
+        deleteCartItemMutation.mutate({
+          products: cartItemIds,
+        });
+      }
+    }
+  };
 
   return (
-    <ul className="flex flex-col">
+    <ul className="flex flex-col gap-2.5">
       {data.cartItems.map((item) => (
         <li
           key={`${item.itemInfo.productId}-${item.cartItemId}`}
@@ -29,7 +48,10 @@ const CartList = ({ token, plants }: CartListProps) => {
               token={token}
               product={{
                 id: item.itemInfo.productId,
-                title: item.itemInfo.metaTitle,
+                title:
+                  item.itemInfo.metaTitle === ""
+                    ? item.itemInfo.productName
+                    : item.itemInfo.metaTitle,
                 sku: item.itemInfo.productSku,
                 manufacturerId: item.itemInfo.mfrPartNo,
                 quantity: item.quantity,
@@ -48,6 +70,24 @@ const CartList = ({ token, plants }: CartListProps) => {
           </Suspense>
         </li>
       ))}
+
+      <div className="flex w-full justify-end gap-4 px-4 md:px-0">
+        {data.cartItems.length > 0 && (
+          <Button
+            variant="subtle"
+            className="flex-1 bg-red-50 font-bold text-wurth-red-650 hover:bg-red-100 md:flex-none"
+            onClick={() => handleClearCart()}
+          >
+            <Trash className="size-4 fill-wurth-red-650" />
+            <span>Clear cart</span>
+          </Button>
+        )}
+
+        <Button className="flex-1 font-bold md:hidden" disabled={true}>
+          <Plus className="size-4 stroke-white" />
+          <span>Add an item</span>
+        </Button>
+      </div>
     </ul>
   );
 };

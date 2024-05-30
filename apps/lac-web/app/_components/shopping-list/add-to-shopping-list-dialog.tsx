@@ -118,9 +118,32 @@ const AddToShoppingListDialog = ({
     );
   };
 
+  const arraysEqual = (arr1: string[], arr2: string[]) => {
+    if (arr1.length !== arr2.length) {
+      return false;
+    }
+
+    const sortedArr1 = arr1.slice().sort();
+    const sortedArr2 = arr2.slice().sort();
+
+    for (let i = 0; i < sortedArr1.length; i++) {
+      if (sortedArr1[i] !== sortedArr2[i]) {
+        return false;
+      }
+    }
+
+    return true;
+  };
+
   const handleShoppingListNameSubmit = async (
     formData: ShoppingListNameSchema,
   ) => {
+    if (
+      arraysEqual(selectedShoppingLists, favoriteListIds) &&
+      !formData.shoppingListName
+    ) {
+      return;
+    }
     setIsLoading(true);
 
     const updatedShoppingLists = selectedShoppingLists;
@@ -159,24 +182,26 @@ const AddToShoppingListDialog = ({
             onSubmit={form.handleSubmit(handleShoppingListNameSubmit)}
             className="space-y-4"
           >
-            <div className="grid max-h-52 grid-cols-1 overflow-y-scroll border px-3 py-1">
-              {shoppingLists.lists.map((list, index) => {
-                return (
-                  <Fragment key={list.listId}>
-                    <ShoppingListItem
-                      index={index}
-                      shoppingLists={shoppingLists.lists}
-                      list={list}
-                      formControl={form.control}
-                      selectedShoppingLists={selectedShoppingLists}
-                      handleShoppingListCheckedChanged={
-                        handleShoppingListCheckedChanged
-                      }
-                    />
-                  </Fragment>
-                );
-              })}
-            </div>
+            {shoppingLists.lists.length > 0 && (
+              <div className="grid max-h-52 grid-cols-1 overflow-y-scroll border px-3 py-1">
+                {shoppingLists.lists.map((list, index) => {
+                  return (
+                    <Fragment key={list.listId}>
+                      <ShoppingListItem
+                        index={index}
+                        shoppingLists={shoppingLists.lists}
+                        list={list}
+                        formControl={form.control}
+                        selectedShoppingLists={selectedShoppingLists}
+                        handleShoppingListCheckedChanged={
+                          handleShoppingListCheckedChanged
+                        }
+                      />
+                    </Fragment>
+                  );
+                })}
+              </div>
+            )}
 
             <div className="grid grid-cols-1 gap-4">
               <FormField

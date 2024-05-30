@@ -117,6 +117,8 @@ export type CartItemConfiguration = {
   hashvalue: string;
   selectedOption: string;
   backorder_all: string;
+  backorder_date: string;
+  backorder_quantity: string;
 };
 
 export type CartConfiguration = {
@@ -146,6 +148,8 @@ export type CartConfiguration = {
   paymentMethod: string | null;
   isAPrimaryShippingAddress?: null;
   shippingAddressId: string | null;
+  backorder_date: string;
+  backorder_quantity: string;
 };
 
 export type GroupList = {
@@ -237,6 +241,16 @@ export type Address = {
   shipTo?: string;
   soldTo?: string;
   default?: boolean;
+  defaultShipping?: string | boolean;
+  routeInfo?: {
+    monday: boolean;
+    tuesday: boolean;
+    wednesday: boolean;
+    thursday: boolean;
+    friday: boolean;
+    route: string | null;
+    routeName: string;
+  };
 };
 
 export type AddressCheckSuggestions = {

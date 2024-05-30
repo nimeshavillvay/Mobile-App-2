@@ -1,12 +1,12 @@
 "use client";
 
+import FullAddress from "@/_components/full-address";
 import useSuspenseShippingAddressList from "@/_hooks/address/use-suspense-shipping-address-list.hook";
 import useUpdateShippingAddressMutation from "@/_hooks/address/use-update-shipping-address-mutation.hook";
-import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
+import type { Token } from "@/_lib/types";
 import { cn } from "@/_lib/utils";
 import { CheckCircle } from "@repo/web-ui/components/icons/check-circle";
 import { CheckCircleFilled } from "@repo/web-ui/components/icons/check-circle-filled";
-import { Truck } from "@repo/web-ui/components/icons/truck";
 import { Button } from "@repo/web-ui/components/ui/button";
 import {
   Dialog,
@@ -17,29 +17,17 @@ import {
   DialogTrigger,
 } from "@repo/web-ui/components/ui/dialog";
 import { useToast } from "@repo/web-ui/components/ui/toast";
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 
 type ShippingAddressSelectorProps = {
-  readonly token: string;
+  readonly token: Token;
+  readonly children: ReactNode;
 };
 
-const ShippingAddressSelector = ({ token }: ShippingAddressSelectorProps) => {
-  const checkLoginQuery = useSuspenseCheckLogin(token);
-
-  if (checkLoginQuery.data.status_code === "NOT_LOGGED_IN") {
-    return null;
-  }
-
-  return <ShippingAddressSelectorButton token={token} />;
-};
-
-export default ShippingAddressSelector;
-
-const ShippingAddressSelectorButton = ({
+const ShippingAddressSelector = ({
   token,
-}: {
-  readonly token: string;
-}) => {
+  children,
+}: ShippingAddressSelectorProps) => {
   const shippingAddressListQuery = useSuspenseShippingAddressList(token);
   const { toast } = useToast();
 
@@ -80,52 +68,43 @@ const ShippingAddressSelectorButton = ({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button
-          variant="ghost"
-          size="sm"
-          className="h-fit px-0 py-0 text-sm font-medium leading-5"
-        >
-          <Truck width={16} height={16} />
-
-          <span>#{defaultAddress?.postalCode}</span>
-        </Button>
-      </DialogTrigger>
+      <DialogTrigger asChild>{children}</DialogTrigger>
 
       <DialogContent className="max-w-[34.375rem]">
         <DialogHeader>
           <DialogTitle>Change Shipping Address</DialogTitle>
         </DialogHeader>
 
-        <ul className="flex flex-col gap-4">
+        <ul className="flex max-h-[60vh] flex-col gap-4 overflow-y-scroll">
           {shippingAddressListQuery.data.map((address) => (
             <li key={address.xcAddressId}>
               <Button
                 variant="outline"
                 className={cn(
-                  "h-fit w-full justify-start rounded-lg border-2 border-wurth-gray-150 px-4 py-4",
+                  "flex h-fit w-full flex-row justify-start gap-2 rounded-lg border-2 border-wurth-gray-150 px-4 py-4",
                   address.xcAddressId === selectedAddress && "border-black",
                 )}
                 onClick={() => setSelectedAddress(address.xcAddressId ?? "")}
                 disabled={updateShippingAddressMutation.isPending}
               >
-                {address.xcAddressId === selectedAddress ? (
-                  <CheckCircleFilled
-                    width={20}
-                    height={20}
-                    className="fill-black"
-                  />
-                ) : (
-                  <CheckCircle
-                    width={20}
-                    height={20}
-                    className="stroke-wurth-gray-150"
-                  />
-                )}
+                <span>
+                  {address.xcAddressId === selectedAddress ? (
+                    <CheckCircleFilled
+                      width={20}
+                      height={20}
+                      className="fill-black"
+                    />
+                  ) : (
+                    <CheckCircle
+                      width={20}
+                      height={20}
+                      className="stroke-wurth-gray-150"
+                    />
+                  )}
+                </span>
 
-                <span className="text-base text-wurth-gray-800">
-                  {address.streetAddress}, {address.locality},{" "}
-                  {address.postalCode}-{address.zip4}
+                <span className="text-wrap text-start text-sm text-wurth-gray-800 md:text-base">
+                  <FullAddress address={address} />
                 </span>
               </Button>
             </li>
@@ -145,3 +124,5 @@ const ShippingAddressSelectorButton = ({
     </Dialog>
   );
 };
+
+export default ShippingAddressSelector;
