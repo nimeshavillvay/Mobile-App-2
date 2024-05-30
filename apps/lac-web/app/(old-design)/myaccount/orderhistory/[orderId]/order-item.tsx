@@ -132,7 +132,7 @@ const OrderItem = ({
 
             <div className="">
               Order Qty: {totalQuantity} {unitOfMeasure ?? "Unit"} | $
-              {price ? formatNumberToPrice(price) : "0.00"}
+              {formatNumberToPrice(price)}
             </div>
           </div>
         </div>
