@@ -38,6 +38,9 @@ const useDeleteShoppingListMutation = () => {
     },
     onSettled: () => {
       queryClient.invalidateQueries({
+        queryKey: ["user", "favorite-skus"],
+      });
+      queryClient.invalidateQueries({
         queryKey: ["my-account", "shopping-list"],
       });
     },
