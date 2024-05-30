@@ -31,7 +31,7 @@ const FavoriteButton = ({ token, productId }: FavoriteButtonProps) => {
         onClick={() => setShowShoppingListsDialog(true)}
       >
         {isFavorite ? (
-          <IoMdHeart className="text-2xl text-brand-primary" />
+          <IoMdHeart className="fill-black text-2xl text-brand-primary" />
         ) : (
           <IoMdHeartEmpty className="text-2xl text-brand-gray-500" />
         )}

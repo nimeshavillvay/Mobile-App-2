@@ -6,7 +6,7 @@ import {
 } from "@/_lib/apis/server";
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import { cva } from "@/_lib/cva.config";
-import { cn } from "@/_lib/utils";
+import { cn, formatNumberToPrice } from "@/_lib/utils";
 import { Separator } from "@repo/web-ui/components/ui/separator";
 import dayjs from "dayjs";
 import { cookies } from "next/headers";
@@ -198,7 +198,7 @@ const DesktopView = async ({ orderNo }: DesktopViewProps) => {
                         </td>
 
                         <td className="ml-2 text-right text-sm text-wurth-gray-800">
-                          ${lineItem.totalPrice}
+                          ${formatNumberToPrice(lineItem.totalPrice)}
                         </td>
                       </tr>
 
@@ -258,7 +258,7 @@ const DesktopView = async ({ orderNo }: DesktopViewProps) => {
                           "text-right font-normal",
                         )}
                       >
-                        ${orderDetails.subTotal}
+                        ${formatNumberToPrice(orderDetails.subTotal)}
                       </td>
                     </tr>
 
@@ -288,7 +288,7 @@ const DesktopView = async ({ orderNo }: DesktopViewProps) => {
                     <tr>
                       <td className={tableLabelStyles()}>Sales tax</td>
                       <td className={cn(tableValueStyles(), "text-right")}>
-                        ${orderDetails.taxAmount}
+                        ${formatNumberToPrice(orderDetails.taxAmount)}
                       </td>
                     </tr>
                   </tbody>
@@ -302,7 +302,7 @@ const DesktopView = async ({ orderNo }: DesktopViewProps) => {
                 <div className="flex flex-row items-center justify-between pb-4 text-base text-wurth-gray-800">
                   <div>Estimated total</div>
 
-                  <div>${orderDetails.orderTotal}</div>
+                  <div>${formatNumberToPrice(orderDetails.orderTotal)}</div>
                 </div>
               </div>
 

@@ -3,9 +3,10 @@
 import useSuspenseCart from "@/_hooks/cart/use-suspense-cart.hook";
 import useSuspenseSimulationCheckout from "@/_hooks/cart/use-suspense-simulation-checkout.hook";
 import type { Plant } from "@/_lib/types";
-import { cn } from "@/_lib/utils";
+import { cn, formatNumberToPrice } from "@/_lib/utils";
 import { ChevronDown } from "@repo/web-ui/components/icons/chevron-down";
 import { Button, buttonVariants } from "@repo/web-ui/components/ui/button";
+import dayjs from "dayjs";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -97,12 +98,16 @@ const CartSummary = ({ token, plants }: CartSummaryProps) => {
 
                       <div>
                         $
-                        {
-                          simulationCheckoutQuery.data.productslist.find(
-                            (product) =>
-                              product.productId === item.itemInfo.productId,
-                          )?.extendedPrice
-                        }
+                        {formatNumberToPrice(
+                          parseFloat(
+                            (
+                              simulationCheckoutQuery.data.productslist.find(
+                                (product) =>
+                                  product.productId === item.itemInfo.productId,
+                              )?.extendedPrice ?? 0
+                            ).toFixed(2),
+                          ),
+                        )}
                       </div>
                     </div>
 
@@ -112,23 +117,36 @@ const CartSummary = ({ token, plants }: CartSummaryProps) => {
                   </div>
                 </div>
 
-                <div className="space-y-1 text-sm text-wurth-gray-800">
-                  <div>
-                    <span className="text-green-700">
-                      {item.mappedConfiguration.availability[0]?.quantity}{" "}
-                      {item.mappedConfiguration.availability[0]?.quantity === 1
-                        ? "item"
-                        : "items"}
-                    </span>{" "}
-                    pickup at{" "}
-                    {
-                      plants.find(
-                        (plant) =>
-                          plant.code ===
-                          item.mappedConfiguration.availability[0]?.plant,
-                      )?.name
-                    }
-                  </div>
+                <div className="flex flex-wrap text-sm text-wurth-gray-800">
+                  {item.mappedConfiguration.availability.map(
+                    (itemLine, index) =>
+                      itemLine &&
+                      typeof itemLine.quantity === "number" &&
+                      itemLine.quantity !== 0 && (
+                        <div key={index} className="mr-2">
+                          <span className="text-green-700">
+                            {itemLine.quantity}{" "}
+                            {itemLine.quantity === 1 ? "item" : "items"}
+                          </span>{" "}
+                          pickup at{" "}
+                          {plants.find((plant) => plant.code === itemLine.plant)
+                            ?.name ?? ""}
+                        </div>
+                      ),
+                  )}
+
+                  {item.configuration.backorder_quantity &&
+                    item.configuration.backorder_date &&
+                    parseInt(item.configuration.backorder_quantity) > 0 && (
+                      <div className="ml-1 mr-4">
+                        <span className="text-yellow-600">&#x2022;</span>
+                        <span className="ml-2">Backorder</span>{" "}
+                        {item.configuration.backorder_quantity} items, ship by{" "}
+                        {dayjs(item.configuration.backorder_date).format(
+                          "ddd, MMMM.DD, YYYY",
+                        )}
+                      </div>
+                    )}
                 </div>
               </div>
             ))}
