@@ -28,10 +28,7 @@ type WillCallPlantProps = {
 
 const WillCallPlantDrawer = ({ token, plants }: WillCallPlantProps) => {
   const willCallPlantQuery = useSuspenseWillCallPlant(token);
-  const plant = willCallPlantQuery.data;
-
-  // This is for cases where the Will Call Plant API doesn't return an address
-  const backupPlant = plants.find((item) => item.code === plant.plant);
+  const { plantName, address, operationHours } = willCallPlantQuery.data;
 
   return (
     <Drawer>
@@ -42,12 +39,12 @@ const WillCallPlantDrawer = ({ token, plants }: WillCallPlantProps) => {
         >
           <Shop width={16} height={16} />
 
-          <span>{backupPlant?.name ?? DEFAULT_PLANT}</span>
+          <span>{plantName ?? DEFAULT_PLANT}</span>
         </Button>
       </DrawerTrigger>
 
       {/* Don't show the drawer if no address data is returned */}
-      {!!plant.address && (
+      {address && (
         <DrawerContent>
           <div className="mx-auto w-full max-w-[26.75rem]">
             <DrawerHeader>
@@ -68,9 +65,14 @@ const WillCallPlantDrawer = ({ token, plants }: WillCallPlantProps) => {
                   />
 
                   <div>
-                    <div>{plant.address["street-address"]}</div>
-                    <div>{plant.address.locality}</div>
-                    <div>{`${plant.address.region} ${plant.address["postal-code"]}, ${plant.address["country-name"]}`}</div>
+                    <div className="text-wrap">
+                      {address.streetAddress && `${address.streetAddress},`}
+                      {address.locality && ` ${address.locality},`}
+                      &nbsp;
+                      {address.region && `${address.region} `}
+                      {address.postalCode && `${address.postalCode}, `}
+                      {address.countryName}
+                    </div>
                   </div>
                 </div>
 
@@ -82,18 +84,20 @@ const WillCallPlantDrawer = ({ token, plants }: WillCallPlantProps) => {
                       className="shrink-0 stroke-wurth-gray-800"
                     />
 
-                    <span>{plant.address["phone-number"]}</span>
+                    <span>{address.phoneNumber ?? "N/A"}</span>
                   </div>
 
-                  <div className="flex flex-row items-start gap-2">
-                    <Timetable
-                      width={20}
-                      height={20}
-                      className="shrink-0 stroke-wurth-gray-800"
-                    />
+                  {!!operationHours && (
+                    <div className="flex flex-row items-start gap-2">
+                      <Timetable
+                        width={20}
+                        height={20}
+                        className="shrink-0 stroke-wurth-gray-800"
+                      />
 
-                    <span>{plant.operation_hours}</span>
-                  </div>
+                      <span>{operationHours}</span>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

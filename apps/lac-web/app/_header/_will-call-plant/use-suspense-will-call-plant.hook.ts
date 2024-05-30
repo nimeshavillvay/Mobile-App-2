@@ -14,6 +14,7 @@ const useSuspenseWillCallPlant = (token: string) => {
         })
         .json<{
           plant: string;
+          name: string;
           address?: {
             "country-name": string;
             locality: string;
@@ -25,6 +26,20 @@ const useSuspenseWillCallPlant = (token: string) => {
           operation_hours?: string;
           gmap?: string;
         }>(),
+    select: (data) => ({
+      plantCode: data.plant,
+      plantName: data.name,
+      address: {
+        countryName: data.address?.["country-name"],
+        locality: data.address?.locality,
+        phoneNumber: data.address?.["phone-number"],
+        region: data.address?.region,
+        streetAddress: data.address?.["street-address"],
+        postalCode: data.address?.["postal-code"],
+      },
+      operationHours: data.operation_hours,
+      gmap: data.gmap,
+    }),
   });
 };
 
