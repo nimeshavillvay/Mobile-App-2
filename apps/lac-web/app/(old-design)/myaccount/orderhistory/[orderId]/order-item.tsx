@@ -67,7 +67,6 @@ const OrderItem = ({
     sku,
     itemDescription,
     totalQuantity,
-    itemSubTotal,
     unitOfMeasure,
     image,
     productTitle,
@@ -76,6 +75,7 @@ const OrderItem = ({
     lineItems,
     isExcludedProduct = false,
     productName,
+    price,
   } = orderItem;
 
   const generateItemUrl = ({
@@ -132,7 +132,7 @@ const OrderItem = ({
 
             <div className="">
               Order Qty: {totalQuantity} {unitOfMeasure ?? "Unit"} | $
-              {itemSubTotal ? formatNumberToPrice(itemSubTotal) : "0.00"}
+              {price ? formatNumberToPrice(price) : "0.00"}
             </div>
           </div>
         </div>

@@ -20,3 +20,5 @@ export const NOT_IN_STOCK = "notInStock" as const;
 export const EMPTY_STRING = "" as const;
 export const TRUE_STRING = "T" as const;
 export const FALSE_STRING = "F" as const;
+
+export const DEFAULT_PLANT = "L010";
