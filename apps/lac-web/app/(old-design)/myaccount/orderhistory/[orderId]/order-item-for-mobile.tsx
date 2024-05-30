@@ -26,7 +26,6 @@ type OrderItemForMobileProps = {
       itemStatus: string;
       promoCode: string;
     }[];
-    itemSubTotal: number;
     itemDescription: string;
     unitOfMeasure?: string;
     image?: string;
@@ -50,7 +49,6 @@ const OrderItemForMobile = ({
     sku,
     itemDescription,
     totalQuantity,
-    itemSubTotal,
     unitOfMeasure,
     image,
     productTitle,
