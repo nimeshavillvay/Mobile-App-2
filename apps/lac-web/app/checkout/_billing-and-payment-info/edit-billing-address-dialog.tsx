@@ -370,7 +370,7 @@ const EditBillingAddressDialog = ({ token }: EditBillingAddressDialogProps) => {
                 )}
               />
 
-              <DialogFooter className="col-span-6">
+              <DialogFooter className="col-span-3 md:col-span-6">
                 <Button
                   variant="outline"
                   type="button"
