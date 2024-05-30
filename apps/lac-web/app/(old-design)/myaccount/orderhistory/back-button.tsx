@@ -1,7 +1,7 @@
 "use client";
 
+import { cn } from "@/_lib/utils";
 import { Button } from "@/old/_components/ui/button";
-import { cn } from "@/old/_utils/helpers";
 import { useRouter } from "next/navigation";
 import { FaArrowLeft } from "react-icons/fa";
 

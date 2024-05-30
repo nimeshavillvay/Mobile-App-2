@@ -1,3 +1,4 @@
+import { cn, formatNumberToPrice } from "@/_lib/utils";
 import AlertInline from "@/old/_components/alert-inline";
 import {
   Table,
@@ -7,7 +8,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/old/_components/ui/table";
-import { cn, formatNumberToPrice } from "@/old/_utils/helpers";
 import { WurthFullBlack } from "@repo/web-ui/components/logos/wurth-full-black";
 import dayjs from "dayjs";
 import Image from "next/image";
@@ -67,7 +67,6 @@ const OrderItem = ({
     sku,
     itemDescription,
     totalQuantity,
-    itemSubTotal,
     unitOfMeasure,
     image,
     productTitle,
@@ -76,6 +75,7 @@ const OrderItem = ({
     lineItems,
     isExcludedProduct = false,
     productName,
+    price,
   } = orderItem;
 
   const generateItemUrl = ({
@@ -132,7 +132,7 @@ const OrderItem = ({
 
             <div className="">
               Order Qty: {totalQuantity} {unitOfMeasure ?? "Unit"} | $
-              {itemSubTotal ? formatNumberToPrice(itemSubTotal) : "0.00"}
+              {price ? formatNumberToPrice(price) : "0.00"}
             </div>
           </div>
         </div>

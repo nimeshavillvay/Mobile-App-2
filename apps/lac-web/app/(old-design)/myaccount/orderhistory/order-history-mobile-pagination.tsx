@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from "@/_lib/utils";
 import { Button } from "@/old/_components/ui/button";
 import {
   Dialog,
@@ -8,7 +9,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/old/_components/ui/dialog";
-import { cn } from "@/old/_utils/helpers";
 import { useSearchParams } from "next/navigation";
 import { useState, type Dispatch, type SetStateAction } from "react";
 import { MdCheck } from "react-icons/md";

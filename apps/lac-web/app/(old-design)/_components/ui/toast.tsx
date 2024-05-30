@@ -3,7 +3,7 @@ import { cva, type VariantProps } from "cva";
 import { X } from "lucide-react";
 import * as React from "react";
 
-import { cn } from "@/old/_utils/helpers";
+import { cn } from "@/_lib/utils";
 
 const ToastProvider = ToastPrimitives.Provider;
 

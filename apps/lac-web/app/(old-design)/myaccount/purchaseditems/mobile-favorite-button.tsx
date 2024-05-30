@@ -2,9 +2,9 @@
 
 import AddToShoppingListDialog from "@/_components/shopping-list/add-to-shopping-list-dialog";
 import useSuspenseFavoriteSKUs from "@/_hooks/shopping-list/use-suspense-favorite-skus.hook";
+import { cn } from "@/_lib/utils";
 import AddToFavoritesIcon from "@/old/_components/icons/add-to-favorites";
 import FavoriteIcon from "@/old/_components/icons/favorite";
-import { cn } from "@/old/_utils/helpers";
 import { Button } from "@repo/web-ui/components/ui/button";
 import { useState } from "react";
 

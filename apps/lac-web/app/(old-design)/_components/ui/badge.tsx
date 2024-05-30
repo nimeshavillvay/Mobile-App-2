@@ -1,4 +1,4 @@
-import { cn } from "@/old/_utils/helpers";
+import { cn } from "@/_lib/utils";
 import { cva, type VariantProps } from "cva";
 import { type HTMLAttributes } from "react";
 

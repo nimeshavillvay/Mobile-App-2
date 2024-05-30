@@ -1,4 +1,4 @@
-import { cn } from "@/old/_utils/helpers";
+import { cn } from "@/_lib/utils";
 import Image, { type ImageProps } from "next/image";
 import Link, { type LinkProps } from "next/link";
 import { type ComponentProps, type ReactNode } from "react";
