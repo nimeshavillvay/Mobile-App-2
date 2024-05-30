@@ -138,7 +138,10 @@ const AddToShoppingListDialog = ({
   const handleShoppingListNameSubmit = async (
     formData: ShoppingListNameSchema,
   ) => {
-    if (arraysEqual(selectedShoppingLists, favoriteListIds)) {
+    if (
+      arraysEqual(selectedShoppingLists, favoriteListIds) &&
+      !formData.shoppingListName
+    ) {
       return;
     }
     setIsLoading(true);
@@ -179,24 +182,26 @@ const AddToShoppingListDialog = ({
             onSubmit={form.handleSubmit(handleShoppingListNameSubmit)}
             className="space-y-4"
           >
-            <div className="grid max-h-52 grid-cols-1 overflow-y-scroll border px-3 py-1">
-              {shoppingLists.lists.map((list, index) => {
-                return (
-                  <Fragment key={list.listId}>
-                    <ShoppingListItem
-                      index={index}
-                      shoppingLists={shoppingLists.lists}
-                      list={list}
-                      formControl={form.control}
-                      selectedShoppingLists={selectedShoppingLists}
-                      handleShoppingListCheckedChanged={
-                        handleShoppingListCheckedChanged
-                      }
-                    />
-                  </Fragment>
-                );
-              })}
-            </div>
+            {shoppingLists.lists.length > 0 && (
+              <div className="grid max-h-52 grid-cols-1 overflow-y-scroll border px-3 py-1">
+                {shoppingLists.lists.map((list, index) => {
+                  return (
+                    <Fragment key={list.listId}>
+                      <ShoppingListItem
+                        index={index}
+                        shoppingLists={shoppingLists.lists}
+                        list={list}
+                        formControl={form.control}
+                        selectedShoppingLists={selectedShoppingLists}
+                        handleShoppingListCheckedChanged={
+                          handleShoppingListCheckedChanged
+                        }
+                      />
+                    </Fragment>
+                  );
+                })}
+              </div>
+            )}
 
             <div className="grid grid-cols-1 gap-4">
               <FormField
