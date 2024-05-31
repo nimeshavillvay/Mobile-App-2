@@ -77,6 +77,7 @@ const CartList = ({ token, plants }: CartListProps) => {
             variant="subtle"
             className="flex-1 bg-red-50 font-bold text-wurth-red-650 hover:bg-red-100 md:flex-none"
             onClick={() => handleClearCart()}
+            disabled={deleteCartItemMutation.isPending}
           >
             <Trash className="size-4 fill-wurth-red-650" />
             <span>Clear cart</span>
