@@ -38,7 +38,7 @@ const useAddToCartMutation = (
       if (availability.options[0]) {
         const selectedOption = availability.options[0];
 
-        configuration.backorder_all = selectedOption.backOrder ? "C" : "";
+        configuration.backorder_all = selectedOption.backOrder ? "T" : "";
         configuration.hashvalue = selectedOption.hash;
         configuration.backorder_quantity =
           selectedOption.plants?.[0]?.backOrderQuantity?.toString() ?? "0";
@@ -54,9 +54,7 @@ const useAddToCartMutation = (
             const selectedPlant = selectedOption.plants[i];
 
             if (selectedPlant) {
-              const quantity = selectedOption.backOrder
-                ? selectedPlant.backOrderQuantity
-                : selectedPlant.quantity;
+              const quantity = selectedPlant.quantity ?? "";
               const index = selectedPlant.index;
               addedIndexes.push(index);
 
