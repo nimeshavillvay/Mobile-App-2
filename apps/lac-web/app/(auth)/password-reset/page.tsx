@@ -21,7 +21,7 @@ const PasswordReset = async ({ searchParams }: PasswordResetProps) => {
   const userId = searchParams.user.toString();
   const passwordResetCheck = await checkPasswordReset(userKey, userId);
 
-  if (passwordResetCheck.statusCode !== "OK") {
+  if (passwordResetCheck.statusCode && passwordResetCheck.statusCode !== "OK") {
     return (
       <div className="mx-auto my-20 max-w-[25rem] space-y-5">
         <p className="text-center text-sm text-wurth-gray-500">
