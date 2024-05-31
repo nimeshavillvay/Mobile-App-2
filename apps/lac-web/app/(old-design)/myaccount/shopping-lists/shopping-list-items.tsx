@@ -1,17 +1,45 @@
 "use client";
 
+import ProductCardSkeleton from "@/_components/product-card-skeleton";
+import {
+  ProductsGridDesktopContainer,
+  ProductsGridListSkeleton,
+  ProductsGridPaginationSkeleton,
+} from "@/_components/products-grid";
 import type { ShoppingListElement } from "@/_lib/types";
+import { cn } from "@/_lib/utils";
 import { Button } from "@repo/web-ui/components/ui/button";
-import { useState } from "react";
+import { Suspense, useState, type ReactNode } from "react";
 import { MdOutlineDelete } from "react-icons/md";
 import { PiPenNibDuotone } from "react-icons/pi";
 import ActionConfirmationDialog from "./action-confirmation-dialog";
+import { ShoppingListHeaderSkeleton } from "./layouts";
 import ProductCard from "./product-card";
 import ShoppingListDialog from "./shopping-list-dialog";
 import ShoppingListPagination from "./shopping-list-pagination";
 import useDeleteShoppingListMutation from "./use-delete-shopping-list-mutation.hook";
 import useSuspenseShoppingListItemCount from "./use-suspense-shopping-list-item-count.hook";
 import useSuspenseShoppingListItems from "./use-suspense-shopping-list-item.hook";
+
+const ProductsGridListContainer = ({
+  type,
+  children,
+}: {
+  readonly type: "mobile" | "desktop";
+  readonly children: ReactNode;
+}) => {
+  return (
+    <div
+      className={cn(
+        type === "mobile"
+          ? "flex flex-col gap-3 md:hidden"
+          : "grid flex-1 gap-5 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 3xl:grid-cols-5",
+      )}
+    >
+      {children}
+    </div>
+  );
+};
 
 const ShoppingListItems = ({
   token,
@@ -68,31 +96,70 @@ const ShoppingListItems = ({
         </div>
       </div>
 
-      <div className="mx-2 my-5 flex flex-row items-center justify-between text-sm font-normal">
-        <p>{shoppingListItemCount.count} items</p>
-        <p>
-          Page {page} of {totalPages == 0 ? 1 : totalPages}
-        </p>
-      </div>
+      <>
+        <Suspense fallback={<ShoppingListHeaderSkeleton />}>
+          <div className="mx-2 my-5 flex flex-row items-center justify-between text-sm font-normal">
+            <p>{shoppingListItemCount.count} items</p>
+            <p>
+              Page {page} of {totalPages == 0 ? 1 : totalPages}
+            </p>
+          </div>
+        </Suspense>
 
-      {shoppingListItems.items.map((item) => (
-        <div key={item.productId} className="inline-grid p-2">
-          <ProductCard
-            orientation="vertical"
-            token={token}
-            product={item}
-            listId={shoppingList.listId}
-          />
-        </div>
-      ))}
+        <Suspense fallback={<ProductsGridListSkeleton type="mobile" />}>
+          <ProductsGridListContainer type="mobile">
+            {shoppingListItems.items.map((item) => (
+              <Suspense
+                key={item.productId}
+                fallback={<ProductCardSkeleton orientation="horizontal" />}
+              >
+                <ProductCard
+                  orientation="horizontal"
+                  token={token}
+                  product={item}
+                  listId={shoppingList.listId}
+                />
+              </Suspense>
+            ))}
+          </ProductsGridListContainer>
+        </Suspense>
 
-      {!!shoppingList?.listId && (
-        <ShoppingListPagination
-          page={page}
-          totalPages={totalPages}
-          shoppingListId={shoppingList?.listId}
-        />
-      )}
+        <ProductsGridDesktopContainer>
+          <Suspense fallback={<ProductsGridListSkeleton type="desktop" />}>
+            <ProductsGridListContainer type="desktop">
+              {shoppingListItems.items.map((item) => (
+                <Suspense
+                  key={item.productId}
+                  fallback={
+                    <ProductCardSkeleton
+                      orientation="vertical"
+                      stretchWidth={true}
+                    />
+                  }
+                >
+                  <ProductCard
+                    orientation="vertical"
+                    token={token}
+                    product={item}
+                    listId={shoppingList.listId}
+                    stretchWidth={true}
+                  />
+                </Suspense>
+              ))}
+            </ProductsGridListContainer>
+          </Suspense>
+        </ProductsGridDesktopContainer>
+
+        <Suspense fallback={<ProductsGridPaginationSkeleton />}>
+          {!!shoppingList?.listId && (
+            <ShoppingListPagination
+              page={page}
+              totalPages={totalPages}
+              shoppingListId={shoppingList?.listId}
+            />
+          )}
+        </Suspense>
+      </>
 
       <ShoppingListDialog
         open={isOpenShoppingListDialog}

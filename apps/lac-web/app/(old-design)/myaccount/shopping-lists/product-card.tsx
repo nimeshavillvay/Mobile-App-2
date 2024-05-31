@@ -23,9 +23,16 @@ type ProductProps = {
   readonly token: string;
   readonly product: ShoppingListItemsElement;
   readonly listId: string;
+  readonly stretchWidth?: boolean;
 };
 
-const ProductCard = ({ orientation, token, product, listId }: ProductProps) => {
+const ProductCard = ({
+  orientation,
+  token,
+  product,
+  listId,
+  stretchWidth = false,
+}: ProductProps) => {
   const id = product.productId;
   const title = product.itemName;
   const image = product.img;
@@ -72,7 +79,11 @@ const ProductCard = ({ orientation, token, product, listId }: ProductProps) => {
   return (
     <ProductCardRoot
       orientation={orientation}
-      className={cn(orientation === "vertical" && "h-[27rem]")}
+      className={cn(
+        "shrink-0 snap-start",
+        orientation === "horizontal" && "w-full",
+        stretchWidth && "md:w-full",
+      )}
     >
       <ProductCardHero>
         {discountPercent > 0 && (
