@@ -171,7 +171,7 @@ const FileInfoAndErrors = ({
 }) => {
   return (
     <>
-      <div className="flex min-h-[68px] items-center justify-center gap-3 ">
+      <div className="flex min-h-[68px] items-center justify-center gap-3">
         <div className="max-w-72">{file.name}</div>
 
         <Button className="" variant="default" onClick={upload}>
@@ -185,7 +185,7 @@ const FileInfoAndErrors = ({
             setFile(null);
           }}
         >
-          <Close className="h-4 w-4  stroke-wurth-red-650" />
+          <Close className="h-4 w-4 stroke-wurth-red-650" />
 
           <span>Remove</span>
         </Button>
@@ -204,7 +204,7 @@ const FileUploadProgress = () => {
       <div className="mb-2 text-center text-sm">
         File uploading, please wait...
       </div>
-      <div className="m-auto  flex max-w-72">
+      <div className="m-auto flex max-w-72">
         <div
           className={cn(
             `h-2 w-6/12 rounded-full rounded-r-none bg-wurth-red-650`,

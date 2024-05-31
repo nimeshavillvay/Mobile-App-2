@@ -82,7 +82,7 @@ const ItemSelectorInput = ({
 
       <ul
         className={cn(
-          "absolute z-50 max-h-80 w-72 overflow-x-hidden overflow-y-scroll  bg-white p-0",
+          "absolute z-50 max-h-80 w-72 overflow-x-hidden overflow-y-scroll bg-white p-0",
           !(isOpen && items.length) && "hidden",
         )}
         {...getMenuProps()}
