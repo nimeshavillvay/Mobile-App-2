@@ -77,8 +77,7 @@ const ConfirmationDialog = ({ token }: ConfirmationDialogProps) => {
     if (productId && quantity && itemInCart) {
       updateCartItemMutation.mutate([
         {
-          cartItemId: itemInCart.cartItemId,
-          quantity: quantity,
+          cartItemId: itemInCart.cartItemId, //Quantity has been omitted from this call, as including it would update the existing amount rather than adding to it.
           config: {
             ...itemInCart.configuration,
             poOrJobName: data.poOrJobName,

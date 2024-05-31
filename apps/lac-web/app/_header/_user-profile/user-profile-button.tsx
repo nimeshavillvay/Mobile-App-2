@@ -4,6 +4,7 @@ import useLogoutMutation from "@/_hooks/user/use-logout-mutation.hook";
 import useOSRLogoutMutation from "@/_hooks/user/use-osr-logout-mutation.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
 import useSuspenseUsersList from "@/_hooks/user/use-suspense-users-list.hook";
+import type { ShippingMethod } from "@/_lib/types";
 import { Building } from "@repo/web-ui/components/icons/building";
 import { Exit } from "@repo/web-ui/components/icons/exit";
 import { HeartOutline } from "@repo/web-ui/components/icons/heart-outline";
@@ -25,9 +26,11 @@ import UserMobileNavigation from "./user-mobile-navigation";
 const UserProfileButton = ({
   token,
   type,
+  shippingMethods,
 }: {
   readonly token: string;
   readonly type: ViewportTypes;
+  readonly shippingMethods: ShippingMethod[];
 }) => {
   const checkLoginQuery = useSuspenseCheckLogin(token);
 
@@ -51,7 +54,9 @@ const UserProfileButton = ({
   }
 
   if (type === "mobile") {
-    return <UserMobileNavigation token={token} />;
+    return (
+      <UserMobileNavigation token={token} shippingMethods={shippingMethods} />
+    );
   } else {
     // Desktop
     return checkLoginQuery.data.status_code === "NOT_LOGGED_IN" ? (

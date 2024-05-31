@@ -40,6 +40,10 @@ const useAddToCartMutation = (
 
         configuration.backorder_all = selectedOption.backOrder ? "C" : "";
         configuration.hashvalue = selectedOption.hash;
+        configuration.backorder_quantity =
+          selectedOption.plants?.[0]?.backOrderQuantity?.toString() ?? "0";
+        configuration.backorder_date =
+          selectedOption.plants?.[0]?.backOrderDate?.toString() ?? "";
 
         // Keep track of the added plants(indexes)
         const addedIndexes: number[] = [];

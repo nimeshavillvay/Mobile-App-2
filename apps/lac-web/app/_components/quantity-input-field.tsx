@@ -5,8 +5,10 @@ import { forwardRef, useId, type ComponentPropsWithoutRef } from "react";
 
 const QuantityInputField = forwardRef<
   HTMLInputElement,
-  Omit<ComponentPropsWithoutRef<typeof Input>, "id" | "type" | "onKeyDown">
->(({ className, ...delegated }, ref) => {
+  Omit<ComponentPropsWithoutRef<typeof Input>, "id" | "type" | "onKeyDown"> & {
+    readonly removeDefaultStyles?: boolean;
+  }
+>(({ value, className, removeDefaultStyles = false, ...delegated }, ref) => {
   const id = useId();
   const quantityId = `quantity-${id}`;
 
@@ -20,13 +22,25 @@ const QuantityInputField = forwardRef<
         ref={ref}
         id={quantityId}
         type="number"
+        value={value}
         className={cn(
-          "flex-1 rounded-sm border-0 p-0 text-center text-lg font-semibold text-wurth-gray-800 shadow-none",
+          !removeDefaultStyles &&
+            "flex-1 rounded-sm border-0 p-0 text-center text-lg font-semibold text-wurth-gray-800 shadow-none",
           className,
         )}
         onKeyDown={(event) => {
-          // Restrict negative values and Euler's constant
-          if (event.code === "Minus" || event.code === "KeyE") {
+          if (
+            event.code === "Minus" || // Disable "-"
+            event.code === "KeyE" || // Disable "e"
+            event.key === "#" || // Disable "#"
+            event.key === "+" || // Disable "+"
+            (value &&
+              value.toString().length >= 5 &&
+              event.code !== "Backspace") || // Limit to 5 characters
+            (value !== undefined &&
+              value.toString().length === 0 &&
+              event.key === "0") // Disable "0" as first character
+          ) {
             event.preventDefault();
           }
         }}

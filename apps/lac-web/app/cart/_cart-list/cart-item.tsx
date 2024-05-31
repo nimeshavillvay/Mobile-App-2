@@ -1,8 +1,10 @@
+import QuantityInputField from "@/_components/quantity-input-field";
 import useDeleteCartItemMutation from "@/_hooks/cart/use-delete-cart-item-mutation.hook";
 import useUpdateCartItemMutation from "@/_hooks/cart/use-update-cart-item-mutation.hook";
 import useDebouncedState from "@/_hooks/misc/use-debounced-state.hook";
 import useSuspenseCheckAvailability from "@/_hooks/product/use-suspense-check-availability.hook";
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
+import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
 import type {
   CartConfiguration,
   CartItemConfiguration,
@@ -11,7 +13,7 @@ import type {
 import { formatNumberToPrice } from "@/_lib/utils";
 import { NUMBER_TYPE } from "@/_lib/zod-helper";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Save } from "@repo/web-ui/components/icons/save";
+import { Alert } from "@repo/web-ui/components/icons/alert";
 import { Trash } from "@repo/web-ui/components/icons/trash";
 import { WurthFullBlack } from "@repo/web-ui/components/logos/wurth-full-black";
 import { Button } from "@repo/web-ui/components/ui/button";
@@ -20,7 +22,7 @@ import { Label } from "@repo/web-ui/components/ui/label";
 import Image from "next/image";
 import Link from "next/link";
 import { Suspense, useEffect, useId, useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import Balancer from "react-wrap-balancer";
 import { z } from "zod";
 import {
@@ -35,7 +37,6 @@ import {
   NOT_IN_STOCK,
   TAKE_ON_HAND,
 } from "../constants";
-import CartItemShippingMethod from "./cart-item-shipping-method";
 import FavoriteButton from "./favorite-button";
 import FavoriteButtonSkeleton from "./favorite-button-skeleton";
 import {
@@ -45,6 +46,7 @@ import {
   getShippingMethods,
 } from "./helpers";
 import PlantName from "./plant-name";
+import RegionalExclusionAndShippingMethods from "./regional-exclusion-and-shipping-methods";
 import type { MainOption, ShipToMeOption } from "./types";
 import useCheckAvailabilityMutation from "./use-check-availability-mutation.hook";
 
@@ -67,10 +69,11 @@ type CartItemProps = {
     image: string;
     cartItemId: number;
     slug: string;
+    isExcludedProduct: boolean;
   };
   readonly plants: Plant[];
   readonly cartConfiguration: CartConfiguration;
-  readonly willCallPlant: { plant: string };
+  readonly willCallPlant: { plantCode: string };
 };
 
 const CartItem = ({
@@ -81,15 +84,16 @@ const CartItem = ({
   willCallPlant,
 }: CartItemProps) => {
   const id = useId();
-  const quantityId = `quantity-${id}`;
   const poId = `po-${id}`;
 
   const itemConfigHash = product?.configuration?.hashvalue;
   const itemConfigShippingMethod = product?.configuration?.shipping_method_1;
 
+  const checkLoginQuery = useSuspenseCheckLogin(token);
+
   const [selectedWillCallPlant, setSelectedWillCallPlant] = useState(() => {
-    if (willCallPlant?.plant) {
-      return willCallPlant.plant;
+    if (willCallPlant?.plantCode) {
+      return willCallPlant.plantCode;
     }
     return plants?.at(0)?.code ?? "";
   });
@@ -97,7 +101,7 @@ const CartItem = ({
   const [selectedShippingOption, setSelectedShippingOption] =
     useState<MainOption>();
 
-  const { register, getValues, watch } = useForm<
+  const { register, getValues, watch, control } = useForm<
     z.infer<typeof cartItemSchema>
   >({
     resolver: zodResolver(cartItemSchema),
@@ -131,6 +135,7 @@ const CartItem = ({
     status,
     availableLocations,
     willCallAnywhere,
+    xplant,
   } = checkAvailabilityQuery.data;
 
   const firstLocation = availableLocations.at(0);
@@ -205,7 +210,7 @@ const CartItem = ({
     defaultShippingMethod?.code ?? "",
   );
 
-  const handleChangeQtyOrPO = () => {
+  const handleChangeQtyOrPO = (quantity: number) => {
     checkAvailabilityMutation.mutate(
       {
         productId: product.id,
@@ -367,6 +372,8 @@ const CartItem = ({
           quantity: takeOnHand.plants?.at(0)?.quantity ?? 0,
           plant: takeOnHand.plants?.at(0)?.plant ?? EMPTY_STRING,
           hash: takeOnHand.hash,
+          backOrderDate: takeOnHand.plants?.at(0)?.backOrderDate,
+          backOrderQuantity: takeOnHand.plants?.at(0)?.backOrderQuantity,
         }),
       );
     } else if (shipAlternativeBranch) {
@@ -388,6 +395,8 @@ const CartItem = ({
           quantity: 0,
           plant: backOrderAll.plants?.at(0)?.plant ?? EMPTY_STRING,
           hash: backOrderAll.hash,
+          backOrderDate: backOrderAll.plants?.at(0)?.backOrderDate,
+          backOrderQuantity: backOrderAll.plants?.at(0)?.backOrderQuantity,
         }),
       );
     }
@@ -469,15 +478,11 @@ const CartItem = ({
               />
             </Suspense>
 
-            <Button variant="subtle" className="w-full">
-              <Save className="size-4" />
-
-              <span className="sr-only">Save</span>
-            </Button>
-
             <Button
               variant="subtle"
               className="w-full bg-red-50 hover:bg-red-100"
+              onClick={() => handleDeleteCartItem()}
+              disabled={deleteCartItemMutation.isPending}
             >
               <Trash className="size-4 fill-wurth-red-650" />
 
@@ -496,12 +501,14 @@ const CartItem = ({
               ${formatNumberToPrice(priceData?.price)}/{priceData?.priceUnit}
             </div>
 
-            {priceData?.listPrice !== priceData?.price && (
-              <div className="ml-1 text-[13px] leading-5 text-wurth-gray-500 line-through">
-                ${formatNumberToPrice(priceData?.listPrice)}/
-                {priceData?.priceUnit}
-              </div>
-            )}
+            {priceData?.listPrice &&
+              priceData?.price &&
+              priceData?.listPrice > priceData?.price && (
+                <div className="ml-1 text-[13px] leading-5 text-wurth-gray-500 line-through">
+                  ${formatNumberToPrice(priceData?.listPrice)}/
+                  {priceData?.priceUnit}
+                </div>
+              )}
           </div>
 
           <h2 className="line-clamp-3 text-sm font-medium text-black">
@@ -517,24 +524,35 @@ const CartItem = ({
           </div>
 
           <div className="flex flex-col gap-2 md:flex-row md:items-center">
-            <div>
-              <Label htmlFor={quantityId} className="sr-only">
-                Quantity
-              </Label>
+            <Controller
+              control={control}
+              name="quantity"
+              render={({ field: { onChange, onBlur, value, name, ref } }) => (
+                <QuantityInputField
+                  onBlur={onBlur}
+                  onChange={(event) => {
+                    if (
+                      Number(event.target.value) >= product.minAmount &&
+                      Number(event.target.value) % product.increment === 0
+                    ) {
+                      console.log("> called: ", Number(event.target.value));
+                      handleChangeQtyOrPO(Number(event.target.value));
+                    }
 
-              <Input
-                {...register("quantity", {
-                  onBlur: () => handleChangeQtyOrPO(),
-                  disabled: checkAvailabilityQuery.isPending,
-                })}
-                id={quantityId}
-                type="number"
-                className="h-fit rounded px-2.5 py-1 text-base md:w-24"
-                required
-                min={product.minAmount}
-                step={product.increment}
-              />
-            </div>
+                    onChange(event);
+                  }}
+                  value={value}
+                  ref={ref}
+                  name={name}
+                  removeDefaultStyles
+                  className="h-fit rounded px-2.5 py-1 text-base md:w-24"
+                  required
+                  min={product.minAmount}
+                  step={product.increment}
+                  disabled={checkAvailabilityQuery.isPending}
+                />
+              )}
+            />
 
             {isInStock && (
               <div className="text-sm text-wurth-gray-800">
@@ -561,11 +579,7 @@ const CartItem = ({
                 &nbsp;at&nbsp;
                 <PlantName
                   plants={plants}
-                  plantCode={
-                    willCallPlant.plant !== ""
-                      ? willCallPlant?.plant
-                      : DEFAULT_PLANT
-                  }
+                  plantCode={xplant !== "" ? xplant : DEFAULT_PLANT}
                 />
               </div>
             )}
@@ -577,7 +591,10 @@ const CartItem = ({
             </Label>
 
             <Input
-              {...register("po", { onBlur: () => handleChangeQtyOrPO() })}
+              {...register("po", {
+                onChange: () => handleChangeQtyOrPO(quantity),
+                disabled: updateCartConfigMutation.isPending,
+              })}
               id={poId}
               type="text"
               placeholder="PO #/ Job Name"
@@ -588,21 +605,68 @@ const CartItem = ({
       </div>
 
       <div className="md:w-80">
-        <CartItemShippingMethod
-          plants={plants}
-          availability={checkAvailabilityQuery.data}
-          setSelectedWillCallPlant={handleSelectWillCallPlant}
-          selectedWillCallPlant={selectedWillCallPlant}
-          setSelectedShippingOption={setSelectedShippingOption}
-          selectedShippingOption={selectedShippingOption}
-          setSelectedShipToMe={setSelectedShipToMe}
-          selectedShipToMe={selectedShipToMe}
-          setSelectedShippingMethod={setSelectedShippingMethod}
-          selectedShippingMethod={selectedShippingMethod}
-          onSave={handleSave}
-          defaultShippingMethod={defaultShippingMethod}
-          shippingMethods={shippingMethods}
-        />
+        {checkLoginQuery.data.status_code === "NOT_LOGGED_IN" &&
+          (product.isExcludedProduct ? (
+            <div className="flex flex-row gap-2 rounded-lg bg-red-50 p-4">
+              <Alert
+                className="mt-1 shrink-0 stroke-wurth-red-650"
+                width={16}
+                height={16}
+              />
+
+              <div className="flex-1 space-y-1">
+                <h4 className="text-base font-semibold text-wurth-red-650">
+                  Not Available
+                </h4>
+
+                <div className="text-sm leading-6 text-wurth-gray-800">
+                  This item is not available in certain regions. For better
+                  experience please{" "}
+                  <Link href="/sign-in">Sign in or register</Link>.
+                </div>
+              </div>
+            </div>
+          ) : (
+            <RegionalExclusionAndShippingMethods
+              token={token}
+              productId={product.id}
+              plants={plants}
+              availability={checkAvailabilityQuery.data}
+              setSelectedWillCallPlant={handleSelectWillCallPlant}
+              selectedWillCallPlant={selectedWillCallPlant}
+              setSelectedShippingOption={setSelectedShippingOption}
+              selectedShippingOption={selectedShippingOption}
+              setSelectedShipToMe={setSelectedShipToMe}
+              selectedShipToMe={selectedShipToMe}
+              setSelectedShippingMethod={setSelectedShippingMethod}
+              selectedShippingMethod={selectedShippingMethod}
+              onSave={handleSave}
+              defaultShippingMethod={defaultShippingMethod}
+              shippingMethods={shippingMethods}
+            />
+          ))}
+
+        {checkLoginQuery.data.status_code === "OK" && (
+          <Suspense>
+            <RegionalExclusionAndShippingMethods
+              token={token}
+              productId={product.id}
+              plants={plants}
+              availability={checkAvailabilityQuery.data}
+              setSelectedWillCallPlant={handleSelectWillCallPlant}
+              selectedWillCallPlant={selectedWillCallPlant}
+              setSelectedShippingOption={setSelectedShippingOption}
+              selectedShippingOption={selectedShippingOption}
+              setSelectedShipToMe={setSelectedShipToMe}
+              selectedShipToMe={selectedShipToMe}
+              setSelectedShippingMethod={setSelectedShippingMethod}
+              selectedShippingMethod={selectedShippingMethod}
+              onSave={handleSave}
+              defaultShippingMethod={defaultShippingMethod}
+              shippingMethods={shippingMethods}
+            />
+          </Suspense>
+        )}
       </div>
 
       <div className="hidden space-y-3 md:block md:shrink-0">
@@ -615,12 +679,14 @@ const CartItem = ({
             ${formatNumberToPrice(priceData?.price)}/{priceData?.priceUnit}
           </div>
 
-          {priceData?.listPrice !== priceData?.price && (
-            <div className="ml-1 text-[13px] leading-5 text-wurth-gray-500 line-through">
-              ${formatNumberToPrice(priceData?.listPrice)}/
-              {priceData?.priceUnit}
-            </div>
-          )}
+          {priceData?.listPrice &&
+            priceData?.price &&
+            priceData?.listPrice > priceData?.price && (
+              <div className="ml-1 text-[13px] leading-5 text-wurth-gray-500 line-through">
+                ${formatNumberToPrice(priceData?.listPrice)}/
+                {priceData?.priceUnit}
+              </div>
+            )}
         </div>
 
         <div className="flex flex-col gap-2">
@@ -634,19 +700,6 @@ const CartItem = ({
 
             <Trash className="size-4 fill-wurth-red-650" />
           </Button>
-
-          {/* This is not implemented as this will be rolled out in phase 2
-          <Button
-            variant="ghost"
-            className="h-fit w-full justify-end px-0 py-0"
-            disabled={true}
-            hidden={true}
-          >
-            <span className="text-[13px] leading-5">Save for later</span>
-
-            <Save className="size-4" />
-          </Button>
-          */}
 
           <FavoriteButton
             display="desktop"

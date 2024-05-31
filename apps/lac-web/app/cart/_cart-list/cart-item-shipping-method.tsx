@@ -210,6 +210,8 @@ const CartItemShippingMethod = ({
               quantity: takeOnHandPlant?.quantity ?? 0,
               plant: takeOnHandPlant?.plant ?? EMPTY_STRING,
               hash: takeOnHand.hash,
+              backOrderDate: takeOnHandPlant?.backOrderDate,
+              backOrderQuantity: takeOnHandPlant?.backOrderQuantity,
             }),
           );
         } else if (shipAlternativeBranch) {
@@ -230,6 +232,8 @@ const CartItemShippingMethod = ({
             quantity: 0,
             plant: EMPTY_STRING,
             hash: willCallAnywhere.hash,
+            backOrderDate: willCallAnywhere?.backOrderDate_1 ?? "0",
+            backOrderQuantity: willCallAnywhere?.backOrderQuantity_1,
           }),
           will_call_avail: (willCallAnywhere?.status === NOT_IN_STOCK
             ? 0
@@ -249,6 +253,8 @@ const CartItemShippingMethod = ({
             plant: getFirstPlantFromPlants(backOrderAll?.plants),
             hash: backOrderAll.hash,
             backOrderAll: true,
+            backOrderDate: backOrderAll.plants[0]?.backOrderDate ?? "",
+            backOrderQuantity: backOrderAll.plants[0]?.backOrderQuantity ?? 0,
           }),
         );
       }
@@ -310,6 +316,8 @@ const CartItemShippingMethod = ({
             quantity: takeOnHandPlant?.quantity ?? 0,
             plant: takeOnHandPlant?.plant ?? EMPTY_STRING,
             hash: takeOnHand.hash,
+            backOrderDate: takeOnHandPlant?.backOrderDate,
+            backOrderQuantity: takeOnHandPlant?.backOrderQuantity,
           }),
         );
       }

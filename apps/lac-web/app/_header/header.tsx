@@ -2,15 +2,15 @@ import { api } from "@/_lib/api";
 import { DEFAULT_REVALIDATE } from "@/_lib/constants";
 import { cn } from "@/_lib/utils";
 import { Phone } from "@repo/web-ui/components/icons/phone";
-import { ShoppingCart } from "@repo/web-ui/components/icons/shopping-cart";
 import { WurthFullBlack } from "@repo/web-ui/components/logos/wurth-full-black";
 import { Button, buttonVariants } from "@repo/web-ui/components/ui/button";
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import Link from "next/link";
 import { Suspense } from "react";
-import ShippingAddressSelector from "./_shipping-address-selector";
+import ShippingDetailsDialog from "./_shipping-details-dialog";
 import UserProfile, { UserProfileSkeleton } from "./_user-profile";
 import WillCallPlant from "./_will-call-plant";
+import Cart from "./cart";
 import DesktopNavigationMenu from "./desktop-navigation-menu";
 import MobileNavigationMenu from "./mobile-navigation-menu";
 import OSRDetails from "./osr-details";
@@ -76,7 +76,7 @@ const Header = async () => {
           <div className="flex items-center gap-5">
             <WillCallPlant />
 
-            <ShippingAddressSelector />
+            <ShippingDetailsDialog />
 
             <Suspense fallback={<Skeleton className="h-5 w-60" />}>
               <OSRDetails />
@@ -136,7 +136,9 @@ const Header = async () => {
               "size-6 md:hidden",
             )}
           >
-            <ShoppingCart />
+            <Suspense fallback={<Skeleton className="h-6 w-6" />}>
+              <Cart type="mobile" />
+            </Suspense>
 
             <span className="sr-only">Cart</span>
           </Link>
@@ -153,7 +155,9 @@ const Header = async () => {
               "hidden shrink-0 md:flex md:h-min md:flex-row md:items-center md:gap-2 md:p-0",
             )}
           >
-            <ShoppingCart className="size-7" />
+            <Suspense fallback={<Skeleton className="h-7 w-7" />}>
+              <Cart type="desktop" />
+            </Suspense>
 
             <span className="text-base font-semibold">Cart</span>
           </Link>

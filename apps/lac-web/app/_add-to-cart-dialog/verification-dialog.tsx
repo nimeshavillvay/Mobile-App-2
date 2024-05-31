@@ -118,10 +118,14 @@ const VerificationDialog = ({ token }: VerificationDialogProps) => {
 
                 <div className="space-y-2">
                   <div className="space-y-1">
-                    <h3 className="text-base text-black">
-                      {itemInfo.productName}
-                    </h3>
-
+                    <Link
+                      href={`/product/${itemInfo.productId}/${itemInfo.slug}`}
+                      onClick={() => setOpen("closed")}
+                    >
+                      <h3 className="text-base text-black">
+                        {itemInfo.productName}
+                      </h3>
+                    </Link>
                     <h4 className="text-sm font-medium text-wurth-gray-500">
                       {itemInfo.productSku}
                     </h4>

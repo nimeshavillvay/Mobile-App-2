@@ -10,7 +10,6 @@ type ProductPricesProps = {
   readonly productId: number;
   readonly listPrice: number;
   readonly uom: string;
-  readonly hasDiscount: boolean;
   readonly className?: string;
 };
 
@@ -19,7 +18,6 @@ const ProductPrices = ({
   listPrice,
   uom,
   token,
-  hasDiscount,
   className,
 }: ProductPricesProps) => {
   const { watch } = useAddToCartForm();
@@ -48,7 +46,7 @@ const ProductPrices = ({
           </span>
         </div>
 
-        {hasDiscount && !isLaminateItem && discount > 0 && (
+        {!isLaminateItem && discount > 0 && (
           <div className="text-wurth-gray-400 line-through">
             ${formatNumberToPrice(listPrice)}
           </div>
@@ -59,7 +57,7 @@ const ProductPrices = ({
           <span className="font-title leading-none">{actualUom}</span>
         </div>
 
-        {hasDiscount && !isLaminateItem && discount > 0 && (
+        {!isLaminateItem && discount > 0 && (
           <div className="font-semibold text-green-700">
             You save ${formatNumberToPrice(listPrice - currentPrice)}
           </div>
