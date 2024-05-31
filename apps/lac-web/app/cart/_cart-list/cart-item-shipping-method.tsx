@@ -130,7 +130,7 @@ const CartItemShippingMethod = ({
     return plantValues.reduce((acc, plant) => acc + (plant.quantity ?? 0), 0);
   };
 
-  const isVendorShipped = !!availableAll?.plants
+  const isVendorShipped = !!availabilityOptions[0]?.plants
     ?.at(0)
     ?.shippingMethods?.find((method) => method.code === VENDOR_DIRECT_CODE);
 
