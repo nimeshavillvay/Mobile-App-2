@@ -210,11 +210,11 @@ const CartItem = ({
     defaultShippingMethod?.code ?? "",
   );
 
-  const handleChangeQtyOrPO = (quantity: number) => {
+  const handleChangeQtyOrPO = () => {
     checkAvailabilityMutation.mutate(
       {
         productId: product.id,
-        qty: quantity,
+        qty: delayedQuantity,
       },
       {
         onSuccess: ({ options }) => {
@@ -536,7 +536,7 @@ const CartItem = ({
                       Number(event.target.value) % product.increment === 0
                     ) {
                       console.log("> called: ", Number(event.target.value));
-                      handleChangeQtyOrPO(Number(event.target.value));
+                      handleChangeQtyOrPO();
                     }
 
                     onChange(event);
@@ -592,7 +592,7 @@ const CartItem = ({
 
             <Input
               {...register("po", {
-                onChange: () => handleChangeQtyOrPO(quantity),
+                onChange: () => handleChangeQtyOrPO(),
                 disabled: updateCartConfigMutation.isPending,
               })}
               id={poId}
