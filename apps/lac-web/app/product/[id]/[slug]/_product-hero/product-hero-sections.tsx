@@ -2,6 +2,8 @@ import { api } from "@/_lib/api";
 import { DEFAULT_REVALIDATE } from "@/_lib/constants";
 import { cn } from "@/_lib/utils";
 import { Truck } from "@repo/web-ui/components/icons/truck";
+import { FiPackage } from "react-icons/fi";
+import { GiRadioactive } from "react-icons/gi";
 import { html, transform } from "ultrahtml";
 import swap from "ultrahtml/transformers/swap";
 import { getProduct } from "../apis";
@@ -48,6 +50,43 @@ export const ProductDescription = ({
       className={cn("text-base text-wurth-gray-500", className)}
       dangerouslySetInnerHTML={{ __html: children }}
     />
+  );
+};
+
+export const HazardousMaterialNotice = ({
+  className,
+}: {
+  readonly className?: string;
+}) => {
+  return (
+    <section className={className}>
+      <div className="flex flex-row gap-2 rounded-lg bg-yellow-50 p-4">
+        <GiRadioactive className="mt-1 shrink-0 text-base leading-none text-yellow-700" />
+
+        <p className="flex-1 text-sm leading-6 text-wurth-gray-800">
+          This item has been flagged as a hazardous material. Special shipping
+          costs may be added to your order.
+        </p>
+      </div>
+    </section>
+  );
+};
+
+export const SpecialShippingNotice = ({
+  className,
+}: {
+  readonly className?: string;
+}) => {
+  return (
+    <section className={className}>
+      <div className="flex flex-row gap-2 rounded-lg bg-wurth-gray-50 p-4">
+        <FiPackage className="mt-1 shrink-0 text-base leading-none" />
+
+        <p className="flex-1 text-sm leading-6 text-wurth-gray-500">
+          This item may incur additional shipping costs and lead times.
+        </p>
+      </div>
+    </section>
   );
 };
 

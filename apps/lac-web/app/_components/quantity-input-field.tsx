@@ -5,8 +5,10 @@ import { forwardRef, useId, type ComponentPropsWithoutRef } from "react";
 
 const QuantityInputField = forwardRef<
   HTMLInputElement,
-  Omit<ComponentPropsWithoutRef<typeof Input>, "id" | "type" | "onKeyDown">
->(({ value, className, ...delegated }, ref) => {
+  Omit<ComponentPropsWithoutRef<typeof Input>, "id" | "type" | "onKeyDown"> & {
+    readonly removeDefaultStyles?: boolean;
+  }
+>(({ value, className, removeDefaultStyles = false, ...delegated }, ref) => {
   const id = useId();
   const quantityId = `quantity-${id}`;
 
@@ -22,7 +24,8 @@ const QuantityInputField = forwardRef<
         type="number"
         value={value}
         className={cn(
-          "flex-1 rounded-sm border-0 p-0 text-center text-lg font-semibold text-wurth-gray-800 shadow-none",
+          !removeDefaultStyles &&
+            "flex-1 rounded-sm border-0 p-0 text-center text-lg font-semibold text-wurth-gray-800 shadow-none",
           className,
         )}
         onKeyDown={(event) => {

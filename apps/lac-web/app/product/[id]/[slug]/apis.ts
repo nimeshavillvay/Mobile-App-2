@@ -1,5 +1,5 @@
 import { api } from "@/_lib/api";
-import { DEFAULT_REVALIDATE, SPECIAL_SHIPPING_FLAG } from "@/_lib/constants";
+import { DEFAULT_REVALIDATE } from "@/_lib/constants";
 import { notFound } from "next/navigation";
 import "server-only";
 
@@ -109,9 +109,7 @@ export const getProduct = async (id: string, slug: string) => {
       isDirectlyShippedFromVendor:
         selected_item.is_directly_shipped_from_vendor ?? false,
       isHazardous: selected_item.txt_hazardous === "Y",
-      specialShipping: SPECIAL_SHIPPING_FLAG.includes(
-        selected_item.txt_special_shipping,
-      ),
+      specialShipping: selected_item.txt_special_shipping,
       productIdOnSap: selected_item.txt_sap,
       mfrPartNo: selected_item.txt_mfn,
       productSummary: selected_item.txt_description_name,

@@ -100,18 +100,15 @@ const ProductCard = ({
 
   let listPrice = 0;
   let currentPrice = 0;
-  let discountPercent = 0;
 
   if (priceData) {
     listPrice = priceData.listPrice;
     currentPrice = priceData?.uomPrice ?? priceData?.price;
   }
 
-  if (currentPrice !== listPrice) {
-    discountPercent = Math.floor(
-      ((listPrice - currentPrice) / listPrice) * 100,
-    );
-  }
+  const discountPercent = Math.round(
+    ((listPrice - currentPrice) / listPrice) * 100,
+  );
 
   const { setOpen, setProductId } = useAddToCartDialog(
     (state) => state.actions,

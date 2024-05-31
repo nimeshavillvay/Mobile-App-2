@@ -17,10 +17,12 @@ import AddToCartFormProvider from "./add-to-cart-form-provider";
 import ProductDesktopCarousel from "./product-desktop-carousel";
 import {
   DropShipItemNotice,
+  HazardousMaterialNotice,
   ProductDescription,
   ProductDetails,
   ProductNumbers,
   ProductSpecifications,
+  SpecialShippingNotice,
 } from "./product-hero-sections";
 
 type ProductHeroProps = {
@@ -55,12 +57,11 @@ const ProductHero = async ({ id, slug }: ProductHeroProps) => {
           Shop <span className="font-semibold">{product.brand}</span>
         </Link>
 
-        {product.selectedProduct.isSaleItem && (
-          <SaleBadges
-            productId={parseInt(id)}
-            listPrice={product.selectedProduct.listPrice}
-          />
-        )}
+        <SaleBadges
+          productId={parseInt(id)}
+          listPrice={product.selectedProduct.listPrice}
+          onSale={product.selectedProduct.isSaleItem}
+        />
       </div>
 
       <h1 className="container my-2 font-title text-2xl font-medium tracking-[-0.009rem] text-wurth-gray-800 md:mb-7 md:mt-1 md:tracking-[-0.144px]">
@@ -90,7 +91,6 @@ const ProductHero = async ({ id, slug }: ProductHeroProps) => {
             productId={parseInt(id)}
             listPrice={product.selectedProduct.listPrice}
             uom={product.selectedProduct.unitOfMeasure}
-            hasDiscount={product.selectedProduct.isSaleItem}
           />
 
           <ProductVariants id={id} />
@@ -102,6 +102,12 @@ const ProductHero = async ({ id, slug }: ProductHeroProps) => {
             uom={product.selectedProduct.unitOfMeasure}
             isExcludedProduct={product.selectedProduct.isExcludedProduct}
           />
+
+          {product.selectedProduct.isHazardous && <HazardousMaterialNotice />}
+
+          {!!product.selectedProduct.specialShipping && (
+            <SpecialShippingNotice />
+          )}
 
           {product.selectedProduct.isDirectlyShippedFromVendor && (
             <DropShipItemNotice />
@@ -155,7 +161,6 @@ const ProductHero = async ({ id, slug }: ProductHeroProps) => {
           productId={parseInt(id)}
           listPrice={product.selectedProduct.listPrice}
           uom={product.selectedProduct.unitOfMeasure}
-          hasDiscount={product.selectedProduct.isSaleItem}
           className="container my-6 md:hidden"
         />
 
@@ -169,6 +174,14 @@ const ProductHero = async ({ id, slug }: ProductHeroProps) => {
           className="container my-6 md:hidden"
           isExcludedProduct={product.selectedProduct.isExcludedProduct}
         />
+
+        {product.selectedProduct.isHazardous && (
+          <HazardousMaterialNotice className="container my-6 md:hidden" />
+        )}
+
+        {!!product.selectedProduct.specialShipping && (
+          <SpecialShippingNotice className="container my-6 md:hidden" />
+        )}
 
         {product.selectedProduct.isDirectlyShippedFromVendor && (
           <DropShipItemNotice className="container my-6 md:hidden" />
