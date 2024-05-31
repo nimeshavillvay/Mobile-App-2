@@ -37,6 +37,7 @@ import {
   NOT_IN_STOCK,
   TAKE_ON_HAND,
 } from "../constants";
+import CartItemShippingMethod from "./cart-item-shipping-method";
 import FavoriteButton from "./favorite-button";
 import FavoriteButtonSkeleton from "./favorite-button-skeleton";
 import {
@@ -636,12 +637,10 @@ const CartItem = ({
               </div>
             </div>
           ) : (
-            <RegionalExclusionAndShippingMethods
-              token={token}
-              productId={product.id}
+            <CartItemShippingMethod
               plants={plants}
               availability={checkAvailabilityQuery.data}
-              setSelectedWillCallPlant={handleSelectWillCallPlant}
+              setSelectedWillCallPlant={setSelectedWillCallPlant}
               selectedWillCallPlant={selectedWillCallPlant}
               setSelectedShippingOption={setSelectedShippingOption}
               selectedShippingOption={selectedShippingOption}
