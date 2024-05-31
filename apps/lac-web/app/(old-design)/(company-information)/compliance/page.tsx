@@ -1,7 +1,5 @@
 import { StaticPageMainTitle } from "@/(old-design)/_components/static-page-main-title";
 import { StaticPageSecondaryTitle } from "@/(old-design)/_components/static-page-secondary-title";
-import Separator from "@/old/_components/separator";
-import Title from "@/old/_components/title";
 import VisuallyHidden from "@/old/_components/visually-hidden";
 import type { Metadata } from "next";
 import Image from "next/image";
