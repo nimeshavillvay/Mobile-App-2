@@ -47,10 +47,10 @@ export const SECTIONS = [
     heading: "My Account",
     links: [
       { label: "Sign in/Register", href: "/sign-in" },
-      { label: "Forgot password?", href: "#" },
+      { label: "Forgot password?", href: "/forgot-password" },
       { label: "Order History", href: "/myaccount/orderhistory" },
-      { label: "Shipping and Returns", href: "/shipping-returns" },
-      { label: "Wish List", href: "/myaccount/wishlist" },
+      { label: "Shipping and Returns", href: "/myaccount/purchaseditems" },
+      { label: "Wish List", href: "/myaccount/shopping-lists" },
     ],
   },
   {
