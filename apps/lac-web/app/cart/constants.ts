@@ -22,3 +22,6 @@ export const TRUE_STRING = "T" as const;
 export const FALSE_STRING = "F" as const;
 
 export const DEFAULT_PLANT = "L010";
+
+export const BACKORDER_ENABLED = "T";
+export const BACKORDER_DISABLED = "";

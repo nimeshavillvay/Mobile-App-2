@@ -337,7 +337,7 @@ const CartItem = ({
         },
         {
           onSuccess: ({ willCallAnywhere }) => {
-            if (willCallAnywhere && willCallAnywhere.status != "notInStock") {
+            if (willCallAnywhere && willCallAnywhere.status != NOT_IN_STOCK) {
               handleSave({
                 ...createCartItemConfig({
                   method: "0",
