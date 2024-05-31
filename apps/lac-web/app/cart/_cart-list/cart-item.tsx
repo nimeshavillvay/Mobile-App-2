@@ -535,7 +535,6 @@ const CartItem = ({
                       Number(event.target.value) >= product.minAmount &&
                       Number(event.target.value) % product.increment === 0
                     ) {
-                      console.log("> called: ", Number(event.target.value));
                       handleChangeQtyOrPO();
                     }
 
