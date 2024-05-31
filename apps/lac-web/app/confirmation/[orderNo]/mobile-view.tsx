@@ -193,9 +193,12 @@ const MobileView = async ({ orderNo }: MobileViewProps) => {
                           <div>${formatNumberToPrice(lineItem.totalPrice)}</div>
                         </div>
 
-                        <h4 className="text-sm font-medium text-wurth-gray-800">
-                          {lineItem.itemDescription}
-                        </h4>
+                        <h4
+                          className="text-sm font-medium text-wurth-gray-800"
+                          dangerouslySetInnerHTML={{
+                            __html: lineItem.itemDescription,
+                          }}
+                        />
                       </div>
                     </div>
 
