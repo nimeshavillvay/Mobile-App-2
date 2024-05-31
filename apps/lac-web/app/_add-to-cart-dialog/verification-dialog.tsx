@@ -467,7 +467,7 @@ const LocationStocks = ({
             </div>
           )}
         </div>
-        {!isBackordered && (
+        {!isBackordered && otherLocations.length > 0 && (
           <CollapsibleTrigger
             asChild
             className="group h-fit gap-1 p-0 pl-1 text-sm font-bold text-black"
