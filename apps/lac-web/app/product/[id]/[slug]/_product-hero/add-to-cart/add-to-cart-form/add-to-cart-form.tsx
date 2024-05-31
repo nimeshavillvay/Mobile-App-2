@@ -155,7 +155,11 @@ const AddToCartFormLoggedIn = ({
           quantity?.toString().length >= 5 || addToCartMutation.isPending,
       }}
       submitButtonProps={{
-        disabled: addToCartMutation.isPending,
+        disabled:
+          !quantity ||
+          quantity < minQty ||
+          quantity % incQty !== 0 ||
+          addToCartMutation.isPending,
       }}
     >
       <Controller
