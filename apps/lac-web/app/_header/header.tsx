@@ -1,5 +1,4 @@
-import { api } from "@/_lib/api";
-import { DEFAULT_REVALIDATE } from "@/_lib/constants";
+import { getCategoriesList } from "@/_lib/apis/server";
 import { cn } from "@/_lib/utils";
 import { Phone } from "@repo/web-ui/components/icons/phone";
 import { WurthFullBlack } from "@repo/web-ui/components/logos/wurth-full-black";
@@ -15,59 +14,9 @@ import DesktopNavigationMenu from "./desktop-navigation-menu";
 import MobileNavigationMenu from "./mobile-navigation-menu";
 import OSRDetails from "./osr-details";
 import SearchBar from "./search-bar";
-import type { Category, TransformedCategory } from "./types";
 
 const Header = async () => {
-  const categories = await api
-    .get("rest/getcategorylist/0", {
-      searchParams: {
-        membershipid: 1,
-        level: 3,
-      },
-      next: {
-        revalidate: DEFAULT_REVALIDATE,
-      },
-    })
-    .json<Category[]>();
-
-  const transformCategory = (category: Category): TransformedCategory => {
-    const {
-      id,
-      name,
-      slug,
-      shortcode,
-      item_count,
-      direct_item_count,
-      img,
-      subcategory,
-    } = category;
-
-    const transformSubcategory = (data: Category): TransformedCategory => ({
-      id: Number(data.id),
-      name: data.name,
-      slug: data.slug,
-      shortCode: data.shortcode,
-      itemCount: Number(data.item_count),
-      directItemCount: Number(data.direct_item_count),
-      image: data.img,
-      subCategory: data.subcategory
-        ? data.subcategory.map(transformSubcategory)
-        : [],
-    });
-
-    return {
-      id: Number(id),
-      name,
-      slug,
-      shortCode: shortcode,
-      itemCount: Number(item_count),
-      directItemCount: Number(direct_item_count),
-      image: img,
-      subCategory: subcategory ? subcategory.map(transformSubcategory) : [],
-    };
-  };
-
-  const transformedCategory = categories.map(transformCategory);
+  const categories = await getCategoriesList();
 
   return (
     <header className="flex flex-col gap-4 border-b border-b-wurth-gray-250 pb-5 shadow-[0px_1px_5px_0px_rgba(0,0,0,0.05),0px_1px_2px_-1px_rgba(0,0,0,0.05)] md:border-0 md:pb-0">
@@ -108,7 +57,7 @@ const Header = async () => {
       </div>
 
       <div className="container flex w-full flex-row items-center gap-7 pt-1">
-        <MobileNavigationMenu categories={transformedCategory} />
+        <MobileNavigationMenu categories={categories} />
 
         <Link href="/" className="flex-shrink-0">
           <WurthFullBlack className="h-[24px] w-[114px] md:h-[28px] md:w-[133px]" />
@@ -168,7 +117,7 @@ const Header = async () => {
         <SearchBar />
       </div>
 
-      <DesktopNavigationMenu categories={transformedCategory} />
+      <DesktopNavigationMenu categories={categories} />
     </header>
   );
 };
