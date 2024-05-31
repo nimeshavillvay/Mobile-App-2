@@ -33,7 +33,7 @@ import { Label } from "@repo/web-ui/components/ui/label";
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import Image from "next/image";
 import Link from "next/link";
-import { Suspense, useId } from "react";
+import { Suspense, useDeferredValue, useId } from "react";
 import {
   Controller,
   FormProvider,
@@ -87,6 +87,7 @@ const VerificationDialog = ({ token }: VerificationDialogProps) => {
   });
   const quantity = addToCartForm.watch("quantity");
   const delayedQuantity = useDebouncedState(quantity);
+  const deferredQuantity = useDeferredValue(delayedQuantity);
 
   return (
     <FormProvider {...addToCartForm}>
@@ -156,7 +157,7 @@ const VerificationDialog = ({ token }: VerificationDialogProps) => {
                   <LocationStocks
                     token={token}
                     productId={itemInfo.productId}
-                    quantity={delayedQuantity}
+                    quantity={deferredQuantity}
                   />
                 </Suspense>
               ) : (

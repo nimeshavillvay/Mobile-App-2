@@ -21,7 +21,7 @@ import { Input } from "@repo/web-ui/components/ui/input";
 import { Label } from "@repo/web-ui/components/ui/label";
 import Image from "next/image";
 import Link from "next/link";
-import { Suspense, useEffect, useId, useState } from "react";
+import { Suspense, useDeferredValue, useEffect, useId, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import Balancer from "react-wrap-balancer";
 import { z } from "zod";
@@ -114,6 +114,7 @@ const CartItem = ({
 
   const quantity = watch("quantity");
   const delayedQuantity = useDebouncedState(quantity);
+  const deferredQuantity = useDeferredValue(delayedQuantity);
   const isQuantityLessThanMin = quantity < product.minAmount;
 
   const updateCartConfigMutation = useUpdateCartItemMutation(token);
@@ -121,14 +122,14 @@ const CartItem = ({
   const checkAvailabilityMutation = useCheckAvailabilityMutation(token);
 
   const priceCheckQuery = useSuspensePriceCheck(token, [
-    { productId: product.id, qty: delayedQuantity },
+    { productId: product.id, qty: deferredQuantity },
   ]);
 
   const priceData = priceCheckQuery.data.productPrices[0];
 
   const checkAvailabilityQuery = useSuspenseCheckAvailability(token, {
     productId: product.id,
-    qty: Number(delayedQuantity ?? product.quantity),
+    qty: Number(deferredQuantity ?? product.quantity),
     plant: selectedWillCallPlant !== "" ? selectedWillCallPlant : undefined,
   });
 
@@ -216,7 +217,7 @@ const CartItem = ({
     checkAvailabilityMutation.mutate(
       {
         productId: product.id,
-        qty: delayedQuantity,
+        qty: deferredQuantity,
       },
       {
         onSuccess: ({ options }) => {
