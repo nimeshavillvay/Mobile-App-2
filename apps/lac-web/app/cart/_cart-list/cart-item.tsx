@@ -501,12 +501,14 @@ const CartItem = ({
               ${formatNumberToPrice(priceData?.price)}/{priceData?.priceUnit}
             </div>
 
-            {priceData?.listPrice !== priceData?.price && (
-              <div className="ml-1 text-[13px] leading-5 text-wurth-gray-500 line-through">
-                ${formatNumberToPrice(priceData?.listPrice)}/
-                {priceData?.priceUnit}
-              </div>
-            )}
+            {priceData?.listPrice &&
+              priceData?.price &&
+              priceData?.listPrice > priceData?.price && (
+                <div className="ml-1 text-[13px] leading-5 text-wurth-gray-500 line-through">
+                  ${formatNumberToPrice(priceData?.listPrice)}/
+                  {priceData?.priceUnit}
+                </div>
+              )}
           </div>
 
           <h2 className="line-clamp-3 text-sm font-medium text-black">
@@ -666,12 +668,14 @@ const CartItem = ({
             ${formatNumberToPrice(priceData?.price)}/{priceData?.priceUnit}
           </div>
 
-          {priceData?.listPrice !== priceData?.price && (
-            <div className="ml-1 text-[13px] leading-5 text-wurth-gray-500 line-through">
-              ${formatNumberToPrice(priceData?.listPrice)}/
-              {priceData?.priceUnit}
-            </div>
-          )}
+          {priceData?.listPrice &&
+            priceData?.price &&
+            priceData?.listPrice > priceData?.price && (
+              <div className="ml-1 text-[13px] leading-5 text-wurth-gray-500 line-through">
+                ${formatNumberToPrice(priceData?.listPrice)}/
+                {priceData?.priceUnit}
+              </div>
+            )}
         </div>
 
         <div className="flex flex-col gap-2">
