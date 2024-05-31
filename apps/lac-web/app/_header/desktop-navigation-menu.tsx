@@ -1,5 +1,6 @@
 "use client";
 
+import type { TransformedCategory } from "@/_lib/types";
 import { cn } from "@/_lib/utils";
 import { ArrowUpRight } from "@repo/web-ui/components/icons/arrow-up-right";
 import { ChevronRight } from "@repo/web-ui/components/icons/chevron-right";
@@ -14,7 +15,6 @@ import {
 } from "@repo/web-ui/components/ui/navigation-menu";
 import Link from "next/link";
 import { useState, type ComponentProps } from "react";
-import type { TransformedCategory } from "./types";
 
 type DesktopNavigationMenuProps = {
   readonly categories: TransformedCategory[];

@@ -30,16 +30,17 @@ const QuantityInputField = forwardRef<
         )}
         onKeyDown={(event) => {
           if (
-            event.code === "Minus" || // Disable "-"
-            event.code === "KeyE" || // Disable "e"
+            event.key === "-" || // Disable "-"
+            event.key === "e" || // Disable "e"
             event.key === "#" || // Disable "#"
             event.key === "+" || // Disable "+"
             (value &&
               value.toString().length >= 5 &&
-              event.code !== "Backspace") || // Limit to 5 characters
+              event.key !== "Backspace") || // Limit to 5 characters
             (value !== undefined &&
               value.toString().length === 0 &&
-              event.key === "0") // Disable "0" as first character
+              event.key === "0") || // Disable "0" as first character
+            event.key === "." // Disable "."
           ) {
             event.preventDefault();
           }

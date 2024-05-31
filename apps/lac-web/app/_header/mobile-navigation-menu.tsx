@@ -1,6 +1,7 @@
 "use client";
 
 import { cva } from "@/_lib/cva.config";
+import type { TransformedCategory } from "@/_lib/types";
 import { cn } from "@/_lib/utils";
 import { ArrowLeft } from "@repo/web-ui/components/icons/arrow-left";
 import { ArrowUpRight } from "@repo/web-ui/components/icons/arrow-up-right";
@@ -18,7 +19,6 @@ import {
 } from "@repo/web-ui/components/ui/sheet";
 import Link from "next/link";
 import { useState } from "react";
-import type { TransformedCategory } from "./types";
 
 const sectionHeadingStyles = cva({
   base: "pb-2 pl-4 pr-2 pt-5 text-sm font-semibold text-wurth-gray-800",

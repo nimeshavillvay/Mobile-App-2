@@ -7,6 +7,7 @@ import type {
   PaymentMethod,
   Plant,
   ShippingMethod,
+  TransformedCategory,
 } from "../types";
 
 export const getBreadcrumbs = async (
@@ -397,4 +398,68 @@ export const getOrderDetails = async (token: string, orderId: string) => {
   } catch {
     return notFound();
   }
+};
+
+export const getCategoriesList = async () => {
+  type Category = {
+    id: string;
+    name: string;
+    slug: string;
+    shortcode: string;
+    item_count: string;
+    direct_item_count: string;
+    img: null | string;
+    subcategory?: Category[];
+  };
+
+  const categories = await api
+    .get("rest/getcategorylist/0", {
+      searchParams: {
+        membershipid: 1,
+        level: 3,
+      },
+      next: {
+        revalidate: DEFAULT_REVALIDATE,
+      },
+    })
+    .json<Category[]>();
+
+  const transformCategory = (category: Category): TransformedCategory => {
+    const {
+      id,
+      name,
+      slug,
+      shortcode,
+      item_count,
+      direct_item_count,
+      img,
+      subcategory,
+    } = category;
+
+    const transformSubcategory = (data: Category): TransformedCategory => ({
+      id: Number(data.id),
+      name: data.name,
+      slug: data.slug,
+      shortCode: data.shortcode,
+      itemCount: Number(data.item_count),
+      directItemCount: Number(data.direct_item_count),
+      image: data.img,
+      subCategory: data.subcategory
+        ? data.subcategory.map(transformSubcategory)
+        : [],
+    });
+
+    return {
+      id: Number(id),
+      name,
+      slug,
+      shortCode: shortcode,
+      itemCount: Number(item_count),
+      directItemCount: Number(direct_item_count),
+      image: img,
+      subCategory: subcategory ? subcategory.map(transformSubcategory) : [],
+    };
+  };
+
+  return categories.map(transformCategory);
 };
