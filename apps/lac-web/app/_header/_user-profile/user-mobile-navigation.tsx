@@ -166,18 +166,6 @@ const UserMobileProfileNavigation = ({
           </li>
 
           <li>
-            <SheetClose asChild className={sectionLinkStyles()}>
-              <Link href="/myaccount/company-profile">Company Profile</Link>
-            </SheetClose>
-          </li>
-
-          <li>
-            <SheetClose asChild className={sectionLinkStyles()}>
-              <Link href="/myaccount/manage-users">Manage Users</Link>
-            </SheetClose>
-          </li>
-
-          <li>
             <SheetClose
               className={sectionLinkStyles()}
               onClick={() => {

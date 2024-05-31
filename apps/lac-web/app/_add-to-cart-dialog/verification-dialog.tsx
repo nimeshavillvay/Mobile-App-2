@@ -367,7 +367,9 @@ const AddToCart = ({
             size="icon"
             className="size-10 rounded-sm"
             onClick={reduceQuantity}
-            disabled={quantity === minAmount || addToCartMutation.isPending}
+            disabled={
+              !quantity || quantity === minAmount || addToCartMutation.isPending
+            }
           >
             <Minus className="size-4" />
             <span className="sr-only">Reduce quantity</span>
@@ -384,6 +386,9 @@ const AddToCart = ({
                 ref={ref}
                 name={name}
                 disabled={addToCartMutation.isPending}
+                required
+                min={minAmount}
+                step={increments}
               />
             )}
           />
@@ -394,7 +399,9 @@ const AddToCart = ({
             size="icon"
             className="size-10 rounded-sm"
             onClick={increaseQuantity}
-            disabled={addToCartMutation.isPending}
+            disabled={
+              quantity?.toString().length >= 5 || addToCartMutation.isPending
+            }
           >
             <Plus className="size-4" />
             <span className="sr-only">Increase quantity</span>

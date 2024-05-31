@@ -3,6 +3,20 @@ import { Input } from "@repo/web-ui/components/ui/input";
 import { Label } from "@repo/web-ui/components/ui/label";
 import { forwardRef, useId, type ComponentPropsWithoutRef } from "react";
 
+const ALLOWED_KEYS = [
+  "0",
+  "1",
+  "2",
+  "3",
+  "4",
+  "5",
+  "6",
+  "7",
+  "8",
+  "9",
+  "Backspace",
+];
+
 const QuantityInputField = forwardRef<
   HTMLInputElement,
   Omit<ComponentPropsWithoutRef<typeof Input>, "id" | "type" | "onKeyDown"> & {
@@ -30,13 +44,10 @@ const QuantityInputField = forwardRef<
         )}
         onKeyDown={(event) => {
           if (
-            event.code === "Minus" || // Disable "-"
-            event.code === "KeyE" || // Disable "e"
-            event.key === "#" || // Disable "#"
-            event.key === "+" || // Disable "+"
+            !ALLOWED_KEYS.includes(event.key) ||
             (value &&
               value.toString().length >= 5 &&
-              event.code !== "Backspace") || // Limit to 5 characters
+              event.key !== "Backspace") || // Limit to 5 characters
             (value !== undefined &&
               value.toString().length === 0 &&
               event.key === "0") // Disable "0" as first character

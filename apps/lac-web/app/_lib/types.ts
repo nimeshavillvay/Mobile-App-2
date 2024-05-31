@@ -420,3 +420,14 @@ export type CheckAvailability = {
     amount: number;
   }[];
 };
+
+export type TransformedCategory = {
+  id: number;
+  name: string;
+  slug: string;
+  shortCode: string;
+  itemCount: number;
+  directItemCount: number;
+  image: null | string;
+  subCategory?: TransformedCategory[];
+};

@@ -54,4 +54,4 @@ jobs:
       - name: Install dependencies
         run: pnpm install
       - name: Run ESLint
-        run: pnpm lint:ci
+        run: pnpm lint
