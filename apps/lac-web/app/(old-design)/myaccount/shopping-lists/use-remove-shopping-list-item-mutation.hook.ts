@@ -42,9 +42,13 @@ const useRemoveShoppingListItemMutation = () => {
         variant: "destructive",
       });
     },
-    onSettled: () => {
+    onSettled: (data, error, variables) => {
       queryClient.invalidateQueries({
         queryKey: ["my-account", "shopping-list"],
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ["user", "favorite-skus", `sku-${variables.productId}`],
       });
     },
   });
