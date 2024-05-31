@@ -5,6 +5,7 @@ import useDebouncedState from "@/_hooks/misc/use-debounced-state.hook";
 import useSuspenseCheckAvailability from "@/_hooks/product/use-suspense-check-availability.hook";
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
+import { DEFAULT_PLANT } from "@/_lib/constants";
 import type {
   CartConfiguration,
   CartItemConfiguration,
@@ -29,7 +30,6 @@ import {
   ALTERNATIVE_BRANCHES,
   AVAILABLE_ALL,
   BACK_ORDER_ALL,
-  DEFAULT_PLANT,
   EMPTY_STRING,
   IN_STOCK,
   LIMITED_STOCK,
@@ -46,7 +46,6 @@ import {
   getAlternativeBranchesConfig,
   getShippingMethods,
 } from "./helpers";
-import PlantName from "./plant-name";
 import RegionalExclusionAndShippingMethods from "./regional-exclusion-and-shipping-methods";
 import type { MainOption, ShipToMeOption } from "./types";
 import useCheckAvailabilityMutation from "./use-check-availability-mutation.hook";
@@ -74,7 +73,7 @@ type CartItemProps = {
   };
   readonly plants: Plant[];
   readonly cartConfiguration: CartConfiguration;
-  readonly willCallPlant: { plantCode: string };
+  readonly willCallPlant: { plantCode: string; plantName: string };
 };
 
 const CartItem = ({
@@ -138,14 +137,11 @@ const CartItem = ({
     status,
     availableLocations,
     willCallAnywhere,
-    xplant,
   } = checkAvailabilityQuery.data;
 
-  const firstLocation = availableLocations.at(0);
-
-  const isNotInStock = status === NOT_IN_STOCK;
-  const isLimitedStock = status === LIMITED_STOCK;
-  const isInStock = status === IN_STOCK;
+  const homeBranchAvailability = availableLocations?.find(
+    (location) => location.location === willCallPlant?.plantCode,
+  );
 
   const willCallHash = willCallAnywhere?.hash;
 
@@ -559,34 +555,18 @@ const CartItem = ({
               )}
             />
 
-            {isInStock && (
-              <div className="text-sm text-wurth-gray-800">
-                <span className="font-semibold text-green-700">
-                  {firstLocation?.amount ?? 0} in stock
-                </span>
-                &nbsp;at&nbsp;{firstLocation?.name}
-              </div>
-            )}
-
-            {isLimitedStock && (
-              <div className="text-sm text-wurth-gray-800">
-                <span className="font-semibold text-yellow-700">
-                  Only {firstLocation?.amount ?? 0} in stock
-                </span>
-                &nbsp;at&nbsp;{firstLocation?.name}
-              </div>
-            )}
-
-            {/* Set default plant when there is no will call plant */}
-            {isNotInStock && (
-              <div className="text-sm text-wurth-gray-800">
-                <span className="font-semibold text-red-700">Out of stock</span>
-                &nbsp;at&nbsp;
-                <PlantName
-                  plants={plants}
-                  plantCode={xplant !== "" ? xplant : DEFAULT_PLANT}
-                />
-              </div>
+            {homeBranchAvailability ? (
+              <AvailabilityStatus
+                availabilityStatus={status}
+                amount={homeBranchAvailability?.amount ?? 0}
+                branch={homeBranchAvailability?.name ?? ""}
+              />
+            ) : (
+              <AvailabilityStatus
+                availabilityStatus={NOT_IN_STOCK}
+                amount={0}
+                branch={willCallPlant?.plantName ?? DEFAULT_PLANT.name}
+              />
             )}
           </div>
 
@@ -722,3 +702,44 @@ const CartItem = ({
 };
 
 export default CartItem;
+
+const AvailabilityStatus = ({
+  availabilityStatus,
+  amount,
+  branch,
+}: {
+  availabilityStatus: string;
+  amount: number;
+  branch: string;
+}) => {
+  const isLimitedStock = availabilityStatus === LIMITED_STOCK;
+  const isInStock = availabilityStatus === IN_STOCK;
+  let statusText = "";
+
+  if (isInStock) {
+    statusText = `${amount ?? 0} in stock`;
+  } else if (isLimitedStock) {
+    statusText = `Only ${amount ?? 0} in stock`;
+  } else {
+    statusText = "Out of stock";
+  }
+
+  return (
+    <div className="text-sm text-wurth-gray-800">
+      <span
+        className={cn(
+          "font-semibold",
+          isInStock
+            ? "text-green-700"
+            : isLimitedStock
+              ? "text-yellow-700"
+              : "text-red-700",
+        )}
+      >
+        {statusText}
+      </span>
+      &nbsp;at&nbsp;
+      {branch}
+    </div>
+  );
+};
