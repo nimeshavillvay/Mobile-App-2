@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@/(old-design)/_utils/helpers";
+import { cn } from "@/_lib/utils";
 import { Alert } from "@repo/web-ui/components/icons/alert";
 import { CheckCircle } from "@repo/web-ui/components/icons/check-circle";
 import { WurthFullBlack } from "@repo/web-ui/components/logos/wurth-full-black";
@@ -46,46 +46,45 @@ const ItemSelectorInput = ({
     },
     items: items,
     itemToString: (item) => {
-      return item ? item.sku : "abc";
+      return item ? item.sku : "N/A";
     },
   });
 
   return (
     <div>
-      <div className="flex w-48 flex-col gap-1">
-        <div className="relative flex gap-0.5 bg-white shadow-sm">
-          <Input
-            id={id}
-            placeholder="Item #"
-            className={cn(
-              "h-10 w-full",
-              isInvalid === true && "border-wurth-red-650 text-wurth-red-650",
-            )}
-            {...getInputProps()}
+      <div className="relative flex w-48 flex-col gap-0.5 bg-white shadow-sm">
+        <Input
+          id={id}
+          placeholder="Item #"
+          className={cn(
+            "h-10 w-full",
+            isInvalid === true && "border-wurth-red-650 text-wurth-red-650",
+          )}
+          {...getInputProps()}
+        />
+
+        {isInvalid === false && (
+          <CheckCircle
+            className="absolute right-2 top-2.5 shrink-0 stroke-green-700"
+            width={20}
+            height={20}
           />
+        )}
 
-          {isInvalid === false && (
-            <CheckCircle
-              className="absolute right-2 top-2.5 shrink-0 stroke-green-700"
-              width={20}
-              height={20}
-            />
-          )}
-
-          {isInvalid === true && (
-            <Alert
-              className="absolute right-2 top-2.5 shrink-0 stroke-wurth-red-650"
-              width={20}
-              height={20}
-            />
-          )}
-        </div>
+        {isInvalid === true && (
+          <Alert
+            className="absolute right-2 top-2.5 shrink-0 stroke-wurth-red-650"
+            width={20}
+            height={20}
+          />
+        )}
       </div>
 
       <ul
-        className={`absolute z-50 max-h-80 w-72 overflow-x-hidden overflow-y-scroll  bg-white p-0 ${
-          !(isOpen && items.length) && "hidden"
-        }`}
+        className={cn(
+          "absolute z-50 max-h-80 w-72 overflow-x-hidden overflow-y-scroll  bg-white p-0",
+          !(isOpen && items.length) && "hidden",
+        )}
         {...getMenuProps()}
       >
         {isOpen &&

@@ -1,5 +1,6 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Alert } from "@repo/web-ui/components/icons/alert";
 import { Plus } from "@repo/web-ui/components/icons/plus";
 import { WurthFullBlack } from "@repo/web-ui/components/logos/wurth-full-black";
@@ -16,13 +17,19 @@ import {
 import { Input } from "@repo/web-ui/components/ui/input";
 import Image from "next/image";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 import getStatus from "./apis";
 import useAddMultipleToCartMutation from "./use-add-multiple-to-cart-mutation.hook";
 
+const formSchema = z.object({
+  sku: z.string(),
+  quantity: z.union([z.number().int().positive(), z.nan()]).nullable(),
+  poJobName: z.string().optional(),
+});
+type FormSchema = z.infer<typeof formSchema>;
+
 const AddMoreItemsFormMobile = ({ token }: { readonly token: string }) => {
-  const [sku, setSku] = useState("");
-  const [quantity, setQuantity] = useState("");
-  const [poJobName, setPoJobName] = useState("");
   const [product, setProduct] = useState<{
     productid: string;
     sku: string;
@@ -57,10 +64,20 @@ const AddMoreItemsFormMobile = ({ token }: { readonly token: string }) => {
 
   const addMultipleToCartMutation = useAddMultipleToCartMutation(token);
 
-  const verify = async () => {
+  const { handleSubmit, register, reset } = useForm<FormSchema>({
+    defaultValues: {
+      sku: "",
+      quantity: null,
+      poJobName: "",
+    },
+    mode: "onBlur",
+    resolver: zodResolver(formSchema),
+  });
+
+  const verify = async (values: FormSchema) => {
     setErrorMessage(null);
 
-    if (sku == "") {
+    if (values.sku == "") {
       setErrorMessage(REQUIRED_ITEM_NUMBER_ERROR_MESSAGE);
       return;
     }
@@ -69,9 +86,9 @@ const AddMoreItemsFormMobile = ({ token }: { readonly token: string }) => {
       const validatedCartItem = await getStatus({
         products: [
           {
-            sku: sku,
-            mqt: parseInt(quantity),
-            poOrJobName: poJobName,
+            sku: values.sku,
+            mqt: values.quantity ?? 0,
+            poOrJobName: values.poJobName,
           },
         ],
       });
@@ -85,13 +102,18 @@ const AddMoreItemsFormMobile = ({ token }: { readonly token: string }) => {
     }
   };
 
-  const addItem = async () => {
-    if (!sku) {
+  const addItem = async (values: FormSchema) => {
+    if (!isVerified) {
+      verify(values);
+      return;
+    }
+
+    if (!values.sku) {
       setErrorMessage(REQUIRED_ITEM_NUMBER_ERROR_MESSAGE);
       return;
     }
 
-    if (!quantity) {
+    if (!values.quantity) {
       setErrorMessage(REQUIRED_QUANTITY_ERROR_MESSAGE);
       return;
     }
@@ -101,12 +123,12 @@ const AddMoreItemsFormMobile = ({ token }: { readonly token: string }) => {
       return;
     }
 
-    if (Number(quantity) < Number(product.minimumQuantity)) {
+    if (Number(values.quantity) < Number(product.minimumQuantity)) {
       setErrorMessage(MINIMUM_QUANTITY_ERROR_MESSAGE);
       return;
     }
 
-    if (Number(quantity) % Number(product.quantityMultiplier) !== 0) {
+    if (Number(values.quantity) % Number(product.quantityMultiplier) !== 0) {
       setErrorMessage(QUANTITY_MULTIPLIER_ERROR_MESSAGE);
       return;
     }
@@ -115,17 +137,15 @@ const AddMoreItemsFormMobile = ({ token }: { readonly token: string }) => {
       [
         {
           productId: parseInt(product.productid),
-          quantity: parseInt(quantity),
-          poOrJobName: poJobName,
+          quantity: values.quantity,
+          poOrJobName: values.poJobName,
         },
       ],
       {
         onSuccess: () => {
-          setSku("");
-          setQuantity("");
-          setPoJobName("");
           setProduct(undefined);
           setOpen(false);
+          reset();
         },
       },
     );
@@ -138,12 +158,9 @@ const AddMoreItemsFormMobile = ({ token }: { readonly token: string }) => {
           <Button
             variant="default"
             className="flex h-fit w-full flex-row items-center gap-5"
-            onClick={() => {
-              setOpen(true);
-            }}
           >
             <Plus className="h-4 w-4 stroke-white stroke-2" />
-            <div>Add an item</div>
+            <span>Add an item</span>
           </Button>
         </DrawerTrigger>
 
@@ -200,17 +217,18 @@ const AddMoreItemsFormMobile = ({ token }: { readonly token: string }) => {
               </div>
             )}
 
-            <div className="text-sm font-medium">
+            <form
+              onSubmit={handleSubmit(addItem)}
+              noValidate
+              className="text-sm font-medium"
+            >
               <div className="mb-4 flex gap-2">
                 <div className="w-2/3">
                   <div>Item Number</div>
                   <Input
+                    {...register("sku")}
                     className="h-10 px-3 py-2"
-                    value={sku}
-                    onChange={(e) => {
-                      setSku(e.target.value);
-                      setIsVerified(false);
-                    }}
+                    onChange={() => setIsVerified(false)}
                   />
                 </div>
 
@@ -218,32 +236,24 @@ const AddMoreItemsFormMobile = ({ token }: { readonly token: string }) => {
                   <div>Qty</div>
                   <Input
                     className="h-10 px-3 py-2"
-                    value={quantity}
-                    onChange={(e) => {
-                      setQuantity(e.target.value);
-                      // setIsVerified(false);
-                    }}
+                    {...register("quantity", {
+                      valueAsNumber: true,
+                    })}
                   />
                 </div>
               </div>
 
               <div className="mb-4">
                 <div>PO #/ Job Name</div>
-                <Input
-                  className="h-10 px-3 py-2"
-                  value={poJobName}
-                  onChange={(e) => setPoJobName(e.target.value)}
-                />
+                <Input className="h-10 px-3 py-2" {...register("poJobName")} />
               </div>
-            </div>
 
-            <DrawerFooter className="px-0 pb-9">
-              {isVerified ? (
-                <Button onClick={addItem}>Add item</Button>
-              ) : (
-                <Button onClick={verify}>Verify</Button>
-              )}
-            </DrawerFooter>
+              <DrawerFooter className="px-0 pb-9">
+                <Button type="submit">
+                  {isVerified ? "Add item" : "Verify"}
+                </Button>
+              </DrawerFooter>
+            </form>
           </div>
         </DrawerContent>
       </Drawer>

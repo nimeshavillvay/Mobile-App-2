@@ -2,7 +2,7 @@ import { Alert } from "@repo/web-ui/components/icons/alert";
 import { WurthFullBlack } from "@repo/web-ui/components/logos/wurth-full-black";
 import Image from "next/image";
 
-const ProductDetails = ({
+const ProductSearchResult = ({
   product,
   isLoading,
   isLastEditedIndex,
@@ -68,7 +68,7 @@ const ProductDetails = ({
     );
   }
 
-  return;
+  return null;
 };
 
-export default ProductDetails;
+export default ProductSearchResult;

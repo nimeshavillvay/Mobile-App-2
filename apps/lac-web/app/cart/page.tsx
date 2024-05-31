@@ -3,16 +3,31 @@ import { getPlants, getShippingMethods } from "@/_lib/apis/server";
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import type { Metadata } from "next";
+import dynamic from "next/dynamic";
 import { cookies } from "next/headers";
 import { Suspense } from "react";
-import AddMoreItemsForm from "./_add-more-items/add-more-items-form";
-import AddMoreItemsFormMobile from "./_add-more-items/add-more-items-form-mobile";
 import CartList from "./_cart-list";
 import CheckoutButton from "./_checkout-button";
 import CartDetails from "./cart-details";
 import CartHeading from "./cart-heading";
 import CartItemFallback from "./cart-item-fallback";
 import ShippingMethod from "./shipping-method";
+
+const DynamicAddMoreItemsSection = dynamic(
+  () => import("./_add-more-items/add-more-items-form"),
+  {
+    ssr: false,
+    loading: () => <Skeleton className="h-[415px] w-full" />,
+  },
+);
+
+const DynamicAddMoreItemsSectionForMobile = dynamic(
+  () => import("./_add-more-items/add-more-items-form-mobile"),
+  {
+    ssr: false,
+    loading: () => <Skeleton className="h-[36px] w-full" />,
+  },
+);
 
 export const metadata: Metadata = {
   title: "Cart",
@@ -62,12 +77,15 @@ const CartPage = async () => {
             <CartList token={sessionToken.value} plants={plants} />
 
             <div className="hidden md:block">
-              <AddMoreItemsForm token={sessionToken.value} />
+              <DynamicAddMoreItemsSection token={sessionToken.value} />
             </div>
+
             <div className="flex gap-2 px-4 md:hidden">
-              <div className="w-1/2">{/* delete cart button goes here*/}</div>
-              <div className="w-1/2">
-                <AddMoreItemsFormMobile token={sessionToken.value} />
+              <div className="flex-1">{/* delete cart button goes here*/}</div>
+              <div className="flex-1">
+                <DynamicAddMoreItemsSectionForMobile
+                  token={sessionToken.value}
+                />
               </div>
             </div>
           </Suspense>

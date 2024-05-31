@@ -5,7 +5,6 @@ import { Download } from "@repo/web-ui/components/icons/download";
 import { FileDownload } from "@repo/web-ui/components/icons/file-download";
 import { Button } from "@repo/web-ui/components/ui/button";
 import {
-  Fragment,
   useCallback,
   useState,
   type Dispatch,
@@ -39,9 +38,7 @@ const BulkUpload = ({
   readonly isBulkUploadDone: boolean;
   readonly isFileProcessingState: boolean;
 }) => {
-  const [fileErrorMessage, setFileErrorMessage] = useState<string | boolean>(
-    false,
-  );
+  const [fileErrorMessage, setFileErrorMessage] = useState<string>("");
 
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
@@ -91,18 +88,14 @@ const BulkUpload = ({
           Add items by uploading an Excel or a CSV file
         </div>
 
-        <Button
-          variant="ghost"
+        <a
           className="flex items-center gap-2 font-medium text-wurth-red-650"
-          type="button"
-          onClick={() => {
-            //TODO: download the template
-            console.log("download the template");
-          }}
+          href="/upload-order-form.csv"
+          download={true}
         >
           <FileDownload className="stroke-wurth-red-650" />
-          <div>Download the template</div>
-        </Button>
+          <span>Download the template</span>
+        </a>
       </div>
 
       <div
@@ -174,7 +167,7 @@ const FileInfoAndErrors = ({
   readonly file: File;
   readonly setFile: Dispatch<React.SetStateAction<File | null>>;
   readonly upload: () => void;
-  readonly fileErrorMessage: string | boolean;
+  readonly fileErrorMessage: string;
 }) => {
   return (
     <>
@@ -194,11 +187,11 @@ const FileInfoAndErrors = ({
         >
           <Close className="h-4 w-4  stroke-wurth-red-650" />
 
-          <div>Remove</div>
+          <span>Remove</span>
         </Button>
       </div>
 
-      {fileErrorMessage && (
+      {!!fileErrorMessage && (
         <div className="text-center text-wurth-red-650">{fileErrorMessage}</div>
       )}
     </>

@@ -1,6 +1,7 @@
 import { searchApi } from "@/_lib/api";
+import type { SearchData, SearchResult } from "@/search/types";
 import { useQuery } from "@tanstack/react-query";
-import type { Product, SearchResults } from "./types";
+import type { Product } from "./types";
 
 const useSearch = (searchText: string) => {
   return useQuery({
@@ -12,20 +13,30 @@ const useSearch = (searchText: string) => {
             query: searchText,
           },
         })
-        .json<SearchResults>(),
+        .json<SearchData>(),
     enabled: !!searchText,
-    select: (data): Product[] => {
+    select: (data) => {
       const { results } = data;
 
-      return results.map((result) => ({
-        sku: result._source.materialNumber,
-        title: result._source.productTitle,
-        image: result._source.item_images,
-        minimumOrderQuantity: result._source.minimumOrderQuantity,
-        orderQuantityByIncrements: result._source.orderQuantitybyIncrements,
-      }));
+      if (Array.isArray(results)) {
+        return results.map((result) => {
+          return mapSearchResults(result);
+        });
+      }
+
+      return [mapSearchResults(results)];
     },
   });
 };
 
 export default useSearch;
+
+const mapSearchResults = (result: SearchResult): Product => {
+  return {
+    sku: result.materialNumber,
+    title: result.productTitle,
+    image: result.itemImage,
+    minimumOrderQuantity: parseInt(result.minimumOrderQuantity),
+    orderQuantityByIncrements: parseInt(result.orderQuantityByIncrements),
+  };
+};

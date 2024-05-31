@@ -8,16 +8,16 @@ export const FileDownload = ({
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="16"
-      height="16"
-      viewBox="0 0 16 16"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
       fill="none"
       className={cn("stroke-black", className)}
       {...delegated}
     >
       <path
-        d="M5.66667 14.3333H3V1.66663H8.66667L13 5.99996V14.3333H10.3333M8 8.99996V13M9.66667 11.8333L8 13.5L6.33333 11.8333M8.66667 1.99996V5.99996H12.6667"
         strokeLinecap="square"
+        d="M8.5 21.5h-4v-19H13L19.5 9v12.5h-4m-3.5-8v6m2.5-1.75l-2.5 2.5-2.5-2.5M13 3v6h6"
       />
     </svg>
   );

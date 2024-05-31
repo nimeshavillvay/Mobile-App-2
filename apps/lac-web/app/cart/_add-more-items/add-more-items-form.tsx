@@ -1,5 +1,6 @@
 "use client";
 
+import useDebouncedState from "@/_hooks/misc/use-debounced-state.hook";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AddToCart } from "@repo/web-ui/components/icons/add-to-cart";
 import { Button } from "@repo/web-ui/components/ui/button";
@@ -7,10 +8,9 @@ import { useEffect, useId, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { MdAdd } from "react-icons/md";
 import * as z from "zod";
-import AddMoreItemsRow from "./add-more-items-row";
 import getStatus from "./apis";
 import BulkUpload from "./bulk-upload";
-import useCustomDebounce from "./custom-debounce";
+import NewItemRow from "./new-item-row";
 import type { Product } from "./types";
 import useAddMultipleToCartMutation from "./use-add-multiple-to-cart-mutation.hook";
 import useSearch from "./use-search.hook";
@@ -59,7 +59,7 @@ const AddMoreItemsForm = ({ token }: { readonly token: string }) => {
   >([]);
 
   const addMultipleToCartMutation = useAddMultipleToCartMutation(token);
-  const debouncedSearchInput = useCustomDebounce(searchInput, 1000);
+  const debouncedSearchInput = useDebouncedState(searchInput);
 
   const id = useId();
 
@@ -87,6 +87,8 @@ const AddMoreItemsForm = ({ token }: { readonly token: string }) => {
     if (searchInput == searchTerm) {
       setIsPopupOpen(true);
     }
+    // eslint-disable-next-line react-compiler/react-compiler
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchInput]);
 
   useEffect(() => {
@@ -96,6 +98,8 @@ const AddMoreItemsForm = ({ token }: { readonly token: string }) => {
     } else {
       setIsPopupOpen(false);
     }
+    // eslint-disable-next-line react-compiler/react-compiler
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedSearchInput]);
 
   const { data: searchData } = useSearch(searchTerm);
@@ -117,6 +121,8 @@ const AddMoreItemsForm = ({ token }: { readonly token: string }) => {
     setSearchResultProducts(searchData ?? []);
     setIsPopupOpen(true);
     setIsLoading(false);
+    // eslint-disable-next-line react-compiler/react-compiler
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchData]);
 
   const onChange = (value: string, type: string, index: number) => {
@@ -190,6 +196,8 @@ const AddMoreItemsForm = ({ token }: { readonly token: string }) => {
     }
 
     setBulkUploadCSVDataToForm(bulkUploadItems);
+    // eslint-disable-next-line react-compiler/react-compiler
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bulkUploadItems]);
 
   const getItemsStatuses = async () => {
@@ -332,7 +340,7 @@ const AddMoreItemsForm = ({ token }: { readonly token: string }) => {
       <div className="mb-5 mt-4 overflow-x-scroll rounded-lg border p-5 shadow-md md:overflow-hidden">
         {fields.map((field, index) => (
           <div key={field.id}>
-            <AddMoreItemsRow
+            <NewItemRow
               index={index}
               id={id}
               onSelectedItemChange={onSelectedItemChange}

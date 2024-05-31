@@ -6,10 +6,10 @@ import { Button } from "@repo/web-ui/components/ui/button";
 import { Input } from "@repo/web-ui/components/ui/input";
 import { type UseFormRegisterReturn } from "react-hook-form";
 import ItemSelectorInput from "./item-selector-input";
-import ProductDetails from "./product-details";
+import ProductSearchResult from "./product-search-result";
 import type { Product } from "./types";
 
-type AddMoreItemsRowProps = {
+type NewItemRowProps = {
   readonly index: number;
   readonly id: string;
   readonly searchResultProducts: Product[];
@@ -42,7 +42,7 @@ type AddMoreItemsRowProps = {
   readonly removeLineItem: () => void;
 };
 
-const AddMoreItemsRow = ({
+const NewItemRow = ({
   index,
   id,
   searchResultProducts,
@@ -58,7 +58,7 @@ const AddMoreItemsRow = ({
   isInvalidQuantity,
   isLoading,
   removeLineItem,
-}: AddMoreItemsRowProps) => {
+}: NewItemRowProps) => {
   const getLineItemStatus = () => {
     if (lineItemFormData.sku == "") {
       return null;
@@ -75,7 +75,7 @@ const AddMoreItemsRow = ({
           onSelectedItemChange(value, index);
         }}
         value={lineItemFormData.sku}
-        isInvalid={getLineItemStatus(index) ?? null}
+        isInvalid={getLineItemStatus() ?? null}
         onTextChange={(value, type) => {
           onChange(value, type, index);
           setLastEditedIndex(index);
@@ -104,7 +104,7 @@ const AddMoreItemsRow = ({
       />
 
       <div className="h-10 min-w-96">
-        <ProductDetails
+        <ProductSearchResult
           product={{
             isInvalid: lineItemFormData?.isInvalid,
             info: lineItemFormData?.info,
@@ -125,4 +125,4 @@ const AddMoreItemsRow = ({
   );
 };
 
-export default AddMoreItemsRow;
+export default NewItemRow;

@@ -296,7 +296,7 @@ export const Showcase: Story = {
         </IconContainer>
 
         <IconContainer name="FileDownload">
-          <FileDownload className="h-6 w-6" />
+          <FileDownload />
         </IconContainer>
       </ul>
     );
