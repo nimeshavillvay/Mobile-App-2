@@ -194,7 +194,7 @@ const PurchasedItemsSelectors = ({
             )}
           </div>
         </div>
-        <div className="mb-4 w-fit content-end rounded border  bg-gray-100 p-2">
+        <div className="mb-4 w-fit content-end rounded border bg-gray-100 p-2">
           <div className="text-[10px] uppercase">Duration</div>
           <div className="font-bold">{`${formattedFromDate} - ${formattedToDate}`}</div>
         </div>

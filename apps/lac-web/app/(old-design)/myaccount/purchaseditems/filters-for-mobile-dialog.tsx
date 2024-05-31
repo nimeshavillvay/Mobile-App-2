@@ -256,7 +256,7 @@ export default FiltersForMobileDialog;
 
 const MobileFilterSortItem = ({ title }: { readonly title: string }) => {
   return (
-    <div className="bg-gray-200 px-5 py-3 text-base font-bold ">{title}</div>
+    <div className="bg-gray-200 px-5 py-3 text-base font-bold">{title}</div>
   );
 };
 
