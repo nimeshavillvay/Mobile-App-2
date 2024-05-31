@@ -684,9 +684,9 @@ const AvailabilityStatus = ({
   amount,
   branch,
 }: {
-  availabilityStatus: string;
-  amount: number;
-  branch: string;
+  readonly availabilityStatus: string;
+  readonly amount: number;
+  readonly branch: string;
 }) => {
   const isLimitedStock = availabilityStatus === LIMITED_STOCK;
   const isInStock = availabilityStatus === IN_STOCK;
