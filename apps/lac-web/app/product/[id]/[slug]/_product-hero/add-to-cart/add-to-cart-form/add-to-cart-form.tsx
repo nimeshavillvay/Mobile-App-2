@@ -70,11 +70,13 @@ const AddToCartForm = ({
       formProps={{ onSubmit }}
       decrementButtonProps={{
         onClick: reduceQuantity,
-        disabled: quantity === minQty || addToCartMutation.isPending,
+        disabled:
+          !quantity || quantity === minQty || addToCartMutation.isPending,
       }}
       incrementButtonProps={{
         onClick: increaseQuantity,
-        disabled: addToCartMutation.isPending,
+        disabled:
+          quantity?.toString().length >= 5 || addToCartMutation.isPending,
       }}
       submitButtonProps={{
         disabled: addToCartMutation.isPending,
@@ -91,6 +93,9 @@ const AddToCartForm = ({
             ref={ref}
             name={name}
             disabled={addToCartMutation.isPending}
+            required
+            min={minQty}
+            step={incQty}
           />
         )}
       />
@@ -141,11 +146,13 @@ const AddToCartFormLoggedIn = ({
       formProps={{ onSubmit }}
       decrementButtonProps={{
         onClick: reduceQuantity,
-        disabled: quantity === minQty || addToCartMutation.isPending,
+        disabled:
+          !quantity || quantity === minQty || addToCartMutation.isPending,
       }}
       incrementButtonProps={{
         onClick: increaseQuantity,
-        disabled: addToCartMutation.isPending,
+        disabled:
+          quantity?.toString().length >= 5 || addToCartMutation.isPending,
       }}
       submitButtonProps={{
         disabled: addToCartMutation.isPending,
@@ -162,6 +169,9 @@ const AddToCartFormLoggedIn = ({
             ref={ref}
             name={name}
             disabled={addToCartMutation.isPending}
+            required
+            min={minQty}
+            step={incQty}
           />
         )}
       />
