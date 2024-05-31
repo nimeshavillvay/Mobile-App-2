@@ -39,7 +39,8 @@ const QuantityInputField = forwardRef<
               event.code !== "Backspace") || // Limit to 5 characters
             (value !== undefined &&
               value.toString().length === 0 &&
-              event.key === "0") // Disable "0" as first character
+              event.key === "0") || // Disable "0" as first character
+            event.key === "." // Disable "."
           ) {
             event.preventDefault();
           }
