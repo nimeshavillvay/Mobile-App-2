@@ -1,7 +1,9 @@
 import SubHeading from "@/_components/sub-heading";
 import { api } from "@/_lib/api";
+import { getCategoriesList } from "@/_lib/apis/server";
 import { DEFAULT_REVALIDATE } from "@/_lib/constants";
-import { Button } from "@repo/web-ui/components/ui/button";
+import { cn } from "@/_lib/utils";
+import { Button, buttonVariants } from "@repo/web-ui/components/ui/button";
 import {
   Collapsible,
   CollapsibleContent,
@@ -13,23 +15,26 @@ import Link from "next/link";
 const SHOWN_CATEGORIES = 9;
 
 const FeaturedCategories = async () => {
-  const data = await api
-    .get("rest/featuredcategories", {
-      next: {
-        revalidate: DEFAULT_REVALIDATE,
-      },
-    })
-    .json<
-      {
-        id: string;
-        name: string;
-        slug: string;
-        shortcode: string;
-        item_count: string;
-        direct_item_count: string;
-        img: string;
-      }[]
-    >();
+  const [data, categoriesList] = await Promise.all([
+    api
+      .get("rest/featuredcategories", {
+        next: {
+          revalidate: DEFAULT_REVALIDATE,
+        },
+      })
+      .json<
+        {
+          id: string;
+          name: string;
+          slug: string;
+          shortcode: string;
+          item_count: string;
+          direct_item_count: string;
+          img: string;
+        }[]
+      >(),
+    getCategoriesList(),
+  ]);
 
   const showCategories = data.slice(0, SHOWN_CATEGORIES).map((category) => ({
     id: category.id,
@@ -43,6 +48,8 @@ const FeaturedCategories = async () => {
     image: category.img,
     name: category.name,
   }));
+
+  const viewAllCategory = categoriesList[0];
 
   return (
     <section className="container my-14 space-y-6 md:my-20 md:space-y-9">
@@ -65,6 +72,20 @@ const FeaturedCategories = async () => {
             </Button>
           </CollapsibleTrigger>
         </Collapsible>
+      )}
+
+      {!!viewAllCategory && (
+        <div className="flex flex-row justify-center">
+          <Link
+            href={`/category/${viewAllCategory.id}/${viewAllCategory.slug}`}
+            className={cn(
+              buttonVariants({ variant: "outline" }),
+              "h-fit p-2.5 text-sm font-bold leading-5 text-black",
+            )}
+          >
+            View all categories
+          </Link>
+        </div>
       )}
     </section>
   );

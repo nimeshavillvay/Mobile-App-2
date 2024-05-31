@@ -367,7 +367,9 @@ const AddToCart = ({
             size="icon"
             className="size-10 rounded-sm"
             onClick={reduceQuantity}
-            disabled={quantity === minAmount || addToCartMutation.isPending}
+            disabled={
+              !quantity || quantity === minAmount || addToCartMutation.isPending
+            }
           >
             <Minus className="size-4" />
             <span className="sr-only">Reduce quantity</span>
@@ -384,6 +386,9 @@ const AddToCart = ({
                 ref={ref}
                 name={name}
                 disabled={addToCartMutation.isPending}
+                required
+                min={minAmount}
+                step={increments}
               />
             )}
           />
@@ -394,7 +399,9 @@ const AddToCart = ({
             size="icon"
             className="size-10 rounded-sm"
             onClick={increaseQuantity}
-            disabled={addToCartMutation.isPending}
+            disabled={
+              quantity?.toString().length >= 5 || addToCartMutation.isPending
+            }
           >
             <Plus className="size-4" />
             <span className="sr-only">Increase quantity</span>
@@ -437,8 +444,8 @@ const LocationStocks = ({
 
   return (
     <Collapsible className="flex flex-col gap-1">
-      <div className="flex flex-row items-center justify-between gap-2 rounded-lg bg-wurth-gray-50 p-2">
-        <div className="flex shrink-0 flex-row items-center gap-2">
+      <div className="flex flex-row flex-wrap items-center justify-between gap-2 rounded-lg bg-wurth-gray-50 p-2">
+        <div className="flex flex-row flex-wrap items-center gap-2">
           <div
             className={cn(
               "rounded px-4 py-2 text-sm font-semibold leading-4 md:px-2 md:py-1",
@@ -460,21 +467,21 @@ const LocationStocks = ({
             </div>
           )}
         </div>
-
-        <CollapsibleTrigger
-          asChild
-          className="group h-fit gap-1 p-0 pl-1 text-sm font-bold text-black"
-        >
-          <Button variant="subtle">
-            <span>Check Other Stores</span>
-
-            <ChevronRight
-              width={16}
-              height={16}
-              className="transition duration-150 ease-out group-data-[state=open]:rotate-90"
-            />
-          </Button>
-        </CollapsibleTrigger>
+        {!isBackordered && (
+          <CollapsibleTrigger
+            asChild
+            className="group h-fit gap-1 p-0 pl-1 text-sm font-bold text-black"
+          >
+            <Button variant="subtle">
+              <span>Check Other Stores</span>
+              <ChevronRight
+                width={16}
+                height={16}
+                className="transition duration-150 ease-out group-data-[state=open]:rotate-90"
+              />
+            </Button>
+          </CollapsibleTrigger>
+        )}
       </div>
 
       <CollapsibleContent>

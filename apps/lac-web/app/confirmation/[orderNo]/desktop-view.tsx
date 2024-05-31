@@ -188,9 +188,12 @@ const DesktopView = async ({ orderNo }: DesktopViewProps) => {
                         </td>
 
                         <td>
-                          <h4 className="mx-2 text-sm font-medium text-wurth-gray-800">
-                            {lineItem.itemDescription}
-                          </h4>
+                          <h4
+                            className="mx-2 text-sm font-medium text-wurth-gray-800"
+                            dangerouslySetInnerHTML={{
+                              __html: lineItem.itemDescription,
+                            }}
+                          />
                         </td>
 
                         <td className="text-nowrap text-sm text-wurth-gray-800">

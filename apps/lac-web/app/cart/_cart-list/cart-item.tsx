@@ -10,7 +10,7 @@ import type {
   CartItemConfiguration,
   Plant,
 } from "@/_lib/types";
-import { formatNumberToPrice } from "@/_lib/utils";
+import { cn, formatNumberToPrice } from "@/_lib/utils";
 import { NUMBER_TYPE } from "@/_lib/zod-helper";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Alert } from "@repo/web-ui/components/icons/alert";
@@ -37,6 +37,7 @@ import {
   NOT_IN_STOCK,
   TAKE_ON_HAND,
 } from "../constants";
+import CartItemShippingMethod from "./cart-item-shipping-method";
 import FavoriteButton from "./favorite-button";
 import FavoriteButtonSkeleton from "./favorite-button-skeleton";
 import {
@@ -113,6 +114,7 @@ const CartItem = ({
 
   const quantity = watch("quantity");
   const delayedQuantity = useDebouncedState(quantity);
+  const isQuantityLessThanMin = quantity < product.minAmount;
 
   const updateCartConfigMutation = useUpdateCartItemMutation(token);
   const deleteCartItemMutation = useDeleteCartItemMutation(token);
@@ -210,11 +212,11 @@ const CartItem = ({
     defaultShippingMethod?.code ?? "",
   );
 
-  const handleChangeQtyOrPO = (quantity: number) => {
+  const handleChangeQtyOrPO = () => {
     checkAvailabilityMutation.mutate(
       {
         productId: product.id,
-        qty: quantity,
+        qty: delayedQuantity,
       },
       {
         onSuccess: ({ options }) => {
@@ -535,8 +537,7 @@ const CartItem = ({
                       Number(event.target.value) >= product.minAmount &&
                       Number(event.target.value) % product.increment === 0
                     ) {
-                      console.log("> called: ", Number(event.target.value));
-                      handleChangeQtyOrPO(Number(event.target.value));
+                      handleChangeQtyOrPO();
                     }
 
                     onChange(event);
@@ -545,7 +546,10 @@ const CartItem = ({
                   ref={ref}
                   name={name}
                   removeDefaultStyles
-                  className="h-fit rounded px-2.5 py-1 text-base md:w-24"
+                  className={cn(
+                    "h-fit rounded px-2.5 py-1 text-base md:w-24",
+                    isQuantityLessThanMin ? "border-red-700" : "",
+                  )}
                   required
                   min={product.minAmount}
                   step={product.increment}
@@ -585,6 +589,12 @@ const CartItem = ({
             )}
           </div>
 
+          {isQuantityLessThanMin && (
+            <p className="text-sm text-red-700">
+              Please consider min. order quantity of: {product.minAmount}
+            </p>
+          )}
+
           <div className="pt-2">
             <Label htmlFor={poId} className="sr-only">
               PO #/ Job Name
@@ -592,7 +602,7 @@ const CartItem = ({
 
             <Input
               {...register("po", {
-                onChange: () => handleChangeQtyOrPO(quantity),
+                onChange: () => handleChangeQtyOrPO(),
                 disabled: updateCartConfigMutation.isPending,
               })}
               id={poId}
@@ -627,12 +637,10 @@ const CartItem = ({
               </div>
             </div>
           ) : (
-            <RegionalExclusionAndShippingMethods
-              token={token}
-              productId={product.id}
+            <CartItemShippingMethod
               plants={plants}
               availability={checkAvailabilityQuery.data}
-              setSelectedWillCallPlant={handleSelectWillCallPlant}
+              setSelectedWillCallPlant={setSelectedWillCallPlant}
               selectedWillCallPlant={selectedWillCallPlant}
               setSelectedShippingOption={setSelectedShippingOption}
               selectedShippingOption={selectedShippingOption}

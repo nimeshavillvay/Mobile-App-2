@@ -61,7 +61,7 @@ const LocationStocks = ({ token, productId }: LocationStocksProps) => {
           )}
         </div>
 
-        {checkLoginQuery.data.status_code === "OK" && (
+        {checkLoginQuery.data.status_code === "OK" && !isBackordered && (
           <CollapsibleTrigger
             className="group flex h-fit w-full flex-row items-center justify-between font-bold md:w-fit md:px-2 md:py-0.5"
             asChild
