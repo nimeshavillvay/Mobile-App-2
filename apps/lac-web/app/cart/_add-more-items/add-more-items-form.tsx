@@ -125,8 +125,8 @@ const AddMoreItemsForm = ({ token }: { readonly token: string }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchData]);
 
-  const onChange = (value: string, type: string, index: number) => {
-    if (type === "__input_change__") {
+  const onChange = (value: string, isItemClick: boolean, index: number) => {
+    if (!isItemClick) {
       setValue(`cart.${index}.sku`, value);
       setSearchInput(value);
     }
