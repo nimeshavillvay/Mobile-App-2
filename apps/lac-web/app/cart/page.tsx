@@ -21,14 +21,6 @@ const DynamicAddMoreItemsSection = dynamic(
   },
 );
 
-const DynamicAddMoreItemsSectionForMobile = dynamic(
-  () => import("./_add-more-items/add-more-items-form-mobile"),
-  {
-    ssr: false,
-    loading: () => <Skeleton className="h-[36px] w-full" />,
-  },
-);
-
 export const metadata: Metadata = {
   title: "Cart",
 };
@@ -78,15 +70,6 @@ const CartPage = async () => {
 
             <div className="hidden md:block">
               <DynamicAddMoreItemsSection token={sessionToken.value} />
-            </div>
-
-            <div className="flex gap-2 px-4 md:hidden">
-              <div className="flex-1">{/* delete cart button goes here*/}</div>
-              <div className="flex-1">
-                <DynamicAddMoreItemsSectionForMobile
-                  token={sessionToken.value}
-                />
-              </div>
             </div>
           </Suspense>
         </div>
