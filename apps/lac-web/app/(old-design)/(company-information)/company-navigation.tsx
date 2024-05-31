@@ -12,7 +12,7 @@ const CompanyNavigation = ({ links }: CompanyNavigationProps) => {
   const pathname = usePathname();
 
   return (
-    <nav className="mx-8 mb-6 hidden text-lg font-bold uppercase sm:flex">
+    <nav className="mb-6 hidden text-lg font-bold uppercase sm:flex sm:pl-4 md:pl-8">
       {links.map((link) => (
         <Fragment key={link.href}>
           <Link

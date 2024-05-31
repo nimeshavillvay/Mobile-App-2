@@ -1,3 +1,5 @@
+import { StaticPageMainTitle } from "@/(old-design)/_components/static-page-main-title";
+import { StaticPageSecondaryTitle } from "@/(old-design)/_components/static-page-secondary-title";
 import Separator from "@/old/_components/separator";
 import Title from "@/old/_components/title";
 import VisuallyHidden from "@/old/_components/visually-hidden";
@@ -12,7 +14,7 @@ export const metadata: Metadata = {
 
 const CompliancePage = () => {
   return (
-    <>
+    <div className="container">
       {/* Section banner */}
       <Image
         src={compliance}
@@ -23,14 +25,7 @@ const CompliancePage = () => {
       />
 
       {/* Section heading with line */}
-      <div className="mb-4 flex flex-row items-center gap-2.5">
-        <Title className="text-brand-primary">Compliance</Title>
-
-        <Separator
-          orientation="horizontal"
-          className="h-px flex-1 bg-brand-primary"
-        />
-      </div>
+      {StaticPageMainTitle("Compliance")}
 
       <div className="box-border space-y-4 text-brand-gray-500">
         <p>
@@ -86,16 +81,7 @@ const CompliancePage = () => {
           </div>
         </div>
 
-        <div className="relative w-full pt-8 md:w-1/2">
-          <h2 className="relative pr-3 text-lg font-medium text-brand-primary">
-            Reporting Hotline Speak Up
-          </h2>
-
-          <Separator
-            orientation="horizontal"
-            className="mt-0.5 h-px flex-1 bg-brand-primary"
-          />
-        </div>
+        {StaticPageSecondaryTitle("Reporting Hotline Speak Up")}
 
         <p>
           Our Code of Compliance represents our commitment to treat each other
@@ -148,7 +134,7 @@ const CompliancePage = () => {
 
         <p>Thank you very much for your support!</p>
       </div>
-    </>
+    </div>
   );
 };
 

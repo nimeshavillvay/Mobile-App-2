@@ -1,5 +1,5 @@
-import Separator from "@/old/_components/separator";
-import Title from "@/old/_components/title";
+import { StaticPageMainTitle } from "@/(old-design)/_components/static-page-main-title";
+import { StaticPageSecondaryTitle } from "@/(old-design)/_components/static-page-secondary-title";
 import type { Metadata } from "next";
 import Image from "next/image";
 import aboutBanner from "./about-banner.jpg";
@@ -23,14 +23,7 @@ const AboutUsPage = () => {
       />
 
       {/* Section heading with line */}
-      <div className="mb-4 flex flex-row items-center gap-2.5">
-        <Title className="text-brand-primary">About Us</Title>
-
-        <Separator
-          orientation="horizontal"
-          className="h-px flex-1 bg-brand-primary"
-        />
-      </div>
+      {StaticPageMainTitle("About Us")}
 
       {/* About us content */}
       <div className="box-border space-y-4 text-brand-gray-500">
@@ -88,34 +81,18 @@ const AboutUsPage = () => {
           cabinetmakers, woodworkers and for architects and designers that
           specify our products.
         </p>
-        <div className="relative w-full pt-8 md:w-1/2 xl:w-1/3">
-          <h2 className="relative pr-3 text-lg font-medium text-brand-primary">
-            Our Mission Statement
-          </h2>
 
-          <Separator
-            orientation="horizontal"
-            className="mt-0.5 h-px flex-1 bg-brand-primary"
-          />
-        </div>
+        {StaticPageSecondaryTitle("Our Mission Statement")}
 
         <p>
           People dedicated to providing excellent service and fine-quality
           products to the woodworking industry.
         </p>
-        <div className="relative w-full pt-8 md:w-1/2 xl:w-1/3">
-          <h2 className="relative pr-3 text-lg font-medium text-brand-primary">
-            Corporate Executives
-          </h2>
 
-          <Separator
-            orientation="horizontal"
-            className="mt-0.5 h-px flex-1 bg-brand-primary"
-          />
-        </div>
+        {StaticPageSecondaryTitle("Corporate Executives")}
 
-        <div className="grid grid-cols-1 grid-rows-2 gap-8 sm:grid-cols-2 sm:grid-rows-6 md:w-1/2 xl:w-1/3">
-          <figure className="row-span-5 flex flex-col rounded-t border border-black">
+        <section className="gap-8 sm:flex sm:flex-row">
+          <figure className="w-full max-w-80 rounded-t border border-black">
             <Image
               src={chiefExecutiveOfficer}
               alt="Photo of Thomas Stolmeier"
@@ -134,7 +111,7 @@ const AboutUsPage = () => {
             </figcaption>
           </figure>
 
-          <figure className="row-span-5 flex flex-col rounded-t border border-black">
+          <figure className="mt-8 w-full max-w-80 rounded-t border border-black sm:mt-0">
             <Image
               src={chiefFinancialOfficer}
               alt="Photo of Thomas Stolmeier"
@@ -152,7 +129,7 @@ const AboutUsPage = () => {
               </p>
             </figcaption>
           </figure>
-        </div>
+        </section>
       </div>
     </div>
   );
