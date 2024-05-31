@@ -28,7 +28,7 @@ const CartSummary = ({ token, plants }: CartSummaryProps) => {
         <h2 className="font-title text-xl font-medium text-wurth-gray-800 md:text-2xl md:tracking-[-0.144px]">
           Cart Summary{" "}
           <span className="text-base leading-7 text-wurth-gray-500 md:text-xl md:leading-7">
-            ({simulationCheckoutQuery.data.totalQuantity}{" "}
+            ({simulationCheckoutQuery.data.cartItemsCount}{" "}
             {simulationCheckoutQuery.data.totalQuantity === 1
               ? "item"
               : "items"}
