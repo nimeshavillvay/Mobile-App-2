@@ -139,8 +139,10 @@ const CartSummary = ({ token, plants }: CartSummaryProps) => {
                     item.configuration.backorder_date &&
                     parseInt(item.configuration.backorder_quantity) > 0 && (
                       <div className="ml-1 mr-4">
-                        <span className="text-yellow-600">&#x2022;</span>
-                        <span className="ml-2">Backorder</span>{" "}
+                        <span className="text-yellow-700">&#x2022;</span>
+                        <span className="ml-2 text-yellow-700">
+                          Backorder
+                        </span>{" "}
                         {item.configuration.backorder_quantity} items, ship by{" "}
                         {dayjs(item.configuration.backorder_date).format(
                           "ddd, MMMM.DD, YYYY",
