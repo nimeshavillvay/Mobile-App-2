@@ -8,6 +8,7 @@ type SaleBadgesProps = {
   readonly productId: number;
   readonly listPrice: number;
   readonly onSale: boolean;
+  readonly isNewItem: boolean;
 };
 
 const SaleBadges = ({
@@ -15,6 +16,7 @@ const SaleBadges = ({
   productId,
   listPrice,
   onSale,
+  isNewItem,
 }: SaleBadgesProps) => {
   const priceCheckQuery = useSuspensePriceCheck(token, [{ productId, qty: 1 }]);
   const priceData = priceCheckQuery.data.productPrices[0];
@@ -33,6 +35,17 @@ const SaleBadges = ({
         <div className="flex flex-row items-center gap-1 rounded bg-sky-50 px-2 py-1.5 text-sm font-semibold leading-4 text-wurth-blue-450">
           <Zap className="hidden size-4 stroke-wurth-blue-450 md:block" />
           <span>Flash Deal</span>
+        </div>
+      )}
+      {isNewItem && (
+        <div
+          className="flex flex-row items-center gap-1 rounded px-2 py-1.5 text-sm font-semibold leading-4"
+          style={{
+            color: "#A16207",
+            backgroundColor: "#FEF2F2",
+          }}
+        >
+          <span>New</span>
         </div>
       )}
       {discount > 0 && (

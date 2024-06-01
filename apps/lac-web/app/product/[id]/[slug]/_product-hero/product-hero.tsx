@@ -61,6 +61,7 @@ const ProductHero = async ({ id, slug }: ProductHeroProps) => {
           productId={parseInt(id)}
           listPrice={product.selectedProduct.listPrice}
           onSale={product.selectedProduct.isSaleItem}
+          isNewItem={product.selectedProduct.isNewItem}
         />
       </div>
 
