@@ -120,7 +120,9 @@ const CartSummary = ({ token, plants }: CartSummaryProps) => {
                       href={`/product/${item.itemInfo.productId}/${item.itemInfo.slug}`}
                     >
                       <h4 className="text-sm font-medium text-wurth-gray-800">
-                        {item.itemInfo.productName}
+                        {item.itemInfo.metaTitle === ""
+                          ? item.itemInfo.productName
+                          : item.itemInfo.metaTitle}
                       </h4>
                     </Link>
                   </div>
