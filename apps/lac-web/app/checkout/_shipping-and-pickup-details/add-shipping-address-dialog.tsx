@@ -128,6 +128,7 @@ const AddShippingAddressDialog = ({
           addressLineOne: selectedSuggestion.streetAddress,
           zipCode: selectedSuggestion.postalCode,
           zip4: selectedSuggestion.zip4 ?? "",
+          skipAddressCheck: true, // Force saving the suggestion
         },
         {
           onSuccess: (data) => {
