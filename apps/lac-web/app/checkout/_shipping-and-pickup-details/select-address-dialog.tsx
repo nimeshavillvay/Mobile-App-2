@@ -94,9 +94,10 @@ const SelectAddressDialog = ({ token }: SelectAddressDialogProps) => {
                     />
                   )}
 
-                  <span className="flex-1 text-wrap text-base text-wurth-gray-800">
+                  <span className="flex-1 text-wrap text-left text-base text-wurth-gray-800">
                     {address.streetAddress}, {address.locality},{" "}
-                    {address.postalCode}-{address.zip4}
+                    {address.postalCode}
+                    {address.zip4 ? `-${address.zip4}` : ""}
                   </span>
                 </Button>
               </li>
