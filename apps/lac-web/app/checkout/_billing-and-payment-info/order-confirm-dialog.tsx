@@ -30,7 +30,6 @@ const OrderConfirmDialog = () => {
           variant="secondary"
           size="lg"
           className="h-fit rounded-lg px-20 py-4 text-lg font-normal shadow-md md:max-w-60 md:self-end"
-          onClick={() => setOpen(true)}
         >
           Place your Order
         </Button>

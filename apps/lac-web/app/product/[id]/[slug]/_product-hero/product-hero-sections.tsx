@@ -32,7 +32,7 @@ export const ProductNumbers = ({
       <span className="select-none">•</span>
 
       <div>
-        Model # <span className="font-medium">{manufacturerNo}</span>
+        Mfr # <span className="font-medium">{manufacturerNo}</span>
       </div>
     </div>
   );

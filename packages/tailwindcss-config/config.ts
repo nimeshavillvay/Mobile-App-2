@@ -43,10 +43,6 @@ const config: Omit<Config, "content"> = {
             500: "#74767B",
             800: "#2A2C2E",
           },
-          orange: {
-            50: "#FEF2F2",
-            100: "#A16207",
-          },
         },
       },
       keyframes: {

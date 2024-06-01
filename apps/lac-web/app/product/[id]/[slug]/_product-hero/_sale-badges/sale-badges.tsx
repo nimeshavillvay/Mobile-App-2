@@ -38,7 +38,13 @@ const SaleBadges = ({
         </div>
       )}
       {isNewItem && (
-        <div className="text-wurth-orange-100 bg-wurth-orange-50 flex flex-row items-center gap-1 rounded px-2 py-1.5 text-sm font-semibold leading-4">
+        <div
+          className="flex flex-row items-center gap-1 rounded px-2 py-1.5 text-sm font-semibold leading-4"
+          style={{
+            color: "#A16207",
+            backgroundColor: "#FEF2F2",
+          }}
+        >
           <span>New</span>
         </div>
       )}

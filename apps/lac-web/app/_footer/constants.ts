@@ -49,8 +49,7 @@ export const SECTIONS = [
       { label: "Sign in/Register", href: "/sign-in" },
       { label: "Forgot password?", href: "/forgot-password" },
       { label: "Order History", href: "/myaccount/orderhistory" },
-      { label: "Shipping and Returns", href: "/myaccount/purchaseditems" },
-      { label: "Wish List", href: "/myaccount/shopping-lists" },
+      { label: "My Shopping List", href: "/myaccount/shopping-lists" },
     ],
   },
   {
