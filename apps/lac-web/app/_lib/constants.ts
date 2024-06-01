@@ -10,3 +10,8 @@ export const SPECIAL_SHIPPING_FLAG = [
   "NOUP",
   "YLTL",
 ] as const;
+
+export const DEFAULT_PLANT = {
+  code: "L010",
+  name: "Brea, CA",
+};
