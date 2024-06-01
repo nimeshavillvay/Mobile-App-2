@@ -158,64 +158,12 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
         </TableCell>
 
         <TableCell className="min-w-[76px]">
-          <Link
-            href={generateItemUrl(item)}
-            className={
-              isItemError(item) ? "pointer-events-none" : "pointer-events-auto"
-            }
-          >
-            {item.image ? (
-              <Image
-                src={item.image}
-                alt={item.productTitle}
-                width={76}
-                height={76}
-                className="border border-brand-gray-200 object-contain"
-              />
-            ) : (
-              <WurthFullBlack
-                width={76}
-                height={76}
-                className="border border-brand-gray-200 px-2"
-              />
-            )}
-          </Link>
-        </TableCell>
-
-        <TableCell className="flex flex-col gap-0.5">
-          <Link
-            href={generateItemUrl(item)}
-            className={cn(
-              "text-sm text-brand-gray-500",
-              isItemError(item) ? "pointer-events-none" : "pointer-events-auto",
-            )}
-          >
-            Item# : {item.productSku !== "" ? item.productSku : "N/A"}
-          </Link>
-
-          {!isItemNotAdded && (
-            <>
-              <div className="text-sm text-brand-gray-500">
-                MRF Part# : {item.mfrPartNo !== "" ? item.mfrPartNo : "N/A"}
-              </div>
-
-              <h4 className="text-wrap font-bold">{item.productTitle}</h4>
-
-              <div className="text-sm text-brand-gray-500">
-                Category :&nbsp;
-                {item.productCategory !== "" ? item.productCategory : "N/A"}
-              </div>
-            </>
-          )}
-        </TableCell>
-
-        <TableCell className="text-center text-sm text-brand-gray-500">
           {item.purchaseOrderDate
             ? dayjs(item.purchaseOrderDate).format(DATE_FORMAT)
             : "N/A"}
         </TableCell>
 
-        <TableCell className="text-center text-sm text-brand-gray-500">
+        <TableCell className="flex flex-col gap-0.5">
           {item.totalItem ?? "N/A"}
         </TableCell>
 
@@ -268,6 +216,10 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
           </Collapsible>
         </TableCell>
 
+        <TableCell className="text-sm text-brand-gray-500" colSpan={2}>
+          {item.unitOfMeasure !== "" ? item.unitOfMeasure : "N/A"}
+        </TableCell>
+
         <TableCell className="flex flex-col gap-0.5 pb-0 text-sm text-brand-gray-500">
           <Label htmlFor={quantityId} className="sr-only">
             Quantity
@@ -296,10 +248,28 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
               </div>
             </>
           )}
-        </TableCell>
 
-        <TableCell className="text-sm text-brand-gray-500">
-          {item.unitOfMeasure !== "" ? item.unitOfMeasure : "N/A"}
+          {isEligible(item) && (
+            <form
+              id={formId}
+              onSubmit={onSubmit}
+              className="flex flex-row items-end justify-end gap-2"
+            >
+              <Button
+                type="submit"
+                className="w-[170px]"
+                disabled={!isValidQuantity || addToCartMutation.isPending}
+              >
+                Add to cart
+              </Button>
+
+              <Suspense fallback={<Skeleton className="h-9 w-14" />}>
+                <FavoriteButton productId={item.productId} token={token} />
+              </Suspense>
+            </form>
+          )}
+
+          {isItemError(item) && <ErrorAlert item={item} />}
         </TableCell>
       </TableRow>
 
@@ -348,48 +318,6 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
 
         <TableCell colSpan={2} />
       </TableRow>
-
-      {isEligible(item) && (
-        <TableRow
-          className={cn(
-            "border-b-0",
-            index % 2 === 0 ? "bg-white" : "bg-brand-gray-100",
-          )}
-        >
-          <TableCell colSpan={7}>
-            <form
-              id={formId}
-              onSubmit={onSubmit}
-              className="flex flex-row items-end justify-end gap-2"
-            >
-              <Button
-                type="submit"
-                className="w-[170px]"
-                disabled={!isValidQuantity || addToCartMutation.isPending}
-              >
-                Add to cart
-              </Button>
-
-              <Suspense fallback={<Skeleton className="h-9 w-14" />}>
-                <FavoriteButton productId={item.productId} token={token} />
-              </Suspense>
-            </form>
-          </TableCell>
-        </TableRow>
-      )}
-
-      {isItemError(item) && (
-        <TableRow
-          className={cn(
-            "border-b-0",
-            index % 2 === 0 ? "bg-white" : "bg-brand-gray-100",
-          )}
-        >
-          <TableCell colSpan={4} className="pt-0">
-            <ErrorAlert item={item} />
-          </TableCell>
-        </TableRow>
-      )}
     </FormProvider>
   );
 };
