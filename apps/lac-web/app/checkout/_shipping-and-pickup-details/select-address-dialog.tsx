@@ -84,17 +84,17 @@ const SelectAddressDialog = ({ token }: SelectAddressDialogProps) => {
                     <CheckCircleFilled
                       width={20}
                       height={20}
-                      className="fill-black"
+                      className="shrink-0 fill-black"
                     />
                   ) : (
                     <CheckCircle
                       width={20}
                       height={20}
-                      className="stroke-wurth-gray-150"
+                      className="shrink-0 stroke-wurth-gray-150"
                     />
                   )}
 
-                  <span className="text-base text-wurth-gray-800">
+                  <span className="flex-1 text-wrap text-base text-wurth-gray-800">
                     {address.streetAddress}, {address.locality},{" "}
                     {address.postalCode}-{address.zip4}
                   </span>
@@ -106,7 +106,7 @@ const SelectAddressDialog = ({ token }: SelectAddressDialogProps) => {
           <DialogFooter>
             <Button
               variant="outline"
-              className="max-w-fit font-bold shadow-md"
+              className="font-bold shadow-md"
               onClick={() => {
                 setOpenAdd(true);
                 setOpen(false);
@@ -116,7 +116,7 @@ const SelectAddressDialog = ({ token }: SelectAddressDialogProps) => {
             </Button>
 
             <Button
-              className="font-bold"
+              className="font-bold shadow-md"
               onClick={handleConfirm}
               disabled={updateCartConfigMutation.isPending}
             >
