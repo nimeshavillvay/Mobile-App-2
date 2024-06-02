@@ -41,16 +41,9 @@ module.exports = {
       },
     ],
     "react/jsx-pascal-case": "error",
-    "prefer-arrow-callback": ["error", { allowNamedFunctions: true }],
     "prefer-arrow-functions/prefer-arrow-functions": [
-      "warn",
-      {
-        allowNamedFunctions: false,
-        classPropertiesAllowed: false,
-        disallowPrototype: false,
-        returnStyle: "unchanged",
-        singleReturnOnly: false,
-      },
+      "error",
+      { allowNamedFunctions: true },
     ],
     curly: ["error", "all"],
     "import/newline-after-import": "error",
