@@ -137,6 +137,7 @@ const PurchasedItemsList = ({ token }: { readonly token: string }) => {
         prop65MessageThree: "",
         listPrice: 0,
         isSaleItem: false,
+        isNewItem: false,
         fClassId: 0,
         class: "",
         attributes: [],

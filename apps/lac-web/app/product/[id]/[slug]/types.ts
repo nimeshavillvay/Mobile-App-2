@@ -43,6 +43,7 @@ export type RelatedProduct = {
   txt_keywords: string;
   list_price: string;
   on_sale: string;
+  is_new: string;
   fclassid: string;
   brand_name: string;
   txt_group_code: null;

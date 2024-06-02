@@ -21,6 +21,8 @@ const ProductsList = ({ token, products }: ProductsListProps) => {
             slug: item.slug,
             title: item.item_name,
             uom: item.txt_uom,
+            onSale: item.on_sale === "Y",
+            isNewItem: item.is_new === "Y",
           },
         ],
       }}

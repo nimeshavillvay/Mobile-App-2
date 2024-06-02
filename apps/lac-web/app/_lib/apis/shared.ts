@@ -50,6 +50,7 @@ export const getItemInfo = async (productIdList: number[]) => {
         txt_keywords: string;
         list_price: string;
         on_sale: string;
+        is_new: string;
         fclassid: string;
         brand_name: string;
         txt_group_code: null;
@@ -92,6 +93,7 @@ export const getItemInfo = async (productIdList: number[]) => {
     prop65MessageThree: item.txt_prop65_message_03 ?? "",
     listPrice: parseFloat(item.list_price),
     isSaleItem: item.on_sale === "Y",
+    isNewItem: item.is_new === "Y",
     fClassId: parseInt(item.fclassid), //TODO rename after clarify with dimithri
     class: item.class,
     attributes: item.attributes,

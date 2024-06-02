@@ -85,6 +85,7 @@ const useSuspenseCart = (token: string) => {
             metaTitle: item.itemInfo.txt_meta_title,
             listPrice: Number(item.itemInfo.list_price),
             isSaleItem: item.itemInfo.on_sale === "Y",
+            isNewItem: item.itemInfo.is_new === "Y",
             fClassId: Number(item.itemInfo.fclassid),
             brandName: item.itemInfo.brand_name,
             groupCode: item.itemInfo.txt_group_code,

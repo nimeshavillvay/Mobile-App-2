@@ -75,6 +75,7 @@ export const getFeaturedBrand = async () => {
       prop65MessageThree: item.txt_prop65_message_03,
       listPrice: Number(item.list_price),
       isSaleItem: item.on_sale === "Y",
+      isNewItem: item.is_new === "Y",
     })),
     variationsCount: group.variationsCount,
   }));
