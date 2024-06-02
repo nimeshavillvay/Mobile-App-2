@@ -16,3 +16,16 @@
     @apply appearance-none;
   }
 }
+
+@media print {
+  header,
+  header *,
+  footer,
+  footer *,
+  div.tsqd-parent-container,
+  div.tsqd-parent-container *,
+  #nonPrintableContent,
+  #nonPrintableContent * {
+    display: none;
+  }
+}

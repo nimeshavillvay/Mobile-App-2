@@ -7,6 +7,7 @@ type InstructionsProps = {
 const Instructions = ({ type }: InstructionsProps) => {
   return (
     <section
+      id="nonPrintableContent"
       className={cn(
         "grid gap-5 text-sm text-wurth-gray-800",
         type === "mobile" ? "grid-cols-1" : "grid-cols-2",
