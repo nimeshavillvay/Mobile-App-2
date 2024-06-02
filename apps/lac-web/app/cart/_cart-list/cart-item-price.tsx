@@ -9,7 +9,7 @@ import { z } from "zod";
 import type { ViewportTypes } from "./types";
 
 const EXCLUDED_KEYS = ["e", "E", "+", "-"];
-const MAX_STEP = 0.0001;
+const MIN_STEP = 0.0001;
 
 type CartItemPriceProps = {
   readonly quantity: number;
@@ -25,7 +25,7 @@ const cartItemPriceSchema = z.object({
       message: "Price required",
     })
     .positive("Price must be positive")
-    .multipleOf(MAX_STEP, "Invalid price"),
+    .multipleOf(MIN_STEP, "Invalid price"),
 });
 
 const CartItemPrice = ({
@@ -91,7 +91,7 @@ const CartItemPrice = ({
               onBlur: onBlur,
               onChange: onChange,
             })}
-            step={MAX_STEP}
+            step={MIN_STEP}
             onKeyDown={(e) =>
               EXCLUDED_KEYS.includes(e.key) && e.preventDefault()
             }

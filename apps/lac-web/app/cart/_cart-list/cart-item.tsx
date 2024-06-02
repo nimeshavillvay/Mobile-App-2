@@ -88,11 +88,9 @@ const CartItem = ({
   const id = useId();
   const poId = `po-${id}`;
 
-  const itemConfigHash = product?.configuration?.hashvalue ?? undefined;
-  const itemConfigShippingMethod =
-    product?.configuration?.shipping_method_1 ?? undefined;
-  const itemConfigWillCallPlant =
-    product?.configuration?.will_call_plant ?? undefined;
+  const itemConfigHash = product?.configuration?.hashvalue;
+  const itemConfigShippingMethod = product?.configuration?.shipping_method_1;
+  const itemConfigWillCallPlant = product?.configuration?.will_call_plant;
 
   const checkLoginQuery = useSuspenseCheckLogin(token);
 
