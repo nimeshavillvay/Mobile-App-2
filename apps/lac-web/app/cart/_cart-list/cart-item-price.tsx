@@ -41,6 +41,11 @@ const CartItemPrice = ({
   ]);
 
   const priceData = priceCheckQuery.data.productPrices[0];
+  const extendedPrice = priceData?.extendedPrice;
+  const price = priceData?.price;
+  const priceUnit = priceData?.priceUnit;
+  const listPrice = priceData?.listPrice;
+
   const loginCheckData = loginCheckResponse.data;
 
   const { register, formState, trigger, getValues } = useForm<
@@ -48,7 +53,7 @@ const CartItemPrice = ({
   >({
     resolver: zodResolver(cartItemPriceSchema),
     values: {
-      price: Number(priceData?.price) ?? 0,
+      price: Number(price) ?? 0,
     },
   });
 
@@ -102,7 +107,7 @@ const CartItemPrice = ({
               formState.errors.price ? "border-red-700" : "border-gray-200",
             )}
           >
-            /{priceData?.priceUnit}
+            /{priceUnit}
           </span>
         </div>
 
@@ -125,20 +130,18 @@ const CartItemPrice = ({
       )}
     >
       <div className="text-lg text-green-700">
-        ${formatNumberToPrice(priceData?.extendedPrice)}
+        ${formatNumberToPrice(extendedPrice)}
       </div>
 
       <div className="ml-2 text-sm font-medium text-wurth-gray-500">
-        ${formatNumberToPrice(priceData?.price)}/{priceData?.priceUnit}
+        ${formatNumberToPrice(price)}/{priceUnit}
       </div>
 
-      {priceData?.listPrice &&
-        priceData?.price &&
-        priceData?.listPrice > priceData?.price && (
-          <div className="ml-1 text-[13px] leading-5 text-wurth-gray-500 line-through">
-            ${formatNumberToPrice(priceData?.listPrice)}/{priceData?.priceUnit}
-          </div>
-        )}
+      {listPrice && price && listPrice > price && (
+        <div className="ml-1 text-[13px] leading-5 text-wurth-gray-500 line-through">
+          ${formatNumberToPrice(listPrice)}/{priceUnit}
+        </div>
+      )}
     </div>
   );
 };
