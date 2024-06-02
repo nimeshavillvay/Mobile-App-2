@@ -88,16 +88,22 @@ const CartItem = ({
   const id = useId();
   const poId = `po-${id}`;
 
-  const itemConfigHash = product?.configuration?.hashvalue;
-  const itemConfigShippingMethod = product?.configuration?.shipping_method_1;
+  const itemConfigHash = product?.configuration?.hashvalue ?? undefined;
+  const itemConfigShippingMethod =
+    product?.configuration?.shipping_method_1 ?? undefined;
+  const itemConfigWillCallPlant =
+    product?.configuration?.will_call_plant ?? undefined;
 
   const checkLoginQuery = useSuspenseCheckLogin(token);
 
   const [selectedWillCallPlant, setSelectedWillCallPlant] = useState(() => {
-    if (willCallPlant?.plantCode) {
+    if (itemConfigWillCallPlant && itemConfigWillCallPlant !== "") {
+      return itemConfigWillCallPlant;
+    } else if (willCallPlant?.plantCode) {
       return willCallPlant.plantCode;
+    } else {
+      return plants?.at(0)?.code ?? DEFAULT_PLANT.code;
     }
-    return plants?.at(0)?.code ?? "";
   });
 
   const [selectedShippingOption, setSelectedShippingOption] =
@@ -303,6 +309,22 @@ const CartItem = ({
     ]);
   };
 
+  const handlePriceOverride = (newPrice: number) => {
+    const data = getValues();
+
+    updateCartConfigMutation.mutate([
+      {
+        cartItemId: product.cartItemId,
+        quantity: Number(data.quantity),
+        price: newPrice,
+        config: {
+          ...product.configuration,
+          poOrJobName: data.po,
+        },
+      },
+    ]);
+  };
+
   const handleDeleteCartItem = () => {
     deleteCartItemMutation.mutate({
       products: [{ cartid: product.cartItemId }],
@@ -419,14 +441,13 @@ const CartItem = ({
         setSelectedShippingOption(MAIN_OPTIONS.BACK_ORDER);
       }
       // Check if there is a selected shipping method
-      if (itemConfigShippingMethod !== "") {
+      if (itemConfigShippingMethod && itemConfigShippingMethod !== "") {
         setSelectedShippingMethod(itemConfigShippingMethod);
       }
     } else {
       // Check if hash matches with the will call hash
       if (willCallHash === itemConfigHash) {
         setSelectedShippingOption(MAIN_OPTIONS.WILL_CALL);
-        // setSelectedWillCallPlant(willCallAnywhere?.willCallPlant);
       } else {
         // Update the cart config with default option based on the priority
         // TODO - There is a mismatch in hashes when initial page load due to selectedWillCallPlant state reset to default
@@ -492,6 +513,7 @@ const CartItem = ({
               token={token}
               quantity={deferredQuantity}
               productId={product.id}
+              onPriceChange={handlePriceOverride}
               type="mobile"
             />
           </Suspense>
@@ -650,6 +672,7 @@ const CartItem = ({
             token={token}
             quantity={deferredQuantity}
             productId={product.id}
+            onPriceChange={handlePriceOverride}
             type="desktop"
           />
         </Suspense>

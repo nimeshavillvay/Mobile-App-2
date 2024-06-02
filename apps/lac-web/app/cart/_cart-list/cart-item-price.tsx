@@ -8,26 +8,31 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import type { ViewportTypes } from "./types";
 
+const EXCLUDED_KEYS = ["e", "E", "+", "-"];
+const MAX_STEP = 0.0001;
+
 type CartItemPriceProps = {
   readonly quantity: number;
   readonly productId: number;
   readonly token: Token;
+  readonly onPriceChange?: (newPrice: number) => void;
   readonly type: ViewportTypes;
 };
 
 const cartItemPriceSchema = z.object({
   price: z
-    .union([
-      z.string().transform((x) => x.replace(/[^0-9.-]+/g, "")),
-      z.number(),
-    ])
-    .pipe(z.coerce.number().min(0.0001).max(999999999)),
+    .number({
+      message: "Price required",
+    })
+    .positive("Price must be positive")
+    .multipleOf(MAX_STEP, "Invalid price"),
 });
 
 const CartItemPrice = ({
   quantity,
   productId,
   token,
+  onPriceChange,
   type,
 }: CartItemPriceProps) => {
   const loginCheckResponse = useSuspenseCheckLogin(token);
@@ -38,14 +43,28 @@ const CartItemPrice = ({
   const priceData = priceCheckQuery.data.productPrices[0];
   const loginCheckData = loginCheckResponse.data;
 
-  const { register, formState } = useForm<z.infer<typeof cartItemPriceSchema>>({
+  const { register, formState, trigger, getValues } = useForm<
+    z.infer<typeof cartItemPriceSchema>
+  >({
     resolver: zodResolver(cartItemPriceSchema),
     values: {
-      price: priceData?.price ?? 0,
+      price: Number(priceData?.price) ?? 0,
     },
   });
 
-  console.log(formState.errors);
+  const onBlur = async () => {
+    const data = getValues();
+
+    await trigger(); // Trigger validation on blur
+
+    if (onPriceChange) {
+      onPriceChange(Number(data.price));
+    }
+  };
+
+  const onChange = async () => {
+    await trigger(); // Trigger validation on change
+  };
 
   if (
     loginCheckData.status_code === "OK" &&
@@ -53,24 +72,46 @@ const CartItemPrice = ({
     "user_id" in loginCheckData
   ) {
     return (
-      <div
-        className={cn(
-          "flex w-full items-center",
-          type === "desktop" ? "justify-end" : "justify-start md:hidden",
-        )}
-      >
-        <Input
+      <>
+        <div
           className={cn(
-            "h-fit w-24 rounded-none rounded-l border-r-0 px-2.5 py-1 text-right text-base md:w-20",
-            formState.errors.price ? "border-red-700" : "border-green-700",
+            "flex w-full items-center",
+            type === "desktop" ? "justify-end" : "justify-start md:hidden",
           )}
-          type="number"
-          {...register("price")}
-        />
-        <span className="rounded-r border border-l-0 p-1 pr-1.5 lowercase text-wurth-gray-400">
-          /{priceData?.priceUnit}
-        </span>
-      </div>
+        >
+          <Input
+            className={cn(
+              "h-fit w-24 rounded-none rounded-l border-r-0 px-2.5 py-1 text-right text-base focus:border-none focus:outline-none focus:ring-0 md:w-20",
+              formState.errors.price ? "border-red-700" : "border-gray-200",
+            )}
+            type="number"
+            {...register("price", {
+              required: true,
+              valueAsNumber: true,
+              onBlur: onBlur,
+              onChange: onChange,
+            })}
+            step={MAX_STEP}
+            onKeyDown={(e) =>
+              EXCLUDED_KEYS.includes(e.key) && e.preventDefault()
+            }
+          />
+          <span
+            className={cn(
+              "rounded-r border border-l-0 p-1 pr-1.5 lowercase text-wurth-gray-400",
+              formState.errors.price ? "border-red-700" : "border-gray-200",
+            )}
+          >
+            /{priceData?.priceUnit}
+          </span>
+        </div>
+
+        {formState.errors.price && (
+          <p className="text-xs text-red-700">
+            {formState.errors.price.message}
+          </p>
+        )}
+      </>
     );
   }
 
