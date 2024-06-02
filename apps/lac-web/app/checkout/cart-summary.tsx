@@ -23,12 +23,12 @@ const CartSummary = ({ token, plants }: CartSummaryProps) => {
   const cartQuery = useSuspenseCart(token);
 
   return (
-    <section className="flex flex-col gap-6 rounded-lg border border-wurth-gray-250 p-5 shadow-lg md:p-6">
+    <section className="flex max-w-full flex-col gap-6 rounded-lg border border-wurth-gray-250 p-5 shadow-lg md:p-6">
       <div className="flex flex-row items-center justify-between">
         <h2 className="font-title text-xl font-medium text-wurth-gray-800 md:text-2xl md:tracking-[-0.144px]">
           Cart Summary{" "}
           <span className="text-base leading-7 text-wurth-gray-500 md:text-xl md:leading-7">
-            ({simulationCheckoutQuery.data.totalQuantity}{" "}
+            ({simulationCheckoutQuery.data.cartItemsCount}{" "}
             {simulationCheckoutQuery.data.totalQuantity === 1
               ? "item"
               : "items"}
