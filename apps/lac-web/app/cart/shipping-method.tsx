@@ -44,14 +44,32 @@ const ShippingMethod = ({ token, options }: ShippingMethodProps) => {
 
   const handleSelectValueChange = (value: string) => {
     updateCartItemMutation.mutate(
-      cartQuery.data.cartItems.map((item) => ({
-        cartItemId: item.cartItemId,
-        quantity: item.quantity,
-        config: {
+      cartQuery.data.cartItems.map((item) => {
+        const config = {
           ...item.configuration,
-          shipping_method_1: value,
-        },
-      })),
+        };
+
+        // Check the 1st available shipping method
+        if (config.shipping_method_1) {
+          config.shipping_method_1 = value;
+        } else if (config.shipping_method_2) {
+          config.shipping_method_2 = value;
+        } else if (config.shipping_method_3) {
+          config.shipping_method_3 = value;
+        } else if (config.shipping_method_4) {
+          config.shipping_method_4 = value;
+        } else if (config.shipping_method_5) {
+          config.shipping_method_5 = value;
+        }
+
+        {
+          return {
+            cartItemId: item.cartItemId,
+            quantity: item.quantity,
+            config,
+          };
+        }
+      }),
     );
   };
 

@@ -18,6 +18,16 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Alert } from "@repo/web-ui/components/icons/alert";
 import { Trash } from "@repo/web-ui/components/icons/trash";
 import { WurthFullBlack } from "@repo/web-ui/components/logos/wurth-full-black";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@repo/web-ui/components/ui/alert-dialog";
 import { Button } from "@repo/web-ui/components/ui/button";
 import { Input } from "@repo/web-ui/components/ui/input";
 import { Label } from "@repo/web-ui/components/ui/label";
@@ -92,6 +102,7 @@ const CartItem = ({
 
   const checkLoginQuery = useSuspenseCheckLogin(token);
 
+  const [deleteConfirmation, setDeleteConfirmation] = useState(false);
   const [selectedWillCallPlant, setSelectedWillCallPlant] = useState(() => {
     if (itemConfigWillCallPlant && itemConfigWillCallPlant !== "") {
       return itemConfigWillCallPlant;
@@ -322,9 +333,16 @@ const CartItem = ({
   };
 
   const handleDeleteCartItem = () => {
-    deleteCartItemMutation.mutate({
-      products: [{ cartid: product.cartItemId }],
-    });
+    deleteCartItemMutation.mutate(
+      {
+        products: [{ cartid: product.cartItemId }],
+      },
+      {
+        onSettled: () => {
+          setDeleteConfirmation(false);
+        },
+      },
+    );
   };
 
   const handleSelectWillCallPlant = (plant: string) => {
@@ -493,7 +511,7 @@ const CartItem = ({
             <Button
               variant="subtle"
               className="w-full bg-red-50 hover:bg-red-100"
-              onClick={() => handleDeleteCartItem()}
+              onClick={() => setDeleteConfirmation(true)}
               disabled={deleteCartItemMutation.isPending}
             >
               <Trash className="size-4 fill-wurth-red-650" />
@@ -677,7 +695,7 @@ const CartItem = ({
           <Button
             variant="ghost"
             className="h-fit w-full justify-end px-0 py-0 text-wurth-red-650"
-            onClick={() => handleDeleteCartItem()}
+            onClick={() => setDeleteConfirmation(true)}
             disabled={deleteCartItemMutation.isPending}
           >
             <span className="text-[13px] leading-5">Delete</span>
@@ -692,6 +710,29 @@ const CartItem = ({
           />
         </div>
       </div>
+
+      <AlertDialog
+        open={deleteConfirmation}
+        onOpenChange={setDeleteConfirmation}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirm Action</AlertDialogTitle>
+
+            <AlertDialogDescription>
+              Are you sure want to remove this item from cart?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+
+            <AlertDialogAction onClick={() => handleDeleteCartItem()}>
+              Confirm
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
