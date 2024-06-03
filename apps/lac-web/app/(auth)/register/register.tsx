@@ -28,22 +28,12 @@ const Register = ({ passwordPolicies, industries }: RegisterProps) => {
 
   return (
     <div className="container max-w-[41.5rem] space-y-5 pb-14 pt-4 md:mt-6">
-      <div className="flex flex-col gap-1 text-wurth-gray-800 md:gap-5">
+      <div className="flex flex-col gap-5 text-wurth-gray-800">
         <h1 className="font-title text-2xl font-medium tracking-[-0.144px] md:text-center md:text-5xl md:leading-[3.5rem] md:tracking-[-0.576px]">
           Create an Account
         </h1>
 
-        <p className="text-sm md:hidden">
-          Already have a web account?{" "}
-          <Link
-            href="/sign-in"
-            className="font-semibold hover:underline focus:underline"
-          >
-            Log in
-          </Link>
-        </p>
-
-        <div className="hidden md:flex md:flex-row md:items-center md:justify-between">
+        <div className="flex flex-row items-center justify-between">
           <div className="text-base text-wurth-gray-800">{email}</div>
 
           <Link
