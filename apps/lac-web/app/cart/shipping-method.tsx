@@ -1,7 +1,9 @@
 "use client";
 
+import useSuspenseWillCallPlant from "@/_header/_will-call-plant/use-suspense-will-call-plant.hook";
 import useSuspenseCart from "@/_hooks/cart/use-suspense-cart.hook";
 import useUpdateCartItemMutation from "@/_hooks/cart/use-update-cart-item-mutation.hook";
+import { DEFAULT_PLANT } from "@/_lib/constants";
 import { Checkbox } from "@repo/web-ui/components/ui/checkbox";
 import { Label } from "@repo/web-ui/components/ui/label";
 import {
@@ -38,6 +40,8 @@ const ShippingMethod = ({
   const [selectedSection, setSelectedSection] = useState<string>();
 
   const cartQuery = useSuspenseCart(token);
+  const willCallPlantQuery = useSuspenseWillCallPlant(token);
+  const willCallPlant = willCallPlantQuery.data;
 
   const updateCartItemMutation = useUpdateCartItemMutation(token);
 
@@ -117,7 +121,8 @@ const ShippingMethod = ({
           />
 
           <Label htmlFor={willCallId}>
-            Store pick up (Will call) at Brea, CA
+            Store pick up (Will call) at&nbsp;
+            {willCallPlant?.plantName ?? DEFAULT_PLANT.name}
           </Label>
         </li>
       </ul>
