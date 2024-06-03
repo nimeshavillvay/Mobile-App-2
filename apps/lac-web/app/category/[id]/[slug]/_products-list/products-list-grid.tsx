@@ -34,6 +34,8 @@ const ProductListGrid = ({ token, categoryId, type }: ProductListGridProps) => {
           title: variant.productName,
           image: variant.image,
           uom: variant.unitOfMeasure,
+          onSale: variant.isSaleItem,
+          isNewItem: variant.isNewItem,
         })),
       },
       info: {
