@@ -1,3 +1,4 @@
+import { getBoolean } from "@/_components/get-boolean";
 import { api } from "@/_lib/api";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
@@ -29,7 +30,7 @@ const useSuspenseCreditCards = (token: string) => {
         number: card.number,
         name: card.name,
         expiryDate: card.expiry_date,
-        defaultPaymentCard: card.default_payment_card === "Y",
+        defaultPaymentCard: getBoolean(card.default_payment_card),
       })),
   });
 };

@@ -1,5 +1,6 @@
 "use client";
 
+import { getBoolean } from "@/_components/get-boolean";
 import SaleBadges from "@/_components/sale-badges";
 import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
@@ -39,8 +40,8 @@ const ProductCard = ({
   const image = product.img;
   const sku = product.txtWurthLacItem;
   const uom = product.txtUom;
-  const onSale = product.onSale === "Y";
-  const isNewItem = product.isNewItem === "Y";
+  const onSale = getBoolean(product.onSale ?? "");
+  const isNewItem = getBoolean(product.isNewItem ?? "");
   const href = `/product/${product.productId}/${product.slug}`;
 
   const removeShoppingListItemMutation = useRemoveShoppingListItemMutation();

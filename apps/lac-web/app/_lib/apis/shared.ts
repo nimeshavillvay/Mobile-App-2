@@ -1,3 +1,4 @@
+import { getBoolean } from "@/_components/get-boolean";
 import { SPECIAL_SHIPPING_FLAG } from "@/_lib/constants";
 import { api } from "../api";
 import type {
@@ -74,7 +75,7 @@ export const getItemInfo = async (productIdList: number[]) => {
     productName: item.item_name,
     image: item.img,
     isComparison: !!item.is_comparison,
-    isHazardous: item.txt_hazardous === "Y",
+    isHazardous: getBoolean(item.txt_hazardous),
     specialShipping: !!SPECIAL_SHIPPING_FLAG.find(
       (flag) => flag === item.txt_special_shipping,
     ),
@@ -92,8 +93,8 @@ export const getItemInfo = async (productIdList: number[]) => {
     prop65MessageTwo: item.txt_prop65_message_02 ?? "",
     prop65MessageThree: item.txt_prop65_message_03 ?? "",
     listPrice: parseFloat(item.list_price),
-    isSaleItem: item.on_sale === "Y",
-    isNewItem: item.is_new === "Y",
+    isSaleItem: getBoolean(item.on_sale),
+    isNewItem: getBoolean(item.is_new),
     fClassId: parseInt(item.fclassid), //TODO rename after clarify with dimithri
     class: item.class,
     attributes: item.attributes,

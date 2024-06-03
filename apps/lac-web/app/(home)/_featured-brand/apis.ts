@@ -1,3 +1,4 @@
+import { getBoolean } from "@/_components/get-boolean";
 import { api } from "@/_lib/api";
 import { DEFAULT_REVALIDATE } from "@/_lib/constants";
 import type { GroupList } from "@/_lib/types";
@@ -59,7 +60,7 @@ export const getFeaturedBrand = async () => {
       slug: item.slug,
       isComparison: !!item.is_comparison,
       skuAttribute: item["SKU-attribute"],
-      isHazardous: item.txt_hazardous === "Y",
+      isHazardous: getBoolean(item.txt_hazardous),
       productIdOnSap: item.txt_sap,
       mfrPartNo: item.txt_mfn,
       productDescription: item.txt_description_name,
@@ -74,8 +75,8 @@ export const getFeaturedBrand = async () => {
       prop65MessageTwo: item.txt_prop65_message_02,
       prop65MessageThree: item.txt_prop65_message_03,
       listPrice: Number(item.list_price),
-      isSaleItem: item.on_sale === "Y",
-      isNewItem: item.is_new === "Y",
+      isSaleItem: getBoolean(item.on_sale),
+      isNewItem: getBoolean(item.is_new),
     })),
     variationsCount: group.variationsCount,
   }));

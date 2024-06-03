@@ -1,3 +1,4 @@
+import { getBoolean } from "@/_components/get-boolean";
 import { api } from "@/_lib/api";
 import type { GroupList, OldPagination } from "@/_lib/types";
 import { useSuspenseQuery } from "@tanstack/react-query";
@@ -114,7 +115,7 @@ const useSuspenseSearch = (
             isFavorite: item.is_favourite,
             isComparison: item.is_comparison,
             skuAttribute: item["SKU-attribute"],
-            isHazardous: item.txt_hazardous === "Y",
+            isHazardous: getBoolean(item.txt_hazardous),
             productIdOnSap: item.txt_sap,
             mfrPartNo: item.txt_mfn,
             productSummary: item.txt_description_name,
@@ -129,8 +130,8 @@ const useSuspenseSearch = (
             prop65MessageTwo: item.txt_prop65_message_02,
             prop65MessageThree: item.txt_prop65_message_03,
             listPrice: Number(item.list_price),
-            isSaleItem: item.on_sale === "Y",
-            isNewItem: item.is_new === "Y",
+            isSaleItem: getBoolean(item.on_sale),
+            isNewItem: getBoolean(item.is_new),
             isDirectlyShippedFromVendor: item.is_directly_shipped_from_vendor,
           })),
           variationsCount: Number(variationsCount),

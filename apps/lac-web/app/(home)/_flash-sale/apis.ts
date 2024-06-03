@@ -1,3 +1,4 @@
+import { getBoolean } from "@/_components/get-boolean";
 import { api } from "@/_lib/api";
 import { DEFAULT_REVALIDATE, SPECIAL_SHIPPING_FLAG } from "@/_lib/constants";
 import "server-only";
@@ -44,8 +45,8 @@ export const getSaleItems = async () => {
     productTitle: data.productTitle,
     productDescription: data.txt_description_name,
     mfrPartNo: data.txt_mfn,
-    isHazardous: data.txt_hazardous === "Y",
-    isDirectlyShippedFromVendor: data.txt_web_direct === "Y",
+    isHazardous: getBoolean(data.txt_hazardous),
+    isDirectlyShippedFromVendor: getBoolean(data.txt_web_direct),
     specialShipping: !!SPECIAL_SHIPPING_FLAG.find(
       (flag) => flag === data.txt_special_shipping,
     ),

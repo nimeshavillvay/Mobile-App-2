@@ -1,3 +1,4 @@
+import { getBoolean } from "@/_components/get-boolean";
 import { api } from "@/_lib/api";
 import { SPECIAL_SHIPPING_FLAG } from "@/_lib/constants";
 import type { Cart, CartItemConfiguration } from "@/_lib/types";
@@ -63,7 +64,7 @@ const useSuspenseCart = (token: string) => {
             image: item.itemInfo.img,
             slug: item.itemInfo.slug,
             isComparison: !!item.itemInfo.is_comparison,
-            isHazardous: item.itemInfo.txt_hazardous === "Y",
+            isHazardous: getBoolean(item.itemInfo.txt_hazardous),
             specialShipping: SPECIAL_SHIPPING_FLAG.includes(
               item.itemInfo.txt_special_shipping,
             ),
@@ -84,8 +85,8 @@ const useSuspenseCart = (token: string) => {
             prop65MessageThree: item.itemInfo.txt_prop65_message_03,
             metaTitle: item.itemInfo.txt_meta_title,
             listPrice: Number(item.itemInfo.list_price),
-            isSaleItem: item.itemInfo.on_sale === "Y",
-            isNewItem: item.itemInfo.is_new === "Y",
+            isSaleItem: getBoolean(item.itemInfo.on_sale),
+            isNewItem: getBoolean(item.itemInfo.is_new),
             fClassId: Number(item.itemInfo.fclassid),
             brandName: item.itemInfo.brand_name,
             groupCode: item.itemInfo.txt_group_code,
