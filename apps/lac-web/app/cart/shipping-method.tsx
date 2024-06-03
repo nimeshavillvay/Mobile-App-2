@@ -12,6 +12,7 @@ import {
   SelectValue,
 } from "@repo/web-ui/components/ui/select";
 import { useId, useState } from "react";
+import { EXCLUDED_SHIPPING_METHODS } from "./constants";
 import type { ShippingMethod } from "./types";
 
 const SHIP_TO_ME = "ship-to-me";
@@ -22,10 +23,17 @@ type ShippingMethodProps = {
   readonly options: ShippingMethod[];
 };
 
-const ShippingMethod = ({ token, options }: ShippingMethodProps) => {
+const ShippingMethod = ({
+  token,
+  options: shippingMethods,
+}: ShippingMethodProps) => {
   const id = useId();
   const shipToMeId = `${SHIP_TO_ME}-${id}`;
   const willCallId = `${WILL_CALL}-${id}`;
+
+  shippingMethods = shippingMethods.filter(
+    (method) => !EXCLUDED_SHIPPING_METHODS.includes(method.code),
+  );
 
   const [selectedSection, setSelectedSection] = useState<string>();
 
@@ -83,9 +91,9 @@ const ShippingMethod = ({ token, options }: ShippingMethodProps) => {
               </SelectTrigger>
 
               <SelectContent>
-                {options.map((option) => (
-                  <SelectItem key={option.code} value={option.code}>
-                    {option.name}
+                {shippingMethods.map((method) => (
+                  <SelectItem key={method.code} value={method.code}>
+                    {method.name}
                   </SelectItem>
                 ))}
               </SelectContent>
