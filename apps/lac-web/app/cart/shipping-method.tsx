@@ -1,7 +1,9 @@
 "use client";
 
+import useSuspenseWillCallPlant from "@/_hooks/address/use-suspense-will-call-plant.hook";
 import useSuspenseCart from "@/_hooks/cart/use-suspense-cart.hook";
 import useUpdateCartItemMutation from "@/_hooks/cart/use-update-cart-item-mutation.hook";
+import { DEFAULT_PLANT } from "@/_lib/constants";
 import { Checkbox } from "@repo/web-ui/components/ui/checkbox";
 import { Label } from "@repo/web-ui/components/ui/label";
 import {
@@ -12,6 +14,7 @@ import {
   SelectValue,
 } from "@repo/web-ui/components/ui/select";
 import { useId, useState } from "react";
+import { EXCLUDED_SHIPPING_METHODS } from "./constants";
 import type { ShippingMethod } from "./types";
 
 const SHIP_TO_ME = "ship-to-me";
@@ -27,9 +30,15 @@ const ShippingMethod = ({ token, options }: ShippingMethodProps) => {
   const shipToMeId = `${SHIP_TO_ME}-${id}`;
   const willCallId = `${WILL_CALL}-${id}`;
 
+  const shippingMethods = options?.filter(
+    (method) => !EXCLUDED_SHIPPING_METHODS.includes(method.code),
+  );
+
   const [selectedSection, setSelectedSection] = useState<string>();
 
   const cartQuery = useSuspenseCart(token);
+  const willCallPlantQuery = useSuspenseWillCallPlant(token);
+  const willCallPlant = willCallPlantQuery.data;
 
   const updateCartItemMutation = useUpdateCartItemMutation(token);
 
@@ -83,9 +92,9 @@ const ShippingMethod = ({ token, options }: ShippingMethodProps) => {
               </SelectTrigger>
 
               <SelectContent>
-                {options.map((option) => (
-                  <SelectItem key={option.code} value={option.code}>
-                    {option.name}
+                {shippingMethods.map((method) => (
+                  <SelectItem key={method.code} value={method.code}>
+                    {method.name}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -109,7 +118,8 @@ const ShippingMethod = ({ token, options }: ShippingMethodProps) => {
           />
 
           <Label htmlFor={willCallId}>
-            Store pick up (Will call) at Brea, CA
+            Store pick up (Will call) at&nbsp;
+            {willCallPlant?.plantName ?? DEFAULT_PLANT.name}
           </Label>
         </li>
       </ul>
