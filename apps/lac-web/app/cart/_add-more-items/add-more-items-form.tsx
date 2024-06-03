@@ -396,7 +396,7 @@ const AddMoreItemsForm = ({ token }: { readonly token: string }) => {
             className="font-medium"
             onClick={() => reset()}
           >
-            <span>Clear all</span>
+            Clear all
           </Button>
 
           <Button type="submit" variant="default" className="">
