@@ -1,6 +1,6 @@
-import { getBoolean } from "@/_components/get-boolean";
 import { api } from "@/_lib/api";
 import { DEFAULT_REVALIDATE } from "@/_lib/constants";
+import { getBoolean } from "@/_lib/utils";
 import { notFound } from "next/navigation";
 import "server-only";
 

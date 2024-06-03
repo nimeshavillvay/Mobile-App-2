@@ -1,7 +1,7 @@
-import { getBoolean } from "@/_components/get-boolean";
 import { api } from "@/_lib/api";
 import { SPECIAL_SHIPPING_FLAG } from "@/_lib/constants";
 import type { Cart, CartItemConfiguration } from "@/_lib/types";
+import { getBoolean } from "@/_lib/utils";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
 const getConfigAvailability = (option: CartItemConfiguration) => {

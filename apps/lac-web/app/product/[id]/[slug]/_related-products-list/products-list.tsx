@@ -1,5 +1,5 @@
-import { getBoolean } from "@/_components/get-boolean";
 import ProductCard from "@/_components/product-card";
+import { getBoolean } from "@/_lib/utils";
 import type { RelatedProduct } from "../types";
 
 type ProductsListProps = {

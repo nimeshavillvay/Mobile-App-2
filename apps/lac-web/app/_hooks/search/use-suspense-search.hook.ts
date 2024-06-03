@@ -1,6 +1,6 @@
-import { getBoolean } from "@/_components/get-boolean";
 import { api } from "@/_lib/api";
 import type { GroupList, OldPagination } from "@/_lib/types";
+import { getBoolean } from "@/_lib/utils";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
 type useSuspenseSearchArgs = {

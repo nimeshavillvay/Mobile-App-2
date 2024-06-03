@@ -1,5 +1,5 @@
-import { getBoolean } from "@/_components/get-boolean";
 import { api } from "@/_lib/api";
+import { getBoolean } from "@/_lib/utils";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
 const useSuspenseCreditCards = (token: string) => {

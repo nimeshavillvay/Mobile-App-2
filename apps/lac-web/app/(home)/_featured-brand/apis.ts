@@ -1,7 +1,7 @@
-import { getBoolean } from "@/_components/get-boolean";
 import { api } from "@/_lib/api";
 import { DEFAULT_REVALIDATE } from "@/_lib/constants";
 import type { GroupList } from "@/_lib/types";
+import { getBoolean } from "@/_lib/utils";
 import "server-only";
 
 export const getFeaturedBrand = async () => {

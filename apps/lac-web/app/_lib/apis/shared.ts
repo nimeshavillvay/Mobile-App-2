@@ -1,5 +1,5 @@
-import { getBoolean } from "@/_components/get-boolean";
 import { SPECIAL_SHIPPING_FLAG } from "@/_lib/constants";
+import { getBoolean } from "@/_lib/utils";
 import { api } from "../api";
 import type {
   AvailabilityParameters,

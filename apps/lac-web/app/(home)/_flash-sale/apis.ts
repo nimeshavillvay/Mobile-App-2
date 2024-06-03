@@ -1,6 +1,6 @@
-import { getBoolean } from "@/_components/get-boolean";
 import { api } from "@/_lib/api";
 import { DEFAULT_REVALIDATE, SPECIAL_SHIPPING_FLAG } from "@/_lib/constants";
+import { getBoolean } from "@/_lib/utils";
 import "server-only";
 
 type FeatureProduct = {
