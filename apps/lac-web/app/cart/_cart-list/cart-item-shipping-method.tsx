@@ -191,6 +191,13 @@ const CartItemShippingMethod = ({
     selectedOption: MainOption;
   }) => {
     if (checked) {
+      const isWillCallOptionSelected =
+        selectedOption === MAIN_OPTIONS.WILL_CALL;
+      const isWillCallAnywhere =
+        willCallAnywhere !== undefined && willCallAnywhere !== null;
+      const isNotInStock =
+        isWillCallAnywhere && willCallAnywhere.status === NOT_IN_STOCK;
+
       setSelectedShippingOption(selectedOption);
       // Ship to me configs
       if (selectedOption === MAIN_OPTIONS.SHIP_TO_ME) {
@@ -228,11 +235,7 @@ const CartItemShippingMethod = ({
         }
       }
       // Will call pickup configs which have products
-      if (
-        selectedOption === MAIN_OPTIONS.WILL_CALL &&
-        willCallAnywhere &&
-        willCallAnywhere.status != "notInStock"
-      ) {
+      if (isWillCallOptionSelected && isWillCallAnywhere && !isNotInStock) {
         onSave({
           ...createCartItemConfig({
             method: "0",
@@ -250,11 +253,7 @@ const CartItemShippingMethod = ({
         });
       }
       // Will call pickup configs and all are backorder
-      if (
-        selectedOption === MAIN_OPTIONS.WILL_CALL &&
-        willCallAnywhere &&
-        willCallAnywhere.status == "notInStock"
-      ) {
+      if (isWillCallOptionSelected && isWillCallAnywhere && isNotInStock) {
         onSave({
           ...createCartItemConfig({
             method: "0",

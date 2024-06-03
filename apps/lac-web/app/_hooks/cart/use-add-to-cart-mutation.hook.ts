@@ -38,10 +38,10 @@ const useAddToCartMutation = (
 
       if (availability.options[0]) {
         const selectedOption = availability.options[0];
-
-        configuration.backorder_all = selectedOption.backOrder
-          ? BACKORDER_ENABLED
-          : BACKORDER_DISABLED;
+        configuration.backorder_all =
+          selectedOption.type === "backOrderAll" && selectedOption.backOrder
+            ? BACKORDER_ENABLED
+            : BACKORDER_DISABLED;
         configuration.hashvalue = selectedOption.hash;
         configuration.backorder_quantity =
           selectedOption.plants?.[0]?.backOrderQuantity?.toString() ?? "0";
