@@ -1,3 +1,4 @@
+import AddShippingAddressDialog from "@/_components/add-shipping-address-dialog";
 import useSuspenseShippingAddressList from "@/_hooks/address/use-suspense-shipping-address-list.hook";
 import useSuspenseCart from "@/_hooks/cart/use-suspense-cart.hook";
 import useUpdateCartConfigMutation from "@/_hooks/cart/use-update-cart-config-mutation.hook";
@@ -15,7 +16,6 @@ import {
 } from "@repo/web-ui/components/ui/dialog";
 import { useToast } from "@repo/web-ui/components/ui/toast";
 import { useState } from "react";
-import AddShippingAddressDialog from "./add-shipping-address-dialog";
 
 type SelectAddressDialogProps = {
   readonly token: string;

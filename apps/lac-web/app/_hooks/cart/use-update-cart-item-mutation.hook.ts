@@ -10,6 +10,7 @@ const useUpdateCartItemMutation = (token: string) => {
       products: {
         quantity?: number; // The optional feature has been made conditional as it's unnecessary when closing the confirmation dialog popup for add to cart.
         cartItemId: number;
+        price?: number;
         config: CartItemConfiguration;
       }[],
     ) => {
@@ -22,6 +23,7 @@ const useUpdateCartItemMutation = (token: string) => {
             cartitembatchconfiguration: products.map((product) => ({
               quantity: product.quantity,
               cartid: product.cartItemId,
+              price: product.price,
               cartitemconfiguration: product.config,
             })),
           },
@@ -32,6 +34,14 @@ const useUpdateCartItemMutation = (token: string) => {
       queryClient.invalidateQueries({
         queryKey: ["cart"],
       });
+    },
+    onSuccess: (_data, variables) => {
+      // Check if the price has been updated and invalidate the price-check query
+      if (variables?.at(0)?.price) {
+        queryClient.invalidateQueries({
+          queryKey: ["user", "price-check"],
+        });
+      }
     },
   });
 };

@@ -3,6 +3,7 @@ import { api } from "@/_lib/api";
 import { checkAvailability } from "@/_lib/apis/shared";
 import { useToast } from "@repo/web-ui/components/ui/toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { BACKORDER_DISABLED, BACKORDER_ENABLED } from "../../cart/constants";
 
 const useAddToCartMutation = (
   token: string,
@@ -37,8 +38,10 @@ const useAddToCartMutation = (
 
       if (availability.options[0]) {
         const selectedOption = availability.options[0];
-
-        configuration.backorder_all = selectedOption.backOrder ? "C" : "";
+        configuration.backorder_all =
+          selectedOption.type === "backOrderAll" && selectedOption.backOrder
+            ? BACKORDER_ENABLED
+            : BACKORDER_DISABLED;
         configuration.hashvalue = selectedOption.hash;
         configuration.backorder_quantity =
           selectedOption.plants?.[0]?.backOrderQuantity?.toString() ?? "0";
@@ -54,9 +57,7 @@ const useAddToCartMutation = (
             const selectedPlant = selectedOption.plants[i];
 
             if (selectedPlant) {
-              const quantity = selectedOption.backOrder
-                ? selectedPlant.backOrderQuantity
-                : selectedPlant.quantity;
+              const quantity = selectedPlant.quantity ?? "";
               const index = selectedPlant.index;
               addedIndexes.push(index);
 

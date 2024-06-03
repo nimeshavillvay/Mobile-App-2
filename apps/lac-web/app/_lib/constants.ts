@@ -15,3 +15,8 @@ export const DEFAULT_PLANT = {
   code: "L010",
   name: "Brea, CA",
 };
+
+// Availability statuses
+export const IN_STOCK = "inStock" as const;
+export const LIMITED_STOCK = "limitedStock" as const;
+export const NOT_IN_STOCK = "notInStock" as const;

@@ -22,3 +22,5 @@ export type ShipToMeOption =
   | undefined;
 
 export type MainOption = (typeof MAIN_OPTIONS)[keyof typeof MAIN_OPTIONS];
+
+export type ViewportTypes = "desktop" | "mobile";

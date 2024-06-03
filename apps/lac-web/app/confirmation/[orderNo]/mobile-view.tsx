@@ -202,13 +202,16 @@ const MobileView = async ({ orderNo }: MobileViewProps) => {
                     </div>
 
                     <div className="space-y-1 text-sm text-wurth-gray-800">
-                      <div>
-                        {lineItem.shipQuantity} items pickup at{" "}
-                        {
-                          plants.find((plant) => plant.code === lineItem.plant)
-                            ?.name
-                        }
-                      </div>
+                      {lineItem.shipQuantity > 0 && (
+                        <div>
+                          {lineItem.shipQuantity} items pickup at{" "}
+                          {
+                            plants.find(
+                              (plant) => plant.code === lineItem.plant,
+                            )?.name
+                          }
+                        </div>
+                      )}
 
                       {lineItem.boQty > 0 && !!lineItem.boDate && (
                         <div>

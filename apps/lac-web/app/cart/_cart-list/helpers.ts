@@ -1,8 +1,11 @@
 import type { CartItemConfiguration } from "@/_lib/types";
-import { EMPTY_STRING, FALSE_STRING, TRUE_STRING } from "../constants";
+import {
+  EMPTY_STRING,
+  EXCLUDED_SHIPPING_METHODS,
+  FALSE_STRING,
+  TRUE_STRING,
+} from "../constants";
 import type { AvailabilityOption } from "../types";
-
-const EXCLUDED_METHODS = ["W"];
 
 export const createCartItemConfig = ({
   method,
@@ -48,27 +51,29 @@ export const getAlternativeBranchesConfig = ({
   plants,
   method,
   hash,
+  backOrderQuantity,
+  backOrderDate,
 }: {
   plants: {
     index: number;
     quantity?: number;
     plant: string;
-    backOrderQuantity?: number;
-    backOrderDate?: string;
   }[];
   method: string;
   hash: string;
+  backOrderQuantity?: number;
+  backOrderDate?: string;
 }) => {
   let config: Partial<CartItemConfiguration> = {
     hashvalue: hash,
+    backorder_quantity: backOrderQuantity?.toString(),
+    backorder_date: backOrderDate,
   };
 
   const data = plants?.map((plant) => ({
     [`avail_${plant?.index}`]: (plant?.quantity ?? 0).toString(),
     [`plant_${plant?.index}`]: plant?.plant ?? "",
     [`shipping_method_${plant?.index}`]: method,
-    [`backorder_quantity`]: plant?.backOrderQuantity?.toString(),
-    [`backorder_date`]: plant?.backOrderDate,
   }));
 
   config = Object.assign(config, ...data);
@@ -91,7 +96,7 @@ export const getShippingMethods = (
       availableOption.plants?.at(0)?.shippingMethods ?? [];
 
     return shippingMethods.filter(
-      (method) => !EXCLUDED_METHODS.includes(method.code),
+      (method) => !EXCLUDED_SHIPPING_METHODS.includes(method.code),
     );
   }
 
