@@ -267,6 +267,9 @@ const CartItem = ({
                   quantity: takeOnHand.plants?.at(0)?.quantity ?? 0,
                   plant: takeOnHand.plants?.at(0)?.plant ?? EMPTY_STRING,
                   hash: takeOnHand.hash,
+                  backOrderDate: takeOnHand.plants?.at(0)?.backOrderDate,
+                  backOrderQuantity:
+                    takeOnHand.plants?.at(0)?.backOrderQuantity,
                 }),
               );
             } else if (shipAlternativeBranch) {
@@ -279,6 +282,12 @@ const CartItem = ({
                     shipAlternativeBranch.plants?.at(0)?.shippingMethods?.at(0)
                       ?.code ?? EMPTY_STRING,
                   hash: shipAlternativeBranch.hash,
+                  backOrderDate: shipAlternativeBranch.backOrder
+                    ? shipAlternativeBranch?.plants?.[0]?.backOrderDate
+                    : "",
+                  backOrderQuantity: shipAlternativeBranch.backOrder
+                    ? shipAlternativeBranch?.plants?.[0]?.backOrderQuantity
+                    : 0,
                 }),
               );
             } else if (backOrderAll) {
@@ -291,6 +300,10 @@ const CartItem = ({
                   quantity: 0,
                   plant: backOrderAll.plants?.at(0)?.plant ?? EMPTY_STRING,
                   hash: backOrderAll.hash,
+                  backOrderDate: backOrderAll.plants?.at(0)?.backOrderDate,
+                  backOrderQuantity:
+                    backOrderAll.plants?.at(0)?.backOrderQuantity,
+                  backOrderAll: true,
                 }),
               );
             }
@@ -357,22 +370,34 @@ const CartItem = ({
         },
         {
           onSuccess: ({ willCallAnywhere }) => {
-            if (willCallAnywhere) {
-              const willCallAvailableQty =
-                willCallAnywhere.status === NOT_IN_STOCK
-                  ? 0
-                  : willCallAnywhere.willCallQuantity ?? 0;
-              const willCallPlant =
-                willCallAnywhere?.willCallPlant ?? EMPTY_STRING;
+            if (willCallAnywhere && willCallAnywhere.status != NOT_IN_STOCK) {
               handleSave({
                 ...createCartItemConfig({
-                  method: EMPTY_STRING,
-                  quantity: 0,
-                  plant: EMPTY_STRING,
+                  method: "0",
+                  quantity: willCallAnywhere?.willCallQuantity,
+                  plant: willCallAnywhere?.willCallPlant,
                   hash: willCallAnywhere.hash,
+                  backOrderDate: willCallAnywhere?.backOrderDate_1,
+                  backOrderQuantity: willCallAnywhere?.backOrderQuantity_1,
                 }),
-                will_call_avail: willCallAvailableQty.toString(),
-                will_call_plant: willCallPlant,
+                will_call_avail: (willCallAnywhere?.status === NOT_IN_STOCK
+                  ? 0
+                  : willCallAnywhere?.willCallQuantity ?? 0
+                ).toString(),
+                will_call_plant:
+                  willCallAnywhere?.willCallPlant ?? EMPTY_STRING,
+              });
+            } else {
+              handleSave({
+                ...createCartItemConfig({
+                  method: "0",
+                  quantity: 0,
+                  plant: willCallAnywhere.willCallPlant,
+                  hash: willCallAnywhere.hash,
+                  backOrderAll: true,
+                  backOrderDate: willCallAnywhere?.willCallBackOrder,
+                  backOrderQuantity: willCallAnywhere?.willCallQuantity,
+                }),
               });
             }
           },
@@ -415,6 +440,12 @@ const CartItem = ({
             shipAlternativeBranch.plants?.at(0)?.shippingMethods?.at(0)?.code ??
             EMPTY_STRING,
           hash: shipAlternativeBranch.hash,
+          backOrderDate: shipAlternativeBranch.backOrder
+            ? shipAlternativeBranch?.plants?.[0]?.backOrderDate
+            : "",
+          backOrderQuantity: shipAlternativeBranch.backOrder
+            ? shipAlternativeBranch?.plants?.[0]?.backOrderQuantity
+            : 0,
         }),
       );
     } else if (backOrderAll) {
@@ -428,6 +459,7 @@ const CartItem = ({
           hash: backOrderAll.hash,
           backOrderDate: backOrderAll.plants?.at(0)?.backOrderDate,
           backOrderQuantity: backOrderAll.plants?.at(0)?.backOrderQuantity,
+          backOrderAll: true,
         }),
       );
     }

@@ -8,7 +8,7 @@ import useDebouncedState from "@/_hooks/misc/use-debounced-state.hook";
 import useItemInfo from "@/_hooks/product/use-item-info.hook";
 import useSuspenseCheckAvailability from "@/_hooks/product/use-suspense-check-availability.hook";
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
-import { cn } from "@/_lib/utils";
+import { cn, formatNumberToPrice } from "@/_lib/utils";
 import { NUMBER_TYPE } from "@/_lib/zod-helper";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AddToCart as AddToCartIcon } from "@repo/web-ui/components/icons/add-to-cart";
@@ -257,12 +257,12 @@ const PriceCheck = ({
             isDiscounted ? "text-green-700" : "text-inherit",
           )}
         >
-          {priceData?.price}
+          {formatNumberToPrice(priceData?.price)}
         </span>
 
         {isDiscounted && (
           <span className="text-base leading-6 text-wurth-gray-400 line-through">
-            {priceData?.listPrice}
+            {formatNumberToPrice(priceData?.listPrice)}
           </span>
         )}
 
@@ -280,7 +280,10 @@ const PriceCheck = ({
             </h5>
 
             <div className="text-xs text-wurth-gray-800">
-              <span className="text-sm">${item.price}</span>/{uom}
+              <span className="text-sm">
+                ${formatNumberToPrice(item.price)}
+              </span>
+              /{uom}
             </div>
           </div>
         ))}
@@ -451,7 +454,7 @@ const LocationStocks = ({
             </div>
           )}
         </div>
-        {!isBackordered && (
+        {!isBackordered && otherLocations.length > 0 && (
           <CollapsibleTrigger
             asChild
             className="group h-fit gap-1 p-0 pl-1 text-sm font-bold text-black"

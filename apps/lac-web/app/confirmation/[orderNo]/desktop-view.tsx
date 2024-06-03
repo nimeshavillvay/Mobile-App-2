@@ -209,21 +209,23 @@ const DesktopView = async ({ orderNo }: DesktopViewProps) => {
                           colSpan={3}
                           className="ml-2 flex flex-row items-center gap-2 rounded bg-wurth-gray-50 px-2 py-0.5 text-sm"
                         >
-                          <div>
-                            {lineItem.shipQuantity} items pickup at{" "}
-                            {
-                              plants.find(
-                                (plant) => plant.code === lineItem.plant,
-                              )?.name
-                            }
-                          </div>
+                          {lineItem.shipQuantity > 0 && (
+                            <div>
+                              {lineItem.shipQuantity} items pickup at{" "}
+                              {
+                                plants.find(
+                                  (plant) => plant.code === lineItem.plant,
+                                )?.name
+                              }
+                            </div>
+                          )}
 
                           {lineItem.boQty > 0 && !!lineItem.boDate && (
                             <>
                               <span>&bull;</span>
 
                               <div>
-                                Backorder {lineItem.shipQuantity} items, ship by{" "}
+                                Backorder {lineItem.boQty} items, ship by{" "}
                                 {dayjs(lineItem.boDate).format(
                                   "ddd, MMM. D, YYYY",
                                 )}
