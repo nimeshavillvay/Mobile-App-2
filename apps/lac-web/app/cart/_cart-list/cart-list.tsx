@@ -93,7 +93,7 @@ const CartList = ({ token, plants }: CartListProps) => {
           </Button>
         )}
 
-        <div className="flex-1">
+        <div className="flex-1 md:hidden">
           <DynamicAddMoreItemsSectionForMobile token={token} />
         </div>
       </div>
