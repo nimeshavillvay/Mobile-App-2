@@ -1,4 +1,5 @@
 import ProductCard from "@/_components/product-card";
+import { getBoolean } from "@/_lib/utils";
 import type { RelatedProduct } from "../types";
 
 type ProductsListProps = {
@@ -21,6 +22,8 @@ const ProductsList = ({ token, products }: ProductsListProps) => {
             slug: item.slug,
             title: item.item_name,
             uom: item.txt_uom,
+            onSale: getBoolean(item.on_sale),
+            isNewItem: getBoolean(item.is_new),
           },
         ],
       }}
