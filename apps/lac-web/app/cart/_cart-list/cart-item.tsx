@@ -1,10 +1,11 @@
+import AvailabilityStatus from "@/_components/availability-status";
 import QuantityInputField from "@/_components/quantity-input-field";
 import useDeleteCartItemMutation from "@/_hooks/cart/use-delete-cart-item-mutation.hook";
 import useUpdateCartItemMutation from "@/_hooks/cart/use-update-cart-item-mutation.hook";
 import useDebouncedState from "@/_hooks/misc/use-debounced-state.hook";
 import useSuspenseCheckAvailability from "@/_hooks/product/use-suspense-check-availability.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
-import { DEFAULT_PLANT } from "@/_lib/constants";
+import { DEFAULT_PLANT, NOT_IN_STOCK } from "@/_lib/constants";
 import type {
   CartConfiguration,
   CartItemConfiguration,
@@ -32,10 +33,7 @@ import {
   AVAILABLE_ALL,
   BACK_ORDER_ALL,
   EMPTY_STRING,
-  IN_STOCK,
-  LIMITED_STOCK,
   MAIN_OPTIONS,
-  NOT_IN_STOCK,
   TAKE_ON_HAND,
 } from "../constants";
 import CartItemPrice from "./cart-item-price";
@@ -140,7 +138,7 @@ const CartItem = ({
   } = checkAvailabilityQuery.data;
 
   const homeBranchAvailability = availableLocations?.find(
-    (location) => location.location === willCallPlant?.plantCode,
+    ({ location }) => location === willCallPlant?.plantCode,
   );
 
   const willCallHash = willCallAnywhere?.hash;
@@ -699,44 +697,3 @@ const CartItem = ({
 };
 
 export default CartItem;
-
-const AvailabilityStatus = ({
-  availabilityStatus,
-  amount,
-  branch,
-}: {
-  readonly availabilityStatus: string;
-  readonly amount: number;
-  readonly branch: string;
-}) => {
-  const isLimitedStock = availabilityStatus === LIMITED_STOCK && amount > 0;
-  const isInStock = availabilityStatus === IN_STOCK && amount > 0;
-  let statusText = "";
-
-  if (isInStock) {
-    statusText = `${amount} in stock`;
-  } else if (isLimitedStock) {
-    statusText = `Only ${amount} in stock`;
-  } else {
-    statusText = "Out of stock";
-  }
-
-  return (
-    <div className="text-sm text-wurth-gray-800">
-      <span
-        className={cn(
-          "font-semibold",
-          isInStock
-            ? "text-green-700"
-            : isLimitedStock
-              ? "text-yellow-700"
-              : "text-red-700",
-        )}
-      >
-        {statusText}
-      </span>
-      &nbsp;at&nbsp;
-      {branch}
-    </div>
-  );
-};
