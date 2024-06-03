@@ -176,7 +176,7 @@ const MobileView = async ({ orderNo }: MobileViewProps) => {
               item.lineItems.map((lineItem) => (
                 <Fragment key={lineItem.itemNo}>
                   <div className="flex flex-col gap-2">
-                    <div className="flex flex-row items-start justify-between gap-3">
+                    <div className="flex flex-row items-start gap-3">
                       <Image
                         src={lineItem.itemImage}
                         alt={`An image of ${lineItem.itemDescription}`}
