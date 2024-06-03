@@ -128,6 +128,7 @@ const AddShippingAddressDialog = ({
           addressLineOne: selectedSuggestion.streetAddress,
           zipCode: selectedSuggestion.postalCode,
           zip4: selectedSuggestion.zip4 ?? "",
+          skipAddressCheck: true, // Force saving the suggestion
         },
         {
           onSuccess: (data) => {
@@ -383,16 +384,16 @@ const AddShippingAddressDialog = ({
                   >
                     <CheckCircle
                       className={cn(
-                        "size-5 stroke-wurth-gray-150",
+                        "size-5 shrink-0 stroke-wurth-gray-150",
                         selectedSuggestionId === address.xcAddressId &&
                           "stroke-wurth-gray-800",
                       )}
                     />
 
-                    <div className="text-base font-medium text-wurth-gray-800">
+                    <span className="flex-1 text-wrap text-left text-base font-medium text-wurth-gray-800">
                       {address.streetAddress}, {address.locality},{" "}
                       {address.region}, {address.postalCode}
-                    </div>
+                    </span>
                   </Button>
                 </li>
               ))}

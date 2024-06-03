@@ -53,6 +53,7 @@ type Product = {
     txt_keywords: string;
     list_price: string;
     on_sale: string;
+    is_new: string;
     fclassid: string;
     brand_name: string;
     txt_group_code: null;
@@ -132,6 +133,7 @@ export const getProduct = async (id: string, slug: string) => {
       prop65MessageThree: selected_item.txt_prop65_message_03,
       listPrice: Number(selected_item.list_price),
       isSaleItem: selected_item.on_sale === "Y",
+      isNewItem: selected_item.is_new === "Y",
       fClassId: Number(selected_item.fclassid),
       productStatus: selected_item.txt_x_pant_Mat_status,
       productThumbnail: selected_item.thumbnail_img,

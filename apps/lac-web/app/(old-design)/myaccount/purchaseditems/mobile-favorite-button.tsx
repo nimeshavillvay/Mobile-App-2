@@ -31,7 +31,7 @@ const MobileFavoriteButton = ({ token, productId }: FavoriteButtonProps) => {
           "h-12 uppercase",
           isFavorite
             ? "border-2 border-[#55a213] bg-white text-[#55a213] hover:bg-white"
-            : "border-2 border-sky-500 bg-white text-brand-secondary  hover:bg-white",
+            : "border-2 border-sky-500 bg-white text-brand-secondary hover:bg-white",
         )}
         onClick={() => setShowShoppingListsDialog(true)}
       >

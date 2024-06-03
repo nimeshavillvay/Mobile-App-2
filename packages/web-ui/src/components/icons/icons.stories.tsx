@@ -22,6 +22,7 @@ import { Download } from "./download";
 import { Exit } from "./exit";
 import { Facebook } from "./facebook";
 import { FileDownload } from "./file-download";
+import { Gear } from "./gear";
 import { Headset } from "./headset";
 import { HeartFilled } from "./heart-filled";
 import { HeartOutline } from "./heart-outline";
@@ -29,6 +30,7 @@ import { Instagram } from "./instagram";
 import { LinkedIn } from "./linkedin";
 import { MagnifyingGlass } from "./magnifying-glass";
 import { Map } from "./map";
+import { MapPin } from "./map-pin";
 import { Menu } from "./menu";
 import { Minus } from "./minus";
 import { PackageDelivery } from "./package-delivery";
@@ -50,6 +52,7 @@ import { Trash } from "./trash";
 import { Truck } from "./truck";
 import { TruckWithClock } from "./truck-with-clock";
 import { Twitter } from "./twitter";
+import { UserGroup } from "./user-group";
 import { Wallet } from "./wallet";
 import { YouTube } from "./youtube";
 import { Zap } from "./zap";
@@ -87,112 +90,44 @@ export const Showcase: Story = {
   render: () => {
     return (
       <ul className="grid grid-cols-6 gap-4">
-        <IconContainer name="Menu">
-          <Menu />
-        </IconContainer>
-
-        <IconContainer name="MagnifyingGlass">
-          <MagnifyingGlass />
-        </IconContainer>
-
-        <IconContainer name="ArrowPathUp">
-          <ArrowPathUp />
-        </IconContainer>
-
-        <IconContainer name="Wallet">
-          <Wallet />
-        </IconContainer>
-
-        <IconContainer name="Phone">
-          <Phone />
-        </IconContainer>
-
-        <IconContainer name="Headset">
-          <Headset />
-        </IconContainer>
-
-        <IconContainer name="Settings">
-          <Settings />
-        </IconContainer>
-
-        <IconContainer name="Download">
-          <Download />
+        <IconContainer name="AddToCart">
+          <AddToCart />
         </IconContainer>
 
         <IconContainer name="Alert">
           <Alert />
         </IconContainer>
 
-        <IconContainer name="Minus">
-          <Minus />
+        <IconContainer name="ArrowLeft">
+          <ArrowLeft />
         </IconContainer>
 
-        <IconContainer name="Plus">
-          <Plus />
+        <IconContainer name="ArrowPathUp">
+          <ArrowPathUp />
         </IconContainer>
 
-        <IconContainer name="Shop">
-          <Shop />
+        <IconContainer name="ArrowRight">
+          <ArrowRight />
         </IconContainer>
 
-        <IconContainer name="Building">
-          <Building />
+        <IconContainer name="ArrowUp">
+          <ArrowUp />
         </IconContainer>
 
-        <IconContainer name="ShoppingCart">
-          <ShoppingCart />
+        <IconContainer name="ArrowUpRight">
+          <ArrowUpRight />
         </IconContainer>
 
-        <IconContainer name="AddToCart">
-          <AddToCart />
-        </IconContainer>
-
-        <IconContainer name="PackageDelivery">
-          <PackageDelivery />
-        </IconContainer>
-
-        <IconContainer name="HeartFilled">
-          <HeartFilled />
-        </IconContainer>
-
-        <IconContainer name="HeartOutline">
-          <HeartOutline />
-        </IconContainer>
-
-        <IconContainer name="Exit">
-          <Exit />
-        </IconContainer>
-
-        <IconContainer name="Zap">
-          <Zap />
-        </IconContainer>
-
-        <IconContainer name="Profile">
-          <Profile />
-        </IconContainer>
-
-        <IconContainer name="Save">
-          <Save />
-        </IconContainer>
-
-        <IconContainer name="Trash">
-          <Trash />
+        <IconContainer name="BarcodeScan">
+          <BarcodeScan />
         </IconContainer>
 
         <IconContainer name="Bell">
           <Bell />
         </IconContainer>
 
-        <IconContainer name="Truck">
-          <Truck />
-        </IconContainer>
-
-        <IconContainer name="TruckWithClock">
-          <TruckWithClock />
-        </IconContainer>
-
-        <IconContainer name="Close">
-          <Close />
+        <IconContainer name="Building">
+          <Building />
         </IconContainer>
 
         <IconContainer name="Check">
@@ -207,30 +142,6 @@ export const Showcase: Story = {
           <CheckCircleFilled />
         </IconContainer>
 
-        <IconContainer name="Shield">
-          <Shield />
-        </IconContainer>
-
-        <IconContainer name="ArrowUpRight">
-          <ArrowUpRight />
-        </IconContainer>
-
-        <IconContainer name="ArrowRight">
-          <ArrowRight />
-        </IconContainer>
-
-        <IconContainer name="ArrowLeft">
-          <ArrowLeft />
-        </IconContainer>
-
-        <IconContainer name="ArrowUp">
-          <ArrowUp />
-        </IconContainer>
-
-        <IconContainer name="ChevronRight">
-          <ChevronRight />
-        </IconContainer>
-
         <IconContainer name="ChevronDown">
           <ChevronDown />
         </IconContainer>
@@ -239,12 +150,48 @@ export const Showcase: Story = {
           <ChevronLeft />
         </IconContainer>
 
+        <IconContainer name="ChevronRight">
+          <ChevronRight />
+        </IconContainer>
+
         <IconContainer name="ChevronUp">
           <ChevronUp />
         </IconContainer>
 
+        <IconContainer name="Close">
+          <Close />
+        </IconContainer>
+
+        <IconContainer name="Download">
+          <Download />
+        </IconContainer>
+
+        <IconContainer name="Exit">
+          <Exit />
+        </IconContainer>
+
         <IconContainer name="Facebook">
           <Facebook />
+        </IconContainer>
+
+        <IconContainer name="FileDownload">
+          <FileDownload />
+        </IconContainer>
+
+        <IconContainer name="Gear">
+          <Gear />
+        </IconContainer>
+
+        <IconContainer name="Headset">
+          <Headset />
+        </IconContainer>
+
+        <IconContainer name="HeartFilled">
+          <HeartFilled />
+        </IconContainer>
+
+        <IconContainer name="HeartOutline">
+          <HeartOutline />
         </IconContainer>
 
         <IconContainer name="Instagram">
@@ -255,48 +202,116 @@ export const Showcase: Story = {
           <LinkedIn />
         </IconContainer>
 
-        <IconContainer name="Twitter">
-          <Twitter />
-        </IconContainer>
-
-        <IconContainer name="Pinterest">
-          <Pinterest />
-        </IconContainer>
-
-        <IconContainer name="YouTube">
-          <YouTube />
-        </IconContainer>
-
-        <IconContainer name="TikTok">
-          <TikTok />
-        </IconContainer>
-
-        <IconContainer name="Switch">
-          <Switch />
-        </IconContainer>
-
-        <IconContainer name="BarcodeScan">
-          <BarcodeScan />
-        </IconContainer>
-
-        <IconContainer name="Printer">
-          <Printer />
-        </IconContainer>
-
-        <IconContainer name="Receipt">
-          <Receipt />
+        <IconContainer name="MagnifyingGlass">
+          <MagnifyingGlass />
         </IconContainer>
 
         <IconContainer name="Map">
           <Map />
         </IconContainer>
 
+        <IconContainer name="MapPin">
+          <MapPin />
+        </IconContainer>
+
+        <IconContainer name="Menu">
+          <Menu />
+        </IconContainer>
+
+        <IconContainer name="Minus">
+          <Minus />
+        </IconContainer>
+
+        <IconContainer name="PackageDelivery">
+          <PackageDelivery />
+        </IconContainer>
+
+        <IconContainer name="Phone">
+          <Phone />
+        </IconContainer>
+
+        <IconContainer name="Pinterest">
+          <Pinterest />
+        </IconContainer>
+
+        <IconContainer name="Plus">
+          <Plus />
+        </IconContainer>
+
+        <IconContainer name="Printer">
+          <Printer />
+        </IconContainer>
+
+        <IconContainer name="Profile">
+          <Profile />
+        </IconContainer>
+
+        <IconContainer name="Receipt">
+          <Receipt />
+        </IconContainer>
+
+        <IconContainer name="Save">
+          <Save />
+        </IconContainer>
+
+        <IconContainer name="Settings">
+          <Settings />
+        </IconContainer>
+
+        <IconContainer name="Shield">
+          <Shield />
+        </IconContainer>
+
+        <IconContainer name="Shop">
+          <Shop />
+        </IconContainer>
+
+        <IconContainer name="ShoppingCart">
+          <ShoppingCart />
+        </IconContainer>
+
+        <IconContainer name="Switch">
+          <Switch />
+        </IconContainer>
+
+        <IconContainer name="TikTok">
+          <TikTok />
+        </IconContainer>
+
         <IconContainer name="Timetable">
           <Timetable />
         </IconContainer>
 
-        <IconContainer name="FileDownload">
-          <FileDownload />
+        <IconContainer name="Trash">
+          <Trash />
+        </IconContainer>
+
+        <IconContainer name="Truck">
+          <Truck />
+        </IconContainer>
+
+        <IconContainer name="TruckWithClock">
+          <TruckWithClock />
+        </IconContainer>
+
+        <IconContainer name="Twitter">
+          <Twitter />
+        </IconContainer>
+
+        <IconContainer name="UserGroup">
+          <UserGroup />
+        </IconContainer>
+
+        <IconContainer name="Wallet">
+          <Wallet />
+        </IconContainer>
+
+        <IconContainer name="YouTube">
+          <YouTube />
+        </IconContainer>
+
+        <IconContainer name="Zap">
+          <Zap />
         </IconContainer>
       </ul>
     );

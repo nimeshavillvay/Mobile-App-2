@@ -4,9 +4,10 @@ import useSuspenseWillCallPlant from "@/_header/_will-call-plant/use-suspense-wi
 import useDeleteCartItemMutation from "@/_hooks/cart/use-delete-cart-item-mutation.hook";
 import useSuspenseCart from "@/_hooks/cart/use-suspense-cart.hook";
 import type { Plant } from "@/_lib/types";
-import { Plus } from "@repo/web-ui/components/icons/plus";
 import { Trash } from "@repo/web-ui/components/icons/trash";
 import { Button } from "@repo/web-ui/components/ui/button";
+import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
+import dynamic from "next/dynamic";
 import { Suspense } from "react";
 import CartItemFallback from "../cart-item-fallback";
 import CartItem from "./cart-item";
@@ -15,6 +16,14 @@ type CartListProps = {
   readonly token: string;
   readonly plants: Plant[];
 };
+
+const DynamicAddMoreItemsSectionForMobile = dynamic(
+  () => import("../_add-more-items/add-more-items-form-mobile"),
+  {
+    ssr: false,
+    loading: () => <Skeleton className="h-[36px] w-full" />,
+  },
+);
 
 const CartList = ({ token, plants }: CartListProps) => {
   const { data } = useSuspenseCart(token);
@@ -77,16 +86,16 @@ const CartList = ({ token, plants }: CartListProps) => {
             variant="subtle"
             className="flex-1 bg-red-50 font-bold text-wurth-red-650 hover:bg-red-100 md:flex-none"
             onClick={() => handleClearCart()}
+            disabled={deleteCartItemMutation.isPending}
           >
             <Trash className="size-4 fill-wurth-red-650" />
             <span>Clear cart</span>
           </Button>
         )}
 
-        <Button className="flex-1 font-bold md:hidden" disabled={true}>
-          <Plus className="size-4 stroke-white" />
-          <span>Add an item</span>
-        </Button>
+        <div className="flex-1">
+          <DynamicAddMoreItemsSectionForMobile token={token} />
+        </div>
       </div>
     </ul>
   );

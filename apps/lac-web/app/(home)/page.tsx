@@ -76,7 +76,7 @@ const HomePage = async () => {
     <>
       <HeroBanners banners={heroBanner} />
 
-      <section className="container my-3 flex w-full snap-x scroll-pl-4 flex-row  items-stretch gap-4 overflow-x-auto md:my-6 md:grid md:snap-none md:scroll-pl-0 md:grid-cols-3 md:gap-5">
+      <section className="container my-3 flex w-full snap-x scroll-pl-4 flex-row items-stretch gap-4 overflow-x-auto md:my-6 md:grid md:snap-none md:scroll-pl-0 md:grid-cols-3 md:gap-5">
         {ADS.map((ad) => (
           <article
             key={ad.id}

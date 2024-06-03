@@ -5,6 +5,7 @@ import useDebouncedState from "@/_hooks/misc/use-debounced-state.hook";
 import useSuspenseCheckAvailability from "@/_hooks/product/use-suspense-check-availability.hook";
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
+import { DEFAULT_PLANT } from "@/_lib/constants";
 import type {
   CartConfiguration,
   CartItemConfiguration,
@@ -21,7 +22,7 @@ import { Input } from "@repo/web-ui/components/ui/input";
 import { Label } from "@repo/web-ui/components/ui/label";
 import Image from "next/image";
 import Link from "next/link";
-import { Suspense, useEffect, useId, useState } from "react";
+import { Suspense, useDeferredValue, useEffect, useId, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import Balancer from "react-wrap-balancer";
 import { z } from "zod";
@@ -29,7 +30,6 @@ import {
   ALTERNATIVE_BRANCHES,
   AVAILABLE_ALL,
   BACK_ORDER_ALL,
-  DEFAULT_PLANT,
   EMPTY_STRING,
   IN_STOCK,
   LIMITED_STOCK,
@@ -46,7 +46,6 @@ import {
   getAlternativeBranchesConfig,
   getShippingMethods,
 } from "./helpers";
-import PlantName from "./plant-name";
 import RegionalExclusionAndShippingMethods from "./regional-exclusion-and-shipping-methods";
 import type { MainOption, ShipToMeOption } from "./types";
 import useCheckAvailabilityMutation from "./use-check-availability-mutation.hook";
@@ -74,7 +73,7 @@ type CartItemProps = {
   };
   readonly plants: Plant[];
   readonly cartConfiguration: CartConfiguration;
-  readonly willCallPlant: { plantCode: string };
+  readonly willCallPlant: { plantCode: string; plantName: string };
 };
 
 const CartItem = ({
@@ -114,6 +113,7 @@ const CartItem = ({
 
   const quantity = watch("quantity");
   const delayedQuantity = useDebouncedState(quantity);
+  const deferredQuantity = useDeferredValue(delayedQuantity);
   const isQuantityLessThanMin = quantity < product.minAmount;
 
   const updateCartConfigMutation = useUpdateCartItemMutation(token);
@@ -121,14 +121,14 @@ const CartItem = ({
   const checkAvailabilityMutation = useCheckAvailabilityMutation(token);
 
   const priceCheckQuery = useSuspensePriceCheck(token, [
-    { productId: product.id, qty: delayedQuantity },
+    { productId: product.id, qty: deferredQuantity },
   ]);
 
   const priceData = priceCheckQuery.data.productPrices[0];
 
   const checkAvailabilityQuery = useSuspenseCheckAvailability(token, {
     productId: product.id,
-    qty: Number(delayedQuantity ?? product.quantity),
+    qty: Number(deferredQuantity ?? product.quantity),
     plant: selectedWillCallPlant !== "" ? selectedWillCallPlant : undefined,
   });
 
@@ -137,14 +137,11 @@ const CartItem = ({
     status,
     availableLocations,
     willCallAnywhere,
-    xplant,
   } = checkAvailabilityQuery.data;
 
-  const firstLocation = availableLocations.at(0);
-
-  const isNotInStock = status === NOT_IN_STOCK;
-  const isLimitedStock = status === LIMITED_STOCK;
-  const isInStock = status === IN_STOCK;
+  const homeBranchAvailability = availableLocations?.find(
+    (location) => location.location === willCallPlant?.plantCode,
+  );
 
   const willCallHash = willCallAnywhere?.hash;
 
@@ -216,7 +213,7 @@ const CartItem = ({
     checkAvailabilityMutation.mutate(
       {
         productId: product.id,
-        qty: delayedQuantity,
+        qty: deferredQuantity,
       },
       {
         onSuccess: ({ options }) => {
@@ -558,34 +555,18 @@ const CartItem = ({
               )}
             />
 
-            {isInStock && (
-              <div className="text-sm text-wurth-gray-800">
-                <span className="font-semibold text-green-700">
-                  {firstLocation?.amount ?? 0} in stock
-                </span>
-                &nbsp;at&nbsp;{firstLocation?.name}
-              </div>
-            )}
-
-            {isLimitedStock && (
-              <div className="text-sm text-wurth-gray-800">
-                <span className="font-semibold text-yellow-700">
-                  Only {firstLocation?.amount ?? 0} in stock
-                </span>
-                &nbsp;at&nbsp;{firstLocation?.name}
-              </div>
-            )}
-
-            {/* Set default plant when there is no will call plant */}
-            {isNotInStock && (
-              <div className="text-sm text-wurth-gray-800">
-                <span className="font-semibold text-red-700">Out of stock</span>
-                &nbsp;at&nbsp;
-                <PlantName
-                  plants={plants}
-                  plantCode={xplant !== "" ? xplant : DEFAULT_PLANT}
-                />
-              </div>
+            {homeBranchAvailability ? (
+              <AvailabilityStatus
+                availabilityStatus={status}
+                amount={homeBranchAvailability?.amount ?? 0}
+                branch={homeBranchAvailability?.name ?? ""}
+              />
+            ) : (
+              <AvailabilityStatus
+                availabilityStatus={NOT_IN_STOCK}
+                amount={0}
+                branch={willCallPlant?.plantName ?? DEFAULT_PLANT.name}
+              />
             )}
           </div>
 
@@ -721,3 +702,44 @@ const CartItem = ({
 };
 
 export default CartItem;
+
+const AvailabilityStatus = ({
+  availabilityStatus,
+  amount,
+  branch,
+}: {
+  readonly availabilityStatus: string;
+  readonly amount: number;
+  readonly branch: string;
+}) => {
+  const isLimitedStock = availabilityStatus === LIMITED_STOCK && amount > 0;
+  const isInStock = availabilityStatus === IN_STOCK && amount > 0;
+  let statusText = "";
+
+  if (isInStock) {
+    statusText = `${amount} in stock`;
+  } else if (isLimitedStock) {
+    statusText = `Only ${amount} in stock`;
+  } else {
+    statusText = "Out of stock";
+  }
+
+  return (
+    <div className="text-sm text-wurth-gray-800">
+      <span
+        className={cn(
+          "font-semibold",
+          isInStock
+            ? "text-green-700"
+            : isLimitedStock
+              ? "text-yellow-700"
+              : "text-red-700",
+        )}
+      >
+        {statusText}
+      </span>
+      &nbsp;at&nbsp;
+      {branch}
+    </div>
+  );
+};

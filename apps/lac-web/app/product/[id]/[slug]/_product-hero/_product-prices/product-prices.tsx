@@ -3,6 +3,7 @@
 import useDebouncedState from "@/_hooks/misc/use-debounced-state.hook";
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import { cn, formatNumberToPrice } from "@/_lib/utils";
+import { useDeferredValue } from "react";
 import useAddToCartForm from "../use-add-to-cart-form.hook";
 
 type ProductPricesProps = {
@@ -23,9 +24,10 @@ const ProductPrices = ({
   const { watch } = useAddToCartForm();
   const quantity = watch("quantity");
   const delayedQuantity = useDebouncedState(quantity);
+  const deferredQuantity = useDeferredValue(delayedQuantity);
 
   const priceCheckQuery = useSuspensePriceCheck(token, [
-    { productId, qty: delayedQuantity },
+    { productId, qty: deferredQuantity },
   ]);
   const priceData = priceCheckQuery.data.productPrices[0];
   const currentPrice = priceData?.uomPrice ?? priceData?.price ?? 0;

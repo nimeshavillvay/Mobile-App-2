@@ -208,7 +208,7 @@ export const SearchBoxInput = ({
                 </li>
                 {categories.results.map((category, index) => (
                   <li
-                    className="p-2 pl-8  hover:bg-gray-100 "
+                    className="p-2 pl-8 hover:bg-gray-100"
                     key={category.id}
                     {...getItemProps({
                       item: category,

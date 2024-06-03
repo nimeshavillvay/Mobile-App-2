@@ -11,6 +11,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@repo/web-ui/components/ui/collapsible";
+import { useDeferredValue } from "react";
 import useAddToCartForm from "../../use-add-to-cart-form.hook";
 
 type LocationStocksProps = {
@@ -22,10 +23,11 @@ const LocationStocks = ({ token, productId }: LocationStocksProps) => {
   const { watch } = useAddToCartForm();
   const quantity = watch("quantity");
   const delayedQuantity = useDebouncedState(quantity);
+  const deferredQuantity = useDeferredValue(delayedQuantity);
 
   const checkAvailabilityQuery = useSuspenseCheckAvailability(token, {
     productId,
-    qty: delayedQuantity,
+    qty: deferredQuantity,
   });
   const firstLocation = checkAvailabilityQuery.data.availableLocations[0];
   const otherLocations =
