@@ -1,5 +1,6 @@
 "use client";
 
+import useSuspenseWillCallPlant from "@/_hooks/address/use-suspense-will-call-plant.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
 import { DEFAULT_PLANT } from "@/_lib/constants";
 import { Map } from "@repo/web-ui/components/icons/map";
@@ -17,7 +18,6 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@repo/web-ui/components/ui/drawer";
-import useSuspenseWillCallPlant from "./use-suspense-will-call-plant.hook";
 
 type WillCallPlantProps = {
   readonly token: string;

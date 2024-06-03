@@ -157,7 +157,7 @@ const AddMoreItemsFormMobile = ({ token }: { readonly token: string }) => {
         <DrawerTrigger asChild>
           <Button
             variant="default"
-            className="flex h-fit w-full flex-row items-center gap-2"
+            className="flex h-fit w-full flex-row items-center gap-2 font-bold"
           >
             <Plus className="h-4 w-4 stroke-white stroke-2" />
             <span>Add an item</span>
