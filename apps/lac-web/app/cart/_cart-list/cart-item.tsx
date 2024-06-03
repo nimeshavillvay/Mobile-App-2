@@ -1,3 +1,4 @@
+import ActionConfirmationDialog from "@/_components/action-confirmation-dialog";
 import QuantityInputField from "@/_components/quantity-input-field";
 import useDeleteCartItemMutation from "@/_hooks/cart/use-delete-cart-item-mutation.hook";
 import useUpdateCartItemMutation from "@/_hooks/cart/use-update-cart-item-mutation.hook";
@@ -91,6 +92,7 @@ const CartItem = ({
 
   const checkLoginQuery = useSuspenseCheckLogin(token);
 
+  const [deleteConfirmation, setDeleteConfirmation] = useState(false);
   const [selectedWillCallPlant, setSelectedWillCallPlant] = useState(() => {
     if (willCallPlant?.plantCode) {
       return willCallPlant.plantCode;
@@ -308,9 +310,16 @@ const CartItem = ({
   };
 
   const handleDeleteCartItem = () => {
-    deleteCartItemMutation.mutate({
-      products: [{ cartid: product.cartItemId }],
-    });
+    deleteCartItemMutation.mutate(
+      {
+        products: [{ cartid: product.cartItemId }],
+      },
+      {
+        onSettled: () => {
+          setDeleteConfirmation(false);
+        },
+      },
+    );
   };
 
   const handleSelectWillCallPlant = (plant: string) => {
@@ -480,7 +489,7 @@ const CartItem = ({
             <Button
               variant="subtle"
               className="w-full bg-red-50 hover:bg-red-100"
-              onClick={() => handleDeleteCartItem()}
+              onClick={() => setDeleteConfirmation(true)}
               disabled={deleteCartItemMutation.isPending}
             >
               <Trash className="size-4 fill-wurth-red-650" />
@@ -682,7 +691,7 @@ const CartItem = ({
           <Button
             variant="ghost"
             className="h-fit w-full justify-end px-0 py-0 text-wurth-red-650"
-            onClick={() => handleDeleteCartItem()}
+            onClick={() => setDeleteConfirmation(true)}
             disabled={deleteCartItemMutation.isPending}
           >
             <span className="text-[13px] leading-5">Delete</span>
@@ -697,6 +706,14 @@ const CartItem = ({
           />
         </div>
       </div>
+
+      <ActionConfirmationDialog
+        open={deleteConfirmation}
+        onOpenChange={setDeleteConfirmation}
+        text="Are you sure want to remove this item from cart?"
+        okText="Confirm"
+        onConfirm={() => handleDeleteCartItem()}
+      />
     </div>
   );
 };

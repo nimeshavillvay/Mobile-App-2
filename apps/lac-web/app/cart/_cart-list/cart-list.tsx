@@ -1,5 +1,6 @@
 "use client";
 
+import ActionConfirmationDialog from "@/_components/action-confirmation-dialog";
 import useSuspenseWillCallPlant from "@/_header/_will-call-plant/use-suspense-will-call-plant.hook";
 import useDeleteCartItemMutation from "@/_hooks/cart/use-delete-cart-item-mutation.hook";
 import useSuspenseCart from "@/_hooks/cart/use-suspense-cart.hook";
@@ -8,7 +9,7 @@ import { Trash } from "@repo/web-ui/components/icons/trash";
 import { Button } from "@repo/web-ui/components/ui/button";
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import dynamic from "next/dynamic";
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
 import CartItemFallback from "../cart-item-fallback";
 import CartItem from "./cart-item";
 
@@ -26,6 +27,7 @@ const DynamicAddMoreItemsSectionForMobile = dynamic(
 );
 
 const CartList = ({ token, plants }: CartListProps) => {
+  const [deleteConfirmation, setDeleteConfirmation] = useState(false);
   const { data } = useSuspenseCart(token);
   const willCallPlantQuery = useSuspenseWillCallPlant(token);
   const deleteCartItemMutation = useDeleteCartItemMutation(token);
@@ -37,9 +39,16 @@ const CartList = ({ token, plants }: CartListProps) => {
       }));
 
       if (cartItemIds.length > 0) {
-        deleteCartItemMutation.mutate({
-          products: cartItemIds,
-        });
+        deleteCartItemMutation.mutate(
+          {
+            products: cartItemIds,
+          },
+          {
+            onSettled: () => {
+              setDeleteConfirmation(false);
+            },
+          },
+        );
       }
     }
   };
@@ -82,15 +91,22 @@ const CartList = ({ token, plants }: CartListProps) => {
 
       <div className="flex w-full justify-end gap-4 px-4 md:px-0">
         {data.cartItems.length > 0 && (
-          <Button
-            variant="subtle"
-            className="flex-1 bg-red-50 font-bold text-wurth-red-650 hover:bg-red-100 md:flex-none"
-            onClick={() => handleClearCart()}
-            disabled={deleteCartItemMutation.isPending}
+          <ActionConfirmationDialog
+            open={deleteConfirmation}
+            onOpenChange={setDeleteConfirmation}
+            text="Are you sure want to delete your cart?"
+            okText="Confirm"
+            onConfirm={() => handleClearCart()}
           >
-            <Trash className="size-4 fill-wurth-red-650" />
-            <span>Clear cart</span>
-          </Button>
+            <Button
+              variant="subtle"
+              className="flex-1 bg-red-50 font-bold text-wurth-red-650 hover:bg-red-100 md:flex-none"
+              disabled={deleteCartItemMutation.isPending}
+            >
+              <Trash className="size-4 fill-wurth-red-650" />
+              <span>Clear cart</span>
+            </Button>
+          </ActionConfirmationDialog>
         )}
 
         <div className="flex-1">
