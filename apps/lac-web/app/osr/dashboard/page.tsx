@@ -19,7 +19,7 @@ const OSRDashboardPage = async () => {
   return (
     <div className="container">
       <div className="mb-4 mt-8 hidden items-center gap-2.5 md:flex md:flex-row">
-        <h1 className="text-[28px] font-medium leading-8 text-brand-primary ">
+        <h1 className="text-[28px] font-medium leading-8 text-brand-primary">
           My Customers
         </h1>
 

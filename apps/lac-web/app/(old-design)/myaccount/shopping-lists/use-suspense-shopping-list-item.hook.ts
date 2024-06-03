@@ -85,6 +85,7 @@ const useSuspenseShoppingListItems = (
           txtKeywords: item.txt_keywords,
           listPrice: item.list_price,
           onSale: item.on_sale,
+          isNewItem: item.is_new,
           fClassId: item.fclassid,
           brandName: item.brand_name,
           txtGroupCode: item.txt_group_code,

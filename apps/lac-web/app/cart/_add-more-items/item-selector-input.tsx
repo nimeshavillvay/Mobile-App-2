@@ -11,7 +11,7 @@ import type { Product } from "./types";
 
 type ItemSelectorInputProps = {
   readonly items: Product[];
-  readonly onTextChange: (selection: string, type: string) => void;
+  readonly onTextChange: (selection: string, isItemClick: boolean) => void;
   readonly onSelectedItemChange: (value: Product) => void;
   readonly id: string;
   readonly isPopupOpen: boolean;
@@ -38,8 +38,9 @@ const ItemSelectorInput = ({
   } = useCombobox({
     inputValue: value,
     isOpen: isPopupOpen,
-    onInputValueChange: ({ type, inputValue }) => {
-      onTextChange(inputValue, type);
+    onInputValueChange: ({ inputValue, type }) => {
+      const isItemClick = type == useCombobox.stateChangeTypes.ItemClick;
+      onTextChange(inputValue, isItemClick);
     },
     onSelectedItemChange: ({ selectedItem }) => {
       onSelectedItemChange(selectedItem);
@@ -70,7 +71,6 @@ const ItemSelectorInput = ({
             height={20}
           />
         )}
-
         {isInvalid === true && (
           <Alert
             className="absolute right-2 top-2.5 shrink-0 stroke-wurth-red-650"
@@ -82,7 +82,7 @@ const ItemSelectorInput = ({
 
       <ul
         className={cn(
-          "absolute z-50 max-h-80 w-72 overflow-x-hidden overflow-y-scroll  bg-white p-0",
+          "absolute z-50 max-h-80 w-72 overflow-x-hidden overflow-y-scroll bg-white p-0",
           !(isOpen && items.length) && "hidden",
         )}
         {...getMenuProps()}

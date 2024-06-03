@@ -23,12 +23,12 @@ const CartSummary = ({ token, plants }: CartSummaryProps) => {
   const cartQuery = useSuspenseCart(token);
 
   return (
-    <section className="flex flex-col gap-6 rounded-lg border border-wurth-gray-250 p-5 shadow-lg md:p-6">
+    <section className="flex max-w-full flex-col gap-6 rounded-lg border border-wurth-gray-250 p-5 shadow-lg md:p-6">
       <div className="flex flex-row items-center justify-between">
         <h2 className="font-title text-xl font-medium text-wurth-gray-800 md:text-2xl md:tracking-[-0.144px]">
           Cart Summary{" "}
           <span className="text-base leading-7 text-wurth-gray-500 md:text-xl md:leading-7">
-            ({simulationCheckoutQuery.data.totalQuantity}{" "}
+            ({simulationCheckoutQuery.data.cartItemsCount}{" "}
             {simulationCheckoutQuery.data.totalQuantity === 1
               ? "item"
               : "items"}
@@ -58,19 +58,22 @@ const CartSummary = ({ token, plants }: CartSummaryProps) => {
                 key={item.itemInfo.productId}
                 className="relative shrink-0 snap-start"
               >
-                <Image
-                  src={item.itemInfo.image}
-                  alt={`An image of ${item.itemInfo.productName}`}
-                  width={96}
-                  height={96}
-                  className="aspect-1 rounded border border-wurth-gray-250 object-contain shadow-sm"
-                />
+                <Link
+                  href={`/product/${item.itemInfo.productId}/${item.itemInfo.slug}`}
+                >
+                  <Image
+                    src={item.itemInfo.image}
+                    alt={`An image of ${item.itemInfo.productName}`}
+                    width={96}
+                    height={96}
+                    className="aspect-1 rounded border border-wurth-gray-250 object-contain shadow-sm"
+                  />
+                  <span className="sr-only">{item.itemInfo.productName}</span>
 
-                <span className="sr-only">{item.itemInfo.productName}</span>
-
-                <span className="absolute bottom-1 right-1 rounded-full bg-wurth-gray-800 p-1 text-center text-[0.625rem] font-semibold leading-none text-white">
-                  {item.quantity}
-                </span>
+                  <span className="absolute bottom-1 right-1 rounded-full bg-wurth-gray-800 p-1 text-center text-[0.625rem] font-semibold leading-none text-white">
+                    {item.quantity}
+                  </span>
+                </Link>
               </div>
             ))}
           </div>
@@ -82,14 +85,17 @@ const CartSummary = ({ token, plants }: CartSummaryProps) => {
                 className="flex flex-col gap-2 [&:not(:first-child)]:pt-4"
               >
                 <div className="flex flex-row gap-3">
-                  <Image
-                    src={item.itemInfo.image}
-                    alt={`An image of ${item.itemInfo.productName}`}
-                    width={84}
-                    height={84}
-                    className="aspect-1 shrink-0 rounded border border-wurth-gray-250 object-contain shadow-sm"
-                  />
-
+                  <Link
+                    href={`/product/${item.itemInfo.productId}/${item.itemInfo.slug}`}
+                  >
+                    <Image
+                      src={item.itemInfo.image}
+                      alt={`An image of ${item.itemInfo.productName}`}
+                      width={84}
+                      height={84}
+                      className="aspect-1 shrink-0 rounded border border-wurth-gray-250 object-contain shadow-sm"
+                    />
+                  </Link>
                   <div className="flex-1 space-y-1">
                     <div className="flex flex-row items-center justify-between text-sm text-wurth-gray-800">
                       <div>
@@ -110,10 +116,15 @@ const CartSummary = ({ token, plants }: CartSummaryProps) => {
                         )}
                       </div>
                     </div>
-
-                    <h4 className="text-sm font-medium text-wurth-gray-800">
-                      {item.itemInfo.productName}
-                    </h4>
+                    <Link
+                      href={`/product/${item.itemInfo.productId}/${item.itemInfo.slug}`}
+                    >
+                      <h4 className="text-sm font-medium text-wurth-gray-800">
+                        {item.itemInfo.metaTitle === ""
+                          ? item.itemInfo.productName
+                          : item.itemInfo.metaTitle}
+                      </h4>
+                    </Link>
                   </div>
                 </div>
 

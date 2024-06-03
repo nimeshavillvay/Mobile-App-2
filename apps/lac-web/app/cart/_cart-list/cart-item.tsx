@@ -5,23 +5,34 @@ import useDebouncedState from "@/_hooks/misc/use-debounced-state.hook";
 import useSuspenseCheckAvailability from "@/_hooks/product/use-suspense-check-availability.hook";
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
+import { DEFAULT_PLANT } from "@/_lib/constants";
 import type {
   CartConfiguration,
   CartItemConfiguration,
   Plant,
 } from "@/_lib/types";
-import { formatNumberToPrice } from "@/_lib/utils";
+import { cn, formatNumberToPrice } from "@/_lib/utils";
 import { NUMBER_TYPE } from "@/_lib/zod-helper";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Alert } from "@repo/web-ui/components/icons/alert";
 import { Trash } from "@repo/web-ui/components/icons/trash";
 import { WurthFullBlack } from "@repo/web-ui/components/logos/wurth-full-black";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@repo/web-ui/components/ui/alert-dialog";
 import { Button } from "@repo/web-ui/components/ui/button";
 import { Input } from "@repo/web-ui/components/ui/input";
 import { Label } from "@repo/web-ui/components/ui/label";
 import Image from "next/image";
 import Link from "next/link";
-import { Suspense, useEffect, useId, useState } from "react";
+import { Suspense, useDeferredValue, useEffect, useId, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import Balancer from "react-wrap-balancer";
 import { z } from "zod";
@@ -29,7 +40,6 @@ import {
   ALTERNATIVE_BRANCHES,
   AVAILABLE_ALL,
   BACK_ORDER_ALL,
-  DEFAULT_PLANT,
   EMPTY_STRING,
   IN_STOCK,
   LIMITED_STOCK,
@@ -37,6 +47,7 @@ import {
   NOT_IN_STOCK,
   TAKE_ON_HAND,
 } from "../constants";
+import CartItemShippingMethod from "./cart-item-shipping-method";
 import FavoriteButton from "./favorite-button";
 import FavoriteButtonSkeleton from "./favorite-button-skeleton";
 import {
@@ -45,7 +56,6 @@ import {
   getAlternativeBranchesConfig,
   getShippingMethods,
 } from "./helpers";
-import PlantName from "./plant-name";
 import RegionalExclusionAndShippingMethods from "./regional-exclusion-and-shipping-methods";
 import type { MainOption, ShipToMeOption } from "./types";
 import useCheckAvailabilityMutation from "./use-check-availability-mutation.hook";
@@ -73,7 +83,7 @@ type CartItemProps = {
   };
   readonly plants: Plant[];
   readonly cartConfiguration: CartConfiguration;
-  readonly willCallPlant: { plantCode: string };
+  readonly willCallPlant: { plantCode: string; plantName: string };
 };
 
 const CartItem = ({
@@ -91,6 +101,7 @@ const CartItem = ({
 
   const checkLoginQuery = useSuspenseCheckLogin(token);
 
+  const [deleteConfirmation, setDeleteConfirmation] = useState(false);
   const [selectedWillCallPlant, setSelectedWillCallPlant] = useState(() => {
     if (willCallPlant?.plantCode) {
       return willCallPlant.plantCode;
@@ -113,20 +124,22 @@ const CartItem = ({
 
   const quantity = watch("quantity");
   const delayedQuantity = useDebouncedState(quantity);
+  const deferredQuantity = useDeferredValue(delayedQuantity);
+  const isQuantityLessThanMin = quantity < product.minAmount;
 
   const updateCartConfigMutation = useUpdateCartItemMutation(token);
   const deleteCartItemMutation = useDeleteCartItemMutation(token);
   const checkAvailabilityMutation = useCheckAvailabilityMutation(token);
 
   const priceCheckQuery = useSuspensePriceCheck(token, [
-    { productId: product.id, qty: delayedQuantity },
+    { productId: product.id, qty: deferredQuantity },
   ]);
 
   const priceData = priceCheckQuery.data.productPrices[0];
 
   const checkAvailabilityQuery = useSuspenseCheckAvailability(token, {
     productId: product.id,
-    qty: Number(delayedQuantity ?? product.quantity),
+    qty: Number(deferredQuantity ?? product.quantity),
     plant: selectedWillCallPlant !== "" ? selectedWillCallPlant : undefined,
   });
 
@@ -135,14 +148,11 @@ const CartItem = ({
     status,
     availableLocations,
     willCallAnywhere,
-    xplant,
   } = checkAvailabilityQuery.data;
 
-  const firstLocation = availableLocations.at(0);
-
-  const isNotInStock = status === NOT_IN_STOCK;
-  const isLimitedStock = status === LIMITED_STOCK;
-  const isInStock = status === IN_STOCK;
+  const homeBranchAvailability = availableLocations?.find(
+    (location) => location.location === willCallPlant?.plantCode,
+  );
 
   const willCallHash = willCallAnywhere?.hash;
 
@@ -214,7 +224,7 @@ const CartItem = ({
     checkAvailabilityMutation.mutate(
       {
         productId: product.id,
-        qty: delayedQuantity,
+        qty: deferredQuantity,
       },
       {
         onSuccess: ({ options }) => {
@@ -322,9 +332,16 @@ const CartItem = ({
   };
 
   const handleDeleteCartItem = () => {
-    deleteCartItemMutation.mutate({
-      products: [{ cartid: product.cartItemId }],
-    });
+    deleteCartItemMutation.mutate(
+      {
+        products: [{ cartid: product.cartItemId }],
+      },
+      {
+        onSettled: () => {
+          setDeleteConfirmation(false);
+        },
+      },
+    );
   };
 
   const handleSelectWillCallPlant = (plant: string) => {
@@ -513,7 +530,7 @@ const CartItem = ({
             <Button
               variant="subtle"
               className="w-full bg-red-50 hover:bg-red-100"
-              onClick={() => handleDeleteCartItem()}
+              onClick={() => setDeleteConfirmation(true)}
               disabled={deleteCartItemMutation.isPending}
             >
               <Trash className="size-4 fill-wurth-red-650" />
@@ -576,7 +593,10 @@ const CartItem = ({
                   ref={ref}
                   name={name}
                   removeDefaultStyles
-                  className="h-fit rounded px-2.5 py-1 text-base md:w-24"
+                  className={cn(
+                    "h-fit rounded px-2.5 py-1 text-base md:w-24",
+                    isQuantityLessThanMin ? "border-red-700" : "",
+                  )}
                   required
                   min={product.minAmount}
                   step={product.increment}
@@ -585,36 +605,26 @@ const CartItem = ({
               )}
             />
 
-            {isInStock && (
-              <div className="text-sm text-wurth-gray-800">
-                <span className="font-semibold text-green-700">
-                  {firstLocation?.amount ?? 0} in stock
-                </span>
-                &nbsp;at&nbsp;{firstLocation?.name}
-              </div>
-            )}
-
-            {isLimitedStock && (
-              <div className="text-sm text-wurth-gray-800">
-                <span className="font-semibold text-yellow-700">
-                  Only {firstLocation?.amount ?? 0} in stock
-                </span>
-                &nbsp;at&nbsp;{firstLocation?.name}
-              </div>
-            )}
-
-            {/* Set default plant when there is no will call plant */}
-            {isNotInStock && (
-              <div className="text-sm text-wurth-gray-800">
-                <span className="font-semibold text-red-700">Out of stock</span>
-                &nbsp;at&nbsp;
-                <PlantName
-                  plants={plants}
-                  plantCode={xplant !== "" ? xplant : DEFAULT_PLANT}
-                />
-              </div>
+            {homeBranchAvailability ? (
+              <AvailabilityStatus
+                availabilityStatus={status}
+                amount={homeBranchAvailability?.amount ?? 0}
+                branch={homeBranchAvailability?.name ?? ""}
+              />
+            ) : (
+              <AvailabilityStatus
+                availabilityStatus={NOT_IN_STOCK}
+                amount={0}
+                branch={willCallPlant?.plantName ?? DEFAULT_PLANT.name}
+              />
             )}
           </div>
+
+          {isQuantityLessThanMin && (
+            <p className="text-sm text-red-700">
+              Please consider min. order quantity of: {product.minAmount}
+            </p>
+          )}
 
           <div className="pt-2">
             <Label htmlFor={poId} className="sr-only">
@@ -658,12 +668,10 @@ const CartItem = ({
               </div>
             </div>
           ) : (
-            <RegionalExclusionAndShippingMethods
-              token={token}
-              productId={product.id}
+            <CartItemShippingMethod
               plants={plants}
               availability={checkAvailabilityQuery.data}
-              setSelectedWillCallPlant={handleSelectWillCallPlant}
+              setSelectedWillCallPlant={setSelectedWillCallPlant}
               selectedWillCallPlant={selectedWillCallPlant}
               setSelectedShippingOption={setSelectedShippingOption}
               selectedShippingOption={selectedShippingOption}
@@ -710,8 +718,8 @@ const CartItem = ({
             ${formatNumberToPrice(priceData?.price)}/{priceData?.priceUnit}
           </div>
 
-          {priceData?.listPrice &&
-            priceData?.price &&
+          {!!priceData?.listPrice &&
+            !!priceData?.price &&
             priceData?.listPrice > priceData?.price && (
               <div className="ml-1 text-[13px] leading-5 text-wurth-gray-500 line-through">
                 ${formatNumberToPrice(priceData?.listPrice)}/
@@ -724,7 +732,7 @@ const CartItem = ({
           <Button
             variant="ghost"
             className="h-fit w-full justify-end px-0 py-0 text-wurth-red-650"
-            onClick={() => handleDeleteCartItem()}
+            onClick={() => setDeleteConfirmation(true)}
             disabled={deleteCartItemMutation.isPending}
           >
             <span className="text-[13px] leading-5">Delete</span>
@@ -739,8 +747,72 @@ const CartItem = ({
           />
         </div>
       </div>
+
+      <AlertDialog
+        open={deleteConfirmation}
+        onOpenChange={setDeleteConfirmation}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirm Action</AlertDialogTitle>
+
+            <AlertDialogDescription>
+              Are you sure want to remove this item from cart?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+
+            <AlertDialogAction onClick={() => handleDeleteCartItem()}>
+              Confirm
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
 
 export default CartItem;
+
+const AvailabilityStatus = ({
+  availabilityStatus,
+  amount,
+  branch,
+}: {
+  readonly availabilityStatus: string;
+  readonly amount: number;
+  readonly branch: string;
+}) => {
+  const isLimitedStock = availabilityStatus === LIMITED_STOCK && amount > 0;
+  const isInStock = availabilityStatus === IN_STOCK && amount > 0;
+  let statusText = "";
+
+  if (isInStock) {
+    statusText = `${amount} in stock`;
+  } else if (isLimitedStock) {
+    statusText = `Only ${amount} in stock`;
+  } else {
+    statusText = "Out of stock";
+  }
+
+  return (
+    <div className="text-sm text-wurth-gray-800">
+      <span
+        className={cn(
+          "font-semibold",
+          isInStock
+            ? "text-green-700"
+            : isLimitedStock
+              ? "text-yellow-700"
+              : "text-red-700",
+        )}
+      >
+        {statusText}
+      </span>
+      &nbsp;at&nbsp;
+      {branch}
+    </div>
+  );
+};

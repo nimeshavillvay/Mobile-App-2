@@ -137,6 +137,7 @@ const PurchasedItemsList = ({ token }: { readonly token: string }) => {
         prop65MessageThree: "",
         listPrice: 0,
         isSaleItem: false,
+        isNewItem: false,
         fClassId: 0,
         class: "",
         attributes: [],
@@ -269,11 +270,13 @@ const PurchasedItemsList = ({ token }: { readonly token: string }) => {
                 </Select>
               </TableHead>
 
-              <TableHead className="space-y-2 py-3 text-center">
+              <TableHead colSpan={2} className="space-y-2 py-3 text-center">
                 Price
               </TableHead>
-              <TableHead className="space-y-2 py-3">Quantity</TableHead>
               <TableHead className="space-y-2 py-3">UOM</TableHead>
+              <TableHead className="space-y-2 py-3 text-center">
+                Quantity
+              </TableHead>
             </TableRow>
           </TableHeader>
 

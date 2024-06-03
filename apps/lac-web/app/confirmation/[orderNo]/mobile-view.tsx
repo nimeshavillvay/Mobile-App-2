@@ -1,4 +1,3 @@
-import productImage from "@/_assets/images/product-item-image.png";
 import {
   getOrderDetails,
   getPaymentMethods,
@@ -179,7 +178,7 @@ const MobileView = async ({ orderNo }: MobileViewProps) => {
                   <div className="flex flex-col gap-2">
                     <div className="flex flex-row items-start gap-3">
                       <Image
-                        src={productImage} // TODO Add real image
+                        src={lineItem.itemImage}
                         alt={`An image of ${lineItem.itemDescription}`}
                         width={84}
                         height={84}
@@ -193,9 +192,12 @@ const MobileView = async ({ orderNo }: MobileViewProps) => {
                           <div>${formatNumberToPrice(lineItem.totalPrice)}</div>
                         </div>
 
-                        <h4 className="text-sm font-medium text-wurth-gray-800">
-                          {lineItem.itemDescription}
-                        </h4>
+                        <h4
+                          className="text-sm font-medium text-wurth-gray-800"
+                          dangerouslySetInnerHTML={{
+                            __html: lineItem.itemDescription,
+                          }}
+                        />
                       </div>
                     </div>
 

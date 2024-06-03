@@ -34,7 +34,7 @@ const useDeleteCreditCardMutation = () => {
     },
     onSuccess: () => {
       toast({
-        title: "Successfully removed new card.",
+        title: "Successfully removed card.",
       });
     },
   });

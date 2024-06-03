@@ -84,7 +84,7 @@ const OrderSummary = ({ token, children }: OrderSummaryProps) => {
 
   return (
     <div className="flex flex-col gap-3 rounded-lg border border-wurth-gray-150 px-5 py-4 shadow-md">
-      <h3 className=" font-title text-xl font-medium tracking-[-0.1px] text-wurth-gray-800">
+      <h3 className="font-title text-xl font-medium tracking-[-0.1px] text-wurth-gray-800">
         Order Summary
       </h3>
 

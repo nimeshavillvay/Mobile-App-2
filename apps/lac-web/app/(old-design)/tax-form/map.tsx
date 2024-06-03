@@ -108,7 +108,7 @@ const Map = ({ taxFormDetails }: { readonly taxFormDetails: TaxFormItems }) => {
                     geography={geo}
                     fill="#DDD"
                     className={cn("outline-none", [
-                      isFileExist(geo.properties.name) ? "fill-[#C9E5F6] " : "",
+                      isFileExist(geo.properties.name) ? "fill-[#C9E5F6]" : "",
                       isFileExist(geo.properties.name) &&
                       hoverText === geo.properties.name
                         ? "cursor-pointer fill-[#8BD2FF]"

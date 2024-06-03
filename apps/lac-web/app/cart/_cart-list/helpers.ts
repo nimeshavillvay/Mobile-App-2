@@ -1,5 +1,10 @@
 import type { CartItemConfiguration } from "@/_lib/types";
-import { EMPTY_STRING, FALSE_STRING, TRUE_STRING } from "../constants";
+import {
+  EMPTY_STRING,
+  EXCLUDED_SHIPPING_METHODS,
+  FALSE_STRING,
+  TRUE_STRING,
+} from "../constants";
 import type { AvailabilityOption } from "../types";
 
 export const createCartItemConfig = ({
@@ -85,8 +90,14 @@ export const getShippingMethods = (
   }
 
   const availableOption = availableOptions[selectedOption];
+
   if (availableOption) {
-    return availableOption.plants?.at(0)?.shippingMethods ?? [];
+    const shippingMethods =
+      availableOption.plants?.at(0)?.shippingMethods ?? [];
+
+    return shippingMethods.filter(
+      (method) => !EXCLUDED_SHIPPING_METHODS.includes(method.code),
+    );
   }
 
   return [];

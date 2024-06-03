@@ -1,13 +1,25 @@
 "use client";
 
-import useSuspenseWillCallPlant from "@/_header/_will-call-plant/use-suspense-will-call-plant.hook";
+import useSuspenseWillCallPlant from "@/_hooks/address/use-suspense-will-call-plant.hook";
 import useDeleteCartItemMutation from "@/_hooks/cart/use-delete-cart-item-mutation.hook";
 import useSuspenseCart from "@/_hooks/cart/use-suspense-cart.hook";
 import type { Plant } from "@/_lib/types";
-import { Plus } from "@repo/web-ui/components/icons/plus";
 import { Trash } from "@repo/web-ui/components/icons/trash";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@repo/web-ui/components/ui/alert-dialog";
 import { Button } from "@repo/web-ui/components/ui/button";
-import { Suspense } from "react";
+import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
+import dynamic from "next/dynamic";
+import { Suspense, useState } from "react";
 import CartItemFallback from "../cart-item-fallback";
 import CartItem from "./cart-item";
 
@@ -16,7 +28,16 @@ type CartListProps = {
   readonly plants: Plant[];
 };
 
+const DynamicAddMoreItemsSectionForMobile = dynamic(
+  () => import("../_add-more-items/add-more-items-form-mobile"),
+  {
+    ssr: false,
+    loading: () => <Skeleton className="h-[36px] w-full" />,
+  },
+);
+
 const CartList = ({ token, plants }: CartListProps) => {
+  const [deleteConfirmation, setDeleteConfirmation] = useState(false);
   const { data } = useSuspenseCart(token);
   const willCallPlantQuery = useSuspenseWillCallPlant(token);
   const deleteCartItemMutation = useDeleteCartItemMutation(token);
@@ -28,9 +49,16 @@ const CartList = ({ token, plants }: CartListProps) => {
       }));
 
       if (cartItemIds.length > 0) {
-        deleteCartItemMutation.mutate({
-          products: cartItemIds,
-        });
+        deleteCartItemMutation.mutate(
+          {
+            products: cartItemIds,
+          },
+          {
+            onSettled: () => {
+              setDeleteConfirmation(false);
+            },
+          },
+        );
       }
     }
   };
@@ -73,20 +101,40 @@ const CartList = ({ token, plants }: CartListProps) => {
 
       <div className="flex w-full justify-end gap-4 px-4 md:px-0">
         {data.cartItems.length > 0 && (
-          <Button
-            variant="subtle"
-            className="flex-1 bg-red-50 font-bold text-wurth-red-650 hover:bg-red-100 md:flex-none"
-            onClick={() => handleClearCart()}
+          <AlertDialog
+            open={deleteConfirmation}
+            onOpenChange={setDeleteConfirmation}
           >
-            <Trash className="size-4 fill-wurth-red-650" />
-            <span>Clear cart</span>
-          </Button>
+            <AlertDialogTrigger asChild>
+              <Button
+                variant="subtle"
+                className="flex-1 bg-red-50 font-bold text-wurth-red-650 hover:bg-red-100 md:flex-none"
+                disabled={deleteCartItemMutation.isPending}
+              >
+                <Trash className="size-4 fill-wurth-red-650" />
+                <span>Clear cart</span>
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Confirm Action</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Are you sure want to delete your cart?
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction onClick={() => handleClearCart()}>
+                  Confirm
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         )}
 
-        <Button className="flex-1 font-bold md:hidden" disabled={true}>
-          <Plus className="size-4 stroke-white" />
-          <span>Add an item</span>
-        </Button>
+        <div className="flex-1 md:hidden">
+          <DynamicAddMoreItemsSectionForMobile token={token} />
+        </div>
       </div>
     </ul>
   );

@@ -1,7 +1,5 @@
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import { cn } from "@/_lib/utils";
-import { Check } from "@repo/web-ui/components/icons/check";
-import { Button } from "@repo/web-ui/components/ui/button";
 import { cookies } from "next/headers";
 import { Suspense } from "react";
 import AddToCartForm from "./add-to-cart-form";
@@ -59,11 +57,6 @@ const AddToCart = ({
             <span className="font-semibold text-wurth-gray-800">{incQty}</span>
           </div>
         </div>
-
-        <Button variant="outline" disabled className="gap-1 md:py-2">
-          <Check className="size-4" />
-          <span>Compare</span>
-        </Button>
 
         <FavoriteButton productId={productId} token={sessionCookie.value} />
       </div>

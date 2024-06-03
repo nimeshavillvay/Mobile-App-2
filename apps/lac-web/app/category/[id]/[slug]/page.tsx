@@ -23,11 +23,8 @@ import Link from "next/link";
 import { Fragment, Suspense } from "react";
 import ProductsList from "./_products-list";
 import { getCategory } from "./apis";
-import { CategoriesGrid } from "./categories-grid";
-import SubCategoriesCollapsible from "./sub-categories-collapsible";
+import SubCategoriesList from "./sub-categories-list";
 import type { CategoryPageProps, SubCategory } from "./types";
-
-const VISIBLE_SUB_CATEGORIES_LENGTH = 6;
 
 export const generateMetadata = async ({
   params: { id, slug },
@@ -52,14 +49,6 @@ const CategoryPage = async ({ params: { id, slug } }: CategoryPageProps) => {
         title: subCategory.title,
         image: subCategory.image,
       }) satisfies SubCategory,
-  );
-  const visibleSubCategories = subCategories.slice(
-    0,
-    VISIBLE_SUB_CATEGORIES_LENGTH,
-  );
-  const hiddenSubCategories = subCategories.slice(
-    VISIBLE_SUB_CATEGORIES_LENGTH,
-    VISIBLE_SUB_CATEGORIES_LENGTH + category.subCategories.length,
   );
 
   return (
@@ -148,13 +137,7 @@ const CategoryPage = async ({ params: { id, slug } }: CategoryPageProps) => {
         </div>
       </section>
 
-      <section className="container my-10 space-y-6 md:my-16 md:space-y-9">
-        <CategoriesGrid categories={visibleSubCategories} priorityImages />
-
-        {hiddenSubCategories.length > 0 && (
-          <SubCategoriesCollapsible hiddenSubCategories={hiddenSubCategories} />
-        )}
-      </section>
+      <SubCategoriesList categories={subCategories} />
 
       <Suspense
         fallback={

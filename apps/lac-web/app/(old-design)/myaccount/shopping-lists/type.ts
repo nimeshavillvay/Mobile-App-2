@@ -44,6 +44,7 @@ export type ShoppingListItemsElementResponse = {
   txt_keywords?: string;
   list_price?: string;
   on_sale?: string;
+  is_new?: string;
   fclassid?: string;
   brand_name?: string;
   txt_group_code?: string;
@@ -92,6 +93,7 @@ export type ShoppingListItemsElement = {
   txtKeywords?: string;
   listPrice?: string;
   onSale?: string;
+  isNewItem?: string;
   fClassId?: string;
   brandName?: string;
   txtGroupCode?: string;

@@ -5,6 +5,12 @@ import dayjs from "dayjs";
 import type { ResponseCookie } from "next/dist/compiled/@edge-runtime/cookies";
 import { NextResponse, type NextRequest } from "next/server";
 
+const PUBLIC_ONLY_ROUTES = [
+  "/sign-in",
+  "/register",
+  "/forgot-password",
+  "/password-reset",
+];
 const PRIVATE_ROUTES = ["/osr", "/checkout", "/confirmation", "/myaccount"];
 
 export const middleware = async (request: NextRequest) => {
@@ -55,6 +61,20 @@ export const middleware = async (request: NextRequest) => {
     }
 
     return response;
+  }
+
+  // Check for public routes
+  const isPublicRoute = !!PUBLIC_ONLY_ROUTES.find((route) =>
+    request.nextUrl.pathname.startsWith(route),
+  );
+  if (isPublicRoute && sessionToken) {
+    const response = await loginCheck(sessionToken?.value);
+
+    if (response.status_code === "OK") {
+      // Redirect to home page if the user tries to access
+      // public only routes while logged in
+      return NextResponse.redirect(new URL("/", request.url));
+    }
   }
 
   // Check for private routes

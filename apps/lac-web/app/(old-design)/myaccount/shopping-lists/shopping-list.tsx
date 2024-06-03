@@ -5,11 +5,17 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/(old-design)/myaccount/shopping-lists/tabs";
+import {
+  ProductsGridDesktopContainer,
+  ProductsGridListSkeleton,
+  ProductsGridPaginationSkeleton,
+} from "@/_components/products-grid";
 import { Button } from "@repo/web-ui/components/ui/button";
 import { useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { MdOutlineAdd } from "react-icons/md";
 import useSuspenseShoppingList from "../../../_hooks/shopping-list/use-suspense-shopping-list.hook";
+import { ShoppingListHeaderSkeleton } from "./layouts";
 import ShoppingListDialog from "./shopping-list-dialog";
 import {
   ShoppingListEmptyItems,
@@ -80,19 +86,35 @@ const ShoppingList = ({ token }: { readonly token: string }) => {
           onClick={() => setIsOpenShoppingListDialog(true)}
         >
           <span className="sr-only">Create shopping list</span>
-          <MdOutlineAdd className="border-1   size-6 rounded-sm border-gray-100 bg-transparent font-bold text-black shadow" />
+          <MdOutlineAdd className="border-1 size-6 rounded-sm border-gray-100 bg-transparent font-bold text-black shadow" />
         </Button>
       </div>
 
-      {shoppingList ? (
-        <ShoppingListItems
-          token={token}
-          page={page}
-          shoppingList={shoppingList}
-        />
-      ) : (
-        <ShoppingListEmptyItems />
-      )}
+      <Suspense
+        fallback={
+          <>
+            <ShoppingListHeaderSkeleton />
+
+            <ProductsGridListSkeleton type="mobile" />
+
+            <ProductsGridDesktopContainer>
+              <ProductsGridListSkeleton type="desktop" />
+            </ProductsGridDesktopContainer>
+
+            <ProductsGridPaginationSkeleton />
+          </>
+        }
+      >
+        {shoppingList ? (
+          <ShoppingListItems
+            token={token}
+            page={page}
+            shoppingList={shoppingList}
+          />
+        ) : (
+          <ShoppingListEmptyItems />
+        )}
+      </Suspense>
 
       <ShoppingListDialog
         open={isOpenShoppingListDialog}

@@ -1,4 +1,3 @@
-import productImage from "@/_assets/images/product-item-image.png";
 import {
   getOrderDetails,
   getPaymentMethods,
@@ -179,7 +178,7 @@ const DesktopView = async ({ orderNo }: DesktopViewProps) => {
                       <tr className="border-b-wurth-gray-150 last:border-0 even:border-b">
                         <td rowSpan={2}>
                           <Image
-                            src={productImage} // TODO Add real image
+                            src={lineItem.itemImage}
                             alt={`An image of ${lineItem.itemDescription}`}
                             width={96}
                             height={96}
@@ -188,9 +187,12 @@ const DesktopView = async ({ orderNo }: DesktopViewProps) => {
                         </td>
 
                         <td>
-                          <h4 className="mx-2 text-sm font-medium text-wurth-gray-800">
-                            {lineItem.itemDescription}
-                          </h4>
+                          <h4
+                            className="mx-2 text-sm font-medium text-wurth-gray-800"
+                            dangerouslySetInnerHTML={{
+                              __html: lineItem.itemDescription,
+                            }}
+                          />
                         </td>
 
                         <td className="text-nowrap text-sm text-wurth-gray-800">

@@ -1,5 +1,6 @@
 import { api } from "@/_lib/api";
 import { DEFAULT_REVALIDATE } from "@/_lib/constants";
+import { getBoolean } from "@/_lib/utils";
 import { notFound } from "next/navigation";
 import "server-only";
 
@@ -53,6 +54,7 @@ type Product = {
     txt_keywords: string;
     list_price: string;
     on_sale: string;
+    is_new: string;
     fclassid: string;
     brand_name: string;
     txt_group_code: null;
@@ -108,7 +110,7 @@ export const getProduct = async (id: string, slug: string) => {
       isComparison: !!selected_item.is_comparison,
       isDirectlyShippedFromVendor:
         selected_item.is_directly_shipped_from_vendor ?? false,
-      isHazardous: selected_item.txt_hazardous === "Y",
+      isHazardous: getBoolean(selected_item.txt_hazardous),
       specialShipping: selected_item.txt_special_shipping,
       productIdOnSap: selected_item.txt_sap,
       mfrPartNo: selected_item.txt_mfn,
@@ -131,7 +133,8 @@ export const getProduct = async (id: string, slug: string) => {
       prop65MessageTwo: selected_item.txt_prop65_message_02,
       prop65MessageThree: selected_item.txt_prop65_message_03,
       listPrice: Number(selected_item.list_price),
-      isSaleItem: selected_item.on_sale === "Y",
+      isSaleItem: getBoolean(selected_item.on_sale),
+      isNewItem: getBoolean(selected_item.is_new),
       fClassId: Number(selected_item.fclassid),
       productStatus: selected_item.txt_x_pant_Mat_status,
       productThumbnail: selected_item.thumbnail_img,

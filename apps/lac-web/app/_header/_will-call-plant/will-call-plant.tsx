@@ -1,6 +1,8 @@
 "use client";
 
+import useSuspenseWillCallPlant from "@/_hooks/address/use-suspense-will-call-plant.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
+import { DEFAULT_PLANT } from "@/_lib/constants";
 import { Map } from "@repo/web-ui/components/icons/map";
 import { Phone } from "@repo/web-ui/components/icons/phone";
 import { Shop } from "@repo/web-ui/components/icons/shop";
@@ -16,9 +18,6 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@repo/web-ui/components/ui/drawer";
-import useSuspenseWillCallPlant from "./use-suspense-will-call-plant.hook";
-
-const DEFAULT_PLANT = "Brea, CA";
 
 type WillCallPlantProps = {
   readonly token: string;
@@ -37,7 +36,7 @@ const WillCallPlantDrawer = ({ token }: WillCallPlantProps) => {
         >
           <Shop width={16} height={16} />
 
-          <span>{plantName ?? DEFAULT_PLANT}</span>
+          <span>{plantName ?? DEFAULT_PLANT.name}</span>
         </Button>
       </DrawerTrigger>
 
@@ -120,7 +119,7 @@ const WillCallPlant = ({ token, ...delegated }: WillCallPlantProps) => {
       <div className="flex flex-row items-center gap-2 text-black">
         <Shop width={16} height={16} />
 
-        <span>{DEFAULT_PLANT}</span>
+        <span>{DEFAULT_PLANT.name}</span>
       </div>
     );
   }

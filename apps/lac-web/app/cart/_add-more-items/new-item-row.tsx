@@ -30,7 +30,11 @@ type NewItemRowProps = {
         }
       | undefined;
   };
-  readonly onChange: (value: string, type: string, index: number) => void;
+  readonly onChange: (
+    value: string,
+    isItemClick: boolean,
+    index: number,
+  ) => void;
   readonly lastEditedIndex: number;
   readonly setLastEditedIndex: (index: number) => void;
   readonly isPopupOpen: boolean;
@@ -76,8 +80,8 @@ const NewItemRow = ({
         }}
         value={lineItemFormData.sku}
         isInvalid={getLineItemStatus() ?? null}
-        onTextChange={(value, type) => {
-          onChange(value, type, index);
+        onTextChange={(value, isItemClick) => {
+          onChange(value, isItemClick, index);
           setLastEditedIndex(index);
         }}
         isPopupOpen={isPopupOpen && lastEditedIndex == index}

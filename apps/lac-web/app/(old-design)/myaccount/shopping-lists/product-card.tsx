@@ -1,8 +1,9 @@
 "use client";
 
+import SaleBadges from "@/_components/sale-badges";
 import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
-import { cn } from "@/_lib/utils";
+import { cn, getBoolean } from "@/_lib/utils";
 import {
   ProductCardContent,
   ProductCardDetails,
@@ -23,14 +24,23 @@ type ProductProps = {
   readonly token: string;
   readonly product: ShoppingListItemsElement;
   readonly listId: string;
+  readonly stretchWidth?: boolean;
 };
 
-const ProductCard = ({ orientation, token, product, listId }: ProductProps) => {
+const ProductCard = ({
+  orientation,
+  token,
+  product,
+  listId,
+  stretchWidth = false,
+}: ProductProps) => {
   const id = product.productId;
   const title = product.itemName;
   const image = product.img;
   const sku = product.txtWurthLacItem;
   const uom = product.txtUom;
+  const onSale = getBoolean(product.onSale);
+  const isNewItem = getBoolean(product.isNewItem);
   const href = `/product/${product.productId}/${product.slug}`;
 
   const removeShoppingListItemMutation = useRemoveShoppingListItemMutation();
@@ -72,12 +82,18 @@ const ProductCard = ({ orientation, token, product, listId }: ProductProps) => {
   return (
     <ProductCardRoot
       orientation={orientation}
-      className={cn(orientation === "vertical" && "h-[27rem]")}
+      className={cn(
+        "shrink-0 snap-start",
+        orientation === "horizontal" && "w-full",
+        stretchWidth && "md:w-full",
+      )}
     >
       <ProductCardHero>
         {discountPercent > 0 && (
           <ProductCardDiscount>{discountPercent}</ProductCardDiscount>
         )}
+
+        <SaleBadges onSale={onSale} isNewItem={isNewItem} />
 
         {!!image && !!title && (
           <ProductCardImage
