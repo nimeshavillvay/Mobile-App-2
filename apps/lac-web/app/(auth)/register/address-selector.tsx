@@ -132,7 +132,7 @@ const AddressList = ({
             <Button
               variant="outline"
               className={cn(
-                "flex h-fit w-full flex-row justify-start rounded-lg border-2 border-wurth-gray-150 p-4",
+                "flex h-fit w-full flex-row justify-start overflow-hidden rounded-lg border-2 border-wurth-gray-150 p-4",
                 selectedIndex === index && "border-wurth-gray-800",
               )}
               onClick={() => setSelectedIndex(index)}
