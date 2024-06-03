@@ -84,6 +84,10 @@ export const middleware = async (request: NextRequest) => {
   if (isPrivateRoute && sessionToken) {
     const response = await loginCheck(sessionToken?.value);
 
+    console.log("> isPrivateRoute: ", isPrivateRoute);
+    console.log("> sessionToken: ", sessionToken);
+    console.log("> response.status_code: ", response.status_code);
+
     if (response.status_code === "NOT_LOGGED_IN") {
       // Redirect to sign in page if user is not logged in
       return NextResponse.redirect(new URL("/sign-in", request.url));
