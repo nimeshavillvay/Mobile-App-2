@@ -227,9 +227,12 @@ const CartItemShippingMethod = ({
               plants: shipAlternativeBranch.plants,
               method: selectedShippingMethod,
               hash: shipAlternativeBranch.hash,
-              backOrderDate: shipAlternativeBranch?.plants?.[0]?.backOrderDate,
-              backOrderQuantity:
-                shipAlternativeBranch?.plants?.[0]?.backOrderQuantity,
+              backOrderDate: shipAlternativeBranch.backOrder
+                ? shipAlternativeBranch?.plants?.[0]?.backOrderDate
+                : "",
+              backOrderQuantity: shipAlternativeBranch.backOrder
+                ? shipAlternativeBranch?.plants?.[0]?.backOrderQuantity
+                : 0,
             }),
           );
         }
@@ -321,10 +324,12 @@ const CartItemShippingMethod = ({
                 plants: shipAlternativeBranch.plants,
                 method: shippingMethod,
                 hash: shipAlternativeBranch.hash,
-                backOrderDate:
-                  shipAlternativeBranch?.plants?.[0]?.backOrderDate,
-                backOrderQuantity:
-                  shipAlternativeBranch?.plants?.[0]?.backOrderQuantity,
+                backOrderDate: shipAlternativeBranch.backOrder
+                  ? shipAlternativeBranch?.plants?.[0]?.backOrderDate
+                  : "",
+                backOrderQuantity: shipAlternativeBranch.backOrder
+                  ? shipAlternativeBranch?.plants?.[0]?.backOrderQuantity
+                  : 0,
               }),
             );
           }
@@ -353,14 +358,18 @@ const CartItemShippingMethod = ({
       }
 
       if (shipToMe === ALTERNATIVE_BRANCHES && shipAlternativeBranch) {
+        console.log("shipAlternativeBranch", shipAlternativeBranch);
         onSave(
           getAlternativeBranchesConfig({
             plants: shipAlternativeBranch?.plants,
             method: defaultShippingMethod.code,
             hash: shipAlternativeBranch.hash,
-            backOrderDate: shipAlternativeBranch?.plants?.[0]?.backOrderDate,
-            backOrderQuantity:
-              shipAlternativeBranch?.plants?.[0]?.backOrderQuantity,
+            backOrderDate: shipAlternativeBranch.backOrder
+              ? shipAlternativeBranch?.plants?.[0]?.backOrderDate
+              : "",
+            backOrderQuantity: shipAlternativeBranch.backOrder
+              ? shipAlternativeBranch?.plants?.[0]?.backOrderQuantity
+              : 0,
           }),
         );
       }

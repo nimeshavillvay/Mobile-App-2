@@ -274,10 +274,12 @@ const CartItem = ({
                     shipAlternativeBranch.plants?.at(0)?.shippingMethods?.at(0)
                       ?.code ?? EMPTY_STRING,
                   hash: shipAlternativeBranch.hash,
-                  backOrderDate:
-                    shipAlternativeBranch?.plants?.[0]?.backOrderDate,
-                  backOrderQuantity:
-                    shipAlternativeBranch?.plants?.[0]?.backOrderQuantity,
+                  backOrderDate: shipAlternativeBranch.backOrder
+                    ? shipAlternativeBranch?.plants?.[0]?.backOrderDate
+                    : "",
+                  backOrderQuantity: shipAlternativeBranch.backOrder
+                    ? shipAlternativeBranch?.plants?.[0]?.backOrderQuantity
+                    : 0,
                 }),
               );
             } else if (backOrderAll) {
@@ -407,9 +409,12 @@ const CartItem = ({
             shipAlternativeBranch.plants?.at(0)?.shippingMethods?.at(0)?.code ??
             EMPTY_STRING,
           hash: shipAlternativeBranch.hash,
-          backOrderDate: shipAlternativeBranch?.plants?.[0]?.backOrderDate,
-          backOrderQuantity:
-            shipAlternativeBranch?.plants?.[0]?.backOrderQuantity,
+          backOrderDate: shipAlternativeBranch.backOrder
+            ? shipAlternativeBranch?.plants?.[0]?.backOrderDate
+            : "",
+          backOrderQuantity: shipAlternativeBranch.backOrder
+            ? shipAlternativeBranch?.plants?.[0]?.backOrderQuantity
+            : 0,
         }),
       );
     } else if (backOrderAll) {

@@ -46,6 +46,8 @@ export const getAlternativeBranchesConfig = ({
   plants,
   method,
   hash,
+  backOrderQuantity,
+  backOrderDate,
 }: {
   plants: {
     index: number;
@@ -59,6 +61,8 @@ export const getAlternativeBranchesConfig = ({
 }) => {
   let config: Partial<CartItemConfiguration> = {
     hashvalue: hash,
+    backorder_quantity: backOrderQuantity?.toString(),
+    backorder_date: backOrderDate,
   };
 
   const data = plants?.map((plant) => ({
