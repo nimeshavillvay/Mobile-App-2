@@ -475,6 +475,13 @@ const CartItem = ({
   useEffect(() => {
     // Check if matched availability option exists
     if (matchedAvailabilityOption) {
+      // Check if there is a selected shipping method
+      if (itemConfigShippingMethod?.length > 0) {
+        // Return early to prevent the selected option from being
+        // overridden by the first option in the availability options
+        return setSelectedShippingMethod(itemConfigShippingMethod);
+      }
+
       if (matchedAvailabilityOption.type === AVAILABLE_ALL) {
         setSelectedShippingOption(MAIN_OPTIONS.SHIP_TO_ME);
         setSelectedShipToMe(AVAILABLE_ALL);
@@ -486,10 +493,6 @@ const CartItem = ({
         setSelectedShipToMe(ALTERNATIVE_BRANCHES);
       } else if (matchedAvailabilityOption.type === BACK_ORDER_ALL) {
         setSelectedShippingOption(MAIN_OPTIONS.BACK_ORDER);
-      }
-      // Check if there is a selected shipping method
-      if (itemConfigShippingMethod && itemConfigShippingMethod !== "") {
-        setSelectedShippingMethod(itemConfigShippingMethod);
       }
     } else {
       // Check if hash matches with the will call hash
