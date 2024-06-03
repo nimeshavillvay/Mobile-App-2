@@ -1,17 +1,18 @@
+import AvailabilityStatus from "@/_components/availability-status";
 import QuantityInputField from "@/_components/quantity-input-field";
 import useDeleteCartItemMutation from "@/_hooks/cart/use-delete-cart-item-mutation.hook";
 import useUpdateCartItemMutation from "@/_hooks/cart/use-update-cart-item-mutation.hook";
 import useDebouncedState from "@/_hooks/misc/use-debounced-state.hook";
 import useSuspenseCheckAvailability from "@/_hooks/product/use-suspense-check-availability.hook";
-import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
-import { DEFAULT_PLANT } from "@/_lib/constants";
+import { DEFAULT_PLANT, NOT_IN_STOCK } from "@/_lib/constants";
 import type {
   CartConfiguration,
   CartItemConfiguration,
   Plant,
+  Token,
 } from "@/_lib/types";
-import { cn, formatNumberToPrice } from "@/_lib/utils";
+import { cn } from "@/_lib/utils";
 import { NUMBER_TYPE } from "@/_lib/zod-helper";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Alert } from "@repo/web-ui/components/icons/alert";
@@ -30,6 +31,7 @@ import {
 import { Button } from "@repo/web-ui/components/ui/button";
 import { Input } from "@repo/web-ui/components/ui/input";
 import { Label } from "@repo/web-ui/components/ui/label";
+import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import Image from "next/image";
 import Link from "next/link";
 import { Suspense, useDeferredValue, useEffect, useId, useState } from "react";
@@ -41,12 +43,10 @@ import {
   AVAILABLE_ALL,
   BACK_ORDER_ALL,
   EMPTY_STRING,
-  IN_STOCK,
-  LIMITED_STOCK,
   MAIN_OPTIONS,
-  NOT_IN_STOCK,
   TAKE_ON_HAND,
 } from "../constants";
+import CartItemPrice from "./cart-item-price";
 import CartItemShippingMethod from "./cart-item-shipping-method";
 import FavoriteButton from "./favorite-button";
 import FavoriteButtonSkeleton from "./favorite-button-skeleton";
@@ -66,7 +66,7 @@ const cartItemSchema = z.object({
 });
 
 type CartItemProps = {
-  readonly token: string;
+  readonly token: Token;
   readonly product: {
     id: number;
     title: string;
@@ -98,15 +98,19 @@ const CartItem = ({
 
   const itemConfigHash = product?.configuration?.hashvalue;
   const itemConfigShippingMethod = product?.configuration?.shipping_method_1;
+  const itemConfigWillCallPlant = product?.configuration?.will_call_plant;
 
   const checkLoginQuery = useSuspenseCheckLogin(token);
 
   const [deleteConfirmation, setDeleteConfirmation] = useState(false);
   const [selectedWillCallPlant, setSelectedWillCallPlant] = useState(() => {
-    if (willCallPlant?.plantCode) {
+    if (itemConfigWillCallPlant && itemConfigWillCallPlant !== "") {
+      return itemConfigWillCallPlant;
+    } else if (willCallPlant?.plantCode) {
       return willCallPlant.plantCode;
+    } else {
+      return plants?.at(0)?.code ?? DEFAULT_PLANT.code;
     }
-    return plants?.at(0)?.code ?? "";
   });
 
   const [selectedShippingOption, setSelectedShippingOption] =
@@ -131,12 +135,6 @@ const CartItem = ({
   const deleteCartItemMutation = useDeleteCartItemMutation(token);
   const checkAvailabilityMutation = useCheckAvailabilityMutation(token);
 
-  const priceCheckQuery = useSuspensePriceCheck(token, [
-    { productId: product.id, qty: deferredQuantity },
-  ]);
-
-  const priceData = priceCheckQuery.data.productPrices[0];
-
   const checkAvailabilityQuery = useSuspenseCheckAvailability(token, {
     productId: product.id,
     qty: Number(deferredQuantity ?? product.quantity),
@@ -151,7 +149,7 @@ const CartItem = ({
   } = checkAvailabilityQuery.data;
 
   const homeBranchAvailability = availableLocations?.find(
-    (location) => location.location === willCallPlant?.plantCode,
+    ({ location }) => location === willCallPlant?.plantCode,
   );
 
   const willCallHash = willCallAnywhere?.hash;
@@ -318,6 +316,22 @@ const CartItem = ({
     ]);
   };
 
+  const handlePriceOverride = (newPrice: number) => {
+    const data = getValues();
+
+    updateCartConfigMutation.mutate([
+      {
+        cartItemId: product.cartItemId,
+        quantity: Number(data.quantity),
+        price: newPrice,
+        config: {
+          ...product.configuration,
+          poOrJobName: data.po,
+        },
+      },
+    ]);
+  };
+
   const handleDeleteCartItem = () => {
     deleteCartItemMutation.mutate(
       {
@@ -441,14 +455,13 @@ const CartItem = ({
         setSelectedShippingOption(MAIN_OPTIONS.BACK_ORDER);
       }
       // Check if there is a selected shipping method
-      if (itemConfigShippingMethod !== "") {
+      if (itemConfigShippingMethod && itemConfigShippingMethod !== "") {
         setSelectedShippingMethod(itemConfigShippingMethod);
       }
     } else {
       // Check if hash matches with the will call hash
       if (willCallHash === itemConfigHash) {
         setSelectedShippingOption(MAIN_OPTIONS.WILL_CALL);
-        // setSelectedWillCallPlant(willCallAnywhere?.willCallPlant);
       } else {
         // Update the cart config with default option based on the priority
         // TODO - There is a mismatch in hashes when initial page load due to selectedWillCallPlant state reset to default
@@ -509,24 +522,15 @@ const CartItem = ({
         </div>
 
         <form className="flex-1 space-y-2 md:space-y-1">
-          <div className="flex flex-row items-center md:hidden">
-            <div className="text-lg text-green-700">
-              ${formatNumberToPrice(priceData?.extendedPrice)}
-            </div>
-
-            <div className="ml-2 text-sm font-medium text-wurth-gray-500">
-              ${formatNumberToPrice(priceData?.price)}/{priceData?.priceUnit}
-            </div>
-
-            {priceData?.listPrice &&
-              priceData?.price &&
-              priceData?.listPrice > priceData?.price && (
-                <div className="ml-1 text-[13px] leading-5 text-wurth-gray-500 line-through">
-                  ${formatNumberToPrice(priceData?.listPrice)}/
-                  {priceData?.priceUnit}
-                </div>
-              )}
-          </div>
+          <Suspense fallback={<Skeleton className="h-7 w-full" />}>
+            <CartItemPrice
+              token={token}
+              quantity={deferredQuantity}
+              productId={product.id}
+              onPriceChange={handlePriceOverride}
+              type="mobile"
+            />
+          </Suspense>
 
           <h2 className="line-clamp-3 text-sm font-medium text-black">
             <Balancer>{product.title}</Balancer>
@@ -654,7 +658,7 @@ const CartItem = ({
           ))}
 
         {checkLoginQuery.data.status_code === "OK" && (
-          <Suspense>
+          <Suspense fallback={<Skeleton className="h-48 w-full" />}>
             <RegionalExclusionAndShippingMethods
               token={token}
               productId={product.id}
@@ -677,24 +681,15 @@ const CartItem = ({
       </div>
 
       <div className="hidden space-y-3 md:block md:shrink-0">
-        <div className="flex flex-col items-end text-right">
-          <div className="text-lg text-green-700">
-            ${formatNumberToPrice(priceData?.extendedPrice)}
-          </div>
-
-          <div className="ml-2 text-sm font-medium text-wurth-gray-500">
-            ${formatNumberToPrice(priceData?.price)}/{priceData?.priceUnit}
-          </div>
-
-          {!!priceData?.listPrice &&
-            !!priceData?.price &&
-            priceData?.listPrice > priceData?.price && (
-              <div className="ml-1 text-[13px] leading-5 text-wurth-gray-500 line-through">
-                ${formatNumberToPrice(priceData?.listPrice)}/
-                {priceData?.priceUnit}
-              </div>
-            )}
-        </div>
+        <Suspense fallback={<Skeleton className="h-[4.25rem] w-full" />}>
+          <CartItemPrice
+            token={token}
+            quantity={deferredQuantity}
+            productId={product.id}
+            onPriceChange={handlePriceOverride}
+            type="desktop"
+          />
+        </Suspense>
 
         <div className="flex flex-col gap-2">
           <Button
@@ -743,44 +738,3 @@ const CartItem = ({
 };
 
 export default CartItem;
-
-const AvailabilityStatus = ({
-  availabilityStatus,
-  amount,
-  branch,
-}: {
-  readonly availabilityStatus: string;
-  readonly amount: number;
-  readonly branch: string;
-}) => {
-  const isLimitedStock = availabilityStatus === LIMITED_STOCK && amount > 0;
-  const isInStock = availabilityStatus === IN_STOCK && amount > 0;
-  let statusText = "";
-
-  if (isInStock) {
-    statusText = `${amount} in stock`;
-  } else if (isLimitedStock) {
-    statusText = `Only ${amount} in stock`;
-  } else {
-    statusText = "Out of stock";
-  }
-
-  return (
-    <div className="text-sm text-wurth-gray-800">
-      <span
-        className={cn(
-          "font-semibold",
-          isInStock
-            ? "text-green-700"
-            : isLimitedStock
-              ? "text-yellow-700"
-              : "text-red-700",
-        )}
-      >
-        {statusText}
-      </span>
-      &nbsp;at&nbsp;
-      {branch}
-    </div>
-  );
-};

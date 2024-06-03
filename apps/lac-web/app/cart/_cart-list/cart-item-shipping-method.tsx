@@ -1,3 +1,4 @@
+import { IN_STOCK, LIMITED_STOCK, NOT_IN_STOCK } from "@/_lib/constants";
 import type {
   CartItemConfiguration,
   Plant,
@@ -39,10 +40,7 @@ import {
   AVAILABLE_ALL,
   BACK_ORDER_ALL,
   EMPTY_STRING,
-  IN_STOCK,
-  LIMITED_STOCK,
   MAIN_OPTIONS,
-  NOT_IN_STOCK,
   TAKE_ON_HAND,
 } from "../constants";
 import type { Availability } from "../types";
