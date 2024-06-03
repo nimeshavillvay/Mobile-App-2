@@ -15,3 +15,6 @@ export const MAIN_OPTIONS = {
 export const EMPTY_STRING = "" as const;
 export const TRUE_STRING = "T" as const;
 export const FALSE_STRING = "F" as const;
+
+// Excluded shipping methods
+export const EXCLUDED_SHIPPING_METHODS = ["W"] as const;
