@@ -34,6 +34,7 @@ export type ItemInfo = {
   prop65MessageThree: string;
   listPrice: number;
   isSaleItem: boolean;
+  isNewItem: boolean;
   fClassId: number;
   class: string;
   attributes: Attributes[];
@@ -192,6 +193,7 @@ export type GroupList = {
 
     list_price: string;
     on_sale: string;
+    is_new: string;
     is_directly_shipped_from_vendor: boolean;
   }[];
   variationsCount: number;
@@ -320,6 +322,7 @@ export type Cart = {
       txt_keywords: string;
       list_price: string;
       on_sale: string;
+      is_new: string;
       fclassid: null;
       brand_name: string;
       txt_group_code: null;
@@ -365,6 +368,8 @@ export type ProductVariant = {
   title: string;
   image: string;
   uom: string;
+  onSale?: boolean;
+  isNewItem?: boolean;
 };
 
 export type Product = {

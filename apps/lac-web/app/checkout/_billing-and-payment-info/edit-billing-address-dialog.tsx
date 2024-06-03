@@ -136,6 +136,7 @@ const EditBillingAddressDialog = ({ token }: EditBillingAddressDialogProps) => {
               // Reset the form and clear the suggestions
               form.reset();
               setSuggestions([]);
+              closeDialog();
             }
           },
         },

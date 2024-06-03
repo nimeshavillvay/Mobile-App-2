@@ -34,30 +34,41 @@ const formSchema = z
       message: "Please enter a valid card number.",
     }),
     brand: z.string().min(1),
-    date: z.string().min(5),
+    date: z.string().min(5).max(5),
     save: z.boolean(),
   })
   .superRefine((data, ctx) => {
-    const [month, year] = data.date.split("/");
-
-    if (month && year) {
-      const date = dayjs()
-        .set("month", parseInt(month) - 1)
-        .set("year", parseInt(year) + 2000);
-
-      if (!date.isValid() || date.isBefore(dayjs(), "month")) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "Please enter a valid Expiration date",
-          path: ["date"],
-        });
-      }
-    } else {
+    const addExpiryDateIssue = () => {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         message: "Please enter a valid Expiration date",
         path: ["date"],
       });
+    };
+
+    const [month, year] = data.date.split("/");
+
+    if (month && year) {
+      // Check if the month and year are exactly two characters
+      if (month.length !== 2 || year.length !== 2) {
+        return addExpiryDateIssue();
+      }
+
+      // Check if the month is valid
+      if (parseInt(month) < 1 || parseInt(month) > 12) {
+        return addExpiryDateIssue();
+      }
+
+      // Check if the date is valid
+      const date = dayjs()
+        .set("month", parseInt(month) - 1)
+        .set("year", parseInt(year) + 2000);
+
+      if (!date.isValid() || date.isBefore(dayjs(), "month")) {
+        return addExpiryDateIssue();
+      }
+    } else {
+      return addExpiryDateIssue();
     }
   });
 

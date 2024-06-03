@@ -111,6 +111,11 @@ const UserProfileDropdown = ({
   const osrLogoutMutation = useOSRLogoutMutation();
 
   const [openShippingDialog, setOpenShippingDialog] = useState(false);
+  const displayName = userProfile.firstName
+    ? userProfile.firstName.concat(" ").concat(userProfile.lastName)
+    : userProfile.lastName
+      ? userProfile.lastName
+      : "User";
 
   return (
     <>
@@ -142,9 +147,7 @@ const UserProfileDropdown = ({
 
         <DropdownMenuContent className="w-56 p-0">
           <DropdownMenuItem className="mb-1 block bg-wurth-gray-50 p-3">
-            <div className="font-medium">
-              {userProfile.firstName} {userProfile.lastName}
-            </div>
+            <div className="font-medium">{displayName}</div>
 
             {isOSRLoggedInAsCustomer && (
               <div>Logged in as {customerDetails}</div>
