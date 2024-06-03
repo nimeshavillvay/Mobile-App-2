@@ -608,6 +608,7 @@ const CartItem = ({
                     step={product.increment}
                     disabled={checkAvailabilityQuery.isPending}
                   />
+
                   <span
                     className={cn(
                       "rounded-r border border-l-0 p-1 pr-1.5 lowercase text-zinc-500",
