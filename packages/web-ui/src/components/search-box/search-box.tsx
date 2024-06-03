@@ -144,7 +144,7 @@ export const SearchBoxInput = ({
       <div className="relative flex items-center">
         <input
           className={cn(
-            "placeholder-text-wurth-gray-400 w-full min-w-0 flex-1 shrink rounded-full border-0 py-2.5 pl-3.5 pr-12 text-sm", // Adjust padding for buttons
+            "placeholder-text-wurth-gray-400 w-full min-w-0 flex-1 shrink rounded-full border-0 py-2.5 pl-3.5 pr-32 text-sm",
             className,
           )}
           {...delegated}

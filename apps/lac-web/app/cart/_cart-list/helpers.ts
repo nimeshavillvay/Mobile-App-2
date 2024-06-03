@@ -51,27 +51,29 @@ export const getAlternativeBranchesConfig = ({
   plants,
   method,
   hash,
+  backOrderQuantity,
+  backOrderDate,
 }: {
   plants: {
     index: number;
     quantity?: number;
     plant: string;
-    backOrderQuantity?: number;
-    backOrderDate?: string;
   }[];
   method: string;
   hash: string;
+  backOrderQuantity?: number;
+  backOrderDate?: string;
 }) => {
   let config: Partial<CartItemConfiguration> = {
     hashvalue: hash,
+    backorder_quantity: backOrderQuantity?.toString(),
+    backorder_date: backOrderDate,
   };
 
   const data = plants?.map((plant) => ({
     [`avail_${plant?.index}`]: (plant?.quantity ?? 0).toString(),
     [`plant_${plant?.index}`]: plant?.plant ?? "",
     [`shipping_method_${plant?.index}`]: method,
-    [`backorder_quantity`]: plant?.backOrderQuantity?.toString(),
-    [`backorder_date`]: plant?.backOrderDate,
   }));
 
   config = Object.assign(config, ...data);

@@ -11,15 +11,14 @@ export const MAIN_OPTIONS = {
   BACK_ORDER: "back-order",
 } as const;
 
-// Availability statuses
-export const IN_STOCK = "inStock" as const;
-export const LIMITED_STOCK = "limitedStock" as const;
-export const NOT_IN_STOCK = "notInStock" as const;
-
 // Cart config values
 export const EMPTY_STRING = "" as const;
 export const TRUE_STRING = "T" as const;
 export const FALSE_STRING = "F" as const;
 
-// Excluded shipping methods
+export const DEFAULT_PLANT = "L010";
+
+export const BACKORDER_ENABLED = "T";
+export const BACKORDER_DISABLED = "F";
+
 export const EXCLUDED_SHIPPING_METHODS = ["W"] as const;

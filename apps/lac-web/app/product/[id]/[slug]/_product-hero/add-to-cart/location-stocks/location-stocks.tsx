@@ -1,8 +1,10 @@
 "use client";
 
+import useSuspenseWillCallPlant from "@/_hooks/address/use-suspense-will-call-plant.hook";
 import useDebouncedState from "@/_hooks/misc/use-debounced-state.hook";
 import useSuspenseCheckAvailability from "@/_hooks/product/use-suspense-check-availability.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
+import { LIMITED_STOCK, NOT_IN_STOCK } from "@/_lib/constants";
 import { cn } from "@/_lib/utils";
 import { ChevronRight } from "@repo/web-ui/components/icons/chevron-right";
 import { Button } from "@repo/web-ui/components/ui/button";
@@ -29,11 +31,20 @@ const LocationStocks = ({ token, productId }: LocationStocksProps) => {
     productId,
     qty: deferredQuantity,
   });
-  const firstLocation = checkAvailabilityQuery.data.availableLocations[0];
-  const otherLocations =
-    checkAvailabilityQuery.data.availableLocations.slice(1);
-  const isBackordered = checkAvailabilityQuery.data.status === "notInStock";
-  const isLimitedStock = checkAvailabilityQuery.data.status === "limitedStock";
+  const willCallPlantQuery = useSuspenseWillCallPlant(token);
+
+  const willCallPlant = willCallPlantQuery.data;
+  const willCallPlantCode = willCallPlant?.plantCode;
+  const { availableLocations, status } = checkAvailabilityQuery.data;
+
+  const homeBranch = availableLocations?.find(
+    (location) => location.location === willCallPlantCode,
+  );
+  const otherLocations = availableLocations?.filter(
+    ({ location }) => location !== willCallPlantCode,
+  );
+  const isNotInStock = status === NOT_IN_STOCK;
+  const isLimitedStock = status === LIMITED_STOCK;
 
   const checkLoginQuery = useSuspenseCheckLogin(token);
 
@@ -44,26 +55,26 @@ const LocationStocks = ({ token, productId }: LocationStocksProps) => {
           <div
             className={cn(
               "rounded px-4 py-2 text-sm font-semibold leading-4 md:px-2 md:py-1",
-              isBackordered || isLimitedStock
+              isNotInStock || isLimitedStock || !homeBranch
                 ? "bg-yellow-50 text-yellow-700"
                 : "bg-green-50 text-green-700",
             )}
           >
-            {isBackordered
+            {isNotInStock || !homeBranch
               ? "Backordered"
               : isLimitedStock
                 ? "Limited Stock"
                 : "In Stock"}
           </div>
 
-          {!isBackordered && (
+          {homeBranch && !isNotInStock && (
             <div className="text-sm font-medium text-wurth-gray-800">
-              {firstLocation?.amount} in stock at {firstLocation?.name}
+              {homeBranch?.amount} in stock at {homeBranch?.name}
             </div>
           )}
         </div>
 
-        {checkLoginQuery.data.status_code === "OK" && !isBackordered && (
+        {checkLoginQuery.data.status_code === "OK" && !isNotInStock && (
           <CollapsibleTrigger
             className="group flex h-fit w-full flex-row items-center justify-between font-bold md:w-fit md:px-2 md:py-0.5"
             asChild
