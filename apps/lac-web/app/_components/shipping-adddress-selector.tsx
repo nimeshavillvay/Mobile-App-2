@@ -18,6 +18,7 @@ import {
 } from "@repo/web-ui/components/ui/dialog";
 import { useToast } from "@repo/web-ui/components/ui/toast";
 import { useState, type ReactNode } from "react";
+import AddShippingAddressDialog from "./add-shipping-address-dialog";
 
 type ShippingAddressSelectorProps = {
   readonly token: Token;
@@ -39,6 +40,8 @@ const ShippingAddressSelector = ({
   const [selectedAddress, setSelectedAddress] = useState(
     defaultAddress?.xcAddressId ?? "",
   );
+
+  const [openNewAddressDialog, setOpenNewAddressDialog] = useState(false);
 
   const updateShippingAddressMutation = useUpdateShippingAddressMutation();
 
@@ -67,61 +70,83 @@ const ShippingAddressSelector = ({
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>{children}</DialogTrigger>
+    <>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogTrigger asChild>{children}</DialogTrigger>
 
-      <DialogContent className="max-w-[34.375rem]">
-        <DialogHeader>
-          <DialogTitle>Change Shipping Address</DialogTitle>
-        </DialogHeader>
+        <DialogContent className="max-w-[34.375rem]">
+          <DialogHeader>
+            <DialogTitle>Change Shipping Address</DialogTitle>
+          </DialogHeader>
 
-        <ul className="flex max-h-[60vh] flex-col gap-4 overflow-y-scroll">
-          {shippingAddressListQuery.data.map((address) => (
-            <li key={address.xcAddressId}>
-              <Button
-                variant="outline"
-                className={cn(
-                  "flex h-fit w-full flex-row justify-start gap-2 rounded-lg border-2 border-wurth-gray-150 px-4 py-4",
-                  address.xcAddressId === selectedAddress && "border-black",
-                )}
-                onClick={() => setSelectedAddress(address.xcAddressId ?? "")}
-                disabled={updateShippingAddressMutation.isPending}
-              >
-                <span>
-                  {address.xcAddressId === selectedAddress ? (
-                    <CheckCircleFilled
-                      width={20}
-                      height={20}
-                      className="fill-black"
-                    />
-                  ) : (
-                    <CheckCircle
-                      width={20}
-                      height={20}
-                      className="stroke-wurth-gray-150"
-                    />
+          <ul className="flex max-h-[60vh] flex-col gap-4 overflow-y-scroll">
+            {shippingAddressListQuery.data.map((address) => (
+              <li key={address.xcAddressId}>
+                <Button
+                  variant="outline"
+                  className={cn(
+                    "flex h-fit w-full flex-row justify-start gap-2 rounded-lg border-2 border-wurth-gray-150 px-4 py-4",
+                    address.xcAddressId === selectedAddress && "border-black",
                   )}
-                </span>
+                  onClick={() => setSelectedAddress(address.xcAddressId ?? "")}
+                  disabled={updateShippingAddressMutation.isPending}
+                >
+                  <span>
+                    {address.xcAddressId === selectedAddress ? (
+                      <CheckCircleFilled
+                        width={20}
+                        height={20}
+                        className="fill-black"
+                      />
+                    ) : (
+                      <CheckCircle
+                        width={20}
+                        height={20}
+                        className="stroke-wurth-gray-150"
+                      />
+                    )}
+                  </span>
 
-                <span className="text-wrap text-start text-sm text-wurth-gray-800 md:text-base">
-                  <FullAddress address={address} />
-                </span>
-              </Button>
-            </li>
-          ))}
-        </ul>
+                  <span className="text-wrap text-start text-sm text-wurth-gray-800 md:text-base">
+                    <FullAddress address={address} />
+                  </span>
+                </Button>
+              </li>
+            ))}
+          </ul>
 
-        <DialogFooter>
-          <Button
-            className="font-bold"
-            onClick={changeDefaultAddress}
-            disabled={updateShippingAddressMutation.isPending}
-          >
-            Confirm
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              className="font-bold"
+              onClick={() => {
+                setOpen(false);
+                setOpenNewAddressDialog(true);
+              }}
+              disabled={updateShippingAddressMutation.isPending}
+            >
+              Add new address
+            </Button>
+
+            <Button
+              className="font-bold"
+              onClick={changeDefaultAddress}
+              disabled={updateShippingAddressMutation.isPending}
+            >
+              Confirm
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <AddShippingAddressDialog
+        open={openNewAddressDialog}
+        closeDialog={() => {
+          setOpen(true);
+          setOpenNewAddressDialog(false);
+        }}
+      />
+    </>
   );
 };
 
