@@ -1,11 +1,11 @@
 "use client";
 
-import AvailabilityStatus from "@/_components/availability-status";
 import useSuspenseWillCallPlant from "@/_hooks/address/use-suspense-will-call-plant.hook";
 import useDebouncedState from "@/_hooks/misc/use-debounced-state.hook";
 import useSuspenseCheckAvailability from "@/_hooks/product/use-suspense-check-availability.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
-import { DEFAULT_PLANT, NOT_IN_STOCK } from "@/_lib/constants";
+import { LIMITED_STOCK, NOT_IN_STOCK } from "@/_lib/constants";
+import { cn } from "@/_lib/utils";
 import { ChevronRight } from "@repo/web-ui/components/icons/chevron-right";
 import { Button } from "@repo/web-ui/components/ui/button";
 import {
@@ -35,7 +35,6 @@ const LocationStocks = ({ token, productId }: LocationStocksProps) => {
 
   const willCallPlant = willCallPlantQuery.data;
   const willCallPlantCode = willCallPlant?.plantCode;
-  const willCallPlantName = willCallPlant?.plantName;
   const { availableLocations, status } = checkAvailabilityQuery.data;
 
   const homeBranch = availableLocations?.find(
@@ -45,6 +44,7 @@ const LocationStocks = ({ token, productId }: LocationStocksProps) => {
     ({ location }) => location !== willCallPlantCode,
   );
   const isNotInStock = status === NOT_IN_STOCK;
+  const isLimitedStock = status === LIMITED_STOCK;
 
   const checkLoginQuery = useSuspenseCheckLogin(token);
 
@@ -52,18 +52,25 @@ const LocationStocks = ({ token, productId }: LocationStocksProps) => {
     <Collapsible className="flex flex-col gap-1">
       <div className="space-y-2 py-1 md:flex md:flex-row md:items-center md:justify-between md:space-y-0">
         <div className="flex shrink-0 flex-row items-center gap-2">
-          {homeBranch ? (
-            <AvailabilityStatus
-              availabilityStatus={status}
-              amount={homeBranch?.amount ?? 0}
-              branch={homeBranch?.name ?? ""}
-            />
-          ) : (
-            <AvailabilityStatus
-              availabilityStatus={NOT_IN_STOCK}
-              amount={0}
-              branch={willCallPlantName ?? DEFAULT_PLANT.name}
-            />
+          <div
+            className={cn(
+              "rounded px-4 py-2 text-sm font-semibold leading-4 md:px-2 md:py-1",
+              isNotInStock || isLimitedStock || !homeBranch
+                ? "bg-yellow-50 text-yellow-700"
+                : "bg-green-50 text-green-700",
+            )}
+          >
+            {isNotInStock || !homeBranch
+              ? "Backordered"
+              : isLimitedStock
+                ? "Limited Stock"
+                : "In Stock"}
+          </div>
+
+          {homeBranch && !isNotInStock && (
+            <div className="text-sm font-medium text-wurth-gray-800">
+              {homeBranch?.amount} in stock at {homeBranch?.name}
+            </div>
           )}
         </div>
 
