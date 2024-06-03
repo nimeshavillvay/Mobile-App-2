@@ -1,5 +1,5 @@
 import { StaticPageMainTitle } from "@/(old-design)/_components/static-page-main-title";
-import { StaticPageSecondaryTitle } from "@/(old-design)/_components/static-page-secondary-title";
+import { StaticPageSubTitle } from "@/(old-design)/_components/static-page-sub-title";
 import VisuallyHidden from "@/old/_components/visually-hidden";
 import type { Metadata } from "next";
 import Image from "next/image";
@@ -79,7 +79,7 @@ const CompliancePage = () => {
           </div>
         </div>
 
-        {StaticPageSecondaryTitle("Reporting Hotline Speak Up")}
+        {StaticPageSubTitle("Reporting Hotline Speak Up")}
 
         <p>
           Our Code of Compliance represents our commitment to treat each other
