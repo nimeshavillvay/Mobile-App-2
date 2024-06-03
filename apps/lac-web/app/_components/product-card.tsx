@@ -22,6 +22,7 @@ import { Suspense, useState, type ComponentProps } from "react";
 import ProductCardActionsForLoggedIn from "./product-card-actions-for-logged-in";
 import ProductCardVariantSelectorForLoggedIn from "./product-card-variant-selector-for-logged-in";
 import ProductCardVariantSelectorSkeleton from "./product-card-variant-selector-skeleton";
+import SaleBadges from "./sale-badges";
 
 type ProductProps = {
   readonly orientation?: ComponentProps<typeof ProductCardRoot>["orientation"];
@@ -67,14 +68,20 @@ const ProductCard = ({
   let id = "";
   let sku = "";
   let uom = "";
+  let onSale = false;
+  let isNewItem = false;
   if (selectedVariant) {
     id = selectedVariant.id;
     sku = selectedVariant.sku;
     uom = selectedVariant.uom;
+    onSale = selectedVariant.onSale ?? false;
+    isNewItem = selectedVariant.isNewItem ?? false;
   } else if (defaultVariant) {
     id = defaultVariant.id;
     sku = defaultVariant.sku;
     uom = defaultVariant.uom;
+    onSale = defaultVariant.onSale ?? false;
+    isNewItem = defaultVariant.isNewItem ?? false;
   }
 
   // Get Product Title
@@ -132,6 +139,8 @@ const ProductCard = ({
         {discountPercent > 0 && (
           <ProductCardDiscount>{discountPercent}</ProductCardDiscount>
         )}
+
+        <SaleBadges onSale={onSale} isNewItem={isNewItem} />
 
         <ProductCardImage
           src={image}

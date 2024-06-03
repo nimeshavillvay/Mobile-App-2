@@ -237,30 +237,13 @@ const PriceCheck = ({
   readonly productId: number;
   readonly uom: string;
 }) => {
-  const { watch } = useFormContext<VerificationDialogSchema>();
-  const quantity = watch("quantity");
-
   const priceCheckQuery = useSuspensePriceCheck(token, [{ productId, qty: 1 }]);
   const priceData = priceCheckQuery.data.productPrices[0];
 
-  let currentPrice = 0;
-  let previousPrice = 0;
-
-  if (priceData) {
-    // First both get the normal price
-    currentPrice = priceData.price;
-    previousPrice = priceData.price;
-
-    // Then look for the discounted price in the breakdowns
-    const breakdown = priceData.priceBreakDowns.findLast(
-      (breakdown) => quantity >= breakdown.quantity,
-    );
-    if (breakdown) {
-      currentPrice = breakdown.price;
-    }
-  }
-
-  const isDiscounted = currentPrice !== previousPrice;
+  const isDiscounted =
+    priceData?.price &&
+    priceData?.listPrice &&
+    priceData?.price < priceData?.listPrice;
 
   return (
     <div className="flex flex-col gap-1">
@@ -274,12 +257,12 @@ const PriceCheck = ({
             isDiscounted ? "text-green-700" : "text-inherit",
           )}
         >
-          {currentPrice}
+          {priceData?.price}
         </span>
 
         {isDiscounted && (
           <span className="text-base leading-6 text-wurth-gray-400 line-through">
-            {previousPrice}
+            {priceData?.listPrice}
           </span>
         )}
 

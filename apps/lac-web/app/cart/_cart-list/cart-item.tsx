@@ -709,14 +709,14 @@ const AvailabilityStatus = ({
   readonly amount: number;
   readonly branch: string;
 }) => {
-  const isLimitedStock = availabilityStatus === LIMITED_STOCK;
-  const isInStock = availabilityStatus === IN_STOCK;
+  const isLimitedStock = availabilityStatus === LIMITED_STOCK && amount > 0;
+  const isInStock = availabilityStatus === IN_STOCK && amount > 0;
   let statusText = "";
 
   if (isInStock) {
-    statusText = `${amount ?? 0} in stock`;
+    statusText = `${amount} in stock`;
   } else if (isLimitedStock) {
-    statusText = `Only ${amount ?? 0} in stock`;
+    statusText = `Only ${amount} in stock`;
   } else {
     statusText = "Out of stock";
   }

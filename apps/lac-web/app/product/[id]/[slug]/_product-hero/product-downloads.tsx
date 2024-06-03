@@ -79,7 +79,7 @@ const DownloadLink = ({
     >
       <Download width={20} height={20} className="mt-1 shrink-0" />
 
-      <span className="text-wrap text-left text-sm font-semibold text-wurth-gray-800">
+      <span className="max-w-full text-wrap text-left text-sm font-semibold text-wurth-gray-800">
         {title}
       </span>
     </a>
