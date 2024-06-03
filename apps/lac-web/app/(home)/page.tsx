@@ -95,12 +95,12 @@ const HomePage = async () => {
                 </div>
               )}
 
-              <h3 className="font-title text-2xl font-medium leading-7 text-[var(--text-color)] md:text-[2.75rem] md:leading-[3rem]">
+              <h3 className="whitespace-normal text-wrap font-title text-2xl font-medium leading-7 text-[var(--text-color)] md:text-[2.75rem] md:leading-[3rem]">
                 <Balancer>{ad.title}</Balancer>
               </h3>
 
               {ad.type === "spotlight" && (
-                <div className="text-wrap text-xs font-medium text-[var(--text-color)] md:mt-2 md:text-base">
+                <div className="whitespace-normal text-wrap text-xs font-medium text-[var(--text-color)] md:mt-2 md:text-base">
                   {ad.subtitle}
                 </div>
               )}
