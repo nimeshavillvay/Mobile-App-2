@@ -43,7 +43,7 @@ const ProductPrices = ({
       <div className="flex flex-row items-end gap-1 text-lg leading-6 text-wurth-gray-800">
         <div className="text-xl font-semibold leading-none">
           $
-          <span className="font-title text-[1.75rem] leading-8">
+          <span className="font-title text-[1.75rem] leading-none">
             {formatNumberToPrice(currentPrice)}
           </span>
         </div>

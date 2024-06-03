@@ -1,5 +1,4 @@
-import Separator from "@/old/_components/separator";
-import Title from "@/old/_components/title";
+import { StaticPageMainTitle } from "@/(old-design)/_components/static-page-main-title";
 import VisuallyHidden from "@/old/_components/visually-hidden";
 import type { Metadata } from "next";
 import Image from "next/image";
@@ -11,7 +10,7 @@ export const metadata: Metadata = {
 
 const CareersPage = () => {
   return (
-    <>
+    <div className="container">
       {/* Section banner */}
       <Image
         src={careersBanner}
@@ -22,14 +21,7 @@ const CareersPage = () => {
       />
 
       {/* Section heading with line */}
-      <div className="mb-4 flex flex-row items-center gap-2.5">
-        <Title className="text-brand-primary">Careers</Title>
-
-        <Separator
-          orientation="horizontal"
-          className="h-px flex-1 bg-brand-primary"
-        />
-      </div>
+      {StaticPageMainTitle("Careers")}
 
       {/* Careers content */}
       <div className="box-border space-y-4 text-brand-gray-500">
@@ -58,7 +50,7 @@ const CareersPage = () => {
           </a>
         </p>
       </div>
-    </>
+    </div>
   );
 };
 

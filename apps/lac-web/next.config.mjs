@@ -3,7 +3,7 @@ const nextConfig = {
   reactStrictMode: true,
   transpilePackages: ["@repo/web-ui"],
   images: {
-    formats: ["image/webp"],
+    formats: ["image/avif", "image/webp"],
     remotePatterns: [
       // TODO Remove old domain
       {
@@ -26,8 +26,6 @@ const nextConfig = {
       },
     ],
     minimumCacheTTL: 60 * 60 * 24 * 365, // 1 year
-    deviceSizes: [640, 828, 1080, 1200, 1920],
-    imageSizes: [48, 96, 128, 256],
   },
   eslint: {
     dirs: ["app"],

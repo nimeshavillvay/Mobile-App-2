@@ -1,5 +1,5 @@
-import Separator from "@/old/_components/separator";
-import Title from "@/old/_components/title";
+import { StaticPageMainTitle } from "@/(old-design)/_components/static-page-main-title";
+import { StaticPageSubTitle } from "@/(old-design)/_components/static-page-sub-title";
 import type { Metadata } from "next";
 import Image from "next/image";
 import aboutBanner from "./about-banner.jpg";
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 const AboutUsPage = () => {
   return (
-    <>
+    <div className="container">
       {/* Section banner */}
       <Image
         src={aboutBanner}
@@ -23,14 +23,7 @@ const AboutUsPage = () => {
       />
 
       {/* Section heading with line */}
-      <div className="mb-4 flex flex-row items-center gap-2.5">
-        <Title className="text-brand-primary">About Us</Title>
-
-        <Separator
-          orientation="horizontal"
-          className="h-px flex-1 bg-brand-primary"
-        />
-      </div>
+      {StaticPageMainTitle("About Us")}
 
       {/* About us content */}
       <div className="box-border space-y-4 text-brand-gray-500">
@@ -89,78 +82,56 @@ const AboutUsPage = () => {
           specify our products.
         </p>
 
-        <div className="relative w-full pt-8 md:w-1/2">
-          <h2 className="relative pr-3 text-lg font-medium text-brand-primary">
-            Our Mission Statement
-          </h2>
-
-          <Separator
-            orientation="horizontal"
-            className="mt-0.5 h-px flex-1 bg-brand-primary"
-          />
-        </div>
+        {StaticPageSubTitle("Our Mission Statement")}
 
         <p>
           People dedicated to providing excellent service and fine-quality
           products to the woodworking industry.
         </p>
 
-        <div className="relative w-full pt-8 md:w-1/2">
-          <h2 className="relative pr-3 text-lg font-medium text-brand-primary">
-            Corporate Executives
-          </h2>
+        {StaticPageSubTitle("Corporate Executives")}
 
-          <Separator
-            orientation="horizontal"
-            className="mt-0.5 h-px flex-1 bg-brand-primary"
-          />
-        </div>
+        <section className="gap-8 sm:flex sm:flex-row">
+          <figure className="w-full max-w-80 rounded-t border border-black">
+            <Image
+              src={chiefExecutiveOfficer}
+              alt="Photo of Thomas Stolmeier"
+              placeholder="blur"
+              className="w-full rounded-t"
+              priority={true}
+            />
 
-        <div className="grid grid-cols-2 gap-8 md:w-1/2">
-          <div className="relative">
-            <div className="relative flex flex-col rounded border border-brand-gray-200">
-              <Image
-                src={chiefExecutiveOfficer}
-                alt="Photo of Thomas Stolmeier"
-                placeholder="blur"
-                className="w-full rounded-t"
-                priority={true}
-              />
+            <figcaption className="row-span-1 p-2 pl-3">
+              <h3 className="font-wurth text-lg font-bold leading-5">
+                Thomas Stolmeier
+              </h3>
+              <p className="mt-2 break-words font-arial italic">
+                President and Chief Executive Officer Wurth Louis and Company
+              </p>
+            </figcaption>
+          </figure>
 
-              <div className="break-words p-4">
-                <h4 className="mb-2 text-base font-medium">Thomas Stolmeier</h4>
+          <figure className="mt-8 w-full max-w-80 rounded-t border border-black sm:mt-0">
+            <Image
+              src={chiefFinancialOfficer}
+              alt="Photo of Thomas Stolmeier"
+              placeholder="blur"
+              className="w-full rounded-t"
+              priority={true}
+            />
 
-                <p className="text-sm italic">
-                  President and Chief Executive Officer Wurth Louis and Company
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="relative">
-            <div className="relative flex flex-col rounded border border-brand-gray-200">
-              <Image
-                src={chiefFinancialOfficer}
-                alt="Photo of Evangeline B. de Guzman"
-                placeholder="blur"
-                className="w-full rounded-t"
-                priority={true}
-              />
-
-              <div className="break-words p-4">
-                <h4 className="mb-2 text-base font-medium">
-                  Evangeline B. de Guzman
-                </h4>
-
-                <p className="text-sm italic">
-                  Chief Financial Officer Wurth Louis and Company
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
+            <figcaption className="row-span-1 p-2 pl-3">
+              <h3 className="font-wurth text-lg font-bold leading-5">
+                Evangeline B. de Guzman
+              </h3>
+              <p className="mt-2 break-words font-arial italic">
+                Chief Financial Officer Wurth Louis and Company
+              </p>
+            </figcaption>
+          </figure>
+        </section>
       </div>
-    </>
+    </div>
   );
 };
 
