@@ -90,6 +90,7 @@ const CartList = ({ token, plants }: CartListProps) => {
                 cartItemId: item.cartItemId,
                 slug: item.itemInfo.slug,
                 isExcludedProduct: item.itemInfo.isExcludedProduct,
+                uom: item.itemInfo.unitOfMeasure,
               }}
               plants={plants}
               cartConfiguration={data.configuration}
