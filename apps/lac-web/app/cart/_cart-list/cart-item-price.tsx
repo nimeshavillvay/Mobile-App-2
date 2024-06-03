@@ -97,9 +97,11 @@ const CartItemPrice = ({
               onChange: onChange,
             })}
             step={MIN_STEP}
-            onKeyDown={(e) =>
-              EXCLUDED_KEYS.includes(e.key) && e.preventDefault()
-            }
+            onKeyDown={(e) => {
+              if (EXCLUDED_KEYS.includes(e.key)) {
+                e.preventDefault();
+              }
+            }}
           />
           <span
             className={cn(
