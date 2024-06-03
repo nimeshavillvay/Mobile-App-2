@@ -95,3 +95,7 @@ export const formatNumberToPrice = (value?: number) => {
     maximumFractionDigits: 2,
   });
 };
+
+export const getBoolean = (value: string | undefined) => {
+  return value === "Y";
+};
