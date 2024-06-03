@@ -43,7 +43,7 @@ const ItemPrices = ({
       <UnitPriceRowForMobile
         salePrice={salePrice}
         uom={priceUnit}
-        price={prices.price}
+        price={prices.price === 0 ? prices.listPrice : prices.price}
       />
     );
   }
@@ -83,7 +83,7 @@ const ItemPrices = ({
         <UnitPriceRow
           salePrice={salePrice}
           uom={priceUnit}
-          price={prices.price}
+          price={prices.price === 0 ? prices.listPrice : prices.price}
         />
       )}
     </div>
