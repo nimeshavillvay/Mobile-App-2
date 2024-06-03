@@ -16,7 +16,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@repo/web-ui/components/ui/dialog";
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 
 const WEEK_DAYS = {
   MONDAY: "Monday",
@@ -29,13 +29,14 @@ const WEEK_DAYS = {
 type ShippingDetailsDialogProps = {
   readonly token: Token;
   readonly shippingMethods: ShippingMethod[];
-  readonly children?: React.ReactNode;
+  readonly children?: ReactNode;
+  readonly open?: boolean;
+  readonly setOpen?: (open: boolean) => void;
 };
 
 const ShippingDetailsDialog = ({
   token,
-  shippingMethods,
-  children,
+  ...delegated
 }: ShippingDetailsDialogProps) => {
   const checkLoginQuery = useSuspenseCheckLogin(token);
 
@@ -43,14 +44,7 @@ const ShippingDetailsDialog = ({
     return null;
   }
 
-  return (
-    <ShippingDetailsDialogButton
-      token={token}
-      shippingMethods={shippingMethods}
-    >
-      {children}
-    </ShippingDetailsDialogButton>
-  );
+  return <ShippingDetailsDialogButton token={token} {...delegated} />;
 };
 
 export default ShippingDetailsDialog;
@@ -59,6 +53,8 @@ const ShippingDetailsDialogButton = ({
   token,
   shippingMethods,
   children,
+  open: externalOpen,
+  setOpen: externalSetOpen,
 }: ShippingDetailsDialogProps) => {
   const shippingAddressListQuery = useSuspenseShippingAddressList(token);
   const billingAddressQuery = useSuspenseBillingAddress(token);
@@ -72,7 +68,12 @@ const ShippingDetailsDialogButton = ({
     (method) => method.code === defaultAddress?.defaultShipping,
   );
 
-  const [open, setOpen] = useState(false);
+  const [internalOpen, setInternalOpen] = useState(false);
+
+  // This is so that the dialog can be controlled from the parent component
+  // if needed
+  const open = externalOpen ?? internalOpen;
+  const setOpen = externalSetOpen ?? setInternalOpen;
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
