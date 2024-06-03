@@ -1,6 +1,6 @@
 "use client";
 
-import useSuspenseWillCallPlant from "@/_header/_will-call-plant/use-suspense-will-call-plant.hook";
+import useSuspenseWillCallPlant from "@/_hooks/address/use-suspense-will-call-plant.hook";
 import useSuspenseCart from "@/_hooks/cart/use-suspense-cart.hook";
 import useUpdateCartItemMutation from "@/_hooks/cart/use-update-cart-item-mutation.hook";
 import { DEFAULT_PLANT } from "@/_lib/constants";
@@ -25,15 +25,12 @@ type ShippingMethodProps = {
   readonly options: ShippingMethod[];
 };
 
-const ShippingMethod = ({
-  token,
-  options: shippingMethods,
-}: ShippingMethodProps) => {
+const ShippingMethod = ({ token, options }: ShippingMethodProps) => {
   const id = useId();
   const shipToMeId = `${SHIP_TO_ME}-${id}`;
   const willCallId = `${WILL_CALL}-${id}`;
 
-  shippingMethods = shippingMethods.filter(
+  const shippingMethods = options?.filter(
     (method) => !EXCLUDED_SHIPPING_METHODS.includes(method.code),
   );
 
