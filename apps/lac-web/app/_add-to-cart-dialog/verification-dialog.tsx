@@ -258,13 +258,11 @@ const PriceCheck = ({
           )}
         >
           {formatNumberToPrice(priceData?.price)}
-
         </span>
 
         {isDiscounted && (
           <span className="text-base leading-6 text-wurth-gray-400 line-through">
             {formatNumberToPrice(priceData?.listPrice)}
-
           </span>
         )}
 
