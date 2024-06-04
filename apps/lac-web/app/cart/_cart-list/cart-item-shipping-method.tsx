@@ -356,7 +356,6 @@ const CartItemShippingMethod = ({
       }
 
       if (shipToMe === ALTERNATIVE_BRANCHES && shipAlternativeBranch) {
-        console.log("shipAlternativeBranch", shipAlternativeBranch);
         onSave(
           getAlternativeBranchesConfig({
             plants: shipAlternativeBranch?.plants,
