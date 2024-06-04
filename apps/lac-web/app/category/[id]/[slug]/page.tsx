@@ -4,6 +4,7 @@ import {
   ProductsGridFiltersSkeleton,
   ProductsGridHeaderSkeleton,
   ProductsGridListSkeleton,
+  ProductsGridMobileFiltersHeaderSkeleton,
   ProductsGridPaginationSkeleton,
 } from "@/_components/products-grid";
 import { getBreadcrumbs } from "@/_lib/apis/server";
@@ -142,6 +143,8 @@ const CategoryPage = async ({ params: { id, slug } }: CategoryPageProps) => {
       <Suspense
         fallback={
           <ProductsGrid>
+            <ProductsGridMobileFiltersHeaderSkeleton />
+
             <ProductsGridHeaderSkeleton />
 
             <ProductsGridListSkeleton type="mobile" />
