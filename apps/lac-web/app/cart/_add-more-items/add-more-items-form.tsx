@@ -390,16 +390,26 @@ const AddMoreItemsForm = ({ token }: { readonly token: string }) => {
         />
 
         <div className="flex w-full min-w-[820px] items-center justify-end gap-2">
-          {isFormSubmitted && isFormInvalid && (
-            <div className="text-sm text-wurth-red-650">
-              Please fix the errors in the form first.
-            </div>
-          )}
+          <Button
+            type="button"
+            variant="ghost"
+            className="font-medium"
+            onClick={() => reset()}
+          >
+            Clear all
+          </Button>
+
           <Button type="submit" variant="default" className="">
             <AddToCart className="stroke-white stroke-2" width={16} />
             <span>Add all items to cart</span>
           </Button>
         </div>
+
+        {isFormSubmitted && isFormInvalid && (
+          <div className="mt-3 text-right text-sm text-wurth-red-650">
+            Please fix the errors in the form first.
+          </div>
+        )}
       </div>
     </form>
   );
