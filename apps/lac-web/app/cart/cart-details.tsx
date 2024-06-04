@@ -28,6 +28,12 @@ const CartDetails = ({ token }: CartDetailsProps) => {
   const { toast } = useToast();
   const { data } = useSuspenseCart(token);
 
+  enum PoJob {
+    PoRequired = "P",
+    JobNameRequired = "J",
+    BothRequired = "B",
+  }
+
   const { register, getValues } = useForm<z.infer<typeof detailsSchema>>({
     resolver: zodResolver(detailsSchema),
     values: {
@@ -37,9 +43,11 @@ const CartDetails = ({ token }: CartDetailsProps) => {
   });
 
   const isPoRequired =
-    data.configuration.po_job === "P" || data.configuration.po_job === "B";
+    data.configuration.po_job === PoJob.PoRequired ||
+    data.configuration.po_job === PoJob.BothRequired;
   const isJobNameRequired =
-    data.configuration.po_job === "J" || data.configuration.po_job === "B";
+    data.configuration.po_job === PoJob.JobNameRequired ||
+    data.configuration.po_job === PoJob.BothRequired;
 
   const cartFormId = useCartFormIdContext();
 
