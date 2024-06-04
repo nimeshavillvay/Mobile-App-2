@@ -99,6 +99,8 @@ const AddToShoppingListDialog = ({
     productId: number,
     selectedShoppingLists: string[],
   ) => {
+    const isAddingToFavorites = selectedShoppingLists.length > 0;
+
     return updateShoppingListItemMutation.mutate(
       {
         listIds: selectedShoppingLists.map((shoppingListId) =>
@@ -109,7 +111,9 @@ const AddToShoppingListDialog = ({
       {
         onSuccess: () => {
           toast({
-            title: "Product has added to the list successfully",
+            title: isAddingToFavorites
+              ? "Product has been added to the list successfully"
+              : "Product has been removed from list successfully",
           });
           setOpenAddToShoppingListDialog(false);
           setIsLoading(false);
