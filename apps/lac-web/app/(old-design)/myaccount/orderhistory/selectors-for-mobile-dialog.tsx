@@ -182,7 +182,13 @@ const SelectorsForMobileDialog = ({
     setDuration(INIT_DURATION);
     setFromDate(new Date(INIT_FROM_DATE));
     setToDate(new Date());
-
+    setPoNos([]);
+    setOrderStatuses([]);
+    setJobNames([]);
+    setOrderTypes([]);
+    setSortBy(urlSortBy);
+    setSortDirection(urlSortDirection);
+    onOpenChange(false);
     const params = new URLSearchParams();
 
     updateSearchParams(params);
