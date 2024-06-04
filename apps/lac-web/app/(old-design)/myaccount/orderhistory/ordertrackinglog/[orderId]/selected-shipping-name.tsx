@@ -1,14 +1,16 @@
 "use client";
 
-import useSelectedAddress from "@/old/_hooks/account/use-selected-address.hook";
+import useSuspenseBillingAddress from "@/_hooks/address/use-suspense-billing-address.hook";
+import type { Token } from "@/_lib/types";
 
-const SelectedShippingName = () => {
-  // TODO: Need to remove old API once company profile is ready
-  const address = useSelectedAddress();
+const SelectedShippingName = ({ token }: { readonly token: Token }) => {
+  const billingAddressQuery = useSuspenseBillingAddress(token);
+
+  const billingAddress = billingAddressQuery.data;
 
   return (
-    <div className="text-sm font-bold text-black md:font-normal md:text-brand-gray-500">
-      {address?.streetAddress ?? "N/A"}
+    <div className="font-wurth text-sm font-bold text-black md:font-arial md:font-normal md:text-brand-gray-500">
+      {billingAddress?.organization && `${billingAddress?.organization},`}
     </div>
   );
 };

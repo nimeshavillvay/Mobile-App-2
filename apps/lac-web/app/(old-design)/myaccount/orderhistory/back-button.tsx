@@ -14,13 +14,25 @@ const BackButton = ({ title = "Back", className }: BackButtonProps) => {
   const router = useRouter();
 
   return (
-    <Button
-      variant="ghost"
-      className={cn("px-0 text-base text-black", className)}
-      onClick={() => router.back()}
-    >
-      <FaArrowLeft /> {title}
-    </Button>
+    <>
+      {/* Desktop back button */}
+      <Button
+        variant="ghost"
+        className={cn("hidden px-0 text-base text-black md:flex", className)}
+        onClick={() => router.back()}
+      >
+        <FaArrowLeft /> {title}
+      </Button>
+
+      {/* Mobile back button */}
+      <Button
+        className="h-[2.625rem] w-full justify-start bg-brand-gray-200 font-bold normal-case text-brand-gray-500 md:hidden"
+        onClick={() => router.back()}
+      >
+        <FaArrowLeft />
+        <span>Back</span>
+      </Button>
+    </>
   );
 };
 
