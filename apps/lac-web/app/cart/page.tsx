@@ -9,6 +9,7 @@ import { Suspense } from "react";
 import CartList from "./_cart-list";
 import CheckoutButton from "./_checkout-button";
 import CartDetails from "./cart-details";
+import { CartFormIdProvider } from "./cart-form-id-context";
 import CartHeading from "./cart-heading";
 import CartItemFallback from "./cart-item-fallback";
 import ShippingMethod from "./shipping-method";
@@ -39,7 +40,7 @@ const CartPage = async () => {
   }
 
   return (
-    <>
+    <CartFormIdProvider>
       <Suspense
         fallback={
           <div className="container">
@@ -99,7 +100,7 @@ const CartPage = async () => {
           </Suspense>
         </aside>
       </div>
-    </>
+    </CartFormIdProvider>
   );
 };
 
