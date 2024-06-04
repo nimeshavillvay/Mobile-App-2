@@ -38,6 +38,7 @@ import { Suspense, useDeferredValue, useEffect, useId, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import Balancer from "react-wrap-balancer";
 import { z } from "zod";
+import { useCartFormIdContext } from "../cart-form-id-context";
 import {
   ALTERNATIVE_BRANCHES,
   AVAILABLE_ALL,
@@ -96,6 +97,7 @@ const CartItem = ({
 }: CartItemProps) => {
   const id = useId();
   const poId = `po-${id}`;
+  const cartFormId = useCartFormIdContext();
 
   const itemConfigHash = product?.configuration?.hashvalue;
   const itemConfigShippingMethod = product?.configuration?.shipping_method_1;
@@ -564,7 +566,7 @@ const CartItem = ({
           </div>
         </div>
 
-        <form className="flex-1 space-y-2 md:space-y-1">
+        <div className="flex-1 space-y-2 md:space-y-1">
           <Suspense fallback={<Skeleton className="h-7 w-full" />}>
             <CartItemPrice
               token={token}
@@ -617,6 +619,7 @@ const CartItem = ({
                     min={product.minAmount}
                     step={product.increment}
                     disabled={checkAvailabilityQuery.isPending}
+                    form={cartFormId} // This is to check the validity when clicking "checkout"
                   />
 
                   <span
@@ -670,7 +673,7 @@ const CartItem = ({
               className="h-fit rounded px-2.5 py-1 text-base"
             />
           </div>
-        </form>
+        </div>
       </div>
 
       <div className="md:w-80">
