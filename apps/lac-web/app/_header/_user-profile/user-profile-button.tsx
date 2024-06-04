@@ -40,22 +40,12 @@ const UserProfileButton = ({
   const checkLoginQuery = useSuspenseCheckLogin(token);
 
   const loginCheckData = checkLoginQuery.data;
-  let isOSRLoggedInAsCustomer = false;
   let isOSRUser = false;
   let customerDetails = "";
 
   if ("sales_rep_id" in loginCheckData) {
     isOSRUser = true;
     customerDetails = loginCheckData.user.company || loginCheckData.user.billto;
-  }
-
-  // TODO: Update this function after the /login-check API is updated to identify the OSR login status
-  if (
-    loginCheckData.status_code === "OK" &&
-    "sales_rep_id" in loginCheckData &&
-    "user_id" in loginCheckData
-  ) {
-    isOSRLoggedInAsCustomer = true;
   }
 
   if (type === "mobile") {
@@ -79,7 +69,10 @@ const UserProfileButton = ({
       <UserProfileDropdown
         token={token}
         isOSRUser={isOSRUser}
-        isOSRLoggedInAsCustomer={isOSRLoggedInAsCustomer}
+        isOSRLoggedInAsCustomer={
+          loginCheckData.status_code == "OK" &&
+          loginCheckData.isLoggedInAsCustomer
+        }
         customerDetails={customerDetails}
         shippingMethods={shippingMethods}
       />
