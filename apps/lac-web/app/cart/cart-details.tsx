@@ -35,6 +35,11 @@ const CartDetails = ({ token }: CartDetailsProps) => {
     },
   });
 
+  const isPoRequired =
+    data.configuration.po_job === "P" || data.configuration.po_job === "B";
+  const isJobNameRequired =
+    data.configuration.po_job === "J" || data.configuration.po_job === "B";
+
   const updateCartConfigMutation = useUpdateCartConfigMutation();
 
   const handleSave = () => {
@@ -60,23 +65,28 @@ const CartDetails = ({ token }: CartDetailsProps) => {
   return (
     <div className="space-y-3 rounded-lg border border-wurth-gray-150 px-5 py-4 shadow-md">
       <div className="space-y-2">
-        <Label htmlFor={poId}>PO Number (Required)</Label>
+        <Label htmlFor={poId}>
+          PO Number {isPoRequired && <span>(Required)</span>}
+        </Label>
 
         <Input
           {...register("po", { onBlur: handleSave })}
           id={poId}
           type="text"
-          required
+          required={isPoRequired}
         />
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor={projectNameId}>Project Name</Label>
+        <Label htmlFor={projectNameId}>
+          Project Name {isJobNameRequired && <span>(Required)</span>}
+        </Label>
 
         <Input
           {...register("projectName", { onBlur: handleSave })}
           id={projectNameId}
           type="text"
+          required={isJobNameRequired}
         />
       </div>
     </div>
