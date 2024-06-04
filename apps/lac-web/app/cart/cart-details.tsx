@@ -9,6 +9,7 @@ import { useToast } from "@repo/web-ui/components/ui/toast";
 import { useId } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { useCartFormIdContext } from "./cart-form-id-context";
 
 const detailsSchema = z.object({
   po: z.string(),
@@ -39,6 +40,8 @@ const CartDetails = ({ token }: CartDetailsProps) => {
     data.configuration.po_job === "P" || data.configuration.po_job === "B";
   const isJobNameRequired =
     data.configuration.po_job === "J" || data.configuration.po_job === "B";
+
+  const cartFormId = useCartFormIdContext();
 
   const updateCartConfigMutation = useUpdateCartConfigMutation();
 
@@ -74,6 +77,7 @@ const CartDetails = ({ token }: CartDetailsProps) => {
           id={poId}
           type="text"
           required={isPoRequired}
+          form={cartFormId}
         />
       </div>
 
@@ -87,6 +91,7 @@ const CartDetails = ({ token }: CartDetailsProps) => {
           id={projectNameId}
           type="text"
           required={isJobNameRequired}
+          form={cartFormId}
         />
       </div>
     </div>
