@@ -75,7 +75,7 @@ const FiltersForMobileDialog = ({ open, setOpen }: FiltersForMobileProps) => {
     setDuration(INIT_DURATION);
     setFromDate(new Date(INIT_FROM_DATE));
     setToDate(new Date(INIT_TO_DATE));
-
+    setActiveFilter(`${SORTING_BY_FIELDS.SKU}-desc`);
     const params = new URLSearchParams();
     updateSearchParams(params);
 

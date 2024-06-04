@@ -1,12 +1,10 @@
+import { revalidateSiteLayout } from "@/_actions/revalidate";
 import useCookies from "@/_hooks/storage/use-cookies.hook";
 import { api } from "@/_lib/api";
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
 
 const useOSRLogoutMutation = () => {
-  const router = useRouter();
-
   const [cookies] = useCookies();
   const queryClient = useQueryClient();
 
@@ -21,9 +19,10 @@ const useOSRLogoutMutation = () => {
         .json<{
           status_code: "OK";
         }>(),
-    onSuccess: () => {
+    onSuccess: async () => {
       queryClient.invalidateQueries();
-      router.replace("/");
+
+      await revalidateSiteLayout("/");
     },
   });
 };
