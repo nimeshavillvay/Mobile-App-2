@@ -86,8 +86,10 @@ const ShoppingListItems = ({
 
   return (
     <>
-      <div className="mx-2 my-5 flex flex-row items-center justify-between">
-        <h3 className="text-2xl font-bold">{shoppingList.listName}</h3>
+      <div className="container my-5 flex flex-row items-center justify-between md:px-0">
+        <h3 className="font-title text-2xl font-bold">
+          {shoppingList.listName}
+        </h3>
         <div className="flex flex-row items-center gap-2">
           <ShoppingListButtons
             renameShoppingList={renameShoppingList}
@@ -96,13 +98,15 @@ const ShoppingListItems = ({
         </div>
       </div>
 
-      <>
+      <div className="container md:px-0">
         <Suspense fallback={<ShoppingListHeaderSkeleton />}>
-          <div className="mx-2 my-5 flex flex-row items-center justify-between text-sm font-normal">
-            <p>{shoppingListItemCount.count} items</p>
-            <p>
+          <div className="my-5 flex flex-row items-center justify-between text-sm font-normal">
+            <div className="font-title text-lg font-medium tracking-normal md:text-3xl md:tracking-[-0.01406rem]">
+              {shoppingListItemCount.count} items
+            </div>
+            <div className="text-sm font-normal md:text-base">
               Page {page} of {totalPages == 0 ? 1 : totalPages}
-            </p>
+            </div>
           </div>
         </Suspense>
 
@@ -159,7 +163,7 @@ const ShoppingListItems = ({
             />
           )}
         </Suspense>
-      </>
+      </div>
 
       <ShoppingListDialog
         open={isOpenShoppingListDialog}
