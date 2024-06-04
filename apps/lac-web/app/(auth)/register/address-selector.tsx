@@ -96,7 +96,7 @@ const AddressSelector = ({
               selectedShippingAddress === undefined) ||
             disabled
           }
-          onClick={onSubmit}
+          onClick={() => onSubmit()}
         >
           Submit
         </Button>

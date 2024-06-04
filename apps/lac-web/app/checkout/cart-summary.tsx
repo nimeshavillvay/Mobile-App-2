@@ -11,6 +11,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
+const UI_DATE_FORMAT = "ddd, MMMM.DD, YYYY";
+
 type CartSummaryProps = {
   readonly token: string;
   readonly plants: Plant[];
@@ -79,90 +81,115 @@ const CartSummary = ({ token, plants }: CartSummaryProps) => {
           </div>
         ) : (
           <div className="flex flex-col gap-4 divide-y divide-wurth-gray-150">
-            {cartQuery.data.cartItems.map((item) => (
-              <div
-                key={item.itemInfo.productId}
-                className="flex flex-col gap-2 [&:not(:first-child)]:pt-4"
-              >
-                <div className="flex flex-row gap-3">
-                  <Link
-                    href={`/product/${item.itemInfo.productId}/${item.itemInfo.slug}`}
-                  >
-                    <Image
-                      src={item.itemInfo.image}
-                      alt={`An image of ${item.itemInfo.productName}`}
-                      width={84}
-                      height={84}
-                      className="aspect-1 shrink-0 rounded border border-wurth-gray-250 object-contain shadow-sm"
-                    />
-                  </Link>
-                  <div className="flex-1 space-y-1">
-                    <div className="flex flex-row items-center justify-between text-sm text-wurth-gray-800">
-                      <div>
-                        {item.quantity} {item.itemInfo.unitOfMeasure}
+            {cartQuery.data.cartItems.map(
+              ({ itemInfo, quantity, mappedConfiguration }) => (
+                <div
+                  key={itemInfo.productId}
+                  className="flex flex-col gap-2 [&:not(:first-child)]:pt-4"
+                >
+                  <div className="flex flex-row gap-3">
+                    <Link
+                      href={`/product/${itemInfo.productId}/${itemInfo.slug}`}
+                    >
+                      <Image
+                        src={itemInfo.image}
+                        alt={`An image of ${itemInfo.productName}`}
+                        width={84}
+                        height={84}
+                        className="aspect-1 shrink-0 rounded border border-wurth-gray-250 object-contain shadow-sm"
+                      />
+                    </Link>
+                    <div className="flex flex-1 flex-col justify-between">
+                      <div className="flex flex-row items-center text-sm text-wurth-gray-800">
+                        <Link
+                          href={`/product/${itemInfo.productId}/${itemInfo.slug}`}
+                          className="w-2/4 md:w-4/6"
+                        >
+                          <h4 className="line-clamp-3 text-sm font-medium text-wurth-gray-800">
+                            {itemInfo.metaTitle === ""
+                              ? itemInfo.productName
+                              : itemInfo.metaTitle}
+                          </h4>
+                        </Link>
+
+                        <div className="w-1/4 self-start md:w-1/6">
+                          {quantity} {itemInfo.unitOfMeasure}
+                        </div>
+
+                        <div className="w-1/4 self-start text-right md:w-1/6">
+                          $
+                          {formatNumberToPrice(
+                            parseFloat(
+                              (
+                                simulationCheckoutQuery.data.productslist.find(
+                                  (product) =>
+                                    product.productId === itemInfo.productId,
+                                )?.extendedPrice ?? 0
+                              ).toFixed(2),
+                            ),
+                          )}
+                        </div>
                       </div>
 
-                      <div>
-                        $
-                        {formatNumberToPrice(
-                          parseFloat(
-                            (
-                              simulationCheckoutQuery.data.productslist.find(
-                                (product) =>
-                                  product.productId === item.itemInfo.productId,
-                              )?.extendedPrice ?? 0
-                            ).toFixed(2),
-                          ),
-                        )}
+                      <div className="flex flex-wrap text-sm text-wurth-gray-800">
+                        {mappedConfiguration?.availability?.length > 0 &&
+                          mappedConfiguration.availability.map(
+                            (itemLine, index) =>
+                              itemLine &&
+                              typeof itemLine.quantity === "number" &&
+                              itemLine.quantity !== 0 &&
+                              !isNaN(itemLine?.quantity) && (
+                                <div key={index} className="">
+                                  <span className="text-green-700">
+                                    {itemLine?.quantity}
+                                    &nbsp;
+                                    {itemLine?.quantity === 1
+                                      ? "item"
+                                      : "items"}
+                                  </span>
+                                  &nbsp;pickup at&nbsp;
+                                  {plants.find(
+                                    (plant) => plant.code === itemLine.plant,
+                                  )?.name ?? "Plant N/A"}
+                                  &nbsp;&nbsp;
+                                  {mappedConfiguration.availability.length -
+                                    1 !==
+                                    index && (
+                                    <span className="text-black">
+                                      &#x2022;&nbsp;&nbsp;
+                                    </span>
+                                  )}
+                                  {mappedConfiguration.availability.length -
+                                    1 ===
+                                    index &&
+                                    mappedConfiguration.backOrderQuantity >
+                                      0 && (
+                                      <span className="text-black">
+                                        &#x2022;&nbsp;&nbsp;
+                                      </span>
+                                    )}
+                                </div>
+                              ),
+                          )}
+
+                        {mappedConfiguration.backOrderQuantity > 0 &&
+                          mappedConfiguration.backOrderDate && (
+                            <div className="mr-4">
+                              <span className="text-yellow-700">Backorder</span>
+                              &nbsp;
+                              {mappedConfiguration.backOrderQuantity}
+                              &nbsp;items, ship by&nbsp;
+                              {dayjs(mappedConfiguration.backOrderDate).format(
+                                UI_DATE_FORMAT,
+                              )}
+                            </div>
+                          )}
                       </div>
                     </div>
-                    <Link
-                      href={`/product/${item.itemInfo.productId}/${item.itemInfo.slug}`}
-                    >
-                      <h4 className="text-sm font-medium text-wurth-gray-800">
-                        {item.itemInfo.metaTitle === ""
-                          ? item.itemInfo.productName
-                          : item.itemInfo.metaTitle}
-                      </h4>
-                    </Link>
                   </div>
                 </div>
-
-                <div className="flex flex-wrap text-sm text-wurth-gray-800">
-                  {item.mappedConfiguration.availability.map(
-                    (itemLine, index) =>
-                      itemLine &&
-                      typeof itemLine.quantity === "number" &&
-                      itemLine.quantity !== 0 && (
-                        <div key={index} className="mr-2">
-                          <span className="text-green-700">
-                            {itemLine.quantity}{" "}
-                            {itemLine.quantity === 1 ? "item" : "items"}
-                          </span>{" "}
-                          pickup at{" "}
-                          {plants.find((plant) => plant.code === itemLine.plant)
-                            ?.name ?? ""}
-                        </div>
-                      ),
-                  )}
-
-                  {item.configuration.backorder_quantity &&
-                    item.configuration.backorder_date &&
-                    parseInt(item.configuration.backorder_quantity) > 0 && (
-                      <div className="ml-1 mr-4">
-                        <span className="text-yellow-700">&#x2022;</span>
-                        <span className="ml-2 text-yellow-700">
-                          Backorder
-                        </span>{" "}
-                        {item.configuration.backorder_quantity} items, ship by{" "}
-                        {dayjs(item.configuration.backorder_date).format(
-                          "ddd, MMMM.DD, YYYY",
-                        )}
-                      </div>
-                    )}
-                </div>
-              </div>
-            ))}
+              ),
+            )}
           </div>
         )}
 

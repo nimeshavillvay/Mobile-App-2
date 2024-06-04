@@ -316,6 +316,9 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
       },
       {
         onSuccess: (data) => {
+          // Scroll to the address form of the page
+          window.scrollTo({ top: 300, behavior: "smooth" });
+
           if (isVerifyAddressResponse(data)) {
             if (Array.isArray(data.suggestions)) {
               // If registration fails, data.suggestions becomes an array
@@ -352,6 +355,14 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
     setFormValues(values);
     registerUser(values);
   });
+
+  const handleClearSuggestions = () => {
+    // Clear all suggestions
+    setBillingSuggestions([]);
+    setShippingSuggestions([]);
+    // Scroll to the address form of the page
+    window.scrollTo({ top: 500, behavior: "smooth" });
+  };
 
   const updateAddress: ComponentProps<
     typeof AddressSelector
@@ -412,11 +423,7 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
         <AddressSelector
           billingAddresses={billingSuggestions}
           shippingAddresses={shippingSuggestions}
-          clearSuggestions={() => {
-            // Clear all suggestions
-            setBillingSuggestions([]);
-            setShippingSuggestions([]);
-          }}
+          clearSuggestions={() => handleClearSuggestions()}
           updateAddress={updateAddress}
           disabled={registerNewUserMutation.isPending}
         />

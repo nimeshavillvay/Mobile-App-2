@@ -12,6 +12,7 @@ export const loginCheck = async (token: string) => {
     })
     .json<
       | {
+          isLoggedInAsCustomer: boolean;
           status_code: "OK";
           user_id: string;
           sales_rep_id?: string;

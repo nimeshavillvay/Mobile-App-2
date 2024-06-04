@@ -38,6 +38,7 @@ import { Suspense, useDeferredValue, useEffect, useId, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import Balancer from "react-wrap-balancer";
 import { z } from "zod";
+import { useCartFormIdContext } from "../cart-form-id-context";
 import {
   ALTERNATIVE_BRANCHES,
   AVAILABLE_ALL,
@@ -96,6 +97,7 @@ const CartItem = ({
 }: CartItemProps) => {
   const id = useId();
   const poId = `po-${id}`;
+  const cartFormId = useCartFormIdContext();
 
   const itemConfigHash = product?.configuration?.hashvalue;
   const itemConfigShippingMethod = product?.configuration?.shipping_method_1;
@@ -220,130 +222,137 @@ const CartItem = ({
   );
 
   const handleChangeQtyOrPO = () => {
-    checkAvailabilityMutation.mutate(
-      {
-        productId: product.id,
-        qty: Number(deferredQuantity),
-      },
-      {
-        onSuccess: ({ options }) => {
-          if (options.length > 0) {
-            const availableAll = findAvailabilityOptionForType(
-              options,
-              AVAILABLE_ALL,
-            );
-            const takeOnHand = findAvailabilityOptionForType(
-              options,
-              TAKE_ON_HAND,
-            );
-            const shipAlternativeBranch = findAvailabilityOptionForType(
-              options,
-              ALTERNATIVE_BRANCHES,
-            );
-            const backOrderAll = findAvailabilityOptionForType(
-              options,
-              BACK_ORDER_ALL,
-            );
-            if (availableAll) {
-              setSelectedShippingOption(MAIN_OPTIONS.SHIP_TO_ME);
-              setSelectedShipToMe(AVAILABLE_ALL);
-              handleSave(
-                createCartItemConfig({
-                  method:
-                    availableAll.plants?.at(0)?.shippingMethods?.at(0)?.code ??
-                    EMPTY_STRING,
-                  quantity: availableAll.plants?.at(0)?.quantity ?? 0,
-                  plant: availableAll.plants?.at(0)?.plant ?? EMPTY_STRING,
-                  hash: availableAll.hash,
-                }),
-              );
-            } else if (takeOnHand) {
-              setSelectedShippingOption(MAIN_OPTIONS.SHIP_TO_ME);
-              setSelectedShipToMe(TAKE_ON_HAND);
-              handleSave(
-                createCartItemConfig({
-                  method:
-                    takeOnHand.plants?.at(0)?.shippingMethods?.at(0)?.code ??
-                    EMPTY_STRING,
-                  quantity: takeOnHand.plants?.at(0)?.quantity ?? 0,
-                  plant: takeOnHand.plants?.at(0)?.plant ?? EMPTY_STRING,
-                  hash: takeOnHand.hash,
-                  backOrderDate: takeOnHand.plants?.at(0)?.backOrderDate,
-                  backOrderQuantity:
-                    takeOnHand.plants?.at(0)?.backOrderQuantity,
-                }),
-              );
-            } else if (shipAlternativeBranch) {
-              setSelectedShippingOption(MAIN_OPTIONS.SHIP_TO_ME);
-              setSelectedShipToMe(ALTERNATIVE_BRANCHES);
-              handleSave(
-                getAlternativeBranchesConfig({
-                  plants: shipAlternativeBranch.plants,
-                  method:
-                    shipAlternativeBranch.plants?.at(0)?.shippingMethods?.at(0)
-                      ?.code ?? EMPTY_STRING,
-                  hash: shipAlternativeBranch.hash,
-                  backOrderDate: shipAlternativeBranch.backOrder
-                    ? shipAlternativeBranch?.plants?.[0]?.backOrderDate
-                    : "",
-                  backOrderQuantity: shipAlternativeBranch.backOrder
-                    ? shipAlternativeBranch?.plants?.[0]?.backOrderQuantity
-                    : 0,
-                }),
-              );
-            } else if (backOrderAll) {
-              setSelectedShippingOption(MAIN_OPTIONS.BACK_ORDER);
-              handleSave(
-                createCartItemConfig({
-                  method:
-                    backOrderAll.plants?.at(0)?.shippingMethods?.at(0)?.code ??
-                    EMPTY_STRING,
-                  quantity: 0,
-                  plant: backOrderAll.plants?.at(0)?.plant ?? EMPTY_STRING,
-                  hash: backOrderAll.hash,
-                  backOrderDate: backOrderAll.plants?.at(0)?.backOrderDate,
-                  backOrderQuantity:
-                    backOrderAll.plants?.at(0)?.backOrderQuantity,
-                  backOrderAll: true,
-                }),
-              );
-            }
-          }
+    if (deferredQuantity > 0) {
+      checkAvailabilityMutation.mutate(
+        {
+          productId: product.id,
+          qty: Number(deferredQuantity),
         },
-      },
-    );
+        {
+          onSuccess: ({ options }) => {
+            if (options.length > 0) {
+              const availableAll = findAvailabilityOptionForType(
+                options,
+                AVAILABLE_ALL,
+              );
+              const takeOnHand = findAvailabilityOptionForType(
+                options,
+                TAKE_ON_HAND,
+              );
+              const shipAlternativeBranch = findAvailabilityOptionForType(
+                options,
+                ALTERNATIVE_BRANCHES,
+              );
+              const backOrderAll = findAvailabilityOptionForType(
+                options,
+                BACK_ORDER_ALL,
+              );
+              if (availableAll) {
+                setSelectedShippingOption(MAIN_OPTIONS.SHIP_TO_ME);
+                setSelectedShipToMe(AVAILABLE_ALL);
+                handleSave(
+                  createCartItemConfig({
+                    method:
+                      availableAll.plants?.at(0)?.shippingMethods?.at(0)
+                        ?.code ?? EMPTY_STRING,
+                    quantity: availableAll.plants?.at(0)?.quantity ?? 0,
+                    plant: availableAll.plants?.at(0)?.plant ?? EMPTY_STRING,
+                    hash: availableAll.hash,
+                  }),
+                );
+              } else if (takeOnHand) {
+                setSelectedShippingOption(MAIN_OPTIONS.SHIP_TO_ME);
+                setSelectedShipToMe(TAKE_ON_HAND);
+                handleSave(
+                  createCartItemConfig({
+                    method:
+                      takeOnHand.plants?.at(0)?.shippingMethods?.at(0)?.code ??
+                      EMPTY_STRING,
+                    quantity: takeOnHand.plants?.at(0)?.quantity ?? 0,
+                    plant: takeOnHand.plants?.at(0)?.plant ?? EMPTY_STRING,
+                    hash: takeOnHand.hash,
+                    backOrderDate: takeOnHand.plants?.at(0)?.backOrderDate,
+                    backOrderQuantity:
+                      takeOnHand.plants?.at(0)?.backOrderQuantity,
+                  }),
+                );
+              } else if (shipAlternativeBranch) {
+                setSelectedShippingOption(MAIN_OPTIONS.SHIP_TO_ME);
+                setSelectedShipToMe(ALTERNATIVE_BRANCHES);
+                handleSave(
+                  getAlternativeBranchesConfig({
+                    plants: shipAlternativeBranch.plants,
+                    method:
+                      shipAlternativeBranch.plants
+                        ?.at(0)
+                        ?.shippingMethods?.at(0)?.code ?? EMPTY_STRING,
+                    hash: shipAlternativeBranch.hash,
+                    backOrderDate: shipAlternativeBranch.backOrder
+                      ? shipAlternativeBranch?.plants?.[0]?.backOrderDate
+                      : "",
+                    backOrderQuantity: shipAlternativeBranch.backOrder
+                      ? shipAlternativeBranch?.plants?.[0]?.backOrderQuantity
+                      : 0,
+                  }),
+                );
+              } else if (backOrderAll) {
+                setSelectedShippingOption(MAIN_OPTIONS.BACK_ORDER);
+                handleSave(
+                  createCartItemConfig({
+                    method:
+                      backOrderAll.plants?.at(0)?.shippingMethods?.at(0)
+                        ?.code ?? EMPTY_STRING,
+                    quantity: 0,
+                    plant: backOrderAll.plants?.at(0)?.plant ?? EMPTY_STRING,
+                    hash: backOrderAll.hash,
+                    backOrderDate: backOrderAll.plants?.at(0)?.backOrderDate,
+                    backOrderQuantity:
+                      backOrderAll.plants?.at(0)?.backOrderQuantity,
+                    backOrderAll: true,
+                  }),
+                );
+              }
+            }
+          },
+        },
+      );
+    }
   };
 
   const handleSave = (config?: Partial<CartItemConfiguration>) => {
     const data = getValues();
 
-    updateCartConfigMutation.mutate([
-      {
-        cartItemId: product.cartItemId,
-        quantity: Number(data.quantity),
-        config: {
-          ...product.configuration,
-          ...config,
-          poOrJobName: data.po,
+    if (Number(data.quantity) > 0) {
+      updateCartConfigMutation.mutate([
+        {
+          cartItemId: product.cartItemId,
+          quantity: Number(data.quantity),
+          config: {
+            ...product.configuration,
+            ...config,
+            poOrJobName: data.po,
+          },
         },
-      },
-    ]);
+      ]);
+    }
   };
 
   const handlePriceOverride = (newPrice: number) => {
     const data = getValues();
 
-    updateCartConfigMutation.mutate([
-      {
-        cartItemId: product.cartItemId,
-        quantity: Number(data.quantity),
-        price: newPrice,
-        config: {
-          ...product.configuration,
-          poOrJobName: data.po,
+    if (Number(data.quantity) > 0) {
+      updateCartConfigMutation.mutate([
+        {
+          cartItemId: product.cartItemId,
+          quantity: Number(data.quantity),
+          price: newPrice,
+          config: {
+            ...product.configuration,
+            poOrJobName: data.po,
+          },
         },
-      },
-    ]);
+      ]);
+    }
   };
 
   const handleDeleteCartItem = () => {
@@ -557,7 +566,7 @@ const CartItem = ({
           </div>
         </div>
 
-        <form className="flex-1 space-y-2 md:space-y-1">
+        <div className="flex-1 space-y-2 md:space-y-1">
           <Suspense fallback={<Skeleton className="h-7 w-full" />}>
             <CartItemPrice
               token={token}
@@ -610,6 +619,7 @@ const CartItem = ({
                     min={product.minAmount}
                     step={product.increment}
                     disabled={checkAvailabilityQuery.isPending}
+                    form={cartFormId} // This is to check the validity when clicking "checkout"
                   />
 
                   <span
@@ -663,7 +673,7 @@ const CartItem = ({
               className="h-fit rounded px-2.5 py-1 text-base"
             />
           </div>
-        </form>
+        </div>
       </div>
 
       <div className="md:w-80">

@@ -178,8 +178,8 @@ const Footer = () => {
           <div className="flex flex-col gap-6 md:flex-row md:justify-between md:border-t md:border-wurth-gray-250 md:pt-7">
             <p className="text-center text-xs text-wurth-gray-500 md:text-left">
               <Balancer>
-                Copyright © 2004-{new Date().getFullYear()}, Würth Baer Supply
-                Company. All Rights Reserved. All logos are Trademarks of their
+                Copyright © {new Date().getFullYear()}, Würth Louis & Company.
+                All Rights Reserved. All logos are Trademarks of their
                 respective owners.
               </Balancer>
             </p>
