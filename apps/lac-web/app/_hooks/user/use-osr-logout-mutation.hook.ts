@@ -19,10 +19,10 @@ const useOSRLogoutMutation = () => {
         .json<{
           status_code: "OK";
         }>(),
-    onSuccess: () => {
+    onSuccess: async () => {
       queryClient.invalidateQueries();
 
-      revalidateSiteLayout("/");
+      await revalidateSiteLayout("/");
     },
   });
 };

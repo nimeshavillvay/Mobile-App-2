@@ -24,7 +24,7 @@ const useLogoutMutation = () => {
         .json<{
           status_code: "OK";
         }>(),
-    onSuccess: () => {
+    onSuccess: async () => {
       queryClient.invalidateQueries();
 
       let inPrivateRoute = false;
@@ -34,7 +34,7 @@ const useLogoutMutation = () => {
         }
       });
 
-      revalidateSiteLayout(inPrivateRoute ? "/sign-in" : undefined);
+      await revalidateSiteLayout(inPrivateRoute ? "/sign-in" : undefined);
     },
   });
 };

@@ -64,7 +64,7 @@ const useSignInMutation = () => {
 
       return transformData;
     },
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       toast({
         title: "Sign in successful",
       });
@@ -74,7 +74,7 @@ const useSignInMutation = () => {
         return revalidateSiteLayout("/osr/dashboard");
       }
 
-      revalidateSiteLayout("/");
+      await revalidateSiteLayout("/");
     },
   });
 };
