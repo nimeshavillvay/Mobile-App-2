@@ -3,6 +3,17 @@
 import useDebouncedState from "@/_hooks/misc/use-debounced-state.hook";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AddToCart } from "@repo/web-ui/components/icons/add-to-cart";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@repo/web-ui/components/ui/alert-dialog";
 import { Button } from "@repo/web-ui/components/ui/button";
 import { useEffect, useId, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
@@ -57,6 +68,7 @@ const AddMoreItemsForm = ({ token }: { readonly token: string }) => {
   const [bulkUploadItems, setBulkUploadItems] = useState<
     { sku: string; quantity: string; jobName: string }[]
   >([]);
+  const [deleteConfirmation, setDeleteConfirmation] = useState(false);
 
   const addMultipleToCartMutation = useAddMultipleToCartMutation(token);
   const debouncedSearchInput = useDebouncedState(searchInput);
@@ -283,15 +295,19 @@ const AddMoreItemsForm = ({ token }: { readonly token: string }) => {
 
     addMultipleToCartMutation.mutateAsync(cartItemDetails, {
       onSuccess: () => {
-        reset();
-        setLastEditedIndex(0);
-        setIsBulkUploadDone(false);
-        setIsFormSubmitted(false);
-        setIsFormInvalid(false);
-        setBulkUploadItems([]);
-        setFile(null);
+        resetForm();
       },
     });
+  };
+
+  const resetForm = () => {
+    reset();
+    setLastEditedIndex(0);
+    setIsBulkUploadDone(false);
+    setIsFormSubmitted(false);
+    setIsFormInvalid(false);
+    setBulkUploadItems([]);
+    setFile(null);
   };
 
   const isInvalidQuantity = (index: number) => {
@@ -390,14 +406,32 @@ const AddMoreItemsForm = ({ token }: { readonly token: string }) => {
         />
 
         <div className="flex w-full min-w-[820px] items-center justify-end gap-2">
-          <Button
-            type="button"
-            variant="ghost"
-            className="font-medium"
-            onClick={() => reset()}
-          >
-            Clear all
-          </Button>
+          {fields.length > 0 && (
+            <AlertDialog
+              open={deleteConfirmation}
+              onOpenChange={setDeleteConfirmation}
+            >
+              <AlertDialogTrigger asChild>
+                <Button type="button" variant="ghost" className="font-medium">
+                  Clear all
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Confirm Action</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Are you sure want to clear all the items?
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction onClick={() => resetForm()}>
+                    Confirm
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          )}
 
           <Button type="submit" variant="default" className="">
             <AddToCart className="stroke-white stroke-2" width={16} />

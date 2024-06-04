@@ -4,5 +4,6 @@ export * from "./products-grid-desktop-filters-header";
 export * from "./products-grid-filters";
 export * from "./products-grid-header";
 export * from "./products-grid-list";
+export * from "./products-grid-mobile-filters-header";
 export * from "./products-grid-pagination";
 export * from "./use-filter-params.hook";
