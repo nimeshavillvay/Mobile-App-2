@@ -30,16 +30,38 @@ const AddressSelector = ({
   const [selectedShippingAddress, setSelectedShippingAddress] =
     useState<number>();
 
+  const getBillingAddress = () => {
+    if (
+      typeof selectedBillingAddress === "number" &&
+      billingAddresses[selectedBillingAddress] !== undefined
+    ) {
+      return {
+        ...billingAddresses[selectedBillingAddress],
+        skip_address_check: true,
+      };
+    } else {
+      return undefined;
+    }
+  };
+
+  const getShippingAddress = () => {
+    if (
+      typeof selectedShippingAddress === "number" &&
+      shippingAddresses[selectedShippingAddress] !== undefined
+    ) {
+      return {
+        ...shippingAddresses[selectedShippingAddress],
+        skip_address_check: true,
+      };
+    } else {
+      return undefined;
+    }
+  };
+
   const onSubmit = () => {
     updateAddress({
-      billing:
-        typeof selectedBillingAddress === "number"
-          ? billingAddresses[selectedBillingAddress]
-          : undefined,
-      shipping:
-        typeof selectedShippingAddress === "number"
-          ? shippingAddresses[selectedShippingAddress]
-          : undefined,
+      billing: getBillingAddress(),
+      shipping: getShippingAddress(),
     });
   };
 
