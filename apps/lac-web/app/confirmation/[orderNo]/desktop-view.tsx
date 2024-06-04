@@ -219,18 +219,16 @@ const DesktopView = async ({ orderNo }: DesktopViewProps) => {
                               }
                             </div>
                           )}
-
+                          {lineItem.shipQuantity > 0 && lineItem.boQty > 0 && (
+                            <span>&bull;</span>
+                          )}
                           {lineItem.boQty > 0 && !!lineItem.boDate && (
-                            <>
-                              <span>&bull;</span>
-
-                              <div>
-                                Backorder {lineItem.boQty} items, ship by{" "}
-                                {dayjs(lineItem.boDate).format(
-                                  "ddd, MMM. D, YYYY",
-                                )}
-                              </div>
-                            </>
+                            <div>
+                              Backorder {lineItem.boQty} items, ship by{" "}
+                              {dayjs(lineItem.boDate).format(
+                                "ddd, MMM. D, YYYY",
+                              )}
+                            </div>
                           )}
                         </td>
                       </tr>

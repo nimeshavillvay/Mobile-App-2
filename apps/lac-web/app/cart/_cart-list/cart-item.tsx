@@ -80,6 +80,7 @@ type CartItemProps = {
     cartItemId: number;
     slug: string;
     isExcludedProduct: boolean;
+    uom: string;
   };
   readonly plants: Plant[];
   readonly cartConfiguration: CartConfiguration;
@@ -222,7 +223,7 @@ const CartItem = ({
     checkAvailabilityMutation.mutate(
       {
         productId: product.id,
-        qty: deferredQuantity,
+        qty: Number(deferredQuantity),
       },
       {
         onSuccess: ({ options }) => {
@@ -474,6 +475,13 @@ const CartItem = ({
   useEffect(() => {
     // Check if matched availability option exists
     if (matchedAvailabilityOption) {
+      // Check if there is a selected shipping method
+      if (itemConfigShippingMethod?.length > 0) {
+        // Return early to prevent the selected option from being
+        // overridden by the first option in the availability options
+        return setSelectedShippingMethod(itemConfigShippingMethod);
+      }
+
       if (matchedAvailabilityOption.type === AVAILABLE_ALL) {
         setSelectedShippingOption(MAIN_OPTIONS.SHIP_TO_ME);
         setSelectedShipToMe(AVAILABLE_ALL);
@@ -485,10 +493,6 @@ const CartItem = ({
         setSelectedShipToMe(ALTERNATIVE_BRANCHES);
       } else if (matchedAvailabilityOption.type === BACK_ORDER_ALL) {
         setSelectedShippingOption(MAIN_OPTIONS.BACK_ORDER);
-      }
-      // Check if there is a selected shipping method
-      if (itemConfigShippingMethod && itemConfigShippingMethod !== "") {
-        setSelectedShippingMethod(itemConfigShippingMethod);
       }
     } else {
       // Check if hash matches with the will call hash
@@ -581,31 +585,44 @@ const CartItem = ({
               control={control}
               name="quantity"
               render={({ field: { onChange, onBlur, value, name, ref } }) => (
-                <QuantityInputField
-                  onBlur={onBlur}
-                  onChange={(event) => {
-                    if (
-                      Number(event.target.value) >= product.minAmount &&
-                      Number(event.target.value) % product.increment === 0
-                    ) {
-                      handleChangeQtyOrPO();
-                    }
+                <div className="flex items-center">
+                  <QuantityInputField
+                    onBlur={onBlur}
+                    onChange={(event) => {
+                      if (
+                        Number(event.target.value) >= product.minAmount &&
+                        Number(event.target.value) % product.increment === 0
+                      ) {
+                        handleChangeQtyOrPO();
+                      }
 
-                    onChange(event);
-                  }}
-                  value={value}
-                  ref={ref}
-                  name={name}
-                  removeDefaultStyles
-                  className={cn(
-                    "h-fit rounded px-2.5 py-1 text-base md:w-24",
-                    isQuantityLessThanMin ? "border-red-700" : "",
-                  )}
-                  required
-                  min={product.minAmount}
-                  step={product.increment}
-                  disabled={checkAvailabilityQuery.isPending}
-                />
+                      onChange(event);
+                    }}
+                    value={value}
+                    ref={ref}
+                    name={name}
+                    removeDefaultStyles
+                    className={cn(
+                      "h-fit w-24 rounded-none rounded-l border-r-0 px-2.5 py-1 text-base focus:border-none focus:outline-none focus:ring-0 md:w-20",
+                      isQuantityLessThanMin ? "border-red-700" : "",
+                    )}
+                    required
+                    min={product.minAmount}
+                    step={product.increment}
+                    disabled={checkAvailabilityQuery.isPending}
+                  />
+
+                  <span
+                    className={cn(
+                      "rounded-r border border-l-0 p-1 pr-1.5 lowercase text-zinc-500",
+                      isQuantityLessThanMin
+                        ? "border-red-700"
+                        : "border-gray-200",
+                    )}
+                  >
+                    {product.uom}
+                  </span>
+                </div>
               )}
             />
 

@@ -71,7 +71,7 @@ const DownloadLink = ({
       href={`https://${path}`}
       className={cn(
         buttonVariants({ variant: "outline" }),
-        "flex h-fit max-w-full flex-col items-start gap-2 rounded-lg border-wurth-gray-250 p-3 shadow-sm",
+        "flex h-fit max-w-full flex-col items-start gap-2 overflow-hidden rounded-lg border-wurth-gray-250 p-3 shadow-sm",
       )}
       target="_blank"
       rel="noopener noreferrer"
