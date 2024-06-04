@@ -1,13 +1,12 @@
+import { revalidateSiteLayout } from "@/_actions/revalidate";
 import useCookies from "@/_hooks/storage/use-cookies.hook";
 import { api } from "@/_lib/api";
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import { useToast } from "@repo/web-ui/components/ui/toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
 
 const useSignInMutation = () => {
   const [cookies] = useCookies();
-  const router = useRouter();
   const queryClient = useQueryClient();
   const { toast } = useToast();
 
@@ -72,10 +71,10 @@ const useSignInMutation = () => {
       queryClient.invalidateQueries();
 
       if (data.authentication.isSalesRep) {
-        return router.replace("/osr/dashboard");
+        return revalidateSiteLayout("/osr/dashboard");
       }
 
-      router.replace("/");
+      revalidateSiteLayout("/");
     },
   });
 };

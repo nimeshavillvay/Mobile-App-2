@@ -1,14 +1,14 @@
+import { revalidateSiteLayout } from "@/_actions/revalidate";
 import useCookies from "@/_hooks/storage/use-cookies.hook";
 import { api } from "@/_lib/api";
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 const PRIVATE_ROUTES = ["/checkout", "/myaccount"];
 
 const useLogoutMutation = () => {
   const pathname = usePathname();
-  const router = useRouter();
 
   const [cookies] = useCookies();
   const queryClient = useQueryClient();
@@ -27,11 +27,14 @@ const useLogoutMutation = () => {
     onSuccess: () => {
       queryClient.invalidateQueries();
 
+      let inPrivateRoute = false;
       PRIVATE_ROUTES.forEach((privateRoute) => {
         if (pathname.startsWith(privateRoute)) {
-          router.replace("/sign-in");
+          inPrivateRoute = true;
         }
       });
+
+      revalidateSiteLayout(inPrivateRoute ? "/sign-in" : undefined);
     },
   });
 };
