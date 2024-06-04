@@ -4,6 +4,15 @@ import useStates from "@/_hooks/registration/use-states.hook";
 import type { PasswordPolicies } from "@/_lib/types";
 import { NUMBER_TYPE } from "@/_lib/zod-helper";
 import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@repo/web-ui/components/ui/alert-dialog";
 import { Checkbox } from "@repo/web-ui/components/ui/checkbox";
 import {
   Form,
@@ -140,6 +149,7 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
   const email = searchParams.get("email");
 
   const [step, setStep] = useState<Step>("personal");
+  const [openVerificationDialog, setOpenVerificationDialog] = useState(false);
 
   const { toast } = useToast();
 
@@ -324,14 +334,18 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
               setShippingSuggestions(data.suggestions["shipping-address"]);
             }
           } else {
+            setOpenVerificationDialog(true);
             toast({
               title: "Registered successfully",
             });
-            router.replace("/");
           }
         },
       },
     );
+  };
+
+  const onOkButtonClicked = () => {
+    router.replace("/");
   };
 
   const handleAddressOnSubmit = addressForm.handleSubmit((values) => {
@@ -375,17 +389,38 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
   // should be cleared.
   if (billingSuggestions.length > 0 || shippingSuggestions.length > 0) {
     return (
-      <AddressSelector
-        billingAddresses={billingSuggestions}
-        shippingAddresses={shippingSuggestions}
-        clearSuggestions={() => {
-          // Clear all suggestions
-          setBillingSuggestions([]);
-          setShippingSuggestions([]);
-        }}
-        updateAddress={updateAddress}
-        disabled={registerNewUserMutation.isPending}
-      />
+      <>
+        <AlertDialog
+          open={openVerificationDialog}
+          onOpenChange={() => setOpenVerificationDialog(false)}
+        >
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Address Verified!</AlertDialogTitle>
+              <AlertDialogDescription>
+                We&apos;ll use this address for shipping and tax calculation
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogAction onClick={onOkButtonClicked}>
+                OK
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+
+        <AddressSelector
+          billingAddresses={billingSuggestions}
+          shippingAddresses={shippingSuggestions}
+          clearSuggestions={() => {
+            // Clear all suggestions
+            setBillingSuggestions([]);
+            setShippingSuggestions([]);
+          }}
+          updateAddress={updateAddress}
+          disabled={registerNewUserMutation.isPending}
+        />
+      </>
     );
   }
 
@@ -452,7 +487,7 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
                 name="email"
                 disabled={registerNewUserMutation.isPending}
                 render={({ field }) => (
-                  <FormItem className="md:hidden">
+                  <FormItem className="hidden">
                     <FormLabel>Email address</FormLabel>
                     <FormControl>
                       <Input
