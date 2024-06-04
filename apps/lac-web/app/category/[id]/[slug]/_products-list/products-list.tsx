@@ -4,6 +4,7 @@ import {
   ProductsGridFiltersSkeleton,
   ProductsGridHeaderSkeleton,
   ProductsGridListSkeleton,
+  ProductsGridMobileFiltersHeaderSkeleton,
   ProductsGridPaginationSkeleton,
 } from "@/_components/products-grid";
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
@@ -13,6 +14,7 @@ import ProductsListDesktopFiltersHeader from "./products-list-desktop-filters-he
 import ProductsListFilters from "./products-list-filters";
 import ProductsListGrid from "./products-list-grid";
 import ProductsListHeader from "./products-list-header";
+import ProductsListMobileFilters from "./products-list-mobile-filters";
 import ProductsListPagination from "./products-list-pagination";
 
 type ProductsListProps = {
@@ -29,6 +31,13 @@ const ProductsList = ({ categoryId }: ProductsListProps) => {
 
   return (
     <ProductsGrid>
+      <Suspense fallback={<ProductsGridMobileFiltersHeaderSkeleton />}>
+        <ProductsListMobileFilters
+          token={tokenCookie.value}
+          categoryId={categoryId}
+        />
+      </Suspense>
+
       <Suspense fallback={<ProductsGridHeaderSkeleton />}>
         <ProductsListHeader token={tokenCookie.value} categoryId={categoryId} />
       </Suspense>

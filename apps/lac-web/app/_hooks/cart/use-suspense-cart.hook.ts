@@ -17,11 +17,13 @@ const getConfigAvailability = (option: CartItemConfiguration) => {
     const shippingMethodKey =
       `shipping_method_${i}` as keyof CartItemConfiguration;
 
-    plantAvailable.push({
-      plant: option[plantKey],
-      quantity: Number(option[quantityKey]),
-      shippingMethod: option[shippingMethodKey],
-    });
+    if (option[plantKey] && option[quantityKey]) {
+      plantAvailable.push({
+        plant: option[plantKey],
+        quantity: Number(option[quantityKey]),
+        shippingMethod: option[shippingMethodKey],
+      });
+    }
   }
 
   return plantAvailable;
@@ -55,6 +57,8 @@ const useSuspenseCart = (token: string) => {
             hashValue: item.configuration.hashvalue,
             selectedOption: item.configuration.selectedOption,
             backOrderAll: item.configuration.backorder_all,
+            backOrderQuantity: Number(item.configuration.backorder_quantity),
+            backOrderDate: item.configuration.backorder_date,
           },
           itemInfo: {
             productId: Number(item.itemInfo.productid),

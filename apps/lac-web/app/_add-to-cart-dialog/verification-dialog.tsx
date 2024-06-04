@@ -429,6 +429,15 @@ const LocationStocks = ({
   const isBackordered = checkAvailabilityQuery.data.status === "notInStock";
   const isLimitedStock = checkAvailabilityQuery.data.status === "limitedStock";
 
+  // If there isn't even one location returned, hide the component
+  if (
+    !firstLocation &&
+    otherLocations.length === 0 &&
+    checkAvailabilityQuery.data.status === "notAvailable"
+  ) {
+    return null;
+  }
+
   return (
     <Collapsible className="flex flex-col gap-1">
       <div className="flex flex-row flex-wrap items-center justify-between gap-2 rounded-lg bg-wurth-gray-50 p-2">

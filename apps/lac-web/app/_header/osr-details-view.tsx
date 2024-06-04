@@ -12,19 +12,13 @@ const OSRDetailsView = ({ token }: { readonly token: string }) => {
   const router = useRouter();
 
   const loginCheckData = loginCheckResponse.data;
-  let isOSRLoggedInAsCustomer = false;
 
-  // TODO: Update this function after the /login-check API is updated to identify the OSR login status
-  if (
-    loginCheckData.status_code === "OK" &&
-    "sales_rep_id" in loginCheckData &&
-    "user_id" in loginCheckData
-  ) {
-    isOSRLoggedInAsCustomer = true;
+  if (loginCheckData.status_code == "NOT_LOGGED_IN") {
+    return null;
   }
 
   return (
-    isOSRLoggedInAsCustomer && (
+    loginCheckData.isLoggedInAsCustomer && (
       <div className="flex items-center gap-5">
         <div>
           <span>Logged in as&nbsp;</span>

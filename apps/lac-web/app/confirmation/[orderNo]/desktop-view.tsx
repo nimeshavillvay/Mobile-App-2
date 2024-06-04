@@ -95,19 +95,28 @@ const DesktopView = async ({ orderNo }: DesktopViewProps) => {
                             method.code === orderDetails.paymentMethod,
                         )?.name
                       }
+                      {!!orderDetails.lastCardDigits && (
+                        <span>
+                          {" "}
+                          / &#x2022;&#x2022;&#x2022;&#x2022;
+                          &#x2022;&#x2022;&#x2022;&#x2022;
+                          &#x2022;&#x2022;&#x2022;&#x2022;{" "}
+                          {orderDetails.lastCardDigits}
+                        </span>
+                      )}
                     </td>
                   </tr>
 
                   <tr>
                     <td className={tableLabelStyles()}>Bill to</td>
-                    <td className={tableValueStyles()}>{orderDetails.email}</td>
+                    <td className={tableValueStyles()}>
+                      {orderDetails.orderBy}
+                    </td>
                   </tr>
 
                   <tr>
                     <td className={tableLabelStyles()}>Email address</td>
-                    <td className={tableValueStyles()}>
-                      {orderDetails.orderBy}
-                    </td>
+                    <td className={tableValueStyles()}>{orderDetails.email}</td>
                   </tr>
 
                   <tr>

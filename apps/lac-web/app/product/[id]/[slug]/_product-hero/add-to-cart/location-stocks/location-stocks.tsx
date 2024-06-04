@@ -48,6 +48,15 @@ const LocationStocks = ({ token, productId }: LocationStocksProps) => {
 
   const checkLoginQuery = useSuspenseCheckLogin(token);
 
+  // If there isn't even one location returned, hide the component
+  if (
+    !homeBranch &&
+    otherLocations.length === 0 &&
+    checkAvailabilityQuery.data.status === "notAvailable"
+  ) {
+    return null;
+  }
+
   return (
     <Collapsible className="flex flex-col gap-1">
       <div className="space-y-2 py-1 md:flex md:flex-row md:items-center md:justify-between md:space-y-0">
@@ -74,22 +83,24 @@ const LocationStocks = ({ token, productId }: LocationStocksProps) => {
           )}
         </div>
 
-        {checkLoginQuery.data.status_code === "OK" && !isNotInStock && (
-          <CollapsibleTrigger
-            className="group flex h-fit w-full flex-row items-center justify-between font-bold md:w-fit md:px-2 md:py-0.5"
-            asChild
-          >
-            <Button type="button" variant="subtle">
-              <span>Check Other Stores</span>
+        {checkLoginQuery.data.status_code === "OK" &&
+          !isNotInStock &&
+          otherLocations.length > 0 && (
+            <CollapsibleTrigger
+              className="group flex h-fit w-full flex-row items-center justify-between font-bold md:w-fit md:px-2 md:py-0.5"
+              asChild
+            >
+              <Button type="button" variant="subtle">
+                <span>Check Other Stores</span>
 
-              <ChevronRight
-                width={16}
-                height={16}
-                className="transition duration-150 ease-out group-data-[state=open]:rotate-90"
-              />
-            </Button>
-          </CollapsibleTrigger>
-        )}
+                <ChevronRight
+                  width={16}
+                  height={16}
+                  className="transition duration-150 ease-out group-data-[state=open]:rotate-90"
+                />
+              </Button>
+            </CollapsibleTrigger>
+          )}
       </div>
 
       {checkLoginQuery.data.status_code === "OK" && (
