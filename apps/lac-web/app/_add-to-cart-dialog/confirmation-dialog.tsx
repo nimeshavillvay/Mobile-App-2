@@ -156,6 +156,7 @@ const ConfirmationDialog = ({ token }: ConfirmationDialogProps) => {
             id={jobNameId}
             type="text"
             placeholder="PO # / Job Name"
+            className="hidden"
           />
         </form>
 
