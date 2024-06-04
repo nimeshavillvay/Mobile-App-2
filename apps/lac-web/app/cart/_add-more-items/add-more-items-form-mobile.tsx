@@ -165,7 +165,7 @@ const AddMoreItemsFormMobile = ({ token }: { readonly token: string }) => {
         </DrawerTrigger>
 
         <DrawerContent>
-          <div className="mx-auto w-full max-w-[26.75rem] px-4">
+          <div className="mx-auto w-full max-w-[26.75rem] overflow-y-scroll px-4">
             <DrawerHeader className="px-0">
               <DrawerTitle className="px-0 text-left">
                 Add an item to cart
