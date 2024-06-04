@@ -4,6 +4,7 @@ import useSuspenseSimulationCheckout from "@/_hooks/cart/use-suspense-simulation
 import useUpdateCartConfigMutation from "@/_hooks/cart/use-update-cart-config-mutation.hook";
 import { formatNumberToPrice } from "@/_lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Close } from "@repo/web-ui/components/icons/close";
 import { Plus } from "@repo/web-ui/components/icons/plus";
 import { Button } from "@repo/web-ui/components/ui/button";
 import {
@@ -41,6 +42,7 @@ type OrderSummaryProps = {
  */
 const OrderSummary = ({ token, children }: OrderSummaryProps) => {
   const simulationCheckoutQuery = useSuspenseSimulationCheckout(token);
+
   const [openPromo, setOpenPromo] = useState(
     // Open the promo code section if a promo code is already applied
     !!simulationCheckoutQuery.data.configuration.coupon,
@@ -55,19 +57,25 @@ const OrderSummary = ({ token, children }: OrderSummaryProps) => {
 
   const updateCartConfigMutation = useUpdateCartConfigMutation();
 
-  const onSubmit = form.handleSubmit((data) => {
+  const updateCartConfig = (promo: string = "") => {
     updateCartConfigMutation.mutate(
-      { coupon: data.promo },
+      { coupon: promo },
       {
         onSuccess: (data) => {
           if (data.error.coupon) {
             form.setError("promo", {
               message: "Invalid Promo Code",
             });
+            return;
           }
+          setOpenPromo(false);
         },
       },
     );
+  };
+
+  const onSubmit = form.handleSubmit((data) => {
+    updateCartConfig(data.promo);
   });
 
   const onOpenChange = (open: boolean) => {
@@ -153,72 +161,108 @@ const OrderSummary = ({ token, children }: OrderSummaryProps) => {
                   }
                 >
                   <div className="flex flex-row items-center justify-between">
-                    <div className="py-1 font-medium">Promo Code</div>
+                    <div className="flex py-1 font-medium">
+                      Promo Code
+                      {!!simulationCheckoutQuery.data.configuration.coupon && (
+                        <div className="ml-1">
+                          {" "}
+                          {simulationCheckoutQuery.data.configuration.coupon}
+                        </div>
+                      )}
+                    </div>
 
-                    <CollapsibleTrigger asChild>
-                      <Button
-                        variant="subtle"
-                        className="h-fit gap-1 px-2 py-0.5 font-bold"
-                      >
-                        {!openPromo ? (
-                          <>
-                            <Plus className="size-4" /> <span>Add</span>
-                          </>
-                        ) : (
-                          "Cancel"
-                        )}
-                      </Button>
-                    </CollapsibleTrigger>
+                    {!!simulationCheckoutQuery.data.configuration.coupon ==
+                      false && (
+                      <CollapsibleTrigger asChild>
+                        <Button
+                          variant="subtle"
+                          className="h-fit gap-1 px-2 py-0.5 font-bold"
+                        >
+                          {!openPromo ? (
+                            <>
+                              <Plus className="size-4" /> <span>Add</span>
+                            </>
+                          ) : (
+                            "Cancel"
+                          )}
+                        </Button>
+                      </CollapsibleTrigger>
+                    )}
+
+                    {!!simulationCheckoutQuery.data.configuration.coupon && (
+                      <div className="flex items-center gap-1 text-green-700">
+                        <div>
+                          -$
+                          {formatNumberToPrice(
+                            parseFloat(
+                              simulationCheckoutQuery.data.discount.toFixed(2),
+                            ),
+                          )}
+                        </div>
+
+                        <Close
+                          className="cursor-pointer"
+                          onClick={() => {
+                            updateCartConfig();
+                          }}
+                          width={12}
+                          height={12}
+                        />
+                      </div>
+                    )}
                   </div>
 
-                  <CollapsibleContent asChild>
-                    <form
-                      onSubmit={onSubmit}
-                      className="mt-2 flex flex-row gap-2"
-                    >
-                      <FormField
-                        control={form.control}
-                        name="promo"
-                        disabled={
-                          updateCartConfigMutation.isPending ||
-                          simulationCheckoutQuery.isFetching
-                        }
-                        render={({ field }) => (
-                          <FormItem className="flex-1">
-                            <FormLabel className="sr-only">
-                              Promo Code
-                            </FormLabel>
-
-                            <FormControl>
-                              <Input
-                                required
-                                type="text"
-                                className="h-8"
-                                {...field}
-                              />
-                            </FormControl>
-
-                            <FormDescription className="sr-only">
-                              Enter your promo code here.
-                            </FormDescription>
-
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      <Button
-                        size="sm"
-                        type="submit"
-                        disabled={
-                          updateCartConfigMutation.isPending ||
-                          simulationCheckoutQuery.isFetching
-                        }
+                  {!!simulationCheckoutQuery.data.configuration.coupon ==
+                    false && (
+                    <CollapsibleContent asChild>
+                      <form
+                        onSubmit={onSubmit}
+                        className="mt-2 flex flex-row gap-2"
                       >
-                        Add
-                      </Button>
-                    </form>
-                  </CollapsibleContent>
+                        <FormField
+                          control={form.control}
+                          name="promo"
+                          disabled={
+                            updateCartConfigMutation.isPending ||
+                            simulationCheckoutQuery.isFetching
+                          }
+                          render={({ field }) => (
+                            <FormItem className="flex-1">
+                              <FormLabel className="sr-only">
+                                Promo Code
+                              </FormLabel>
+
+                              <FormControl>
+                                <Input
+                                  required
+                                  type="text"
+                                  className="h-8"
+                                  {...field}
+                                />
+                              </FormControl>
+
+                              <FormDescription className="sr-only">
+                                Enter your promo code here.
+                              </FormDescription>
+
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+
+                        <Button
+                          size="sm"
+                          type="submit"
+                          disabled={
+                            updateCartConfigMutation.isPending ||
+                            simulationCheckoutQuery.isFetching
+                          }
+                        >
+                          Add
+                        </Button>
+                      </form>
+                    </CollapsibleContent>
+                  )}
                 </Collapsible>
               </Form>
             </td>
