@@ -234,6 +234,7 @@ export const getOrderDetails = async (token: string, orderId: string) => {
         tax: number;
         promoCode: string;
         paymentMethod: string;
+        lastCardDigits: string;
         driverNotes: string;
         completeDelivery: boolean;
         shipToAddress: {
@@ -322,6 +323,7 @@ export const getOrderDetails = async (token: string, orderId: string) => {
       taxAmount: response.tax,
       promoCode: response.promoCode,
       paymentMethod: response.paymentMethod,
+      lastCardDigits: response.lastCardDigits,
       driverNotes: response.driverNotes,
       completeDelivery: response.completeDelivery,
       shipToAddress: {

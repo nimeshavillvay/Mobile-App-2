@@ -1,5 +1,6 @@
 "use client";
 
+import useSuspenseBillingAddress from "@/_hooks/address/use-suspense-billing-address.hook";
 import useSuspenseUsersList from "@/_hooks/user/use-suspense-users-list.hook";
 import Separator from "@/old/_components/separator";
 import useAccountSelectorDialog from "@/old/_hooks/account/use-account-selector-dialog.hook";
@@ -12,6 +13,9 @@ import defaultAvatar from "./default-avatar.png";
 const Profile = ({ token }: { readonly token: string }) => {
   const usersListQuery = useSuspenseUsersList(token);
   const userProfile = usersListQuery.data?.manageContact?.yourProfile;
+
+  const billingAddressQuery = useSuspenseBillingAddress(token);
+  const billingAddress = billingAddressQuery.data;
 
   // TODO: Need to remove if account selector is not needed
   const setAccountSelectorOpen = useAccountSelectorDialog(
@@ -41,7 +45,7 @@ const Profile = ({ token }: { readonly token: string }) => {
           <div>Company</div>
 
           <div className="flex flex-row items-center gap-1">
-            <span>{userProfile.id ?? "N/A"}</span>
+            <span>{billingAddress?.soldTo ?? "N/A"}</span>
 
             <button
               aria-label="Switch address"
