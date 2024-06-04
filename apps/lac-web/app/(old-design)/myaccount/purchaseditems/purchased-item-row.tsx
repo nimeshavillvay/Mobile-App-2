@@ -29,12 +29,6 @@ import { DATE_FORMAT } from "./constants";
 import FavoriteButton from "./favorite-button";
 import type { DetailedPurchasedItem } from "./types";
 
-const schema = z.object({
-  quantity: z.number().int().min(1).nullable(),
-});
-
-type Schema = z.infer<typeof schema>;
-
 type PurchasedItemRowProps = {
   readonly token: string;
   readonly item: DetailedPurchasedItem;
@@ -50,6 +44,20 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
   const formId = `purchase-add-to-cart-form-${id}`;
 
   const { setQuantity } = useAddToCartDialog((state) => state.actions);
+
+  const schema = z.object({
+    quantity: z
+      .number()
+      .int()
+      .min(item.minimumOrderQuantity, {
+        message: `Please consider minimum order quantity of: ${item.minimumOrderQuantity}`,
+      })
+      .multipleOf(item.quantityByIncrements, {
+        message: `This product is sold in multiples of: ${item.quantityByIncrements}`,
+      })
+      .nullable(),
+  });
+  type Schema = z.infer<typeof schema>;
 
   const methods = useForm<Schema>({
     values: { quantity: null },
@@ -226,15 +234,23 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
           </Label>
           <Input
             id={quantityId}
+            form={formId}
             type="number"
-            step={item.quantityByIncrements}
-            className="h-6 w-16 px-1 text-right text-base leading-4"
+            className={cn(
+              "h-6 w-16 px-1 text-right text-base leading-4",
+              !!methods.formState.errors.quantity?.message &&
+                "border-wurth-red-650",
+            )}
+            disabled={addToCartMutation.isPending || isItemError(item)}
             {...methods.register("quantity", {
               valueAsNumber: true,
-              min: item.minimumOrderQuantity,
-              disabled: addToCartMutation.isPending || isItemError(item),
             })}
           />
+          {!!methods.formState.errors.quantity?.message && (
+            <div className="text-wurth-red-650">
+              {methods.formState.errors.quantity?.message}
+            </div>
+          )}
           {!isItemError(item) && (
             <>
               <div className="text-nowrap">
