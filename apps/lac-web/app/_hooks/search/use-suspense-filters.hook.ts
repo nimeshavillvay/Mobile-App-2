@@ -25,6 +25,9 @@ const useSuspenseFilters = (
         type: typeof PURCHASES;
         from: string;
         to: string;
+        values: {
+          [key: string]: string[] | undefined;
+        };
       }
     | {
         type: typeof FAVORITES;
@@ -62,11 +65,23 @@ const useSuspenseFilters = (
         }
       }
 
-      if (
-        (args.type === "Order History" || args.type === "Purchases") &&
-        args.from &&
-        args.to
-      ) {
+      if (args.type === "Purchases" && args.from && args.to && args.values) {
+        searchParams.append("from", args.from);
+        searchParams.append("to", args.to);
+        console.log(args.values);
+        for (const [key, values] of Object.entries(args.values)) {
+          if (values) {
+            for (const value of values) {
+              rfData[key] = {
+                ...rfData[key],
+                [value]: "Y",
+              };
+            }
+          }
+        }
+      }
+
+      if (args.type === "Order History" && args.from && args.to) {
         searchParams.append("from", args.from);
         searchParams.append("to", args.to);
       }
