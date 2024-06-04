@@ -63,7 +63,7 @@ const ShoppingList = ({ token }: { readonly token: string }) => {
 
   return (
     <>
-      <div className="flex flex-row justify-center">
+      <div className="container flex flex-row justify-center md:px-0">
         {shoppingLists.lists.length > 0 && (
           <Tabs
             onValueChange={setSelectedAddressShoppingListId}
