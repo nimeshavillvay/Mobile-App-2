@@ -215,7 +215,10 @@ const MobileView = async ({ orderNo }: MobileViewProps) => {
 
                       {lineItem.boQty > 0 && !!lineItem.boDate && (
                         <div>
-                          Backorder {lineItem.shipQuantity} items, ship by{" "}
+                          {lineItem.shipQuantity > 0 && lineItem.boQty > 0 && (
+                            <span className="mr-1">&bull;</span>
+                          )}
+                          Backorder {lineItem.boQty} items, ship by{" "}
                           {dayjs(lineItem.boDate).format("ddd, MMM. D, YYYY")}
                         </div>
                       )}
