@@ -352,7 +352,7 @@ const AddShippingAddressDialog = ({
             </form>
           </Form>
         ) : (
-          <div className="flex flex-col gap-4">
+          <div className="flex max-h-[600px] flex-col gap-4">
             <div className="space-y-1">
               <h3 className="text-base font-semibold text-wurth-gray-800">
                 Address Conflict
@@ -365,7 +365,7 @@ const AddShippingAddressDialog = ({
               </p>
             </div>
 
-            <ul className="flex flex-col gap-2">
+            <ul className="flex flex-col gap-2 overflow-y-auto">
               {addressSuggestions.map((address) => (
                 <li key={address.xcAddressId}>
                   <Button
