@@ -37,12 +37,12 @@ const FormContent = ({
           Qty / {uom}
         </div>
 
-        <div className="flex flex-row items-center justify-between gap-2 shadow-sm">
+        <div className="flex flex-row items-center justify-between gap-2">
           <Button
             type="button"
             variant="subtle"
             size="icon"
-            className="size-10 rounded-sm"
+            className="ml-2 h-7 w-10 rounded-sm"
             {...decrementButtonProps}
           >
             <Minus className="size-4" />
@@ -55,7 +55,7 @@ const FormContent = ({
             type="button"
             variant="subtle"
             size="icon"
-            className="size-10 rounded-sm"
+            className="mr-2 h-7 w-10 rounded-sm"
             {...incrementButtonProps}
           >
             <Plus className="size-4" />

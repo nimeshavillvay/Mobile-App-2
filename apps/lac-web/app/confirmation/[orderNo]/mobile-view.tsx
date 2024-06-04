@@ -176,7 +176,7 @@ const MobileView = async ({ orderNo }: MobileViewProps) => {
               item.lineItems.map((lineItem) => (
                 <Fragment key={lineItem.itemNo}>
                   <div className="flex flex-col gap-2">
-                    <div className="flex flex-row items-start gap-3">
+                    <div className="flex flex-row items-start justify-between gap-3">
                       <Image
                         src={lineItem.itemImage}
                         alt={`An image of ${lineItem.itemDescription}`}
@@ -215,7 +215,10 @@ const MobileView = async ({ orderNo }: MobileViewProps) => {
 
                       {lineItem.boQty > 0 && !!lineItem.boDate && (
                         <div>
-                          Backorder {lineItem.shipQuantity} items, ship by{" "}
+                          {lineItem.shipQuantity > 0 && lineItem.boQty > 0 && (
+                            <span className="mr-1">&bull;</span>
+                          )}
+                          Backorder {lineItem.boQty} items, ship by{" "}
                           {dayjs(lineItem.boDate).format("ddd, MMM. D, YYYY")}
                         </div>
                       )}
