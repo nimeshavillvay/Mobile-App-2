@@ -181,7 +181,7 @@ const OrderSummary = ({ token, children }: OrderSummaryProps) => {
 
                     {!!coupon && (
                       <div className="flex items-center gap-1 text-green-700">
-                        <div>-{formattedNumberToPrice(discount)}</div>
+                        <div>Applied</div>
 
                         <Close
                           className="cursor-pointer"
