@@ -61,8 +61,9 @@ const AddToShoppingListDialog = ({
 
   const shoppingLists = shoppingListsQuery?.data;
 
-  const [selectedShoppingLists, setSelectedShoppingLists] =
-    useState<string[]>();
+  const [selectedShoppingLists, setSelectedShoppingLists] = useState<string[]>(
+    [],
+  );
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -160,7 +161,7 @@ const AddToShoppingListDialog = ({
     }
     setIsLoading(true);
 
-    const updatedShoppingLists = selectedShoppingLists;
+    const updatedShoppingLists = structuredClone(selectedShoppingLists);
 
     if (formData.shoppingListName !== "") {
       const newShoppingListId = await createShoppingList(
