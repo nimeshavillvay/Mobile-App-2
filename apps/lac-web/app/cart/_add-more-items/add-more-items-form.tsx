@@ -22,7 +22,7 @@ import * as z from "zod";
 import getStatus from "./apis";
 import BulkUpload from "./bulk-upload";
 import NewItemRow from "./new-item-row";
-import type { Product } from "./types";
+import type { CartItem, Product } from "./types";
 import useAddMultipleToCartMutation from "./use-add-multiple-to-cart-mutation.hook";
 import useSearch from "./use-search.hook";
 
@@ -244,23 +244,7 @@ const AddMoreItemsForm = ({ token }: { readonly token: string }) => {
     });
   };
 
-  const isFormValid = (
-    cartItems: {
-      sku: string;
-      isBulkUploadItem: boolean;
-      quantity?: number | null | undefined;
-      jobName?: string | undefined;
-      isInvalid?: boolean | null | undefined;
-      info?:
-        | {
-            minQuantity: number;
-            orderIncrementBy: number;
-            title: string;
-            image: string;
-          }
-        | undefined;
-    }[],
-  ): boolean => {
+  const isFormValid = (cartItems: CartItem[]): boolean => {
     let isValidForm = true;
     let i = 0;
 
