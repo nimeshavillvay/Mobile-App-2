@@ -616,7 +616,7 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
                   disabled={registerNewUserMutation.isPending}
                   render={({ field }) => (
                     <FormItem className="md:col-span-2">
-                      <FormLabel>Name of the company</FormLabel>
+                      <FormLabel>Company Name</FormLabel>
                       <FormControl>
                         <Input
                           type="text"

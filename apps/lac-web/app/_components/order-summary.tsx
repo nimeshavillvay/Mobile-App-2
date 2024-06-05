@@ -2,6 +2,7 @@
 
 import useSuspenseSimulationCheckout from "@/_hooks/cart/use-suspense-simulation-checkout.hook";
 import useUpdateCartConfigMutation from "@/_hooks/cart/use-update-cart-config-mutation.hook";
+import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
 import { formatNumberToPrice } from "@/_lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Close } from "@repo/web-ui/components/icons/close";
@@ -41,6 +42,7 @@ type OrderSummaryProps = {
  * to avoid blocking the rendering of the parent component.
  */
 const OrderSummary = ({ token, children }: OrderSummaryProps) => {
+  const checkLoginQuery = useSuspenseCheckLogin(token);
   const simulationCheckoutQuery = useSuspenseSimulationCheckout(token);
   const simulationData = simulationCheckoutQuery.data;
   const {
@@ -137,15 +139,21 @@ const OrderSummary = ({ token, children }: OrderSummaryProps) => {
             </td>
           </tr>
 
-          <tr>
-            <td className="py-1">
-              <Link href="/tax-form" className="underline">
-                Sales Tax
-              </Link>
-            </td>
-
-            <td className="py-1 text-right">{formattedNumberToPrice(tax)}</td>
-          </tr>
+          {checkLoginQuery.data.status_code === "OK" && (
+            <tr>
+              <td className="py-1">
+                <Link href="/tax-form" className="underline">
+                  Sales Tax
+                </Link>
+              </td>
+              <td className="py-1 text-right">
+                $
+                {formatNumberToPrice(
+                  parseFloat(simulationCheckoutQuery.data.tax.toFixed(2)),
+                )}
+              </td>
+            </tr>
+          )}
 
           <tr>
             <td colSpan={2} className="pb-3 pt-1">
