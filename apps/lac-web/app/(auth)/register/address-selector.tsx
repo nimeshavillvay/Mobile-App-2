@@ -38,10 +38,7 @@ const AddressSelector = ({
       typeof selectedAddress === "number" &&
       addresses[selectedAddress] !== undefined
     ) {
-      return {
-        ...addresses[selectedAddress],
-        skip_address_check: true,
-      };
+      return addresses[selectedAddress];
     } else {
       return undefined;
     }

@@ -370,6 +370,7 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
   >["updateAddress"] = ({ billing, shipping }) => {
     const newFormValues = structuredClone(formValues);
     let isSkipAddressCheck = false;
+
     if (billing) {
       newFormValues.billingAddress = billing["street-address"];
       newFormValues.billingCity = billing.locality;
@@ -378,7 +379,7 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
       newFormValues.billingCountry = billing["country-name"];
       newFormValues.billingPostCode = billing["postal-code"];
       newFormValues.billingZipCode = billing.zip4;
-      isSkipAddressCheck = billing.skip_address_check ?? false;
+      isSkipAddressCheck = true;
     }
 
     if (shipping) {
@@ -390,7 +391,7 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
       newFormValues.shippingCountry = shipping["country-name"];
       newFormValues.shippingPostCode = shipping["postal-code"];
       newFormValues.shippingZipCode = shipping.zip4;
-      isSkipAddressCheck = shipping.skip_address_check ?? false;
+      isSkipAddressCheck = true;
     }
 
     // Submit the form again
