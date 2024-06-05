@@ -578,9 +578,7 @@ const CartItem = ({
           </Suspense>
 
           <h2 className="line-clamp-3 text-sm font-medium text-black">
-            <Balancer>
-              <span dangerouslySetInnerHTML={{ __html: product.title }} />
-            </Balancer>
+            <Balancer dangerouslySetInnerHTML={{ __html: product.title }} />
           </h2>
 
           <div className="flex flex-row gap-1 text-sm text-wurth-gray-500">
