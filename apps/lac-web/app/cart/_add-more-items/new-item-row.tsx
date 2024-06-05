@@ -98,6 +98,8 @@ const NewItemRow = ({
         id={`quantity-${index}-${id}`}
         placeholder="Qty"
         type="number"
+        min={1}
+        step={1}
         className={cn(
           "h-10 w-20 px-3 py-2",
           isFormSubmitted &&
