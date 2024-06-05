@@ -131,7 +131,7 @@ const useAddToCartMutation = (
         if (data?.[0]?.error == "amount") {
           toast({
             variant: "destructive",
-            title: "Quantity provided is less than minimum quantity",
+            title: "Invalid Quantity",
           });
         } else {
           toast({
