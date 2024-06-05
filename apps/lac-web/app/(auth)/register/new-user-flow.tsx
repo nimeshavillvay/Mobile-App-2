@@ -575,7 +575,9 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
               disabled={registerNewUserMutation.isPending}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>I&apos;m buying for</FormLabel>
+                  <FormLabel className="font-bold leading-5">
+                    I&apos;m buying for
+                  </FormLabel>
 
                   <FormControl>
                     <RadioGroup
@@ -838,7 +840,7 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
                   control={addressForm.control}
                   name="billingCounty"
                   render={({ field }) => (
-                    <FormItem className="col-span-3">
+                    <FormItem className="col-span-3 self-end">
                       <FormLabel>County</FormLabel>
                       <Select
                         onValueChange={field.onChange}
@@ -873,7 +875,7 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
                   name="billingPostCode"
                   disabled={registerNewUserMutation.isPending}
                   render={({ field }) => (
-                    <FormItem className="col-span-2">
+                    <FormItem className="col-span-2 self-end">
                       <FormLabel>Zip/Post code</FormLabel>
                       <FormControl>
                         <Input
@@ -897,7 +899,7 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
                   disabled={registerNewUserMutation.isPending}
                   render={({ field }) => (
                     <FormItem className="col-span-1">
-                      <FormLabel className="overflow-hidden text-ellipsis text-nowrap">
+                      <FormLabel className="overflow-hidden text-ellipsis text-wrap">
                         Zip4 (Optional)
                       </FormLabel>
                       <FormControl>
