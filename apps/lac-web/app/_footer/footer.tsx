@@ -17,7 +17,7 @@ import WhyShopWithUs from "./why-shop-with-us";
 
 const Footer = () => {
   return (
-    <footer className="mt-14 md:mt-20">
+    <footer className="mt-14 md:mt-20 print:hidden">
       <WhyShopWithUs />
 
       <div className="space-y-6 pb-7 pt-10 md:space-y-10">
