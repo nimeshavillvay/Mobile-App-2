@@ -17,6 +17,7 @@ import {
 import { useId, useState } from "react";
 import { AVAILABLE_ALL, EXCLUDED_SHIPPING_METHODS } from "./constants";
 import type { ShippingMethod } from "./types";
+import useCartPageStore from "./use-cart-page-store.hook";
 
 const SHIP_TO_ME = "ship-to-me";
 const WILL_CALL = "will-call";
@@ -42,6 +43,9 @@ const ShippingMethod = ({ token, options }: ShippingMethodProps) => {
   const willCallPlant = willCallPlantQuery.data;
 
   const updateCartItemMutation = useUpdateCartItemMutation(token);
+
+  // TODO Delete this hook after refactoring the entire cart item section
+  const { incrementCartItemKey } = useCartPageStore((state) => state.actions);
 
   const handleSelectValueChange = async (value: string) => {
     // Get the available shipping methods for each item in the cart
@@ -112,6 +116,11 @@ const ShippingMethod = ({ token, options }: ShippingMethodProps) => {
           };
         }
       }),
+      {
+        onSuccess: () => {
+          incrementCartItemKey();
+        },
+      },
     );
   };
 

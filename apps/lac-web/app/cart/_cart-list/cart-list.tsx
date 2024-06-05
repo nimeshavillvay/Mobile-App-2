@@ -21,6 +21,7 @@ import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import dynamic from "next/dynamic";
 import { Suspense, useState } from "react";
 import CartItemFallback from "../cart-item-fallback";
+import useCartPageStore from "../use-cart-page-store.hook";
 import CartItem from "./cart-item";
 
 type CartListProps = {
@@ -63,6 +64,9 @@ const CartList = ({ token, plants }: CartListProps) => {
     }
   };
 
+  // TODO Delete this hook after refactoring the entire cart item section
+  const cartItemKey = useCartPageStore((state) => state.cartItemKey);
+
   return (
     <ul className="flex flex-col gap-2.5">
       {data.cartItems.map((item) => (
@@ -72,7 +76,7 @@ const CartList = ({ token, plants }: CartListProps) => {
         >
           <Suspense fallback={<CartItemFallback />}>
             <CartItem
-              key={`${item.itemInfo.productId}-${item.cartItemId}`}
+              key={cartItemKey.toString()}
               token={token}
               product={{
                 id: item.itemInfo.productId,

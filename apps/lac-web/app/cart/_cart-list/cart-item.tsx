@@ -208,7 +208,10 @@ const CartItem = ({
   );
 
   // Find the default option (available first option)
-  let defaultShippingMethod = shippingMethods?.at(0);
+  let defaultShippingMethod =
+    shippingMethods.find(
+      (method) => method.code === product.configuration.shipping_method_1,
+    ) ?? shippingMethods?.at(0);
 
   if (shippingMethods?.length > 0 && cartConfiguration?.default_shipping) {
     const shipToDefaultShippingMethod = shippingMethods.find(
@@ -221,18 +224,10 @@ const CartItem = ({
     }
   }
 
-  const defaultSelected =
-    itemConfigShippingMethod ?? defaultShippingMethod?.code ?? "";
   // User selected shipping method (ship-to-me)
-  const [selectedShippingMethod, setSelectedShippingMethod] =
-    useState(defaultSelected);
-
-  // This useEffect is used to keep the selected option in sync with
-  // option selected in the global shipping option dropdown
-  useEffect(() => {
-    setSelectedShippingMethod(defaultSelected);
-  }, [defaultSelected]);
-
+  const [selectedShippingMethod, setSelectedShippingMethod] = useState(
+    defaultShippingMethod?.code ?? "",
+  );
   const handleChangeQtyOrPO = () => {
     if (deferredQuantity > 0) {
       checkAvailabilityMutation.mutate(
