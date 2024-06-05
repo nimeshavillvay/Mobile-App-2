@@ -15,6 +15,7 @@ import {
   DialogTrigger,
 } from "@repo/web-ui/components/ui/dialog";
 import { useToast } from "@repo/web-ui/components/ui/toast";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 type SelectAddressDialogProps = {
@@ -25,6 +26,7 @@ const SelectAddressDialog = ({ token }: SelectAddressDialogProps) => {
   const [open, setOpen] = useState(false);
   const [openAdd, setOpenAdd] = useState(false);
   const { toast } = useToast();
+  const router = useRouter();
 
   const shippingAddressListQuery = useSuspenseShippingAddressList(token);
   const cartQuery = useSuspenseCart(token);
@@ -44,8 +46,11 @@ const SelectAddressDialog = ({ token }: SelectAddressDialogProps) => {
         onSuccess: () => {
           toast({
             title: "Address selected",
+            description:
+              "Change in shipping address may affect cart item availability, please review and proceed to checkout",
           });
           setOpen(false);
+          router.replace("/cart");
         },
       },
     );

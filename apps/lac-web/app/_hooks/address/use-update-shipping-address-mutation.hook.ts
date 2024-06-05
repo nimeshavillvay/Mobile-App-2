@@ -140,6 +140,9 @@ const useUpdateShippingAddressMutation = () => {
       queryClient.invalidateQueries({
         queryKey: ["my-account", "shipping-addresses"],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["user", "will-call-plant"],
+      });
     },
   });
 };
