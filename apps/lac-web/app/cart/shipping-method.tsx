@@ -3,6 +3,7 @@
 import useSuspenseWillCallPlant from "@/_hooks/address/use-suspense-will-call-plant.hook";
 import useSuspenseCart from "@/_hooks/cart/use-suspense-cart.hook";
 import useUpdateCartItemMutation from "@/_hooks/cart/use-update-cart-item-mutation.hook";
+import { checkAvailability } from "@/_lib/apis/shared";
 import { DEFAULT_PLANT } from "@/_lib/constants";
 import { Checkbox } from "@repo/web-ui/components/ui/checkbox";
 import { Label } from "@repo/web-ui/components/ui/label";
@@ -14,7 +15,7 @@ import {
   SelectValue,
 } from "@repo/web-ui/components/ui/select";
 import { useId, useState } from "react";
-import { EXCLUDED_SHIPPING_METHODS } from "./constants";
+import { AVAILABLE_ALL, EXCLUDED_SHIPPING_METHODS } from "./constants";
 import type { ShippingMethod } from "./types";
 
 const SHIP_TO_ME = "ship-to-me";
@@ -42,24 +43,65 @@ const ShippingMethod = ({ token, options }: ShippingMethodProps) => {
 
   const updateCartItemMutation = useUpdateCartItemMutation(token);
 
-  const handleSelectValueChange = (value: string) => {
-    updateCartItemMutation.mutate(
+  const handleSelectValueChange = async (value: string) => {
+    // Get the available shipping methods for each item in the cart
+    const itemShippingMethods = await Promise.all(
+      cartQuery.data.cartItems.map(async (item) => {
+        const availability = await checkAvailability(token, {
+          productId: item.itemInfo.productId,
+          qty: item.quantity,
+          plant: item.configuration?.plant_1,
+        });
+
+        // Get all methods for "Ship to me"
+        const shippingMethods =
+          availability.options
+            .find((option) => option.type === AVAILABLE_ALL)
+            ?.plants.at(0)?.shippingMethods ?? [];
+
+        return {
+          id: item.itemInfo.productId,
+          shippingMethods,
+        };
+      }),
+    );
+
+    await updateCartItemMutation.mutateAsync(
       cartQuery.data.cartItems.map((item) => {
         const config = {
           ...item.configuration,
         };
 
-        // Check the 1st available shipping method
-        if (config.shipping_method_1) {
-          config.shipping_method_1 = value;
-        } else if (config.shipping_method_2) {
-          config.shipping_method_2 = value;
-        } else if (config.shipping_method_3) {
-          config.shipping_method_3 = value;
-        } else if (config.shipping_method_4) {
-          config.shipping_method_4 = value;
-        } else if (config.shipping_method_5) {
-          config.shipping_method_5 = value;
+        let newValue: string | undefined = undefined;
+        // Check if the value is available
+        const shippingMethod = itemShippingMethods.find(
+          (shippingMethod) => shippingMethod.id === item.itemInfo.productId,
+        );
+        if (shippingMethod) {
+          // Check if the global shipping method selected is available for the item
+          const isValid = !!shippingMethod.shippingMethods.find(
+            (element) => element.code === value,
+          );
+
+          if (isValid) {
+            newValue = value;
+          }
+        }
+
+        // Change the shipping method only if it can be changed
+        if (newValue) {
+          // Check the 1st available shipping method
+          if (config.shipping_method_1) {
+            config.shipping_method_1 = newValue;
+          } else if (config.shipping_method_2) {
+            config.shipping_method_2 = newValue;
+          } else if (config.shipping_method_3) {
+            config.shipping_method_3 = newValue;
+          } else if (config.shipping_method_4) {
+            config.shipping_method_4 = newValue;
+          } else if (config.shipping_method_5) {
+            config.shipping_method_5 = newValue;
+          }
         }
 
         {

@@ -221,10 +221,17 @@ const CartItem = ({
     }
   }
 
+  const defaultSelected =
+    itemConfigShippingMethod ?? defaultShippingMethod?.code ?? "";
   // User selected shipping method (ship-to-me)
-  const [selectedShippingMethod, setSelectedShippingMethod] = useState(
-    defaultShippingMethod?.code ?? "",
-  );
+  const [selectedShippingMethod, setSelectedShippingMethod] =
+    useState(defaultSelected);
+
+  // This useEffect is used to keep the selected option in sync with
+  // option selected in the global shipping option dropdown
+  useEffect(() => {
+    setSelectedShippingMethod(defaultSelected);
+  }, [defaultSelected]);
 
   const handleChangeQtyOrPO = () => {
     if (deferredQuantity > 0) {
