@@ -30,8 +30,8 @@ const useUpdateCartItemMutation = (token: string) => {
         })
         .json();
     },
-    onSettled: () => {
-      queryClient.invalidateQueries({
+    onSettled: async () => {
+      await queryClient.invalidateQueries({
         queryKey: ["cart"],
       });
     },
