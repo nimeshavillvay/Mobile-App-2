@@ -62,6 +62,7 @@ const FiltersDropdown = ({ filters }: { readonly filters: Filters[] }) => {
                     onCheckedChange={(checked) =>
                       toggleCheck(filter.id, value.id, checked)
                     }
+                    disabled={!value.active}
                   />
 
                   <Label htmlFor={getCheckboxId(filter.id, value.id)}>

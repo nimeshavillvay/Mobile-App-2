@@ -18,6 +18,7 @@ import {
   TableRow,
 } from "@/old/_components/ui/table";
 import { useSearchParams } from "next/navigation";
+import { useDeferredValue } from "react";
 import { changeSearchParams } from "./client-helpers";
 import {
   DEFAULT_SORT,
@@ -40,8 +41,9 @@ import useSuspensePurchasedItemsList from "./use-suspense-purchased-items-list.h
 
 const PurchasedItemsList = ({ token }: { readonly token: string }) => {
   const searchParams = useSearchParams();
-  const fromDate = searchParams.get(QUERY_KEYS.FROM_DATE) ?? INIT_FROM_DATE;
-  const toDate = searchParams.get(QUERY_KEYS.TO_DATE) ?? INIT_TO_DATE;
+  const deferredSearchParams = useDeferredValue(searchParams);
+  const fromDate = deferredSearchParams.get("from") ?? INIT_FROM_DATE;
+  const toDate = deferredSearchParams.get("to") ?? INIT_TO_DATE;
   const orderBy = searchParams.get(QUERY_KEYS.ORDER_BY) ?? INIT_SORTING_FIELD;
   const orderType =
     searchParams.get(QUERY_KEYS.ORDER_TYPE) ?? INIT_SORTING_TYPE;
@@ -57,10 +59,18 @@ const PurchasedItemsList = ({ token }: { readonly token: string }) => {
     (sortingType) => sortingType.value === orderType,
   );
 
+  const values: { [key: string]: string[] } = {};
+
+  for (const key of deferredSearchParams.keys()) {
+    if (key !== "page" && key !== "from" && key !== "to") {
+      values[key] = deferredSearchParams.getAll(key);
+    }
+  }
   const filtersQuery = useSuspenseFilters(token, {
     type: "Purchases",
     from: fromDate,
     to: toDate,
+    values,
   });
 
   const purchasedItemsList = useSuspensePurchasedItemsList(
