@@ -25,7 +25,7 @@ const useSuspenseFilters = (
         type: typeof PURCHASES;
         from: string;
         to: string;
-        values?: {
+        values: {
           [key: string]: string[] | undefined;
         };
       }
