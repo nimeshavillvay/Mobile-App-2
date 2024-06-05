@@ -42,6 +42,16 @@ type OrderSummaryProps = {
  */
 const OrderSummary = ({ token, children }: OrderSummaryProps) => {
   const simulationCheckoutQuery = useSuspenseSimulationCheckout(token);
+  const simulationData = simulationCheckoutQuery.data;
+  const {
+    configuration: { coupon },
+    cartItemsCount,
+    discount,
+    shippingCost,
+    tax,
+    net,
+    total,
+  } = simulationData;
 
   const [openPromo, setOpenPromo] = useState(
     // Open the promo code section if a promo code is already applied
@@ -56,6 +66,9 @@ const OrderSummary = ({ token, children }: OrderSummaryProps) => {
   });
 
   const updateCartConfigMutation = useUpdateCartConfigMutation();
+
+  const formattedNumberToPrice = (value: number) =>
+    `$${formatNumberToPrice(parseFloat(value.toFixed(2)))}`;
 
   const updateCartConfig = (promo: string = "") => {
     updateCartConfigMutation.mutate(
@@ -99,27 +112,17 @@ const OrderSummary = ({ token, children }: OrderSummaryProps) => {
       <table className="w-full text-sm text-wurth-gray-800">
         <tbody>
           <tr>
-            <td className="pb-1">
-              Subtotal ({simulationCheckoutQuery.data.cartItemsCount} items)
-            </td>
+            <td className="pb-1">Subtotal ({cartItemsCount} items)</td>
 
-            <td className="pb-1 text-right">
-              $
-              {formatNumberToPrice(
-                parseFloat(simulationCheckoutQuery.data.net.toFixed(2)),
-              )}
-            </td>
+            <td className="pb-1 text-right">{formattedNumberToPrice(net)}</td>
           </tr>
 
-          {simulationCheckoutQuery.data.discount > 0 && (
+          {discount > 0 && (
             <tr>
               <td className="py-1">Savings</td>
 
               <td className="py-1 text-right font-medium text-green-700">
-                -$
-                {formatNumberToPrice(
-                  parseFloat(simulationCheckoutQuery.data.discount.toFixed(2)),
-                )}
+                -{formattedNumberToPrice(discount)}
               </td>
             </tr>
           )}
@@ -128,8 +131,8 @@ const OrderSummary = ({ token, children }: OrderSummaryProps) => {
             <td className="py-1">Shipping</td>
 
             <td className="py-1 text-right">
-              {simulationCheckoutQuery.data.shippingCost > 0
-                ? `$${formatNumberToPrice(parseFloat(simulationCheckoutQuery.data.shippingCost.toFixed(2)))}`
+              {shippingCost > 0
+                ? `${formattedNumberToPrice(shippingCost)}`
                 : "Free"}
             </td>
           </tr>
@@ -141,12 +144,7 @@ const OrderSummary = ({ token, children }: OrderSummaryProps) => {
               </Link>
             </td>
 
-            <td className="py-1 text-right">
-              $
-              {formatNumberToPrice(
-                parseFloat(simulationCheckoutQuery.data.tax.toFixed(2)),
-              )}
-            </td>
+            <td className="py-1 text-right">{formattedNumberToPrice(tax)}</td>
           </tr>
 
           <tr>
@@ -163,16 +161,10 @@ const OrderSummary = ({ token, children }: OrderSummaryProps) => {
                   <div className="flex flex-row items-center justify-between">
                     <div className="flex py-1 font-medium">
                       Promo Code
-                      {!!simulationCheckoutQuery.data.configuration.coupon && (
-                        <div className="ml-1">
-                          {" "}
-                          {simulationCheckoutQuery.data.configuration.coupon}
-                        </div>
-                      )}
+                      {!!coupon && <div className="ml-1"> {coupon}</div>}
                     </div>
 
-                    {!!simulationCheckoutQuery.data.configuration.coupon ==
-                      false && (
+                    {!!coupon == false && (
                       <CollapsibleTrigger asChild>
                         <Button
                           variant="subtle"
@@ -189,16 +181,9 @@ const OrderSummary = ({ token, children }: OrderSummaryProps) => {
                       </CollapsibleTrigger>
                     )}
 
-                    {!!simulationCheckoutQuery.data.configuration.coupon && (
+                    {!!coupon && (
                       <div className="flex items-center gap-1 text-green-700">
-                        <div>
-                          -$
-                          {formatNumberToPrice(
-                            parseFloat(
-                              simulationCheckoutQuery.data.discount.toFixed(2),
-                            ),
-                          )}
-                        </div>
+                        <div>-{formattedNumberToPrice(discount)}</div>
 
                         <Close
                           className="cursor-pointer"
@@ -212,8 +197,7 @@ const OrderSummary = ({ token, children }: OrderSummaryProps) => {
                     )}
                   </div>
 
-                  {!!simulationCheckoutQuery.data.configuration.coupon ==
-                    false && (
+                  {!!coupon == false && (
                     <CollapsibleContent asChild>
                       <form
                         onSubmit={onSubmit}
@@ -272,10 +256,7 @@ const OrderSummary = ({ token, children }: OrderSummaryProps) => {
             <td className="py-4 pb-1">Estimated total</td>
 
             <td className="py-4 pb-1 text-right text-base">
-              $
-              {formatNumberToPrice(
-                parseFloat(simulationCheckoutQuery.data.total.toFixed(2)),
-              )}
+              {formattedNumberToPrice(total)}
             </td>
           </tr>
         </tbody>
