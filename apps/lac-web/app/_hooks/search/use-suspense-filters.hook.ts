@@ -13,6 +13,10 @@ const FILTER_TYPES = {
   [CATEGORIES]: "C",
 } as const;
 
+type Values = {
+  [key: string]: string[] | undefined;
+};
+
 const useSuspenseFilters = (
   token: string,
   args:
@@ -25,9 +29,7 @@ const useSuspenseFilters = (
         type: typeof PURCHASES;
         from: string;
         to: string;
-        values: {
-          [key: string]: string[] | undefined;
-        };
+        values: Values;
       }
     | {
         type: typeof FAVORITES;
@@ -36,9 +38,7 @@ const useSuspenseFilters = (
     | {
         type: typeof CATEGORIES;
         id: string;
-        values: {
-          [key: string]: string[] | undefined;
-        };
+        values: Values;
       },
 ) => {
   return useSuspenseQuery({
