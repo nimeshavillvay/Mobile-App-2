@@ -141,11 +141,7 @@ const OrderSummary = ({ token, children }: OrderSummaryProps) => {
 
           {checkLoginQuery.data.status_code === "OK" && (
             <tr>
-              <td className="py-1">
-                <Link href="/tax-form" className="underline">
-                  Sales Tax
-                </Link>
-              </td>
+              <td className="py-1">Sales Tax</td>
               <td className="py-1 text-right">
                 $
                 {formatNumberToPrice(
