@@ -13,7 +13,6 @@ const config: Omit<Config, "content"> = {
       xs: "480px",
       ...defaultTheme.screens,
       "3xl": "1700px",
-      print: { raw: "print" },
     },
     extend: {
       fontFamily: {
