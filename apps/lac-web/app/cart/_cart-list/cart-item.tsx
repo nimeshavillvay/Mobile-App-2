@@ -221,10 +221,17 @@ const CartItem = ({
     }
   }
 
+  const defaultSelected =
+    itemConfigShippingMethod ?? defaultShippingMethod?.code ?? "";
   // User selected shipping method (ship-to-me)
-  const [selectedShippingMethod, setSelectedShippingMethod] = useState(
-    defaultShippingMethod?.code ?? "",
-  );
+  const [selectedShippingMethod, setSelectedShippingMethod] =
+    useState(defaultSelected);
+
+  // This useEffect is used to keep the selected option in sync with
+  // option selected in the global shipping option dropdown
+  useEffect(() => {
+    setSelectedShippingMethod(defaultSelected);
+  }, [defaultSelected]);
 
   const handleChangeQtyOrPO = () => {
     if (deferredQuantity > 0) {
@@ -489,13 +496,6 @@ const CartItem = ({
   useEffect(() => {
     // Check if matched availability option exists
     if (matchedAvailabilityOption) {
-      // Check if there is a selected shipping method
-      if (itemConfigShippingMethod?.length > 0) {
-        // Return early to prevent the selected option from being
-        // overridden by the first option in the availability options
-        return setSelectedShippingMethod(itemConfigShippingMethod);
-      }
-
       if (matchedAvailabilityOption.type === AVAILABLE_ALL) {
         setSelectedShippingOption(MAIN_OPTIONS.SHIP_TO_ME);
         setSelectedShipToMe(AVAILABLE_ALL);
@@ -507,6 +507,10 @@ const CartItem = ({
         setSelectedShipToMe(ALTERNATIVE_BRANCHES);
       } else if (matchedAvailabilityOption.type === BACK_ORDER_ALL) {
         setSelectedShippingOption(MAIN_OPTIONS.BACK_ORDER);
+      }
+      // This logic is to stop the ship to me option being selected automatically when will call option is selected
+      if (willCallHash === itemConfigHash) {
+        return setSelectedShippingMethod(itemConfigShippingMethod);
       }
     } else {
       // Check if hash matches with the will call hash
@@ -523,8 +527,9 @@ const CartItem = ({
   }, [
     itemConfigShippingMethod,
     itemConfigHash,
-    willCallHash,
+    willCallPlant,
     matchedAvailabilityOption,
+    itemConfigWillCallPlant,
   ]); // Disabling ESLint for the dependency array because it's exhaustive when including all relevant dependencies
 
   return (
@@ -583,7 +588,7 @@ const CartItem = ({
           </Suspense>
 
           <h2 className="line-clamp-3 text-sm font-medium text-black">
-            <Balancer>{product.title}</Balancer>
+            <Balancer dangerouslySetInnerHTML={{ __html: product.title }} />
           </h2>
 
           <div className="flex flex-row gap-1 text-sm text-wurth-gray-500">

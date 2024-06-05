@@ -211,7 +211,7 @@ export const ProductDetails = async ({
       </h2>
 
       <div
-        className="mb-6 space-y-7 text-base font-semibold leading-6"
+        className="mb-6 space-y-7 text-base font-normal leading-7"
         dangerouslySetInnerHTML={{
           __html: product.selectedProduct.productSummary,
         }}

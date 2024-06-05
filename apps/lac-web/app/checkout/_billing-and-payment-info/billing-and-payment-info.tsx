@@ -24,6 +24,7 @@ import {
   RadioGroup,
   RadioGroupItem,
 } from "@repo/web-ui/components/ui/radio-group";
+import dayjs from "dayjs";
 import { useId, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -143,6 +144,17 @@ const BillingAndPaymentInfo = ({
     }
   };
 
+  const isExpiredCreditCard = (date: string) => {
+    const [month, year] = date.split("/");
+    if (month && year) {
+      const comparedDate = dayjs()
+        .set("month", parseInt(month) - 1)
+        .set("year", parseInt(year) + 2000);
+      return comparedDate.isBefore(dayjs(), "month");
+    }
+    return false;
+  };
+
   return (
     <section className="flex flex-col gap-5 rounded-lg border border-wurth-gray-250 p-5 shadow-lg md:gap-6 md:p-6">
       <h2 className="font-title text-xl font-medium text-wurth-gray-800 md:text-2xl md:tracking-[-0.144px]">
@@ -251,6 +263,7 @@ const BillingAndPaymentInfo = ({
                   <RadioGroupItem
                     value={card.id.toString()}
                     id={getId(card.id.toString())}
+                    disabled={isExpiredCreditCard(card.expiryDate)}
                   />
 
                   <Label
@@ -271,7 +284,13 @@ const BillingAndPaymentInfo = ({
                       </span>
 
                       <span className="text-sm text-wurth-gray-500">
-                        Expires {card.expiryDate}
+                        {isExpiredCreditCard(card.expiryDate) ? (
+                          <span className="text-wurth-red-650">
+                            Expired {card.expiryDate}
+                          </span>
+                        ) : (
+                          <span>Expires {card.expiryDate}</span>
+                        )}
                       </span>
                     </span>
                   </Label>
