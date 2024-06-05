@@ -30,7 +30,7 @@ const RegionalExclusionAndShippingMethods = ({
 }) => {
   const productExcludedQuery = useSuspenseProductExcluded(token, productId);
 
-  if (!productExcludedQuery.data.isExcluded) {
+  if (productExcludedQuery.data.isExcluded) {
     return (
       <div className="mt-1 flex flex-row gap-2 rounded-lg bg-red-50 p-2">
         <Alert
