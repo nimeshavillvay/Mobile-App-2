@@ -376,6 +376,7 @@ const AddToCart = ({
                 required
                 min={minAmount}
                 step={increments}
+                className="md:w-[6.125rem]"
               />
             )}
           />

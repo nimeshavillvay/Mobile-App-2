@@ -37,7 +37,7 @@ const ProductCard = ({
         className={cn(
           "flex rounded-lg border border-solid border-wurth-gray-250 bg-white p-3 shadow-[0px_1px_2px_-1px_rgba(0,0,0,0.06),0px_1px_3px_0px_rgba(0,0,0,0.08)]",
           orientation === "vertical" &&
-            "w-[12.5rem] flex-col gap-2 md:w-64 md:p-4",
+            "w-[12.5rem] flex-col gap-3 md:w-64 md:p-4",
           orientation === "horizontal" && "w-[24.75rem] flex-row gap-3",
           className,
         )}
@@ -84,7 +84,7 @@ const ProductCardImage = ({
   const orientation = useOrientation();
 
   return (
-    <Link href={href}>
+    <Link href={href} className="flex items-center justify-center">
       <Image
         src={src}
         alt={alt}
@@ -160,7 +160,7 @@ const ProductCardContent = ({
   return (
     <div
       className={cn(
-        "flex flex-1 flex-col gap-2",
+        "flex flex-1 flex-col justify-between gap-2",
         orientation === "horizontal" && "w-2/4 md:w-full",
         className,
       )}
@@ -178,17 +178,9 @@ const ProductCardDetails = ({
   readonly sku: string;
   readonly href: LinkProps["href"];
 }) => {
-  const orientation = useOrientation();
-
   return (
     <div className="space-y-1 text-sm">
-      <h3
-        className={cn(
-          "font-medium text-black",
-          orientation === "vertical" && "line-clamp-3",
-          orientation === "horizontal" && "line-clamp-2",
-        )}
-      >
+      <h3 className="line-clamp-2 font-medium text-black">
         <Link href={href}>
           <span dangerouslySetInnerHTML={{ __html: title }} />
         </Link>
@@ -245,7 +237,7 @@ const ProductCardActions = ({
   readonly disabled?: boolean;
 }) => {
   return (
-    <div className="mt-auto flex flex-row items-center gap-1 md:gap-2">
+    <div className="flex flex-row items-center gap-1 md:gap-2">
       <Button
         className="h-10 max-h-full flex-1 px-4 text-[0.875rem] leading-5"
         onClick={addToCart}
