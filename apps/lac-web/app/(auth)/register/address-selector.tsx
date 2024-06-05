@@ -153,7 +153,7 @@ const AddressList = ({
                 )}
               />
 
-              <div className="flex-1 text-wrap text-left text-base font-medium text-wurth-gray-800">
+              <div className="flex-1 whitespace-normal text-wrap text-left text-base font-medium text-wurth-gray-800">
                 {address["street-address"]}, {address.locality},{" "}
                 {address.region} {address.county && `, ${address.county} `}
                 {address["postal-code"]}
