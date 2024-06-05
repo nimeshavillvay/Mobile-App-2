@@ -6,12 +6,11 @@ import type { Plant } from "@/_lib/types";
 import { cn, formatNumberToPrice } from "@/_lib/utils";
 import { ChevronDown } from "@repo/web-ui/components/icons/chevron-down";
 import { Button, buttonVariants } from "@repo/web-ui/components/ui/button";
-import dayjs from "dayjs";
+import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
-
-const UI_DATE_FORMAT = "ddd, MMMM.DD, YYYY";
+import { Suspense, useState } from "react";
+import RegionalExclusionAndShippingMethods from "./regional-exclusion-and-shipping-methods";
 
 type CartSummaryProps = {
   readonly token: string;
@@ -132,58 +131,16 @@ const CartSummary = ({ token, plants }: CartSummaryProps) => {
                       </div>
 
                       <div className="flex flex-wrap text-sm text-wurth-gray-800">
-                        {mappedConfiguration?.availability?.length > 0 &&
-                          mappedConfiguration.availability.map(
-                            (itemLine, index) =>
-                              itemLine &&
-                              typeof itemLine.quantity === "number" &&
-                              itemLine.quantity !== 0 &&
-                              !isNaN(itemLine?.quantity) && (
-                                <div key={index} className="">
-                                  <span className="text-green-700">
-                                    {itemLine?.quantity}
-                                    &nbsp;
-                                    {itemLine?.quantity === 1
-                                      ? "item"
-                                      : "items"}
-                                  </span>
-                                  &nbsp;pickup at&nbsp;
-                                  {plants.find(
-                                    (plant) => plant.code === itemLine.plant,
-                                  )?.name ?? "Plant N/A"}
-                                  &nbsp;&nbsp;
-                                  {mappedConfiguration.availability.length -
-                                    1 !==
-                                    index && (
-                                    <span className="text-black">
-                                      &#x2022;&nbsp;&nbsp;
-                                    </span>
-                                  )}
-                                  {mappedConfiguration.availability.length -
-                                    1 ===
-                                    index &&
-                                    mappedConfiguration.backOrderQuantity >
-                                      0 && (
-                                      <span className="text-black">
-                                        &#x2022;&nbsp;&nbsp;
-                                      </span>
-                                    )}
-                                </div>
-                              ),
-                          )}
-
-                        {mappedConfiguration.backOrderQuantity > 0 &&
-                          mappedConfiguration.backOrderDate && (
-                            <div className="mr-4">
-                              <span className="text-yellow-700">Backorder</span>
-                              &nbsp;
-                              {mappedConfiguration.backOrderQuantity}
-                              &nbsp;items, ship by&nbsp;
-                              {dayjs(mappedConfiguration.backOrderDate).format(
-                                UI_DATE_FORMAT,
-                              )}
-                            </div>
-                          )}
+                        <Suspense
+                          fallback={<Skeleton className="h-5 w-[400px]" />}
+                        >
+                          <RegionalExclusionAndShippingMethods
+                            token={token}
+                            mappedConfiguration={mappedConfiguration}
+                            plants={plants}
+                            productId={itemInfo.productId}
+                          />
+                        </Suspense>
                       </div>
                     </div>
                   </div>
