@@ -141,12 +141,7 @@ const OrderSummary = ({ token, children }: OrderSummaryProps) => {
           {checkLoginQuery.data.status_code === "OK" && (
             <tr>
               <td className="py-1">Sales Tax</td>
-              <td className="py-1 text-right">
-                $
-                {formatNumberToPrice(
-                  parseFloat(simulationCheckoutQuery.data.tax.toFixed(2)),
-                )}
-              </td>
+              <td className="py-1 text-right">{formattedNumberToPrice(tax)}</td>
             </tr>
           )}
 
