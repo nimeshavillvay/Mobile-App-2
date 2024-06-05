@@ -64,6 +64,9 @@ const useUpdateCartConfigMutation = <
       queryClient.invalidateQueries({
         queryKey: ["cart"],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["user", "will-call-plant"],
+      });
     },
   });
 };

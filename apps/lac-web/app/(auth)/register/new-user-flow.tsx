@@ -341,6 +341,12 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
             toast({
               title: "Registered successfully",
             });
+            if (
+              billingSuggestions.length == 0 ||
+              shippingSuggestions.length == 0
+            ) {
+              router.replace("/");
+            }
           }
         },
       },
