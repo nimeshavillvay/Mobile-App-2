@@ -189,7 +189,9 @@ const ProductCardDetails = ({
           orientation === "horizontal" && "line-clamp-2",
         )}
       >
-        <Link href={href} dangerouslySetInnerHTML={{ __html: title }} />
+        <Link href={href}>
+          <span dangerouslySetInnerHTML={{ __html: title }} />
+        </Link>
       </h3>
 
       <div className="font-normal leading-none text-wurth-gray-400">{sku}</div>
@@ -300,11 +302,9 @@ const ProductCardVariantSelector = ({
         <SelectContent>
           <SelectGroup>
             {variants.map((variant) => (
-              <SelectItem
-                key={variant.value}
-                value={variant.value}
-                dangerouslySetInnerHTML={{ __html: variant.title }}
-              />
+              <SelectItem key={variant.value} value={variant.value}>
+                <span dangerouslySetInnerHTML={{ __html: variant.title }} />
+              </SelectItem>
             ))}
           </SelectGroup>
         </SelectContent>
