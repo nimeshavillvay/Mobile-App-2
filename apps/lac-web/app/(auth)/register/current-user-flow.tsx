@@ -189,7 +189,7 @@ const CurrentUserFlow = ({ passwordPolicies }: CurrentUserFlowProps) => {
                   />
                 </FormControl>
                 <FormDescription>
-                  Lorem ipsum dolor sit amet consectetur.
+                  Enter your Wurth Louis And Company Account Number
                 </FormDescription>
                 <FormMessage />
               </FormItem>
