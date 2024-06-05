@@ -73,7 +73,7 @@ const AddUserEmailDialog = ({
   const onSubmit = (data: AddUserSchema) => {
     checkEmailMutation.mutate(data.email, {
       onSuccess: (data, email) => {
-        if (data.statusCode === "OK") {
+        if (data.statusCode === "USER_NEW") {
           setOpenAddUserDataDialog(true);
           setEmail(email);
           setOpen(false);

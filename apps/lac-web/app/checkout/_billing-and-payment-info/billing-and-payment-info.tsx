@@ -312,7 +312,7 @@ const BillingAndPaymentInfo = ({
         <AddCreditCardDialog token={token} />
       </div>
 
-      <OrderConfirmDialog />
+      <OrderConfirmDialog token={token} />
     </section>
   );
 };

@@ -140,7 +140,10 @@ const SubCategorySheet = ({ category, onCloseMain }: SubCategorySheetProps) => {
         </Button>
       </SheetTrigger>
 
-      <SheetContent side="left" className="w-80 bg-wurth-gray-50">
+      <SheetContent
+        side="left"
+        className="flex w-80 flex-col gap-0 bg-wurth-gray-50"
+      >
         <SheetHeader className="text-left">
           <button
             className="flex flex-row items-center gap-1"
@@ -155,7 +158,7 @@ const SubCategorySheet = ({ category, onCloseMain }: SubCategorySheetProps) => {
           </SheetDescription>
         </SheetHeader>
 
-        <ul className={dividerStyles()}>
+        <ul className={cn(dividerStyles(), "flex-1 overflow-y-auto")}>
           <li>
             <SheetClose
               asChild

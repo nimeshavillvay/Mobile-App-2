@@ -15,7 +15,7 @@ const useCheckEmailMutation = () => {
           },
           json: { email },
         })
-        .json<{ status_code: "OK" }>();
+        .json<{ status_code: "USER_NEW" }>();
 
       return {
         statusCode: response.status_code,

@@ -26,7 +26,13 @@ import { Input } from "@repo/web-ui/components/ui/input";
 import { useToast } from "@repo/web-ui/components/ui/toast";
 import dayjs from "dayjs";
 import { LoaderCircle } from "lucide-react";
-import { Fragment, useState, type Dispatch, type SetStateAction } from "react";
+import {
+  Fragment,
+  useEffect,
+  useState,
+  type Dispatch,
+  type SetStateAction,
+} from "react";
 import type { Control } from "react-hook-form";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -55,9 +61,14 @@ const AddToShoppingListDialog = ({
 
   const shoppingLists = shoppingListsQuery?.data;
 
-  const [selectedShoppingLists, setSelectedShoppingLists] =
-    useState<string[]>(favoriteListIds);
+  const [selectedShoppingLists, setSelectedShoppingLists] = useState<string[]>(
+    [],
+  );
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    setSelectedShoppingLists(favoriteListIds);
+  }, [favoriteListIds]);
 
   const shoppingListNameSchema = z.object({
     shoppingListName: z.string().trim(),
@@ -99,6 +110,8 @@ const AddToShoppingListDialog = ({
     productId: number,
     selectedShoppingLists: string[],
   ) => {
+    const isAddingToFavorites = selectedShoppingLists.length > 0;
+
     return updateShoppingListItemMutation.mutate(
       {
         listIds: selectedShoppingLists.map((shoppingListId) =>
@@ -109,7 +122,9 @@ const AddToShoppingListDialog = ({
       {
         onSuccess: () => {
           toast({
-            title: "Product has added to the list successfully",
+            title: isAddingToFavorites
+              ? "Product has been added to the list successfully"
+              : "Product has been removed from list successfully",
           });
           setOpenAddToShoppingListDialog(false);
           setIsLoading(false);
@@ -146,7 +161,7 @@ const AddToShoppingListDialog = ({
     }
     setIsLoading(true);
 
-    const updatedShoppingLists = selectedShoppingLists;
+    const updatedShoppingLists = structuredClone(selectedShoppingLists);
 
     if (formData.shoppingListName !== "") {
       const newShoppingListId = await createShoppingList(

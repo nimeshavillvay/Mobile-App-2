@@ -134,6 +134,7 @@ const AddShippingAddressDialog = ({
           onSuccess: (data) => {
             if ("xcAddressId" in data) {
               form.reset();
+              setAddressSuggestions([]);
               closeDialog();
             }
           },
