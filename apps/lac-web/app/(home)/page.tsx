@@ -91,7 +91,7 @@ const HomePage = async () => {
           >
             <div
               className={cn(
-                "shrink-1 z-[1] min-h-[8.75rem] flex-1 truncate px-4 pt-4  md:pl-9 md:pr-0 md:pt-9",
+                "shrink-1 z-[1] min-h-[8.75rem] flex-1 truncate px-4 pt-4 md:pl-9 md:pr-0 md:pt-9",
                 ad.type === "spotlight"
                   ? "md:max-w-[16.063rem]"
                   : "md:max-w-56",
