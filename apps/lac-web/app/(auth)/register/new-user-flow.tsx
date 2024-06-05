@@ -271,7 +271,7 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
 
   const registerNewUserMutation = useRegisterNewUserMutation();
 
-  const registerUser = (values: AddressSchema) => {
+  const registerUser = (values: AddressSchema, skipAddressCheck?: boolean) => {
     const {
       firstName,
       lastName,
@@ -313,6 +313,7 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
             : values.shippingPostCode,
           zipCode: values.same ? values.billingZipCode : values.shippingZipCode,
         },
+        skipAddressCheck,
       },
       {
         onSuccess: (data) => {
@@ -368,6 +369,7 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
     typeof AddressSelector
   >["updateAddress"] = ({ billing, shipping }) => {
     const newFormValues = structuredClone(formValues);
+    let isSkipAddressCheck = false;
 
     if (billing) {
       newFormValues.billingAddress = billing["street-address"];
@@ -377,6 +379,7 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
       newFormValues.billingCountry = billing["country-name"];
       newFormValues.billingPostCode = billing["postal-code"];
       newFormValues.billingZipCode = billing.zip4;
+      isSkipAddressCheck = true;
     }
 
     if (shipping) {
@@ -388,10 +391,11 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
       newFormValues.shippingCountry = shipping["country-name"];
       newFormValues.shippingPostCode = shipping["postal-code"];
       newFormValues.shippingZipCode = shipping.zip4;
+      isSkipAddressCheck = true;
     }
 
     // Submit the form again
-    registerUser(newFormValues);
+    registerUser(newFormValues, isSkipAddressCheck);
   };
 
   // Hide the forms when there is an address conflict.

@@ -1,12 +1,17 @@
-export const calculatePriceDetails = (price: number, salePrice: number) => {
-  const displayPrice = salePrice > 0 && price > salePrice ? salePrice : price;
-  const originalPrice = salePrice > 0 && price > salePrice ? price : 0;
-  const savingAmount =
-    salePrice > 0 && price > salePrice ? price - salePrice : 0;
-  const discount =
-    salePrice > 0 && price > salePrice
-      ? (((price - salePrice) / price) * 100).toFixed(0.5)
-      : 0;
+/**
+ * Calculates the display price and discount.
+ *
+ * The display price is the lower of the original price or the current price.
+ * The discount is calculated as a percentage of the reduction from the
+ * original price to the current price, rounded to two decimal places.
+ *
+ * @param listPrice - The original price of the product.
+ * @param price - The current or discounted price of the product
+ * @returns An object containing the display price and discount percentage
+ */
 
-  return { displayPrice, originalPrice, savingAmount, discount };
+export const calculatePriceDetails = (price: number, listPrice: number) => {
+  const displayPrice = Math.min(price, listPrice);
+  const discount = Math.round(((listPrice - price) / listPrice) * 100);
+  return { displayPrice, discount };
 };

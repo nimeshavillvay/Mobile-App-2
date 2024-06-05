@@ -215,7 +215,7 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
                     productId={item.productId}
                     quantity={1}
                     uom={item.unitOfMeasure}
-                    salePrice={item.isSaleItem ? Number(item.listPrice) : 0}
+                    listPrice={item.listPrice}
                     showUnitPrice={true}
                   />
                 </Suspense>

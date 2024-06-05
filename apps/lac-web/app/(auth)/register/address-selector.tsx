@@ -30,16 +30,24 @@ const AddressSelector = ({
   const [selectedShippingAddress, setSelectedShippingAddress] =
     useState<number>();
 
+  const getAddress = (
+    selectedAddress: number | undefined,
+    addresses: ResponseAddress[],
+  ) => {
+    if (
+      typeof selectedAddress === "number" &&
+      addresses[selectedAddress] !== undefined
+    ) {
+      return addresses[selectedAddress];
+    } else {
+      return undefined;
+    }
+  };
+
   const onSubmit = () => {
     updateAddress({
-      billing:
-        typeof selectedBillingAddress === "number"
-          ? billingAddresses[selectedBillingAddress]
-          : undefined,
-      shipping:
-        typeof selectedShippingAddress === "number"
-          ? shippingAddresses[selectedShippingAddress]
-          : undefined,
+      billing: getAddress(selectedBillingAddress, billingAddresses),
+      shipping: getAddress(selectedShippingAddress, shippingAddresses),
     });
   };
 
