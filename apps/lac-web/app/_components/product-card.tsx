@@ -131,7 +131,7 @@ const ProductCard = ({
       orientation={orientation}
       className={cn(
         "shrink-0 snap-start",
-        orientation === "horizontal" && "w-full",
+        orientation === "horizontal" ? "w-full" : "h-[25.75rem]",
         stretchWidth && "md:w-full",
       )}
     >
@@ -153,58 +153,60 @@ const ProductCard = ({
       <ProductCardContent>
         <ProductCardDetails title={title} sku={sku} href={href} />
 
-        <ProductCardPrice
-          price={currentPrice}
-          uom={uom}
-          actualPrice={listPrice}
-        />
+        <div className="flex flex-col gap-2">
+          <ProductCardPrice
+            price={currentPrice}
+            uom={uom}
+            actualPrice={listPrice}
+          />
 
-        {product.variants.length > 1 ? (
-          isLoggedInUser ? (
-            <Suspense fallback={<ProductCardVariantSelectorSkeleton />}>
-              <ProductCardVariantSelectorForLoggedIn
-                productVariantId={id}
+          {product.variants.length > 1 ? (
+            isLoggedInUser ? (
+              <Suspense fallback={<ProductCardVariantSelectorSkeleton />}>
+                <ProductCardVariantSelectorForLoggedIn
+                  productVariantId={id}
+                  href={href}
+                  selectedId={selectedId}
+                  setSelectedId={setSelectedId}
+                  variants={product.variants}
+                  addToCart={addToCart}
+                  token={token}
+                />
+              </Suspense>
+            ) : (
+              <ProductCardVariantSelector
                 href={href}
-                selectedId={selectedId}
-                setSelectedId={setSelectedId}
-                variants={product.variants}
+                value={selectedId}
+                onValueChange={setSelectedId}
+                variants={product.variants.map((variant) => ({
+                  value: variant.id,
+                  title: variant.title,
+                }))}
                 addToCart={addToCart}
+                isFavorite={false}
+                onClickShoppingList={() => {
+                  router.push("/sign-in");
+                }}
+              />
+            )
+          ) : isLoggedInUser ? (
+            <Suspense fallback={<Skeleton className="h-5 w-full" />}>
+              <ProductCardActionsForLoggedIn
                 token={token}
+                productVariantId={id}
+                addToCart={addToCart}
               />
             </Suspense>
           ) : (
-            <ProductCardVariantSelector
-              href={href}
-              value={selectedId}
-              onValueChange={setSelectedId}
-              variants={product.variants.map((variant) => ({
-                value: variant.id,
-                title: variant.title,
-              }))}
+            <ProductCardActions
               addToCart={addToCart}
               isFavorite={false}
               onClickShoppingList={() => {
                 router.push("/sign-in");
               }}
             />
-          )
-        ) : isLoggedInUser ? (
-          <Suspense fallback={<Skeleton className="h-5 w-full" />}>
-            <ProductCardActionsForLoggedIn
-              token={token}
-              productVariantId={id}
-              addToCart={addToCart}
-            />
-          </Suspense>
-        ) : (
-          <ProductCardActions
-            addToCart={addToCart}
-            isFavorite={false}
-            onClickShoppingList={() => {
-              router.push("/sign-in");
-            }}
-          />
-        )}
+          )}
+        </div>
       </ProductCardContent>
     </ProductCardRoot>
   );
