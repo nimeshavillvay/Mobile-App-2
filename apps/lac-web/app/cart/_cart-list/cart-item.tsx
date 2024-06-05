@@ -36,6 +36,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Suspense, useDeferredValue, useEffect, useId, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { GiRadioactive } from "react-icons/gi";
 import Balancer from "react-wrap-balancer";
 import { z } from "zod";
 import { useCartFormIdContext } from "../cart-form-id-context";
@@ -51,6 +52,7 @@ import CartItemPrice from "./cart-item-price";
 import CartItemShippingMethod from "./cart-item-shipping-method";
 import FavoriteButton from "./favorite-button";
 import FavoriteButtonSkeleton from "./favorite-button-skeleton";
+import HazardousMaterialNotice from "./hazardous-material-notice";
 import {
   createCartItemConfig,
   findAvailabilityOptionForType,
@@ -82,6 +84,7 @@ type CartItemProps = {
     slug: string;
     isExcludedProduct: boolean;
     uom: string;
+    isHazardous: boolean;
   };
   readonly plants: Plant[];
   readonly cartConfiguration: CartConfiguration;
@@ -102,6 +105,8 @@ const CartItem = ({
   const itemConfigHash = product?.configuration?.hashvalue;
   const itemConfigShippingMethod = product?.configuration?.shipping_method_1;
   const itemConfigWillCallPlant = product?.configuration?.will_call_plant;
+
+  const [isHazardClick, setIsHazardClick] = useState(false);
 
   const checkLoginQuery = useSuspenseCheckLogin(token);
 
@@ -582,12 +587,26 @@ const CartItem = ({
           </h2>
 
           <div className="flex flex-row gap-1 text-sm text-wurth-gray-500">
+            {product.isHazardous && (
+              <Button
+                variant="ghost"
+                className="h-fit w-fit px-0 py-0"
+                type="button"
+                onClick={() => {
+                  setIsHazardClick(!isHazardClick);
+                }}
+              >
+                <GiRadioactive className="mt-[2px] shrink-0 text-base leading-none text-yellow-700" />
+              </Button>
+            )}
             <div>Item # {product.sku}</div>
 
             <div>&#x2022;</div>
 
             <div>Mfr # {product.manufacturerId}</div>
           </div>
+
+          {product.isHazardous && isHazardClick && <HazardousMaterialNotice />}
 
           <div className="flex flex-col gap-2 md:flex-row md:items-center">
             <Controller

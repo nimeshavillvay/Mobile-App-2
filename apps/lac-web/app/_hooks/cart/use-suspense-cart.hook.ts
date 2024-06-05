@@ -131,6 +131,7 @@ const useSuspenseCart = (token: string) => {
           shippingAddressId: data.configuration.shippingAddressId,
         },
         totalQuantity: data["total-quantity"],
+        allRegionalExluded: data.allRegionalExluded,
       };
     },
   });

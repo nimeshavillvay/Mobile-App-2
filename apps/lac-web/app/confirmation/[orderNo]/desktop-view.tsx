@@ -42,7 +42,7 @@ const DesktopView = async ({ orderNo }: DesktopViewProps) => {
 
   return (
     <div className="container hidden flex-col gap-5 md:flex">
-      <div className="flex flex-col gap-10 rounded-lg border border-wurth-gray-150 p-10 shadow-sm">
+      <div className="flex flex-col gap-10 rounded-lg border border-wurth-gray-150 p-10 shadow-sm print:hidden">
         <div className="flex flex-col gap-6">
           <h2>Order receipt</h2>
 
