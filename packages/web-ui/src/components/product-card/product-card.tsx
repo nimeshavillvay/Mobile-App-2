@@ -155,9 +155,15 @@ const ProductCardContent = ({
   className,
   ...delegated
 }: ComponentProps<"div">) => {
+  const orientation = useOrientation();
+
   return (
     <div
-      className={cn("flex w-2/4 flex-1 flex-col gap-2 md:w-full", className)}
+      className={cn(
+        "flex flex-1 flex-col gap-2",
+        orientation === "horizontal" && "w-2/4 md:w-full",
+        className,
+      )}
       {...delegated}
     />
   );
