@@ -582,13 +582,16 @@ const CartItem = ({
               token={token}
               quantity={deferredQuantity}
               productId={product.id}
+              cartItemId={product.cartItemId}
               onPriceChange={handlePriceOverride}
               type="mobile"
             />
           </Suspense>
 
           <h2 className="line-clamp-3 text-sm font-medium text-black">
-            <Balancer>{product.title}</Balancer>
+            <Balancer>
+              <span dangerouslySetInnerHTML={{ __html: product.title }} />
+            </Balancer>
           </h2>
 
           <div className="flex flex-row gap-1 text-sm text-wurth-gray-500">
@@ -769,6 +772,7 @@ const CartItem = ({
             token={token}
             quantity={deferredQuantity}
             productId={product.id}
+            cartItemId={product.cartItemId}
             onPriceChange={handlePriceOverride}
             type="desktop"
           />

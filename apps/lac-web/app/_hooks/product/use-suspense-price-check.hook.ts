@@ -33,6 +33,7 @@ const getPriceBreakDowns = (price_breakdowns: PriceBreakDowns) => {
 type Product = {
   productId: number;
   qty: number;
+  cartId?: number;
 };
 
 // TODO: Need to remove usePriceCheck hook and replace it with useSuspensePriceCheck
@@ -49,6 +50,7 @@ const useSuspensePriceCheck = (token: string, products: Product[]) => {
             products: products.map((product) => ({
               productid: product.productId,
               qty: product.qty,
+              ...(product.cartId !== undefined && { cartid: product.cartId }),
             })),
           },
           cache: "no-store",

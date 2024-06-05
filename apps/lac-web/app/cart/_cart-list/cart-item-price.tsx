@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@repo/web-ui/components/ui/input";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { useCartFormIdContext } from "../cart-form-id-context";
 import type { ViewportTypes } from "./types";
 
 const EXCLUDED_KEYS = ["e", "E", "+", "-"];
@@ -15,6 +16,7 @@ type CartItemPriceProps = {
   readonly quantity: number;
   readonly productId: number;
   readonly token: Token;
+  readonly cartItemId: number;
   readonly onPriceChange?: (newPrice: number) => void;
   readonly type: ViewportTypes;
 };
@@ -32,12 +34,15 @@ const CartItemPrice = ({
   quantity,
   productId,
   token,
+  cartItemId,
   onPriceChange,
   type,
 }: CartItemPriceProps) => {
+  const cartFormId = useCartFormIdContext();
+
   const loginCheckResponse = useSuspenseCheckLogin(token);
   const priceCheckQuery = useSuspensePriceCheck(token, [
-    { productId: productId, qty: quantity },
+    { productId: productId, qty: quantity, cartId: cartItemId },
   ]);
 
   const priceData = priceCheckQuery.data.productPrices[0];
@@ -96,7 +101,9 @@ const CartItemPrice = ({
               onBlur: onBlur,
               onChange: onChange,
             })}
+            min={MIN_STEP}
             step={MIN_STEP}
+            form={cartFormId} // This is to check the validity when clicking "checkout"
             onKeyDown={(e) => {
               if (EXCLUDED_KEYS.includes(e.key)) {
                 e.preventDefault();

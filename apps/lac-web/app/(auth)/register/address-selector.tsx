@@ -59,9 +59,8 @@ const AddressSelector = ({
         </h3>
 
         <p className="text-sm text-wurth-gray-800">
-          We found a few possible versions of your address. Please select the
-          most accurate one to ensure correct shipping and taxes. If none match,
-          please update your address.
+          We found a few possible matches for the address you entered. Please
+          select the most accurate one to ensure correct shipping information.
         </p>
       </div>
 
@@ -153,7 +152,7 @@ const AddressList = ({
                 )}
               />
 
-              <div className="flex-1 text-wrap text-left text-base font-medium text-wurth-gray-800">
+              <div className="flex-1 whitespace-normal text-wrap text-left text-base font-medium text-wurth-gray-800">
                 {address["street-address"]}, {address.locality},{" "}
                 {address.region} {address.county && `, ${address.county} `}
                 {address["postal-code"]}

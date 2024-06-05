@@ -68,7 +68,6 @@ const useSuspenseFilters = (
       if (args.type === "Purchases" && args.from && args.to && args.values) {
         searchParams.append("from", args.from);
         searchParams.append("to", args.to);
-        console.log(args.values);
         for (const [key, values] of Object.entries(args.values)) {
           if (values) {
             for (const value of values) {

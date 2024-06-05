@@ -155,9 +155,15 @@ const ProductCardContent = ({
   className,
   ...delegated
 }: ComponentProps<"div">) => {
+  const orientation = useOrientation();
+
   return (
     <div
-      className={cn("flex flex-1 flex-col justify-between gap-2", className)}
+      className={cn(
+        "flex flex-1 flex-col justify-between gap-2",
+        orientation === "horizontal" && "w-2/4 md:w-full",
+        className,
+      )}
       {...delegated}
     />
   );
@@ -175,7 +181,9 @@ const ProductCardDetails = ({
   return (
     <div className="space-y-1 text-sm">
       <h3 className="line-clamp-2 font-medium text-black">
-        <Link href={href}>{title}</Link>
+        <Link href={href}>
+          <span dangerouslySetInnerHTML={{ __html: title }} />
+        </Link>
       </h3>
 
       <div className="font-normal leading-none text-wurth-gray-400">{sku}</div>
@@ -287,7 +295,7 @@ const ProductCardVariantSelector = ({
           <SelectGroup>
             {variants.map((variant) => (
               <SelectItem key={variant.value} value={variant.value}>
-                {variant.title}
+                <span dangerouslySetInnerHTML={{ __html: variant.title }} />
               </SelectItem>
             ))}
           </SelectGroup>

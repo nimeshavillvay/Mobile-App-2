@@ -104,20 +104,22 @@ const CategoriesGrid = ({
   }[];
 }) => {
   return (
-    <ul className="grid grid-cols-3 gap-x-4 gap-y-10 pb-4 lg:grid-cols-5 xl:grid-cols-7 2xl:grid-cols-9">
+    <ul className="w-full space-x-2 space-y-10 pb-4 text-center md:space-x-[1.875rem]">
       {categories.map((category) => (
-        <li key={category.id}>
+        <li key={category.id} className="inline-block w-[7rem] md:w-[7.75rem]">
           <Link
             href={`/category/${category.id}/${category.slug}`}
             className="flex flex-col items-center gap-4 md:gap-2"
           >
-            <Image
-              src={category.image}
-              alt={`An image of the category ${category.name}`}
-              width={124}
-              height={124}
-              className="size-28 rounded-full object-fill md:size-[7.75rem]"
-            />
+            <div className="flex size-28 items-center justify-center overflow-hidden rounded-full p-4 shadow-sm md:size-[7.75rem]">
+              <Image
+                src={category.image}
+                alt={`An image of the category ${category.name}`}
+                width={124}
+                height={124}
+                className="size-full object-contain object-center"
+              />
+            </div>
 
             <span className="text-center text-[0.9375rem] font-semibold leading-5 text-black md:text-base">
               {category.name}

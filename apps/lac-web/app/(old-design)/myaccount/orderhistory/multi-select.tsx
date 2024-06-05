@@ -39,7 +39,9 @@ const MultiSelect = ({
   const filteredItems = data;
 
   const isItemSelected = (item: Option) => {
-    return selectedItems?.includes(item);
+    return selectedItems.some(
+      (selectedItem) => selectedItem.value === item.value,
+    );
   };
 
   const {

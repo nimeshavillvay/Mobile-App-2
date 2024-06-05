@@ -66,7 +66,13 @@ const ProductHero = async ({ id, slug }: ProductHeroProps) => {
       </div>
 
       <h1 className="container my-2 font-title text-2xl font-medium tracking-[-0.009rem] text-wurth-gray-800 md:mb-7 md:mt-1 md:tracking-[-0.144px]">
-        <Balancer>{product.selectedProduct.productName}</Balancer>
+        <Balancer>
+          <span
+            dangerouslySetInnerHTML={{
+              __html: product.selectedProduct.productName,
+            }}
+          />
+        </Balancer>
       </h1>
 
       {/* Desktop view */}
