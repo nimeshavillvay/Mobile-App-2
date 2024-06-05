@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@/_lib/utils";
+import { cn, formatNumberToPrice } from "@/_lib/utils";
 import {
   Table,
   TableBody,
@@ -78,11 +78,15 @@ const MyCustomerDetails = ({
       case columnPrimaryRep:
         return customer.salesRep;
       case columnTotalOrders:
-        return customer.totalOrders;
+        return customer.totalOrders > 0 ? customer.totalOrders : null;
       case columnCartSubtotal:
-        return customer.subTotal;
+        return parseFloat(customer.subTotal) > 0
+          ? formatNumberToPrice(
+              parseFloat(parseFloat(customer.subTotal).toFixed(2)),
+            )
+          : null;
       case columnCartItemCount:
-        return customer.totalItems;
+        return customer.totalItems > 0 ? customer.totalItems : null;
       case columnCartLastUpdate:
         return dayjs(customer.date.toString()).format("DD/MM/YYYY");
     }
