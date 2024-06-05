@@ -34,7 +34,10 @@ const ProductVariants = async ({ id, className }: ProductVariantsProps) => {
   const validFilters = filters
     .map((filter) => ({
       ...filter,
-      values: filter.values.filter((value) => value.name),
+      values: filter.values.map((value) => ({
+        ...value,
+        name: value.name?.length > 0 ? value.name : "N/A",
+      })),
     }))
     .filter((filter) => filter.values.length > 1);
 

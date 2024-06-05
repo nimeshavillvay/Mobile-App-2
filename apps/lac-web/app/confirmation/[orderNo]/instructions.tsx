@@ -8,7 +8,7 @@ const Instructions = ({ type }: InstructionsProps) => {
   return (
     <section
       className={cn(
-        "grid gap-5 text-sm text-wurth-gray-800",
+        "grid gap-5 text-sm text-wurth-gray-800 print:hidden",
         type === "mobile" ? "grid-cols-1" : "grid-cols-2",
       )}
     >
