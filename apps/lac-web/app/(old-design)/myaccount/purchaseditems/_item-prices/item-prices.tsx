@@ -17,7 +17,7 @@ type ItemPricesProps = {
   readonly productId: number;
   readonly quantity: number;
   readonly uom: string;
-  readonly salePrice: number;
+  readonly listPrice: number;
   readonly showUnitPrice?: boolean;
   readonly unitPriceOnly?: boolean;
 };
@@ -27,7 +27,7 @@ const ItemPrices = ({
   productId,
   quantity,
   uom,
-  salePrice,
+  listPrice,
   showUnitPrice = false,
   unitPriceOnly = false,
 }: ItemPricesProps) => {
@@ -41,9 +41,9 @@ const ItemPrices = ({
   if (unitPriceOnly && prices) {
     return (
       <UnitPriceRowForMobile
-        salePrice={salePrice}
+        listPrice={listPrice}
         uom={priceUnit}
-        price={prices.price === 0 ? prices.listPrice : prices.price}
+        price={prices.price}
       />
     );
   }
@@ -81,9 +81,9 @@ const ItemPrices = ({
 
       {showUnitPrice && prices && (
         <UnitPriceRow
-          salePrice={salePrice}
+          listPrice={listPrice}
           uom={priceUnit}
-          price={prices.price === 0 ? prices.listPrice : prices.price}
+          price={prices.price}
         />
       )}
     </div>

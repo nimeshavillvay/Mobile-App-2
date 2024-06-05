@@ -155,9 +155,15 @@ const ProductCardContent = ({
   className,
   ...delegated
 }: ComponentProps<"div">) => {
+  const orientation = useOrientation();
+
   return (
     <div
-      className={cn("flex flex-1 flex-col gap-2", className)}
+      className={cn(
+        "flex flex-1 flex-col gap-2",
+        orientation === "horizontal" && "w-2/4 md:w-full",
+        className,
+      )}
       {...delegated}
     />
   );
@@ -183,7 +189,7 @@ const ProductCardDetails = ({
           orientation === "horizontal" && "line-clamp-2",
         )}
       >
-        <Link href={href}>{title}</Link>
+        <Link href={href} dangerouslySetInnerHTML={{ __html: title }} />
       </h3>
 
       <div className="font-normal leading-none text-wurth-gray-400">{sku}</div>
@@ -294,9 +300,11 @@ const ProductCardVariantSelector = ({
         <SelectContent>
           <SelectGroup>
             {variants.map((variant) => (
-              <SelectItem key={variant.value} value={variant.value}>
-                {variant.title}
-              </SelectItem>
+              <SelectItem
+                key={variant.value}
+                value={variant.value}
+                dangerouslySetInnerHTML={{ __html: variant.title }}
+              />
             ))}
           </SelectGroup>
         </SelectContent>

@@ -29,6 +29,7 @@ const useRegisterNewUserMutation = () => {
       employees = 0,
       billingAddress,
       shippingAddress,
+      skipAddressCheck = false,
     }: {
       firstName: string;
       lastName: string;
@@ -40,6 +41,7 @@ const useRegisterNewUserMutation = () => {
       employees?: number;
       billingAddress: Address;
       shippingAddress: Address;
+      skipAddressCheck?: boolean;
     }) => {
       const response = await api
         .post("rest/register/new", {
@@ -65,6 +67,7 @@ const useRegisterNewUserMutation = () => {
               "street-address": billingAddress.address,
               "postal-code": billingAddress.postalCode,
               zip4: billingAddress.zipCode ?? "",
+              skip_address_check: skipAddressCheck,
             },
             "shipping-address": {
               "country-name": shippingAddress.country,
@@ -76,6 +79,7 @@ const useRegisterNewUserMutation = () => {
               "street-address": shippingAddress.address,
               "postal-code": shippingAddress.postalCode,
               zip4: shippingAddress.zipCode ?? "",
+              skip_address_check: skipAddressCheck,
             },
           },
         })
@@ -115,6 +119,7 @@ export type ResponseAddress = {
   "street-address": string;
   "postal-code": string;
   zip4: string;
+  skip_address_check?: boolean;
 };
 type VerifyAddressResponse = {
   check_type: "ADDRESS" | "SAP";

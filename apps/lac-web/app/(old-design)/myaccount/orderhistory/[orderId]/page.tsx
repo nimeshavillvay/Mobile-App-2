@@ -109,10 +109,10 @@ const DetailedOrderPage = async ({
 
   return (
     <>
-      <div className="container pb-6 md:px-0">
-        <BackButton title="Back to My Orders" className="mb-2 mt-2 md:mt-0" />
+      <BackButton title="Back to My Orders" className="mb-2 mt-2 md:mt-0" />
 
-        <h2 className="relative font-wurth text-xl font-medium text-brand-primary">
+      <div className="container pb-6 md:px-0">
+        <h2 className="relative mt-[0.938rem] font-wurth text-xl font-medium text-brand-primary">
           Order #{orderId}
         </h2>
 

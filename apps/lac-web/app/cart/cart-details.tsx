@@ -9,6 +9,7 @@ import { useToast } from "@repo/web-ui/components/ui/toast";
 import { useId } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { useCartFormIdContext } from "./cart-form-id-context";
 
 const detailsSchema = z.object({
   po: z.string(),
@@ -27,6 +28,12 @@ const CartDetails = ({ token }: CartDetailsProps) => {
   const { toast } = useToast();
   const { data } = useSuspenseCart(token);
 
+  enum PoJob {
+    PoRequired = "P",
+    JobNameRequired = "J",
+    BothRequired = "B",
+  }
+
   const { register, getValues } = useForm<z.infer<typeof detailsSchema>>({
     resolver: zodResolver(detailsSchema),
     values: {
@@ -34,6 +41,15 @@ const CartDetails = ({ token }: CartDetailsProps) => {
       projectName: data.configuration.jobName ?? "",
     },
   });
+
+  const isPoRequired =
+    data.configuration.po_job === PoJob.PoRequired ||
+    data.configuration.po_job === PoJob.BothRequired;
+  const isJobNameRequired =
+    data.configuration.po_job === PoJob.JobNameRequired ||
+    data.configuration.po_job === PoJob.BothRequired;
+
+  const cartFormId = useCartFormIdContext();
 
   const updateCartConfigMutation = useUpdateCartConfigMutation();
 
@@ -60,23 +76,30 @@ const CartDetails = ({ token }: CartDetailsProps) => {
   return (
     <div className="space-y-3 rounded-lg border border-wurth-gray-150 px-5 py-4 shadow-md">
       <div className="space-y-2">
-        <Label htmlFor={poId}>PO Number (Required)</Label>
+        <Label htmlFor={poId}>
+          PO Number {isPoRequired && <span>(Required)</span>}
+        </Label>
 
         <Input
           {...register("po", { onBlur: handleSave })}
           id={poId}
           type="text"
-          required
+          required={isPoRequired}
+          form={cartFormId}
         />
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor={projectNameId}>Project Name</Label>
+        <Label htmlFor={projectNameId}>
+          Project Name {isJobNameRequired && <span>(Required)</span>}
+        </Label>
 
         <Input
           {...register("projectName", { onBlur: handleSave })}
           id={projectNameId}
           type="text"
+          required={isJobNameRequired}
+          form={cartFormId}
         />
       </div>
     </div>
