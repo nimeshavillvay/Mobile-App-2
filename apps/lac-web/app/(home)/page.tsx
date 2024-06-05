@@ -1,4 +1,5 @@
 import { getBanners } from "@/_lib/apis/server";
+import { cn } from "@/_lib/utils";
 import { ArrowRight } from "@repo/web-ui/components/icons/arrow-right";
 import Image, { type StaticImageData } from "next/image";
 import { type CSSProperties, type ComponentProps } from "react";
@@ -86,11 +87,18 @@ const HomePage = async () => {
                 "--text-color": ad.colors.text,
               } as CSSProperties
             }
-            className="flex w-[11.75rem] shrink-0 snap-start flex-col justify-between overflow-hidden rounded-lg bg-[var(--background-color)] md:relative md:max-h-[21.25rem] md:w-auto md:snap-align-none"
+            className="relative flex min-h-[18.75rem] w-[11.75rem] shrink-0 snap-start flex-col justify-between overflow-hidden rounded-lg bg-[var(--background-color)] md:relative md:h-[21.25rem] md:w-auto md:snap-align-none"
           >
-            <div className="shrink-1 z-[1] min-h-0 flex-1 truncate px-4 pt-4 md:max-w-56 md:px-9 md:pt-9">
+            <div
+              className={cn(
+                "shrink-1 z-[1] min-h-[8.75rem] flex-1 truncate px-4 pt-4 md:pl-9 md:pr-0 md:pt-9",
+                ad.type === "spotlight"
+                  ? "md:max-w-[16.063rem]"
+                  : "md:max-w-56",
+              )}
+            >
               {ad.type === "sale" && (
-                <div className="font-title text-sm tracking-[-0.00438rem] text-[var(--text-color)] md:text-lg md:tracking-[-0.00625rem]">
+                <div className="font-title text-sm tracking-[-0.00438rem] text-[var(--text-color)] md:text-[1.25rem] md:leading-7 md:tracking-[-0.00625rem]">
                   Super Sale!
                 </div>
               )}
@@ -100,7 +108,7 @@ const HomePage = async () => {
               </h3>
 
               {ad.type === "spotlight" && (
-                <div className="whitespace-normal text-wrap text-xs font-medium text-[var(--text-color)] md:mt-2 md:text-base">
+                <div className="whitespace-normal text-wrap pr-7 text-xs font-medium text-[var(--text-color)] md:mt-2 md:text-base">
                   {ad.subtitle}
                 </div>
               )}
@@ -109,14 +117,19 @@ const HomePage = async () => {
             <Image
               src={ad.image}
               alt="A picture of the sale"
-              width={170}
-              height={170}
-              className="self-end object-contain md:absolute md:bottom-7 md:right-0"
+              width={258}
+              height={ad.type === "spotlight" ? 225 : 258}
+              className={cn(
+                "absolute -right-3.5 bottom-3.5 self-end object-contain md:absolute md:bottom-0",
+                ad.type === "spotlight"
+                  ? "max-h-[8rem] md:-right-12 md:bottom-6 md:max-h-[14.063rem]"
+                  : "md:bottom-0",
+              )}
             />
 
             <div
               style={{ "--accent-color": ad.colors.accent } as CSSProperties}
-              className="z-[1] flex flex-row items-center gap-2 bg-[var(--accent-color)] px-4 py-2 text-sm font-bold text-white"
+              className="z-[1] flex flex-row items-center gap-2 bg-[var(--accent-color)] px-4 py-2 text-sm font-bold text-white md:py-4"
             >
               <span>Shop Now</span>
 
