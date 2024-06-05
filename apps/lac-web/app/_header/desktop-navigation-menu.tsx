@@ -93,6 +93,14 @@ const DesktopNavigationMenu = ({ categories }: DesktopNavigationMenuProps) => {
               <span>Wurth Machinery</span>
               <ArrowUpRight className="size-4 stroke-white" />
             </NavigationMenuItemLink>
+
+            <NavigationMenuItemLink
+              href="https://wurthlac.com/catalogs-literature"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <span>Resources</span>
+            </NavigationMenuItemLink>
           </NavigationMenuList>
         </NavigationMenu>
       </div>
