@@ -1,8 +1,9 @@
-// TODO: Skeleton need to be implemented after new API is available
+import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
+
 const OrderTrackingLoading = () => {
   return (
-    <div>
-      <h1>Order Tracking Loading...</h1>
+    <div className="container my-4 md:my-0 md:px-0">
+      <Skeleton className="h-72 w-full" />
     </div>
   );
 };
