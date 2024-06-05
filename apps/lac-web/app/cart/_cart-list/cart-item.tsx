@@ -582,6 +582,7 @@ const CartItem = ({
               token={token}
               quantity={deferredQuantity}
               productId={product.id}
+              cartItemId={product.cartItemId}
               onPriceChange={handlePriceOverride}
               type="mobile"
             />
@@ -771,6 +772,7 @@ const CartItem = ({
             token={token}
             quantity={deferredQuantity}
             productId={product.id}
+            cartItemId={product.cartItemId}
             onPriceChange={handlePriceOverride}
             type="desktop"
           />

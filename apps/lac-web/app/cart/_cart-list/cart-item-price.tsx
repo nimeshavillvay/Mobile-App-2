@@ -15,6 +15,7 @@ type CartItemPriceProps = {
   readonly quantity: number;
   readonly productId: number;
   readonly token: Token;
+  readonly cartItemId: number;
   readonly onPriceChange?: (newPrice: number) => void;
   readonly type: ViewportTypes;
 };
@@ -32,12 +33,13 @@ const CartItemPrice = ({
   quantity,
   productId,
   token,
+  cartItemId,
   onPriceChange,
   type,
 }: CartItemPriceProps) => {
   const loginCheckResponse = useSuspenseCheckLogin(token);
   const priceCheckQuery = useSuspensePriceCheck(token, [
-    { productId: productId, qty: quantity },
+    { productId: productId, qty: quantity, cartId: cartItemId },
   ]);
 
   const priceData = priceCheckQuery.data.productPrices[0];
