@@ -45,7 +45,7 @@ const SignIn = () => {
   const onSubmitEmail = emailForm.handleSubmit((data) => {
     checkEmailMutation.mutate(data.email, {
       onSuccess: (data, email) => {
-        if (data.statusCode === "OK") {
+        if (data.statusCode === "USER_NEW") {
           const newURLSearchParams = new URLSearchParams({
             email,
           });
@@ -60,15 +60,23 @@ const SignIn = () => {
           // The email already exists
           if (
             isErrorResponse(errorResponse) &&
-            errorResponse["status_code"] === "FAILED" &&
-            errorResponse.message ===
-              "Email address already exists in the database."
+            errorResponse["status_code"] === "USER_ACTIVE" &&
+            errorResponse.message === "Email exists and is valid."
           ) {
             const newURLSearchParams = new URLSearchParams({
               email,
             });
 
             router.replace(`/sign-in?${newURLSearchParams.toString()}`);
+          } else if (
+            isErrorResponse(errorResponse) &&
+            errorResponse["status_code"] === "USER_DEACTIVE" &&
+            errorResponse.message === "User is deactivated."
+          ) {
+            emailForm.setError("email", {
+              type: "custom",
+              message: "User is deactivated.",
+            });
           }
         }
       },
@@ -140,7 +148,11 @@ const SignIn = () => {
             className="rounded border-wurth-gray-250 px-3 py-2 text-center text-base shadow-sm"
             disabled={checkEmailMutation.isPending}
           />
-
+          {!!emailForm?.formState?.errors?.email?.message && (
+            <p className="text-center text-sm text-wurth-gray-500">
+              {emailForm.formState.errors.email.message}
+            </p>
+          )}
           <Button
             type="submit"
             className="w-full py-2.5 font-bold"

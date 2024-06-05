@@ -1,5 +1,6 @@
 "use client";
 
+import useSuspenseCart from "@/_hooks/cart/use-suspense-cart.hook";
 import { Button } from "@repo/web-ui/components/ui/button";
 import {
   Dialog,
@@ -13,10 +14,11 @@ import {
 import { useState } from "react";
 import useCheckoutMutation from "./use-checkout-mutation.hook";
 
-const OrderConfirmDialog = () => {
+const OrderConfirmDialog = ({ token }: { readonly token: string }) => {
   const [open, setOpen] = useState(false);
   const [buttonDisable, setButtonDisable] = useState(false);
   const checkoutMutation = useCheckoutMutation();
+  const cartMutation = useSuspenseCart(token);
 
   const clickConfirmOrder = () => {
     checkoutMutation.mutate();
@@ -30,6 +32,7 @@ const OrderConfirmDialog = () => {
           variant="secondary"
           size="lg"
           className="h-fit rounded-lg px-20 py-4 text-lg font-normal shadow-md md:max-w-60 md:self-end"
+          disabled={cartMutation.data.allRegionalExluded}
         >
           Place your Order
         </Button>
