@@ -2,7 +2,6 @@
 
 import type { TransformedCategory } from "@/_lib/types";
 import { cn } from "@/_lib/utils";
-import { ArrowUpRight } from "@repo/web-ui/components/icons/arrow-up-right";
 import { ChevronRight } from "@repo/web-ui/components/icons/chevron-right";
 import {
   NavigationMenu,
@@ -85,13 +84,8 @@ const DesktopNavigationMenu = ({ categories }: DesktopNavigationMenuProps) => {
               </NavigationMenuContent>
             </NavigationMenuItem>
 
-            <NavigationMenuItemLink
-              href="https://www.wurthmachinery.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <span>Wurth Machinery</span>
-              <ArrowUpRight className="size-4 stroke-white" />
+            <NavigationMenuItemLink asChild>
+              <Link href="/cart#quick-order-form">Quick Order</Link>
             </NavigationMenuItemLink>
 
             <NavigationMenuItemLink
@@ -99,7 +93,7 @@ const DesktopNavigationMenu = ({ categories }: DesktopNavigationMenuProps) => {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <span>Resources</span>
+              Resources
             </NavigationMenuItemLink>
           </NavigationMenuList>
         </NavigationMenu>
