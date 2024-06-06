@@ -9,7 +9,7 @@ import { z } from "zod";
 import { useCartFormIdContext } from "../cart-form-id-context";
 import type { ViewportTypes } from "./types";
 
-const EXCLUDED_KEYS = ["e", "E", "+", "-"];
+const EXCLUDED_KEYS = ["e", "E", "+", "-", "Enter"];
 const MIN_STEP = 0.0001;
 
 type CartItemPriceProps = {
