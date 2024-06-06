@@ -4,7 +4,6 @@ import { cva } from "@/_lib/cva.config";
 import type { TransformedCategory } from "@/_lib/types";
 import { cn } from "@/_lib/utils";
 import { ArrowLeft } from "@repo/web-ui/components/icons/arrow-left";
-import { ArrowUpRight } from "@repo/web-ui/components/icons/arrow-up-right";
 import { ChevronRight } from "@repo/web-ui/components/icons/chevron-right";
 import { Menu } from "@repo/web-ui/components/icons/menu";
 import { Button } from "@repo/web-ui/components/ui/button";
@@ -93,23 +92,8 @@ const MobileNavigationMenu = ({ categories }: MobileNavigationMenuProps) => {
 
             <ul className={dividerStyles()}>
               <li className="border-b border-b-wurth-gray-250">
-                <a
-                  href="https://www.wurthmachinery.com/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={sectionLinkStyles()}
-                >
-                  <span>Wurth Machinery</span>
-
-                  <ArrowUpRight className="size-5" />
-                </a>
-              </li>
-            </ul>
-
-            <ul className={dividerStyles()}>
-              <li className="border-b border-b-wurth-gray-250">
                 <SheetClose asChild className={sectionLinkStyles()}>
-                  <Link href={`/catalogs-literature`}>
+                  <Link href="/catalogs-literature">
                     <span>Resources</span>
 
                     <ChevronRight className="size-5" />
