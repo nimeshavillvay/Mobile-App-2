@@ -131,7 +131,7 @@ const ProductCard = ({
       orientation={orientation}
       className={cn(
         "shrink-0 snap-start",
-        orientation === "horizontal" ? "w-full" : "h-[25.75rem]",
+        orientation === "horizontal" ? "w-full" : "min-h-[25.75rem]",
         stretchWidth && "md:w-full",
       )}
     >

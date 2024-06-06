@@ -650,7 +650,7 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
                       >
                         <FormControl>
                           <SelectTrigger>
-                            <SelectValue />
+                            <SelectValue placeholder="Select industry" />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
@@ -783,7 +783,7 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
                       >
                         <FormControl>
                           <SelectTrigger>
-                            <SelectValue />
+                            <SelectValue placeholder="Select country" />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
@@ -817,7 +817,7 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
                       >
                         <FormControl>
                           <SelectTrigger>
-                            <SelectValue />
+                            <SelectValue placeholder="Select state" />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
@@ -851,7 +851,7 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
                       >
                         <FormControl>
                           <SelectTrigger>
-                            <SelectValue />
+                            <SelectValue placeholder="Select county" />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
@@ -1007,7 +1007,7 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
                         >
                           <FormControl>
                             <SelectTrigger>
-                              <SelectValue />
+                              <SelectValue placeholder="Select country" />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
@@ -1045,7 +1045,7 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
                         >
                           <FormControl>
                             <SelectTrigger>
-                              <SelectValue />
+                              <SelectValue placeholder="Select state" />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
@@ -1079,7 +1079,7 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
                         >
                           <FormControl>
                             <SelectTrigger>
-                              <SelectValue />
+                              <SelectValue placeholder="Select county" />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
