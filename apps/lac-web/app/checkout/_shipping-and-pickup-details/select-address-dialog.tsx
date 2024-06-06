@@ -65,12 +65,12 @@ const SelectAddressDialog = ({ token }: SelectAddressDialogProps) => {
           </Button>
         </DialogTrigger>
 
-        <DialogContent className="max-w-[34.375rem]">
+        <DialogContent className="flex max-h-dvh max-w-[34.375rem] flex-col">
           <DialogHeader>
             <DialogTitle>Change Shipping Address</DialogTitle>
           </DialogHeader>
 
-          <ul className="flex flex-col gap-4">
+          <ul className="flex flex-1 flex-col gap-4 overflow-y-auto">
             {shippingAddressListQuery.data.map((address) => (
               <li key={address.xcAddressId}>
                 <Button

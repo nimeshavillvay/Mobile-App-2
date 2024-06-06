@@ -327,6 +327,7 @@ const AddMoreItemsForm = ({ token }: { readonly token: string }) => {
 
   return (
     <form
+      id="quick-order-form"
       onSubmit={handleSubmit(onSubmit)}
       noValidate
       className="mt-10 px-4 md:p-0"
