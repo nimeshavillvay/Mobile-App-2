@@ -25,6 +25,8 @@ type ProductProps = {
   readonly product: ShoppingListItemsElement;
   readonly listId: string;
   readonly stretchWidth?: boolean;
+  readonly isNewItem?: boolean;
+  readonly onSale?: boolean;
 };
 
 const ProductCard = ({

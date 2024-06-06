@@ -87,15 +87,31 @@ const BillingAndPaymentInfo = ({
     });
   };
 
+  const isExpiredCreditCard = (date: string) => {
+    const [month, year] = date.split("/");
+    if (month && year) {
+      const comparedDate = dayjs()
+        .set("month", parseInt(month) - 1)
+        .set("year", parseInt(year) + 2000);
+      return comparedDate.isBefore(dayjs(), "month");
+    }
+    return false;
+  };
+
   const deleteCreditCardMutation = useDeleteCreditCardMutation();
 
   const [paymentId, setPaymentId] = useState(() => {
+    const nonExpiredCards = creditCartsQuery.data.filter(
+      (card) => !isExpiredCreditCard(card.expiryDate),
+    );
     // Search for the credit card
     const creditCard = creditCartsQuery.data.find(
       (card) => card.number === cartQuery.data.configuration.paymentToken,
     );
-    if (creditCard) {
+    if (creditCard && !isExpiredCreditCard(creditCard.expiryDate)) {
       return creditCard.id.toString();
+    } else if (nonExpiredCards[0] !== undefined) {
+      return nonExpiredCards[0].id.toString();
     }
 
     // Search for the payment method
@@ -142,17 +158,6 @@ const BillingAndPaymentInfo = ({
         paymentToken: "0000",
       });
     }
-  };
-
-  const isExpiredCreditCard = (date: string) => {
-    const [month, year] = date.split("/");
-    if (month && year) {
-      const comparedDate = dayjs()
-        .set("month", parseInt(month) - 1)
-        .set("year", parseInt(year) + 2000);
-      return comparedDate.isBefore(dayjs(), "month");
-    }
-    return false;
   };
 
   return (
