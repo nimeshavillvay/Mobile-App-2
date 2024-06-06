@@ -25,6 +25,8 @@ export type SearchResult = {
   categorySlug?: string;
   brandId?: string;
   brandSlug?: string;
+  is_new?: string;
+  on_sale?: string;
 };
 
 export type SearchData = {

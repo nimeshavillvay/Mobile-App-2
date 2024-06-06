@@ -1,4 +1,5 @@
 import { ProductsGridList } from "@/_components/products-grid";
+import { getBoolean } from "@/_lib/utils";
 import { type ComponentProps } from "react";
 import { getSearchResults } from "./apis";
 
@@ -35,6 +36,8 @@ const ProductListGrid = async ({
             image: product.itemImage,
             sku: product.materialNumber,
             uom: product.uom ?? "Set",
+            onSale: getBoolean(product.on_sale),
+            isNewItem: getBoolean(product.is_new),
           },
         ],
       },
