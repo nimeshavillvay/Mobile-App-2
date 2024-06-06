@@ -105,6 +105,18 @@ const MobileNavigationMenu = ({ categories }: MobileNavigationMenuProps) => {
                 </a>
               </li>
             </ul>
+
+            <ul className={dividerStyles()}>
+              <li className="border-b border-b-wurth-gray-250">
+                <SheetClose asChild className={sectionLinkStyles()}>
+                  <Link href={`/catalogs-literature`}>
+                    <span>Resources</span>
+
+                    <ChevronRight className="size-5" />
+                  </Link>
+                </SheetClose>
+              </li>
+            </ul>
           </section>
         </div>
       </SheetContent>
