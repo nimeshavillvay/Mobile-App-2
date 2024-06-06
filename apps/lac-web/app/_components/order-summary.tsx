@@ -128,21 +128,25 @@ const OrderSummary = ({ token, children }: OrderSummaryProps) => {
             </tr>
           )}
 
-          <tr>
-            <td className="py-1">Shipping</td>
-
-            <td className="py-1 text-right">
-              {shippingCost > 0
-                ? `${formattedNumberToPrice(shippingCost)}`
-                : "Free"}
-            </td>
-          </tr>
-
           {checkLoginQuery.data.status_code === "OK" && (
-            <tr>
-              <td className="py-1">Sales Tax</td>
-              <td className="py-1 text-right">{formattedNumberToPrice(tax)}</td>
-            </tr>
+            <>
+              <tr>
+                <td className="py-1">Shipping</td>
+
+                <td className="py-1 text-right">
+                  {shippingCost > 0
+                    ? `${formattedNumberToPrice(shippingCost)}`
+                    : "Free"}
+                </td>
+              </tr>
+
+              <tr>
+                <td className="py-1">Sales Tax</td>
+                <td className="py-1 text-right">
+                  {formattedNumberToPrice(tax)}
+                </td>
+              </tr>
+            </>
           )}
 
           <tr>
