@@ -255,8 +255,6 @@ const CartItem = ({
                 BACK_ORDER_ALL,
               );
               if (availableAll) {
-                setSelectedShippingOption(MAIN_OPTIONS.SHIP_TO_ME);
-                setSelectedShipToMe(AVAILABLE_ALL);
                 handleSave(
                   createCartItemConfig({
                     method:
@@ -268,8 +266,6 @@ const CartItem = ({
                   }),
                 );
               } else if (takeOnHand) {
-                setSelectedShippingOption(MAIN_OPTIONS.SHIP_TO_ME);
-                setSelectedShipToMe(TAKE_ON_HAND);
                 handleSave(
                   createCartItemConfig({
                     method:
@@ -284,8 +280,6 @@ const CartItem = ({
                   }),
                 );
               } else if (shipAlternativeBranch) {
-                setSelectedShippingOption(MAIN_OPTIONS.SHIP_TO_ME);
-                setSelectedShipToMe(ALTERNATIVE_BRANCHES);
                 handleSave(
                   getAlternativeBranchesConfig({
                     plants: shipAlternativeBranch.plants,
