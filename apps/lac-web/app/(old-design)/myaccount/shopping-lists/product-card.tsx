@@ -93,7 +93,9 @@ const ProductCard = ({
           <ProductCardDiscount>{discountPercent}</ProductCardDiscount>
         )}
 
-        <SaleBadges onSale={onSale} isNewItem={isNewItem} />
+        {orientation === "vertical" && (
+          <SaleBadges onSale={onSale} isNewItem={isNewItem} />
+        )}
 
         {!!image && !!title && (
           <ProductCardImage
@@ -106,6 +108,12 @@ const ProductCard = ({
       </ProductCardHero>
 
       <ProductCardContent>
+        {orientation === "horizontal" && (
+          <div>
+            <SaleBadges onSale={onSale} isNewItem={isNewItem} />
+          </div>
+        )}
+
         {!!sku && !!title && (
           <ProductCardDetails title={title} sku={sku} href={href} />
         )}
