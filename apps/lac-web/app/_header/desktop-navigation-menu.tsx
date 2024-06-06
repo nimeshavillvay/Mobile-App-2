@@ -88,12 +88,8 @@ const DesktopNavigationMenu = ({ categories }: DesktopNavigationMenuProps) => {
               <Link href="/cart#quick-order-form">Quick Order</Link>
             </NavigationMenuItemLink>
 
-            <NavigationMenuItemLink
-              href="https://wurthlac.com/catalogs-literature"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Resources
+            <NavigationMenuItemLink asChild>
+              <Link href="/catalogs-literature">Resources</Link>
             </NavigationMenuItemLink>
           </NavigationMenuList>
         </NavigationMenu>
