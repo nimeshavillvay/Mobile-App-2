@@ -104,11 +104,15 @@ const CartSummary = ({ token, plants }: CartSummaryProps) => {
                           href={`/product/${itemInfo.productId}/${itemInfo.slug}`}
                           className="w-2/4 md:w-4/6"
                         >
-                          <h4 className="line-clamp-3 text-sm font-medium text-wurth-gray-800">
-                            {itemInfo.metaTitle === ""
-                              ? itemInfo.productName
-                              : itemInfo.metaTitle}
-                          </h4>
+                          <h4
+                            className="line-clamp-3 text-sm font-medium text-wurth-gray-800"
+                            dangerouslySetInnerHTML={{
+                              __html:
+                                itemInfo.metaTitle === ""
+                                  ? itemInfo.productName
+                                  : itemInfo.metaTitle,
+                            }}
+                          />
                         </Link>
 
                         <div className="w-1/4 self-start md:w-1/6">
