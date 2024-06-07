@@ -76,7 +76,7 @@ const AddressDialog = ({
     city: z.string().trim().min(1, "Please enter city").max(40),
     state: z.string().trim().min(1, "Please select a state").max(40),
     zipCode: z.string().refine((value) => /^\d+$/.test(value), {
-      message: "Please enter a valid ZIP4",
+      message: "Please enter a valid ZIP Code",
     }),
     phoneNumber: z.string().trim().min(1, "Please enter phone number").max(20),
     country: z.string().trim().min(1, "Please enter country").max(40),
