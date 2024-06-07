@@ -11,6 +11,7 @@ import {
   BreadcrumbSeparator,
 } from "@repo/web-ui/components/ui/breadcrumb";
 import { buttonVariants } from "@repo/web-ui/components/ui/button";
+import { decode } from "html-entities";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Fragment, Suspense } from "react";
@@ -26,8 +27,8 @@ export const generateMetadata = async ({
   const product = await getProduct(id, slug);
 
   return {
-    title: product.selectedProduct.productName,
-    description: product.selectedProduct.productDescription,
+    title: decode(product.selectedProduct.productName),
+    description: decode(product.selectedProduct.productDescription),
   };
 };
 
