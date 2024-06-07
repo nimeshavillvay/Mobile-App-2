@@ -153,9 +153,10 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
                 MRF Part# : {item.mfrPartNo !== "" ? item.mfrPartNo : "N/A"}
               </div>
 
-              <h4 className="line-clamp-3 text-wrap font-bold">
-                {item.productTitle}
-              </h4>
+              <h4
+                className="line-clamp-3 text-wrap font-bold"
+                dangerouslySetInnerHTML={{ __html: item.productTitle }}
+              />
 
               <div className="text-sm text-brand-gray-500">
                 Category :&nbsp;
