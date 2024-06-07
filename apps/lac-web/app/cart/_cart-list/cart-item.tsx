@@ -341,6 +341,13 @@ const CartItem = ({
     }
   };
 
+  const isOSRLoggedInAsCustomer = () => {
+    return (
+      checkLoginQuery.data.status_code === "OK" &&
+      checkLoginQuery.data.isLoggedInAsCustomer
+    );
+  };
+
   const handleSave = (config?: Partial<CartItemConfiguration>) => {
     const data = getValues();
 
@@ -589,10 +596,9 @@ const CartItem = ({
         </div>
 
         <div className="flex-1 space-y-2 md:space-y-1">
-          {checkLoginQuery.data.status_code === "OK" &&
-            checkLoginQuery.data.isLoggedInAsCustomer && (
-              <div className="text-lg font-semibold">${osrCartItemTotal}</div>
-            )}
+          {isOSRLoggedInAsCustomer() && (
+            <div className="text-lg font-semibold">${osrCartItemTotal}</div>
+          )}
 
           <Suspense fallback={<Skeleton className="h-7 w-full" />}>
             <CartItemPrice
@@ -782,12 +788,11 @@ const CartItem = ({
       </div>
 
       <div className="hidden space-y-3 md:block md:shrink-0">
-        {checkLoginQuery.data.status_code === "OK" &&
-          checkLoginQuery.data.isLoggedInAsCustomer && (
-            <div className="text-right text-lg font-semibold">
-              ${osrCartItemTotal}
-            </div>
-          )}
+        {isOSRLoggedInAsCustomer() && (
+          <div className="text-right text-lg font-semibold">
+            ${osrCartItemTotal}
+          </div>
+        )}
 
         <Suspense fallback={<Skeleton className="h-[4.25rem] w-full" />}>
           <CartItemPrice
