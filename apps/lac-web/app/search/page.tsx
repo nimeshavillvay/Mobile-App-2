@@ -75,7 +75,7 @@ const SearchPage = async ({
         searchParams={searchResults.summary.searchParams}
       />
 
-      <Breadcrumb className="container my-3 hidden md:block">
+      <Breadcrumb className="container my-3 block">
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink asChild>
@@ -117,7 +117,7 @@ const SearchPage = async ({
         Array.isArray(searchResults.results) &&
         searchResults.results.length !== 0 && (
           <>
-            <h1 className="container line-clamp-3 text-balance pl-8 font-title text-4xl font-medium tracking-tight text-wurth-gray-800 md:text-5xl md:leading-[3.5rem] md:tracking-[-0.036rem]">
+            <h1 className="container line-clamp-3 text-balance font-title text-4xl font-medium tracking-tight text-wurth-gray-800 md:text-5xl md:leading-[3.5rem] md:tracking-[-0.036rem]">
               Search Results for &quot;{query}&quot;
             </h1>
             <div className="mx-auto max-w-[1360px]">
