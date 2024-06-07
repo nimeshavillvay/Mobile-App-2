@@ -184,7 +184,6 @@ const BillingAndPaymentInfo = ({
             </h3>
 
             <div className="text-base text-wurth-gray-800">
-              {billingAddressQuery.data.soldTo}{" "}
               {billingAddressQuery.data.organization}
               <br />
               {billingAddressQuery.data.streetAddress},{" "}
