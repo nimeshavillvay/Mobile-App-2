@@ -34,6 +34,7 @@ import { Label } from "@repo/web-ui/components/ui/label";
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import Image from "next/image";
 import Link from "next/link";
+// eslint-disable-next-line no-restricted-imports
 import { Suspense, useDeferredValue, useEffect, useId, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { GiRadioactive } from "react-icons/gi";

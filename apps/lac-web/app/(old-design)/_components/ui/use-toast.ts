@@ -1,4 +1,5 @@
 // Inspired by react-hot-toast library
+// eslint-disable-next-line no-restricted-imports
 import * as React from "react";
 
 import type {

@@ -9,6 +9,7 @@ import {
   DialogTitle,
 } from "@repo/web-ui/components/ui/dialog";
 import { useRouter } from "next/navigation";
+// eslint-disable-next-line no-restricted-imports
 import { useEffect, useState } from "react";
 
 type DiscontinuedItemNoticeProps = {

@@ -1,6 +1,7 @@
 import * as ToastPrimitives from "@radix-ui/react-toast";
 import { cva, type VariantProps } from "cva";
 import { X } from "lucide-react";
+// eslint-disable-next-line no-restricted-imports
 import * as React from "react";
 
 import { cn } from "@/_lib/utils";
