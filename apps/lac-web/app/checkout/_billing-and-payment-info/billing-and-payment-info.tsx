@@ -174,7 +174,7 @@ const BillingAndPaymentInfo = ({
             </h3>
 
             <div className="text-base text-wurth-gray-800">
-              {billingAddressQuery.data.xcAddressId}
+              {billingAddressQuery.data.soldTo}
             </div>
           </div>
 
