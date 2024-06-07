@@ -1,10 +1,5 @@
 import { AVAILABILITY_STATUSES } from "@/old/_lib/constants";
 import type { UOM, UOMLabel } from "@/old/_lib/types";
-import { JSEncrypt } from "jsencrypt";
-
-export const getMediaUrl = (path: string) => {
-  return `${process.env.NEXT_PUBLIC_WURTH_LAC_OLD_API}/pim${path}`;
-};
 
 export const formatNumberToPrice = (value: number) => {
   return value.toLocaleString(undefined, {
@@ -53,15 +48,6 @@ export const getStatusLabel = (status: string) => {
   }
 
   return "";
-};
-
-export const encryptString = (value: string) => {
-  const RSAEncrypt = new JSEncrypt();
-  if (process.env.NEXT_PUBLIC_WURTH_LAC_LOGIN_PUBLIC_KEY) {
-    RSAEncrypt.setPublicKey(process.env.NEXT_PUBLIC_WURTH_LAC_LOGIN_PUBLIC_KEY);
-  }
-
-  return RSAEncrypt.encrypt(value);
 };
 
 export const base64Encode = (value: string) => {
