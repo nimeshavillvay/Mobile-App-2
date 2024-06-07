@@ -74,7 +74,6 @@ const ShippingDetailsDialogButton = ({
   // if needed
   const open = externalOpen ?? internalOpen;
   const setOpen = externalSetOpen ?? setInternalOpen;
-  console.log(".........................", defaultAddress);
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
