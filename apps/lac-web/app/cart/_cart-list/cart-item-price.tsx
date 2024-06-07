@@ -1,4 +1,3 @@
-import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
 import type { Token } from "@/_lib/types";
 import { cn, formatNumberToPrice } from "@/_lib/utils";
@@ -13,10 +12,21 @@ const EXCLUDED_KEYS = ["e", "E", "+", "-", "Enter"] as const;
 const MIN_STEP = 0.0001;
 
 type CartItemPriceProps = {
-  readonly quantity: number;
-  readonly productId: number;
   readonly token: Token;
-  readonly cartItemId: number;
+  readonly priceCheckData: {
+    error: true | null;
+    productPrices: {
+      productId: number;
+      price: number;
+      priceUnit: string;
+      extendedPrice: number;
+      listPrice: number;
+      couponCode: string | null;
+      priceBreakDowns: { quantity: number; price: number }[];
+      uomPrice: number | undefined;
+      uomPriceUnit: string | undefined;
+    }[];
+  };
   readonly onPriceChange?: (newPrice: number) => void;
   readonly type: ViewportTypes;
 };
@@ -31,21 +41,16 @@ const cartItemPriceSchema = z.object({
 });
 
 const CartItemPrice = ({
-  quantity,
-  productId,
   token,
-  cartItemId,
+  priceCheckData,
   onPriceChange,
   type,
 }: CartItemPriceProps) => {
   const cartFormId = useCartFormIdContext();
 
   const loginCheckResponse = useSuspenseCheckLogin(token);
-  const priceCheckQuery = useSuspensePriceCheck(token, [
-    { productId: productId, qty: quantity, cartId: cartItemId },
-  ]);
 
-  const priceData = priceCheckQuery.data.productPrices[0];
+  const priceData = priceCheckData.productPrices[0];
   const extendedPrice = priceData?.extendedPrice;
   const price = priceData?.price;
   const priceUnit = priceData?.priceUnit;

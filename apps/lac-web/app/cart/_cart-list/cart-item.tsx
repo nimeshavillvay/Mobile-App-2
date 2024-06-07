@@ -4,6 +4,7 @@ import useDeleteCartItemMutation from "@/_hooks/cart/use-delete-cart-item-mutati
 import useUpdateCartItemMutation from "@/_hooks/cart/use-update-cart-item-mutation.hook";
 import useDebouncedState from "@/_hooks/misc/use-debounced-state.hook";
 import useSuspenseCheckAvailability from "@/_hooks/product/use-suspense-check-availability.hook";
+import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
 import { DEFAULT_PLANT, NOT_IN_STOCK } from "@/_lib/constants";
 import type {
@@ -138,6 +139,26 @@ const CartItem = ({
   const delayedQuantity = useDebouncedState(quantity);
   const deferredQuantity = useDeferredValue(delayedQuantity);
   const isQuantityLessThanMin = quantity < product.minAmount;
+
+  const priceCheckQuery = useSuspensePriceCheck(token, [
+    {
+      productId: product.id,
+      qty: deferredQuantity,
+      cartId: product.cartItemId,
+    },
+  ]);
+
+  const priceCheckData = priceCheckQuery.data;
+
+  const [osrCartItemTotal, setOsrCartItemTotal] = useState(
+    deferredQuantity * (priceCheckData?.productPrices[0]?.price ?? 0),
+  );
+
+  useEffect(() => {
+    setOsrCartItemTotal(
+      deferredQuantity * (priceCheckData?.productPrices[0]?.price ?? 0),
+    );
+  }, [priceCheckData, deferredQuantity]);
 
   const updateCartConfigMutation = useUpdateCartItemMutation(token);
   const deleteCartItemMutation = useDeleteCartItemMutation(token);
@@ -340,6 +361,8 @@ const CartItem = ({
 
   const handlePriceOverride = (newPrice: number) => {
     const data = getValues();
+
+    setOsrCartItemTotal(data.quantity * newPrice);
 
     if (Number(data.quantity) > 0) {
       updateCartConfigMutation.mutate([
@@ -566,13 +589,16 @@ const CartItem = ({
         </div>
 
         <div className="flex-1 space-y-2 md:space-y-1">
+          {checkLoginQuery.data.status_code === "OK" &&
+            checkLoginQuery.data.isLoggedInAsCustomer && (
+              <div className="text-lg font-semibold">${osrCartItemTotal}</div>
+            )}
+
           <Suspense fallback={<Skeleton className="h-7 w-full" />}>
             <CartItemPrice
               token={token}
-              quantity={deferredQuantity}
-              productId={product.id}
-              cartItemId={product.cartItemId}
               onPriceChange={handlePriceOverride}
+              priceCheckData={priceCheckQuery.data}
               type="mobile"
             />
           </Suspense>
@@ -756,17 +782,21 @@ const CartItem = ({
       </div>
 
       <div className="hidden space-y-3 md:block md:shrink-0">
+        {checkLoginQuery.data.status_code === "OK" &&
+          checkLoginQuery.data.isLoggedInAsCustomer && (
+            <div className="text-right text-lg font-semibold">
+              ${osrCartItemTotal}
+            </div>
+          )}
+
         <Suspense fallback={<Skeleton className="h-[4.25rem] w-full" />}>
           <CartItemPrice
             token={token}
-            quantity={deferredQuantity}
-            productId={product.id}
-            cartItemId={product.cartItemId}
             onPriceChange={handlePriceOverride}
+            priceCheckData={priceCheckQuery.data}
             type="desktop"
           />
         </Suspense>
-
         <div className="flex flex-col gap-2">
           <Button
             variant="ghost"
