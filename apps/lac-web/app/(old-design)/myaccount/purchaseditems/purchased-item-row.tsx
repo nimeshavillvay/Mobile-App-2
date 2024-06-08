@@ -93,7 +93,6 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
     return (
       item &&
       item.productSku &&
-      !item.isExcludedProduct &&
       item.productStatus !== "DL" &&
       !item.isDiscontinued
     );
@@ -348,16 +347,6 @@ const ErrorAlert = ({ item }: { readonly item: DetailedPurchasedItem }) => {
         variant="destructive"
         title="Error!"
         description="Not available online. Please call Customer Service for availability"
-      />
-    );
-  }
-
-  if (item?.isExcludedProduct) {
-    return (
-      <AlertInline
-        variant="destructive"
-        title="Error!"
-        description="This item is not available in your territory."
       />
     );
   }
