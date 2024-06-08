@@ -81,6 +81,12 @@ export const SearchBoxInput = ({
     }
   };
 
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = event.target.value;
+    console.log(newValue);
+    setValue(newValue);
+  };
+
   const { products, categories, brands } = data;
   const validSearches = products.results
     .filter(isValidProduct)
@@ -92,14 +98,7 @@ export const SearchBoxInput = ({
   const { isOpen, getMenuProps, getInputProps, getItemProps, closeMenu } =
     useCombobox({
       inputValue: value,
-      onInputValueChange: ({ inputValue }) => {
-        setValue(inputValue);
-      },
-      items: [
-        ...brands.results,
-        ...categories.results,
-        ...validSearches.map(({ product }) => product),
-      ].map((result) => result as SearchDropDownItem),
+      items: [...brands.results, ...categories.results, ...products.results],
       // eslint-disable-next-line prefer-arrow-functions/prefer-arrow-functions
       itemToString(result: SearchDropDownItem | null): string {
         if (!result) {
@@ -150,6 +149,8 @@ export const SearchBoxInput = ({
           {...delegated}
           {...getInputProps()}
           onKeyDown={handleKeyDown}
+          value={value}
+          onChange={handleInputChange}
         />
         <div className="absolute right-0 flex items-center">{children}</div>
       </div>
