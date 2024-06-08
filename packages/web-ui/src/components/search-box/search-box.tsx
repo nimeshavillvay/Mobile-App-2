@@ -83,7 +83,6 @@ export const SearchBoxInput = ({
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value;
-    console.log(newValue);
     setValue(newValue);
   };
 
