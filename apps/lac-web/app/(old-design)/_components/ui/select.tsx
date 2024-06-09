@@ -2,6 +2,7 @@
 
 import * as SelectPrimitive from "@radix-ui/react-select";
 import { Check, ChevronDown, ChevronUp } from "lucide-react";
+// eslint-disable-next-line no-restricted-imports
 import * as React from "react";
 
 import { cn } from "@/_lib/utils";

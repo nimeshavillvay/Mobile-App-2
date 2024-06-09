@@ -1,5 +1,5 @@
-import { StaticPageMainTitle } from "@/(old-design)/_components/static-page-main-title";
-import { StaticPageSubTitle } from "@/(old-design)/_components/static-page-sub-title";
+import { MainTitle } from "@/(old-design)/_components/main-title";
+import { SubTitle } from "@/(old-design)/_components/sub-title";
 import VisuallyHidden from "@/old/_components/visually-hidden";
 import type { Metadata } from "next";
 import Image from "next/image";
@@ -22,8 +22,7 @@ const CompliancePage = () => {
         priority={true}
       />
 
-      {/* Section heading with line */}
-      {StaticPageMainTitle("Compliance")}
+      <MainTitle>Compliance</MainTitle>
 
       <div className="box-border space-y-4 text-brand-gray-500">
         <p>
@@ -79,7 +78,7 @@ const CompliancePage = () => {
           </div>
         </div>
 
-        {StaticPageSubTitle("Reporting Hotline Speak Up")}
+        <SubTitle>Reporting Hotline Speak Up</SubTitle>
 
         <p>
           Our Code of Compliance represents our commitment to treat each other

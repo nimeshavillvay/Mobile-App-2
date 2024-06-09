@@ -24,12 +24,12 @@ import {
   RadioGroup,
   RadioGroupItem,
 } from "@repo/web-ui/components/ui/radio-group";
-import dayjs from "dayjs";
 import { useId, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import AddCreditCardDialog from "./add-credit-card-dialog";
 import EditBillingAddressDialog from "./edit-billing-address-dialog";
+import { getPaymentId, isExpiredCreditCard } from "./helpers";
 import OrderConfirmDialog from "./order-confirm-dialog";
 import useDeleteCreditCardMutation from "./use-delete-credit-card-mutation.hook";
 import useSuspenseCreditCards from "./use-suspense-credit-cards.hook";
@@ -87,44 +87,17 @@ const BillingAndPaymentInfo = ({
     });
   };
 
-  const isExpiredCreditCard = (date: string) => {
-    const [month, year] = date.split("/");
-    if (month && year) {
-      const comparedDate = dayjs()
-        .set("month", parseInt(month) - 1)
-        .set("year", parseInt(year) + 2000);
-      return comparedDate.isBefore(dayjs(), "month");
-    }
-    return false;
-  };
-
   const deleteCreditCardMutation = useDeleteCreditCardMutation();
 
-  const [paymentId, setPaymentId] = useState(() => {
-    const nonExpiredCards = creditCartsQuery.data.filter(
-      (card) => !isExpiredCreditCard(card.expiryDate),
-    );
-    // Search for the credit card
-    const creditCard = creditCartsQuery.data.find(
-      (card) => card.number === cartQuery.data.configuration.paymentToken,
-    );
-    if (creditCard && !isExpiredCreditCard(creditCard.expiryDate)) {
-      return creditCard.id.toString();
-    } else if (nonExpiredCards[0] !== undefined) {
-      return nonExpiredCards[0].id.toString();
-    }
-
-    // Search for the payment method
-    const paymentMethod = paymentMethods.find(
-      (paymentMethod) =>
-        paymentMethod.code === cartQuery.data.configuration.paymentMethod,
-    );
-    if (paymentMethod) {
-      return paymentMethod.code;
-    }
-
-    return "";
-  });
+  const [paymentId, setPaymentId] = useState(() =>
+    getPaymentId(
+      {
+        paymentToken: cartQuery.data.configuration.paymentToken,
+        paymentMethod: cartQuery.data.configuration.paymentMethod,
+      },
+      { creditCards: creditCartsQuery.data, paymentMethods },
+    ),
+  );
 
   const selectPayment = (id: string) => {
     setPaymentId(id);
@@ -336,7 +309,10 @@ const BillingAndPaymentInfo = ({
         <AddCreditCardDialog token={token} />
       </div>
 
-      <OrderConfirmDialog token={token} />
+      <OrderConfirmDialog
+        token={token}
+        otherPaymentMethods={otherPaymentMethods}
+      />
     </section>
   );
 };
