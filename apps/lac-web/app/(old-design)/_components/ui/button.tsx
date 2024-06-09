@@ -1,6 +1,7 @@
 import { cn } from "@/_lib/utils";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "cva";
+// eslint-disable-next-line no-restricted-imports
 import * as React from "react";
 
 const buttonVariants = cva({

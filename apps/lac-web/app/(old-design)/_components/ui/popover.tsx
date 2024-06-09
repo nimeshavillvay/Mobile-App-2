@@ -1,6 +1,7 @@
 "use client";
 
 import * as PopoverPrimitive from "@radix-ui/react-popover";
+// eslint-disable-next-line no-restricted-imports
 import * as React from "react";
 
 import { cn } from "@/_lib/utils";

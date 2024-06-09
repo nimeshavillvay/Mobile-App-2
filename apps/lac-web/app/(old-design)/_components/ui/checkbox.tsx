@@ -3,6 +3,7 @@
 import { cn } from "@/_lib/utils";
 import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
 import { Check } from "lucide-react";
+// eslint-disable-next-line no-restricted-imports
 import * as React from "react";
 
 const Checkbox = React.forwardRef<

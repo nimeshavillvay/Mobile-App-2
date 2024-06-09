@@ -55,27 +55,24 @@ const CartSummary = ({ token, plants }: CartSummaryProps) => {
         {!showDetails ? (
           <div className="flex w-full snap-x flex-row items-center gap-3 overflow-x-auto">
             {cartQuery.data.cartItems.map((item) => (
-              <div
+              <Link
+                href={`/product/${item.itemInfo.productId}/${item.itemInfo.slug}`}
                 key={item.itemInfo.productId}
                 className="relative shrink-0 snap-start"
               >
-                <Link
-                  href={`/product/${item.itemInfo.productId}/${item.itemInfo.slug}`}
-                >
-                  <Image
-                    src={item.itemInfo.image}
-                    alt={`An image of ${item.itemInfo.productName}`}
-                    width={96}
-                    height={96}
-                    className="aspect-1 rounded border border-wurth-gray-250 object-contain shadow-sm"
-                  />
-                  <span className="sr-only">{item.itemInfo.productName}</span>
+                <Image
+                  src={item.itemInfo.image}
+                  alt={`An image of ${item.itemInfo.productName}`}
+                  width={96}
+                  height={96}
+                  className="aspect-1 rounded border border-wurth-gray-250 object-contain shadow-sm"
+                />
+                <span className="sr-only">{item.itemInfo.productName}</span>
 
-                  <span className="absolute bottom-1 right-1 rounded-full bg-wurth-gray-800 p-1 text-center text-[0.625rem] font-semibold leading-none text-white">
-                    {item.quantity}
-                  </span>
-                </Link>
-              </div>
+                <span className="absolute bottom-1 right-1 rounded-full bg-wurth-gray-800 p-1 text-center text-[0.625rem] font-semibold leading-none text-white">
+                  {item.quantity}
+                </span>
+              </Link>
             ))}
           </div>
         ) : (

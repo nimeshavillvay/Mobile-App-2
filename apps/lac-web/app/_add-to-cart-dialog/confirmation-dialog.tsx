@@ -120,9 +120,10 @@ const ConfirmationDialog = ({ token }: ConfirmationDialogProps) => {
             />
 
             <div className="flex flex-1 flex-col gap-2">
-              <h3 className="line-clamp-3 text-sm font-medium">
-                {itemInfo.productName}
-              </h3>
+              <h3
+                className="line-clamp-3 text-sm font-medium"
+                dangerouslySetInnerHTML={{ __html: itemInfo.productName }}
+              />
 
               <div className="flex flex-row items-start justify-between gap-4">
                 {productId && quantity ? (

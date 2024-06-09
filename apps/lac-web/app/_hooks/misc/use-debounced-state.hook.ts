@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-restricted-imports
 import { useEffect, useState } from "react";
 
 const useDebouncedState = <T>(value: T, delay = 500) => {

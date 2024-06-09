@@ -80,7 +80,9 @@ const addressSchema = z
     billingCountry: z.string().min(2, "Please select a valid country"),
     billingState: z.string().min(2, "Please select a valid state"),
     billingCounty: z.string().optional(),
-    billingPostCode: z.string().min(5, "Please enter a valid Zip/Postal code"),
+    billingPostCode: z
+      .string()
+      .length(5, "Please enter a valid Zip/Postal code"),
     billingZipCode: z.string().optional(),
 
     same: z.boolean(),
@@ -723,7 +725,7 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
               onSubmit={handleAddressOnSubmit}
               disableSubmit={registerNewUserMutation.isPending}
             >
-              <div className="grid grid-cols-3 gap-5 md:grid-cols-6">
+              <div className="grid grid-cols-3 items-end gap-5 md:grid-cols-6">
                 <FormField
                   control={addressForm.control}
                   name="billingAddress"
@@ -947,7 +949,7 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
               </div>
 
               {!sameAddress && (
-                <div className="grid grid-cols-3 gap-5 md:grid-cols-6">
+                <div className="grid grid-cols-3 items-end gap-5 md:grid-cols-6">
                   <FormField
                     control={addressForm.control}
                     name="shippingAddress"
@@ -1127,7 +1129,7 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
                     disabled={registerNewUserMutation.isPending}
                     render={({ field }) => (
                       <FormItem className="col-span-1">
-                        <FormLabel className="overflow-hidden text-ellipsis text-nowrap">
+                        <FormLabel className="overflow-hidden text-ellipsis text-wrap">
                           Zip4 (Optional)
                         </FormLabel>
                         <FormControl>

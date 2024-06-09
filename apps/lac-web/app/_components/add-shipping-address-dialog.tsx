@@ -153,7 +153,7 @@ const AddShippingAddressDialog = ({
         }
       }}
     >
-      <DialogContent className="max-w-[27.75rem]">
+      <DialogContent className="flex max-h-dvh max-w-[27.75rem] flex-col">
         <DialogHeader>
           <DialogTitle>Add New Shipping Address</DialogTitle>
         </DialogHeader>
@@ -353,7 +353,7 @@ const AddShippingAddressDialog = ({
             </form>
           </Form>
         ) : (
-          <div className="flex max-h-[600px] flex-col gap-4">
+          <div className="flex min-h-0 flex-1 flex-col gap-4">
             <div className="space-y-1">
               <h3 className="text-base font-semibold text-wurth-gray-800">
                 Address Conflict
@@ -366,7 +366,7 @@ const AddShippingAddressDialog = ({
               </p>
             </div>
 
-            <ul className="flex flex-col gap-2 overflow-y-auto">
+            <ul className="flex flex-1 flex-col gap-2 overflow-y-auto">
               {addressSuggestions.map((address) => (
                 <li key={address.xcAddressId}>
                   <Button

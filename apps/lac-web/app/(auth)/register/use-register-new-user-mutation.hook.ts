@@ -1,6 +1,8 @@
 import useCookies from "@/_hooks/storage/use-cookies.hook";
 import { api } from "@/_lib/api";
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
+import { isErrorResponse } from "@/_lib/utils";
+import { useToast } from "@repo/web-ui/components/ui/toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 type Address = {
@@ -16,6 +18,7 @@ type Address = {
 const useRegisterNewUserMutation = () => {
   const queryClient = useQueryClient();
   const [cookies] = useCookies();
+  const { toast } = useToast();
 
   return useMutation({
     mutationFn: async ({
@@ -88,6 +91,20 @@ const useRegisterNewUserMutation = () => {
         >();
 
       return response;
+    },
+    onError: async (error) => {
+      if (error?.response?.status === 400) {
+        const errorResponse = await error.response.json();
+
+        if (isErrorResponse(errorResponse)) {
+          toast({
+            variant: "destructive",
+            title: "Registration failed",
+            description:
+              "Failed to validate your shipping address. Please correct your entry.",
+          });
+        }
+      }
     },
     onSuccess: (response) => {
       if (!isVerifyAddressResponse(response)) {

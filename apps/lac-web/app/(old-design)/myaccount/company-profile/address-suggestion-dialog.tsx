@@ -169,7 +169,7 @@ const AddressSuggestionDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={setOpenAddressSuggestionDialog}>
-      <DialogContent className="old-design-text-base max-h-[800px] max-w-[500px] overflow-y-auto">
+      <DialogContent className="old-design-text-base max-h-dvh max-w-[500px] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Address Suggestions</DialogTitle>
         </DialogHeader>
@@ -180,7 +180,7 @@ const AddressSuggestionDialog = ({
           {addressCheckSuggestions?.suggestions?.map((addressSuggestion) => (
             <div
               key={addressSuggestion?.uuid}
-              className="mx-5 mt-1 flex cursor-default flex-row items-start gap-3 rounded border-2 border-gray-100 py-3 pl-5 shadow"
+              className="mx-5 mt-1 flex cursor-default flex-row items-center gap-3 rounded border-2 border-gray-100 py-3 pl-5 shadow"
             >
               <RadioGroupItem value={addressSuggestion?.uuid} />
 
