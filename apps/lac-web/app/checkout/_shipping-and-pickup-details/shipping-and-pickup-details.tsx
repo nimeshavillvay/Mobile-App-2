@@ -98,7 +98,7 @@ const ShippingAndPickupDetails = ({ token }: ShippingAndPickupDetailsProps) => {
         )}
       </div>
 
-      <div className="flex flex-col gap-8 md:flex-row md:items-start">
+      <div className="flex flex-col gap-8 lg:flex-row lg:items-start">
         <div className="flex-1 space-y-2">
           <div className="space-y-1">
             <h3 className="text-sm text-black">Shipping Address</h3>

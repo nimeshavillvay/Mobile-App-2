@@ -16,6 +16,11 @@ import {
 } from "~/components/ui/select";
 import type { SkeletonProps } from "~/components/ui/skeleton";
 import { Skeleton } from "~/components/ui/skeleton";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "~/components/ui/tooltip";
 import { cn, formatNumberToPrice } from "~/lib/utils";
 import { HeartFilled } from "../icons/heart-filled";
 
@@ -180,11 +185,17 @@ const ProductCardDetails = ({
 }) => {
   return (
     <div className="space-y-1 text-sm">
-      <h3 className="line-clamp-2 font-medium text-black">
-        <Link href={href}>
-          <span dangerouslySetInnerHTML={{ __html: title }} />
-        </Link>
-      </h3>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <h3 className="line-clamp-2 font-medium text-black">
+            <Link href={href} dangerouslySetInnerHTML={{ __html: title }} />
+          </h3>
+        </TooltipTrigger>
+
+        <TooltipContent>
+          <p dangerouslySetInnerHTML={{ __html: title }} />
+        </TooltipContent>
+      </Tooltip>
 
       <div className="font-normal leading-none text-wurth-gray-400">{sku}</div>
     </div>
