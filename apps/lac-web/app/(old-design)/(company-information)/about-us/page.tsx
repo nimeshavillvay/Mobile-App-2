@@ -1,5 +1,5 @@
-import { StaticPageMainTitle } from "@/(old-design)/_components/static-page-main-title";
-import { StaticPageSubTitle } from "@/(old-design)/_components/static-page-sub-title";
+import { MainTitle } from "@/(old-design)/_components/main-title";
+import { SubTitle } from "@/(old-design)/_components/sub-title";
 import type { Metadata } from "next";
 import Image from "next/image";
 import aboutBanner from "./about-banner.jpg";
@@ -23,7 +23,7 @@ const AboutUsPage = () => {
       />
 
       {/* Section heading with line */}
-      {StaticPageMainTitle("About Us")}
+      <MainTitle>About Us</MainTitle>
 
       {/* About us content */}
       <div className="box-border space-y-4 text-brand-gray-500">
@@ -82,14 +82,14 @@ const AboutUsPage = () => {
           specify our products.
         </p>
 
-        {StaticPageSubTitle("Our Mission Statement")}
+        <SubTitle>Our Mission Statement</SubTitle>
 
         <p>
           People dedicated to providing excellent service and fine-quality
           products to the woodworking industry.
         </p>
 
-        {StaticPageSubTitle("Corporate Executives")}
+        <SubTitle>Corporate Executives</SubTitle>
 
         <section className="gap-8 sm:flex sm:flex-row">
           <figure className="w-full max-w-80 rounded-t border border-black">
