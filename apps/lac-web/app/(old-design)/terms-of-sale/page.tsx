@@ -1,7 +1,6 @@
-import Separator from "@/old/_components/separator";
-import Title from "@/old/_components/title";
 import VisuallyHidden from "@/old/_components/visually-hidden";
 import type { Metadata } from "next";
+import { MainTitle } from "../_components/main-title";
 
 export const metadata: Metadata = {
   title: "Terms of Sale",
@@ -9,16 +8,9 @@ export const metadata: Metadata = {
 
 const TermsOfSalePage = () => {
   return (
-    <section className="py-8">
+    <section className="container py-8">
       {/* Section heading with line */}
-      <div className="mb-4 flex flex-row items-center gap-2.5">
-        <Title className="text-brand-primary">Terms of Sale</Title>
-
-        <Separator
-          orientation="horizontal"
-          className="h-px flex-1 bg-brand-primary"
-        />
-      </div>
+      <MainTitle>Terms of Sale</MainTitle>
 
       {/* Terms of sale content */}
       <div className="box-border space-y-4 text-brand-gray-500">
@@ -36,14 +28,7 @@ const TermsOfSalePage = () => {
               (800) 422-4389
             </a>
             &nbsp;, and/or email&nbsp;
-            <a
-              title="Click to email Customer Service - Opens in email client"
-              href="CService@wurthlac.com"
-              className="text-[#007bff] hover:underline"
-            >
-              CService@wurthlac.com
-            </a>
-            .
+            <strong>CService@wurthlac.com</strong>.
           </em>
         </p>
 
@@ -228,9 +213,13 @@ const TermsOfSalePage = () => {
           to the Goods, these Terms of Sale or the business relationship between
           Buyer and Seller; provided, however, that Seller, in its discretion,
           may elect instead to pursue any legal action against Buyer in any
-          other court having jurisdiction over the subject matter. BUYER HEREBY
-          CONSENTS TO JURISDICTION, PERSONAL AND OTHERWISE, OF SUCH COURTS, AND
-          HEREBY WAIVES ANY OBJECTIONS OF ANY NATURE TO VENUE IN SUCH COURTS.
+          other court having jurisdiction over the subject matter.{" "}
+          <em className="not-italic">
+            BUYER HEREBY CONSENTS TO JURISDICTION, PERSONAL AND OTHERWISE, OF
+            SUCH COURTS, AND HEREBY WAIVES ANY OBJECTIONS OF ANY NATURE TO VENUE
+            IN SUCH COURTS
+          </em>
+          .
         </p>
 
         <p>
