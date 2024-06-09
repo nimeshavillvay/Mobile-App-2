@@ -135,6 +135,8 @@ const ShippingMethod = ({ token, options }: ShippingMethodProps) => {
       }),
     );
 
+    //TODO - this will be refactored properly to remove duplication and handle proper types with
+    // will call plant anywhere
     await updateCartItemMutation.mutateAsync(
       cartQuery.data.cartItems.map((item) => {
         const config = {
@@ -149,16 +151,15 @@ const ShippingMethod = ({ token, options }: ShippingMethodProps) => {
           availability.willCallAnywhere.status === IN_STOCK
         ) {
           (Object.keys(config) as (keyof typeof config)[]).forEach((key) => {
-            if (key.startsWith("avail_")) {
-              config[key] = "";
-            }
-            if (key.startsWith("shipping_method_")) {
-              config[key] = "";
-            }
-            if (key.startsWith("plant_")) {
+            if (
+              key.startsWith("avail_") ||
+              key.startsWith("shipping_method_") ||
+              key.startsWith("plant_")
+            ) {
               config[key] = "";
             }
           });
+
           config.shipping_method_1 = "0";
           config.avail_1 =
             availability.willCallAnywhere?.willCallQuantity.toString();
@@ -175,13 +176,11 @@ const ShippingMethod = ({ token, options }: ShippingMethodProps) => {
           availability.willCallAnywhere.status === NOT_IN_STOCK
         ) {
           (Object.keys(config) as (keyof typeof config)[]).forEach((key) => {
-            if (key.startsWith("avail_")) {
-              config[key] = "";
-            }
-            if (key.startsWith("shipping_method_")) {
-              config[key] = "";
-            }
-            if (key.startsWith("plant_")) {
+            if (
+              key.startsWith("avail_") ||
+              key.startsWith("shipping_method_") ||
+              key.startsWith("plant_")
+            ) {
               config[key] = "";
             }
           });
