@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import React from "react";
 import { MainTitle } from "../_components/main-title";
 import type { BranchType } from "./branch-data";
 import { branchData } from "./branch-data";
@@ -8,59 +7,32 @@ export const metadata: Metadata = {
   title: "Our Branches",
 };
 
-const Branch = ({
-  branchData,
-  children,
-}: {
-  readonly branchData: BranchType;
-  readonly children: React.ReactNode;
-}) => {
+const Branch = ({ branchData }: { readonly branchData: BranchType }) => {
   return (
     <div className="border border-gray-300 bg-gray-200 p-6 shadow-gray-300 hover:bg-gray-300 hover:shadow-xl">
-      <h3 className="mb-4 text-xl font-semibold">{children}</h3>
+      <h3 className="mb-4 text-xl font-semibold">{branchData.branchName}</h3>
       <address>
         <ul>
           {branchData.address.map((address) => (
-            <BranchAddress key={address}>{address}</BranchAddress>
+            <li className="font-semibold" key={address}>
+              {address}
+            </li>
           ))}
 
           {branchData.phone.map((phone) => (
-            <BranchPhone key={phone.phoneNo} telRef={phone.link}>
-              {phone.phoneNo}
-            </BranchPhone>
+            <li
+              key={phone.phoneNo}
+              className="w-fit text-blue-600 hover:text-blue-800 hover:underline"
+            >
+              <a href={phone.link}>{phone.phoneNo}</a>
+            </li>
           ))}
 
-          {branchData.fax?.map((fax) => <BranchFax key={fax}>{fax}</BranchFax>)}
+          {branchData.fax?.map((fax) => <li key={fax}>{fax}</li>)}
         </ul>
       </address>
     </div>
   );
-};
-
-const BranchAddress = ({
-  children,
-}: {
-  readonly children: React.ReactNode;
-}) => {
-  return <li className="font-semibold">{children}</li>;
-};
-
-const BranchPhone = ({
-  telRef,
-  children,
-}: {
-  readonly telRef: string;
-  readonly children: React.ReactNode;
-}) => {
-  return (
-    <li className="w-fit text-blue-600 hover:text-blue-800 hover:underline">
-      <a href={telRef}>{children}</a>
-    </li>
-  );
-};
-
-const BranchFax = ({ children }: { readonly children: React.ReactNode }) => {
-  return <li>{children}</li>;
 };
 
 const BranchFinderPage = () => {
@@ -84,9 +56,7 @@ const BranchFinderPage = () => {
 
       <div className="mt-6 grid grid-cols-1 gap-8 text-wrap break-words text-gray-600 xs:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
         {branchData.map((branch) => (
-          <Branch key={branch.branchName} branchData={branch}>
-            {branch.branchName}
-          </Branch>
+          <Branch key={branch.branchName} branchData={branch} />
         ))}
       </div>
     </div>
