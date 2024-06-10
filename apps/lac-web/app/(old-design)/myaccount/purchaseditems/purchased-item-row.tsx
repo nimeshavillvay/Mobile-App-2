@@ -160,7 +160,7 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
 
               <h4
                 className="line-clamp-3 text-wrap font-bold"
-                dangerouslySetInnerHTML={{ __html: item.productCategory }}
+                dangerouslySetInnerHTML={{ __html: item.productTitle }}
               />
 
               <div className="text-sm text-brand-gray-500">

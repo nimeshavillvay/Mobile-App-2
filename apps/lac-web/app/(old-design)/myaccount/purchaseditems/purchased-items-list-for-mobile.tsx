@@ -84,7 +84,7 @@ const PurchasedItemRowForMobile = ({
         {item.productCategory && (
           <div
             className="text-sm"
-            dangerouslySetInnerHTML={{ __html: item.productTitle }}
+            dangerouslySetInnerHTML={{ __html: item.productCategory }}
           />
         )}
 
