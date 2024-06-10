@@ -318,7 +318,7 @@ const MobileView = async ({ orderNo }: MobileViewProps) => {
         </div>
       )}
 
-      <Instructions type="mobile" />
+      {orderDetails.deliveryInstruction && <Instructions type="mobile" />}
     </div>
   );
 };
