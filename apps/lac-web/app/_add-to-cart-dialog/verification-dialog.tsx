@@ -1,5 +1,6 @@
 "use client";
 
+import ProductNotAvailable from "@/_components/product-not-available";
 import QuantityInputField from "@/_components/quantity-input-field";
 import QuantityWarning from "@/_components/quantity-warning";
 import useAddToCartMutation from "@/_hooks/cart/use-add-to-cart-mutation.hook";
@@ -8,10 +9,9 @@ import useDebouncedState from "@/_hooks/misc/use-debounced-state.hook";
 import useItemInfo from "@/_hooks/product/use-item-info.hook";
 import useSuspenseCheckAvailability from "@/_hooks/product/use-suspense-check-availability.hook";
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
-import { LIMITED_STOCK, NOT_IN_STOCK } from "@/_lib/constants";
+import { LIMITED_STOCK, NOT_AVAILABLE, NOT_IN_STOCK } from "@/_lib/constants";
 import { cn, formatNumberToPrice } from "@/_lib/utils";
 import { NUMBER_TYPE } from "@/_lib/zod-helper";
-import { ProductNotAvailable } from "@/product-not-available";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AddToCart as AddToCartIcon } from "@repo/web-ui/components/icons/add-to-cart";
 import { ChevronRight } from "@repo/web-ui/components/icons/chevron-right";
@@ -43,7 +43,6 @@ import {
   useFormContext,
 } from "react-hook-form";
 import { z } from "zod";
-import { NOT_AVAILABLE } from "../_lib/constants";
 
 const verificationDialogSchema = z.object({
   poOrJobName: z.string(),

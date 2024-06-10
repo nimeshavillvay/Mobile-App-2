@@ -6,11 +6,11 @@ import {
   AlertTitle,
 } from "@repo/web-ui/components/ui/alert";
 
-export const ProductNotAvailable = ({
-  message = "",
-}: {
+type MessageProps = {
   readonly message?: string;
-}) => {
+};
+
+const ProductNotAvailable = ({ message = "" }: MessageProps) => {
   return (
     <Alert variant="destructive">
       <AlertIcon className="size-4" />
@@ -30,3 +30,5 @@ export const ProductNotAvailable = ({
     </Alert>
   );
 };
+
+export default ProductNotAvailable;

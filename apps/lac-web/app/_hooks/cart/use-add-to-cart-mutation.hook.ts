@@ -110,9 +110,8 @@ const useAddToCartMutation = (
           productId: item.productid,
           error: item.error,
         }));
-      } else {
-        return;
       }
+      return;
     },
     onMutate: () => {
       // Prefetch the product data for the dialog
@@ -135,23 +134,21 @@ const useAddToCartMutation = (
       if (data === undefined) {
         return;
       }
-      if (typeof data === "object") {
-        if (data?.[0]?.["error"] && data?.[0]?.["error"] !== "") {
-          if (data?.[0]?.["error"] == "amount") {
-            toast({
-              variant: "destructive",
-              title: "Invalid Quantity",
-            });
-          } else {
-            toast({
-              variant: "destructive",
-              title: data?.[0]?.["error"],
-            });
-          }
+      if (data?.[0]?.["error"] && data?.[0]?.["error"] !== "") {
+        if (data?.[0]?.["error"] == "amount") {
+          toast({
+            variant: "destructive",
+            title: "Invalid Quantity",
+          });
         } else {
-          // Open the dialog
-          setOpen("confirmation");
+          toast({
+            variant: "destructive",
+            title: data?.[0]?.["error"],
+          });
         }
+      } else {
+        // Open the dialog
+        setOpen("confirmation");
       }
     },
   });

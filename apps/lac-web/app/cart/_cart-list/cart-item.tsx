@@ -96,7 +96,7 @@ type CartItemProps = {
   readonly plants: Plant[];
   readonly cartConfiguration: CartConfiguration;
   readonly willCallPlant: { plantCode: string; plantName: string };
-  readonly getDeletedProduct: (sku: string) => void;
+  readonly setDeletedProduct: (sku: string) => void;
 };
 
 const CartItem = ({
@@ -105,7 +105,7 @@ const CartItem = ({
   plants,
   cartConfiguration,
   willCallPlant,
-  getDeletedProduct,
+  setDeletedProduct,
 }: CartItemProps) => {
   const id = useId();
   const poId = `po-${id}`;
@@ -172,7 +172,7 @@ const CartItem = ({
       },
       {
         onSettled: () => {
-          getDeletedProduct(product.sku);
+          setDeletedProduct(product.sku);
         },
       },
     );

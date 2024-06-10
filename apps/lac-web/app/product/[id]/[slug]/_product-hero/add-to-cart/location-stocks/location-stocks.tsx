@@ -1,12 +1,12 @@
 "use client";
 
+import ProductNotAvailable from "@/_components/product-not-available";
 import useSuspenseWillCallPlant from "@/_hooks/address/use-suspense-will-call-plant.hook";
 import useDebouncedState from "@/_hooks/misc/use-debounced-state.hook";
 import useSuspenseCheckAvailability from "@/_hooks/product/use-suspense-check-availability.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
 import { LIMITED_STOCK, NOT_AVAILABLE, NOT_IN_STOCK } from "@/_lib/constants";
 import { cn } from "@/_lib/utils";
-import { ProductNotAvailable } from "@/product-not-available";
 import { ChevronRight } from "@repo/web-ui/components/icons/chevron-right";
 import { Button } from "@repo/web-ui/components/ui/button";
 import {

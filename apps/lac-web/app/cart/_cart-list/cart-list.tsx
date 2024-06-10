@@ -1,10 +1,10 @@
 "use client";
 
+import ProductNotAvailable from "@/_components/product-not-available";
 import useSuspenseWillCallPlant from "@/_hooks/address/use-suspense-will-call-plant.hook";
 import useDeleteCartItemMutation from "@/_hooks/cart/use-delete-cart-item-mutation.hook";
 import useSuspenseCart from "@/_hooks/cart/use-suspense-cart.hook";
 import type { Plant } from "@/_lib/types";
-import { ProductNotAvailable } from "@/product-not-available";
 import { Trash } from "@repo/web-ui/components/icons/trash";
 import {
   AlertDialog,
@@ -69,26 +69,22 @@ const CartList = ({ token, plants }: CartListProps) => {
   const cartItemKey = useCartPageStore((state) => state.cartItemKey);
 
   const [deletedProdSkus, setDeletedProdSkus] = useState<string[]>([]);
-  const getDeletedProduct = (sku: string) => {
+  const setDeletedProduct = (sku: string) => {
     if (!deletedProdSkus.find((eachSku) => eachSku === sku)) {
       setDeletedProdSkus((deletedProdSkus) => [...deletedProdSkus, sku]);
     }
   };
 
-  const getMessage = () => {
-    return deletedProdSkus
-      .join()
-      .concat(deletedProdSkus.length === 1 ? " Product is" : " Products are")
-      .concat(
-        " not available online. Please call Customer Service for availability",
-      );
-  };
+  const message = deletedProdSkus
+    .join()
+    .concat(deletedProdSkus.length === 1 ? " Product is" : " Products are")
+    .concat(
+      " not available online. Please call Customer Service for availability",
+    );
 
   return (
     <>
-      {deletedProdSkus.length > 0 && (
-        <ProductNotAvailable message={getMessage()} />
-      )}
+      {deletedProdSkus.length > 0 && <ProductNotAvailable message={message} />}
       <ul className="flex flex-col gap-2.5">
         {data.cartItems.map((item) => (
           <li
@@ -121,7 +117,7 @@ const CartList = ({ token, plants }: CartListProps) => {
                 plants={plants}
                 cartConfiguration={data.configuration}
                 willCallPlant={willCallPlantQuery?.data}
-                getDeletedProduct={getDeletedProduct}
+                setDeletedProduct={setDeletedProduct}
               />
             </Suspense>
           </li>
