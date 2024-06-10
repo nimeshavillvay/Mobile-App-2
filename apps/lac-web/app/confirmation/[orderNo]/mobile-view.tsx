@@ -269,7 +269,7 @@ const MobileView = async ({ orderNo }: MobileViewProps) => {
 
                 {orderDetails.discount > 0 && (
                   <tr>
-                    <td className={tableLabelStyles()}>Bill to</td>
+                    <td className={tableLabelStyles()}>Saving</td>
                     <td className={cn(tableValueStyles(), "text-right")}>
                       -${orderDetails.discount}
                     </td>
