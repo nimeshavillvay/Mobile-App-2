@@ -2,6 +2,7 @@
 
 import * as RadioGroupPrimitive from "@radix-ui/react-radio-group";
 import { Circle } from "lucide-react";
+// eslint-disable-next-line no-restricted-imports
 import * as React from "react";
 
 import { cn } from "@/_lib/utils";

@@ -4,7 +4,7 @@ import useSuspenseWillCallPlant from "@/_hooks/address/use-suspense-will-call-pl
 import useSuspenseCart from "@/_hooks/cart/use-suspense-cart.hook";
 import useUpdateCartItemMutation from "@/_hooks/cart/use-update-cart-item-mutation.hook";
 import { checkAvailability } from "@/_lib/apis/shared";
-import { DEFAULT_PLANT } from "@/_lib/constants";
+import { DEFAULT_PLANT, IN_STOCK, NOT_IN_STOCK } from "@/_lib/constants";
 import { Checkbox } from "@repo/web-ui/components/ui/checkbox";
 import { Label } from "@repo/web-ui/components/ui/label";
 import {
@@ -124,6 +124,90 @@ const ShippingMethod = ({ token, options }: ShippingMethodProps) => {
     );
   };
 
+  const handleGlobalWillCall = async () => {
+    const CartItemsAvailability = await Promise.all(
+      cartQuery.data.cartItems.map(async (item) => {
+        return await checkAvailability(token, {
+          productId: item.itemInfo.productId,
+          qty: item.quantity,
+          plant: DEFAULT_PLANT.code,
+        });
+      }),
+    );
+
+    //TODO - this will be refactored properly to remove duplication and handle proper types with
+    // will call plant anywhere
+    await updateCartItemMutation.mutateAsync(
+      cartQuery.data.cartItems.map((item) => {
+        const config = {
+          ...item.configuration,
+        };
+        const availability = CartItemsAvailability.find(
+          (willCall) => willCall.productId === item.itemInfo.productId,
+        );
+        if (
+          availability &&
+          availability.willCallAnywhere &&
+          availability.willCallAnywhere.status === IN_STOCK
+        ) {
+          (Object.keys(config) as (keyof typeof config)[]).forEach((key) => {
+            if (
+              key.startsWith("avail_") ||
+              key.startsWith("shipping_method_") ||
+              key.startsWith("plant_")
+            ) {
+              config[key] = "";
+            }
+          });
+
+          config.shipping_method_1 = "0";
+          config.avail_1 =
+            availability.willCallAnywhere?.willCallQuantity.toString();
+          config.plant_1 = DEFAULT_PLANT.code;
+          config.hashvalue = availability.willCallAnywhere.hash;
+          config.backorder_date =
+            availability.willCallAnywhere?.backOrderDate_1 ?? "";
+          config.will_call_avail =
+            availability.willCallAnywhere?.willCallQuantity.toString();
+          config.will_call_plant = DEFAULT_PLANT.code;
+        } else if (
+          availability &&
+          availability.willCallAnywhere &&
+          availability.willCallAnywhere.status === NOT_IN_STOCK
+        ) {
+          (Object.keys(config) as (keyof typeof config)[]).forEach((key) => {
+            if (
+              key.startsWith("avail_") ||
+              key.startsWith("shipping_method_") ||
+              key.startsWith("plant_")
+            ) {
+              config[key] = "";
+            }
+          });
+          config.avail_1 = "0";
+          config.shipping_method_1 = "0";
+          config.plant_1 = DEFAULT_PLANT.code;
+          config.backorder_all = "T";
+          config.hashvalue = availability.willCallAnywhere.hash;
+          config.backorder_date =
+            availability.willCallAnywhere?.willCallBackOrder ?? "";
+          config.backorder_quantity =
+            availability.willCallAnywhere?.willCallQuantity.toString();
+        }
+        return {
+          cartItemId: item.cartItemId,
+          quantity: item.quantity,
+          config,
+        };
+      }),
+      {
+        onSuccess: () => {
+          incrementCartItemKey();
+        },
+      },
+    );
+  };
+
   return (
     <div className="space-y-3 rounded-lg border border-wurth-gray-150 px-5 py-4 shadow-md">
       <h3 className="pb-2 text-sm text-black">Default delivery method</h3>
@@ -179,6 +263,7 @@ const ShippingMethod = ({ token, options }: ShippingMethodProps) => {
             onCheckedChange={(checked) => {
               if (checked === true) {
                 setSelectedSection(WILL_CALL);
+                handleGlobalWillCall();
               } else {
                 setSelectedSection(undefined);
               }

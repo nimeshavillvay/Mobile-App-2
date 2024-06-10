@@ -2,6 +2,7 @@
 
 import { Button } from "@repo/web-ui/components/ui/button";
 import Link from "next/link";
+// eslint-disable-next-line no-restricted-imports
 import { useEffect } from "react";
 
 const ErrorPage = ({

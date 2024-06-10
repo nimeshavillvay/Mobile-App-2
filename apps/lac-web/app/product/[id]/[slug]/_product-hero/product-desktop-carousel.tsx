@@ -12,6 +12,7 @@ import {
 } from "@repo/web-ui/components/ui/dialog";
 import useEmblaCarousel from "embla-carousel-react";
 import Image from "next/image";
+// eslint-disable-next-line no-restricted-imports
 import { useCallback, useEffect, useState, type CSSProperties } from "react";
 
 type ProductDesktopCarouselProps = Readonly<{
@@ -104,7 +105,10 @@ const ProductDesktopCarousel = ({
 
                 <DialogPrimitive.Content>
                   <div className="fixed left-0 right-0 top-0 z-[60] flex flex-row items-center justify-between gap-2.5 bg-black/70 p-2.5 duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top">
-                    <div className="text-lg leading-5 text-white">{title}</div>
+                    <div
+                      className="text-lg leading-5 text-white"
+                      dangerouslySetInnerHTML={{ __html: title }}
+                    />
 
                     <DialogClose asChild>
                       <Button variant="ghost" size="icon" className="h-fit p-0">

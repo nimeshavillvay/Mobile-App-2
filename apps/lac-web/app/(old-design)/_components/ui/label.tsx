@@ -2,6 +2,7 @@
 
 import * as LabelPrimitive from "@radix-ui/react-label";
 import { cva, type VariantProps } from "cva";
+// eslint-disable-next-line no-restricted-imports
 import * as React from "react";
 
 import { cn } from "@/_lib/utils";

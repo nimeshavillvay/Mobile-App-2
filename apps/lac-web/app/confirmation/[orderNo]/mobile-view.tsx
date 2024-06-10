@@ -41,7 +41,7 @@ const MobileView = async ({ orderNo }: MobileViewProps) => {
   ]);
 
   return (
-    <div className="container flex flex-col gap-5 md:hidden">
+    <div className="container flex flex-col gap-5 md:hidden print:block">
       <div className="flex flex-col gap-4 rounded-lg border border-wurth-gray-150 p-4 shadow-md">
         <h2 className="text-base font-semibold text-wurth-gray-800">
           Order Receipt

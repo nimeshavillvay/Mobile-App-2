@@ -106,6 +106,7 @@ const CartItemPrice = ({
               onBlur: onBlur,
               onChange: onChange,
             })}
+            onWheel={(e) => (e.target as HTMLInputElement).blur()}
             min={MIN_STEP}
             step={MIN_STEP}
             form={cartFormId} // This is to check the validity when clicking "checkout"

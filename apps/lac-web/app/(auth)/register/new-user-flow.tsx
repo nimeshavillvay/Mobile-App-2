@@ -80,7 +80,9 @@ const addressSchema = z
     billingCountry: z.string().min(2, "Please select a valid country"),
     billingState: z.string().min(2, "Please select a valid state"),
     billingCounty: z.string().optional(),
-    billingPostCode: z.string().min(5, "Please enter a valid Zip/Postal code"),
+    billingPostCode: z
+      .string()
+      .length(5, "Please enter a valid Zip/Postal code"),
     billingZipCode: z.string().optional(),
 
     same: z.boolean(),
