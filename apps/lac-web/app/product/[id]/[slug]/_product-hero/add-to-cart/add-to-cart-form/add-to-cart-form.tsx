@@ -1,15 +1,15 @@
 "use client";
 
-import {
-  calculateIncreaseQuantity,
-  calculateReduceQuantity,
-} from "@/_components/quantity-change";
 import QuantityInputField from "@/_components/quantity-input-field";
 import useAddToCartMutation from "@/_hooks/cart/use-add-to-cart-mutation.hook";
 import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
 import useSuspenseCheckAvailability from "@/_hooks/product/use-suspense-check-availability.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
 import { NOT_AVAILABLE } from "@/_lib/constants";
+import {
+  calculateIncreaseQuantity,
+  calculateReduceQuantity,
+} from "@/_lib/utils";
 import { Controller } from "react-hook-form";
 import useAddToCartForm from "../../use-add-to-cart-form.hook";
 import FormContent from "./form-content";
