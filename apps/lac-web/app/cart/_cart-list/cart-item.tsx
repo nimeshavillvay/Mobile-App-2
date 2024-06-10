@@ -187,7 +187,7 @@ const CartItem = ({
 
   useEffect(() => {
     if (status === NOT_AVAILABLE) {
-      deleteItemIfStatusNotAvailable;
+      deleteItemIfStatusNotAvailable();
     }
   }, [status, deleteItemIfStatusNotAvailable]);
 
