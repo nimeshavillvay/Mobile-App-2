@@ -86,7 +86,7 @@ const ShoppingListItems = ({
 
   return (
     <>
-      <div className="container my-5 flex flex-row items-center justify-between md:px-0">
+      <div className="container my-5 flex flex-col items-center justify-between md:flex-row md:px-0">
         <h3 className="font-title text-2xl font-bold">
           {shoppingList.listName}
         </h3>

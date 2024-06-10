@@ -141,9 +141,10 @@ const PurchasedItemDetailedViewDialog = ({
                   <div className="text-base">{item.productCategory}</div>
                 )}
 
-                <h4 className="line-clamp-6 text-wrap font-bold text-black">
-                  {item.productTitle}
-                </h4>
+                <h4
+                  className="line-clamp-6 text-wrap font-bold text-black"
+                  dangerouslySetInnerHTML={{ __html: item.productTitle }}
+                />
               </div>
             </div>
 

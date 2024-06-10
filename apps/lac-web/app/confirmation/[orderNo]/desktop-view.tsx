@@ -332,7 +332,7 @@ const DesktopView = async ({ orderNo }: DesktopViewProps) => {
         </div>
       </div>
 
-      <Instructions type="desktop" />
+      {orderDetails.deliveryInstruction && <Instructions type="desktop" />}
     </div>
   );
 };

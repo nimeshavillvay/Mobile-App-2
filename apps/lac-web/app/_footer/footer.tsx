@@ -97,10 +97,10 @@ const Footer = () => {
 
         <div className="container flex flex-col gap-6 md:flex-row-reverse md:items-center md:justify-between">
           <ul className="flex flex-row items-center justify-center gap-4">
-            {SOCIAL_LINKS.map(({ name, Icon }) => (
+            {SOCIAL_LINKS.map(({ name, Icon, url }) => (
               <li key={name}>
                 <a
-                  href="wurthlac.com"
+                  href={url}
                   target="_blank"
                   rel="noopener noreferrer"
                   className={cn(
@@ -223,7 +223,10 @@ export default Footer;
 
 const SAMNotice = () => {
   return (
-    <div className="flex flex-col items-center gap-3 rounded-xl bg-wurth-gray-50 px-7 py-5 md:items-start">
+    <Link
+      href="/government"
+      className="flex flex-col items-center gap-3 rounded-xl bg-wurth-gray-50 px-7 py-5 md:items-start"
+    >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="158"
@@ -291,9 +294,9 @@ const SAMNotice = () => {
       <div className="text-center text-sm font-semibold text-wurth-gray-800 md:text-left">
         <div>Approved US Government Vendor</div>
         <div>
-          <span className="font-normal">Cage Code: </span>XXXX
+          <span className="font-normal">Cage Code: </span>0P072
         </div>
       </div>
-    </div>
+    </Link>
   );
 };

@@ -10,7 +10,12 @@ import useItemInfo from "@/_hooks/product/use-item-info.hook";
 import useSuspenseCheckAvailability from "@/_hooks/product/use-suspense-check-availability.hook";
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import { LIMITED_STOCK, NOT_AVAILABLE, NOT_IN_STOCK } from "@/_lib/constants";
-import { cn, formatNumberToPrice } from "@/_lib/utils";
+import {
+  calculateIncreaseQuantity,
+  calculateReduceQuantity,
+  cn,
+  formatNumberToPrice,
+} from "@/_lib/utils";
 import { NUMBER_TYPE } from "@/_lib/zod-helper";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AddToCart as AddToCartIcon } from "@repo/web-ui/components/icons/add-to-cart";
@@ -143,6 +148,7 @@ const VerificationDialog = ({ token }: VerificationDialogProps) => {
                         token={token}
                         productId={productId}
                         uom={itemInfo.unitOfMeasure}
+                        quantity={Number(deferredQuantity)}
                       />
                     </Suspense>
                   ) : (
@@ -239,12 +245,16 @@ const PriceCheck = ({
   token,
   productId,
   uom,
+  quantity,
 }: {
   readonly token: string;
   readonly productId: number;
   readonly uom: string;
+  readonly quantity: number;
 }) => {
-  const priceCheckQuery = useSuspensePriceCheck(token, [{ productId, qty: 1 }]);
+  const priceCheckQuery = useSuspensePriceCheck(token, [
+    { productId, qty: quantity },
+  ]);
   const priceData = priceCheckQuery.data.productPrices[0];
 
   const isDiscounted =
@@ -322,11 +332,17 @@ const AddToCart = ({
 
   const reduceQuantity = () => {
     // Use `Number(quantity)` because `quantity` is a string at runtime
-    setValue("quantity", Number(quantity) - increments);
+    setValue(
+      "quantity",
+      calculateReduceQuantity(Number(quantity), minAmount, increments),
+    );
   };
   const increaseQuantity = () => {
     // Use `Number(quantity)` because `quantity` is a string at runtime
-    setValue("quantity", Number(quantity) + increments);
+    setValue(
+      "quantity",
+      calculateIncreaseQuantity(Number(quantity), minAmount, increments),
+    );
   };
 
   const addToCartMutation = useAddToCartMutation(token, {
@@ -405,7 +421,7 @@ const AddToCart = ({
             className="size-10 rounded-sm"
             onClick={increaseQuantity}
             disabled={
-              quantity?.toString().length >= 5 ||
+              quantity?.toString().length > 5 ||
               addToCartMutation.isPending ||
               disableAddToCartButton
             }
