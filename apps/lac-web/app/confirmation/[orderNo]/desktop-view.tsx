@@ -125,7 +125,10 @@ const DesktopView = async ({ orderNo }: DesktopViewProps) => {
                       {orderDetails.billToAddress.street},{" "}
                       {orderDetails.billToAddress.city},{" "}
                       {orderDetails.billToAddress.region},{" "}
-                      {orderDetails.billToAddress.shipTo}
+                      {orderDetails.billToAddress.zipCode}
+                      {orderDetails.billToAddress.zip4
+                        ? ` - ${orderDetails.billToAddress.zip4}`
+                        : ""}
                     </td>
                   </tr>
                 </tbody>
@@ -275,7 +278,7 @@ const DesktopView = async ({ orderNo }: DesktopViewProps) => {
 
                     {orderDetails.discount > 0 && (
                       <tr>
-                        <td className={tableLabelStyles()}>Bill to</td>
+                        <td className={tableLabelStyles()}>Saving</td>
                         <td className={cn(tableValueStyles(), "text-right")}>
                           -${orderDetails.discount}
                         </td>

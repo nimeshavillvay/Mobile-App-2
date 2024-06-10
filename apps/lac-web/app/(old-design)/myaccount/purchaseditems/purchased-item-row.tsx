@@ -99,7 +99,6 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
     return (
       item &&
       item.productSku &&
-      !item.isExcludedProduct &&
       item.productStatus !== "DL" &&
       !item.isDiscontinued
     );
@@ -159,9 +158,10 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
                 MRF Part# : {item.mfrPartNo !== "" ? item.mfrPartNo : "N/A"}
               </div>
 
-              <h4 className="line-clamp-3 text-wrap font-bold">
-                {item.productTitle}
-              </h4>
+              <h4
+                className="line-clamp-3 text-wrap font-bold"
+                dangerouslySetInnerHTML={{ __html: item.productTitle }}
+              />
 
               <div className="text-sm text-brand-gray-500">
                 Category :&nbsp;
@@ -372,16 +372,6 @@ const ErrorAlert = ({ item }: { readonly item: DetailedPurchasedItem }) => {
         variant="destructive"
         title="Error!"
         description="Not available online. Please call Customer Service for availability"
-      />
-    );
-  }
-
-  if (item?.isExcludedProduct) {
-    return (
-      <AlertInline
-        variant="destructive"
-        title="Error!"
-        description="This item is not available in your territory."
       />
     );
   }

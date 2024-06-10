@@ -1,5 +1,6 @@
 "use client";
 
+import { TooltipProvider } from "@repo/web-ui/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { ReactQueryStreamedHydration } from "@tanstack/react-query-next-experimental";
@@ -57,7 +58,9 @@ const ReactQueryProvider = ({ children }: { readonly children: ReactNode }) => {
   return (
     <QueryClientProvider client={queryClient}>
       <ReactQueryStreamedHydration>
-        <WrapBalancer>{children}</WrapBalancer>
+        <WrapBalancer>
+          <TooltipProvider>{children}</TooltipProvider>
+        </WrapBalancer>
       </ReactQueryStreamedHydration>
 
       <ReactQueryDevtools />

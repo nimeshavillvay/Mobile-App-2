@@ -38,7 +38,6 @@ export const isItemError = (item: DetailedPurchasedItem) => {
   return (
     !item ||
     !item.productSku ||
-    item.isExcludedProduct ||
     item.productStatus === "DL" ||
     item.productStatus === "DU" ||
     item.productStatus === "DV" ||

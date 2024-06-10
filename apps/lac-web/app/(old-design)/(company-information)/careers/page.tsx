@@ -1,4 +1,4 @@
-import { StaticPageMainTitle } from "@/(old-design)/_components/static-page-main-title";
+import { MainTitle } from "@/(old-design)/_components/main-title";
 import VisuallyHidden from "@/old/_components/visually-hidden";
 import type { Metadata } from "next";
 import Image from "next/image";
@@ -21,7 +21,7 @@ const CareersPage = () => {
       />
 
       {/* Section heading with line */}
-      {StaticPageMainTitle("Careers")}
+      <MainTitle>Careers</MainTitle>
 
       {/* Careers content */}
       <div className="box-border space-y-4 text-brand-gray-500">

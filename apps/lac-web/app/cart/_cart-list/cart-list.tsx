@@ -4,6 +4,7 @@ import ProductNotAvailable from "@/_components/product-not-available";
 import useSuspenseWillCallPlant from "@/_hooks/address/use-suspense-will-call-plant.hook";
 import useDeleteCartItemMutation from "@/_hooks/cart/use-delete-cart-item-mutation.hook";
 import useSuspenseCart from "@/_hooks/cart/use-suspense-cart.hook";
+import useUpdateCartConfigMutation from "@/_hooks/cart/use-update-cart-config-mutation.hook";
 import type { Plant } from "@/_lib/types";
 import { Trash } from "@repo/web-ui/components/icons/trash";
 import {
@@ -43,6 +44,7 @@ const CartList = ({ token, plants }: CartListProps) => {
   const { data } = useSuspenseCart(token);
   const willCallPlantQuery = useSuspenseWillCallPlant(token);
   const deleteCartItemMutation = useDeleteCartItemMutation(token);
+  const updateCartConfigMutation = useUpdateCartConfigMutation();
 
   const handleClearCart = () => {
     if (data.cartItems.length > 0) {
@@ -61,6 +63,8 @@ const CartList = ({ token, plants }: CartListProps) => {
             },
           },
         );
+
+        updateCartConfigMutation.mutate({ coupon: "" });
       }
     }
   };

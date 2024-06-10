@@ -15,6 +15,7 @@ import {
   AlertDialogTrigger,
 } from "@repo/web-ui/components/ui/alert-dialog";
 import { Button } from "@repo/web-ui/components/ui/button";
+// eslint-disable-next-line no-restricted-imports
 import { useEffect, useId, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { MdAdd } from "react-icons/md";

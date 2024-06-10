@@ -38,6 +38,7 @@ import {
   Suspense,
   useCallback,
   useDeferredValue,
+  // eslint-disable-next-line no-restricted-imports
   useEffect,
   useId,
   useState,

@@ -1,5 +1,6 @@
 "use client";
 
+// eslint-disable-next-line no-restricted-imports
 import { useEffect } from "react";
 import { useCookies } from "react-cookie";
 import { SEARCH_PARAMS_COOKIE, TOTAL_COOKIE } from "./constants";

@@ -126,9 +126,12 @@ const OrderItem = ({
           <div className="flex flex-col">
             <div>Item#: {sku ?? "N/A"}</div>
 
-            <div className="line-clamp-3 text-wrap font-bold text-black">
-              {productName ?? productTitle ?? "Description N/A"}
-            </div>
+            <div
+              className="line-clamp-3 text-wrap font-bold text-black"
+              dangerouslySetInnerHTML={{
+                __html: productName ?? productTitle ?? "Description N/A",
+              }}
+            />
 
             <div className="">
               Order Qty: {totalQuantity} {unitOfMeasure ?? "Unit"} | $

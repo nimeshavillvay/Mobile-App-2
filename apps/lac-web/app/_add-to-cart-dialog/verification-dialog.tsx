@@ -125,9 +125,12 @@ const VerificationDialog = ({ token }: VerificationDialogProps) => {
                       href={`/product/${itemInfo.productId}/${itemInfo.slug}`}
                       onClick={() => setOpen("closed")}
                     >
-                      <h3 className="text-base text-black">
-                        {itemInfo.productName}
-                      </h3>
+                      <h3
+                        className="text-base text-black"
+                        dangerouslySetInnerHTML={{
+                          __html: itemInfo.productName,
+                        }}
+                      />
                     </Link>
                     <h4 className="text-sm font-medium text-wurth-gray-500">
                       {itemInfo.productSku}

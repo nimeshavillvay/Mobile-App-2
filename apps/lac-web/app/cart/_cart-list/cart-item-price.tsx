@@ -9,7 +9,7 @@ import { z } from "zod";
 import { useCartFormIdContext } from "../cart-form-id-context";
 import type { ViewportTypes } from "./types";
 
-const EXCLUDED_KEYS = ["e", "E", "+", "-", "Enter"];
+const EXCLUDED_KEYS = ["e", "E", "+", "-", "Enter"] as const;
 const MIN_STEP = 0.0001;
 
 type CartItemPriceProps = {
@@ -101,12 +101,22 @@ const CartItemPrice = ({
               onBlur: onBlur,
               onChange: onChange,
             })}
+            onWheel={(e) => (e.target as HTMLInputElement).blur()}
             min={MIN_STEP}
             step={MIN_STEP}
             form={cartFormId} // This is to check the validity when clicking "checkout"
             onKeyDown={(e) => {
               if (EXCLUDED_KEYS.includes(e.key)) {
                 e.preventDefault();
+
+                // Submit the price if the user presses "Enter"
+                if (e.key === "Enter") {
+                  const price = getValues("price");
+
+                  if (onPriceChange) {
+                    onPriceChange(Number(price));
+                  }
+                }
               }
             }}
           />
