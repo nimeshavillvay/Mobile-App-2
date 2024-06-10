@@ -341,12 +341,9 @@ const CartItem = ({
     }
   };
 
-  const isOSRLoggedInAsCustomer = () => {
-    return (
-      checkLoginQuery.data.status_code === "OK" &&
-      checkLoginQuery.data.isLoggedInAsCustomer
-    );
-  };
+  const isOSRLoggedInAsCustomer =
+    checkLoginQuery.data.status_code === "OK" &&
+    checkLoginQuery.data.isLoggedInAsCustomer;
 
   const handleSave = (config?: Partial<CartItemConfiguration>) => {
     const data = getValues();
@@ -596,7 +593,7 @@ const CartItem = ({
         </div>
 
         <div className="flex-1 space-y-2 md:space-y-1">
-          {isOSRLoggedInAsCustomer() && (
+          {isOSRLoggedInAsCustomer && (
             <div className="text-lg font-semibold">${osrCartItemTotal}</div>
           )}
 
@@ -788,7 +785,7 @@ const CartItem = ({
       </div>
 
       <div className="hidden space-y-3 md:block md:shrink-0">
-        {isOSRLoggedInAsCustomer() && (
+        {isOSRLoggedInAsCustomer && (
           <div className="text-right text-lg font-semibold">
             ${osrCartItemTotal}
           </div>
