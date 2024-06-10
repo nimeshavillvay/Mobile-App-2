@@ -1,5 +1,5 @@
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
-import type { Token } from "@/_lib/types";
+import type { ItemsPriceResult, Token } from "@/_lib/types";
 import { cn, formatNumberToPrice } from "@/_lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@repo/web-ui/components/ui/input";
@@ -13,20 +13,7 @@ const MIN_STEP = 0.0001;
 
 type CartItemPriceProps = {
   readonly token: Token;
-  readonly priceCheckData: {
-    error: true | null;
-    productPrices: {
-      productId: number;
-      price: number;
-      priceUnit: string;
-      extendedPrice: number;
-      listPrice: number;
-      couponCode: string | null;
-      priceBreakDowns: { quantity: number; price: number }[];
-      uomPrice: number | undefined;
-      uomPriceUnit: string | undefined;
-    }[];
-  };
+  readonly priceCheckData: ItemsPriceResult;
   readonly onPriceChange?: (newPrice: number) => void;
   readonly type: ViewportTypes;
 };

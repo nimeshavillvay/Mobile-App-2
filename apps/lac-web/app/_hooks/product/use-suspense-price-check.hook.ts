@@ -1,8 +1,8 @@
 import { api } from "@/_lib/api";
-import type { PriceBreakDowns } from "@/_lib/types";
+import type { ItemsPriceResult, PriceBreakDowns } from "@/_lib/types";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
-type ItemPrice = {
+type ItemPriceOld = {
   productid: number;
   price: string;
   price_unit: string;
@@ -14,9 +14,9 @@ type ItemPrice = {
   uom_price_unit?: string;
 };
 
-type ItemsPriceResult = {
+type ItemsPriceResultOld = {
   error: true | null; //TODO need to clarify how errors send
-  items: ItemPrice[];
+  items: ItemPriceOld[];
 };
 
 const getPriceBreakDowns = (price_breakdowns: PriceBreakDowns) => {
@@ -55,8 +55,8 @@ const useSuspensePriceCheck = (token: string, products: Product[]) => {
           },
           cache: "no-store",
         })
-        .json<ItemsPriceResult>(),
-    select: (data) => {
+        .json<ItemsPriceResultOld>(),
+    select: (data): ItemsPriceResult => {
       const { items, error } = data;
       const mappedItems = items.map(
         ({

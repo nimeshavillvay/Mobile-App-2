@@ -152,14 +152,8 @@ const CartItem = ({
   const priceCheckData = priceCheckQuery.data;
 
   const [osrCartItemTotal, setOsrCartItemTotal] = useState(
-    deferredQuantity * (priceCheckData?.productPrices[0]?.price ?? 0),
+    quantity * (priceCheckData?.productPrices[0]?.price ?? 0),
   );
-
-  useEffect(() => {
-    setOsrCartItemTotal(
-      deferredQuantity * (priceCheckData?.productPrices[0]?.price ?? 0),
-    );
-  }, [priceCheckData, deferredQuantity]);
 
   const updateCartConfigMutation = useUpdateCartItemMutation(token);
   const deleteCartItemMutation = useDeleteCartItemMutation(token);
@@ -361,6 +355,9 @@ const CartItem = ({
           },
         },
       ]);
+      setOsrCartItemTotal(
+        data.quantity * (priceCheckData?.productPrices[0]?.price ?? 0),
+      );
     }
   };
 
@@ -595,7 +592,9 @@ const CartItem = ({
 
         <div className="flex-1 space-y-2 md:space-y-1">
           {isOSRLoggedInAsCustomer && (
-            <div className="text-lg font-semibold">${osrCartItemTotal}</div>
+            <div className="text-lg font-semibold md:hidden">
+              ${osrCartItemTotal}
+            </div>
           )}
 
           <Suspense fallback={<Skeleton className="h-7 w-full" />}>
