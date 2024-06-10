@@ -3,7 +3,6 @@
 import useSuspenseCart from "@/_hooks/cart/use-suspense-cart.hook";
 import useSuspenseSimulationCheckout from "@/_hooks/cart/use-suspense-simulation-checkout.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
-import type { CartItemConfiguration } from "@/_lib/types";
 import { Shield } from "@repo/web-ui/components/icons/shield";
 import { Button } from "@repo/web-ui/components/ui/button";
 import { useRouter } from "next/navigation";
@@ -20,18 +19,11 @@ const CheckoutButton = ({ token }: CheckoutButtonProps) => {
 
   const checkLoginQuery = useSuspenseCheckLogin(token);
   const simulationCheckoutQuery = useSuspenseSimulationCheckout(token);
-  const cartQueryGet = useSuspenseCart(token);
-
-  // Check if item cartItemConfiguration has a hash value (not empty string)
-  const isCartItemConfigurationComplete = (
-    config: CartItemConfiguration,
-  ): boolean => {
-    return config.hashvalue !== "";
-  };
+  const cartQuery = useSuspenseCart(token);
 
   // Check if all cart items have complete configurations
-  const areAllCartItemsConfigured = cartQueryGet.data.cartItems.every(
-    (cartItem) => isCartItemConfigurationComplete(cartItem.configuration),
+  const areAllCartItemsConfigured = cartQuery.data.cartItems.every(
+    (cartItem) => cartItem.configuration.hashvalue !== "",
   );
 
   const isButtonDisabled =

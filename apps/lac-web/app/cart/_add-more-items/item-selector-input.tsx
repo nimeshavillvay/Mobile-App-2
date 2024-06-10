@@ -7,6 +7,7 @@ import { WurthFullBlack } from "@repo/web-ui/components/logos/wurth-full-black";
 import { Input } from "@repo/web-ui/components/ui/input";
 import { useCombobox } from "downshift";
 import Image from "next/image";
+import type { ChangeEvent } from "react";
 import type { Product } from "./types";
 
 type ItemSelectorInputProps = {
@@ -47,7 +48,7 @@ const ItemSelectorInput = ({
     },
   });
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value;
     onTextChange(newValue, false);
   };
