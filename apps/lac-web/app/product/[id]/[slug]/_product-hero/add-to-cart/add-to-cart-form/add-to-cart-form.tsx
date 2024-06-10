@@ -1,5 +1,9 @@
 "use client";
 
+import {
+  calculateIncreaseQuantity,
+  calculateReduceQuantity,
+} from "@/_components/quantity-change";
 import QuantityInputField from "@/_components/quantity-input-field";
 import useAddToCartMutation from "@/_hooks/cart/use-add-to-cart-mutation.hook";
 import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
@@ -34,11 +38,17 @@ const AddToCartForm = ({
 
   const reduceQuantity = () => {
     // Use `Number(quantity)` because `quantity` is a string at runtime
-    setValue("quantity", Number(quantity) - incQty);
+    setValue(
+      "quantity",
+      calculateReduceQuantity(Number(quantity), minQty, incQty),
+    );
   };
   const increaseQuantity = () => {
     // Use `Number(quantity)` because `quantity` is a string at runtime
-    setValue("quantity", Number(quantity) + incQty);
+    setValue(
+      "quantity",
+      calculateIncreaseQuantity(Number(quantity), minQty, incQty),
+    );
   };
 
   const addToCartMutation = useAddToCartMutation(token, {
@@ -136,11 +146,17 @@ const AddToCartFormLoggedIn = ({
 
   const reduceQuantity = () => {
     // Use `Number(quantity)` because `quantity` is a string at runtime
-    setValue("quantity", Number(quantity) - incQty);
+    setValue(
+      "quantity",
+      calculateReduceQuantity(Number(quantity), minQty, incQty),
+    );
   };
   const increaseQuantity = () => {
     // Use `Number(quantity)` because `quantity` is a string at runtime
-    setValue("quantity", Number(quantity) + incQty);
+    setValue(
+      "quantity",
+      calculateIncreaseQuantity(Number(quantity), minQty, incQty),
+    );
   };
 
   const addToCartMutation = useAddToCartMutation(token, {

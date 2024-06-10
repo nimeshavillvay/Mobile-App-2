@@ -1,6 +1,10 @@
 "use client";
 
 import ProductNotAvailable from "@/_components/product-not-available";
+import {
+  calculateIncreaseQuantity,
+  calculateReduceQuantity,
+} from "@/_components/quantity-change";
 import QuantityInputField from "@/_components/quantity-input-field";
 import QuantityWarning from "@/_components/quantity-warning";
 import useAddToCartMutation from "@/_hooks/cart/use-add-to-cart-mutation.hook";
@@ -322,11 +326,17 @@ const AddToCart = ({
 
   const reduceQuantity = () => {
     // Use `Number(quantity)` because `quantity` is a string at runtime
-    setValue("quantity", Number(quantity) - increments);
+    setValue(
+      "quantity",
+      calculateReduceQuantity(Number(quantity), minAmount, increments),
+    );
   };
   const increaseQuantity = () => {
     // Use `Number(quantity)` because `quantity` is a string at runtime
-    setValue("quantity", Number(quantity) + increments);
+    setValue(
+      "quantity",
+      calculateIncreaseQuantity(Number(quantity), minAmount, increments),
+    );
   };
 
   const addToCartMutation = useAddToCartMutation(token, {
