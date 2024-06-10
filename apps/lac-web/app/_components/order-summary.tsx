@@ -23,7 +23,8 @@ import {
   FormMessage,
 } from "@repo/web-ui/components/ui/form";
 import { Input } from "@repo/web-ui/components/ui/input";
-import { useState, type ReactNode } from "react";
+// eslint-disable-next-line no-restricted-imports
+import { useEffect, useState, type ReactNode } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -264,9 +265,28 @@ const OrderSummary = ({ token, children }: OrderSummaryProps) => {
         </tbody>
       </table>
 
+      <PromoCode discount={discount} updateCartConfig={updateCartConfig} />
+
       {children}
     </div>
   );
 };
 
 export default OrderSummary;
+
+const PromoCode = ({
+  discount,
+  updateCartConfig,
+}: {
+  readonly discount: number;
+  readonly updateCartConfig: (coupon: string) => void;
+}) => {
+  useEffect(() => {
+    if (discount === 0) {
+      updateCartConfig("");
+    }
+    // eslint-disable-next-line react-compiler/react-compiler
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [discount]);
+  return null;
+};
