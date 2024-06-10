@@ -167,7 +167,7 @@ const EditBillingAddressDialog = ({ token }: EditBillingAddressDialogProps) => {
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="max-w-[37.5rem]">
+      <DialogContent className="flex max-h-dvh max-w-[37.5rem] flex-col">
         <DialogHeader>
           <DialogTitle>Edit Billing Address</DialogTitle>
         </DialogHeader>
@@ -393,7 +393,7 @@ const EditBillingAddressDialog = ({ token }: EditBillingAddressDialogProps) => {
             </form>
           </Form>
         ) : (
-          <div className="flex flex-col gap-4">
+          <div className="flex min-h-0 flex-1 flex-col gap-4">
             <div className="space-y-1">
               <h3 className="text-base font-semibold text-wurth-gray-800">
                 Address Conflict
@@ -406,7 +406,7 @@ const EditBillingAddressDialog = ({ token }: EditBillingAddressDialogProps) => {
               </p>
             </div>
 
-            <ul className="flex flex-col gap-2">
+            <ul className="flex flex-1 flex-col gap-2 overflow-y-auto">
               {suggestions.map((address) => (
                 <li key={address.xcAddressId}>
                   <Button
