@@ -97,10 +97,10 @@ const Footer = () => {
 
         <div className="container flex flex-col gap-6 md:flex-row-reverse md:items-center md:justify-between">
           <ul className="flex flex-row items-center justify-center gap-4">
-            {SOCIAL_LINKS.map(({ name, Icon }) => (
+            {SOCIAL_LINKS.map(({ name, Icon, url }) => (
               <li key={name}>
                 <a
-                  href="wurthlac.com"
+                  href={url}
                   target="_blank"
                   rel="noopener noreferrer"
                   className={cn(
