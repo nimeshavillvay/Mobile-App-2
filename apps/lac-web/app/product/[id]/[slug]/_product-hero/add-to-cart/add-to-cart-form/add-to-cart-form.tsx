@@ -98,7 +98,7 @@ const AddToCartForm = ({
       incrementButtonProps={{
         onClick: increaseQuantity,
         disabled:
-          quantity?.toString().length >= 5 ||
+          quantity?.toString().length > 5 ||
           addToCartMutation.isPending ||
           disableAddToCartButton,
       }}
@@ -192,7 +192,7 @@ const AddToCartFormLoggedIn = ({
       incrementButtonProps={{
         onClick: increaseQuantity,
         disabled:
-          quantity?.toString().length >= 5 ||
+          quantity?.toString().length > 5 ||
           addToCartMutation.isPending ||
           disableAddToCartButton,
       }}

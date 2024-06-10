@@ -415,7 +415,7 @@ const AddToCart = ({
             className="size-10 rounded-sm"
             onClick={increaseQuantity}
             disabled={
-              quantity?.toString().length >= 5 ||
+              quantity?.toString().length > 5 ||
               addToCartMutation.isPending ||
               disableAddToCartButton
             }
