@@ -18,6 +18,7 @@ const ZipCodeInputField = forwardRef<
       )}
       value={value}
       label="Zip/Postal code"
+      onWheel={(e) => (e.target as HTMLInputElement).blur()}
       {...delegated}
     />
   );
