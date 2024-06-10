@@ -76,10 +76,7 @@ const CatalogsLiteraturePage = () => {
           </a>
         </div>
         <div>
-          <p className="mb-4">
-            Click the catalog cover below to go to the individual sections of
-            the catalog.
-          </p>
+          <p className="mb-4">Or you can download the full pdf version here.</p>
           <a
             href="/literature/catalog/WurthLAC_2022-2023_Full_Catalog.pdf"
             title="WurthLAC 2022-2023 Full Catalog"
