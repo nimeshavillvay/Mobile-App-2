@@ -85,9 +85,10 @@ const PurchasedItemRowForMobile = ({
           <div className="text-sm">{item.productCategory}</div>
         )}
 
-        <h4 className="line-clamp-3 text-wrap font-bold text-black">
-          {item.productTitle}
-        </h4>
+        <h4
+          className="line-clamp-3 text-wrap font-bold text-black"
+          dangerouslySetInnerHTML={{ __html: item.productTitle }}
+        />
 
         <div className="truncate text-sm">
           {item.productSku !== "" ? item.productSku : "N/A"}
