@@ -6,6 +6,10 @@ import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
 import useSuspenseCheckAvailability from "@/_hooks/product/use-suspense-check-availability.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
 import { NOT_AVAILABLE } from "@/_lib/constants";
+import {
+  calculateIncreaseQuantity,
+  calculateReduceQuantity,
+} from "@/_lib/utils";
 import { Controller } from "react-hook-form";
 import useAddToCartForm from "../../use-add-to-cart-form.hook";
 import FormContent from "./form-content";
@@ -34,11 +38,17 @@ const AddToCartForm = ({
 
   const reduceQuantity = () => {
     // Use `Number(quantity)` because `quantity` is a string at runtime
-    setValue("quantity", Number(quantity) - incQty);
+    setValue(
+      "quantity",
+      calculateReduceQuantity(Number(quantity), minQty, incQty),
+    );
   };
   const increaseQuantity = () => {
     // Use `Number(quantity)` because `quantity` is a string at runtime
-    setValue("quantity", Number(quantity) + incQty);
+    setValue(
+      "quantity",
+      calculateIncreaseQuantity(Number(quantity), minQty, incQty),
+    );
   };
 
   const addToCartMutation = useAddToCartMutation(token, {
@@ -88,7 +98,7 @@ const AddToCartForm = ({
       incrementButtonProps={{
         onClick: increaseQuantity,
         disabled:
-          quantity?.toString().length >= 5 ||
+          quantity?.toString().length > 5 ||
           addToCartMutation.isPending ||
           disableAddToCartButton,
       }}
@@ -136,11 +146,17 @@ const AddToCartFormLoggedIn = ({
 
   const reduceQuantity = () => {
     // Use `Number(quantity)` because `quantity` is a string at runtime
-    setValue("quantity", Number(quantity) - incQty);
+    setValue(
+      "quantity",
+      calculateReduceQuantity(Number(quantity), minQty, incQty),
+    );
   };
   const increaseQuantity = () => {
     // Use `Number(quantity)` because `quantity` is a string at runtime
-    setValue("quantity", Number(quantity) + incQty);
+    setValue(
+      "quantity",
+      calculateIncreaseQuantity(Number(quantity), minQty, incQty),
+    );
   };
 
   const addToCartMutation = useAddToCartMutation(token, {
@@ -176,7 +192,7 @@ const AddToCartFormLoggedIn = ({
       incrementButtonProps={{
         onClick: increaseQuantity,
         disabled:
-          quantity?.toString().length >= 5 ||
+          quantity?.toString().length > 5 ||
           addToCartMutation.isPending ||
           disableAddToCartButton,
       }}
