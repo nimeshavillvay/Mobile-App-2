@@ -135,7 +135,7 @@ const CatalogsLiteraturePage = () => {
 
         <a
           href="/literature/catalog/WurthLAC_2022-2023_Full_Catalog.pdf"
-          title="WurthLAC 2022-2023 Full Catalog"
+          title="WurthLAC Kessebohmer Catalog"
           target="_blank"
           rel="noopener noreferrer"
           className="flex w-fit flex-col sm:flex-row"
@@ -167,7 +167,7 @@ const CatalogsLiteraturePage = () => {
 
         <a
           href="https://ipaper.ipapercms.dk/WurthBaerSupply/wurth-louis-and-company/kessebohmer-catalog/"
-          title="WurthLAC 2022-2023 Full Catalog"
+          title="WurthLAC Kessebohmer Catalog"
           target="_blank"
           rel="noopener noreferrer"
           className="flex w-fit flex-col sm:flex-row"
