@@ -1,5 +1,6 @@
 "use client";
 
+import FullAddress from "@/_components/full-address";
 import useSuspenseShippingAddressList from "@/_hooks/address/use-suspense-shipping-address-list.hook";
 import useSuspenseCart from "@/_hooks/cart/use-suspense-cart.hook";
 import useUpdateCartConfigMutation from "@/_hooks/cart/use-update-cart-config-mutation.hook";
@@ -104,12 +105,7 @@ const ShippingAndPickupDetails = ({ token }: ShippingAndPickupDetailsProps) => {
             <h3 className="text-sm text-black">Shipping Address</h3>
 
             <div className="text-base text-wurth-gray-800">
-              {selectedAddress?.streetAddress}, {selectedAddress?.locality},{" "}
-              {selectedAddress?.region}, {selectedAddress?.county},{" "}
-              {selectedAddress?.postalCode}
-              {selectedAddress?.zip4 ? ` - ${selectedAddress?.zip4}` : ""}
-              <br />
-              {selectedAddress?.countryName}
+              <FullAddress address={selectedAddress} showCountry={true} />
             </div>
           </div>
 

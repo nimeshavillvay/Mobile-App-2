@@ -2,9 +2,10 @@ import type { Address } from "@/_lib/types";
 
 type FullAddressProps = {
   readonly address: Address | undefined;
+  readonly showCountry?: boolean;
 };
 
-const FullAddress = ({ address }: FullAddressProps) => {
+const FullAddress = ({ address, showCountry = false }: FullAddressProps) => {
   if (!address) {
     return null;
   }
@@ -18,6 +19,7 @@ const FullAddress = ({ address }: FullAddressProps) => {
       &nbsp;
       {address?.postalCode}
       {address?.zip4 && `-${address.zip4}`}
+      {showCountry && `, ${address?.countryName}`}
     </>
   );
 };
