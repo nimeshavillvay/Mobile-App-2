@@ -1,6 +1,6 @@
 "use client";
 
-import QuantityInputField from "@/_components/quantity-input-field";
+import NumberInputField from "@/_components/number-input-field";
 import useAddToCartMutation from "@/_hooks/cart/use-add-to-cart-mutation.hook";
 import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
 import useSuspenseCheckAvailability from "@/_hooks/product/use-suspense-check-availability.hook";
@@ -110,7 +110,7 @@ const AddToCartForm = ({
         control={control}
         name="quantity"
         render={({ field: { onChange, onBlur, value, name, ref } }) => (
-          <QuantityInputField
+          <NumberInputField
             onBlur={onBlur}
             onChange={onChange}
             value={value}
@@ -120,6 +120,7 @@ const AddToCartForm = ({
             required
             min={minQty}
             step={incQty}
+            label="Quantity"
           />
         )}
       />
@@ -209,7 +210,7 @@ const AddToCartFormLoggedIn = ({
         control={control}
         name="quantity"
         render={({ field: { onChange, onBlur, value, name, ref } }) => (
-          <QuantityInputField
+          <NumberInputField
             onBlur={onBlur}
             onChange={onChange}
             value={value}
@@ -219,6 +220,7 @@ const AddToCartFormLoggedIn = ({
             required
             min={minQty}
             step={incQty}
+            label="Quantity"
           />
         )}
       />

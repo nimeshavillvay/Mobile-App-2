@@ -1,6 +1,6 @@
 "use client";
 
-import QuantityInputField from "@/_components/quantity-input-field";
+import NumberInputField from "@/_components/number-input-field";
 import { Suspense, type ReactNode } from "react";
 import FormContent from "./form-content";
 
@@ -18,7 +18,7 @@ const SuspenseFallback = ({ children }: SuspenseFallbackProps) => {
           incrementButtonProps={{ disabled: true }}
           submitButtonProps={{ disabled: true }}
         >
-          <QuantityInputField disabled />
+          <NumberInputField label="Quantity" disabled />
         </FormContent>
       }
     >
