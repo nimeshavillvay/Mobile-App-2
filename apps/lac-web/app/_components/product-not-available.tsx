@@ -6,11 +6,11 @@ import {
   AlertTitle,
 } from "@repo/web-ui/components/ui/alert";
 
-type MessageProps = {
+type ProductNotAvailableProps = {
   readonly message?: string;
 };
 
-const ProductNotAvailable = ({ message = "" }: MessageProps) => {
+const ProductNotAvailable = ({ message = "" }: ProductNotAvailableProps) => {
   return (
     <Alert variant="destructive">
       <AlertIcon className="size-4" />
