@@ -35,6 +35,7 @@ import { nanoid } from "nanoid";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import ZipCodeInputField from "./zip-code-input-field";
 
 const formSchema = z.object({
   address: z.string().min(1),
@@ -306,7 +307,10 @@ const AddShippingAddressDialog = ({
                   <FormItem className="col-span-4">
                     <FormLabel>Zip/Post code</FormLabel>
                     <FormControl>
-                      <Input placeholder="Zip/Post code" {...field} />
+                      <ZipCodeInputField
+                        {...field}
+                        placeholder="Zip/Post code"
+                      />
                     </FormControl>
                     <FormDescription className="sr-only">
                       Enter your postal code
