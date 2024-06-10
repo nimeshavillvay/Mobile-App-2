@@ -56,7 +56,7 @@ const Header = async () => {
         </div>
       </div>
 
-      <div className="container flex w-full flex-row items-center gap-7 pt-1">
+      <div className="container flex w-full min-w-0 flex-row items-center gap-7 pt-1">
         <MobileNavigationMenu categories={categories} />
 
         <Link href="/" className="flex-shrink-0">
@@ -69,7 +69,7 @@ const Header = async () => {
           <SearchBar />
         </div>
 
-        <div className="ml-auto flex flex-row items-center gap-4 md:ml-0 md:gap-6">
+        <div className="ml-auto flex min-w-0 flex-row items-center gap-4 md:ml-0 md:gap-6">
           {/* Mobile */}
           <Suspense fallback={<UserProfileSkeleton type="mobile" />}>
             <UserProfile type="mobile" />

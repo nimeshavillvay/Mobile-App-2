@@ -65,7 +65,7 @@ const BulkUpload = ({
     const errorMessage = validateFile(file);
     setFileErrorMessage(errorMessage);
 
-    if (fileErrorMessage) {
+    if (errorMessage) {
       return;
     }
 

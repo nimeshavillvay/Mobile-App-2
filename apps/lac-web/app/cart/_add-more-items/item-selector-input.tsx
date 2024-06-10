@@ -7,6 +7,7 @@ import { WurthFullBlack } from "@repo/web-ui/components/logos/wurth-full-black";
 import { Input } from "@repo/web-ui/components/ui/input";
 import { useCombobox } from "downshift";
 import Image from "next/image";
+import type { ChangeEvent } from "react";
 import type { Product } from "./types";
 
 type ItemSelectorInputProps = {
@@ -38,10 +39,6 @@ const ItemSelectorInput = ({
   } = useCombobox({
     inputValue: value,
     isOpen: isPopupOpen,
-    onInputValueChange: ({ inputValue, type }) => {
-      const isItemClick = type == useCombobox.stateChangeTypes.ItemClick;
-      onTextChange(inputValue, isItemClick);
-    },
     onSelectedItemChange: ({ selectedItem }) => {
       onSelectedItemChange(selectedItem);
     },
@@ -50,6 +47,11 @@ const ItemSelectorInput = ({
       return item ? item.sku : "N/A";
     },
   });
+
+  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const newValue = event.target.value;
+    onTextChange(newValue, false);
+  };
 
   return (
     <div>
@@ -62,6 +64,8 @@ const ItemSelectorInput = ({
             isInvalid === true && "border-wurth-red-650 text-wurth-red-650",
           )}
           {...getInputProps()}
+          value={value}
+          onChange={handleInputChange}
         />
 
         {isInvalid === false && (

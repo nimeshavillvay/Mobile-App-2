@@ -25,9 +25,9 @@ const ButtonContent = ({
 }: ButtonContentProps) => {
   return (
     <>
-      <Profile className="md:size-7" />
+      <Profile className="shrink-0 md:size-7" />
 
-      <span className="sr-only md:not-sr-only md:text-base md:font-semibold">
+      <span className="sr-only md:not-sr-only md:min-w-0 md:shrink md:truncate md:text-base md:font-semibold">
         {children}
       </span>
     </>

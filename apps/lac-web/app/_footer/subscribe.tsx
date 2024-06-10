@@ -7,6 +7,7 @@ import { Input } from "@repo/web-ui/components/ui/input";
 import { Label } from "@repo/web-ui/components/ui/label";
 import { useToast } from "@repo/web-ui/components/ui/toast";
 import { useMutation } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 import { useId } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -20,6 +21,7 @@ const Subscribe = () => {
   const id = useId();
   const emailId = `email-${id}`;
   const { toast } = useToast();
+  const router = useRouter();
 
   const { register, handleSubmit, reset } = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
@@ -41,6 +43,7 @@ const Subscribe = () => {
         title: "Sent confirmation email",
         description: "Please check your email to confirm your subscription.",
       });
+      router.push("/subscribe-thank-you");
     },
   });
 

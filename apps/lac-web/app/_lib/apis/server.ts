@@ -228,6 +228,7 @@ export const getOrderDetails = async (token: string, orderId: string) => {
         po: string;
         jobName: string;
         handlingFee: number;
+        deliveryInstruction: boolean;
         discount: number;
         subTotal: number;
         orderTotal: number;
@@ -317,6 +318,7 @@ export const getOrderDetails = async (token: string, orderId: string) => {
       po: response.po,
       jobName: response.jobName,
       handlingFee: response.handlingFee,
+      deliveryInstruction: response.deliveryInstruction,
       discount: response.discount,
       subTotal: response.subTotal,
       orderTotal: response.orderTotal,

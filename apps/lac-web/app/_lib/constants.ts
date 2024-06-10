@@ -20,3 +20,4 @@ export const DEFAULT_PLANT = {
 export const IN_STOCK = "inStock" as const;
 export const LIMITED_STOCK = "limitedStock" as const;
 export const NOT_IN_STOCK = "notInStock" as const;
+export const NOT_AVAILABLE = "notAvailable" as const;

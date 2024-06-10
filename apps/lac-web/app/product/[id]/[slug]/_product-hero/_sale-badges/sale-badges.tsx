@@ -9,6 +9,7 @@ type SaleBadgesProps = {
   readonly listPrice: number;
   readonly onSale: boolean;
   readonly isNewItem: boolean;
+  readonly minimumOrderQuantity: number;
 };
 
 const SaleBadges = ({
@@ -17,8 +18,11 @@ const SaleBadges = ({
   listPrice,
   onSale,
   isNewItem,
+  minimumOrderQuantity,
 }: SaleBadgesProps) => {
-  const priceCheckQuery = useSuspensePriceCheck(token, [{ productId, qty: 1 }]);
+  const priceCheckQuery = useSuspensePriceCheck(token, [
+    { productId, qty: minimumOrderQuantity },
+  ]);
   const priceData = priceCheckQuery.data.productPrices[0];
   const currentPrice = priceData?.uomPrice ?? priceData?.price ?? 0;
 

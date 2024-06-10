@@ -62,6 +62,7 @@ const ProductHero = async ({ id, slug }: ProductHeroProps) => {
           listPrice={product.selectedProduct.listPrice}
           onSale={product.selectedProduct.isSaleItem}
           isNewItem={product.selectedProduct.isNewItem}
+          minimumOrderQuantity={product.selectedProduct.minimumOrderQuantity}
         />
       </div>
 

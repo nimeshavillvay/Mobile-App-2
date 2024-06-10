@@ -41,7 +41,7 @@ const MobileView = async ({ orderNo }: MobileViewProps) => {
   ]);
 
   return (
-    <div className="container flex flex-col gap-5 md:hidden">
+    <div className="container flex flex-col gap-5 md:hidden print:block">
       <div className="flex flex-col gap-4 rounded-lg border border-wurth-gray-150 p-4 shadow-md">
         <h2 className="text-base font-semibold text-wurth-gray-800">
           Order Receipt
@@ -124,7 +124,12 @@ const MobileView = async ({ orderNo }: MobileViewProps) => {
                     {orderDetails.billToAddress.street},{" "}
                     {orderDetails.billToAddress.city},{" "}
                     {orderDetails.billToAddress.region},{" "}
-                    {orderDetails.billToAddress.shipTo}
+                    {orderDetails.billToAddress.county},{" "}
+                    {orderDetails.billToAddress.zipCode}
+                    {orderDetails.billToAddress.zip4
+                      ? ` - ${orderDetails.billToAddress.zip4}, `
+                      : ", "}
+                    {orderDetails.billToAddress.country}
                   </td>
                 </tr>
               </tbody>
@@ -154,7 +159,12 @@ const MobileView = async ({ orderNo }: MobileViewProps) => {
                     {orderDetails.shipToAddress.street},{" "}
                     {orderDetails.shipToAddress.city},{" "}
                     {orderDetails.shipToAddress.region},{" "}
+                    {orderDetails.shipToAddress.county},{" "}
                     {orderDetails.shipToAddress.zipCode}
+                    {orderDetails.shipToAddress.zip4
+                      ? ` - ${orderDetails.shipToAddress.zip4}, `
+                      : ", "}
+                    {orderDetails.shipToAddress.country}
                   </td>
                 </tr>
 
@@ -269,7 +279,7 @@ const MobileView = async ({ orderNo }: MobileViewProps) => {
 
                 {orderDetails.discount > 0 && (
                   <tr>
-                    <td className={tableLabelStyles()}>Bill to</td>
+                    <td className={tableLabelStyles()}>Saving</td>
                     <td className={cn(tableValueStyles(), "text-right")}>
                       -${orderDetails.discount}
                     </td>
@@ -318,7 +328,7 @@ const MobileView = async ({ orderNo }: MobileViewProps) => {
         </div>
       )}
 
-      <Instructions type="mobile" />
+      {orderDetails.deliveryInstruction && <Instructions type="mobile" />}
     </div>
   );
 };

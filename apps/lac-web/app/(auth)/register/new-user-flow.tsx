@@ -1,3 +1,4 @@
+import ZipCodeInputField from "@/_components/zip-code-input-field";
 import useCounties from "@/_hooks/registration/use-counties.hook";
 import useCountries from "@/_hooks/registration/use-countries.hook";
 import useStates from "@/_hooks/registration/use-states.hook";
@@ -76,7 +77,7 @@ const personalDetailsSchema = z.object({
 const addressSchema = z
   .object({
     billingAddress: z.string().min(6, "Please enter a valid address"),
-    billingCity: z.string().min(6, "Please enter a valid City"),
+    billingCity: z.string().min(1, "Please enter a valid City"), // there are cities with just 1 letter also
     billingCountry: z.string().min(2, "Please select a valid country"),
     billingState: z.string().min(2, "Please select a valid state"),
     billingCounty: z.string().optional(),
@@ -92,7 +93,9 @@ const addressSchema = z
     shippingCountry: z.string(),
     shippingState: z.string(),
     shippingCounty: z.string().optional(),
-    shippingPostCode: z.string(),
+    shippingPostCode: z
+      .string()
+      .length(5, "Please enter a valid Zip/Postal code"),
     shippingZipCode: z.string().optional(),
   })
   .superRefine((values, ctx) => {
@@ -880,11 +883,9 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
                     <FormItem className="col-span-2 self-end">
                       <FormLabel>Zip/Post code</FormLabel>
                       <FormControl>
-                        <Input
-                          type="text"
-                          required
-                          disabled={registerNewUserMutation.isPending}
+                        <ZipCodeInputField
                           {...field}
+                          disabled={registerNewUserMutation.isPending}
                         />
                       </FormControl>
                       <FormDescription className="sr-only">
@@ -1108,11 +1109,9 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
                       <FormItem className="col-span-2">
                         <FormLabel>Zip/Post code</FormLabel>
                         <FormControl>
-                          <Input
-                            type="text"
-                            required
-                            disabled={registerNewUserMutation.isPending}
+                          <ZipCodeInputField
                             {...field}
+                            disabled={registerNewUserMutation.isPending}
                           />
                         </FormControl>
                         <FormDescription className="sr-only">

@@ -101,9 +101,12 @@ const OrderItemForMobile = ({
 
           <div className="flex flex-col space-y-0.5">
             <div>{sku ?? "N/A"}</div>
-            <div className="line-clamp-3 font-bold text-black">
-              {productName ?? productTitle ?? "Description N/A"}
-            </div>
+            <div
+              className="line-clamp-3 font-bold text-black"
+              dangerouslySetInnerHTML={{
+                __html: productName ?? productTitle ?? "Description N/A",
+              }}
+            />
             <div className="font-bold text-brand-secondary">
               {lineItems?.length ? lineItems[0]?.itemStatus : "N/A"}
             </div>
