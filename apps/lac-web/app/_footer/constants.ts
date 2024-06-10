@@ -56,7 +56,7 @@ export const SECTIONS = [
     heading: "Tools and Resources",
     links: [
       { label: "FAQs", href: "/faqs" },
-      { label: "Our Branches", href: "/branches" },
+      { label: "Our Branches", href: "/branch-finder" },
       { label: "Terms of Sale", href: "/terms-of-sale" },
       {
         label: "Terms for Suppliers",
