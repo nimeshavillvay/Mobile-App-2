@@ -5,7 +5,7 @@ import useUpdateCartItemMutation from "@/_hooks/cart/use-update-cart-item-mutati
 import useDebouncedState from "@/_hooks/misc/use-debounced-state.hook";
 import useSuspenseCheckAvailability from "@/_hooks/product/use-suspense-check-availability.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
-import { DEFAULT_PLANT, NOT_IN_STOCK } from "@/_lib/constants";
+import { DEFAULT_PLANT, NOT_AVAILABLE, NOT_IN_STOCK } from "@/_lib/constants";
 import type {
   CartConfiguration,
   CartItemConfiguration,
@@ -34,7 +34,14 @@ import { Label } from "@repo/web-ui/components/ui/label";
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import Image from "next/image";
 import Link from "next/link";
-import { Suspense, useDeferredValue, useEffect, useId, useState } from "react";
+import {
+  Suspense,
+  useDeferredValue,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+} from "react";
 import { Controller, useForm } from "react-hook-form";
 import { GiRadioactive } from "react-icons/gi";
 import Balancer from "react-wrap-balancer";
@@ -89,6 +96,7 @@ type CartItemProps = {
   readonly plants: Plant[];
   readonly cartConfiguration: CartConfiguration;
   readonly willCallPlant: { plantCode: string; plantName: string };
+  readonly getDeletedProduct: (sku: string) => void;
 };
 
 const CartItem = ({
@@ -97,6 +105,7 @@ const CartItem = ({
   plants,
   cartConfiguration,
   willCallPlant,
+  getDeletedProduct,
 }: CartItemProps) => {
   const id = useId();
   const poId = `po-${id}`;
@@ -155,6 +164,25 @@ const CartItem = ({
     availableLocations,
     willCallAnywhere,
   } = checkAvailabilityQuery.data;
+
+  const deleteItemIfStatusNotAvailable = useRef(() => {
+    deleteCartItemMutation.mutate(
+      {
+        products: [{ cartid: product.cartItemId }],
+      },
+      {
+        onSettled: () => {
+          getDeletedProduct(product.sku);
+        },
+      },
+    );
+  });
+
+  useEffect(() => {
+    if (status === NOT_AVAILABLE) {
+      deleteItemIfStatusNotAvailable.current();
+    }
+  }, [status]);
 
   const homeBranchAvailability = availableLocations?.find(
     ({ location }) => location === willCallPlant?.plantCode,

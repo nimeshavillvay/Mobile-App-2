@@ -4,6 +4,7 @@ import useSuspenseWillCallPlant from "@/_hooks/address/use-suspense-will-call-pl
 import useDeleteCartItemMutation from "@/_hooks/cart/use-delete-cart-item-mutation.hook";
 import useSuspenseCart from "@/_hooks/cart/use-suspense-cart.hook";
 import type { Plant } from "@/_lib/types";
+import { ProductNotAvailable } from "@/product-not-available";
 import { Trash } from "@repo/web-ui/components/icons/trash";
 import {
   AlertDialog,
@@ -67,82 +68,104 @@ const CartList = ({ token, plants }: CartListProps) => {
   // TODO Delete this hook after refactoring the entire cart item section
   const cartItemKey = useCartPageStore((state) => state.cartItemKey);
 
+  const [deletedProdSkus, setDeletedProdSkus] = useState<string[]>([]);
+  const getDeletedProduct = (sku: string) => {
+    if (!deletedProdSkus.find((eachSku) => eachSku === sku)) {
+      setDeletedProdSkus((deletedProdSkus) => [...deletedProdSkus, sku]);
+    }
+  };
+
+  const getMessage = () => {
+    return deletedProdSkus
+      .join()
+      .concat(deletedProdSkus.length === 1 ? " Product is" : " Products are")
+      .concat(
+        " not available online. Please call Customer Service for availability",
+      );
+  };
+
   return (
-    <ul className="flex flex-col gap-2.5">
-      {data.cartItems.map((item) => (
-        <li
-          key={`${item.itemInfo.productId}-${item.cartItemId}`}
-          className="border-b border-b-wurth-gray-250 px-4 pb-7 md:px-0 [&:not(:first-child)]:pt-7"
-        >
-          <Suspense fallback={<CartItemFallback />}>
-            <CartItem
-              key={cartItemKey.toString()}
-              token={token}
-              product={{
-                id: item.itemInfo.productId,
-                title:
-                  item.itemInfo.metaTitle === ""
-                    ? item.itemInfo.productName
-                    : item.itemInfo.metaTitle,
-                sku: item.itemInfo.productSku,
-                manufacturerId: item.itemInfo.mfrPartNo,
-                quantity: item.quantity,
-                configuration: item.configuration,
-                minAmount: item.itemInfo.minimumOrderQuantity,
-                increment: item.itemInfo.quantityByIncrements,
-                image: item.itemInfo.image,
-                cartItemId: item.cartItemId,
-                slug: item.itemInfo.slug,
-                isExcludedProduct: item.itemInfo.isExcludedProduct,
-                uom: item.itemInfo.unitOfMeasure,
-                isHazardous: item.itemInfo.isHazardous,
-              }}
-              plants={plants}
-              cartConfiguration={data.configuration}
-              willCallPlant={willCallPlantQuery?.data}
-            />
-          </Suspense>
-        </li>
-      ))}
-
-      <div className="flex w-full justify-end gap-4 px-4 md:px-0">
-        {data.cartItems.length > 0 && (
-          <AlertDialog
-            open={deleteConfirmation}
-            onOpenChange={setDeleteConfirmation}
+    <>
+      {deletedProdSkus.length > 0 && (
+        <ProductNotAvailable message={getMessage()} />
+      )}
+      <ul className="flex flex-col gap-2.5">
+        {data.cartItems.map((item) => (
+          <li
+            key={`${item.itemInfo.productId}-${item.cartItemId}`}
+            className="border-b border-b-wurth-gray-250 px-4 pb-7 md:px-0 [&:not(:first-child)]:pt-7"
           >
-            <AlertDialogTrigger asChild>
-              <Button
-                variant="subtle"
-                className="flex-1 bg-red-50 font-bold text-wurth-red-650 hover:bg-red-100 md:flex-none"
-                disabled={deleteCartItemMutation.isPending}
-              >
-                <Trash className="size-4 fill-wurth-red-650" />
-                <span>Clear cart</span>
-              </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Confirm Action</AlertDialogTitle>
-                <AlertDialogDescription>
-                  Are you sure want to delete your cart?
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction onClick={() => handleClearCart()}>
-                  Confirm
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        )}
+            <Suspense fallback={<CartItemFallback />}>
+              <CartItem
+                key={cartItemKey.toString()}
+                token={token}
+                product={{
+                  id: item.itemInfo.productId,
+                  title:
+                    item.itemInfo.metaTitle === ""
+                      ? item.itemInfo.productName
+                      : item.itemInfo.metaTitle,
+                  sku: item.itemInfo.productSku,
+                  manufacturerId: item.itemInfo.mfrPartNo,
+                  quantity: item.quantity,
+                  configuration: item.configuration,
+                  minAmount: item.itemInfo.minimumOrderQuantity,
+                  increment: item.itemInfo.quantityByIncrements,
+                  image: item.itemInfo.image,
+                  cartItemId: item.cartItemId,
+                  slug: item.itemInfo.slug,
+                  isExcludedProduct: item.itemInfo.isExcludedProduct,
+                  uom: item.itemInfo.unitOfMeasure,
+                  isHazardous: item.itemInfo.isHazardous,
+                }}
+                plants={plants}
+                cartConfiguration={data.configuration}
+                willCallPlant={willCallPlantQuery?.data}
+                getDeletedProduct={getDeletedProduct}
+              />
+            </Suspense>
+          </li>
+        ))}
 
-        <div className="flex-1 md:hidden">
-          <DynamicAddMoreItemsSectionForMobile token={token} />
+        <div className="flex w-full justify-end gap-4 px-4 md:px-0">
+          {data.cartItems.length > 0 && (
+            <AlertDialog
+              open={deleteConfirmation}
+              onOpenChange={setDeleteConfirmation}
+            >
+              <AlertDialogTrigger asChild>
+                <Button
+                  variant="subtle"
+                  className="flex-1 bg-red-50 font-bold text-wurth-red-650 hover:bg-red-100 md:flex-none"
+                  disabled={deleteCartItemMutation.isPending}
+                >
+                  <Trash className="size-4 fill-wurth-red-650" />
+                  <span>Clear cart</span>
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Confirm Action</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Are you sure want to delete your cart?
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction onClick={() => handleClearCart()}>
+                    Confirm
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          )}
+
+          <div className="flex-1 md:hidden">
+            <DynamicAddMoreItemsSectionForMobile token={token} />
+          </div>
         </div>
-      </div>
-    </ul>
+      </ul>
+    </>
   );
 };
 

@@ -1,6 +1,7 @@
 import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
 import { api } from "@/_lib/api";
 import { checkAvailability } from "@/_lib/apis/shared";
+import { NOT_AVAILABLE } from "@/_lib/constants";
 import { useToast } from "@repo/web-ui/components/ui/toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { BACKORDER_DISABLED, BACKORDER_ENABLED } from "../../cart/constants";
@@ -79,35 +80,39 @@ const useAddToCartMutation = (
         }
       }
 
-      const response = await api
-        .post("rest/cart", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          json: {
-            "configurable-items": [
-              {
-                productid: productId,
-                quantity,
-                configuration,
-              },
-            ],
-          },
-        })
-        .json<
-          {
-            car_item_id: boolean | number;
-            error?: string;
-            productid: number;
-          }[]
-        >();
+      if (availability.status !== NOT_AVAILABLE) {
+        const response = await api
+          .post("rest/cart", {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            json: {
+              "configurable-items": [
+                {
+                  productid: productId,
+                  quantity,
+                  configuration,
+                },
+              ],
+            },
+          })
+          .json<
+            {
+              car_item_id: boolean | number;
+              error?: string;
+              productid: number;
+            }[]
+          >();
 
-      // Return transformed data
-      return response.map((item) => ({
-        cartItemId: item.car_item_id,
-        productId: item.productid,
-        error: item.error,
-      }));
+        // Return transformed data
+        return response.map((item) => ({
+          cartItemId: item.car_item_id,
+          productId: item.productid,
+          error: item.error,
+        }));
+      } else {
+        return;
+      }
     },
     onMutate: () => {
       // Prefetch the product data for the dialog
@@ -127,21 +132,26 @@ const useAddToCartMutation = (
       });
     },
     onSuccess: async (data) => {
-      if (data?.[0]?.error && data?.[0]?.error !== "") {
-        if (data?.[0]?.error == "amount") {
-          toast({
-            variant: "destructive",
-            title: "Invalid Quantity",
-          });
+      if (data === undefined) {
+        return;
+      }
+      if (typeof data === "object") {
+        if (data?.[0]?.["error"] && data?.[0]?.["error"] !== "") {
+          if (data?.[0]?.["error"] == "amount") {
+            toast({
+              variant: "destructive",
+              title: "Invalid Quantity",
+            });
+          } else {
+            toast({
+              variant: "destructive",
+              title: data?.[0]?.["error"],
+            });
+          }
         } else {
-          toast({
-            variant: "destructive",
-            title: data?.[0]?.error,
-          });
+          // Open the dialog
+          setOpen("confirmation");
         }
-      } else {
-        // Open the dialog
-        setOpen("confirmation");
       }
     },
   });

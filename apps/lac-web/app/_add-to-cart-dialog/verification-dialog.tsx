@@ -8,8 +8,10 @@ import useDebouncedState from "@/_hooks/misc/use-debounced-state.hook";
 import useItemInfo from "@/_hooks/product/use-item-info.hook";
 import useSuspenseCheckAvailability from "@/_hooks/product/use-suspense-check-availability.hook";
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
+import { LIMITED_STOCK, NOT_IN_STOCK } from "@/_lib/constants";
 import { cn, formatNumberToPrice } from "@/_lib/utils";
 import { NUMBER_TYPE } from "@/_lib/zod-helper";
+import { ProductNotAvailable } from "@/product-not-available";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AddToCart as AddToCartIcon } from "@repo/web-ui/components/icons/add-to-cart";
 import { ChevronRight } from "@repo/web-ui/components/icons/chevron-right";
@@ -41,6 +43,7 @@ import {
   useFormContext,
 } from "react-hook-form";
 import { z } from "zod";
+import { NOT_AVAILABLE } from "../_lib/constants";
 
 const verificationDialogSchema = z.object({
   poOrJobName: z.string(),
@@ -207,14 +210,16 @@ const VerificationDialog = ({ token }: VerificationDialogProps) => {
               )}
 
               {itemInfo ? (
-                <AddToCart
-                  token={token}
-                  productId={itemInfo.productId}
-                  minAmount={itemInfo.minimumOrderQuantity}
-                  increments={itemInfo.quantityByIncrements}
-                  formId={formId}
-                  uom={itemInfo.unitOfMeasure}
-                />
+                <Suspense fallback={<Skeleton className="h-[3.75rem]" />}>
+                  <AddToCart
+                    token={token}
+                    productId={itemInfo.productId}
+                    minAmount={itemInfo.minimumOrderQuantity}
+                    increments={itemInfo.quantityByIncrements}
+                    formId={formId}
+                    uom={itemInfo.unitOfMeasure}
+                  />
+                </Suspense>
               ) : (
                 <Skeleton className="h-[3.75rem]" />
               )}
@@ -336,6 +341,13 @@ const AddToCart = ({
     });
   });
 
+  const checkAvailabilityQuery = useSuspenseCheckAvailability(token, {
+    productId,
+    qty: 1,
+  });
+  const disableAddToCartButton =
+    checkAvailabilityQuery.data.status === NOT_AVAILABLE;
+
   return (
     <form
       className="flex flex-row items-stretch gap-2"
@@ -355,7 +367,10 @@ const AddToCart = ({
             className="size-10 rounded-sm"
             onClick={reduceQuantity}
             disabled={
-              !quantity || quantity === minAmount || addToCartMutation.isPending
+              !quantity ||
+              quantity === minAmount ||
+              addToCartMutation.isPending ||
+              disableAddToCartButton
             }
           >
             <Minus className="size-4" />
@@ -372,7 +387,7 @@ const AddToCart = ({
                 value={value}
                 ref={ref}
                 name={name}
-                disabled={addToCartMutation.isPending}
+                disabled={addToCartMutation.isPending || disableAddToCartButton}
                 required
                 min={minAmount}
                 step={increments}
@@ -388,7 +403,9 @@ const AddToCart = ({
             className="size-10 rounded-sm"
             onClick={increaseQuantity}
             disabled={
-              quantity?.toString().length >= 5 || addToCartMutation.isPending
+              quantity?.toString().length >= 5 ||
+              addToCartMutation.isPending ||
+              disableAddToCartButton
             }
           >
             <Plus className="size-4" />
@@ -401,7 +418,7 @@ const AddToCart = ({
         type="submit"
         variant="secondary"
         className="h-full flex-[5] gap-2 rounded-lg px-5 py-4 shadow-md md:flex-[2]"
-        disabled={addToCartMutation.isPending}
+        disabled={addToCartMutation.isPending || disableAddToCartButton}
       >
         <AddToCartIcon className="stroke-white" />
 
@@ -427,16 +444,16 @@ const LocationStocks = ({
   const firstLocation = checkAvailabilityQuery.data.availableLocations[0];
   const otherLocations =
     checkAvailabilityQuery.data.availableLocations.slice(1);
-  const isBackordered = checkAvailabilityQuery.data.status === "notInStock";
-  const isLimitedStock = checkAvailabilityQuery.data.status === "limitedStock";
+  const isBackordered = checkAvailabilityQuery.data.status === NOT_IN_STOCK;
+  const isLimitedStock = checkAvailabilityQuery.data.status === LIMITED_STOCK;
 
   // If there isn't even one location returned, hide the component
   if (
     !firstLocation &&
     otherLocations.length === 0 &&
-    checkAvailabilityQuery.data.status === "notAvailable"
+    checkAvailabilityQuery.data.status === NOT_AVAILABLE
   ) {
-    return null;
+    return <ProductNotAvailable />;
   }
 
   return (

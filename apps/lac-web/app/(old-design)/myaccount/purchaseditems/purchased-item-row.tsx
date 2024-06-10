@@ -12,6 +12,7 @@ import {
 import { Input } from "@/old/_components/ui/input";
 import { Label } from "@/old/_components/ui/label";
 import { TableCell, TableRow } from "@/old/_components/ui/table";
+import { ProductNotAvailable } from "@/product-not-available";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { WurthFullBlack } from "@repo/web-ui/components/logos/wurth-full-black";
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
@@ -70,6 +71,8 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
     productId: item.productId,
   });
 
+  const [isNotAvailableProduct, setIsNotAvailableProduct] = useState(false);
+
   const onSubmit = methods.handleSubmit((data) => {
     if (data.quantity) {
       // Update the quantity in add to cart dialog
@@ -80,7 +83,10 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
           quantity: data.quantity,
         },
         {
-          onSuccess: () => {
+          onSuccess: (data) => {
+            if (data === undefined) {
+              setIsNotAvailableProduct(true);
+            }
             // Reset the form after submission
             methods.reset();
           },
@@ -289,6 +295,25 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
         </TableCell>
       </TableRow>
 
+      {isNotAvailableProduct && (
+        <TableRow
+          key="error"
+          className={cn(
+            "border-b-0",
+            index % 2 === 0 ? "bg-white" : "bg-brand-gray-100",
+          )}
+        >
+          <TableCell />
+          <TableCell
+            colSpan={3}
+            className="flex flex-col gap-0.5 pb-0 text-sm text-brand-gray-500"
+          >
+            <ProductNotAvailable />
+          </TableCell>
+          <TableCell colSpan={6} />
+        </TableRow>
+      )}
+
       <TableRow
         key={`${index}_1`}
         className={cn(
@@ -332,7 +357,7 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
           </Collapsible>
         </TableCell>
 
-        <TableCell colSpan={2} />
+        <TableCell colSpan={4} />
       </TableRow>
     </FormProvider>
   );
