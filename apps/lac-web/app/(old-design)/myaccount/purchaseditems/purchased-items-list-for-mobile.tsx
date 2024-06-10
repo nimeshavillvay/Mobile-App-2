@@ -82,7 +82,10 @@ const PurchasedItemRowForMobile = ({
 
       <div className="flex w-full min-w-[200px] flex-col gap-1 px-2 text-brand-gray-500">
         {item.productCategory && (
-          <div className="text-sm">{item.productCategory}</div>
+          <div
+            className="text-sm"
+            dangerouslySetInnerHTML={{ __html: item.productCategory }}
+          />
         )}
 
         <h4
