@@ -223,7 +223,7 @@ export default Footer;
 
 const SAMNotice = () => {
   return (
-    <a
+    <Link
       href="/government"
       className="flex flex-col items-center gap-3 rounded-xl bg-wurth-gray-50 px-7 py-5 md:items-start"
     >
@@ -297,6 +297,6 @@ const SAMNotice = () => {
           <span className="font-normal">Cage Code: </span>0P072
         </div>
       </div>
-    </a>
+    </Link>
   );
 };
