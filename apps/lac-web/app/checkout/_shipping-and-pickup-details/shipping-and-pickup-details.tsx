@@ -104,10 +104,10 @@ const ShippingAndPickupDetails = ({ token }: ShippingAndPickupDetailsProps) => {
             <h3 className="text-sm text-black">Shipping Address</h3>
 
             <div className="text-base text-wurth-gray-800">
-              {selectedAddress?.streetAddress}, {selectedAddress?.county},
-              <br />
-              {selectedAddress?.locality}, {selectedAddress?.postalCode}-
-              {selectedAddress?.zip4},
+              {selectedAddress?.streetAddress}, {selectedAddress?.locality},{" "}
+              {selectedAddress?.region}, {selectedAddress?.county},{" "}
+              {selectedAddress?.postalCode}
+              {selectedAddress?.zip4 ? ` - ${selectedAddress?.zip4}` : ""}
               <br />
               {selectedAddress?.countryName}
             </div>

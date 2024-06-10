@@ -124,7 +124,12 @@ const MobileView = async ({ orderNo }: MobileViewProps) => {
                     {orderDetails.billToAddress.street},{" "}
                     {orderDetails.billToAddress.city},{" "}
                     {orderDetails.billToAddress.region},{" "}
-                    {orderDetails.billToAddress.shipTo}
+                    {orderDetails.billToAddress.county},{" "}
+                    {orderDetails.billToAddress.zipCode}
+                    {orderDetails.billToAddress.zip4
+                      ? ` - ${orderDetails.billToAddress.zip4}, `
+                      : ", "}
+                    {orderDetails.billToAddress.country}
                   </td>
                 </tr>
               </tbody>
@@ -154,7 +159,12 @@ const MobileView = async ({ orderNo }: MobileViewProps) => {
                     {orderDetails.shipToAddress.street},{" "}
                     {orderDetails.shipToAddress.city},{" "}
                     {orderDetails.shipToAddress.region},{" "}
+                    {orderDetails.shipToAddress.county},{" "}
                     {orderDetails.shipToAddress.zipCode}
+                    {orderDetails.shipToAddress.zip4
+                      ? ` - ${orderDetails.shipToAddress.zip4}, `
+                      : ", "}
+                    {orderDetails.shipToAddress.country}
                   </td>
                 </tr>
 

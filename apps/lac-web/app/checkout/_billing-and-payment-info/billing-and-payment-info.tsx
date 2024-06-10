@@ -160,9 +160,13 @@ const BillingAndPaymentInfo = ({
               {billingAddressQuery.data.organization}
               <br />
               {billingAddressQuery.data.streetAddress},{" "}
+              {billingAddressQuery.data.locality},{" "}
+              {billingAddressQuery.data.region},{" "}
               {billingAddressQuery.data.county},{" "}
-              {billingAddressQuery.data.postalCode} -{" "}
-              {billingAddressQuery.data.zip4}
+              {billingAddressQuery.data.postalCode}
+              {billingAddressQuery.data.zip4
+                ? ` - ${billingAddressQuery.data.zip4}`
+                : ""}
               <br />
               {billingAddressQuery.data.countryName}
             </div>
