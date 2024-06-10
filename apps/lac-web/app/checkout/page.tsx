@@ -33,7 +33,7 @@ const CheckoutPage = async () => {
       </h1>
 
       <div className="container flex flex-col md:flex-row md:gap-12">
-        <div className="flex flex-1 flex-col gap-5 md:gap-6">
+        <div className="flex min-w-0 flex-1 flex-col gap-5 md:gap-6">
           <Suspense
             fallback={
               <Skeleton className="h-[246px] rounded-lg shadow-lg md:h-[254px]" />
