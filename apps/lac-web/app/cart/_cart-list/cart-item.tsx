@@ -36,7 +36,6 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   Suspense,
-  useCallback,
   useDeferredValue,
   // eslint-disable-next-line no-restricted-imports
   useEffect,
@@ -150,8 +149,7 @@ const CartItem = ({
   const isQuantityLessThanMin = quantity < product.minAmount;
 
   const updateCartConfigMutation = useUpdateCartItemMutation(token);
-  const { mutate: deleteCartItemMutate, isPending: isDeleteCartItemPending } =
-    useDeleteCartItemMutation(token);
+  const deleteCartItemMutation = useDeleteCartItemMutation(token);
   const checkAvailabilityMutation = useCheckAvailabilityMutation(token);
 
   const checkAvailabilityQuery = useSuspenseCheckAvailability(token, {
@@ -167,8 +165,8 @@ const CartItem = ({
     willCallAnywhere,
   } = checkAvailabilityQuery.data;
 
-  const deleteItemIfStatusNotAvailable = useCallback(() => {
-    deleteCartItemMutate(
+  const deleteItemIfStatusNotAvailable = () => {
+    deleteCartItemMutation.mutate(
       {
         products: [{ cartid: product.cartItemId }],
       },
@@ -178,18 +176,15 @@ const CartItem = ({
         },
       },
     );
-  }, [
-    deleteCartItemMutate,
-    product.cartItemId,
-    product.sku,
-    setDeletedProduct,
-  ]);
+  };
 
   useEffect(() => {
     if (status === NOT_AVAILABLE) {
       deleteItemIfStatusNotAvailable();
     }
-  }, [status, deleteItemIfStatusNotAvailable]);
+    // eslint-disable-next-line react-compiler/react-compiler
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [status]);
 
   const homeBranchAvailability = availableLocations?.find(
     ({ location }) => location === willCallPlant?.plantCode,
@@ -392,7 +387,7 @@ const CartItem = ({
   };
 
   const handleDeleteCartItem = () => {
-    deleteCartItemMutate(
+    deleteCartItemMutation.mutate(
       {
         products: [{ cartid: product.cartItemId }],
       },
@@ -591,7 +586,7 @@ const CartItem = ({
               variant="subtle"
               className="w-full bg-red-50 hover:bg-red-100"
               onClick={() => setDeleteConfirmation(true)}
-              disabled={isDeleteCartItemPending}
+              disabled={deleteCartItemMutation.isPending}
             >
               <Trash className="size-4 fill-wurth-red-650" />
 
@@ -807,7 +802,7 @@ const CartItem = ({
             variant="ghost"
             className="h-fit w-full justify-end px-0 py-0 text-wurth-red-650"
             onClick={() => setDeleteConfirmation(true)}
-            disabled={isDeleteCartItemPending}
+            disabled={deleteCartItemMutation.isPending}
           >
             <span className="text-[13px] leading-5">Delete</span>
 
