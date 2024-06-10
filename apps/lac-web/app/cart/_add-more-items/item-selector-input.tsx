@@ -38,10 +38,6 @@ const ItemSelectorInput = ({
   } = useCombobox({
     inputValue: value,
     isOpen: isPopupOpen,
-    onInputValueChange: ({ inputValue, type }) => {
-      const isItemClick = type == useCombobox.stateChangeTypes.ItemClick;
-      onTextChange(inputValue, isItemClick);
-    },
     onSelectedItemChange: ({ selectedItem }) => {
       onSelectedItemChange(selectedItem);
     },
@@ -50,6 +46,11 @@ const ItemSelectorInput = ({
       return item ? item.sku : "N/A";
     },
   });
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = event.target.value;
+    onTextChange(newValue, false);
+  };
 
   return (
     <div>
@@ -62,6 +63,8 @@ const ItemSelectorInput = ({
             isInvalid === true && "border-wurth-red-650 text-wurth-red-650",
           )}
           {...getInputProps()}
+          value={value}
+          onChange={handleInputChange}
         />
 
         {isInvalid === false && (

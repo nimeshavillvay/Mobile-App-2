@@ -76,7 +76,7 @@ const personalDetailsSchema = z.object({
 const addressSchema = z
   .object({
     billingAddress: z.string().min(6, "Please enter a valid address"),
-    billingCity: z.string().min(6, "Please enter a valid City"),
+    billingCity: z.string().min(1, "Please enter a valid City"), // there are cities with just 1 letter also
     billingCountry: z.string().min(2, "Please select a valid country"),
     billingState: z.string().min(2, "Please select a valid state"),
     billingCounty: z.string().optional(),
