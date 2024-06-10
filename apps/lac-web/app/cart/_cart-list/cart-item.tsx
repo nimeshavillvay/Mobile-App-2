@@ -5,7 +5,7 @@ import useUpdateCartItemMutation from "@/_hooks/cart/use-update-cart-item-mutati
 import useDebouncedState from "@/_hooks/misc/use-debounced-state.hook";
 import useSuspenseCheckAvailability from "@/_hooks/product/use-suspense-check-availability.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
-import { DEFAULT_PLANT, NOT_IN_STOCK } from "@/_lib/constants";
+import { DEFAULT_PLANT, NOT_AVAILABLE, NOT_IN_STOCK } from "@/_lib/constants";
 import type {
   CartConfiguration,
   CartItemConfiguration,
@@ -34,8 +34,14 @@ import { Label } from "@repo/web-ui/components/ui/label";
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import Image from "next/image";
 import Link from "next/link";
-// eslint-disable-next-line no-restricted-imports
-import { Suspense, useDeferredValue, useEffect, useId, useState } from "react";
+import {
+  Suspense,
+  useDeferredValue,
+  // eslint-disable-next-line no-restricted-imports
+  useEffect,
+  useId,
+  useState,
+} from "react";
 import { Controller, useForm } from "react-hook-form";
 import { GiRadioactive } from "react-icons/gi";
 import Balancer from "react-wrap-balancer";
@@ -90,6 +96,7 @@ type CartItemProps = {
   readonly plants: Plant[];
   readonly cartConfiguration: CartConfiguration;
   readonly willCallPlant: { plantCode: string; plantName: string };
+  readonly setDeletedProduct: (sku: string) => void;
 };
 
 const CartItem = ({
@@ -98,6 +105,7 @@ const CartItem = ({
   plants,
   cartConfiguration,
   willCallPlant,
+  setDeletedProduct,
 }: CartItemProps) => {
   const id = useId();
   const poId = `po-${id}`;
@@ -156,6 +164,27 @@ const CartItem = ({
     availableLocations,
     willCallAnywhere,
   } = checkAvailabilityQuery.data;
+
+  const deleteItemIfStatusNotAvailable = () => {
+    deleteCartItemMutation.mutate(
+      {
+        products: [{ cartid: product.cartItemId }],
+      },
+      {
+        onSettled: () => {
+          setDeletedProduct(product.sku);
+        },
+      },
+    );
+  };
+
+  useEffect(() => {
+    if (status === NOT_AVAILABLE) {
+      deleteItemIfStatusNotAvailable();
+    }
+    // eslint-disable-next-line react-compiler/react-compiler
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [status]);
 
   const homeBranchAvailability = availableLocations?.find(
     ({ location }) => location === willCallPlant?.plantCode,
