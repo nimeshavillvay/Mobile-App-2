@@ -119,7 +119,7 @@ const OrderHistoryListSelectors = ({
     ];
 
     const newUrlSearchParams = new URLSearchParams(searchParams);
-
+    newUrlSearchParams.set(QUERY_KEYS.PAGE, INIT_PAGE_NUMBER);
     if (fromDate) {
       newUrlSearchParams.set(
         QUERY_KEYS.FROM_DATE,
