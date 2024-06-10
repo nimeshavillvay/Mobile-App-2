@@ -82,12 +82,16 @@ const PurchasedItemRowForMobile = ({
 
       <div className="flex w-full min-w-[200px] flex-col gap-1 px-2 text-brand-gray-500">
         {item.productCategory && (
-          <div className="text-sm">{item.productCategory}</div>
+          <div
+            className="text-sm"
+            dangerouslySetInnerHTML={{ __html: item.productTitle }}
+          />
         )}
 
-        <h4 className="line-clamp-3 text-wrap font-bold text-black">
-          {item.productTitle}
-        </h4>
+        <h4
+          className="line-clamp-3 text-wrap font-bold text-black"
+          dangerouslySetInnerHTML={{ __html: item.productTitle }}
+        />
 
         <div className="truncate text-sm">
           {item.productSku !== "" ? item.productSku : "N/A"}
