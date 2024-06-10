@@ -1,3 +1,4 @@
+import ZipCodeInputField from "@/_components/zip-code-input-field";
 import useSuspenseBillingAddress from "@/_hooks/address/use-suspense-billing-address.hook";
 import useUpdateBillingAddressMutation from "@/_hooks/address/use-update-billing-address-mutation.hook";
 import useCounties from "@/_hooks/registration/use-counties.hook";
@@ -332,11 +333,11 @@ const EditBillingAddressDialog = ({ token }: EditBillingAddressDialogProps) => {
                   <FormItem className="col-span-2">
                     <FormLabel>Zip/Post code</FormLabel>
                     <FormControl>
-                      <Input
-                        type="text"
-                        required
-                        disabled={updateBillingAddressMutation.isPending}
+                      <ZipCodeInputField
                         {...field}
+                        required
+                        placeholder="Zip/Post code"
+                        disabled={updateBillingAddressMutation.isPending}
                       />
                     </FormControl>
                     <FormDescription className="sr-only">

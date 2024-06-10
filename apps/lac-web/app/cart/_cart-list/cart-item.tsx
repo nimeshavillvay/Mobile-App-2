@@ -1,5 +1,5 @@
 import AvailabilityStatus from "@/_components/availability-status";
-import QuantityInputField from "@/_components/quantity-input-field";
+import NumberInputField from "@/_components/number-input-field";
 import useDeleteCartItemMutation from "@/_hooks/cart/use-delete-cart-item-mutation.hook";
 import useUpdateCartItemMutation from "@/_hooks/cart/use-update-cart-item-mutation.hook";
 import useDebouncedState from "@/_hooks/misc/use-debounced-state.hook";
@@ -669,7 +669,7 @@ const CartItem = ({
               name="quantity"
               render={({ field: { onChange, onBlur, value, name, ref } }) => (
                 <div className="flex items-center">
-                  <QuantityInputField
+                  <NumberInputField
                     onBlur={onBlur}
                     onChange={(event) => {
                       if (
@@ -694,6 +694,7 @@ const CartItem = ({
                     step={product.increment}
                     disabled={checkAvailabilityQuery.isPending}
                     form={cartFormId} // This is to check the validity when clicking "checkout"
+                    label="Quantity"
                   />
 
                   <span
