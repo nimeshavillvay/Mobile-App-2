@@ -23,7 +23,8 @@ import {
   FormMessage,
 } from "@repo/web-ui/components/ui/form";
 import { Input } from "@repo/web-ui/components/ui/input";
-import { useState, type ReactNode } from "react";
+// eslint-disable-next-line no-restricted-imports
+import { useEffect, useState, type ReactNode } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -65,6 +66,14 @@ const OrderSummary = ({ token, children }: OrderSummaryProps) => {
       promo: simulationCheckoutQuery.data.configuration.coupon ?? "",
     },
   });
+
+  useEffect(() => {
+    if (discount === 0) {
+      updateCartConfig("");
+    }
+    // eslint-disable-next-line react-compiler/react-compiler
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [discount]);
 
   const updateCartConfigMutation = useUpdateCartConfigMutation();
 
