@@ -65,6 +65,9 @@ const ShippingMethod = ({ token, options }: ShippingMethodProps) => {
 
         return {
           id: item.itemInfo.productId,
+          hashvalue:
+            availability.options.find((option) => option.type === AVAILABLE_ALL)
+              ?.hash ?? "",
           shippingMethods,
         };
       }),
@@ -77,6 +80,7 @@ const ShippingMethod = ({ token, options }: ShippingMethodProps) => {
         };
 
         let newValue: string | undefined = undefined;
+        let newHashValue: string | undefined = undefined;
         // Check if the value is available
         const shippingMethod = itemShippingMethods.find(
           (shippingMethod) => shippingMethod.id === item.itemInfo.productId,
@@ -89,11 +93,12 @@ const ShippingMethod = ({ token, options }: ShippingMethodProps) => {
 
           if (isValid) {
             newValue = value;
+            newHashValue = shippingMethod.hashvalue;
           }
         }
 
         // Change the shipping method only if it can be changed
-        if (newValue) {
+        if (newValue && newHashValue) {
           // Check the 1st available shipping method
           if (config.shipping_method_1) {
             config.shipping_method_1 = newValue;
@@ -106,6 +111,9 @@ const ShippingMethod = ({ token, options }: ShippingMethodProps) => {
           } else if (config.shipping_method_5) {
             config.shipping_method_5 = newValue;
           }
+
+          // Set hash value
+          config.hashvalue = newHashValue;
         }
 
         {

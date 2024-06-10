@@ -1,11 +1,12 @@
 import AvailabilityStatus from "@/_components/availability-status";
-import QuantityInputField from "@/_components/quantity-input-field";
+import NumberInputField from "@/_components/number-input-field";
 import useDeleteCartItemMutation from "@/_hooks/cart/use-delete-cart-item-mutation.hook";
 import useUpdateCartItemMutation from "@/_hooks/cart/use-update-cart-item-mutation.hook";
 import useDebouncedState from "@/_hooks/misc/use-debounced-state.hook";
 import useSuspenseCheckAvailability from "@/_hooks/product/use-suspense-check-availability.hook";
+import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
-import { DEFAULT_PLANT, NOT_IN_STOCK } from "@/_lib/constants";
+import { DEFAULT_PLANT, NOT_AVAILABLE, NOT_IN_STOCK } from "@/_lib/constants";
 import type {
   CartConfiguration,
   CartItemConfiguration,
@@ -34,8 +35,14 @@ import { Label } from "@repo/web-ui/components/ui/label";
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import Image from "next/image";
 import Link from "next/link";
-// eslint-disable-next-line no-restricted-imports
-import { Suspense, useDeferredValue, useEffect, useId, useState } from "react";
+import {
+  Suspense,
+  useDeferredValue,
+  // eslint-disable-next-line no-restricted-imports
+  useEffect,
+  useId,
+  useState,
+} from "react";
 import { Controller, useForm } from "react-hook-form";
 import { GiRadioactive } from "react-icons/gi";
 import Balancer from "react-wrap-balancer";
@@ -90,6 +97,7 @@ type CartItemProps = {
   readonly plants: Plant[];
   readonly cartConfiguration: CartConfiguration;
   readonly willCallPlant: { plantCode: string; plantName: string };
+  readonly setDeletedProduct: (sku: string) => void;
 };
 
 const CartItem = ({
@@ -98,6 +106,7 @@ const CartItem = ({
   plants,
   cartConfiguration,
   willCallPlant,
+  setDeletedProduct,
 }: CartItemProps) => {
   const id = useId();
   const poId = `po-${id}`;
@@ -140,6 +149,20 @@ const CartItem = ({
   const deferredQuantity = useDeferredValue(delayedQuantity);
   const isQuantityLessThanMin = quantity < product.minAmount;
 
+  const priceCheckQuery = useSuspensePriceCheck(token, [
+    {
+      productId: product.id,
+      qty: deferredQuantity,
+      cartId: product.cartItemId,
+    },
+  ]);
+
+  const priceCheckData = priceCheckQuery.data;
+
+  const [osrCartItemTotal, setOsrCartItemTotal] = useState(
+    quantity * (priceCheckData?.productPrices[0]?.price ?? 0),
+  );
+
   const updateCartConfigMutation = useUpdateCartItemMutation(token);
   const deleteCartItemMutation = useDeleteCartItemMutation(token);
   const checkAvailabilityMutation = useCheckAvailabilityMutation(token);
@@ -156,6 +179,27 @@ const CartItem = ({
     availableLocations,
     willCallAnywhere,
   } = checkAvailabilityQuery.data;
+
+  const deleteItemIfStatusNotAvailable = () => {
+    deleteCartItemMutation.mutate(
+      {
+        products: [{ cartid: product.cartItemId }],
+      },
+      {
+        onSettled: () => {
+          setDeletedProduct(product.sku);
+        },
+      },
+    );
+  };
+
+  useEffect(() => {
+    if (status === NOT_AVAILABLE) {
+      deleteItemIfStatusNotAvailable();
+    }
+    // eslint-disable-next-line react-compiler/react-compiler
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [status]);
 
   const homeBranchAvailability = availableLocations?.find(
     ({ location }) => location === willCallPlant?.plantCode,
@@ -321,6 +365,10 @@ const CartItem = ({
     }
   };
 
+  const isOSRLoggedInAsCustomer =
+    checkLoginQuery.data.status_code === "OK" &&
+    checkLoginQuery.data.isLoggedInAsCustomer;
+
   const handleSave = (config?: Partial<CartItemConfiguration>) => {
     const data = getValues();
 
@@ -336,11 +384,16 @@ const CartItem = ({
           },
         },
       ]);
+      setOsrCartItemTotal(
+        data.quantity * (priceCheckData?.productPrices[0]?.price ?? 0),
+      );
     }
   };
 
   const handlePriceOverride = (newPrice: number) => {
     const data = getValues();
+
+    setOsrCartItemTotal(data.quantity * newPrice);
 
     if (Number(data.quantity) > 0) {
       updateCartConfigMutation.mutate([
@@ -567,13 +620,17 @@ const CartItem = ({
         </div>
 
         <div className="flex-1 space-y-2 md:space-y-1">
+          {isOSRLoggedInAsCustomer && (
+            <div className="text-lg font-semibold md:hidden">
+              ${osrCartItemTotal}
+            </div>
+          )}
+
           <Suspense fallback={<Skeleton className="h-7 w-full" />}>
             <CartItemPrice
               token={token}
-              quantity={deferredQuantity}
-              productId={product.id}
-              cartItemId={product.cartItemId}
               onPriceChange={handlePriceOverride}
+              priceCheckData={priceCheckQuery.data}
               type="mobile"
             />
           </Suspense>
@@ -612,7 +669,7 @@ const CartItem = ({
               name="quantity"
               render={({ field: { onChange, onBlur, value, name, ref } }) => (
                 <div className="flex items-center">
-                  <QuantityInputField
+                  <NumberInputField
                     onBlur={onBlur}
                     onChange={(event) => {
                       if (
@@ -637,6 +694,7 @@ const CartItem = ({
                     step={product.increment}
                     disabled={checkAvailabilityQuery.isPending}
                     form={cartFormId} // This is to check the validity when clicking "checkout"
+                    label="Quantity"
                   />
 
                   <span
@@ -757,17 +815,20 @@ const CartItem = ({
       </div>
 
       <div className="hidden space-y-3 md:block md:shrink-0">
+        {isOSRLoggedInAsCustomer && (
+          <div className="text-right text-lg font-semibold">
+            ${osrCartItemTotal}
+          </div>
+        )}
+
         <Suspense fallback={<Skeleton className="h-[4.25rem] w-full" />}>
           <CartItemPrice
             token={token}
-            quantity={deferredQuantity}
-            productId={product.id}
-            cartItemId={product.cartItemId}
             onPriceChange={handlePriceOverride}
+            priceCheckData={priceCheckQuery.data}
             type="desktop"
           />
         </Suspense>
-
         <div className="flex flex-col gap-2">
           <Button
             variant="ghost"

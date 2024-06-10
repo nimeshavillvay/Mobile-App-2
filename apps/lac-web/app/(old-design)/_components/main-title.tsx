@@ -14,7 +14,7 @@ const MainTitle = React.forwardRef<
       )}
       ref={ref}
     >
-      <span className="relative z-10 inline-block max-w-[80%] bg-white pr-4">
+      <span className="relative z-10 inline-block bg-white pr-4">
         {children}
       </span>
     </h1>

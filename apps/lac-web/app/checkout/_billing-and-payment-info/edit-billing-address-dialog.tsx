@@ -1,3 +1,4 @@
+import ZipCodeInputField from "@/_components/zip-code-input-field";
 import useSuspenseBillingAddress from "@/_hooks/address/use-suspense-billing-address.hook";
 import useUpdateBillingAddressMutation from "@/_hooks/address/use-update-billing-address-mutation.hook";
 import useCounties from "@/_hooks/registration/use-counties.hook";
@@ -167,7 +168,7 @@ const EditBillingAddressDialog = ({ token }: EditBillingAddressDialogProps) => {
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="max-w-[37.5rem]">
+      <DialogContent className="flex max-h-dvh max-w-[37.5rem] flex-col">
         <DialogHeader>
           <DialogTitle>Edit Billing Address</DialogTitle>
         </DialogHeader>
@@ -332,11 +333,11 @@ const EditBillingAddressDialog = ({ token }: EditBillingAddressDialogProps) => {
                   <FormItem className="col-span-2">
                     <FormLabel>Zip/Post code</FormLabel>
                     <FormControl>
-                      <Input
-                        type="text"
-                        required
-                        disabled={updateBillingAddressMutation.isPending}
+                      <ZipCodeInputField
                         {...field}
+                        required
+                        placeholder="Zip/Post code"
+                        disabled={updateBillingAddressMutation.isPending}
                       />
                     </FormControl>
                     <FormDescription className="sr-only">
@@ -393,7 +394,7 @@ const EditBillingAddressDialog = ({ token }: EditBillingAddressDialogProps) => {
             </form>
           </Form>
         ) : (
-          <div className="flex flex-col gap-4">
+          <div className="flex min-h-0 flex-1 flex-col gap-4">
             <div className="space-y-1">
               <h3 className="text-base font-semibold text-wurth-gray-800">
                 Address Conflict
@@ -406,7 +407,7 @@ const EditBillingAddressDialog = ({ token }: EditBillingAddressDialogProps) => {
               </p>
             </div>
 
-            <ul className="flex flex-col gap-2">
+            <ul className="flex flex-1 flex-col gap-2 overflow-y-auto">
               {suggestions.map((address) => (
                 <li key={address.xcAddressId}>
                   <Button

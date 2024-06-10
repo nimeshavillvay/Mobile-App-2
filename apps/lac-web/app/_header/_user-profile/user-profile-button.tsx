@@ -6,6 +6,7 @@ import useOSRLogoutMutation from "@/_hooks/user/use-osr-logout-mutation.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
 import useSuspenseUsersList from "@/_hooks/user/use-suspense-users-list.hook";
 import type { ShippingMethod } from "@/_lib/types";
+import { cn } from "@/_lib/utils";
 import { Building } from "@repo/web-ui/components/icons/building";
 import { Exit } from "@repo/web-ui/components/icons/exit";
 import { HeartOutline } from "@repo/web-ui/components/icons/heart-outline";
@@ -126,11 +127,14 @@ const UserProfileDropdown = ({
 
       <DropdownMenu>
         <DropdownMenuTrigger
-          className={buttonClasses({
-            variant: "ghost",
-            size: "default",
-            type: "desktop",
-          })}
+          className={cn(
+            buttonClasses({
+              variant: "ghost",
+              size: "default",
+              type: "desktop",
+            }),
+            "min-w-0 shrink",
+          )}
         >
           <ButtonContent>
             Hi, {userProfile.firstName !== "" ? userProfile.firstName : "User"}

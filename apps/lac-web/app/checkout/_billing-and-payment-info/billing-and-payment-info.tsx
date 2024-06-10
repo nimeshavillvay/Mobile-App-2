@@ -1,5 +1,6 @@
 "use client";
 
+import FullAddress from "@/_components/full-address";
 import useSuspenseBillingAddress from "@/_hooks/address/use-suspense-billing-address.hook";
 import useSuspenseCart from "@/_hooks/cart/use-suspense-cart.hook";
 import useUpdateCartConfigMutation from "@/_hooks/cart/use-update-cart-config-mutation.hook";
@@ -147,7 +148,7 @@ const BillingAndPaymentInfo = ({
             </h3>
 
             <div className="text-base text-wurth-gray-800">
-              {billingAddressQuery.data.xcAddressId}
+              {billingAddressQuery.data.soldTo}
             </div>
           </div>
 
@@ -157,15 +158,12 @@ const BillingAndPaymentInfo = ({
             </h3>
 
             <div className="text-base text-wurth-gray-800">
-              {billingAddressQuery.data.soldTo}{" "}
               {billingAddressQuery.data.organization}
               <br />
-              {billingAddressQuery.data.streetAddress},{" "}
-              {billingAddressQuery.data.county},{" "}
-              {billingAddressQuery.data.postalCode} -{" "}
-              {billingAddressQuery.data.zip4}
-              <br />
-              {billingAddressQuery.data.countryName}
+              <FullAddress
+                address={billingAddressQuery.data}
+                showCountry={true}
+              />
             </div>
 
             <EditBillingAddressDialog token={token} />

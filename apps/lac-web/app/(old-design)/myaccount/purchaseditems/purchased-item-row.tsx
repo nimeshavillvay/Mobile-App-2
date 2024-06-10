@@ -1,5 +1,8 @@
+import ProductNotAvailable from "@/_components/product-not-available";
+import RegionalExclusion from "@/_components/regional-exclusion";
 import useAddToCartMutation from "@/_hooks/cart/use-add-to-cart-mutation.hook";
 import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
+import useSuspenseProductExcluded from "@/_hooks/product/use-suspense-product-excluded.hook";
 import { cn } from "@/_lib/utils";
 import AlertInline from "@/old/_components/alert-inline";
 import ErrorBoundary from "@/old/_components/error-boundary";
@@ -70,6 +73,8 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
     productId: item.productId,
   });
 
+  const [isNotAvailableProduct, setIsNotAvailableProduct] = useState(false);
+
   const onSubmit = methods.handleSubmit((data) => {
     if (data.quantity) {
       // Update the quantity in add to cart dialog
@@ -80,7 +85,10 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
           quantity: data.quantity,
         },
         {
-          onSuccess: () => {
+          onSuccess: (data) => {
+            if (data === undefined) {
+              setIsNotAvailableProduct(true);
+            }
             // Reset the form after submission
             methods.reset();
           },
@@ -88,6 +96,13 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
       );
     }
   });
+
+  const productExcludedQuery = useSuspenseProductExcluded(
+    token,
+    item.productId,
+  );
+
+  const isRegionalExcluded = productExcludedQuery.data.isExcluded;
 
   const isEligible = (item: DetailedPurchasedItem) => {
     return (
@@ -241,7 +256,11 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
               !!methods.formState.errors.quantity?.message &&
                 "border-wurth-red-650",
             )}
-            disabled={addToCartMutation.isPending || isItemError(item)}
+            disabled={
+              addToCartMutation.isPending ||
+              isItemError(item) ||
+              isRegionalExcluded
+            }
             {...methods.register("quantity", {
               valueAsNumber: true,
             })}
@@ -274,7 +293,11 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
               <Button
                 type="submit"
                 className="w-[170px]"
-                disabled={!isValidQuantity || addToCartMutation.isPending}
+                disabled={
+                  !isValidQuantity ||
+                  addToCartMutation.isPending ||
+                  isRegionalExcluded
+                }
               >
                 Add to cart
               </Button>
@@ -288,6 +311,44 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
           {isItemError(item) && <ErrorAlert item={item} />}
         </TableCell>
       </TableRow>
+
+      {isNotAvailableProduct && (
+        <TableRow
+          key="error"
+          className={cn(
+            "border-b-0",
+            index % 2 === 0 ? "bg-white" : "bg-brand-gray-100",
+          )}
+        >
+          <TableCell />
+          <TableCell
+            colSpan={3}
+            className="flex flex-col gap-0.5 pb-0 text-sm text-brand-gray-500"
+          >
+            <ProductNotAvailable />
+          </TableCell>
+          <TableCell colSpan={6} />
+        </TableRow>
+      )}
+
+      {isRegionalExcluded && (
+        <TableRow
+          key="reginal-exclude-error"
+          className={cn(
+            "border-b-0",
+            index % 2 === 0 ? "bg-white" : "bg-brand-gray-100",
+          )}
+        >
+          <TableCell />
+          <TableCell
+            colSpan={3}
+            className="flex flex-col gap-0.5 pb-0 text-sm text-brand-gray-500"
+          >
+            <RegionalExclusion />
+          </TableCell>
+          <TableCell colSpan={6} />
+        </TableRow>
+      )}
 
       <TableRow
         key={`${index}_1`}
@@ -332,7 +393,7 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
           </Collapsible>
         </TableCell>
 
-        <TableCell colSpan={2} />
+        <TableCell colSpan={4} />
       </TableRow>
     </FormProvider>
   );

@@ -125,10 +125,12 @@ const DesktopView = async ({ orderNo }: DesktopViewProps) => {
                       {orderDetails.billToAddress.street},{" "}
                       {orderDetails.billToAddress.city},{" "}
                       {orderDetails.billToAddress.region},{" "}
+                      {orderDetails.billToAddress.county},{" "}
                       {orderDetails.billToAddress.zipCode}
                       {orderDetails.billToAddress.zip4
-                        ? ` - ${orderDetails.billToAddress.zip4}`
-                        : ""}
+                        ? ` - ${orderDetails.billToAddress.zip4}, `
+                        : ", "}
+                      {orderDetails.billToAddress.country}
                     </td>
                   </tr>
                 </tbody>
@@ -153,7 +155,12 @@ const DesktopView = async ({ orderNo }: DesktopViewProps) => {
                       {orderDetails.shipToAddress.street},{" "}
                       {orderDetails.shipToAddress.city},{" "}
                       {orderDetails.shipToAddress.region},{" "}
+                      {orderDetails.shipToAddress.county},{" "}
                       {orderDetails.shipToAddress.zipCode}
+                      {orderDetails.shipToAddress.zip4
+                        ? ` - ${orderDetails.shipToAddress.zip4}, `
+                        : ", "}
+                      {orderDetails.shipToAddress.country}
                     </td>
                   </tr>
 
@@ -278,7 +285,7 @@ const DesktopView = async ({ orderNo }: DesktopViewProps) => {
 
                     {orderDetails.discount > 0 && (
                       <tr>
-                        <td className={tableLabelStyles()}>Bill to</td>
+                        <td className={tableLabelStyles()}>Saving</td>
                         <td className={cn(tableValueStyles(), "text-right")}>
                           -${orderDetails.discount}
                         </td>
@@ -332,7 +339,7 @@ const DesktopView = async ({ orderNo }: DesktopViewProps) => {
         </div>
       </div>
 
-      <Instructions type="desktop" />
+      {orderDetails.deliveryInstruction && <Instructions type="desktop" />}
     </div>
   );
 };

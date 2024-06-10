@@ -1,5 +1,7 @@
 import useAddToCartMutation from "@/_hooks/cart/use-add-to-cart-mutation.hook";
 import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
+import useSuspenseCheckAvailability from "@/_hooks/product/use-suspense-check-availability.hook";
+import { NOT_AVAILABLE } from "@/_lib/constants";
 import { cn } from "@/_lib/utils";
 import ErrorBoundary from "@/old/_components/error-boundary";
 import AddToCartIcon from "@/old/_components/icons/add-to-cart";
@@ -94,6 +96,13 @@ const PurchasedItemDetailedViewDialog = ({
   const isItemNotAdded = !item.productSku;
   const isValidQuantity = !!(quantity && quantity >= 1);
 
+  const checkAvailabilityQuery = useSuspenseCheckAvailability(token, {
+    productId: item.productId,
+    qty: 1,
+  });
+  const disableAddToCartButton =
+    checkAvailabilityQuery.data.status === NOT_AVAILABLE;
+
   return (
     <FormProvider {...methods}>
       <Dialog
@@ -132,9 +141,10 @@ const PurchasedItemDetailedViewDialog = ({
                   <div className="text-base">{item.productCategory}</div>
                 )}
 
-                <h4 className="line-clamp-6 text-wrap font-bold text-black">
-                  {item.productTitle}
-                </h4>
+                <h4
+                  className="line-clamp-6 text-wrap font-bold text-black"
+                  dangerouslySetInnerHTML={{ __html: item.productTitle }}
+                />
               </div>
             </div>
 
@@ -210,7 +220,7 @@ const PurchasedItemDetailedViewDialog = ({
                       variant="ghost"
                       className="flex h-10 w-full items-center justify-between rounded-sm border border-brand-gray-300 px-2 font-normal capitalize"
                       onClick={() => setShowPriceBreakdown(!showPriceBreakdown)}
-                      disabled={isItemError(item)}
+                      disabled={isItemError(item) || disableAddToCartButton}
                     >
                       <span>Price Breakdown</span>
                       <MdKeyboardArrowRight className="text-2xl leading-none" />
@@ -239,7 +249,9 @@ const PurchasedItemDetailedViewDialog = ({
                       valueAsNumber: true,
                       min: item.minimumOrderQuantity,
                       disabled:
-                        addToCartMutation.isPending || isItemError(item),
+                        addToCartMutation.isPending ||
+                        isItemError(item) ||
+                        disableAddToCartButton,
                     })}
                   />
 
@@ -253,7 +265,7 @@ const PurchasedItemDetailedViewDialog = ({
             <Collapsible
               open={showPriceBreakdown}
               onOpenChange={setShowPriceBreakdown}
-              disabled={isItemError(item)}
+              disabled={isItemError(item) || disableAddToCartButton}
             >
               <CollapsibleTrigger
                 className={cn(
@@ -317,7 +329,11 @@ const PurchasedItemDetailedViewDialog = ({
 
               <Button
                 className="h-12 flex-1"
-                disabled={!isValidQuantity || addToCartMutation.isPending}
+                disabled={
+                  !isValidQuantity ||
+                  addToCartMutation.isPending ||
+                  disableAddToCartButton
+                }
               >
                 <AddToCartIcon /> Add to Cart
               </Button>

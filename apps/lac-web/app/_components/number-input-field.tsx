@@ -17,24 +17,25 @@ const ALLOWED_KEYS = [
   "Backspace",
 ];
 
-const QuantityInputField = forwardRef<
+const NumberInputField = forwardRef<
   HTMLInputElement,
   Omit<ComponentPropsWithoutRef<typeof Input>, "id" | "type" | "onKeyDown"> & {
+    readonly label: string;
     readonly removeDefaultStyles?: boolean;
   }
->(({ value, className, removeDefaultStyles = false, ...delegated }, ref) => {
+>(({ value, className, label, removeDefaultStyles, ...delegated }, ref) => {
   const id = useId();
-  const quantityId = `quantity-${id}`;
+  const numberInputId = `number-input-${id}`;
 
   return (
     <div>
-      <Label htmlFor={quantityId} className="sr-only">
-        Quantity
+      <Label htmlFor={numberInputId} className="sr-only">
+        {label}
       </Label>
 
       <Input
         ref={ref}
-        id={quantityId}
+        id={numberInputId}
         type="number"
         value={value}
         className={cn(
@@ -60,6 +61,6 @@ const QuantityInputField = forwardRef<
     </div>
   );
 });
-QuantityInputField.displayName = "QuantityInputField";
+NumberInputField.displayName = "NumberInputField";
 
-export default QuantityInputField;
+export default NumberInputField;

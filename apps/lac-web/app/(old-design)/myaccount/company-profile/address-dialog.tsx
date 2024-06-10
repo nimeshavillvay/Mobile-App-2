@@ -1,3 +1,4 @@
+import ZipCodeInputField from "@/_components/zip-code-input-field";
 import useAddShippingAddressMutation from "@/_hooks/address/use-add-shipping-address-mutation.hook";
 import useUpdateBillingAddressMutation from "@/_hooks/address/use-update-billing-address-mutation.hook";
 import useUpdateShippingAddressMutation from "@/_hooks/address/use-update-shipping-address-mutation.hook";
@@ -75,9 +76,12 @@ const AddressDialog = ({
       .max(40),
     city: z.string().trim().min(1, "Please enter city").max(40),
     state: z.string().trim().min(1, "Please select a state").max(40),
-    zipCode: z.string().refine((value) => /^\d+$/.test(value), {
-      message: "Please enter a valid ZIP4",
-    }),
+    zipCode: z
+      .string()
+      .length(5, "Please enter a valid Zip/Postal code")
+      .refine((value) => /^\d+$/.test(value), {
+        message: "Please enter a valid ZIP Code",
+      }),
     phoneNumber: z.string().trim().min(1, "Please enter phone number").max(20),
     country: z.string().trim().min(1, "Please enter country").max(40),
   });
@@ -410,7 +414,11 @@ const AddressDialog = ({
                       </FormDescription>
 
                       <FormControl>
-                        <Input placeholder="Zip Code" type="text" {...field} />
+                        <ZipCodeInputField
+                          className="h-8 rounded-sm border-brand-gray-400 font-medium"
+                          {...field}
+                          placeholder="Zip Code"
+                        />
                       </FormControl>
                       <FormDescription className="sr-only">
                         Enter Zip Code

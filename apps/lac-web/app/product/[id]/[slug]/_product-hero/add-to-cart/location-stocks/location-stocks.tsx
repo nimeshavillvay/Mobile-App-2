@@ -1,10 +1,11 @@
 "use client";
 
+import ProductNotAvailable from "@/_components/product-not-available";
 import useSuspenseWillCallPlant from "@/_hooks/address/use-suspense-will-call-plant.hook";
 import useDebouncedState from "@/_hooks/misc/use-debounced-state.hook";
 import useSuspenseCheckAvailability from "@/_hooks/product/use-suspense-check-availability.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
-import { LIMITED_STOCK, NOT_IN_STOCK } from "@/_lib/constants";
+import { LIMITED_STOCK, NOT_AVAILABLE, NOT_IN_STOCK } from "@/_lib/constants";
 import { cn } from "@/_lib/utils";
 import { ChevronRight } from "@repo/web-ui/components/icons/chevron-right";
 import { Button } from "@repo/web-ui/components/ui/button";
@@ -48,15 +49,14 @@ const LocationStocks = ({ token, productId }: LocationStocksProps) => {
 
   const checkLoginQuery = useSuspenseCheckLogin(token);
 
-  // If there isn't even one location returned, hide the component
+  // If there isn't even one location returned, show not available error
   if (
     !homeBranch &&
     otherLocations.length === 0 &&
-    checkAvailabilityQuery.data.status === "notAvailable"
+    checkAvailabilityQuery.data.status === NOT_AVAILABLE
   ) {
-    return null;
+    return <ProductNotAvailable />;
   }
-
   return (
     <Collapsible className="flex flex-col gap-1">
       <div className="space-y-2 py-1 md:flex md:flex-row md:items-center md:justify-between md:space-y-0">

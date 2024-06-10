@@ -74,7 +74,6 @@ const ShippingDetailsDialogButton = ({
   // if needed
   const open = externalOpen ?? internalOpen;
   const setOpen = externalSetOpen ?? setInternalOpen;
-
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
@@ -86,7 +85,7 @@ const ShippingDetailsDialogButton = ({
           >
             <Truck width={16} height={16} />
 
-            <span>#{defaultAddress?.xcAddressId}</span>
+            <span>#{defaultAddress?.postalCode}</span>
           </Button>
         )}
       </DialogTrigger>

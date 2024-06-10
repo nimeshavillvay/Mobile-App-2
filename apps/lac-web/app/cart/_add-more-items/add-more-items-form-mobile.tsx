@@ -159,6 +159,7 @@ const AddMoreItemsFormMobile = ({ token }: { readonly token: string }) => {
         onSuccess: () => {
           setProduct(undefined);
           setOpen(false);
+          setErrorMessage(null); // Clear error after successfully adding to cart
           reset();
         },
       },
