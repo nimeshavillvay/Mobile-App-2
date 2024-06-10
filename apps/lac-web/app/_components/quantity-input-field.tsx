@@ -21,45 +21,65 @@ const QuantityInputField = forwardRef<
   HTMLInputElement,
   Omit<ComponentPropsWithoutRef<typeof Input>, "id" | "type" | "onKeyDown"> & {
     readonly removeDefaultStyles?: boolean;
+    readonly hideLabel?: boolean;
+    readonly inputId?: string;
   }
->(({ value, className, removeDefaultStyles = false, ...delegated }, ref) => {
-  const id = useId();
-  const quantityId = `quantity-${id}`;
+>(
+  (
+    {
+      value,
+      className,
+      removeDefaultStyles = false,
+      hideLabel = false,
+      inputId,
+      ...delegated
+    },
+    ref,
+  ) => {
+    const id = useId();
+    let quantityId = `quantity-${id}`;
 
-  return (
-    <div>
-      <Label htmlFor={quantityId} className="sr-only">
-        Quantity
-      </Label>
+    if (inputId) {
+      quantityId = inputId;
+    }
 
-      <Input
-        ref={ref}
-        id={quantityId}
-        type="number"
-        value={value}
-        className={cn(
-          !removeDefaultStyles &&
-            "flex-1 rounded-sm border-0 p-0 text-center text-lg font-semibold text-wurth-gray-800 shadow-none",
-          className,
+    return (
+      <div>
+        {!hideLabel && (
+          <Label htmlFor={quantityId} className="sr-only">
+            Quantity
+          </Label>
         )}
-        onKeyDown={(event) => {
-          if (
-            !ALLOWED_KEYS.includes(event.key) ||
-            (value &&
-              value.toString().length >= 5 &&
-              event.key !== "Backspace") || // Limit to 5 characters
-            (value !== undefined &&
-              value.toString().length === 0 &&
-              event.key === "0") // Disable "0" as first character
-          ) {
-            event.preventDefault();
-          }
-        }}
-        {...delegated}
-      />
-    </div>
-  );
-});
+
+        <Input
+          ref={ref}
+          id={quantityId}
+          type="number"
+          value={value}
+          className={cn(
+            !removeDefaultStyles &&
+              "flex-1 rounded-sm border-0 p-0 text-center text-lg font-semibold text-wurth-gray-800 shadow-none",
+            className,
+          )}
+          onKeyDown={(event) => {
+            if (
+              !ALLOWED_KEYS.includes(event.key) ||
+              (value &&
+                value.toString().length >= 5 &&
+                event.key !== "Backspace") || // Limit to 5 characters
+              (value !== undefined &&
+                value.toString().length === 0 &&
+                event.key === "0") // Disable "0" as first character
+            ) {
+              event.preventDefault();
+            }
+          }}
+          {...delegated}
+        />
+      </div>
+    );
+  },
+);
 QuantityInputField.displayName = "QuantityInputField";
 
 export default QuantityInputField;
