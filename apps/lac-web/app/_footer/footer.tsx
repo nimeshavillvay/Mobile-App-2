@@ -223,7 +223,10 @@ export default Footer;
 
 const SAMNotice = () => {
   return (
-    <div className="flex flex-col items-center gap-3 rounded-xl bg-wurth-gray-50 px-7 py-5 md:items-start">
+    <a
+      href="/government"
+      className="flex flex-col items-center gap-3 rounded-xl bg-wurth-gray-50 px-7 py-5 md:items-start"
+    >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="158"
@@ -291,9 +294,9 @@ const SAMNotice = () => {
       <div className="text-center text-sm font-semibold text-wurth-gray-800 md:text-left">
         <div>Approved US Government Vendor</div>
         <div>
-          <span className="font-normal">Cage Code: </span>XXXX
+          <span className="font-normal">Cage Code: </span>0P072
         </div>
       </div>
-    </div>
+    </a>
   );
 };
