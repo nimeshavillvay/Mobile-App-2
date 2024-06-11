@@ -65,7 +65,7 @@ const ShippingMethod = ({ token, options }: ShippingMethodProps) => {
     config: CartItemConfiguration,
   ) => {
     clearConfigKeys(config, ["avail_", "shipping_method_", "plant_"]);
-    config.plant_1 = DEFAULT_PLANT.code;
+    config.plant_1 = willCallPlant?.plantCode ?? DEFAULT_PLANT.code;
     config.hashvalue = availability.willCallAnywhere.hash;
 
     if (availability.willCallAnywhere.status === IN_STOCK) {
@@ -76,7 +76,7 @@ const ShippingMethod = ({ token, options }: ShippingMethodProps) => {
         availability.willCallAnywhere?.backOrderDate_1 ?? "";
       config.will_call_avail =
         availability.willCallAnywhere?.willCallQuantity.toString();
-      config.will_call_plant = DEFAULT_PLANT.code;
+      config.will_call_plant = willCallPlant?.plantCode ?? DEFAULT_PLANT.code;
     } else if (availability.willCallAnywhere.status === NOT_IN_STOCK) {
       config.avail_1 = "0";
       config.shipping_method_1 = "0";
@@ -93,7 +93,7 @@ const ShippingMethod = ({ token, options }: ShippingMethodProps) => {
         availability.willCallAnywhere?.backOrderDate_1 ?? "";
       config.will_call_avail =
         availability.willCallAnywhere?.willCallQuantity.toString();
-      config.will_call_plant = DEFAULT_PLANT.code;
+      config.will_call_plant = willCallPlant?.plantCode ?? DEFAULT_PLANT.code;
       config.backorder_all = "F";
       config.backorder_quantity =
         availability.willCallAnywhere?.backOrderQuantity_1?.toString() ?? "";
@@ -195,7 +195,7 @@ const ShippingMethod = ({ token, options }: ShippingMethodProps) => {
         return await checkAvailability(token, {
           productId: item.itemInfo.productId,
           qty: item.quantity,
-          plant: DEFAULT_PLANT.code,
+          plant: willCallPlant?.plantCode ?? DEFAULT_PLANT.code,
         });
       }),
     );
