@@ -9,7 +9,12 @@ import useDebouncedState from "@/_hooks/misc/use-debounced-state.hook";
 import useItemInfo from "@/_hooks/product/use-item-info.hook";
 import useSuspenseCheckAvailability from "@/_hooks/product/use-suspense-check-availability.hook";
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
-import { LIMITED_STOCK, NOT_AVAILABLE, NOT_IN_STOCK } from "@/_lib/constants";
+import {
+  LIMITED_STOCK,
+  MAX_QUANTITY,
+  NOT_AVAILABLE,
+  NOT_IN_STOCK,
+} from "@/_lib/constants";
 import {
   calculateIncreaseQuantity,
   calculateReduceQuantity,
@@ -424,7 +429,8 @@ const AddToCart = ({
             disabled={
               quantity?.toString().length > 5 ||
               addToCartMutation.isPending ||
-              disableAddToCartButton
+              disableAddToCartButton ||
+              Number(quantity) + increments >= MAX_QUANTITY
             }
           >
             <Plus className="size-4" />
