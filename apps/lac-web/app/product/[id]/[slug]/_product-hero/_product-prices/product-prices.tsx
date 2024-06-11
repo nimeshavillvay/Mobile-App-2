@@ -78,7 +78,10 @@ const ProductPrices = ({
 
             <div className="text-sm font-semibold leading-none text-wurth-gray-800">
               <span className="text-base font-bold leading-6">
-                ${formatNumberToPrice(Math.min(item.price, currentPrice))}
+                $
+                {formatNumberToPrice(
+                  item.quantity >= deferredQuantity ? item.price : currentPrice,
+                )}
               </span>
               /{uom}
             </div>
