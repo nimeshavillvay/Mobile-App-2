@@ -13,7 +13,7 @@ import type {
   Plant,
   Token,
 } from "@/_lib/types";
-import { cn } from "@/_lib/utils";
+import { cn, formatNumberToPrice } from "@/_lib/utils";
 import { NUMBER_TYPE } from "@/_lib/zod-helper";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Alert } from "@repo/web-ui/components/icons/alert";
@@ -365,9 +365,9 @@ const CartItem = ({
     }
   };
 
-  const isOSRLoggedInAsCustomer =
+  const isOSRLoggedInAsOSR =
     checkLoginQuery.data.status_code === "OK" &&
-    checkLoginQuery.data.isLoggedInAsCustomer;
+    checkLoginQuery.data.sales_rep_id;
 
   const handleSave = (config?: Partial<CartItemConfiguration>) => {
     const data = getValues();
@@ -620,9 +620,9 @@ const CartItem = ({
         </div>
 
         <div className="flex-1 space-y-2 md:space-y-1">
-          {isOSRLoggedInAsCustomer && (
+          {isOSRLoggedInAsOSR && (
             <div className="text-lg font-semibold md:hidden">
-              ${osrCartItemTotal}
+              ${formatNumberToPrice(parseFloat(osrCartItemTotal.toFixed(2)))}
             </div>
           )}
 
@@ -815,9 +815,9 @@ const CartItem = ({
       </div>
 
       <div className="hidden space-y-3 md:block md:shrink-0">
-        {isOSRLoggedInAsCustomer && (
+        {isOSRLoggedInAsOSR && (
           <div className="text-right text-lg font-semibold">
-            ${osrCartItemTotal}
+            ${formatNumberToPrice(parseFloat(osrCartItemTotal.toFixed(2)))}
           </div>
         )}
 
