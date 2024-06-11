@@ -21,7 +21,13 @@ import {
   SelectValue,
 } from "@repo/web-ui/components/ui/select";
 import { useId, useState } from "react";
-import { AVAILABLE_ALL, EXCLUDED_SHIPPING_METHODS } from "./constants";
+import {
+  ALTERNATIVE_BRANCHES,
+  AVAILABLE_ALL,
+  BACK_ORDER_ALL,
+  EXCLUDED_SHIPPING_METHODS,
+  TAKE_ON_HAND,
+} from "./constants";
 import type { Availability, ShippingMethod } from "./types";
 import useCartPageStore from "./use-cart-page-store.hook";
 
@@ -114,17 +120,35 @@ const ShippingMethod = ({ token, options }: ShippingMethodProps) => {
           plant: item.configuration?.plant_1,
         });
 
+        const allAvailableOption = availability.options.find(
+          (option) => option.type === AVAILABLE_ALL,
+        );
+        const takeOnHandOption = availability.options.find(
+          (option) => option.type === TAKE_ON_HAND,
+        );
+        const alternativeBranchesOption = availability.options.find(
+          (option) => option.type === ALTERNATIVE_BRANCHES,
+        );
+        const backOrderAllOption = availability.options.find(
+          (option) => option.type === BACK_ORDER_ALL,
+        );
+
         // Get all methods for "Ship to me"
         const shippingMethods =
-          availability.options
-            .find((option) => option.type === AVAILABLE_ALL)
-            ?.plants.at(0)?.shippingMethods ?? [];
+          allAvailableOption?.plants.at(0)?.shippingMethods ?? // First check for all available
+          takeOnHandOption?.plants.at(0)?.shippingMethods ?? // Then for order some and back order the rest
+          alternativeBranchesOption?.plants.at(0)?.shippingMethods ?? // Then for alternative branches
+          backOrderAllOption?.plants.at(0)?.shippingMethods ?? // Finally backorder everything
+          [];
 
         return {
           id: item.itemInfo.productId,
           hashvalue:
-            availability.options.find((option) => option.type === AVAILABLE_ALL)
-              ?.hash ?? "",
+            allAvailableOption?.hash ??
+            takeOnHandOption?.hash ??
+            alternativeBranchesOption?.hash ??
+            backOrderAllOption?.hash ??
+            "",
           shippingMethods,
         };
       }),

@@ -41,6 +41,7 @@ import {
   // eslint-disable-next-line no-restricted-imports
   useEffect,
   useId,
+  useRef,
   useState,
 } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -117,6 +118,10 @@ const CartItem = ({
   const itemConfigWillCallPlant = product?.configuration?.will_call_plant;
 
   const [isHazardClick, setIsHazardClick] = useState(false);
+
+  // This ref is to delay the check availability calls when the quantity or
+  // PO Name changes to avoid multiple API calls
+  const qtyOrPoChangeTimeoutRef = useRef<NodeJS.Timeout>();
 
   const checkLoginQuery = useSuspenseCheckLogin(token);
 
@@ -245,7 +250,6 @@ const CartItem = ({
       return undefined;
     },
   );
-
   // use the new function to determine the available options
   const shippingMethods = getShippingMethods(
     selectedShipToMe,
@@ -253,12 +257,15 @@ const CartItem = ({
   );
 
   // Find the default option (available first option)
-  let defaultShippingMethod =
-    shippingMethods.find(
-      (method) => method.code === product.configuration.shipping_method_1,
-    ) ?? shippingMethods?.at(0);
+  let defaultShippingMethod = shippingMethods.find(
+    (method) => method.code === product.configuration.shipping_method_1,
+  );
 
-  if (shippingMethods?.length > 0 && cartConfiguration?.default_shipping) {
+  if (
+    !defaultShippingMethod &&
+    shippingMethods?.length > 0 &&
+    cartConfiguration?.default_shipping
+  ) {
     const shipToDefaultShippingMethod = shippingMethods.find(
       (method) => method?.code === cartConfiguration.default_shipping,
     );
@@ -273,95 +280,104 @@ const CartItem = ({
   const [selectedShippingMethod, setSelectedShippingMethod] = useState(
     defaultShippingMethod?.code ?? "",
   );
-  const handleChangeQtyOrPO = () => {
-    if (deferredQuantity > 0) {
-      checkAvailabilityMutation.mutate(
-        {
-          productId: product.id,
-          qty: Number(deferredQuantity),
-        },
-        {
-          onSuccess: ({ options }) => {
-            if (options.length > 0) {
-              const availableAll = findAvailabilityOptionForType(
-                options,
-                AVAILABLE_ALL,
-              );
-              const takeOnHand = findAvailabilityOptionForType(
-                options,
-                TAKE_ON_HAND,
-              );
-              const shipAlternativeBranch = findAvailabilityOptionForType(
-                options,
-                ALTERNATIVE_BRANCHES,
-              );
-              const backOrderAll = findAvailabilityOptionForType(
-                options,
-                BACK_ORDER_ALL,
-              );
-              if (availableAll) {
-                handleSave(
-                  createCartItemConfig({
-                    method:
-                      availableAll.plants?.at(0)?.shippingMethods?.at(0)
-                        ?.code ?? EMPTY_STRING,
-                    quantity: availableAll.plants?.at(0)?.quantity ?? 0,
-                    plant: availableAll.plants?.at(0)?.plant ?? EMPTY_STRING,
-                    hash: availableAll.hash,
-                  }),
-                );
-              } else if (takeOnHand) {
-                handleSave(
-                  createCartItemConfig({
-                    method:
-                      takeOnHand.plants?.at(0)?.shippingMethods?.at(0)?.code ??
-                      EMPTY_STRING,
-                    quantity: takeOnHand.plants?.at(0)?.quantity ?? 0,
-                    plant: takeOnHand.plants?.at(0)?.plant ?? EMPTY_STRING,
-                    hash: takeOnHand.hash,
-                    backOrderDate: takeOnHand.plants?.at(0)?.backOrderDate,
-                    backOrderQuantity:
-                      takeOnHand.plants?.at(0)?.backOrderQuantity,
-                  }),
-                );
-              } else if (shipAlternativeBranch) {
-                handleSave(
-                  getAlternativeBranchesConfig({
-                    plants: shipAlternativeBranch.plants,
-                    method:
-                      shipAlternativeBranch.plants
-                        ?.at(0)
-                        ?.shippingMethods?.at(0)?.code ?? EMPTY_STRING,
-                    hash: shipAlternativeBranch.hash,
-                    backOrderDate: shipAlternativeBranch.backOrder
-                      ? shipAlternativeBranch?.plants?.[0]?.backOrderDate
-                      : "",
-                    backOrderQuantity: shipAlternativeBranch.backOrder
-                      ? shipAlternativeBranch?.plants?.[0]?.backOrderQuantity
-                      : 0,
-                  }),
-                );
-              } else if (backOrderAll) {
-                setSelectedShippingOption(MAIN_OPTIONS.BACK_ORDER);
-                handleSave(
-                  createCartItemConfig({
-                    method:
-                      backOrderAll.plants?.at(0)?.shippingMethods?.at(0)
-                        ?.code ?? EMPTY_STRING,
-                    quantity: 0,
-                    plant: backOrderAll.plants?.at(0)?.plant ?? EMPTY_STRING,
-                    hash: backOrderAll.hash,
-                    backOrderDate: backOrderAll.plants?.at(0)?.backOrderDate,
-                    backOrderQuantity:
-                      backOrderAll.plants?.at(0)?.backOrderQuantity,
-                    backOrderAll: true,
-                  }),
-                );
-              }
-            }
+
+  const handleChangeQtyOrPO = (quantity?: number) => {
+    const newQuantity = quantity ?? Number(deferredQuantity);
+
+    if (newQuantity > 0) {
+      // Clear the existing timeout
+      clearTimeout(qtyOrPoChangeTimeoutRef.current);
+
+      // Set it to a timeout to avoid multiple API calls
+      qtyOrPoChangeTimeoutRef.current = setTimeout(() => {
+        checkAvailabilityMutation.mutate(
+          {
+            productId: product.id,
+            qty: newQuantity,
           },
-        },
-      );
+          {
+            onSuccess: ({ options }) => {
+              if (options.length > 0) {
+                const availableAll = findAvailabilityOptionForType(
+                  options,
+                  AVAILABLE_ALL,
+                );
+                const takeOnHand = findAvailabilityOptionForType(
+                  options,
+                  TAKE_ON_HAND,
+                );
+                const shipAlternativeBranch = findAvailabilityOptionForType(
+                  options,
+                  ALTERNATIVE_BRANCHES,
+                );
+                const backOrderAll = findAvailabilityOptionForType(
+                  options,
+                  BACK_ORDER_ALL,
+                );
+                if (availableAll) {
+                  handleSave(
+                    createCartItemConfig({
+                      method:
+                        availableAll.plants?.at(0)?.shippingMethods?.at(0)
+                          ?.code ?? EMPTY_STRING,
+                      quantity: availableAll.plants?.at(0)?.quantity ?? 0,
+                      plant: availableAll.plants?.at(0)?.plant ?? EMPTY_STRING,
+                      hash: availableAll.hash,
+                    }),
+                  );
+                } else if (takeOnHand) {
+                  handleSave(
+                    createCartItemConfig({
+                      method:
+                        takeOnHand.plants?.at(0)?.shippingMethods?.at(0)
+                          ?.code ?? EMPTY_STRING,
+                      quantity: takeOnHand.plants?.at(0)?.quantity ?? 0,
+                      plant: takeOnHand.plants?.at(0)?.plant ?? EMPTY_STRING,
+                      hash: takeOnHand.hash,
+                      backOrderDate: takeOnHand.plants?.at(0)?.backOrderDate,
+                      backOrderQuantity:
+                        takeOnHand.plants?.at(0)?.backOrderQuantity,
+                    }),
+                  );
+                } else if (shipAlternativeBranch) {
+                  handleSave(
+                    getAlternativeBranchesConfig({
+                      plants: shipAlternativeBranch.plants,
+                      method:
+                        shipAlternativeBranch.plants
+                          ?.at(0)
+                          ?.shippingMethods?.at(0)?.code ?? EMPTY_STRING,
+                      hash: shipAlternativeBranch.hash,
+                      backOrderDate: shipAlternativeBranch.backOrder
+                        ? shipAlternativeBranch?.plants?.[0]?.backOrderDate
+                        : "",
+                      backOrderQuantity: shipAlternativeBranch.backOrder
+                        ? shipAlternativeBranch?.plants?.[0]?.backOrderQuantity
+                        : 0,
+                    }),
+                  );
+                } else if (backOrderAll) {
+                  setSelectedShippingOption(MAIN_OPTIONS.BACK_ORDER);
+                  handleSave(
+                    createCartItemConfig({
+                      method:
+                        backOrderAll.plants?.at(0)?.shippingMethods?.at(0)
+                          ?.code ?? EMPTY_STRING,
+                      quantity: 0,
+                      plant: backOrderAll.plants?.at(0)?.plant ?? EMPTY_STRING,
+                      hash: backOrderAll.hash,
+                      backOrderDate: backOrderAll.plants?.at(0)?.backOrderDate,
+                      backOrderQuantity:
+                        backOrderAll.plants?.at(0)?.backOrderQuantity,
+                      backOrderAll: true,
+                    }),
+                  );
+                }
+              }
+            },
+          },
+        );
+      }, 500);
     }
   };
 
@@ -676,7 +692,7 @@ const CartItem = ({
                         Number(event.target.value) >= product.minAmount &&
                         Number(event.target.value) % product.increment === 0
                       ) {
-                        handleChangeQtyOrPO();
+                        handleChangeQtyOrPO(Number(event.target.value));
                       }
 
                       onChange(event);
