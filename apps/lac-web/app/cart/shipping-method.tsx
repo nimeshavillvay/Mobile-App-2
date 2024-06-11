@@ -4,7 +4,13 @@ import useSuspenseWillCallPlant from "@/_hooks/address/use-suspense-will-call-pl
 import useSuspenseCart from "@/_hooks/cart/use-suspense-cart.hook";
 import useUpdateCartItemMutation from "@/_hooks/cart/use-update-cart-item-mutation.hook";
 import { checkAvailability } from "@/_lib/apis/shared";
-import { DEFAULT_PLANT, IN_STOCK, NOT_IN_STOCK } from "@/_lib/constants";
+import {
+  DEFAULT_PLANT,
+  IN_STOCK,
+  LIMITED_STOCK,
+  NOT_IN_STOCK,
+} from "@/_lib/constants";
+import type { CartItemConfiguration } from "@/_lib/types";
 import { Checkbox } from "@repo/web-ui/components/ui/checkbox";
 import { Label } from "@repo/web-ui/components/ui/label";
 import {
@@ -16,7 +22,7 @@ import {
 } from "@repo/web-ui/components/ui/select";
 import { useId, useState } from "react";
 import { AVAILABLE_ALL, EXCLUDED_SHIPPING_METHODS } from "./constants";
-import type { ShippingMethod } from "./types";
+import type { Availability, ShippingMethod } from "./types";
 import useCartPageStore from "./use-cart-page-store.hook";
 
 const SHIP_TO_ME = "ship-to-me";
@@ -43,6 +49,57 @@ const ShippingMethod = ({ token, options }: ShippingMethodProps) => {
   const willCallPlant = willCallPlantQuery.data;
 
   const updateCartItemMutation = useUpdateCartItemMutation(token);
+
+  const clearConfigKeys = (
+    config: CartItemConfiguration,
+    prefixes: string[],
+  ): void => {
+    (Object.keys(config) as (keyof typeof config)[]).forEach((key) => {
+      if (prefixes.some((prefix) => key.startsWith(prefix))) {
+        config[key] = "";
+      }
+    });
+  };
+  const transformConfiguration = (
+    availability: Availability,
+    config: CartItemConfiguration,
+  ) => {
+    clearConfigKeys(config, ["avail_", "shipping_method_", "plant_"]);
+    config.plant_1 = DEFAULT_PLANT.code;
+    config.hashvalue = availability.willCallAnywhere.hash;
+
+    if (availability.willCallAnywhere.status === IN_STOCK) {
+      config.shipping_method_1 = "0";
+      config.avail_1 =
+        availability.willCallAnywhere?.willCallQuantity.toString();
+      config.backorder_date =
+        availability.willCallAnywhere?.backOrderDate_1 ?? "";
+      config.will_call_avail =
+        availability.willCallAnywhere?.willCallQuantity.toString();
+      config.will_call_plant = DEFAULT_PLANT.code;
+    } else if (availability.willCallAnywhere.status === NOT_IN_STOCK) {
+      config.avail_1 = "0";
+      config.shipping_method_1 = "0";
+      config.backorder_all = "T";
+      config.backorder_date =
+        availability.willCallAnywhere?.willCallBackOrder ?? "";
+      config.backorder_quantity =
+        availability.willCallAnywhere?.willCallQuantity.toString();
+    } else if (availability.willCallAnywhere.status === LIMITED_STOCK) {
+      config.shipping_method_1 = "0";
+      config.avail_1 =
+        availability.willCallAnywhere?.willCallQuantity.toString();
+      config.backorder_date =
+        availability.willCallAnywhere?.backOrderDate_1 ?? "";
+      config.will_call_avail =
+        availability.willCallAnywhere?.willCallQuantity.toString();
+      config.will_call_plant = DEFAULT_PLANT.code;
+      config.backorder_all = "F";
+      config.backorder_quantity =
+        availability.willCallAnywhere?.backOrderQuantity_1?.toString() ?? "";
+    }
+    return config;
+  };
 
   // TODO Delete this hook after refactoring the entire cart item section
   const { incrementCartItemKey } = useCartPageStore((state) => state.actions);
@@ -133,7 +190,7 @@ const ShippingMethod = ({ token, options }: ShippingMethodProps) => {
   };
 
   const handleGlobalWillCall = async () => {
-    const CartItemsAvailability = await Promise.all(
+    const cartItemsAvailability = await Promise.all(
       cartQuery.data.cartItems.map(async (item) => {
         return await checkAvailability(token, {
           productId: item.itemInfo.productId,
@@ -143,77 +200,28 @@ const ShippingMethod = ({ token, options }: ShippingMethodProps) => {
       }),
     );
 
-    //TODO - this will be refactored properly to remove duplication and handle proper types with
-    // will call plant anywhere
-    await updateCartItemMutation.mutateAsync(
-      cartQuery.data.cartItems.map((item) => {
-        const config = {
-          ...item.configuration,
-        };
-        const availability = CartItemsAvailability.find(
-          (willCall) => willCall.productId === item.itemInfo.productId,
-        );
-        if (
-          availability &&
-          availability.willCallAnywhere &&
-          availability.willCallAnywhere.status === IN_STOCK
-        ) {
-          (Object.keys(config) as (keyof typeof config)[]).forEach((key) => {
-            if (
-              key.startsWith("avail_") ||
-              key.startsWith("shipping_method_") ||
-              key.startsWith("plant_")
-            ) {
-              config[key] = "";
-            }
-          });
+    const cartItems = cartQuery.data.cartItems.map((item) => {
+      const config = {
+        ...item.configuration,
+      };
+      const availability = cartItemsAvailability.find(
+        (willCall) => willCall.productId === item.itemInfo.productId,
+      );
+      const transformedConfig = availability
+        ? transformConfiguration(availability, config)
+        : config;
+      return {
+        cartItemId: item.cartItemId,
+        quantity: item.quantity,
+        config: transformedConfig,
+      };
+    });
 
-          config.shipping_method_1 = "0";
-          config.avail_1 =
-            availability.willCallAnywhere?.willCallQuantity.toString();
-          config.plant_1 = DEFAULT_PLANT.code;
-          config.hashvalue = availability.willCallAnywhere.hash;
-          config.backorder_date =
-            availability.willCallAnywhere?.backOrderDate_1 ?? "";
-          config.will_call_avail =
-            availability.willCallAnywhere?.willCallQuantity.toString();
-          config.will_call_plant = DEFAULT_PLANT.code;
-        } else if (
-          availability &&
-          availability.willCallAnywhere &&
-          availability.willCallAnywhere.status === NOT_IN_STOCK
-        ) {
-          (Object.keys(config) as (keyof typeof config)[]).forEach((key) => {
-            if (
-              key.startsWith("avail_") ||
-              key.startsWith("shipping_method_") ||
-              key.startsWith("plant_")
-            ) {
-              config[key] = "";
-            }
-          });
-          config.avail_1 = "0";
-          config.shipping_method_1 = "0";
-          config.plant_1 = DEFAULT_PLANT.code;
-          config.backorder_all = "T";
-          config.hashvalue = availability.willCallAnywhere.hash;
-          config.backorder_date =
-            availability.willCallAnywhere?.willCallBackOrder ?? "";
-          config.backorder_quantity =
-            availability.willCallAnywhere?.willCallQuantity.toString();
-        }
-        return {
-          cartItemId: item.cartItemId,
-          quantity: item.quantity,
-          config,
-        };
-      }),
-      {
-        onSuccess: () => {
-          incrementCartItemKey();
-        },
+    await updateCartItemMutation.mutateAsync(cartItems, {
+      onSuccess: () => {
+        incrementCartItemKey();
       },
-    );
+    });
   };
 
   return (
