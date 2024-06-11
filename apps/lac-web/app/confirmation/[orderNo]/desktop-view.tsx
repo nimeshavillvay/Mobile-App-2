@@ -40,8 +40,6 @@ const DesktopView = async ({ orderNo }: DesktopViewProps) => {
     getPlants(),
   ]);
 
-  console.log(orderDetails);
-
   return (
     <div className="container hidden flex-col gap-5 md:flex">
       <div className="flex flex-col gap-10 rounded-lg border border-wurth-gray-150 p-10 shadow-sm print:hidden">
