@@ -82,7 +82,21 @@ const AddressDialog = ({
       .refine((value) => /^\d+$/.test(value), {
         message: "Please enter a valid ZIP Code",
       }),
-    phoneNumber: z.string().trim().min(1, "Please enter phone number").max(20),
+    phoneNumber: z
+      .string()
+      .trim()
+      .refine(
+        (value) => {
+          const numericCharacters = value.replace(/-/g, "");
+          const isValidLength =
+            numericCharacters.length >= 10 && numericCharacters.length <= 15;
+          const isValidFormat = /^[\d-]+$/.test(value);
+          return isValidLength && isValidFormat;
+        },
+        {
+          message: "Please enter a valid phone number",
+        },
+      ),
     country: z.string().trim().min(1, "Please enter country").max(40),
   });
 

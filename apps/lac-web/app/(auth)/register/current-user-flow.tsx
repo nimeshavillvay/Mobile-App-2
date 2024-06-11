@@ -224,11 +224,19 @@ const CurrentUserFlow = ({ passwordPolicies }: CurrentUserFlowProps) => {
 
         <p className="text-sm text-wurth-gray-800">
           By continuing, you agree to the{" "}
-          <Link href="/privacy-policy" className="font-semibold underline">
+          <Link
+            target="_blank"
+            href="/privacy-policy"
+            className="font-semibold underline"
+          >
             Privacy Notice
           </Link>{" "}
           and{" "}
-          <Link href="/terms-of-sale" className="font-semibold underline">
+          <Link
+            target="_blank"
+            href="/terms-of-sale"
+            className="font-semibold underline"
+          >
             Terms and Conditions
           </Link>{" "}
           and you consent to the collection and processing of your personal data
