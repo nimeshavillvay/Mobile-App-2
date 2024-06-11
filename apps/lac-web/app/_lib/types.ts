@@ -437,3 +437,20 @@ export type TransformedCategory = {
   image: null | string;
   subCategory?: TransformedCategory[];
 };
+
+export type ItemPrice = {
+  productId: number;
+  price: number;
+  priceUnit: string;
+  extendedPrice: number;
+  listPrice: number;
+  couponCode: string | null;
+  priceBreakDowns: { quantity: number; price: number }[];
+  uomPrice: number | undefined;
+  uomPriceUnit: string | undefined;
+};
+
+export type ItemsPriceResult = {
+  error: true | null;
+  productPrices: ItemPrice[];
+};

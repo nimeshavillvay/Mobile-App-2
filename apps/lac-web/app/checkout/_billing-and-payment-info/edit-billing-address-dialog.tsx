@@ -1,3 +1,4 @@
+import ZipCodeInputField from "@/_components/zip-code-input-field";
 import useSuspenseBillingAddress from "@/_hooks/address/use-suspense-billing-address.hook";
 import useUpdateBillingAddressMutation from "@/_hooks/address/use-update-billing-address-mutation.hook";
 import useCounties from "@/_hooks/registration/use-counties.hook";
@@ -332,11 +333,11 @@ const EditBillingAddressDialog = ({ token }: EditBillingAddressDialogProps) => {
                   <FormItem className="col-span-2">
                     <FormLabel>Zip/Post code</FormLabel>
                     <FormControl>
-                      <Input
-                        type="text"
-                        required
-                        disabled={updateBillingAddressMutation.isPending}
+                      <ZipCodeInputField
                         {...field}
+                        required
+                        placeholder="Zip/Post code"
+                        disabled={updateBillingAddressMutation.isPending}
                       />
                     </FormControl>
                     <FormDescription className="sr-only">
@@ -425,13 +426,13 @@ const EditBillingAddressDialog = ({ token }: EditBillingAddressDialogProps) => {
                   >
                     <CheckCircle
                       className={cn(
-                        "size-5 stroke-wurth-gray-150",
+                        "size-5 shrink-0 stroke-wurth-gray-150",
                         selectedSuggestionId === address.xcAddressId &&
                           "stroke-wurth-gray-800",
                       )}
                     />
 
-                    <div className="text-base font-medium text-wurth-gray-800">
+                    <div className="flex-1 text-wrap text-left text-base font-medium text-wurth-gray-800">
                       {address.streetAddress}, {address.locality},{" "}
                       {address.region}, {address.postalCode}
                     </div>
