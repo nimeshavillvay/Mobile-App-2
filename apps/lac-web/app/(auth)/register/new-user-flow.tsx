@@ -702,21 +702,23 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
 
             <p className="text-sm text-wurth-gray-800">
               By continuing, you agree to the{" "}
-              <Link
+              <a
                 target="_blank"
+                rel="noopener noreferrer"
                 href="/privacy-policy"
                 className="font-semibold underline"
               >
                 Privacy Notice
-              </Link>{" "}
+              </a>{" "}
               and{" "}
-              <Link
+              <a
                 target="_blank"
+                rel="noopener noreferrer"
                 href="/terms-of-sale"
                 className="font-semibold underline"
               >
                 Terms and Conditions
-              </Link>{" "}
+              </a>{" "}
               and you consent to the collection and processing of your personal
               data for purposes of completing transactions.
             </p>
