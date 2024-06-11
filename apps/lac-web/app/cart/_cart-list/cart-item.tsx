@@ -98,6 +98,7 @@ type CartItemProps = {
   readonly cartConfiguration: CartConfiguration;
   readonly willCallPlant: { plantCode: string; plantName: string };
   readonly setDeletedProduct: (sku: string) => void;
+  readonly setIsErrorOpen: (open: boolean) => void;
 };
 
 const CartItem = ({
@@ -107,6 +108,7 @@ const CartItem = ({
   cartConfiguration,
   willCallPlant,
   setDeletedProduct,
+  setIsErrorOpen,
 }: CartItemProps) => {
   const id = useId();
   const poId = `po-${id}`;
@@ -188,6 +190,7 @@ const CartItem = ({
       {
         onSettled: () => {
           setDeletedProduct(product.sku);
+          setIsErrorOpen(false);
         },
       },
     );

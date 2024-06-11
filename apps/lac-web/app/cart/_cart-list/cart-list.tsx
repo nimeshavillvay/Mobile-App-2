@@ -1,12 +1,19 @@
 "use client";
 
-import ProductNotAvailable from "@/_components/product-not-available";
 import useSuspenseWillCallPlant from "@/_hooks/address/use-suspense-will-call-plant.hook";
 import useDeleteCartItemMutation from "@/_hooks/cart/use-delete-cart-item-mutation.hook";
 import useSuspenseCart from "@/_hooks/cart/use-suspense-cart.hook";
 import useUpdateCartConfigMutation from "@/_hooks/cart/use-update-cart-config-mutation.hook";
 import type { Plant } from "@/_lib/types";
+import { Alert as AlertIcon } from "@repo/web-ui/components/icons/alert";
+import { Close } from "@repo/web-ui/components/icons/close";
 import { Trash } from "@repo/web-ui/components/icons/trash";
+import {
+  Alert,
+  AlertContent,
+  AlertDescription,
+  AlertTitle,
+} from "@repo/web-ui/components/ui/alert";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -79,16 +86,39 @@ const CartList = ({ token, plants }: CartListProps) => {
     }
   };
 
-  const message = deletedProdSkus
-    .join()
-    .concat(deletedProdSkus.length === 1 ? " Product is" : " Products are")
-    .concat(
-      " not available online. Please call Customer Service for availability",
-    );
+  const [isErrorOpen, setIsErrorOpen] = useState(false);
 
   return (
     <>
-      {deletedProdSkus.length > 0 && <ProductNotAvailable message={message} />}
+      {deletedProdSkus.length > 0 && !isErrorOpen && (
+        <Alert variant="destructive" className="mb-2">
+          <AlertIcon className="size-4" />
+          <AlertContent>
+            <AlertTitle>Error</AlertTitle>
+            <AlertDescription>
+              {deletedProdSkus
+                .join(", ")
+                .concat(
+                  deletedProdSkus.length === 1
+                    ? " Product is"
+                    : " Products are",
+                )
+                .concat(
+                  " not available online. Please call Customer Service for availability",
+                )}
+            </AlertDescription>
+          </AlertContent>
+          <Button
+            className=" absolute right-1 top-1 h-fit w-fit cursor-pointer hover:bg-transparent"
+            variant="ghost"
+            type="button"
+            onClick={() => setIsErrorOpen(true)}
+          >
+            <Close className=" stroke-red-800" width={12} height={12} />
+          </Button>
+        </Alert>
+      )}
+
       <ul className="flex flex-col gap-2.5">
         {data.cartItems.map((item) => (
           <li
@@ -122,6 +152,7 @@ const CartList = ({ token, plants }: CartListProps) => {
                 cartConfiguration={data.configuration}
                 willCallPlant={willCallPlantQuery?.data}
                 setDeletedProduct={setDeletedProduct}
+                setIsErrorOpen={setIsErrorOpen}
               />
             </Suspense>
           </li>
