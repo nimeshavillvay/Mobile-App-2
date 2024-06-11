@@ -28,6 +28,7 @@ import {
   DURATIONS,
   INIT_DURATION,
   INIT_FROM_DATE,
+  INIT_PAGE_NUMBER,
   INIT_SORT_DIRECTION,
   INIT_SORT_TYPE,
   QUERY_KEYS,
@@ -133,6 +134,7 @@ const SelectorsForMobileDialog = ({
     ];
 
     const newUrlSearchParams = new URLSearchParams(searchParams);
+    newUrlSearchParams.set(QUERY_KEYS.PAGE, INIT_PAGE_NUMBER);
 
     if (fromDate) {
       newUrlSearchParams.set(
