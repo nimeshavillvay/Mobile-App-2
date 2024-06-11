@@ -145,7 +145,9 @@ const DesktopView = async ({ orderNo }: DesktopViewProps) => {
                   <tr>
                     <td className={tableLabelStyles()}>Delivery date</td>
                     <td className={tableValueStyles()}>
-                      {dayjs(orderDetails.orderDate).format("MM/DD/YYYY")}
+                      {orderDetails.pickupDate
+                        ? dayjs(orderDetails.pickupDate).format("MM/DD/YYYY")
+                        : dayjs(orderDetails.orderDate).format("MM/DD/YYYY")}
                     </td>
                   </tr>
 
