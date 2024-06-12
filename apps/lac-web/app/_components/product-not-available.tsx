@@ -6,25 +6,16 @@ import {
   AlertTitle,
 } from "@repo/web-ui/components/ui/alert";
 
-type ProductNotAvailableProps = {
-  readonly message?: string;
-};
-
-const ProductNotAvailable = ({ message = "" }: ProductNotAvailableProps) => {
+const ProductNotAvailable = () => {
   return (
     <Alert variant="destructive">
       <AlertIcon className="size-4" />
       <AlertContent>
         <AlertTitle>Error</AlertTitle>
         <AlertDescription>
-          {message ? (
-            message
-          ) : (
-            <span>
-              Not available online. Please call Customer Service for
-              availability
-            </span>
-          )}
+          <span>
+            Not available online. Please call Customer Service for availability
+          </span>
         </AlertDescription>
       </AlertContent>
     </Alert>

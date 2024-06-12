@@ -5,7 +5,7 @@ import useAddToCartMutation from "@/_hooks/cart/use-add-to-cart-mutation.hook";
 import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
 import useSuspenseCheckAvailability from "@/_hooks/product/use-suspense-check-availability.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
-import { NOT_AVAILABLE } from "@/_lib/constants";
+import { MAX_QUANTITY, NOT_AVAILABLE } from "@/_lib/constants";
 import {
   calculateIncreaseQuantity,
   calculateReduceQuantity,
@@ -100,7 +100,8 @@ const AddToCartForm = ({
         disabled:
           quantity?.toString().length > 5 ||
           addToCartMutation.isPending ||
-          disableAddToCartButton,
+          disableAddToCartButton ||
+          Number(quantity) + incQty >= MAX_QUANTITY,
       }}
       submitButtonProps={{
         disabled: addToCartMutation.isPending || disableAddToCartButton,
@@ -195,7 +196,8 @@ const AddToCartFormLoggedIn = ({
         disabled:
           quantity?.toString().length > 5 ||
           addToCartMutation.isPending ||
-          disableAddToCartButton,
+          disableAddToCartButton ||
+          Number(quantity) + incQty >= MAX_QUANTITY,
       }}
       submitButtonProps={{
         disabled:

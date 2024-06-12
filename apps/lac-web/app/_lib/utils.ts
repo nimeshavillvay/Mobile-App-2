@@ -105,24 +105,16 @@ export const calculateReduceQuantity = (
   minQty: number,
   increaseQty: number,
 ) => {
-  if (minQty > 1) {
-    const displayQuantity =
-      quantity % minQty === 0
-        ? quantity - increaseQty
-        : quantity - (quantity % minQty);
-    return displayQuantity > minQty ? displayQuantity : minQty;
-  } else {
-    return quantity - increaseQty;
-  }
+  const displayQuantity =
+    quantity % minQty === 0
+      ? quantity - increaseQty
+      : quantity - (quantity % minQty);
+  return displayQuantity > minQty ? displayQuantity : minQty;
 };
 export const calculateIncreaseQuantity = (
   quantity: number,
   minQty: number,
   increaseQty: number,
 ) => {
-  if (minQty > 1) {
-    return quantity - (quantity % minQty) + increaseQty;
-  } else {
-    return quantity + increaseQty;
-  }
+  return quantity - (quantity % minQty) + increaseQty;
 };
