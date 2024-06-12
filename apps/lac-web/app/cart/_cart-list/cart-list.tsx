@@ -109,12 +109,12 @@ const CartList = ({ token, plants }: CartListProps) => {
             </AlertDescription>
           </AlertContent>
           <Button
-            className=" absolute right-1 top-1 h-fit w-fit cursor-pointer hover:bg-transparent"
+            className="absolute right-1 top-1 h-fit w-fit cursor-pointer hover:bg-transparent"
             variant="ghost"
             type="button"
             onClick={() => setIsErrorOpen(true)}
           >
-            <Close className=" stroke-red-800" width={12} height={12} />
+            <Close className="stroke-red-800" width={12} height={12} />
           </Button>
         </Alert>
       )}
