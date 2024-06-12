@@ -13,7 +13,6 @@ import {
   FormMessage,
 } from "@repo/web-ui/components/ui/form";
 import { Input } from "@repo/web-ui/components/ui/input";
-import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useId, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -224,13 +223,23 @@ const CurrentUserFlow = ({ passwordPolicies }: CurrentUserFlowProps) => {
 
         <p className="text-sm text-wurth-gray-800">
           By continuing, you agree to the{" "}
-          <Link href="/privacy-policy" className="font-semibold underline">
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            href="/privacy-policy"
+            className="font-semibold underline"
+          >
             Privacy Notice
-          </Link>{" "}
+          </a>{" "}
           and{" "}
-          <Link href="/terms-of-sale" className="font-semibold underline">
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            href="/terms-of-sale"
+            className="font-semibold underline"
+          >
             Terms and Conditions
-          </Link>{" "}
+          </a>{" "}
           and you consent to the collection and processing of your personal data
           for purposes of completing transactions.
         </p>

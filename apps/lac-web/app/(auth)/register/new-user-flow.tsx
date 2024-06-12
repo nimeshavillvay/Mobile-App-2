@@ -37,7 +37,6 @@ import {
   SelectValue,
 } from "@repo/web-ui/components/ui/select";
 import { useToast } from "@repo/web-ui/components/ui/toast";
-import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useMemo, useState, type ComponentProps } from "react";
 import { useForm } from "react-hook-form";
@@ -93,9 +92,7 @@ const addressSchema = z
     shippingCountry: z.string(),
     shippingState: z.string(),
     shippingCounty: z.string().optional(),
-    shippingPostCode: z
-      .string()
-      .length(5, "Please enter a valid Zip/Postal code"),
+    shippingPostCode: z.string(),
     shippingZipCode: z.string().optional(),
   })
   .superRefine((values, ctx) => {
@@ -132,7 +129,7 @@ const addressSchema = z
         });
       }
 
-      if (values.shippingPostCode.length < 5) {
+      if (values.shippingPostCode.length != 5) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           path: ["shippingPostCode"],
@@ -704,13 +701,23 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
 
             <p className="text-sm text-wurth-gray-800">
               By continuing, you agree to the{" "}
-              <Link href="/privacy-policy" className="font-semibold underline">
+              <a
+                target="_blank"
+                rel="noopener noreferrer"
+                href="/privacy-policy"
+                className="font-semibold underline"
+              >
                 Privacy Notice
-              </Link>{" "}
+              </a>{" "}
               and{" "}
-              <Link href="/terms-of-sale" className="font-semibold underline">
+              <a
+                target="_blank"
+                rel="noopener noreferrer"
+                href="/terms-of-sale"
+                className="font-semibold underline"
+              >
                 Terms and Conditions
-              </Link>{" "}
+              </a>{" "}
               and you consent to the collection and processing of your personal
               data for purposes of completing transactions.
             </p>
