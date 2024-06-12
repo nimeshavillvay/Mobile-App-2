@@ -5,24 +5,13 @@ const nextConfig = {
   images: {
     formats: ["image/avif", "image/webp"],
     remotePatterns: [
-      // TODO Remove old domain
-      {
-        protocol: "http",
-        hostname: "webdev.wurthlac.com",
-      },
-      // TODO Remove this domain
       {
         protocol: "https",
-        hostname: "cdn.pixabay.com",
+        hostname: "wurthlac-dev.x-shops.com", // Development
       },
       {
         protocol: "https",
-        hostname: "wurthlac.x-shops.com",
-      },
-      // TODO Remove this domain
-      {
-        protocol: "https",
-        hostname: "www.wurthmachinery.com",
+        hostname: "wurthlac.x-shops.com", // Production
       },
     ],
     minimumCacheTTL: 60 * 60 * 24 * 365, // 1 year
