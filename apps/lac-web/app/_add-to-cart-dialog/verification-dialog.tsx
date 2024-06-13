@@ -147,7 +147,7 @@ const VerificationDialog = ({ token }: VerificationDialogProps) => {
                     </h4>
                   </div>
 
-                  {productId ? (
+                  {productId && Number(deferredQuantity) > 0 ? (
                     <Suspense fallback={<Skeleton className="h-20" />}>
                       <PriceCheck
                         token={token}
@@ -391,7 +391,7 @@ const AddToCart = ({
             onClick={reduceQuantity}
             disabled={
               !quantity ||
-              quantity === minAmount ||
+              Number(quantity) === minAmount ||
               addToCartMutation.isPending ||
               disableAddToCartButton
             }
