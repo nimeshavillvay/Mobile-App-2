@@ -1,6 +1,8 @@
 import { api } from "@/_lib/api";
+import { checkAvailability } from "@/_lib/apis/shared";
 import { useToast } from "@repo/web-ui/components/ui/toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { BACKORDER_DISABLED, BACKORDER_ENABLED } from "../../cart/constants";
 
 const useAddMultipleToCartMutation = (token: string) => {
   const queryClient = useQueryClient();
@@ -43,6 +45,8 @@ const useAddMultipleToCartMutation = (token: string) => {
         avail_5: "",
         plant_5: "",
         shipping_method_5: "",
+        backorder_quantity: "",
+        backorder_date: "",
       };
 
       const productsInfo = products.map((product) => {
@@ -56,13 +60,89 @@ const useAddMultipleToCartMutation = (token: string) => {
         };
       });
 
+      const checkAndConfigureAvailability = async () => {
+        const productMap = new Map();
+        // This is so that we remove duplicate products since when we send in cart post goes as 2 lines with 2 different hashes and then when
+        //we receive from get we only get new updated has and that doesn't match the hash we have so thus default is not set
+        productsInfo.forEach((product) => {
+          if (
+            product.productid !== undefined &&
+            product.quantity !== undefined &&
+            product.quantity !== null
+          ) {
+            if (productMap.has(product.productid)) {
+              productMap.get(product.productid).quantity += product.quantity;
+            } else {
+              productMap.set(product.productid, { ...product });
+            }
+          }
+        });
+
+        const uniqueProducts = Array.from(productMap.values());
+
+        // Create availability promises only for unique products
+        const availabilityPromises = uniqueProducts.map((product) => {
+          return checkAvailability(token, {
+            productId: product.productid,
+            qty: product.quantity,
+          }).then((availability) => ({ product, availability })); // Resolve each promise with both product and availability
+        });
+
+        const availabilityResults = await Promise.all(availabilityPromises);
+
+        // Process each resolved value
+        availabilityResults.forEach(({ product, availability }) => {
+          if (availability.options && availability.options.length > 0) {
+            const selectedOption = availability.options[0];
+            if (selectedOption) {
+              // Update product configuration based on the selected availability option
+              product.configuration.backorder_all =
+                selectedOption.type === "backOrderAll" &&
+                selectedOption.backOrder
+                  ? BACKORDER_ENABLED
+                  : BACKORDER_DISABLED;
+              product.configuration.hashvalue = selectedOption.hash;
+              product.configuration.backorder_quantity =
+                selectedOption.plants?.[0]?.backOrderQuantity?.toString() ??
+                "0";
+              product.configuration.backorder_date =
+                selectedOption.plants?.[0]?.backOrderDate?.toString() ?? "";
+
+              // Update configuration details for up to 5 plants
+              if (product.configuration) {
+                const addedIndexes = [];
+                for (let i = 0; i < 5; i++) {
+                  if (selectedOption.plants[i]) {
+                    const selectedPlant = selectedOption.plants[i];
+                    if (selectedPlant) {
+                      const quantity = selectedPlant.quantity ?? "";
+                      const index = i + 1; // Assuming index starts from 1 to 5
+                      addedIndexes.push(index);
+
+                      product.configuration[`avail_${index}`] =
+                        quantity?.toString() ?? "";
+                      product.configuration[`plant_${index}`] =
+                        selectedPlant.plant ?? "";
+                      product.configuration[`shipping_method_${index}`] =
+                        selectedPlant.shippingMethods[0]?.code ?? "";
+                    }
+                  }
+                }
+              }
+            }
+          }
+        });
+
+        return uniqueProducts;
+      };
+
       const response = await api
         .post("rest/cart", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
           json: {
-            "configurable-items": productsInfo,
+            "configurable-items": await checkAndConfigureAvailability(),
           },
         })
         .json<
