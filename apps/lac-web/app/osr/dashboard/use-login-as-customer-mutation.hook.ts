@@ -39,6 +39,7 @@ const useLoginAsCustomerMutation = () => {
     },
     onSettled: () => {
       queryClient.invalidateQueries();
+      queryClient.resetQueries({ queryKey: ["user", "price-check"] });
     },
   });
 };
