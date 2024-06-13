@@ -93,9 +93,7 @@ const addressSchema = z
     shippingCountry: z.string(),
     shippingState: z.string(),
     shippingCounty: z.string().optional(),
-    shippingPostCode: z
-      .string()
-      .length(5, "Please enter a valid Zip/Postal code"),
+    shippingPostCode: z.string(),
     shippingZipCode: z.string().optional(),
   })
   .superRefine((values, ctx) => {
@@ -132,7 +130,7 @@ const addressSchema = z
         });
       }
 
-      if (values.shippingPostCode.length < 5) {
+      if (values.shippingPostCode.length != 5) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           path: ["shippingPostCode"],
