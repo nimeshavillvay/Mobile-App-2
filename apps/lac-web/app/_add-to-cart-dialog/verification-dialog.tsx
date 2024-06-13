@@ -147,7 +147,7 @@ const VerificationDialog = ({ token }: VerificationDialogProps) => {
                     </h4>
                   </div>
 
-                  {productId && Number(deferredQuantity) > 0 ? (
+                  {productId ? (
                     <Suspense fallback={<Skeleton className="h-20" />}>
                       <PriceCheck
                         token={token}
