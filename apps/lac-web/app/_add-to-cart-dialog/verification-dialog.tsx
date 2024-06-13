@@ -262,6 +262,14 @@ const PriceCheck = ({
   ]);
   const priceData = priceCheckQuery.data.productPrices[0];
 
+  const initialPriceCheckQuery = useSuspensePriceCheck(token, [
+    { productId, qty: 1 },
+  ]);
+
+  const initialPriceData = initialPriceCheckQuery.data.productPrices[0];
+  const initialPrice =
+    initialPriceData?.uomPrice ?? initialPriceData?.price ?? 0;
+
   const isDiscounted =
     priceData?.price &&
     priceData?.listPrice &&
@@ -303,7 +311,7 @@ const PriceCheck = ({
 
             <div className="text-xs text-wurth-gray-800">
               <span className="text-sm">
-                ${formatNumberToPrice(item.price)}
+                ${formatNumberToPrice(Math.min(item.price, initialPrice))}
               </span>
               /{uom}
             </div>
@@ -391,7 +399,7 @@ const AddToCart = ({
             onClick={reduceQuantity}
             disabled={
               !quantity ||
-              quantity === minAmount ||
+              Number(quantity) === minAmount ||
               addToCartMutation.isPending ||
               disableAddToCartButton
             }

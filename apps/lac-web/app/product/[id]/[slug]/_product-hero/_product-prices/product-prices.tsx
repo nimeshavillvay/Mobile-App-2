@@ -26,6 +26,14 @@ const ProductPrices = ({
   const delayedQuantity = useDebouncedState(quantity);
   const deferredQuantity = useDeferredValue(delayedQuantity);
 
+  const initialPriceCheckQuery = useSuspensePriceCheck(token, [
+    { productId, qty: 1 },
+  ]);
+
+  const initialPriceData = initialPriceCheckQuery.data.productPrices[0];
+  const initialPrice =
+    initialPriceData?.uomPrice ?? initialPriceData?.price ?? 0;
+
   const priceCheckQuery = useSuspensePriceCheck(token, [
     { productId, qty: deferredQuantity },
   ]);
@@ -78,10 +86,7 @@ const ProductPrices = ({
 
             <div className="text-sm font-semibold leading-none text-wurth-gray-800">
               <span className="text-base font-bold leading-6">
-                $
-                {formatNumberToPrice(
-                  item.quantity >= deferredQuantity ? item.price : currentPrice,
-                )}
+                ${formatNumberToPrice(Math.min(item.price, initialPrice))}
               </span>
               /{uom}
             </div>

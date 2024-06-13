@@ -91,7 +91,7 @@ const AddToCartForm = ({
         onClick: reduceQuantity,
         disabled:
           !quantity ||
-          quantity === minQty ||
+          Number(quantity) === minQty ||
           addToCartMutation.isPending ||
           disableAddToCartButton,
       }}
@@ -187,7 +187,7 @@ const AddToCartFormLoggedIn = ({
         onClick: reduceQuantity,
         disabled:
           !quantity ||
-          quantity === minQty ||
+          Number(quantity) === minQty ||
           addToCartMutation.isPending ||
           disableAddToCartButton,
       }}
