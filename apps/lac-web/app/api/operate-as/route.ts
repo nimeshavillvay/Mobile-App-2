@@ -14,8 +14,9 @@ export const POST = async (request: NextRequest) => {
     expires: z.string(),
   });
 
-  const params: { [key: string]: string | string[] } = {};
-  for (const [key, value] of request.nextUrl.searchParams.entries()) {
+  const params: { [key: string]: FormDataEntryValue } = {};
+  const formData = await request.formData();
+  for (const [key, value] of formData.entries()) {
     params[key] = value;
   }
 
