@@ -2,11 +2,10 @@ import useUpdateShippingAddressMutation from "@/_hooks/address/use-update-shippi
 import type { Address, AddressFormData } from "@/_lib/types";
 import { Button } from "@/old/_components/ui/button";
 import { useState } from "react";
-import { MdOutlineDelete, MdOutlineEdit } from "react-icons/md";
+import { MdOutlineEdit } from "react-icons/md";
 import AddressDialog from "./address-dialog";
 import AddressSuggestionDialog from "./address-suggestion-dialog";
 import type { AddressCheckSuggestionsWithUuid } from "./types";
-import useDeleteShippingAddressMutation from "./use-delete-shipping-address-mutation.hook";
 
 const ShippingAddressCard = ({
   shippingAddress,
@@ -26,13 +25,6 @@ const ShippingAddressCard = ({
     useState<AddressCheckSuggestionsWithUuid>();
 
   const updateShippingAddressMutation = useUpdateShippingAddressMutation();
-  const deleteShippingAddressMutation = useDeleteShippingAddressMutation();
-
-  const deleteShippingAddress = () => {
-    if (shippingAddress.shipTo) {
-      deleteShippingAddressMutation.mutate(shippingAddress.shipTo);
-    }
-  };
 
   return (
     <>
@@ -77,15 +69,6 @@ const ShippingAddressCard = ({
           >
             <span className="sr-only">Edit shipping address</span>
             <MdOutlineEdit className="text-2xl" />
-          </Button>
-
-          <Button
-            variant="ghost"
-            className="hover:bg-gray-200"
-            onClick={deleteShippingAddress}
-          >
-            <span className="sr-only">Delete shipping address</span>
-            <MdOutlineDelete className="text-2xl" />
           </Button>
         </div>
       </div>
