@@ -223,7 +223,10 @@ const CartItem = ({
     availabilityOptions,
     TAKE_ON_HAND,
   );
-
+  const backOrderAll = findAvailabilityOptionForType(
+    availabilityOptions,
+    BACK_ORDER_ALL,
+  );
   const shipAlternativeBranch = findAvailabilityOptionForType(
     availabilityOptions,
     ALTERNATIVE_BRANCHES,
@@ -488,6 +491,65 @@ const CartItem = ({
     }
   };
 
+  // // TODO - Need to optimize this logic based on priority to set the default option
+  const setDefaultsForCartConfig = () => {
+    if (availableAll) {
+      handleSave(
+        createCartItemConfig({
+          method:
+            availableAll.plants?.at(0)?.shippingMethods?.at(0)?.code ??
+            EMPTY_STRING,
+          quantity: availableAll.plants?.at(0)?.quantity ?? 0,
+          plant: availableAll.plants?.at(0)?.plant ?? EMPTY_STRING,
+          hash: availableAll.hash,
+        }),
+      );
+    } else if (takeOnHand) {
+      handleSave(
+        createCartItemConfig({
+          method:
+            takeOnHand.plants?.at(0)?.shippingMethods?.at(0)?.code ??
+            EMPTY_STRING,
+          quantity: takeOnHand.plants?.at(0)?.quantity ?? 0,
+          plant: takeOnHand.plants?.at(0)?.plant ?? EMPTY_STRING,
+          hash: takeOnHand.hash,
+          backOrderDate: takeOnHand.plants?.at(0)?.backOrderDate,
+          backOrderQuantity: takeOnHand.plants?.at(0)?.backOrderQuantity,
+        }),
+      );
+    } else if (shipAlternativeBranch) {
+      handleSave(
+        getAlternativeBranchesConfig({
+          plants: shipAlternativeBranch.plants,
+          method:
+            shipAlternativeBranch.plants?.at(0)?.shippingMethods?.at(0)?.code ??
+            EMPTY_STRING,
+          hash: shipAlternativeBranch.hash,
+          backOrderDate: shipAlternativeBranch.backOrder
+            ? shipAlternativeBranch?.plants?.[0]?.backOrderDate
+            : "",
+          backOrderQuantity: shipAlternativeBranch.backOrder
+            ? shipAlternativeBranch?.plants?.[0]?.backOrderQuantity
+            : 0,
+        }),
+      );
+    } else if (backOrderAll) {
+      handleSave(
+        createCartItemConfig({
+          method:
+            backOrderAll.plants?.at(0)?.shippingMethods?.at(0)?.code ??
+            EMPTY_STRING,
+          quantity: 0,
+          plant: backOrderAll.plants?.at(0)?.plant ?? EMPTY_STRING,
+          hash: backOrderAll.hash,
+          backOrderDate: backOrderAll.plants?.at(0)?.backOrderDate,
+          backOrderQuantity: backOrderAll.plants?.at(0)?.backOrderQuantity,
+          backOrderAll: true,
+        }),
+      );
+    }
+  };
+
   const matchedAvailabilityOption = availabilityOptions.find(
     (option) => option.hash === itemConfigHash,
   );
@@ -517,6 +579,10 @@ const CartItem = ({
       // Check if hash matches with the will call hash
       if (willCallHash === itemConfigHash) {
         setSelectedShippingOption(MAIN_OPTIONS.WILL_CALL);
+      } else {
+        // Update the cart config with default option based on the priority
+        // This is needed so that if the the cart gets expired we update it here
+        setDefaultsForCartConfig();
       }
     }
     // eslint-disable-next-line react-compiler/react-compiler

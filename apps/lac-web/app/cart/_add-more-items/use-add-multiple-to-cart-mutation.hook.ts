@@ -2,7 +2,7 @@ import { api } from "@/_lib/api";
 import { checkAvailability } from "@/_lib/apis/shared";
 import { useToast } from "@repo/web-ui/components/ui/toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { BACKORDER_DISABLED, BACKORDER_ENABLED } from "../../cart/constants";
+import { BACKORDER_DISABLED, BACKORDER_ENABLED } from "../constants";
 
 const useAddMultipleToCartMutation = (token: string) => {
   const queryClient = useQueryClient();
@@ -65,11 +65,11 @@ const useAddMultipleToCartMutation = (token: string) => {
         // This is so that we remove duplicate products since when we send in cart post goes as 2 lines with 2 different hashes and then when
         //we receive from get we only get new updated has and that doesn't match the hash we have so thus default is not set
         productsInfo.forEach((product) => {
-          if (
+          const canBeAddedToCart =
             product.productid !== undefined &&
             product.quantity !== undefined &&
-            product.quantity !== null
-          ) {
+            product.quantity !== null;
+          if (canBeAddedToCart) {
             if (productMap.has(product.productid)) {
               productMap.get(product.productid).quantity += product.quantity;
             } else {
