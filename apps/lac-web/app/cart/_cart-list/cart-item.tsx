@@ -131,6 +131,8 @@ const CartItem = ({
   const [selectedWillCallPlant, setSelectedWillCallPlant] = useState(() => {
     if (itemConfigWillCallPlant && itemConfigWillCallPlant !== "") {
       return itemConfigWillCallPlant;
+    } else if (product.configuration.plant_1) {
+      return product.configuration.plant_1;
     } else if (willCallPlant?.plantCode) {
       return willCallPlant.plantCode;
     } else {
