@@ -76,10 +76,9 @@ const ProductPrices = ({
         )}
       </div>
 
-      {freightCharge && (
+      {!!freightCharge && (
         <div className="text-base text-wurth-gray-800">
-          <span>Freight: </span>
-          <span className="font-semibold">{freightCharge}</span>
+          Freight: <span className="font-semibold">{freightCharge}</span>
         </div>
       )}
 
