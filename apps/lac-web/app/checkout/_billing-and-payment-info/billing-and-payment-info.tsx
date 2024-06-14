@@ -304,7 +304,11 @@ const BillingAndPaymentInfo = ({
           </ul>
         </RadioGroup>
 
-        <AddCreditCardDialog token={token} />
+        <AddCreditCardDialog
+          token={token}
+          paymentMethods={paymentMethods}
+          onCreatedNewCreditCard={setPaymentId}
+        />
       </div>
 
       <OrderConfirmDialog
