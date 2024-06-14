@@ -9,8 +9,12 @@ import type { AddressCheckSuggestionsWithUuid } from "./types";
 
 const ShippingAddressCard = ({
   shippingAddress,
+  soldTo,
+  isAdmin,
 }: {
   readonly shippingAddress: Address;
+  readonly soldTo: string;
+  readonly isAdmin: boolean;
 }) => {
   const [openShippingAddressDialog, setOpenShippingAddressDialog] =
     useState(false);
@@ -25,6 +29,8 @@ const ShippingAddressCard = ({
     useState<AddressCheckSuggestionsWithUuid>();
 
   const updateShippingAddressMutation = useUpdateShippingAddressMutation();
+
+  const isSameAsBilling = soldTo && soldTo === shippingAddress.shipTo;
 
   return (
     <>
@@ -61,16 +67,18 @@ const ShippingAddressCard = ({
             <p className="p-1 font-bold text-brand-secondary">Default</p>
           )}
         </div>
-        <div className="w-20 text-center">
-          <Button
-            variant="ghost"
-            className="hover:bg-gray-200"
-            onClick={() => setOpenShippingAddressDialog(true)}
-          >
-            <span className="sr-only">Edit shipping address</span>
-            <MdOutlineEdit className="text-2xl" />
-          </Button>
-        </div>
+        {!isSameAsBilling && isAdmin && (
+          <div className="w-20 text-center">
+            <Button
+              variant="ghost"
+              className="hover:bg-gray-200"
+              onClick={() => setOpenShippingAddressDialog(true)}
+            >
+              <span className="sr-only">Edit shipping address</span>
+              <MdOutlineEdit className="text-2xl" />
+            </Button>
+          </div>
+        )}
       </div>
 
       <AddressDialog
