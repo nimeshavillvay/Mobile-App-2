@@ -12,6 +12,7 @@ type ProductPricesProps = {
   readonly listPrice: number;
   readonly uom: string;
   readonly className?: string;
+  readonly freightCharge: string;
 };
 
 const ProductPrices = ({
@@ -20,6 +21,7 @@ const ProductPrices = ({
   uom,
   token,
   className,
+  freightCharge,
 }: ProductPricesProps) => {
   const { watch } = useAddToCartForm();
   const quantity = watch("quantity");
@@ -73,6 +75,12 @@ const ProductPrices = ({
           </div>
         )}
       </div>
+
+      {!!freightCharge && (
+        <div className="text-base text-wurth-gray-800">
+          Freight: <span className="font-semibold">{freightCharge}</span>
+        </div>
+      )}
 
       <div className="grid grid-cols-2 gap-0.5">
         {priceData?.priceBreakDowns.map((item) => (

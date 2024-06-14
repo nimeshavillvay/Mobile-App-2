@@ -99,6 +99,7 @@ const ProductHero = async ({ id, slug }: ProductHeroProps) => {
             productId={parseInt(id)}
             listPrice={product.selectedProduct.listPrice}
             uom={product.selectedProduct.unitOfMeasure}
+            freightCharge={product.selectedProduct.specialShipping}
           />
 
           <ProductVariants id={id} />
@@ -170,6 +171,7 @@ const ProductHero = async ({ id, slug }: ProductHeroProps) => {
           listPrice={product.selectedProduct.listPrice}
           uom={product.selectedProduct.unitOfMeasure}
           className="container my-6 md:hidden"
+          freightCharge={product.selectedProduct.specialShipping}
         />
 
         <ProductVariants id={id} className="container my-6 md:hidden" />
