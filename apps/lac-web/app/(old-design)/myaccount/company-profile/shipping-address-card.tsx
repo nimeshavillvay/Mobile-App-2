@@ -2,16 +2,19 @@ import useUpdateShippingAddressMutation from "@/_hooks/address/use-update-shippi
 import type { Address, AddressFormData } from "@/_lib/types";
 import { Button } from "@/old/_components/ui/button";
 import { useState } from "react";
-import { MdOutlineDelete, MdOutlineEdit } from "react-icons/md";
+import { MdOutlineEdit } from "react-icons/md";
 import AddressDialog from "./address-dialog";
 import AddressSuggestionDialog from "./address-suggestion-dialog";
 import type { AddressCheckSuggestionsWithUuid } from "./types";
-import useDeleteShippingAddressMutation from "./use-delete-shipping-address-mutation.hook";
 
 const ShippingAddressCard = ({
   shippingAddress,
+  soldTo,
+  isAdmin,
 }: {
   readonly shippingAddress: Address;
+  readonly soldTo: string;
+  readonly isAdmin: boolean;
 }) => {
   const [openShippingAddressDialog, setOpenShippingAddressDialog] =
     useState(false);
@@ -26,13 +29,8 @@ const ShippingAddressCard = ({
     useState<AddressCheckSuggestionsWithUuid>();
 
   const updateShippingAddressMutation = useUpdateShippingAddressMutation();
-  const deleteShippingAddressMutation = useDeleteShippingAddressMutation();
 
-  const deleteShippingAddress = () => {
-    if (shippingAddress.shipTo) {
-      deleteShippingAddressMutation.mutate(shippingAddress.shipTo);
-    }
-  };
+  const isSameAsBilling = soldTo && soldTo === shippingAddress.shipTo;
 
   return (
     <>
@@ -69,25 +67,18 @@ const ShippingAddressCard = ({
             <p className="p-1 font-bold text-brand-secondary">Default</p>
           )}
         </div>
-        <div className="w-20 text-center">
-          <Button
-            variant="ghost"
-            className="hover:bg-gray-200"
-            onClick={() => setOpenShippingAddressDialog(true)}
-          >
-            <span className="sr-only">Edit shipping address</span>
-            <MdOutlineEdit className="text-2xl" />
-          </Button>
-
-          <Button
-            variant="ghost"
-            className="hover:bg-gray-200"
-            onClick={deleteShippingAddress}
-          >
-            <span className="sr-only">Delete shipping address</span>
-            <MdOutlineDelete className="text-2xl" />
-          </Button>
-        </div>
+        {!isSameAsBilling && isAdmin && (
+          <div className="w-20 text-center">
+            <Button
+              variant="ghost"
+              className="hover:bg-gray-200"
+              onClick={() => setOpenShippingAddressDialog(true)}
+            >
+              <span className="sr-only">Edit shipping address</span>
+              <MdOutlineEdit className="text-2xl" />
+            </Button>
+          </div>
+        )}
       </div>
 
       <AddressDialog

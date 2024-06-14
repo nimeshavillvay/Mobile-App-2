@@ -124,6 +124,9 @@ const useUpdateBillingAddressMutation = () => {
       queryClient.invalidateQueries({
         queryKey: ["my-account", "billing-address"],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["my-account", "shipping-addresses"],
+      });
     },
   });
 };
