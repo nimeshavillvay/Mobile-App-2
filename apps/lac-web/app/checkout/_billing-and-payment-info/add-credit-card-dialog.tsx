@@ -125,11 +125,9 @@ const AddCreditCardDialog = ({ token }: AddCreditCardDialogProps) => {
 
           if (key === "token") {
             if (value) {
-              form.setValue("token", value ?? "");
+              form.setValue("token", value);
             } else {
-              form.setError("token", {
-                message: "Please enter a valid card number.",
-              });
+              form.setValue("token", ""); // Clear the form state if empty
             }
           } else if (key === "brand") {
             form.setValue("brand", value ?? "");
