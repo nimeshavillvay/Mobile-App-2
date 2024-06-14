@@ -293,27 +293,30 @@ const DesktopView = async ({ orderNo }: DesktopViewProps) => {
                         </td>
                       </tr>
                     )}
+                    {orderDetails.handlingFee > 0 && (
+                      <>
+                        <tr>
+                          <td className={tableLabelStyles()}>Shipping</td>
+                          <td
+                            className={cn(
+                              tableValueStyles(),
+                              "text-right font-normal",
+                            )}
+                          >
+                            {orderDetails.handlingFee > 0
+                              ? `$${orderDetails.handlingFee}`
+                              : "Free"}
+                          </td>
+                        </tr>
 
-                    <tr>
-                      <td className={tableLabelStyles()}>Shipping</td>
-                      <td
-                        className={cn(
-                          tableValueStyles(),
-                          "text-right font-normal",
-                        )}
-                      >
-                        {orderDetails.handlingFee > 0
-                          ? `$${orderDetails.handlingFee}`
-                          : "Free"}
-                      </td>
-                    </tr>
-
-                    <tr>
-                      <td className={tableLabelStyles()}>Sales tax</td>
-                      <td className={cn(tableValueStyles(), "text-right")}>
-                        ${formatNumberToPrice(orderDetails.taxAmount)}
-                      </td>
-                    </tr>
+                        <tr>
+                          <td className={tableLabelStyles()}>Sales tax</td>
+                          <td className={cn(tableValueStyles(), "text-right")}>
+                            ${formatNumberToPrice(orderDetails.taxAmount)}
+                          </td>
+                        </tr>
+                      </>
+                    )}
                   </tbody>
                 </table>
 

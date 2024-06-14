@@ -357,6 +357,7 @@ const CartItem = ({
                       backOrderQuantity: shipAlternativeBranch.backOrder
                         ? shipAlternativeBranch?.plants?.[0]?.backOrderQuantity
                         : 0,
+                      backOrderAll: shipAlternativeBranch.backOrder,
                     }),
                   );
                 } else if (backOrderAll) {
@@ -580,7 +581,7 @@ const CartItem = ({
         setSelectedShippingOption(MAIN_OPTIONS.WILL_CALL);
       } else {
         // Update the cart config with default option based on the priority
-        // TODO - There is a mismatch in hashes when initial page load due to selectedWillCallPlant state reset to default
+        // This is needed so that if the the cart gets expired we update it here
         setDefaultsForCartConfig();
       }
     }
