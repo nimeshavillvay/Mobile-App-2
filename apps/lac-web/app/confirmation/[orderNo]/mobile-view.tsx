@@ -304,24 +304,30 @@ const MobileView = async ({ orderNo }: MobileViewProps) => {
                     </td>
                   </tr>
                 )}
+                {orderDetails.handlingFee > 0 && (
+                  <>
+                    <tr>
+                      <td className={tableLabelStyles()}>Shipping</td>
+                      <td
+                        className={cn(
+                          tableValueStyles(),
+                          "text-right font-normal",
+                        )}
+                      >
+                        {orderDetails.handlingFee > 0
+                          ? `$${formatNumberToPrice(orderDetails.handlingFee)}`
+                          : "Free"}
+                      </td>
+                    </tr>
 
-                <tr>
-                  <td className={tableLabelStyles()}>Shipping</td>
-                  <td
-                    className={cn(tableValueStyles(), "text-right font-normal")}
-                  >
-                    {orderDetails.handlingFee > 0
-                      ? `$${formatNumberToPrice(orderDetails.handlingFee)}`
-                      : "Free"}
-                  </td>
-                </tr>
-
-                <tr>
-                  <td className={tableLabelStyles()}>Sales tax</td>
-                  <td className={cn(tableValueStyles(), "text-right")}>
-                    ${formatNumberToPrice(orderDetails.taxAmount)}
-                  </td>
-                </tr>
+                    <tr>
+                      <td className={tableLabelStyles()}>Sales tax</td>
+                      <td className={cn(tableValueStyles(), "text-right")}>
+                        ${formatNumberToPrice(orderDetails.taxAmount)}
+                      </td>
+                    </tr>
+                  </>
+                )}
               </tbody>
             </table>
 
