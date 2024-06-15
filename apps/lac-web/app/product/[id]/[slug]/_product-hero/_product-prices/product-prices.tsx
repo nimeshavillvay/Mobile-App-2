@@ -12,6 +12,7 @@ type ProductPricesProps = {
   readonly listPrice: number;
   readonly uom: string;
   readonly className?: string;
+  readonly freightCharge: string;
 };
 
 const ProductPrices = ({
@@ -20,11 +21,20 @@ const ProductPrices = ({
   uom,
   token,
   className,
+  freightCharge,
 }: ProductPricesProps) => {
   const { watch } = useAddToCartForm();
   const quantity = watch("quantity");
   const delayedQuantity = useDebouncedState(quantity);
   const deferredQuantity = useDeferredValue(delayedQuantity);
+
+  const initialPriceCheckQuery = useSuspensePriceCheck(token, [
+    { productId, qty: 1 },
+  ]);
+
+  const initialPriceData = initialPriceCheckQuery.data.productPrices[0];
+  const initialPrice =
+    initialPriceData?.uomPrice ?? initialPriceData?.price ?? 0;
 
   const priceCheckQuery = useSuspensePriceCheck(token, [
     { productId, qty: deferredQuantity },
@@ -66,6 +76,12 @@ const ProductPrices = ({
         )}
       </div>
 
+      {!!freightCharge && (
+        <div className="text-base text-wurth-gray-800">
+          Freight: <span className="font-semibold">{freightCharge}</span>
+        </div>
+      )}
+
       <div className="grid grid-cols-2 gap-0.5">
         {priceData?.priceBreakDowns.map((item) => (
           <div
@@ -78,7 +94,7 @@ const ProductPrices = ({
 
             <div className="text-sm font-semibold leading-none text-wurth-gray-800">
               <span className="text-base font-bold leading-6">
-                ${formatNumberToPrice(Math.min(item.price, currentPrice))}
+                ${formatNumberToPrice(Math.min(item.price, initialPrice))}
               </span>
               /{uom}
             </div>

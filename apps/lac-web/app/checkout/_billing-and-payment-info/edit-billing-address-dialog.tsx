@@ -1,3 +1,4 @@
+import FullAddress from "@/_components/full-address";
 import ZipCodeInputField from "@/_components/zip-code-input-field";
 import useSuspenseBillingAddress from "@/_hooks/address/use-suspense-billing-address.hook";
 import useUpdateBillingAddressMutation from "@/_hooks/address/use-update-billing-address-mutation.hook";
@@ -138,6 +139,14 @@ const EditBillingAddressDialog = ({ token }: EditBillingAddressDialogProps) => {
               form.reset();
               setSuggestions([]);
               closeDialog();
+            } else if ("suggestions" in data) {
+              // This is to handle address conflicts in SAP after the UPS check
+              setSuggestions(
+                data.suggestions.map((address) => ({
+                  ...address,
+                  xcAddressId: nanoid(), // Give a temporary ID to each suggestion
+                })),
+              );
             }
           },
         },
@@ -433,8 +442,7 @@ const EditBillingAddressDialog = ({ token }: EditBillingAddressDialogProps) => {
                     />
 
                     <div className="flex-1 text-wrap text-left text-base font-medium text-wurth-gray-800">
-                      {address.streetAddress}, {address.locality},{" "}
-                      {address.region}, {address.postalCode}
+                      <FullAddress address={address} />
                     </div>
                   </Button>
                 </li>

@@ -145,7 +145,9 @@ const DesktopView = async ({ orderNo }: DesktopViewProps) => {
                   <tr>
                     <td className={tableLabelStyles()}>Delivery date</td>
                     <td className={tableValueStyles()}>
-                      {dayjs(orderDetails.orderDate).format("MM/DD/YYYY")}
+                      {orderDetails.pickupDate
+                        ? dayjs(orderDetails.pickupDate).format("MM/DD/YYYY")
+                        : dayjs(orderDetails.orderDate).format("MM/DD/YYYY")}
                     </td>
                   </tr>
 
@@ -291,21 +293,21 @@ const DesktopView = async ({ orderNo }: DesktopViewProps) => {
                         </td>
                       </tr>
                     )}
-
-                    <tr>
-                      <td className={tableLabelStyles()}>Shipping</td>
-                      <td
-                        className={cn(
-                          tableValueStyles(),
-                          "text-right font-normal",
-                        )}
-                      >
-                        {orderDetails.handlingFee > 0
-                          ? `$${orderDetails.handlingFee}`
-                          : "Free"}
-                      </td>
-                    </tr>
-
+                    {orderDetails.handlingFee > 0 && (
+                      <tr>
+                        <td className={tableLabelStyles()}>Shipping</td>
+                        <td
+                          className={cn(
+                            tableValueStyles(),
+                            "text-right font-normal",
+                          )}
+                        >
+                          {orderDetails.handlingFee > 0
+                            ? `$${orderDetails.handlingFee}`
+                            : "Free"}
+                        </td>
+                      </tr>
+                    )}
                     <tr>
                       <td className={tableLabelStyles()}>Sales tax</td>
                       <td className={cn(tableValueStyles(), "text-right")}>

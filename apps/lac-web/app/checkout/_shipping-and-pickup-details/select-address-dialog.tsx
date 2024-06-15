@@ -1,4 +1,5 @@
 import AddShippingAddressDialog from "@/_components/add-shipping-address-dialog";
+import FullAddress from "@/_components/full-address";
 import useSuspenseShippingAddressList from "@/_hooks/address/use-suspense-shipping-address-list.hook";
 import useSuspenseCart from "@/_hooks/cart/use-suspense-cart.hook";
 import useUpdateCartConfigMutation from "@/_hooks/cart/use-update-cart-config-mutation.hook";
@@ -100,9 +101,7 @@ const SelectAddressDialog = ({ token }: SelectAddressDialogProps) => {
                   )}
 
                   <span className="flex-1 text-wrap text-left text-base text-wurth-gray-800">
-                    {address.streetAddress}, {address.locality},{" "}
-                    {address.postalCode}
-                    {address.zip4 ? `-${address.zip4}` : ""}
+                    <FullAddress address={address} />
                   </span>
                 </Button>
               </li>

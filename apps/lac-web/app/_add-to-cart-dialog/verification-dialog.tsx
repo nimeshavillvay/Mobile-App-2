@@ -9,7 +9,12 @@ import useDebouncedState from "@/_hooks/misc/use-debounced-state.hook";
 import useItemInfo from "@/_hooks/product/use-item-info.hook";
 import useSuspenseCheckAvailability from "@/_hooks/product/use-suspense-check-availability.hook";
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
-import { LIMITED_STOCK, NOT_AVAILABLE, NOT_IN_STOCK } from "@/_lib/constants";
+import {
+  LIMITED_STOCK,
+  MAX_QUANTITY,
+  NOT_AVAILABLE,
+  NOT_IN_STOCK,
+} from "@/_lib/constants";
 import {
   calculateIncreaseQuantity,
   calculateReduceQuantity,
@@ -257,6 +262,14 @@ const PriceCheck = ({
   ]);
   const priceData = priceCheckQuery.data.productPrices[0];
 
+  const initialPriceCheckQuery = useSuspensePriceCheck(token, [
+    { productId, qty: 1 },
+  ]);
+
+  const initialPriceData = initialPriceCheckQuery.data.productPrices[0];
+  const initialPrice =
+    initialPriceData?.uomPrice ?? initialPriceData?.price ?? 0;
+
   const isDiscounted =
     priceData?.price &&
     priceData?.listPrice &&
@@ -298,7 +311,7 @@ const PriceCheck = ({
 
             <div className="text-xs text-wurth-gray-800">
               <span className="text-sm">
-                ${formatNumberToPrice(item.price)}
+                ${formatNumberToPrice(Math.min(item.price, initialPrice))}
               </span>
               /{uom}
             </div>
@@ -386,7 +399,7 @@ const AddToCart = ({
             onClick={reduceQuantity}
             disabled={
               !quantity ||
-              quantity === minAmount ||
+              Number(quantity) === minAmount ||
               addToCartMutation.isPending ||
               disableAddToCartButton
             }
@@ -424,7 +437,8 @@ const AddToCart = ({
             disabled={
               quantity?.toString().length > 5 ||
               addToCartMutation.isPending ||
-              disableAddToCartButton
+              disableAddToCartButton ||
+              Number(quantity) + increments >= MAX_QUANTITY
             }
           >
             <Plus className="size-4" />

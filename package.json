@@ -1,5 +1,5 @@
 {
-  "name": "frontend-monorepo-template",
+  "name": "wurth-frontend-monorepo",
   "private": true,
   "scripts": {
     "dev": "dotenv -c -- turbo dev",
@@ -23,7 +23,7 @@
   },
   "devDependencies": {
     "@repo/prettier-config": "workspace:*",
-    "prettier": "3.2.5",
+    "prettier": "3.3.2",
     "turbo": "1.13.3"
   },
   "dependencies": {

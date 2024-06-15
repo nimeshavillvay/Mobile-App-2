@@ -256,11 +256,7 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
               !!methods.formState.errors.quantity?.message &&
                 "border-wurth-red-650",
             )}
-            disabled={
-              addToCartMutation.isPending ||
-              isItemError(item) ||
-              isRegionalExcluded
-            }
+            disabled={addToCartMutation.isPending || isItemError(item)}
             {...methods.register("quantity", {
               valueAsNumber: true,
             })}
@@ -293,11 +289,7 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
               <Button
                 type="submit"
                 className="w-[170px]"
-                disabled={
-                  !isValidQuantity ||
-                  addToCartMutation.isPending ||
-                  isRegionalExcluded
-                }
+                disabled={!isValidQuantity || addToCartMutation.isPending}
               >
                 Add to cart
               </Button>

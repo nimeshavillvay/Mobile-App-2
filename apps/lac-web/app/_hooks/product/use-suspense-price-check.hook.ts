@@ -49,7 +49,7 @@ const useSuspensePriceCheck = (token: string, products: Product[]) => {
           json: {
             products: products.map((product) => ({
               productid: product.productId,
-              qty: Number(product.qty) === 0 ? 1 : product.qty,
+              qty: Number(product.qty) <= 0 ? 1 : product.qty,
               ...(product.cartId !== undefined && { cartid: product.cartId }),
             })),
           },

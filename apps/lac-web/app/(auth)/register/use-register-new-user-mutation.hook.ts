@@ -5,6 +5,11 @@ import { isErrorResponse } from "@/_lib/utils";
 import { useToast } from "@repo/web-ui/components/ui/toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
+type SAPErrorResponse = {
+  check_type: string;
+  message: string;
+};
+
 type Address = {
   address: string;
   city: string;
@@ -19,6 +24,15 @@ const useRegisterNewUserMutation = () => {
   const queryClient = useQueryClient();
   const [cookies] = useCookies();
   const { toast } = useToast();
+
+  const showGenericErrorMessage = () => {
+    toast({
+      variant: "destructive",
+      title: "Registration failed",
+      description:
+        "Failed to validate your shipping address. Please correct your entry.",
+    });
+  };
 
   return useMutation({
     mutationFn: async ({
@@ -97,12 +111,19 @@ const useRegisterNewUserMutation = () => {
         const errorResponse = await error.response.json();
 
         if (isErrorResponse(errorResponse)) {
-          toast({
-            variant: "destructive",
-            title: "Registration failed",
-            description:
-              "Failed to validate your shipping address. Please correct your entry.",
-          });
+          showGenericErrorMessage();
+        } else if (isSAPErrorResponse(errorResponse)) {
+          if (
+            typeof (errorResponse as SAPErrorResponse)?.message === "string"
+          ) {
+            toast({
+              variant: "destructive",
+              title: "Registration failed",
+              description: errorResponse.message,
+            });
+          } else {
+            showGenericErrorMessage();
+          }
         }
       }
     },
@@ -154,6 +175,20 @@ export const isVerifyAddressResponse = (
     typeof data === "object" &&
     ((data as VerifyAddressResponse).check_type === "ADDRESS" ||
       (data as VerifyAddressResponse).check_type === "SAP")
+  ) {
+    return true;
+  }
+
+  return false;
+};
+
+const isSAPErrorResponse = (error: unknown): error is SAPErrorResponse => {
+  if (
+    typeof error === "object" &&
+    typeof (error as SAPErrorResponse)?.check_type === "string" &&
+    (error as SAPErrorResponse)?.check_type === "SAP" &&
+    (typeof (error as SAPErrorResponse)?.message === "string" ||
+      typeof (error as SAPErrorResponse)?.message === "object")
   ) {
     return true;
   }
