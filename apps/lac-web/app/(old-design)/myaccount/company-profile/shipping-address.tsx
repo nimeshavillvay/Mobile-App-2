@@ -1,6 +1,8 @@
 "use client";
 
+import useSuspenseBillingAddress from "@/_hooks/address/use-suspense-billing-address.hook";
 import useSuspenseShippingAddressList from "@/_hooks/address/use-suspense-shipping-address-list.hook";
+import useSuspenseUsersList from "@/_hooks/user/use-suspense-users-list.hook";
 import type { Address, AddressFormData } from "@/_lib/types";
 import Separator from "@/old/_components/separator";
 import Title from "@/old/_components/title";
@@ -38,8 +40,16 @@ const ShippingAddress = ({ token }: { readonly token: string }) => {
   const [addressCheckSuggestions, setAddressCheckSuggestions] =
     useState<AddressCheckSuggestionsWithUuid>();
 
+  const billingAddressQuery = useSuspenseBillingAddress(token);
+  const billingAddress = billingAddressQuery?.data;
+
   const shippingAddressQuery = useSuspenseShippingAddressList(token);
   const shippingAddresses = shippingAddressQuery?.data;
+
+  const usersListQuery = useSuspenseUsersList(token);
+
+  const { permission } = usersListQuery.data.manageContact.yourProfile;
+  const isAdmin = permission.toLowerCase() === "admin";
 
   return (
     <>
@@ -59,6 +69,8 @@ const ShippingAddress = ({ token }: { readonly token: string }) => {
           <ShippingAddressCard
             key={address.xcAddressId}
             shippingAddress={address}
+            soldTo={billingAddress.soldTo ?? ""}
+            isAdmin={isAdmin}
           />
         ))}
         <button

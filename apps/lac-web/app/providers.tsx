@@ -15,7 +15,11 @@ type ProvidersProps = {
 const Providers = ({ children }: ProvidersProps) => {
   return (
     <CookiesProvider>
-      <ReactQueryProvider>{children}</ReactQueryProvider>
+      <ReactQueryProvider>
+        <WrapBalancer>
+          <TooltipProvider>{children}</TooltipProvider>
+        </WrapBalancer>
+      </ReactQueryProvider>
     </CookiesProvider>
   );
 };
@@ -57,11 +61,7 @@ const ReactQueryProvider = ({ children }: { readonly children: ReactNode }) => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ReactQueryStreamedHydration>
-        <WrapBalancer>
-          <TooltipProvider>{children}</TooltipProvider>
-        </WrapBalancer>
-      </ReactQueryStreamedHydration>
+      <ReactQueryStreamedHydration>{children}</ReactQueryStreamedHydration>
 
       <ReactQueryDevtools />
     </QueryClientProvider>

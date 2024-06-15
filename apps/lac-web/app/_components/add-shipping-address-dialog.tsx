@@ -1,3 +1,4 @@
+import FullAddress from "@/_components/full-address";
 import useAddShippingAddressMutation from "@/_hooks/address/use-add-shipping-address-mutation.hook";
 import useCounties from "@/_hooks/registration/use-counties.hook";
 import useCountries from "@/_hooks/registration/use-countries.hook";
@@ -137,6 +138,14 @@ const AddShippingAddressDialog = ({
               form.reset();
               setAddressSuggestions([]);
               closeDialog();
+            } else if ("suggestions" in data) {
+              // This is to handle address conflicts in SAP after the UPS check
+              setAddressSuggestions(
+                data.suggestions.map((address) => ({
+                  ...address,
+                  xcAddressId: nanoid(), // Give a temporary ID to each suggestion
+                })),
+              );
             }
           },
         },
@@ -396,8 +405,7 @@ const AddShippingAddressDialog = ({
                     />
 
                     <span className="flex-1 text-wrap text-left text-base font-medium text-wurth-gray-800">
-                      {address.streetAddress}, {address.locality},{" "}
-                      {address.region}, {address.postalCode}
+                      <FullAddress address={address} />
                     </span>
                   </Button>
                 </li>

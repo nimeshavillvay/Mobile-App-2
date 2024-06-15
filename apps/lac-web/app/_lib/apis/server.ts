@@ -222,6 +222,7 @@ export const getOrderDetails = async (token: string, orderId: string) => {
         status: string;
         email: string;
         orderDate: string;
+        pickupDate: string;
         orderBy: string;
         soldTo: string;
         shipTo: string;
@@ -312,6 +313,7 @@ export const getOrderDetails = async (token: string, orderId: string) => {
       orderStatus: response.status,
       email: response.email,
       orderDate: response.orderDate ?? "",
+      pickupDate: response.pickupDate ?? "",
       orderBy: response.orderBy,
       soldTo: response.soldTo,
       shipTo: response.shipTo,

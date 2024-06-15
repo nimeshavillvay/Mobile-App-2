@@ -140,7 +140,9 @@ const ProductCard = ({
           <ProductCardDiscount>{discountPercent}</ProductCardDiscount>
         )}
 
-        <SaleBadges onSale={onSale} isNewItem={isNewItem} />
+        {orientation === "vertical" && (
+          <SaleBadges onSale={onSale} isNewItem={isNewItem} />
+        )}
 
         <ProductCardImage
           src={image}
@@ -151,6 +153,12 @@ const ProductCard = ({
       </ProductCardHero>
 
       <ProductCardContent>
+        {orientation === "horizontal" && (
+          <div>
+            <SaleBadges onSale={onSale} isNewItem={isNewItem} />
+          </div>
+        )}
+
         <ProductCardDetails title={title} sku={sku} href={href} />
 
         <div className="flex flex-col gap-2">

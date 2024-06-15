@@ -21,6 +21,9 @@ const tableLabelStyles = cva({ base: "text-sm text-wurth-gray-800" });
 const tableValueStyles = cva({
   base: "pl-2 text-sm font-medium text-wurth-gray-800",
 });
+const productImageStyles = cva({
+  base: "shrink-0 rounded border border-wurth-gray-250 object-contain shadow-sm",
+});
 
 type MobileViewProps = {
   readonly orderNo: string;
@@ -149,7 +152,9 @@ const MobileView = async ({ orderNo }: MobileViewProps) => {
                 <tr>
                   <td className={tableLabelStyles()}>Delivery date</td>
                   <td className={tableValueStyles()}>
-                    {dayjs(orderDetails.orderDate).format("MM/DD/YYYY")}
+                    {orderDetails.pickupDate
+                      ? dayjs(orderDetails.pickupDate).format("MM/DD/YYYY")
+                      : dayjs(orderDetails.orderDate).format("MM/DD/YYYY")}
                   </td>
                 </tr>
 
@@ -198,10 +203,24 @@ const MobileView = async ({ orderNo }: MobileViewProps) => {
                     <div className="flex flex-row items-start justify-between gap-3">
                       <Image
                         src={lineItem.itemImage}
-                        alt={`An image of ${lineItem.itemDescription}`}
+                        alt={lineItem.itemDescription}
                         width={84}
                         height={84}
-                        className="shrink-0 rounded border border-wurth-gray-250 object-contain shadow-sm"
+                        className={cn(productImageStyles(), "print:hidden")}
+                      />
+
+                      {/* Make a separate element for the print because Safari can't handle lazy loaded images */}
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={lineItem.itemImage}
+                        alt={lineItem.itemDescription}
+                        width={84}
+                        height={84}
+                        className={cn(
+                          productImageStyles(),
+                          "hidden print:block",
+                        )}
+                        loading="eager"
                       />
 
                       <div className="flex flex-col gap-1">
@@ -285,18 +304,21 @@ const MobileView = async ({ orderNo }: MobileViewProps) => {
                     </td>
                   </tr>
                 )}
-
-                <tr>
-                  <td className={tableLabelStyles()}>Shipping</td>
-                  <td
-                    className={cn(tableValueStyles(), "text-right font-normal")}
-                  >
-                    {orderDetails.handlingFee > 0
-                      ? `$${formatNumberToPrice(orderDetails.handlingFee)}`
-                      : "Free"}
-                  </td>
-                </tr>
-
+                {orderDetails.handlingFee > 0 && (
+                  <tr>
+                    <td className={tableLabelStyles()}>Shipping</td>
+                    <td
+                      className={cn(
+                        tableValueStyles(),
+                        "text-right font-normal",
+                      )}
+                    >
+                      {orderDetails.handlingFee > 0
+                        ? `$${formatNumberToPrice(orderDetails.handlingFee)}`
+                        : "Free"}
+                    </td>
+                  </tr>
+                )}
                 <tr>
                   <td className={tableLabelStyles()}>Sales tax</td>
                   <td className={cn(tableValueStyles(), "text-right")}>

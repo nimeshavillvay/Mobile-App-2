@@ -1,3 +1,5 @@
+import useUpdateCartConfigMutation from "@/_hooks/cart/use-update-cart-config-mutation.hook";
+import type { PaymentMethod } from "@/_lib/types";
 import { cn } from "@/_lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus } from "@repo/web-ui/components/icons/plus";
@@ -27,6 +29,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import useAddCreditCardMutation from "./use-add-credit-card-mutation.hook";
 import useSuspenseCreditCardSignature from "./use-suspense-credit-card-signature.hook";
+import useSuspenseCreditCards from "./use-suspense-credit-cards.hook";
 
 const formSchema = z
   .object({
@@ -75,11 +78,18 @@ const formSchema = z
 
 type AddCreditCardDialogProps = {
   readonly token: string;
+  readonly paymentMethods: PaymentMethod[];
+  readonly onCreatedNewCreditCard: (newCardId: string) => void;
 };
 
-const AddCreditCardDialog = ({ token }: AddCreditCardDialogProps) => {
+const AddCreditCardDialog = ({
+  token,
+  paymentMethods,
+  onCreatedNewCreditCard,
+}: AddCreditCardDialogProps) => {
   const [open, setOpen] = useState(false);
   const creditCardSignatureQuery = useSuspenseCreditCardSignature(token);
+  const creditCartsQuery = useSuspenseCreditCards(token);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -93,6 +103,7 @@ const AddCreditCardDialog = ({ token }: AddCreditCardDialogProps) => {
   });
 
   const addCreditCardMutation = useAddCreditCardMutation();
+  const updateCartConfigMutation = useUpdateCartConfigMutation();
 
   const onSubmit = form.handleSubmit((values) => {
     addCreditCardMutation.mutate(
@@ -104,11 +115,34 @@ const AddCreditCardDialog = ({ token }: AddCreditCardDialogProps) => {
         defaultCard: false,
       },
       {
-        onSuccess: () => {
+        onSuccess: async (data) => {
+          const query = await creditCartsQuery.refetch({
+            cancelRefetch: false, // This is set to false because the mutation will invalidate the query by default
+          });
+
+          // Select the newly added credit card
+          const newCardId = data.card_id;
+          const selectedCreditCard = query.data?.find(
+            (card) => card.id === newCardId,
+          );
+          if (selectedCreditCard) {
+            await updateCartConfigMutation.mutate({
+              cardName: selectedCreditCard.name,
+              cardType: selectedCreditCard.type,
+              expireDate: selectedCreditCard.expiryDate,
+              paymentMethod: paymentMethods.find(
+                (paymentMethod) => paymentMethod.isCreditCard,
+              )?.code,
+              paymentToken: selectedCreditCard.number,
+            });
+          }
+
           setOpen(false);
 
           // Clear form when the dialog is closed
           form.reset();
+
+          onCreatedNewCreditCard(newCardId.toString());
         },
       },
     );
@@ -125,11 +159,9 @@ const AddCreditCardDialog = ({ token }: AddCreditCardDialogProps) => {
 
           if (key === "token") {
             if (value) {
-              form.setValue("token", value ?? "");
+              form.setValue("token", value);
             } else {
-              form.setError("token", {
-                message: "Please enter a valid card number.",
-              });
+              form.setValue("token", ""); // Clear the form state if empty
             }
           } else if (key === "brand") {
             form.setValue("brand", value ?? "");
@@ -178,6 +210,7 @@ const AddCreditCardDialog = ({ token }: AddCreditCardDialogProps) => {
             <FormField
               control={form.control}
               name="name"
+              disabled={addCreditCardMutation.isPending}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Name on card</FormLabel>
@@ -195,6 +228,7 @@ const AddCreditCardDialog = ({ token }: AddCreditCardDialogProps) => {
             <FormField
               control={form.control}
               name="token"
+              disabled={addCreditCardMutation.isPending}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Card number</FormLabel>
@@ -227,6 +261,7 @@ const AddCreditCardDialog = ({ token }: AddCreditCardDialogProps) => {
             <FormField
               control={form.control}
               name="brand"
+              disabled={addCreditCardMutation.isPending}
               render={({ field }) => (
                 <FormItem className="sr-only">
                   <FormLabel>Name on card</FormLabel>
@@ -244,6 +279,7 @@ const AddCreditCardDialog = ({ token }: AddCreditCardDialogProps) => {
             <FormField
               control={form.control}
               name="date"
+              disabled={addCreditCardMutation.isPending}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Expiration date</FormLabel>
@@ -261,6 +297,7 @@ const AddCreditCardDialog = ({ token }: AddCreditCardDialogProps) => {
             <FormField
               control={form.control}
               name="save"
+              disabled={addCreditCardMutation.isPending}
               render={({ field }) => (
                 <FormItem className="flex flex-row items-start space-x-2 space-y-0">
                   <FormControl>
@@ -280,7 +317,11 @@ const AddCreditCardDialog = ({ token }: AddCreditCardDialogProps) => {
               )}
             />
 
-            <Button type="submit" className="self-end">
+            <Button
+              type="submit"
+              className="self-end"
+              disabled={addCreditCardMutation.isPending}
+            >
               Submit
             </Button>
           </form>

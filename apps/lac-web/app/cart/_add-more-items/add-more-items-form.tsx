@@ -398,7 +398,12 @@ const AddMoreItemsForm = ({ token }: { readonly token: string }) => {
               onOpenChange={setDeleteConfirmation}
             >
               <AlertDialogTrigger asChild>
-                <Button type="button" variant="ghost" className="font-medium">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  className="font-medium"
+                  disabled={addMultipleToCartMutation.isPending}
+                >
                   Clear all
                 </Button>
               </AlertDialogTrigger>
@@ -419,7 +424,12 @@ const AddMoreItemsForm = ({ token }: { readonly token: string }) => {
             </AlertDialog>
           )}
 
-          <Button type="submit" variant="default" className="">
+          <Button
+            type="submit"
+            variant="default"
+            className=""
+            disabled={addMultipleToCartMutation.isPending}
+          >
             <AddToCart className="stroke-white stroke-2" width={16} />
             <span>Add all items to cart</span>
           </Button>
