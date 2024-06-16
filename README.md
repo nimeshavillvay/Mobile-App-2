@@ -2,11 +2,11 @@
 
 ## Package Manager
 
-This repo uses [pnpm](https://pnpm.io/).
+This repository uses [pnpm](https://pnpm.io/).
 
 ## Visual Studio Code extensions
 
-Install all the recommended extensions when opening this repo in VS Code for the 1st time.
+Install all the recommended extensions when opening this repository in Visual Studio Code.
 
 ## Environment Variables
 
@@ -14,7 +14,7 @@ Create the `.env.local` file at the root. Any new variables must also be specifi
 
 ## Project Structure
 
-The repo has two main folders `apps` and `packages`.
+The repository has two main folders `apps` and `packages`.
 
 - `app` - Contains the main applications, like the Web and Mobile applications.
 - `packages` - Contains code that is shared among the applications in the `apps` folder, like sharable [ESLint](https://eslint.org/) configs in `eslint-config`.
@@ -26,6 +26,6 @@ The repo has two main folders `apps` and `packages`.
 
 ## GitHub Actions
 
-This repo has GitHub Actions configured to run a Prettier and ESLint checks to run on Pull Requests. It will run these check on all packages by default. To save time, the GitHub Action has [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching) configured to skip the checks on packages that don't have any code changes.
+This repository has GitHub Actions configured to run [Prettier](https://prettier.io/) and [ESLint](https://eslint.org/) checks to run on Pull Requests for all packages by default. To save time, the actions have [Remote Caching](https://turbo.build/repository/docs/core-concepts/remote-caching) configured to skip the checks on packages that don't have any code changes.
 
-To configure the remote cache follow [this guide](https://turbo.build/repo/docs/guides/ci-vendors/github-actions). Ideally the `TURBO_TOKEN` secret should come from the Vercel team owner's account so that we don't need to replace the secret every time members in the Vercel team change.
+To configure the remote cache follow [this guide](https://turbo.build/repository/docs/guides/ci-vendors/github-actions). Ideally the `TURBO_TOKEN` secret should come from the Vercel team owner's account so that we don't need to replace the secret every time members in the Vercel team change.
