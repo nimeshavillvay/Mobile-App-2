@@ -37,6 +37,14 @@ jobs:
           key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
+      - uses: actions/cache@v4
+        name: Setup Prettier cache
+        with:
+          path: .prettier/cache
+          key: ${{ runner.os }}-prettier-${{ hashFiles('{apps,packages}/**/*') }}
+          restore-keys: |
+            ${{ runner.os }}-prettier-
+          save-always: true
       - name: Install dependencies
         run: pnpm install
       - name: Check formatting with Prettier
