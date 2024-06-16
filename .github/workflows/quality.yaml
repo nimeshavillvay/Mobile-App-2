@@ -8,7 +8,7 @@ concurrency:
 jobs:
   prettier:
     name: Prettier
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         node-version: [20]
@@ -50,7 +50,7 @@ jobs:
         run: pnpm prettier:check
   eslint:
     name: ESLint
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         node-version: [20]
