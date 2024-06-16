@@ -37,17 +37,20 @@ jobs:
           key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
-      - uses: actions/cache@v4
-        name: Setup Prettier cache
+      - uses: actions/cache/restore@v4
+        name: Restore Prettier cache
         with:
           path: .prettier/cache
           key: ${{ runner.os }}-prettier-${{ hashFiles('**/.prettierrc.js') }}
-          restore-keys: |
-            ${{ runner.os }}-prettier-
       - name: Install dependencies
         run: pnpm install
       - name: Check formatting with Prettier
         run: pnpm prettier:check
+      - uses: actions/cache/save@v4
+        name: Save Prettier cache
+        with:
+          path: .prettier/cache
+          key: ${{ runner.os }}-prettier-${{ hashFiles('**/.prettierrc.js') }}
   eslint:
     name: ESLint
     runs-on: ubuntu-22.04
