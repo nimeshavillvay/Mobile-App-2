@@ -44,6 +44,7 @@ jobs:
           key: ${{ runner.os }}-prettier-${{ hashFiles('**/.prettierrc.js') }}
           restore-keys: |
             ${{ runner.os }}-prettier-
+          save-always: true
       - name: Install dependencies
         run: pnpm install
       - name: Check formatting with Prettier
