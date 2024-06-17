@@ -29,7 +29,6 @@ import { useId, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import AddCreditCardDialog from "./add-credit-card-dialog";
-import EditBillingAddressDialog from "./edit-billing-address-dialog";
 import { getPaymentId, isExpiredCreditCard } from "./helpers";
 import OrderConfirmDialog from "./order-confirm-dialog";
 import useDeleteCreditCardMutation from "./use-delete-credit-card-mutation.hook";
@@ -158,15 +157,17 @@ const BillingAndPaymentInfo = ({
             </h3>
 
             <div className="text-base text-wurth-gray-800">
-              {billingAddressQuery.data.organization}
-              <br />
+              {!!billingAddressQuery.data.organization && (
+                <span>
+                  {billingAddressQuery.data.organization}
+                  <br />
+                </span>
+              )}
               <FullAddress
                 address={billingAddressQuery.data}
                 showCountry={true}
               />
             </div>
-
-            <EditBillingAddressDialog token={token} />
           </div>
         </div>
 
