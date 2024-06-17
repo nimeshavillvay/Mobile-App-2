@@ -122,6 +122,7 @@ const DesktopView = async ({ orderNo }: DesktopViewProps) => {
                   <tr>
                     <td className={tableLabelStyles()}>Billing address</td>
                     <td className={tableValueStyles()}>
+                      #{orderDetails.soldTo},{" "}
                       {orderDetails.billToAddress.street},{" "}
                       {orderDetails.billToAddress.city},{" "}
                       {orderDetails.billToAddress.region},{" "}
@@ -154,6 +155,7 @@ const DesktopView = async ({ orderNo }: DesktopViewProps) => {
                   <tr>
                     <td className={tableLabelStyles()}>Ship to address</td>
                     <td className={tableValueStyles()}>
+                      #{orderDetails.shipTo},{" "}
                       {orderDetails.shipToAddress.street},{" "}
                       {orderDetails.shipToAddress.city},{" "}
                       {orderDetails.shipToAddress.region},{" "}

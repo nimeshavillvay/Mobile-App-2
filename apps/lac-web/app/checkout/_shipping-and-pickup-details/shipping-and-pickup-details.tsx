@@ -105,6 +105,12 @@ const ShippingAndPickupDetails = ({ token }: ShippingAndPickupDetailsProps) => {
             <h3 className="text-sm text-black">Shipping Address</h3>
 
             <div className="text-base text-wurth-gray-800">
+              {!!selectedAddress?.shipTo && (
+                <span>
+                  {`#${selectedAddress?.shipTo} `}
+                  <br />
+                </span>
+              )}
               <FullAddress address={selectedAddress} showCountry={true} />
             </div>
           </div>
