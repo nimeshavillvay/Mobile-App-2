@@ -100,6 +100,13 @@ const SideMenu = ({ token }: { readonly token: string }) => {
         </AccordionItem>
       </Accordion>
 
+      <Link
+        href="/tax-form"
+        className={cn(menuItem({ status: "inactive" }), "w-full text-left")}
+      >
+        Sales Tax
+      </Link>
+
       <button
         onClick={() => {
           if (isOsr) {
