@@ -42,6 +42,7 @@ import {
   EMPTY_STRING,
   MAIN_OPTIONS,
   TAKE_ON_HAND,
+  UI_DATE_FORMAT,
 } from "../constants";
 import type { Availability } from "../types";
 import {
@@ -51,8 +52,6 @@ import {
 } from "./helpers";
 import PlantName from "./plant-name";
 import type { MainOption, OptionPlant, ShipToMeOption } from "./types";
-
-const UI_DATE_FORMAT = "ddd, MMM. DD YYYY";
 
 // Vendor Direct Shipping Method
 const VENDOR_DIRECT_CODE = "D";

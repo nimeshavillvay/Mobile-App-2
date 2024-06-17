@@ -22,3 +22,5 @@ export const BACKORDER_ENABLED = "T";
 export const BACKORDER_DISABLED = "F";
 
 export const EXCLUDED_SHIPPING_METHODS = ["W"] as const;
+
+export const UI_DATE_FORMAT = "ddd, MMM. DD YYYY" as const;
