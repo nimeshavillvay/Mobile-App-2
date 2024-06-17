@@ -22,7 +22,7 @@ export type Availability = {
     quantity_1?: number;
     shippingMethods_1?: string[];
     type?: string;
-  };
+  }[];
   xplant: string;
   availableLocations: {
     location: string;

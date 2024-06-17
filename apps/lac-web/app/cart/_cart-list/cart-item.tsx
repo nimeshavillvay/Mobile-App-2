@@ -69,7 +69,7 @@ import {
   getShippingMethods,
 } from "./helpers";
 import RegionalExclusionAndShippingMethods from "./regional-exclusion-and-shipping-methods";
-import type { MainOption, ShipToMeOption } from "./types";
+import type { MainOption, ShipToMeOption, WillCallOption } from "./types";
 import useCheckAvailabilityMutation from "./use-check-availability-mutation.hook";
 
 const cartItemSchema = z.object({
@@ -215,7 +215,7 @@ const CartItem = ({
     ({ location }) => location === willCallPlant?.plantCode,
   );
 
-  const willCallHash = willCallAnywhere?.hash;
+  
 
   const availableAll = findAvailabilityOptionForType(
     availabilityOptions,
@@ -255,6 +255,12 @@ const CartItem = ({
       return undefined;
     },
   );
+
+  const [selectedWillCallTransfer, setSelectedWillCallTransfer] =
+    useState<WillCallOption>(() => {
+      return MAIN_OPTIONS.WILL_CALL;
+    });
+
   // use the new function to determine the available options
   const shippingMethods = getShippingMethods(
     selectedShipToMe,
@@ -448,7 +454,7 @@ const CartItem = ({
   const handleSelectWillCallPlant = (plant: string) => {
     if (plant !== "") {
       setSelectedWillCallPlant(plant);
-
+      setSelectedWillCallTransfer(MAIN_OPTIONS.WILL_CALL);
       checkAvailabilityMutation.mutate(
         {
           productId: product.id,
@@ -457,33 +463,39 @@ const CartItem = ({
         },
         {
           onSuccess: ({ willCallAnywhere }) => {
-            if (willCallAnywhere && willCallAnywhere.status != NOT_IN_STOCK) {
+            if (
+              willCallAnywhere[0] &&
+              willCallAnywhere[0].status != NOT_IN_STOCK
+            ) {
               handleSave({
                 ...createCartItemConfig({
                   method: "0",
-                  quantity: willCallAnywhere?.willCallQuantity,
-                  plant: willCallAnywhere?.willCallPlant,
-                  hash: willCallAnywhere.hash,
-                  backOrderDate: willCallAnywhere?.backOrderDate_1,
-                  backOrderQuantity: willCallAnywhere?.backOrderQuantity_1,
+                  quantity: willCallAnywhere[0]?.willCallQuantity,
+                  plant: willCallAnywhere[0]?.willCallPlant,
+                  hash: willCallAnywhere[0].hash,
+                  backOrderDate: willCallAnywhere[0]?.backOrderDate_1,
+                  backOrderQuantity: willCallAnywhere[0]?.backOrderQuantity_1,
                 }),
-                will_call_avail: (willCallAnywhere?.status === NOT_IN_STOCK
+                will_call_avail: (willCallAnywhere[0]?.status === NOT_IN_STOCK
                   ? 0
-                  : willCallAnywhere?.willCallQuantity ?? 0
+                  : willCallAnywhere[0]?.willCallQuantity ?? 0
                 ).toString(),
                 will_call_plant:
-                  willCallAnywhere?.willCallPlant ?? EMPTY_STRING,
+                  willCallAnywhere[0]?.willCallPlant ?? EMPTY_STRING,
               });
-            } else {
+            } else if (
+              willCallAnywhere[0] &&
+              willCallAnywhere[0].status === NOT_IN_STOCK
+            ) {
               handleSave({
                 ...createCartItemConfig({
                   method: "0",
                   quantity: 0,
-                  plant: willCallAnywhere.willCallPlant,
-                  hash: willCallAnywhere.hash,
+                  plant: willCallAnywhere[0].willCallPlant,
+                  hash: willCallAnywhere[0].hash,
                   backOrderAll: true,
-                  backOrderDate: willCallAnywhere?.willCallBackOrder,
-                  backOrderQuantity: willCallAnywhere?.willCallQuantity,
+                  backOrderDate: willCallAnywhere[0]?.willCallBackOrder,
+                  backOrderQuantity: willCallAnywhere[0]?.willCallQuantity,
                 }),
               });
             }
@@ -574,13 +586,15 @@ const CartItem = ({
         setSelectedShippingOption(MAIN_OPTIONS.BACK_ORDER);
       }
       // This logic is to stop the ship to me option being selected automatically when will call option is selected
-      if (willCallHash === itemConfigHash) {
-        return setSelectedShippingMethod(itemConfigShippingMethod);
-      }
+      // if (willCallHash[0] && willCallHash[0].hash === itemConfigHash) {
+      //   return setSelectedShippingMethod(itemConfigShippingMethod);
+      // }
     } else {
       // Check if hash matches with the will call hash
-      if (willCallHash === itemConfigHash) {
+      if (willCallAnywhere[0] && willCallAnywhere[0].hash === itemConfigHash) {
         setSelectedShippingOption(MAIN_OPTIONS.WILL_CALL);
+      } else if (willCallAnywhere[1] && willCallAnywhere[1].hash === itemConfigHash) {
+        setSelectedShippingOption(MAIN_OPTIONS.WILL_CALL_TRANSFER);
       } else {
         // Update the cart config with default option based on the priority
         // This is needed so that if the the cart gets expired we update it here
@@ -804,6 +818,8 @@ const CartItem = ({
               setSelectedShippingOption={setSelectedShippingOption}
               selectedShippingOption={selectedShippingOption}
               setSelectedShipToMe={setSelectedShipToMe}
+              setSelectedWillCallTransfer={setSelectedWillCallTransfer}
+              selectedWillCallTransfer={selectedWillCallTransfer}
               selectedShipToMe={selectedShipToMe}
               setSelectedShippingMethod={setSelectedShippingMethod}
               selectedShippingMethod={selectedShippingMethod}
@@ -826,6 +842,8 @@ const CartItem = ({
               selectedShippingOption={selectedShippingOption}
               setSelectedShipToMe={setSelectedShipToMe}
               selectedShipToMe={selectedShipToMe}
+              setSelectedWillCallTransfer={setSelectedWillCallTransfer}
+              selectedWillCallTransfer={selectedWillCallTransfer}
               setSelectedShippingMethod={setSelectedShippingMethod}
               selectedShippingMethod={selectedShippingMethod}
               onSave={handleSave}

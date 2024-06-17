@@ -16,6 +16,8 @@ const RegionalExclusionAndShippingMethods = ({
   selectedShipToMe,
   setSelectedShippingMethod,
   selectedShippingMethod,
+  setSelectedWillCallTransfer,
+  selectedWillCallTransfer,
   onSave,
   defaultShippingMethod,
   shippingMethods,
@@ -44,6 +46,8 @@ const RegionalExclusionAndShippingMethods = ({
       selectedShippingOption={selectedShippingOption}
       setSelectedShipToMe={setSelectedShipToMe}
       selectedShipToMe={selectedShipToMe}
+      setSelectedWillCallTransfer={setSelectedWillCallTransfer}
+      selectedWillCallTransfer={selectedWillCallTransfer}
       setSelectedShippingMethod={setSelectedShippingMethod}
       selectedShippingMethod={selectedShippingMethod}
       onSave={onSave}
