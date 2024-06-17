@@ -41,7 +41,7 @@ jobs:
         name: Setup Prettier cache
         with:
           path: .prettier/cache
-          key: ${{ runner.os }}-prettier-${{ hashFiles('{apps,packages}/**/*') }}
+          key: ${{ runner.os }}-prettier-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-prettier-
           save-always: true
