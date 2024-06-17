@@ -76,6 +76,7 @@ const AddUserEmailDialog = ({
         if (data.statusCode === "USER_NEW") {
           setOpenAddUserDataDialog(true);
           setEmail(email);
+          form.reset();
           setOpen(false);
         }
       },
@@ -98,7 +99,16 @@ const AddUserEmailDialog = ({
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog
+      open={open}
+      onOpenChange={(open) => {
+        if (!open) {
+          form.reset();
+        }
+
+        setOpen(open);
+      }}
+    >
       <DialogContent className="old-design-text-base max-w-[360px]">
         <DialogHeader>
           <DialogTitle className="text-left font-wurth">Add User</DialogTitle>
