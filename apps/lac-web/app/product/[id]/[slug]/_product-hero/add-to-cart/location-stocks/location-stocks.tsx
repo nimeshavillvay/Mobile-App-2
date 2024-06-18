@@ -5,7 +5,12 @@ import useSuspenseWillCallPlant from "@/_hooks/address/use-suspense-will-call-pl
 import useDebouncedState from "@/_hooks/misc/use-debounced-state.hook";
 import useSuspenseCheckAvailability from "@/_hooks/product/use-suspense-check-availability.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
-import { LIMITED_STOCK, NOT_AVAILABLE, NOT_IN_STOCK } from "@/_lib/constants";
+import {
+  LIMITED_STOCK,
+  NOT_AVAILABLE,
+  NOT_IN_STOCK,
+  UI_DATE_FORMAT,
+} from "@/_lib/constants";
 import { cn } from "@/_lib/utils";
 import { ChevronRight } from "@repo/web-ui/components/icons/chevron-right";
 import { Button } from "@repo/web-ui/components/ui/button";
@@ -14,6 +19,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@repo/web-ui/components/ui/collapsible";
+import dayjs from "dayjs";
 import { useDeferredValue } from "react";
 import useAddToCartForm from "../../use-add-to-cart-form.hook";
 
@@ -47,6 +53,9 @@ const LocationStocks = ({ token, productId }: LocationStocksProps) => {
   const isNotInStock = status === NOT_IN_STOCK;
   const isLimitedStock = status === LIMITED_STOCK;
 
+  const backOrderDate =
+    checkAvailabilityQuery.data.options[0]?.plants[0]?.backOrderDate;
+
   const checkLoginQuery = useSuspenseCheckLogin(token);
 
   // If there isn't even one location returned, show not available error
@@ -79,6 +88,12 @@ const LocationStocks = ({ token, productId }: LocationStocksProps) => {
           {homeBranch && !isNotInStock && (
             <div className="text-sm font-medium text-wurth-gray-800">
               {homeBranch?.amount} in stock at {homeBranch?.name}
+            </div>
+          )}
+          {(isNotInStock || !homeBranch) && !!backOrderDate && (
+            <div className="text-sm font-medium text-wurth-gray-800">
+              Items are expected to ship by{" "}
+              {dayjs(backOrderDate).format(UI_DATE_FORMAT)}.
             </div>
           )}
         </div>
