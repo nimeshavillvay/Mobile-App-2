@@ -31,6 +31,7 @@ import dynamic from "next/dynamic";
 import { Suspense, useState } from "react";
 import CartItemFallback from "../cart-item-fallback";
 import useCartPageStore from "../use-cart-page-store.hook";
+import useCartStore from "../use-cart-store.hook";
 import CartItem from "./cart-item";
 
 type CartListProps = {
@@ -79,29 +80,21 @@ const CartList = ({ token, plants }: CartListProps) => {
   // TODO Delete this hook after refactoring the entire cart item section
   const cartItemKey = useCartPageStore((state) => state.cartItemKey);
 
-  const [deletedProdSkus, setDeletedProdSkus] = useState<string[]>([]);
-  const setDeletedProduct = (sku: string) => {
-    if (!deletedProdSkus.find((eachSku) => eachSku === sku)) {
-      setDeletedProdSkus((deletedProdSkus) => [...deletedProdSkus, sku]);
-    }
-  };
-
-  const [isErrorOpen, setIsErrorOpen] = useState(false);
+  const excludedSkus = useCartStore((state) => state.excludedSkus);
+  const { setExcludedSkus } = useCartStore((state) => state.actions);
 
   return (
     <>
-      {deletedProdSkus.length > 0 && !isErrorOpen && (
+      {Array.isArray(excludedSkus) && excludedSkus.length > 0 && (
         <Alert variant="destructive" className="mb-2">
           <AlertIcon className="size-4" />
           <AlertContent>
             <AlertTitle>Error</AlertTitle>
             <AlertDescription>
-              {deletedProdSkus
+              {excludedSkus
                 .join(", ")
                 .concat(
-                  deletedProdSkus.length === 1
-                    ? " Product is"
-                    : " Products are",
+                  excludedSkus.length === 1 ? " Product is" : " Products are",
                 )
                 .concat(
                   " not available online. Please call Customer Service for availability",
@@ -112,7 +105,7 @@ const CartList = ({ token, plants }: CartListProps) => {
             className="absolute right-1 top-1 h-fit w-fit cursor-pointer hover:bg-transparent"
             variant="ghost"
             type="button"
-            onClick={() => setIsErrorOpen(true)}
+            onClick={() => setExcludedSkus([])}
           >
             <Close className="stroke-red-800" width={12} height={12} />
           </Button>
@@ -151,8 +144,6 @@ const CartList = ({ token, plants }: CartListProps) => {
                 plants={plants}
                 cartConfiguration={data.configuration}
                 willCallPlant={willCallPlantQuery?.data}
-                setDeletedProduct={setDeletedProduct}
-                setIsErrorOpen={setIsErrorOpen}
               />
             </Suspense>
           </li>

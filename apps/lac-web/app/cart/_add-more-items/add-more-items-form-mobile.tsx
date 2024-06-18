@@ -153,6 +153,7 @@ const AddMoreItemsFormMobile = ({ token }: { readonly token: string }) => {
           productId: parseInt(product.productid),
           quantity: values.quantity,
           poOrJobName: values.poJobName,
+          sku: values.sku,
         },
       ],
       {

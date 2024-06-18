@@ -1,12 +1,16 @@
 import { api } from "@/_lib/api";
 import { checkAvailability } from "@/_lib/apis/shared";
+import { NOT_AVAILABLE } from "@/_lib/constants";
 import { useToast } from "@repo/web-ui/components/ui/toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { BACKORDER_DISABLED, BACKORDER_ENABLED } from "../constants";
+import useCartStore from "../use-cart-store.hook";
 
 const useAddMultipleToCartMutation = (token: string) => {
   const queryClient = useQueryClient();
   const { toast } = useToast();
+  const { setExcludedSkus } = useCartStore((state) => state.actions);
+  const excludedSkus = useCartStore((state) => state.excludedSkus);
 
   return useMutation({
     mutationFn: async (
@@ -14,6 +18,7 @@ const useAddMultipleToCartMutation = (token: string) => {
         productId: number | undefined;
         quantity: number | null | undefined;
         poOrJobName?: string;
+        sku: string;
       }[],
     ) => {
       /**
@@ -53,6 +58,7 @@ const useAddMultipleToCartMutation = (token: string) => {
         return {
           productid: product.productId,
           quantity: product.quantity,
+          sku: product.sku,
           configuration: {
             ...configuration,
             poOrJobName: product.poOrJobName,
@@ -78,7 +84,7 @@ const useAddMultipleToCartMutation = (token: string) => {
           }
         });
 
-        const uniqueProducts = Array.from(productMap.values());
+        let uniqueProducts = Array.from(productMap.values());
 
         // Create availability promises only for unique products
         const availabilityPromises = uniqueProducts.map((product) => {
@@ -92,7 +98,14 @@ const useAddMultipleToCartMutation = (token: string) => {
 
         // Process each resolved value
         availabilityResults.forEach(({ product, availability }) => {
-          if (availability.options && availability.options.length > 0) {
+          if (availability.status === NOT_AVAILABLE) {
+            uniqueProducts = uniqueProducts.filter(
+              (item) => item["sku"] !== product["sku"],
+            );
+            if (!excludedSkus.find((eachSku) => eachSku === product["sku"])) {
+              excludedSkus.push(product["sku"]);
+            }
+          } else if (availability.options && availability.options.length > 0) {
             const selectedOption = availability.options[0];
             if (selectedOption) {
               // Update product configuration based on the selected availability option
@@ -132,9 +145,14 @@ const useAddMultipleToCartMutation = (token: string) => {
             }
           }
         });
-
+        setExcludedSkus(excludedSkus);
         return uniqueProducts;
       };
+
+      const productsToAddToCart = await checkAndConfigureAvailability();
+      if (productsToAddToCart.length <= 0) {
+        return null;
+      }
 
       const response = await api
         .post("rest/cart", {
@@ -142,7 +160,7 @@ const useAddMultipleToCartMutation = (token: string) => {
             Authorization: `Bearer ${token}`,
           },
           json: {
-            "configurable-items": await checkAndConfigureAvailability(),
+            "configurable-items": productsToAddToCart,
           },
         })
         .json<

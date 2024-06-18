@@ -6,7 +6,7 @@ import useDebouncedState from "@/_hooks/misc/use-debounced-state.hook";
 import useSuspenseCheckAvailability from "@/_hooks/product/use-suspense-check-availability.hook";
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
-import { DEFAULT_PLANT, NOT_AVAILABLE, NOT_IN_STOCK } from "@/_lib/constants";
+import { DEFAULT_PLANT, NOT_IN_STOCK } from "@/_lib/constants";
 import type {
   CartConfiguration,
   CartItemConfiguration,
@@ -98,8 +98,6 @@ type CartItemProps = {
   readonly plants: Plant[];
   readonly cartConfiguration: CartConfiguration;
   readonly willCallPlant: { plantCode: string; plantName: string };
-  readonly setDeletedProduct: (sku: string) => void;
-  readonly setIsErrorOpen: (open: boolean) => void;
 };
 
 const CartItem = ({
@@ -108,8 +106,6 @@ const CartItem = ({
   plants,
   cartConfiguration,
   willCallPlant,
-  setDeletedProduct,
-  setIsErrorOpen,
 }: CartItemProps) => {
   const id = useId();
   const poId = `po-${id}`;
@@ -188,28 +184,6 @@ const CartItem = ({
     availableLocations,
     willCallAnywhere,
   } = checkAvailabilityQuery.data;
-
-  const deleteItemIfStatusNotAvailable = () => {
-    deleteCartItemMutation.mutate(
-      {
-        products: [{ cartid: product.cartItemId }],
-      },
-      {
-        onSettled: () => {
-          setDeletedProduct(product.sku);
-          setIsErrorOpen(false);
-        },
-      },
-    );
-  };
-
-  useEffect(() => {
-    if (status === NOT_AVAILABLE) {
-      deleteItemIfStatusNotAvailable();
-    }
-    // eslint-disable-next-line react-compiler/react-compiler
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [status]);
 
   const homeBranchAvailability = availableLocations?.find(
     ({ location }) => location === willCallPlant?.plantCode,
