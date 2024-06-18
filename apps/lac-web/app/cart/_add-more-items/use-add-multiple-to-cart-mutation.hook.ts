@@ -96,14 +96,16 @@ const useAddMultipleToCartMutation = (token: string) => {
 
         const availabilityResults = await Promise.all(availabilityPromises);
 
+        const excludedSkuList = [...excludedSkus];
+
         // Process each resolved value
         availabilityResults.forEach(({ product, availability }) => {
           if (availability.status === NOT_AVAILABLE) {
             uniqueProducts = uniqueProducts.filter(
               (item) => item["sku"] !== product["sku"],
             );
-            if (!excludedSkus.find((eachSku) => eachSku === product["sku"])) {
-              excludedSkus.push(product["sku"]);
+            if (!excludedSkuList.find((sku) => sku === product["sku"])) {
+              excludedSkuList.push(product["sku"]);
             }
           } else if (availability.options && availability.options.length > 0) {
             const selectedOption = availability.options[0];
@@ -145,7 +147,7 @@ const useAddMultipleToCartMutation = (token: string) => {
             }
           }
         });
-        setExcludedSkus(excludedSkus);
+        setExcludedSkus(excludedSkuList);
         return uniqueProducts;
       };
 
