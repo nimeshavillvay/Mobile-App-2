@@ -85,9 +85,8 @@ const AddUserEmailDialog = ({
           const errorResponse = await error.response.json();
           if (
             isErrorResponse(errorResponse) &&
-            errorResponse["status_code"] === "FAILED" &&
-            errorResponse.message ===
-              "Email address already exists in the database."
+            errorResponse["status_code"] === "USER_ACTIVE" &&
+            errorResponse.message === "Email exists and is valid."
           ) {
             form.setError("email", {
               message: "User already exists",
