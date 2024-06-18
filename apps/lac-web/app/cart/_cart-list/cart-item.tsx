@@ -215,8 +215,6 @@ const CartItem = ({
     ({ location }) => location === willCallPlant?.plantCode,
   );
 
-  
-
   const availableAll = findAvailabilityOptionForType(
     availabilityOptions,
     AVAILABLE_ALL,
@@ -586,15 +584,15 @@ const CartItem = ({
         setSelectedShippingOption(MAIN_OPTIONS.BACK_ORDER);
       }
       // This logic is to stop the ship to me option being selected automatically when will call option is selected
-      // if (willCallHash[0] && willCallHash[0].hash === itemConfigHash) {
-      //   return setSelectedShippingMethod(itemConfigShippingMethod);
-      // }
     } else {
       // Check if hash matches with the will call hash
       if (willCallAnywhere[0] && willCallAnywhere[0].hash === itemConfigHash) {
-        setSelectedShippingOption(MAIN_OPTIONS.WILL_CALL);
-      } else if (willCallAnywhere[1] && willCallAnywhere[1].hash === itemConfigHash) {
-        setSelectedShippingOption(MAIN_OPTIONS.WILL_CALL_TRANSFER);
+        setSelectedWillCallTransfer(MAIN_OPTIONS.WILL_CALL);
+        return setSelectedShippingOption(MAIN_OPTIONS.WILL_CALL);
+      }
+      if (willCallAnywhere[1] && willCallAnywhere[1].hash === itemConfigHash) {
+        setSelectedWillCallTransfer(MAIN_OPTIONS.WILL_CALL_TRANSFER);
+        return setSelectedShippingOption(MAIN_OPTIONS.WILL_CALL);
       } else {
         // Update the cart config with default option based on the priority
         // This is needed so that if the the cart gets expired we update it here

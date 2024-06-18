@@ -43,7 +43,8 @@ import {
   MAIN_OPTIONS,
   TAKE_ON_HAND,
 } from "../constants";
-import type { Availability } from "../types";
+import type { Availability, WillCallAnywhere } from "../types";
+import CartItemWillCallTransfer from "./cart-item-will-call-transfer";
 import {
   createCartItemConfig,
   findAvailabilityOptionForType,
@@ -107,7 +108,6 @@ const CartItemShippingMethod = ({
     status,
     willCallAnywhere,
   } = availability;
-
   const availableAll = findAvailabilityOptionForType(
     availabilityOptions,
     AVAILABLE_ALL,
@@ -171,24 +171,6 @@ const CartItemShippingMethod = ({
     return plants?.at(0)?.backOrderDate;
   };
 
-  const getFirstPlantFromPlants = (
-    plants: {
-      plant: string;
-    }[],
-  ) => {
-    return plants?.at(0)?.plant ?? "";
-  };
-
-  const getFirstShippingCodeFromShippingMethod = (
-    plants: {
-      shippingMethods: ShippingMethod[];
-    }[],
-  ) => {
-    const shippingMethods = plants?.at(0)?.shippingMethods ?? [];
-    // Get the first method available
-    return shippingMethods?.at(0)?.code ?? "";
-  };
-
   const handleDeliveryOptionSelect = ({
     checked,
     selectedOption,
@@ -201,12 +183,6 @@ const CartItemShippingMethod = ({
         selectedOption === MAIN_OPTIONS.WILL_CALL;
       const isWillCallAnywhere =
         willCallAnywhere !== undefined && willCallAnywhere !== null;
-      const isNotInStock =
-        isWillCallAnywhere &&
-        willCallAnywhere[0] &&
-        willCallAnywhere[0].status === NOT_IN_STOCK;
-
-      setSelectedShippingOption(selectedOption);
       // Ship to me configs
       if (selectedOption === MAIN_OPTIONS.SHIP_TO_ME) {
         if (availableAll) {
@@ -247,77 +223,72 @@ const CartItemShippingMethod = ({
           );
         }
       }
-      // Will call pickup configs which have products
       if (
         isWillCallOptionSelected &&
         isWillCallAnywhere &&
-        willCallAnywhere[0] &&
-        !isNotInStock
+        willCallAnywhere[0]
       ) {
-        onSave({
-          ...createCartItemConfig({
-            method: "0",
-            quantity: willCallAnywhere[0]?.willCallQuantity,
-            plant: willCallAnywhere[0]?.willCallPlant,
-            hash: willCallAnywhere[0].hash,
-            backOrderDate: willCallAnywhere[0]?.backOrderDate_1,
-            backOrderQuantity: willCallAnywhere[0]?.backOrderQuantity_1,
-          }),
-          will_call_avail: (willCallAnywhere[0]?.status === NOT_IN_STOCK
-            ? 0
-            : willCallAnywhere[0]?.willCallQuantity ?? 0
-          ).toString(),
-          will_call_plant: willCallAnywhere[0]?.willCallPlant ?? EMPTY_STRING,
-        });
-      }
-      // Will call pickup configs and all are backorder
-      if (
-        isWillCallOptionSelected &&
-        isWillCallAnywhere &&
-        willCallAnywhere[0] &&
-        isNotInStock
-      ) {
-        onSave({
-          ...createCartItemConfig({
-            method: "0",
-            quantity: 0,
-            plant: willCallAnywhere[0].willCallPlant,
-            hash: willCallAnywhere[0].hash,
-            backOrderAll: true,
-            backOrderDate: willCallAnywhere[0]?.willCallBackOrder,
-            backOrderQuantity: willCallAnywhere[0]?.willCallQuantity,
-          }),
-        });
-      }
-      // Back order all can have only this config
-      if (selectedOption === MAIN_OPTIONS.BACK_ORDER && backOrderAll) {
-        onSave(
-          createCartItemConfig({
-            method: getFirstShippingCodeFromShippingMethod(
-              backOrderAll?.plants,
-            ),
-            quantity: 0,
-            plant: getFirstPlantFromPlants(backOrderAll?.plants),
-            hash: backOrderAll.hash,
-            backOrderAll: true,
-            backOrderDate: backOrderAll.plants[0]?.backOrderDate ?? "",
-            backOrderQuantity: backOrderAll.plants[0]?.backOrderQuantity ?? 0,
-          }),
-        );
+        setSelectedWillCallTransfer(MAIN_OPTIONS.WILL_CALL);
+        processWillCallAnywhereItem(willCallAnywhere[0]);
       }
     } else {
       setSelectedShippingOption(undefined);
     }
   };
-  const handleWillCallOptions = (willCallOption: string) => {
-    // setSelectedWillCallOption(willCallOption); // Assuming you have a state to track the selected will-call option
 
-    if (willCallOption === MAIN_OPTIONS.WILL_CALL) {
-      setSelectedWillCallTransfer(MAIN_OPTIONS.WILL_CALL);
+  const processWillCallAnywhereItem = (item: WillCallAnywhere) => {
+    const isNotInStock = item && item.status === NOT_IN_STOCK;
+    if (item && !isNotInStock) {
+      onSave({
+        ...createCartItemConfig({
+          method: "0",
+          quantity: item?.willCallQuantity,
+          plant: item?.willCallPlant,
+          hash: item.hash,
+          backOrderDate: item?.backOrderDate_1,
+          backOrderQuantity: item?.backOrderQuantity_1,
+          shippingMethod: item.shippingMethod,
+        }),
+        will_call_avail: (item?.status === NOT_IN_STOCK
+          ? 0
+          : item?.willCallQuantity ?? 0
+        ).toString(),
+        will_call_plant: item?.willCallPlant ?? EMPTY_STRING,
+      });
     }
+    // Will call pickup configs and all are backorder
+    if (item && isNotInStock) {
+      onSave({
+        ...createCartItemConfig({
+          method: "0",
+          quantity: 0,
+          plant: item.willCallPlant,
+          hash: item.hash,
+          backOrderAll: true,
+          backOrderDate: item?.willCallBackOrder,
+          backOrderQuantity: item?.willCallQuantity,
+          shippingMethod: item.shippingMethod,
+        }),
+      });
+    }
+  };
 
-    if (willCallOption === MAIN_OPTIONS.WILL_CALL_TRANSFER) {
+  const handleWillCallOptions = (willCallOption: string) => {
+    if (
+      willCallOption === MAIN_OPTIONS.WILL_CALL &&
+      willCallAnywhere &&
+      willCallAnywhere[0]
+    ) {
+      setSelectedWillCallTransfer(MAIN_OPTIONS.WILL_CALL);
+      processWillCallAnywhereItem(willCallAnywhere[0]);
+    }
+    if (
+      willCallOption === MAIN_OPTIONS.WILL_CALL_TRANSFER &&
+      willCallAnywhere &&
+      willCallAnywhere[1]
+    ) {
       setSelectedWillCallTransfer(MAIN_OPTIONS.WILL_CALL_TRANSFER);
+      processWillCallAnywhereItem(willCallAnywhere[1]);
     }
   };
 
@@ -679,7 +650,14 @@ const CartItemShippingMethod = ({
             <Select
               disabled={selectedShippingOption !== MAIN_OPTIONS.WILL_CALL}
               value={selectedWillCallPlant}
-              onValueChange={(plant) => setSelectedWillCallPlant(plant)}
+              onValueChange={(plant) => {
+                setSelectedWillCallPlant(plant);
+                setSelectedWillCallTransfer(MAIN_OPTIONS.WILL_CALL);
+
+                if (willCallAnywhere && willCallAnywhere[0]) {
+                  processWillCallAnywhereItem(willCallAnywhere[0]);
+                }
+              }}
             >
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select a store" />
@@ -729,34 +707,23 @@ const CartItemShippingMethod = ({
                         </div>
                       </div>
                     )}
+                    <CartItemWillCallTransfer
+                      value={MAIN_OPTIONS.WILL_CALL_TRANSFER}
+                      id={MAIN_OPTIONS.WILL_CALL_TRANSFER}
+                      willCallAnywhere={willCallAnywhere}
+                      plants={plants}
+                    />
+                    {willCallAnywhere[1]?.backOrder && (
+                      <BackOrderInfoBanner
+                        date={willCallAnywhere[0]?.backOrderDate_1 ?? ""}
+                      />
+                    )}
 
-                    {willCallAnywhere[1] &&
-                      willCallAnywhere[1].status === LIMITED_STOCK &&
-                      willCallAnywhere.length > 1 && (
-                        <div className="flex flex-row gap-2 rounded-lg border border-wurth-gray-150 px-2 py-2 text-sm shadow-sm">
-                          <div className="w-4">
-                            <RadioGroupItem
-                              value={MAIN_OPTIONS.WILL_CALL_TRANSFER}
-                              id={MAIN_OPTIONS.WILL_CALL_TRANSFER}
-                            />
-                          </div>
-
-                          <div className="flex flex-col gap-0.5">
-                            <div className="flex items-center text-sm">
-                              <ItemCountBadge
-                                count={willCallAnywhere[0].willCallQuantity}
-                              />
-                              &nbsp;
-                              <span className="font-medium">pick up at</span>
-                              &nbsp;
-                              <PlantName
-                                plants={plants}
-                                plantCode={willCallAnywhere[0].willCallPlant}
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      )}
+                    {willCallAnywhere[1]?.status === NOT_IN_STOCK && (
+                      <BackOrderInfoBanner
+                        date={willCallAnywhere[0]?.willCallBackOrder ?? ""}
+                      />
+                    )}
                   </RadioGroup>
                 )}
 
@@ -767,75 +734,57 @@ const CartItemShippingMethod = ({
                       handleWillCallOptions(value as WillCallOption)
                     }
                   >
-                    {willCallAnywhere[0].status === LIMITED_STOCK && (
-                      <div className="flex flex-row gap-2 rounded-lg border border-wurth-gray-150 px-2 py-2 text-sm shadow-sm">
-                        <div className="w-4">
-                          <RadioGroupItem
-                            value={MAIN_OPTIONS.WILL_CALL}
-                            id={MAIN_OPTIONS.WILL_CALL}
+                    <div className="flex flex-row gap-2 rounded-lg border border-wurth-gray-150 px-2 py-2 text-sm shadow-sm">
+                      <div className="w-4">
+                        <RadioGroupItem
+                          value={MAIN_OPTIONS.WILL_CALL}
+                          id={MAIN_OPTIONS.WILL_CALL}
+                        />
+                      </div>
+
+                      <div className="flex flex-col gap-0.5">
+                        <div className="text-wrap font-medium">
+                          <ItemCountBadge
+                            count={willCallAnywhere[0].willCallQuantity}
+                          />
+                          &nbsp;
+                          <span className="font-medium">pick up at</span>
+                          &nbsp;
+                          <PlantName
+                            plants={plants}
+                            plantCode={willCallAnywhere[0].willCallPlant}
                           />
                         </div>
 
-                        <div className="flex flex-col gap-0.5">
-                          <div className="text-wrap font-medium">
-                            <ItemCountBadge
-                              count={willCallAnywhere[0].willCallQuantity}
-                            />
-                            &nbsp;
-                            <span className="font-medium">pick up at</span>
-                            &nbsp;
-                            <PlantName
-                              plants={plants}
-                              plantCode={willCallAnywhere[0].willCallPlant}
-                            />
-                          </div>
-
-                          {willCallAnywhere[0]?.backOrder && (
-                            <BackOrderItemCountLabel
-                              count={
-                                willCallAnywhere[0].backOrderQuantity_1 ?? 0
-                              }
-                            />
-                          )}
-                        </div>
+                        {willCallAnywhere[0]?.backOrder && (
+                          <BackOrderItemCountLabel
+                            count={willCallAnywhere[0].backOrderQuantity_1 ?? 0}
+                          />
+                        )}
                       </div>
+                    </div>
+                    {willCallAnywhere[0]?.backOrder && (
+                      <BackOrderInfoBanner
+                        date={willCallAnywhere[0]?.backOrderDate_1 ?? ""}
+                      />
+                    )}
+                    <CartItemWillCallTransfer
+                      value={MAIN_OPTIONS.WILL_CALL_TRANSFER}
+                      id={MAIN_OPTIONS.WILL_CALL_TRANSFER}
+                      willCallAnywhere={willCallAnywhere}
+                      plants={plants}
+                    />
+                    {willCallAnywhere[1]?.backOrder && (
+                      <BackOrderInfoBanner
+                        date={willCallAnywhere[0]?.backOrderDate_1 ?? ""}
+                      />
                     )}
 
-                    {willCallAnywhere[1] &&
-                      willCallAnywhere[1].status === LIMITED_STOCK &&
-                      willCallAnywhere.length > 1 && (
-                        <div className="flex flex-row gap-2 rounded-lg border border-wurth-gray-150 px-2 py-2 text-sm shadow-sm">
-                          <div className="w-4">
-                            <RadioGroupItem
-                              value={MAIN_OPTIONS.WILL_CALL_TRANSFER}
-                              id={MAIN_OPTIONS.WILL_CALL_TRANSFER}
-                            />
-                          </div>
-
-                          <div className="flex flex-col gap-0.5">
-                            <div className="flex items-center text-sm">
-                              <ItemCountBadge
-                                count={willCallAnywhere[0].willCallQuantity}
-                              />
-                              &nbsp;
-                              <span className="font-medium">pick up at</span>
-                              &nbsp;
-                              <PlantName
-                                plants={plants}
-                                plantCode={willCallAnywhere[0].willCallPlant}
-                              />
-                            </div>
-
-                            {willCallAnywhere[1]?.backOrder && (
-                              <BackOrderItemCountLabel
-                                count={
-                                  willCallAnywhere[1]?.backOrderQuantity_1 ?? 0
-                                }
-                              />
-                            )}
-                          </div>
-                        </div>
-                      )}
+                    {willCallAnywhere[1]?.status === NOT_IN_STOCK && (
+                      <BackOrderInfoBanner
+                        date={willCallAnywhere[0]?.willCallBackOrder ?? ""}
+                      />
+                    )}
                   </RadioGroup>
                 )}
 
@@ -846,76 +795,62 @@ const CartItemShippingMethod = ({
                       handleWillCallOptions(value as WillCallOption)
                     }
                   >
-                    {willCallAnywhere[0].status === NOT_IN_STOCK && (
-                      <div className="flex flex-row gap-2 rounded-lg border border-wurth-gray-150 px-2 py-2 text-sm shadow-sm">
-                        <div className="w-4">
-                          <RadioGroupItem
-                            value={MAIN_OPTIONS.WILL_CALL}
-                            id={MAIN_OPTIONS.WILL_CALL}
+                    <div className="flex flex-row gap-2 rounded-lg border border-wurth-gray-150 px-2 py-2 text-sm shadow-sm">
+                      <div className="w-4">
+                        <RadioGroupItem
+                          value={MAIN_OPTIONS.WILL_CALL}
+                          id={MAIN_OPTIONS.WILL_CALL}
+                        />
+                      </div>
+
+                      <div className="flex flex-col gap-0.5">
+                        <div className="rounded bg-red-800/10 px-2 py-1 text-sm text-red-800">
+                          This item is out of stock at&nbsp;
+                          <PlantName
+                            plants={plants}
+                            plantCode={willCallAnywhere[0].willCallPlant}
                           />
                         </div>
 
-                        <div className="flex flex-col gap-0.5">
-                          <div className="rounded bg-red-800/10 px-2 py-1 text-sm text-red-800">
-                            This item is out of stock at&nbsp;
-                            <PlantName
-                              plants={plants}
-                              plantCode={willCallAnywhere[0].willCallPlant}
-                            />
-                          </div>
-
-                          {willCallAnywhere[0]?.backOrder && (
-                            <BackOrderItemCountLabel
-                              count={willCallAnywhere[0].willCallQuantity}
-                            />
-                          )}
-                        </div>
+                        {willCallAnywhere[0]?.willCallQuantity && (
+                          <BackOrderItemCountLabel
+                            count={willCallAnywhere[0].willCallQuantity}
+                          />
+                        )}
                       </div>
+                    </div>
+
+                    {willCallAnywhere[0]?.backOrder && (
+                      <BackOrderInfoBanner
+                        date={willCallAnywhere[0]?.backOrderDate_1 ?? ""}
+                      />
                     )}
 
-                    {willCallAnywhere[1] &&
-                      willCallAnywhere[1].status === NOT_IN_STOCK &&
-                      willCallAnywhere.length > 1 && (
-                        <div className="flex flex-row gap-2 rounded-lg border border-wurth-gray-150 px-2 py-2 text-sm shadow-sm">
-                          <div className="w-4">
-                            <RadioGroupItem
-                              value={MAIN_OPTIONS.WILL_CALL_TRANSFER}
-                              id={MAIN_OPTIONS.WILL_CALL_TRANSFER}
-                            />
-                          </div>
+                    {willCallAnywhere[0]?.status === NOT_IN_STOCK && (
+                      <BackOrderInfoBanner
+                        date={willCallAnywhere[0]?.willCallBackOrder ?? ""}
+                      />
+                    )}
+                    <CartItemWillCallTransfer
+                      value={MAIN_OPTIONS.WILL_CALL_TRANSFER}
+                      id={MAIN_OPTIONS.WILL_CALL_TRANSFER}
+                      willCallAnywhere={willCallAnywhere}
+                      plants={plants}
+                    />
+                    {willCallAnywhere[1]?.backOrder && (
+                      <BackOrderInfoBanner
+                        date={willCallAnywhere[1]?.backOrderDate_1 ?? ""}
+                      />
+                    )}
 
-                          <div className="flex flex-col gap-0.5">
-                            <div className="rounded bg-red-800/10 px-2 py-1 text-sm text-red-800">
-                              This item is out of stock at&nbsp;
-                              <PlantName
-                                plants={plants}
-                                plantCode={willCallAnywhere[0].willCallPlant}
-                              />
-                            </div>
-
-                            {willCallAnywhere[1]?.backOrder && (
-                              <BackOrderItemCountLabel
-                                count={willCallAnywhere[0].willCallQuantity}
-                              />
-                            )}
-                          </div>
-                        </div>
-                      )}
+                    {willCallAnywhere[1]?.status === NOT_IN_STOCK && (
+                      <BackOrderInfoBanner
+                        date={willCallAnywhere[1]?.willCallBackOrder ?? ""}
+                      />
+                    )}
                   </RadioGroup>
                 )}
               </div>
-            )}
-
-            {willCallAnywhere[0]?.backOrder && (
-              <BackOrderInfoBanner
-                date={willCallAnywhere[0]?.backOrderDate_1 ?? ""}
-              />
-            )}
-
-            {willCallAnywhere[0]?.status === NOT_IN_STOCK && (
-              <BackOrderInfoBanner
-                date={willCallAnywhere[0]?.willCallBackOrder ?? ""}
-              />
             )}
           </div>
         )}

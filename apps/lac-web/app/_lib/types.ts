@@ -417,6 +417,7 @@ export type CheckAvailability = {
     plant_1?: string;
     quantity_1?: number;
     shippingMethods_1?: string[];
+    shippingMethod: string;
     type?: string;
   }[];
   xplant: string;
