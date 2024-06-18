@@ -163,6 +163,19 @@ const UserProfileDropdown = ({
 
           <DropdownMenuSeparator />
 
+          {isOSRUser && (
+            <DropdownMenuItem
+              asChild
+              className="flex flex-row items-center gap-2 text-black"
+            >
+              <Link href="/osr/dashboard">
+                <DropdownMenuShortcut className="ml-0 size-4" />
+
+                <span>My Customers</span>
+              </Link>
+            </DropdownMenuItem>
+          )}
+
           <DropdownMenuItem
             asChild
             className="flex flex-row items-center gap-2 text-black"
