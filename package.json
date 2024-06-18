@@ -10,7 +10,8 @@
     "prettier:check": "prettier --check \"**/*.{js,jsx,ts,tsx,md,json,yaml}\" --cache --cache-location=.prettier/cache"
   },
   "engines": {
-    "node": ">=20.12.2"
+    "node": ">=20.12.2",
+    "pnpm": "8"
   },
   "pnpm": {
     "peerDependencyRules": {
