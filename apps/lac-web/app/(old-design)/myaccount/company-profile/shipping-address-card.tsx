@@ -40,10 +40,7 @@ const ShippingAddressCard = ({
             {shippingAddress?.organization}
           </h3>
           {!!shippingAddress?.shipTo && (
-            <span>
-              {`#${shippingAddress?.shipTo} `}
-              <br />
-            </span>
+            <div>{`#${shippingAddress?.shipTo} `}</div>
           )}
           <p className="text-sm font-medium md:text-base">
             {shippingAddress?.streetAddress}, {shippingAddress?.locality},{" "}

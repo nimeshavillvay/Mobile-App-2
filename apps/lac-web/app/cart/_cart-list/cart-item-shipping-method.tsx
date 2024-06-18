@@ -1,4 +1,9 @@
-import { IN_STOCK, LIMITED_STOCK, NOT_IN_STOCK } from "@/_lib/constants";
+import {
+  IN_STOCK,
+  LIMITED_STOCK,
+  NOT_IN_STOCK,
+  UI_DATE_FORMAT,
+} from "@/_lib/constants";
 import type {
   CartItemConfiguration,
   Plant,
@@ -42,7 +47,6 @@ import {
   EMPTY_STRING,
   MAIN_OPTIONS,
   TAKE_ON_HAND,
-  UI_DATE_FORMAT,
 } from "../constants";
 import type { Availability } from "../types";
 import {

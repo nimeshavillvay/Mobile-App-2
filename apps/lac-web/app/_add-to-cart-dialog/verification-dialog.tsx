@@ -14,6 +14,7 @@ import {
   MAX_QUANTITY,
   NOT_AVAILABLE,
   NOT_IN_STOCK,
+  UI_DATE_FORMAT,
 } from "@/_lib/constants";
 import {
   calculateIncreaseQuantity,
@@ -22,7 +23,6 @@ import {
   formatNumberToPrice,
 } from "@/_lib/utils";
 import { NUMBER_TYPE } from "@/_lib/zod-helper";
-import { UI_DATE_FORMAT } from "@/cart/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AddToCart as AddToCartIcon } from "@repo/web-ui/components/icons/add-to-cart";
 import { ChevronRight } from "@repo/web-ui/components/icons/chevron-right";

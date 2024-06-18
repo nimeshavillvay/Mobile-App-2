@@ -158,10 +158,7 @@ const BillingAndPaymentInfo = ({
 
             <div className="text-base text-wurth-gray-800">
               {!!billingAddressQuery.data.organization && (
-                <span>
-                  {billingAddressQuery.data.organization}
-                  <br />
-                </span>
+                <div>{billingAddressQuery.data.organization}</div>
               )}
               <FullAddress
                 address={billingAddressQuery.data}

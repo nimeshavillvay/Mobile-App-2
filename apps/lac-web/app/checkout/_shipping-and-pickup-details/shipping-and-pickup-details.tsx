@@ -106,10 +106,7 @@ const ShippingAndPickupDetails = ({ token }: ShippingAndPickupDetailsProps) => {
 
             <div className="text-base text-wurth-gray-800">
               {!!selectedAddress?.shipTo && (
-                <span>
-                  {`#${selectedAddress?.shipTo} `}
-                  <br />
-                </span>
+                <div>{`#${selectedAddress?.shipTo} `}</div>
               )}
               <FullAddress address={selectedAddress} showCountry={true} />
             </div>
