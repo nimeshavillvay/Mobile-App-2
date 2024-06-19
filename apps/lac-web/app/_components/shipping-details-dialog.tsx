@@ -112,6 +112,9 @@ const ShippingDetailsDialogButton = ({
                 Shipping Address
               </div>
               <div className="font-semibold">
+                {!!defaultAddress?.shipTo && (
+                  <div>{`#${defaultAddress?.shipTo} `}</div>
+                )}
                 <FullAddress address={defaultAddress} />
               </div>
             </div>

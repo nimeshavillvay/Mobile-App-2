@@ -14,6 +14,7 @@ import {
   MAX_QUANTITY,
   NOT_AVAILABLE,
   NOT_IN_STOCK,
+  UI_DATE_FORMAT,
 } from "@/_lib/constants";
 import {
   calculateIncreaseQuantity,
@@ -43,6 +44,7 @@ import {
 import { Input } from "@repo/web-ui/components/ui/input";
 import { Label } from "@repo/web-ui/components/ui/label";
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
+import dayjs from "dayjs";
 import Image from "next/image";
 import Link from "next/link";
 import { Suspense, useDeferredValue, useId } from "react";
@@ -480,6 +482,9 @@ const LocationStocks = ({
   const isBackordered = checkAvailabilityQuery.data.status === NOT_IN_STOCK;
   const isLimitedStock = checkAvailabilityQuery.data.status === LIMITED_STOCK;
 
+  const backOrderDate =
+    checkAvailabilityQuery.data.options[0]?.plants[0]?.backOrderDate;
+
   // If there isn't even one location returned, hide the component
   if (
     !firstLocation &&
@@ -511,6 +516,12 @@ const LocationStocks = ({
           {!isBackordered && (
             <div className="text-sm font-medium text-wurth-gray-800">
               {firstLocation?.amount} in stock at {firstLocation?.name}
+            </div>
+          )}
+          {isBackordered && !!backOrderDate && (
+            <div className="flex-1 text-sm font-medium text-wurth-gray-800">
+              Items are expected to ship by{" "}
+              {dayjs(backOrderDate).format(UI_DATE_FORMAT)}.
             </div>
           )}
         </div>

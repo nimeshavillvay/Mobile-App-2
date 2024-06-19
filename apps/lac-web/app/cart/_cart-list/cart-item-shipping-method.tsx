@@ -1,4 +1,9 @@
-import { IN_STOCK, LIMITED_STOCK, NOT_IN_STOCK } from "@/_lib/constants";
+import {
+  IN_STOCK,
+  LIMITED_STOCK,
+  NOT_IN_STOCK,
+  UI_DATE_FORMAT,
+} from "@/_lib/constants";
 import type {
   CartItemConfiguration,
   Plant,
@@ -51,8 +56,6 @@ import {
 } from "./helpers";
 import PlantName from "./plant-name";
 import type { MainOption, OptionPlant, ShipToMeOption } from "./types";
-
-const UI_DATE_FORMAT = "ddd, MMM. DD YYYY";
 
 // Vendor Direct Shipping Method
 const VENDOR_DIRECT_CODE = "D";

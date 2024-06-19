@@ -124,7 +124,7 @@ const MobileView = async ({ orderNo }: MobileViewProps) => {
                 <tr>
                   <td className={tableLabelStyles()}>Billing address</td>
                   <td className={tableValueStyles()}>
-                    {orderDetails.billToAddress.street},{" "}
+                    #{orderDetails.soldTo}, {orderDetails.billToAddress.street},{" "}
                     {orderDetails.billToAddress.city},{" "}
                     {orderDetails.billToAddress.region},{" "}
                     {orderDetails.billToAddress.county},{" "}
@@ -161,7 +161,7 @@ const MobileView = async ({ orderNo }: MobileViewProps) => {
                 <tr>
                   <td className={tableLabelStyles()}>Ship to address</td>
                   <td className={tableValueStyles()}>
-                    {orderDetails.shipToAddress.street},{" "}
+                    #{orderDetails.shipTo}, {orderDetails.shipToAddress.street},{" "}
                     {orderDetails.shipToAddress.city},{" "}
                     {orderDetails.shipToAddress.region},{" "}
                     {orderDetails.shipToAddress.county},{" "}
