@@ -57,6 +57,7 @@ import {
   MAIN_OPTIONS,
   TAKE_ON_HAND,
 } from "../constants";
+import type { WillCallAnywhere } from "../types";
 import CartItemPrice from "./cart-item-price";
 import CartItemShippingMethod from "./cart-item-shipping-method";
 import FavoriteButton from "./favorite-button";
@@ -255,9 +256,7 @@ const CartItem = ({
   );
 
   const [selectedWillCallTransfer, setSelectedWillCallTransfer] =
-    useState<WillCallOption>(() => {
-      return MAIN_OPTIONS.WILL_CALL;
-    });
+    useState<WillCallOption>(MAIN_OPTIONS.WILL_CALL);
 
   // use the new function to determine the available options
   const shippingMethods = getShippingMethods(
@@ -568,6 +567,13 @@ const CartItem = ({
     (option) => option.hash === itemConfigHash,
   );
 
+  const isWillCallAnywhere = (
+    willCallAnywhere: WillCallAnywhere,
+    itemConfigHash: string,
+  ) => {
+    return willCallAnywhere && willCallAnywhere.hash === itemConfigHash;
+  };
+
   // TODO - Will remove useEffect hook once we found a better solution.
   // This is used as intermittent UI state which is much more complicated to be managed inside a mutation ATM
   useEffect(() => {
@@ -587,13 +593,18 @@ const CartItem = ({
       }
     } else {
       // Check if hash matches with the will call hash
-      if (willCallAnywhere[0] && willCallAnywhere[0].hash === itemConfigHash) {
+      if (
+        willCallAnywhere[0] &&
+        isWillCallAnywhere(willCallAnywhere[0], itemConfigHash)
+      ) {
         setSelectedWillCallTransfer(MAIN_OPTIONS.WILL_CALL);
-        return setSelectedShippingOption(MAIN_OPTIONS.WILL_CALL);
-      }
-      if (willCallAnywhere[1] && willCallAnywhere[1].hash === itemConfigHash) {
+        setSelectedShippingOption(MAIN_OPTIONS.WILL_CALL);
+      } else if (
+        willCallAnywhere[1] &&
+        isWillCallAnywhere(willCallAnywhere[1], itemConfigHash)
+      ) {
         setSelectedWillCallTransfer(MAIN_OPTIONS.WILL_CALL_TRANSFER);
-        return setSelectedShippingOption(MAIN_OPTIONS.WILL_CALL);
+        setSelectedShippingOption(MAIN_OPTIONS.WILL_CALL);
       } else {
         // Update the cart config with default option based on the priority
         // This is needed so that if the the cart gets expired we update it here

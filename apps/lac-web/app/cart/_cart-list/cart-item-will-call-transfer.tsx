@@ -2,7 +2,6 @@ import { IN_STOCK, LIMITED_STOCK, NOT_IN_STOCK } from "@/_lib/constants";
 import type { Plant } from "@/_lib/types";
 import { cn } from "@/_lib/utils";
 import { RadioGroupItem } from "@repo/web-ui/components/ui/radio-group";
-import React from "react";
 import type { Availability } from "../types";
 import PlantName from "./plant-name";
 
@@ -120,6 +119,7 @@ const ItemCountBadge = ({
     </span>
   );
 };
+
 const BackOrderItemCountLabel = ({ count }: { readonly count: number }) => {
   return (
     <div className="text-sm font-medium">

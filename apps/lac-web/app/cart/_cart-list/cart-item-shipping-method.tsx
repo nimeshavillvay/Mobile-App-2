@@ -108,6 +108,7 @@ const CartItemShippingMethod = ({
     status,
     willCallAnywhere,
   } = availability;
+
   const availableAll = findAvailabilityOptionForType(
     availabilityOptions,
     AVAILABLE_ALL,
@@ -140,6 +141,7 @@ const CartItemShippingMethod = ({
   const isVendorShipped = !!availabilityOptions[0]?.plants
     ?.at(0)
     ?.shippingMethods?.find((method) => method.code === VENDOR_DIRECT_CODE);
+
   const isSameDayShippingEnabled =
     !!availableAll?.plants?.find((value) => value?.isSameDayAvail)
       ?.isSameDayAvail ?? false;
@@ -170,6 +172,7 @@ const CartItemShippingMethod = ({
   ) => {
     return plants?.at(0)?.backOrderDate;
   };
+
   const getFirstPlantFromPlants = (
     plants: {
       plant: string;
@@ -187,6 +190,7 @@ const CartItemShippingMethod = ({
     // Get the first method available
     return shippingMethods?.at(0)?.code ?? "";
   };
+
   const handleDeliveryOptionSelect = ({
     checked,
     selectedOption,
@@ -715,12 +719,10 @@ const CartItemShippingMethod = ({
                   >
                     {willCallAnywhere[0].status === IN_STOCK && (
                       <div className="flex flex-row gap-2 rounded-lg border border-wurth-gray-150 px-2 py-2 text-sm shadow-sm">
-                        <div className="w-4">
-                          <RadioGroupItem
-                            value={MAIN_OPTIONS.WILL_CALL}
-                            id={MAIN_OPTIONS.WILL_CALL}
-                          />
-                        </div>
+                        <RadioGroupItem
+                          value={MAIN_OPTIONS.WILL_CALL}
+                          id={MAIN_OPTIONS.WILL_CALL}
+                        />
 
                         <div className="flex flex-col gap-0.5">
                           <div className="flex items-center text-sm">
@@ -766,12 +768,10 @@ const CartItemShippingMethod = ({
                     }
                   >
                     <div className="flex flex-row gap-2 rounded-lg border border-wurth-gray-150 px-2 py-2 text-sm shadow-sm">
-                      <div className="w-4">
-                        <RadioGroupItem
-                          value={MAIN_OPTIONS.WILL_CALL}
-                          id={MAIN_OPTIONS.WILL_CALL}
-                        />
-                      </div>
+                      <RadioGroupItem
+                        value={MAIN_OPTIONS.WILL_CALL}
+                        id={MAIN_OPTIONS.WILL_CALL}
+                      />
 
                       <div className="flex flex-col gap-0.5">
                         <div className="text-wrap font-medium">
@@ -827,12 +827,10 @@ const CartItemShippingMethod = ({
                     }
                   >
                     <div className="flex flex-row gap-2 rounded-lg border border-wurth-gray-150 px-2 py-2 text-sm shadow-sm">
-                      <div className="w-4">
-                        <RadioGroupItem
-                          value={MAIN_OPTIONS.WILL_CALL}
-                          id={MAIN_OPTIONS.WILL_CALL}
-                        />
-                      </div>
+                      <RadioGroupItem
+                        value={MAIN_OPTIONS.WILL_CALL}
+                        id={MAIN_OPTIONS.WILL_CALL}
+                      />
 
                       <div className="flex flex-col gap-0.5">
                         <div className="rounded bg-red-800/10 px-2 py-1 text-sm text-red-800">
