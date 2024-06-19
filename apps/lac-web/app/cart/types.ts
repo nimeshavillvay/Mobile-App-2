@@ -30,7 +30,7 @@ export type WillCallAnywhere = {
   quantity_1?: number;
   shippingMethods_1?: string[];
   type?: string;
-  shippingMethod:string
+  shippingMethod: string;
 };
 
 export type AvailabilityOption = {

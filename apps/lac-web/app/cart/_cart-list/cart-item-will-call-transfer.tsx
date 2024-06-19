@@ -43,7 +43,7 @@ const CartItemWillCallTransfer = ({
               />
             </div>
             <span className="text-xs text-wurth-gray-500">
-              Your order will be ready for pick up the next day
+              Your order will be ready for pick up the next day.
             </span>
           </div>
         </div>
@@ -71,7 +71,7 @@ const CartItemWillCallTransfer = ({
               />
             )}
             <span className="text-xs text-wurth-gray-500">
-              The available quantity will be ready for pick up the next day
+              The available quantity will be ready for pick up the next day.
             </span>
           </div>
         </div>
