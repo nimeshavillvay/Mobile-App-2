@@ -64,6 +64,9 @@ export type Order = {
   orderTotal: string;
   tax: string;
   totalAmountWithTax: string;
+  firstName: string;
+  lastName: string;
+  attnName: string;
 };
 
 export type Pagination = {

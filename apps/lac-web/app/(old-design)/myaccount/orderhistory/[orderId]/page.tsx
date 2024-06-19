@@ -140,7 +140,9 @@ const DetailedOrderPage = async ({
                 <div className="flex flex-row">
                   <div className="flex-1 font-bold">Order By:</div>
                   <div className="flex-1 truncate whitespace-nowrap">
-                    {orderDetail?.orderBy ?? "N/A"}
+                    {orderDetail?.orderBy !== orderDetail?.email
+                      ? orderDetail?.orderBy
+                      : orderDetail.firstName + " " + orderDetail.lastName}
                   </div>
                 </div>
                 <div className="flex flex-row">

@@ -64,7 +64,11 @@ const OrderHistoryRow = ({ index, order }: OrderHistoryRowProps) => {
       <TableRow className={getTableRowBgColor(index)}>
         <TableCell className="flex flex-col text-center">
           <h4 className="font-bold">Order By:</h4>
-          <div>{order.orderBy !== "" ? order.orderBy : "N/A"}</div>
+          <div>
+            {order.attnName !== ""
+              ? order.attnName
+              : order.firstName + " " + order.lastName}
+          </div>
         </TableCell>
 
         <TableCell className="text-center">

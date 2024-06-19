@@ -110,7 +110,9 @@ const DesktopView = async ({ orderNo }: DesktopViewProps) => {
                   <tr>
                     <td className={tableLabelStyles()}>Bill to</td>
                     <td className={tableValueStyles()}>
-                      {orderDetails.orderBy}
+                      {orderDetails.firstName + " " + orderDetails.lastName}
+                      <br />
+                      {orderDetails.billToAddress.attention}
                     </td>
                   </tr>
 
@@ -171,7 +173,9 @@ const DesktopView = async ({ orderNo }: DesktopViewProps) => {
                   <tr>
                     <td className={tableLabelStyles()}>Contact person</td>
                     <td className={tableValueStyles()}>
-                      {orderDetails.orderBy}
+                      {orderDetails.orderBy !== orderDetails.email
+                        ? orderDetails.orderBy
+                        : orderDetails.firstName + " " + orderDetails.lastName}
                     </td>
                   </tr>
 
