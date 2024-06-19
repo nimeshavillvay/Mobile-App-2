@@ -139,7 +139,7 @@ const CartItemShippingMethod = ({
     return plantValues.reduce((acc, plant) => acc + (plant.quantity ?? 0), 0);
   };
 
-  const isVendorShipped = isDirectlyShippedFromVendor ?? false;
+  const isVendorShipped = isDirectlyShippedFromVendor === true ?? false;
 
   const isSameDayShippingEnabled =
     !!availableAll?.plants?.find((value) => value?.isSameDayAvail)
