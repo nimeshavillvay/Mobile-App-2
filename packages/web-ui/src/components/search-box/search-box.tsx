@@ -185,8 +185,9 @@ export const SearchBoxInput = ({
                         key={brand.id}
                         className="m-2 mb-2 mr-2 flex items-center rounded-md border-2 p-2 shadow-sm hover:bg-gray-100"
                         onClick={() => {
-                          brand.brandName &&
+                          if (brand.brandName) {
                             handleDropDownClick(brand.brandName);
+                          }
                         }}
                       >
                         {brand.brandImage && brand.brandName && (
@@ -226,10 +227,11 @@ export const SearchBoxInput = ({
                     <Link
                       href={`/category/${category.id}/${category.slug}`}
                       key={category.id}
-                      onClick={() =>
-                        category.categoryName &&
-                        handleDropDownClick(category.categoryName)
-                      }
+                      onClick={() => {
+                        if (category.categoryName) {
+                          handleDropDownClick(category.categoryName);
+                        }
+                      }}
                     >
                       <span className="text-[#74767B]">&#8627;</span>{" "}
                       <span className="break-words font-semibold text-[#CC0000]">
@@ -263,10 +265,11 @@ export const SearchBoxInput = ({
                         className="flex items-start justify-start gap-4 px-3 py-2"
                         href={`/product/${product.id}/${product.slug}`}
                         key={product.id}
-                        onClick={() =>
-                          product.productTitle &&
-                          handleDropDownClick(product.productTitle)
-                        }
+                        onClick={() => {
+                          if (product.productTitle) {
+                            handleDropDownClick(product.productTitle);
+                          }
+                        }}
                       >
                         <div className="flex-shrink-0 overflow-hidden rounded-md border border-gray-300">
                           {product.itemImage && product.productTitle ? (
