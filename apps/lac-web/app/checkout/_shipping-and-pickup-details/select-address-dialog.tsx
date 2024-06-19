@@ -3,6 +3,7 @@ import FullAddress from "@/_components/full-address";
 import useSuspenseShippingAddressList from "@/_hooks/address/use-suspense-shipping-address-list.hook";
 import useSuspenseCart from "@/_hooks/cart/use-suspense-cart.hook";
 import useUpdateCartConfigMutation from "@/_hooks/cart/use-update-cart-config-mutation.hook";
+import useSuspenseUsersList from "@/_hooks/user/use-suspense-users-list.hook";
 import { cn } from "@/_lib/utils";
 import { CheckCircle } from "@repo/web-ui/components/icons/check-circle";
 import { CheckCircleFilled } from "@repo/web-ui/components/icons/check-circle-filled";
@@ -57,6 +58,11 @@ const SelectAddressDialog = ({ token }: SelectAddressDialogProps) => {
     );
   };
 
+  const usersListQuery = useSuspenseUsersList(token);
+
+  const { permission } = usersListQuery.data.manageContact.yourProfile;
+  const isAdmin = permission.toLowerCase() === "admin";
+
   return (
     <>
       <Dialog open={open} onOpenChange={setOpen}>
@@ -109,16 +115,18 @@ const SelectAddressDialog = ({ token }: SelectAddressDialogProps) => {
           </ul>
 
           <DialogFooter>
-            <Button
-              variant="outline"
-              className="font-bold shadow-md"
-              onClick={() => {
-                setOpenAdd(true);
-                setOpen(false);
-              }}
-            >
-              Add new address
-            </Button>
+            {isAdmin && (
+              <Button
+                variant="outline"
+                className="font-bold shadow-md"
+                onClick={() => {
+                  setOpenAdd(true);
+                  setOpen(false);
+                }}
+              >
+                Add new address
+              </Button>
+            )}
 
             <Button
               className="font-bold shadow-md"

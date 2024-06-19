@@ -73,13 +73,15 @@ const ShippingAddress = ({ token }: { readonly token: string }) => {
             isAdmin={isAdmin}
           />
         ))}
-        <button
-          className="flex cursor-pointer flex-row items-center justify-center space-y-3 border-gray-100 bg-transparent p-5 text-center font-bold shadow hover:shadow-lg md:space-y-5 md:p-6"
-          onClick={() => setOpenShippingAddressDialog(true)}
-        >
-          <span className="sr-only">Add shipping address</span>+ Add new
-          shipping address
-        </button>
+        {isAdmin && (
+          <button
+            className="flex cursor-pointer flex-row items-center justify-center space-y-3 border-gray-100 bg-transparent p-5 text-center font-bold shadow hover:shadow-lg md:space-y-5 md:p-6"
+            onClick={() => setOpenShippingAddressDialog(true)}
+          >
+            <span className="sr-only">Add shipping address</span>+ Add new
+            shipping address
+          </button>
+        )}
       </div>
 
       <AddressDialog

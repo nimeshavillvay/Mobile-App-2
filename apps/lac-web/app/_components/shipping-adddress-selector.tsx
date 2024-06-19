@@ -3,6 +3,7 @@
 import FullAddress from "@/_components/full-address";
 import useSuspenseShippingAddressList from "@/_hooks/address/use-suspense-shipping-address-list.hook";
 import useUpdateShippingAddressMutation from "@/_hooks/address/use-update-shipping-address-mutation.hook";
+import useSuspenseUsersList from "@/_hooks/user/use-suspense-users-list.hook";
 import type { Token } from "@/_lib/types";
 import { cn } from "@/_lib/utils";
 import { CheckCircle } from "@repo/web-ui/components/icons/check-circle";
@@ -69,6 +70,11 @@ const ShippingAddressSelector = ({
     }
   };
 
+  const usersListQuery = useSuspenseUsersList(token);
+
+  const { permission } = usersListQuery.data.manageContact.yourProfile;
+  const isAdmin = permission.toLowerCase() === "admin";
+
   return (
     <>
       <Dialog open={open} onOpenChange={setOpen}>
@@ -116,17 +122,19 @@ const ShippingAddressSelector = ({
           </ul>
 
           <DialogFooter>
-            <Button
-              variant="outline"
-              className="font-bold"
-              onClick={() => {
-                setOpen(false);
-                setOpenNewAddressDialog(true);
-              }}
-              disabled={updateShippingAddressMutation.isPending}
-            >
-              Add new address
-            </Button>
+            {isAdmin && (
+              <Button
+                variant="outline"
+                className="font-bold"
+                onClick={() => {
+                  setOpen(false);
+                  setOpenNewAddressDialog(true);
+                }}
+                disabled={updateShippingAddressMutation.isPending}
+              >
+                Add new address
+              </Button>
+            )}
 
             <Button
               className="font-bold"
