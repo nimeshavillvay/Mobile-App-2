@@ -72,37 +72,51 @@ const ShippingMethod = ({ token, options }: ShippingMethodProps) => {
   ) => {
     clearConfigKeys(config, ["avail_", "shipping_method_", "plant_"]);
     config.plant_1 = willCallPlant?.plantCode ?? DEFAULT_PLANT.code;
-    config.hashvalue = availability.willCallAnywhere.hash;
+    config.hashvalue = availability?.willCallAnywhere?.[0]?.hash
+      ? availability.willCallAnywhere[0].hash
+      : "";
 
-    if (availability.willCallAnywhere.status === IN_STOCK) {
+    if (
+      availability.willCallAnywhere &&
+      availability.willCallAnywhere[0] &&
+      availability.willCallAnywhere[0].status === IN_STOCK
+    ) {
       config.shipping_method_1 = "0";
       config.avail_1 =
-        availability.willCallAnywhere?.willCallQuantity.toString();
+        availability.willCallAnywhere[0]?.willCallQuantity.toString();
       config.backorder_date =
-        availability.willCallAnywhere?.backOrderDate_1 ?? "";
+        availability.willCallAnywhere[0]?.backOrderDate_1 ?? "";
       config.will_call_avail =
-        availability.willCallAnywhere?.willCallQuantity.toString();
+        availability.willCallAnywhere[0]?.willCallQuantity.toString();
       config.will_call_plant = willCallPlant?.plantCode ?? DEFAULT_PLANT.code;
-    } else if (availability.willCallAnywhere.status === NOT_IN_STOCK) {
+    } else if (
+      availability.willCallAnywhere &&
+      availability.willCallAnywhere[0] &&
+      availability.willCallAnywhere[0].status === NOT_IN_STOCK
+    ) {
       config.avail_1 = "0";
       config.shipping_method_1 = "0";
       config.backorder_all = "T";
       config.backorder_date =
-        availability.willCallAnywhere?.willCallBackOrder ?? "";
+        availability.willCallAnywhere[0]?.willCallBackOrder ?? "";
       config.backorder_quantity =
-        availability.willCallAnywhere?.willCallQuantity.toString();
-    } else if (availability.willCallAnywhere.status === LIMITED_STOCK) {
+        availability.willCallAnywhere[0]?.willCallQuantity.toString();
+    } else if (
+      availability.willCallAnywhere &&
+      availability.willCallAnywhere[0] &&
+      availability.willCallAnywhere[0].status === LIMITED_STOCK
+    ) {
       config.shipping_method_1 = "0";
       config.avail_1 =
-        availability.willCallAnywhere?.willCallQuantity.toString();
+        availability.willCallAnywhere[0]?.willCallQuantity.toString();
       config.backorder_date =
-        availability.willCallAnywhere?.backOrderDate_1 ?? "";
+        availability.willCallAnywhere[0]?.backOrderDate_1 ?? "";
       config.will_call_avail =
-        availability.willCallAnywhere?.willCallQuantity.toString();
+        availability.willCallAnywhere[0]?.willCallQuantity.toString();
       config.will_call_plant = willCallPlant?.plantCode ?? DEFAULT_PLANT.code;
       config.backorder_all = "F";
       config.backorder_quantity =
-        availability.willCallAnywhere?.backOrderQuantity_1?.toString() ?? "";
+        availability.willCallAnywhere[0]?.backOrderQuantity_1?.toString() ?? "";
     }
     return config;
   };
