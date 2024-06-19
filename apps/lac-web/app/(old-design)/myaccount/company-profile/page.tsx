@@ -44,8 +44,8 @@ const CompanyProfilePage = () => {
         </div>
 
         <div className="md:col-span-3">
-          <Suspense fallback={<Skeleton />}>
-            <SalesRepresentative />
+          <Suspense fallback={<Skeleton className="h-72" />}>
+            <SalesRepresentative token={sessionToken.value} />
           </Suspense>
         </div>
       </div>
