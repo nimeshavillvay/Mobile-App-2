@@ -67,7 +67,7 @@ const OrderHistoryRow = ({ index, order }: OrderHistoryRowProps) => {
           <div>
             {order.attnName !== ""
               ? order.attnName
-              : order.firstName + " " + order.lastName}
+              : `${order.firstName} ${order.lastName}`}
           </div>
         </TableCell>
 
