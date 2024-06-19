@@ -61,7 +61,6 @@ import type {
 const UI_DATE_FORMAT = "ddd, MMM. DD YYYY";
 
 // Vendor Direct Shipping Method
-const VENDOR_DIRECT_CODE = "D";
 
 type CartItemShippingMethodProps = {
   readonly plants: Plant[];
@@ -79,6 +78,7 @@ type CartItemShippingMethodProps = {
   readonly shippingMethods: ShippingMethod[];
   readonly setSelectedWillCallTransfer: (option: WillCallOption) => void;
   readonly selectedWillCallTransfer: WillCallOption;
+  readonly isDirectlyShippedFromVendor: boolean;
 };
 
 const CartItemShippingMethod = ({
@@ -97,6 +97,7 @@ const CartItemShippingMethod = ({
   onSave,
   defaultShippingMethod,
   shippingMethods,
+  isDirectlyShippedFromVendor,
 }: CartItemShippingMethodProps) => {
   const id = useId();
   const shipToMeId = `${MAIN_OPTIONS.SHIP_TO_ME}-${id}`;
@@ -138,9 +139,7 @@ const CartItemShippingMethod = ({
     return plantValues.reduce((acc, plant) => acc + (plant.quantity ?? 0), 0);
   };
 
-  const isVendorShipped = !!availabilityOptions[0]?.plants
-    ?.at(0)
-    ?.shippingMethods?.find((method) => method.code === VENDOR_DIRECT_CODE);
+  const isVendorShipped = isDirectlyShippedFromVendor ?? false;
 
   const isSameDayShippingEnabled =
     !!availableAll?.plants?.find((value) => value?.isSameDayAvail)
@@ -422,7 +421,7 @@ const CartItemShippingMethod = ({
     <ul className="flex flex-col gap-3">
       {isVendorShipped && (
         <li className="text-sm text-wurth-gray-500">
-          This item is shipped by the vender
+          This item is shipped by the vendor
         </li>
       )}
 

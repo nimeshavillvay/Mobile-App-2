@@ -49,7 +49,8 @@ const ShippingMethod = ({ token, options }: ShippingMethodProps) => {
   );
 
   const [selectedSection, setSelectedSection] = useState<string>();
-
+  const [selectedDeliveryMethod, setSelectedDeliveryMethod] =
+    useState<string>();
   const cartQuery = useSuspenseCart(token);
   const willCallPlantQuery = useSuspenseWillCallPlant(token);
   const willCallPlant = willCallPlantQuery.data;
@@ -125,6 +126,7 @@ const ShippingMethod = ({ token, options }: ShippingMethodProps) => {
   const { incrementCartItemKey } = useCartPageStore((state) => state.actions);
 
   const handleSelectValueChange = async (value: string) => {
+    setSelectedDeliveryMethod(value);
     // Get the available shipping methods for each item in the cart
     const itemShippingMethods = await Promise.all(
       cartQuery.data.cartItems.map(async (item) => {
@@ -276,6 +278,9 @@ const ShippingMethod = ({ token, options }: ShippingMethodProps) => {
               onCheckedChange={(checked) => {
                 if (checked === true) {
                   setSelectedSection(SHIP_TO_ME);
+                  if (selectedDeliveryMethod) {
+                    handleSelectValueChange(selectedDeliveryMethod);
+                  }
                 } else {
                   setSelectedSection(undefined);
                 }

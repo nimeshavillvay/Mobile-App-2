@@ -95,6 +95,7 @@ type CartItemProps = {
     isExcludedProduct: boolean;
     uom: string;
     isHazardous: boolean;
+    isDirectlyShippedFromVendor: boolean;
   };
   readonly plants: Plant[];
   readonly cartConfiguration: CartConfiguration;
@@ -333,7 +334,14 @@ const CartItem = ({
                       hash: availableAll.hash,
                     }),
                   );
-                } else if (takeOnHand) {
+                } else if (takeOnHand && homeBranchAvailability) {
+                  const setShippingMethod =
+                    takeOnHand.plants?.[0]?.shippingMethods.find(
+                      (method) => method.code === selectedShippingMethod,
+                    )?.code ||
+                    takeOnHand.plants?.[0]?.shippingMethods?.[0]?.code ||
+                    selectedShippingMethod;
+                  setSelectedShippingMethod(setShippingMethod);
                   handleSave(
                     createCartItemConfig({
                       method:
@@ -347,7 +355,7 @@ const CartItem = ({
                         takeOnHand.plants?.at(0)?.backOrderQuantity,
                     }),
                   );
-                } else if (shipAlternativeBranch) {
+                } else if (shipAlternativeBranch && homeBranchAvailability) {
                   handleSave(
                     getAlternativeBranchesConfig({
                       plants: shipAlternativeBranch.plants,
@@ -517,7 +525,7 @@ const CartItem = ({
           hash: availableAll.hash,
         }),
       );
-    } else if (takeOnHand) {
+    } else if (takeOnHand && homeBranchAvailability) {
       handleSave(
         createCartItemConfig({
           method:
@@ -530,7 +538,7 @@ const CartItem = ({
           backOrderQuantity: takeOnHand.plants?.at(0)?.backOrderQuantity,
         }),
       );
-    } else if (shipAlternativeBranch) {
+    } else if (shipAlternativeBranch && homeBranchAvailability) {
       handleSave(
         getAlternativeBranchesConfig({
           plants: shipAlternativeBranch.plants,
@@ -836,6 +844,7 @@ const CartItem = ({
               onSave={handleSave}
               defaultShippingMethod={defaultShippingMethod}
               shippingMethods={shippingMethods}
+              isDirectlyShippedFromVendor={product.isDirectlyShippedFromVendor}
             />
           ))}
 
@@ -859,6 +868,7 @@ const CartItem = ({
               onSave={handleSave}
               defaultShippingMethod={defaultShippingMethod}
               shippingMethods={shippingMethods}
+              isDirectlyShippedFromVendor={product.isDirectlyShippedFromVendor}
             />
           </Suspense>
         )}

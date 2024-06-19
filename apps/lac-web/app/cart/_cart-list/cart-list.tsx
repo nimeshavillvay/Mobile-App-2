@@ -147,6 +147,8 @@ const CartList = ({ token, plants }: CartListProps) => {
                   isExcludedProduct: item.itemInfo.isExcludedProduct,
                   uom: item.itemInfo.unitOfMeasure,
                   isHazardous: item.itemInfo.isHazardous,
+                  isDirectlyShippedFromVendor:
+                    item.itemInfo.isDirectlyShippedFromVendor,
                 }}
                 plants={plants}
                 cartConfiguration={data.configuration}
