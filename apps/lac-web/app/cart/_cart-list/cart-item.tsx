@@ -473,6 +473,7 @@ const CartItem = ({
                   hash: willCallAnywhere[0].hash,
                   backOrderDate: willCallAnywhere[0]?.backOrderDate_1,
                   backOrderQuantity: willCallAnywhere[0]?.backOrderQuantity_1,
+                  shippingMethod: "W",
                 }),
                 will_call_avail: (willCallAnywhere[0]?.status === NOT_IN_STOCK
                   ? 0
@@ -494,6 +495,7 @@ const CartItem = ({
                   backOrderAll: true,
                   backOrderDate: willCallAnywhere[0]?.willCallBackOrder,
                   backOrderQuantity: willCallAnywhere[0]?.willCallQuantity,
+                  shippingMethod: "W",
                 }),
               });
             }
@@ -583,7 +585,6 @@ const CartItem = ({
       } else if (matchedAvailabilityOption.type === BACK_ORDER_ALL) {
         setSelectedShippingOption(MAIN_OPTIONS.BACK_ORDER);
       }
-      // This logic is to stop the ship to me option being selected automatically when will call option is selected
     } else {
       // Check if hash matches with the will call hash
       if (willCallAnywhere[0] && willCallAnywhere[0].hash === itemConfigHash) {

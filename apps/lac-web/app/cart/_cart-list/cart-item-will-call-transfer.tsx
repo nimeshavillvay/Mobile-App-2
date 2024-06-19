@@ -35,13 +35,16 @@ const CartItemWillCallTransfer = ({
             <div className="flex items-center text-sm">
               <ItemCountBadge count={willCallItem.willCallQuantity} />
               &nbsp;
-              <span className="font-medium">pick up at</span>
+              <span className="font-medium">transfer from</span>
               &nbsp;
               <PlantName
                 plants={plants}
                 plantCode={willCallItem.willCallPlant}
               />
             </div>
+            <span className="text-xs text-wurth-gray-500">
+              Your order will be ready for pick up the next day
+            </span>
           </div>
         </div>
       )}
@@ -55,7 +58,7 @@ const CartItemWillCallTransfer = ({
             <div className="flex items-center text-sm">
               <ItemCountBadge count={willCallItem.willCallQuantity} />
               &nbsp;
-              <span className="font-medium">pick up at</span>
+              <span className="font-medium">transfer from</span>
               &nbsp;
               <PlantName
                 plants={plants}
@@ -67,6 +70,9 @@ const CartItemWillCallTransfer = ({
                 count={willCallItem.backOrderQuantity_1 ?? 0}
               />
             )}
+            <span className="text-xs text-wurth-gray-500">
+              The available quantity will be ready for pick up the next day
+            </span>
           </div>
         </div>
       )}

@@ -170,7 +170,23 @@ const CartItemShippingMethod = ({
   ) => {
     return plants?.at(0)?.backOrderDate;
   };
+  const getFirstPlantFromPlants = (
+    plants: {
+      plant: string;
+    }[],
+  ) => {
+    return plants?.at(0)?.plant ?? "";
+  };
 
+  const getFirstShippingCodeFromShippingMethod = (
+    plants: {
+      shippingMethods: ShippingMethod[];
+    }[],
+  ) => {
+    const shippingMethods = plants?.at(0)?.shippingMethods ?? [];
+    // Get the first method available
+    return shippingMethods?.at(0)?.code ?? "";
+  };
   const handleDeliveryOptionSelect = ({
     checked,
     selectedOption,
@@ -231,6 +247,22 @@ const CartItemShippingMethod = ({
         setSelectedWillCallTransfer(MAIN_OPTIONS.WILL_CALL);
         processWillCallAnywhereItem(willCallAnywhere[0]);
       }
+      // Back order all can have only this config
+      if (selectedOption === MAIN_OPTIONS.BACK_ORDER && backOrderAll) {
+        onSave(
+          createCartItemConfig({
+            method: getFirstShippingCodeFromShippingMethod(
+              backOrderAll?.plants,
+            ),
+            quantity: 0,
+            plant: getFirstPlantFromPlants(backOrderAll?.plants),
+            hash: backOrderAll.hash,
+            backOrderAll: true,
+            backOrderDate: backOrderAll.plants[0]?.backOrderDate ?? "",
+            backOrderQuantity: backOrderAll.plants[0]?.backOrderQuantity ?? 0,
+          }),
+        );
+      }
     } else {
       setSelectedShippingOption(undefined);
     }
@@ -279,6 +311,7 @@ const CartItemShippingMethod = ({
       willCallAnywhere &&
       willCallAnywhere[0]
     ) {
+      setSelectedShippingOption(MAIN_OPTIONS.WILL_CALL);
       setSelectedWillCallTransfer(MAIN_OPTIONS.WILL_CALL);
       processWillCallAnywhereItem(willCallAnywhere[0]);
     }
@@ -287,6 +320,7 @@ const CartItemShippingMethod = ({
       willCallAnywhere &&
       willCallAnywhere[1]
     ) {
+      setSelectedShippingOption(MAIN_OPTIONS.WILL_CALL);
       setSelectedWillCallTransfer(MAIN_OPTIONS.WILL_CALL_TRANSFER);
       processWillCallAnywhereItem(willCallAnywhere[1]);
     }
@@ -653,10 +687,7 @@ const CartItemShippingMethod = ({
               onValueChange={(plant) => {
                 setSelectedWillCallPlant(plant);
                 setSelectedWillCallTransfer(MAIN_OPTIONS.WILL_CALL);
-
-                if (willCallAnywhere && willCallAnywhere[0]) {
-                  processWillCallAnywhereItem(willCallAnywhere[0]);
-                }
+                setSelectedShippingOption(MAIN_OPTIONS.WILL_CALL);
               }}
             >
               <SelectTrigger className="w-full">
