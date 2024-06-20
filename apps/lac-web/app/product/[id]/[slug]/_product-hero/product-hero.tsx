@@ -33,15 +33,19 @@ type ProductHeroProps = {
 const ProductHero = async ({ id, slug }: ProductHeroProps) => {
   const product = await getProduct(id, slug);
 
-  const images = product.selectedProduct.detailedImages?.length
+  const media = product.selectedProduct.detailedImages?.length
     ? product.selectedProduct.detailedImages.map((image) => ({
         src: image.img,
         alt: image.alt,
+        url: image.url,
+        type: image.type,
       }))
     : [
         {
           src: product.selectedProduct.image,
           alt: product.selectedProduct.productName,
+          url: "",
+          type: "IMAGE",
         },
       ];
 
@@ -80,7 +84,7 @@ const ProductHero = async ({ id, slug }: ProductHeroProps) => {
       <div className="hidden md:container md:grid md:grid-cols-[minmax(0,3fr)_minmax(26rem,2fr)] md:gap-x-8 md:gap-y-[3.75rem]">
         <ProductDesktopCarousel
           title={product.selectedProduct.productName}
-          images={images}
+          media={media}
         />
 
         <div className="space-y-6">
@@ -149,16 +153,28 @@ const ProductHero = async ({ id, slug }: ProductHeroProps) => {
 
         <Carousel className="mb-10 mt-5 md:hidden">
           <CarouselContent>
-            {images.map((image, index) => (
-              <CarouselItem key={image.src}>
-                <Image
-                  src={image.src}
-                  alt={image.alt}
-                  width={770}
-                  height={770}
-                  className="aspect-1 object-contain"
-                  priority={index === 0}
-                />
+            {media.map((mediaItem, index) => (
+              <CarouselItem key={mediaItem.src}>
+                {mediaItem.type === "IMAGE" && (
+                  <Image
+                    src={mediaItem.src}
+                    alt={mediaItem.alt}
+                    width={770}
+                    height={770}
+                    className="aspect-1 object-contain"
+                    priority={index === 0}
+                  />
+                )}
+
+                {mediaItem.type === "VIDEO" && (
+                  <div className="relative w-full overflow-hidden pt-[100%]">
+                    <iframe
+                      title={`YouTube player for ${mediaItem.alt}`}
+                      src={`https://${mediaItem.url}?autoplay=0`}
+                      className="absolute inset-0 h-full w-full"
+                    />
+                  </div>
+                )}
               </CarouselItem>
             ))}
           </CarouselContent>
