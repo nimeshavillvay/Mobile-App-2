@@ -28,4 +28,4 @@ The repository has two main folders `apps` and `packages`.
 
 This repository has GitHub Actions configured to run [Prettier](https://prettier.io/) and [ESLint](https://eslint.org/) checks to run on Pull Requests for all packages by default. To save time, the actions have [Remote Caching](https://turbo.build/repository/docs/core-concepts/remote-caching) configured to skip the checks on packages that don't have any code changes.
 
-To configure the remote cache follow [this guide](https://turbo.build/repository/docs/guides/ci-vendors/github-actions). Ideally the `TURBO_TOKEN` secret should come from the Vercel team owner's account so that we don't need to replace the secret every time members in the Vercel team change.
+To configure the remote cache follow [this guide](https://turbo.build/repo/docs/guides/ci-vendors/github-actions). Ideally the `TURBO_TOKEN` secret should come from the Vercel team owner's account so that we don't need to replace the secret every time members in the Vercel team change.

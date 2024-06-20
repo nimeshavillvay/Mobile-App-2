@@ -76,6 +76,7 @@ const AddUserEmailDialog = ({
         if (data.statusCode === "USER_NEW") {
           setOpenAddUserDataDialog(true);
           setEmail(email);
+          form.reset();
           setOpen(false);
         }
       },
@@ -84,9 +85,8 @@ const AddUserEmailDialog = ({
           const errorResponse = await error.response.json();
           if (
             isErrorResponse(errorResponse) &&
-            errorResponse["status_code"] === "FAILED" &&
-            errorResponse.message ===
-              "Email address already exists in the database."
+            errorResponse["status_code"] === "USER_ACTIVE" &&
+            errorResponse.message === "Email exists and is valid."
           ) {
             form.setError("email", {
               message: "User already exists",
@@ -98,7 +98,16 @@ const AddUserEmailDialog = ({
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog
+      open={open}
+      onOpenChange={(open) => {
+        if (!open) {
+          form.reset();
+        }
+
+        setOpen(open);
+      }}
+    >
       <DialogContent className="old-design-text-base max-w-[360px]">
         <DialogHeader>
           <DialogTitle className="text-left font-wurth">Add User</DialogTitle>

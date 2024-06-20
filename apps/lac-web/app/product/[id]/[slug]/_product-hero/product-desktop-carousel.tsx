@@ -12,17 +12,23 @@ import {
 } from "@repo/web-ui/components/ui/dialog";
 import useEmblaCarousel from "embla-carousel-react";
 import Image from "next/image";
-// eslint-disable-next-line no-restricted-imports
-import { useCallback, useEffect, useState, type CSSProperties } from "react";
+import {
+  Fragment,
+  useCallback,
+  // eslint-disable-next-line no-restricted-imports
+  useEffect,
+  useState,
+  type CSSProperties,
+} from "react";
 
 type ProductDesktopCarouselProps = Readonly<{
   title: string;
-  images: { src: string; alt: string }[];
+  media: { src: string; alt: string; url: string; type: string }[];
 }>;
 
 const ProductDesktopCarousel = ({
   title,
-  images,
+  media,
 }: ProductDesktopCarouselProps) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [emblaRef, emblaApi] = useEmblaCarousel();
@@ -57,9 +63,9 @@ const ProductDesktopCarousel = ({
     <div className="relative pr-4">
       <div className="absolute bottom-0 left-0 top-0 h-full overflow-y-auto">
         <div className="flex flex-col gap-2">
-          {images.map((image, index) => (
+          {media.map((mediaItem, index) => (
             <Button
-              key={image.src}
+              key={mediaItem.src}
               type="button"
               variant="outline"
               className="h-fit rounded-md border border-wurth-gray-250 p-1 shadow-sm data-[selected=true]:border-2 data-[selected=true]:border-black data-[selected=true]:p-[3px]"
@@ -67,8 +73,8 @@ const ProductDesktopCarousel = ({
               data-selected={index === selectedIndex}
             >
               <Image
-                src={image.src}
-                alt={image.alt}
+                src={mediaItem.src}
+                alt={mediaItem.alt}
                 width={76}
                 height={76}
                 className="aspect-1 overflow-hidden rounded object-contain"
@@ -85,48 +91,66 @@ const ProductDesktopCarousel = ({
         ref={emblaRef}
       >
         <div className="flex rounded-lg">
-          {images.map((image, index) => (
-            <Dialog key={image.src}>
-              <DialogTrigger className="min-w-0 shrink-0 grow-0 basis-full">
-                <Image
-                  src={image.src}
-                  alt={image.alt}
-                  width={980}
-                  height={980}
-                  className="aspect-1 object-contain"
-                  priority={index === 0}
-                />
-
-                <span className="sr-only">View image {index + 1}</span>
-              </DialogTrigger>
-
-              <DialogPortal>
-                <DialogOverlay />
-
-                <DialogPrimitive.Content>
-                  <div className="fixed left-0 right-0 top-0 z-[60] flex flex-row items-center justify-between gap-2.5 bg-black/70 p-2.5 duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top">
-                    <div
-                      className="text-lg leading-5 text-white"
-                      dangerouslySetInnerHTML={{ __html: title }}
+          {media.map((mediaItem, index) => (
+            <Fragment key={mediaItem.src}>
+              {mediaItem.type === "IMAGE" && (
+                <Dialog>
+                  <DialogTrigger className="min-w-0 shrink-0 grow-0 basis-full">
+                    <Image
+                      src={mediaItem.src}
+                      alt={mediaItem.alt}
+                      width={980}
+                      height={980}
+                      className="aspect-1 object-contain"
+                      priority={index === 0}
                     />
 
-                    <DialogClose asChild>
-                      <Button variant="ghost" size="icon" className="h-fit p-0">
-                        <Close className="stroke-white" />
-                      </Button>
-                    </DialogClose>
-                  </div>
+                    <span className="sr-only">View image {index + 1}</span>
+                  </DialogTrigger>
 
-                  <Image
-                    src={image.src}
-                    alt={image.alt}
-                    width={512}
-                    height={512}
-                    className="fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border border-zinc-200 bg-white p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top sm:rounded-lg"
+                  <DialogPortal>
+                    <DialogOverlay />
+
+                    <DialogPrimitive.Content>
+                      <div className="fixed left-0 right-0 top-0 z-[60] flex flex-row items-center justify-between gap-2.5 bg-black/70 p-2.5 duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top">
+                        <div
+                          className="text-lg leading-5 text-white"
+                          dangerouslySetInnerHTML={{ __html: title }}
+                        />
+
+                        <DialogClose asChild>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-fit p-0"
+                          >
+                            <Close className="stroke-white" />
+                          </Button>
+                        </DialogClose>
+                      </div>
+
+                      <Image
+                        src={mediaItem.src}
+                        alt={mediaItem.alt}
+                        width={512}
+                        height={512}
+                        className="fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border border-zinc-200 bg-white p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top sm:rounded-lg"
+                      />
+                    </DialogPrimitive.Content>
+                  </DialogPortal>
+                </Dialog>
+              )}
+
+              {mediaItem.type === "VIDEO" && (
+                <div className="relative w-full min-w-0 shrink-0 grow-0 basis-full overflow-hidden pt-[100%]">
+                  <iframe
+                    title={`YouTube player for ${mediaItem.alt}`}
+                    src={`https://${mediaItem.url}?autoplay=0`}
+                    className="absolute inset-0 h-full w-full"
                   />
-                </DialogPrimitive.Content>
-              </DialogPortal>
-            </Dialog>
+                </div>
+              )}
+            </Fragment>
           ))}
         </div>
       </div>

@@ -68,6 +68,8 @@ type Product = {
     detailed_images?: {
       img: string;
       alt: string;
+      url: string;
+      type: "IMAGE" | "VIDEO";
     }[];
   };
 };

@@ -15,6 +15,7 @@ export const createCartItemConfig = ({
   backOrderAll = false,
   backOrderDate,
   backOrderQuantity,
+  shippingMethod,
 }: {
   method: string;
   quantity: number;
@@ -23,6 +24,7 @@ export const createCartItemConfig = ({
   backOrderAll?: boolean;
   backOrderQuantity?: number;
   backOrderDate?: string;
+  shippingMethod?: string;
 }) => ({
   avail_1: quantity ? quantity.toString() : EMPTY_STRING,
   avail_2: EMPTY_STRING,
@@ -39,6 +41,7 @@ export const createCartItemConfig = ({
   shipping_method_3: EMPTY_STRING,
   shipping_method_4: EMPTY_STRING,
   shipping_method_5: EMPTY_STRING,
+  will_call_shipping: shippingMethod,
   backorder_all: backOrderAll ? TRUE_STRING : FALSE_STRING,
   hashvalue: hash,
   will_call_avail: EMPTY_STRING,

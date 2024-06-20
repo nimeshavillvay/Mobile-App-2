@@ -25,7 +25,7 @@ export const getOrderTrackingLog = async (orderId: string) => {
       throw new Error("Order not found");
     } else {
       const transformedData = {
-        orderNo: Number(orderNo),
+        orderNo: orderNo,
         shipToAddress: {
           attention: shipToAddress.attention,
           street: shipToAddress.shipToStreet,

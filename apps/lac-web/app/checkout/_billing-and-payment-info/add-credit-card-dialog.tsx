@@ -113,6 +113,7 @@ const AddCreditCardDialog = ({
         holderName: values.name,
         type: values.brand,
         defaultCard: false,
+        save: values.save,
       },
       {
         onSuccess: async (data) => {
@@ -237,7 +238,7 @@ const AddCreditCardDialog = ({
                       <>
                         <iframe
                           title="Snappay credit card iframe"
-                          src={`${process.env.NEXT_PUBLIC_SNAPPAY_URL}/Interop/InteropRequest?reqno=${creditCardSignatureQuery.data.requestId}`}
+                          src={`${process.env.NEXT_PUBLIC_WURTH_LAC_SNAPPAY_URL}/Interop/InteropRequest?reqno=${creditCardSignatureQuery.data.requestId}`}
                           className={cn(
                             inputStyles(),
                             "block w-full px-0 py-0 [&_input]:!p-0",

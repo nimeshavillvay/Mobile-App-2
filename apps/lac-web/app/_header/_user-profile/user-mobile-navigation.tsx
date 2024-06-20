@@ -94,6 +94,10 @@ const UserMobileProfileNavigation = ({
     checkLoginQuery.data.status_code === "OK" &&
     !!checkLoginQuery.data.sales_rep_id;
 
+  const isOSRLoggedInAsCustomer =
+    checkLoginQuery.data.status_code == "OK" &&
+    checkLoginQuery.data.isLoggedInAsCustomer;
+
   const osrLogoutMutation = useOSRLogoutMutation();
   const logoutMutation = useLogoutMutation();
 
@@ -146,6 +150,14 @@ const UserMobileProfileNavigation = ({
               </SheetClose>
             </Suspense>
           </li>
+
+          {isOsr && !isOSRLoggedInAsCustomer && (
+            <li>
+              <SheetClose asChild className={sectionLinkStyles()}>
+                <Link href="/osr/dashboard">My Customers</Link>
+              </SheetClose>
+            </li>
+          )}
 
           <li>
             <SheetClose asChild className={sectionLinkStyles()}>

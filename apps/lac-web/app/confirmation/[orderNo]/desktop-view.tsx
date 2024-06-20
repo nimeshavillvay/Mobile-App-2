@@ -6,8 +6,10 @@ import {
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import { cva } from "@/_lib/cva.config";
 import { cn, formatNumberToPrice } from "@/_lib/utils";
+import { Alert, AlertTitle } from "@repo/web-ui/components/ui/alert";
 import { Separator } from "@repo/web-ui/components/ui/separator";
 import dayjs from "dayjs";
+import { AlertCircle } from "lucide-react";
 import { cookies } from "next/headers";
 import Image from "next/image";
 import { redirect } from "next/navigation";
@@ -110,7 +112,9 @@ const DesktopView = async ({ orderNo }: DesktopViewProps) => {
                   <tr>
                     <td className={tableLabelStyles()}>Bill to</td>
                     <td className={tableValueStyles()}>
-                      {orderDetails.orderBy}
+                      {`${orderDetails.firstName} ${orderDetails.lastName}`}
+                      <br />
+                      {orderDetails.billToAddress.attention}
                     </td>
                   </tr>
 
@@ -122,6 +126,7 @@ const DesktopView = async ({ orderNo }: DesktopViewProps) => {
                   <tr>
                     <td className={tableLabelStyles()}>Billing address</td>
                     <td className={tableValueStyles()}>
+                      #{orderDetails.soldTo},{" "}
                       {orderDetails.billToAddress.street},{" "}
                       {orderDetails.billToAddress.city},{" "}
                       {orderDetails.billToAddress.region},{" "}
@@ -154,6 +159,7 @@ const DesktopView = async ({ orderNo }: DesktopViewProps) => {
                   <tr>
                     <td className={tableLabelStyles()}>Ship to address</td>
                     <td className={tableValueStyles()}>
+                      #{orderDetails.shipTo},{" "}
                       {orderDetails.shipToAddress.street},{" "}
                       {orderDetails.shipToAddress.city},{" "}
                       {orderDetails.shipToAddress.region},{" "}
@@ -169,7 +175,9 @@ const DesktopView = async ({ orderNo }: DesktopViewProps) => {
                   <tr>
                     <td className={tableLabelStyles()}>Contact person</td>
                     <td className={tableValueStyles()}>
-                      {orderDetails.orderBy}
+                      {orderDetails.orderBy !== orderDetails.email
+                        ? orderDetails.orderBy
+                        : `${orderDetails.firstName} ${orderDetails.lastName}`}
                     </td>
                   </tr>
 
@@ -180,6 +188,15 @@ const DesktopView = async ({ orderNo }: DesktopViewProps) => {
                 </tbody>
               </table>
             </div>
+
+            {orderDetails.completeDelivery && (
+              <Alert variant="destructive" className="col-span-3 max-w-fit">
+                <AlertCircle className="h-4 w-4" />
+                <AlertTitle>
+                  This order will not ship until backorder item(s) are in stock.
+                </AlertTitle>
+              </Alert>
+            )}
 
             <table className="col-span-2">
               <thead>
