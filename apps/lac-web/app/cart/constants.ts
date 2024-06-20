@@ -8,6 +8,7 @@ export const ALTERNATIVE_BRANCHES = "shipAlternativeBranch" as const;
 export const MAIN_OPTIONS = {
   SHIP_TO_ME: "ship-to-me",
   WILL_CALL: "will-call",
+  WILL_CALL_TRANSFER: "will-call-transfer",
   BACK_ORDER: "back-order",
 } as const;
 

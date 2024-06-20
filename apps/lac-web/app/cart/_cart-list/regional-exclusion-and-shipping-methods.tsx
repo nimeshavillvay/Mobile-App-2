@@ -16,9 +16,12 @@ const RegionalExclusionAndShippingMethods = ({
   selectedShipToMe,
   setSelectedShippingMethod,
   selectedShippingMethod,
+  setSelectedWillCallTransfer,
+  selectedWillCallTransfer,
   onSave,
   defaultShippingMethod,
   shippingMethods,
+  isDirectlyShippedFromVendor,
 }: ComponentProps<typeof CartItemShippingMethod> & {
   readonly token: string;
   readonly productId: number;
@@ -44,11 +47,14 @@ const RegionalExclusionAndShippingMethods = ({
       selectedShippingOption={selectedShippingOption}
       setSelectedShipToMe={setSelectedShipToMe}
       selectedShipToMe={selectedShipToMe}
+      setSelectedWillCallTransfer={setSelectedWillCallTransfer}
+      selectedWillCallTransfer={selectedWillCallTransfer}
       setSelectedShippingMethod={setSelectedShippingMethod}
       selectedShippingMethod={selectedShippingMethod}
       onSave={onSave}
       defaultShippingMethod={defaultShippingMethod}
       shippingMethods={shippingMethods}
+      isDirectlyShippedFromVendor={isDirectlyShippedFromVendor}
     />
   );
 };
