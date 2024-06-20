@@ -138,8 +138,6 @@ const sessionTokenDetails = async (existingToken?: string) => {
         if (key && value) {
           if (key === SESSION_TOKEN_COOKIE) {
             tokenValue = value;
-            // } else if (key === "expires") {
-            //   cookieConfig.expires = dayjs(value).toDate();
           } else if (key === "Max-Age") {
             cookieConfig.maxAge = parseInt(value);
           }
