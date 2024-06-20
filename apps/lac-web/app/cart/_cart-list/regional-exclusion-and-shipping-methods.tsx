@@ -21,6 +21,7 @@ const RegionalExclusionAndShippingMethods = ({
   onSave,
   defaultShippingMethod,
   shippingMethods,
+  isDirectlyShippedFromVendor,
 }: ComponentProps<typeof CartItemShippingMethod> & {
   readonly token: string;
   readonly productId: number;
@@ -53,6 +54,7 @@ const RegionalExclusionAndShippingMethods = ({
       onSave={onSave}
       defaultShippingMethod={defaultShippingMethod}
       shippingMethods={shippingMethods}
+      isDirectlyShippedFromVendor={isDirectlyShippedFromVendor}
     />
   );
 };
