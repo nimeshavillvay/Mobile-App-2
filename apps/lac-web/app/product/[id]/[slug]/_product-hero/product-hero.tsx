@@ -33,7 +33,7 @@ type ProductHeroProps = {
 const ProductHero = async ({ id, slug }: ProductHeroProps) => {
   const product = await getProduct(id, slug);
 
-  const images = product.selectedProduct.detailedImages
+  const images = product.selectedProduct.detailedImages?.length
     ? product.selectedProduct.detailedImages.map((image) => ({
         src: image.img,
         alt: image.alt,
