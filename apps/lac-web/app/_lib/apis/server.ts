@@ -310,7 +310,7 @@ export const getOrderDetails = async (token: string, orderId: string) => {
       }>();
 
     const transformedData = {
-      orderNo: Number(response.orderNo),
+      orderNo: response.orderNo,
       orderType: response.orderType,
       orderStatus: response.status,
       email: response.email,
