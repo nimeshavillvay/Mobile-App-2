@@ -1,9 +1,15 @@
 import { loginCheck } from "@/_hooks/user/use-suspense-check-login.hook";
 import { api } from "@/_lib/api";
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
+import dayjs from "dayjs";
+import isBetween from "dayjs/plugin/isBetween";
 import type { ResponseCookie } from "next/dist/compiled/@edge-runtime/cookies";
 import { NextResponse, type NextRequest } from "next/server";
 
+dayjs.extend(isBetween);
+
+const TOKEN_EXPIRE_COOKIE = "xid_00924_expire";
+const TOKEN_MAX_AGE = 7200;
 const PUBLIC_ONLY_ROUTES = [
   "/sign-in",
   "/register",
@@ -19,9 +25,10 @@ export const middleware = async (request: NextRequest) => {
   }
 
   const sessionToken = request.cookies.get(SESSION_TOKEN_COOKIE);
+  const tokenExpire = request.cookies.get(TOKEN_EXPIRE_COOKIE);
 
   // Create new session token if it doesn't exist
-  if (!sessionToken) {
+  if (!sessionToken || !tokenExpire) {
     // TODO Find a better solution to this
     // Currently server components do not have the session token cookie
     // when opening the site for the first time, so we're using this
@@ -41,6 +48,15 @@ export const middleware = async (request: NextRequest) => {
     loginCheck(sessionToken?.value),
   ]);
 
+  // Refresh the token only if it's close to expiring.
+  // We shouldn't refresh it on every page navigation, because it makes the TanStack
+  // Query cache useless.
+  const shouldRefreshToken = dayjs().isBetween(
+    dayjs(tokenExpire.value).subtract(TOKEN_MAX_AGE / 4, "seconds"),
+    dayjs(tokenExpire.value),
+    "seconds",
+  );
+
   // Check for public routes
   const isPublicRoute = !!PUBLIC_ONLY_ROUTES.find((route) =>
     request.nextUrl.pathname.startsWith(route),
@@ -52,10 +68,10 @@ export const middleware = async (request: NextRequest) => {
   ) {
     // Redirect to home page if the user tries to access
     // public only routes while logged in
-    const response = setSessionTokenCookie(
-      NextResponse.redirect(new URL("/", request.url)),
-      { tokenValue, cookieConfig },
-    );
+    const response = NextResponse.redirect(new URL("/", request.url));
+    if (shouldRefreshToken) {
+      setSessionTokenCookie(response, { tokenValue, cookieConfig });
+    }
 
     return response;
   }
@@ -68,7 +84,9 @@ export const middleware = async (request: NextRequest) => {
     if (loginCheckResponse.status_code === "NOT_LOGGED_IN") {
       // Redirect to sign in page if user is not logged in
       const response = NextResponse.redirect(new URL("/sign-in", request.url));
-      setSessionTokenCookie(response, { tokenValue, cookieConfig });
+      if (shouldRefreshToken) {
+        setSessionTokenCookie(response, { tokenValue, cookieConfig });
+      }
 
       return response;
     } else {
@@ -80,7 +98,9 @@ export const middleware = async (request: NextRequest) => {
         !("sales_rep_id" in loginCheckResponse)
       ) {
         const response = NextResponse.redirect(new URL("/", request.url));
-        setSessionTokenCookie(response, { tokenValue, cookieConfig });
+        if (shouldRefreshToken) {
+          setSessionTokenCookie(response, { tokenValue, cookieConfig });
+        }
 
         return response;
       }
@@ -88,10 +108,9 @@ export const middleware = async (request: NextRequest) => {
   }
 
   const response = NextResponse.next();
-  setSessionTokenCookie(response, {
-    tokenValue,
-    cookieConfig,
-  });
+  if (shouldRefreshToken) {
+    setSessionTokenCookie(response, { tokenValue, cookieConfig });
+  }
 
   return response;
 };
@@ -162,4 +181,11 @@ const setSessionTokenCookie = (
   },
 ) => {
   response.cookies.set(SESSION_TOKEN_COOKIE, tokenValue, cookieConfig);
+  response.cookies.set(
+    TOKEN_EXPIRE_COOKIE,
+    dayjs()
+      .add(cookieConfig.maxAge ?? TOKEN_MAX_AGE, "seconds")
+      .toISOString(),
+    cookieConfig,
+  );
 };
