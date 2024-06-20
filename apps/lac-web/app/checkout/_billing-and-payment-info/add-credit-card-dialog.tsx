@@ -113,6 +113,7 @@ const AddCreditCardDialog = ({
         holderName: values.name,
         type: values.brand,
         defaultCard: false,
+        save: values.save,
       },
       {
         onSuccess: async (data) => {
