@@ -5,7 +5,7 @@ import { MdKeyboardArrowRight } from "react-icons/md";
 
 type OrderDetailsForMobileProps = {
   readonly orderDetail: {
-    orderNo: number;
+    orderNo: string;
     orderType: string;
     orderStatus: string;
     email: string;
