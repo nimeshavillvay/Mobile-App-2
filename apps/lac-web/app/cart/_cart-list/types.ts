@@ -21,6 +21,10 @@ export type ShipToMeOption =
   | typeof ALTERNATIVE_BRANCHES
   | undefined;
 
+export type WillCallOption =
+  | typeof MAIN_OPTIONS.WILL_CALL
+  | typeof MAIN_OPTIONS.WILL_CALL_TRANSFER;
+
 export type MainOption = (typeof MAIN_OPTIONS)[keyof typeof MAIN_OPTIONS];
 
 export type ViewportTypes = "desktop" | "mobile";

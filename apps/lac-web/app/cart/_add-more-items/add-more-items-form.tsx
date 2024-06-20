@@ -275,6 +275,7 @@ const AddMoreItemsForm = ({ token }: { readonly token: string }) => {
         productId: item.info?.productId,
         quantity: item.quantity,
         poOrJobName: item.jobName,
+        sku: item.sku,
       };
     });
 

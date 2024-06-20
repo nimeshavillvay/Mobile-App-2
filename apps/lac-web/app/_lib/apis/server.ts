@@ -224,6 +224,8 @@ export const getOrderDetails = async (token: string, orderId: string) => {
         orderDate: string;
         pickupDate: string;
         orderBy: string;
+        firstName: string;
+        lastName: string;
         soldTo: string;
         shipTo: string;
         po: string;
@@ -308,13 +310,15 @@ export const getOrderDetails = async (token: string, orderId: string) => {
       }>();
 
     const transformedData = {
-      orderNo: Number(response.orderNo),
+      orderNo: response.orderNo,
       orderType: response.orderType,
       orderStatus: response.status,
       email: response.email,
       orderDate: response.orderDate ?? "",
       pickupDate: response.pickupDate ?? "",
       orderBy: response.orderBy,
+      firstName: response.firstName,
+      lastName: response.lastName,
       soldTo: response.soldTo,
       shipTo: response.shipTo,
       po: response.po,

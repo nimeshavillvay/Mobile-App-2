@@ -22,9 +22,9 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - name: Install pnpm
-        uses: pnpm/action-setup@v3
+        uses: pnpm/action-setup@v4
         with:
-          version: 8
+          version: 9
           run_install: false
       - name: Get pnpm store directory
         shell: bash
@@ -37,6 +37,14 @@ jobs:
           key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
+      - uses: actions/cache@v4
+        name: Setup Prettier cache
+        with:
+          path: .prettier/cache
+          key: ${{ runner.os }}-prettier-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-prettier-
+          save-always: true
       - name: Install dependencies
         run: pnpm install
       - name: Check formatting with Prettier
@@ -61,9 +69,9 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - name: Install pnpm
-        uses: pnpm/action-setup@v3
+        uses: pnpm/action-setup@v4
         with:
-          version: 8
+          version: 9
           run_install: false
       - name: Get pnpm store directory
         shell: bash

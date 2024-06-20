@@ -6,8 +6,10 @@ import {
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import { cva } from "@/_lib/cva.config";
 import { cn, formatNumberToPrice } from "@/_lib/utils";
+import { Alert, AlertTitle } from "@repo/web-ui/components/ui/alert";
 import { Separator } from "@repo/web-ui/components/ui/separator";
 import dayjs from "dayjs";
+import { AlertCircle } from "lucide-react";
 import { cookies } from "next/headers";
 import Image from "next/image";
 import { redirect } from "next/navigation";
@@ -113,7 +115,11 @@ const MobileView = async ({ orderNo }: MobileViewProps) => {
 
                 <tr>
                   <td className={tableLabelStyles()}>Bill to</td>
-                  <td className={tableValueStyles()}>{orderDetails.orderBy}</td>
+                  <td className={tableValueStyles()}>
+                    {`${orderDetails.firstName} ${orderDetails.lastName}`}
+                    <br />
+                    {orderDetails.billToAddress.attention}
+                  </td>
                 </tr>
 
                 <tr>
@@ -124,7 +130,7 @@ const MobileView = async ({ orderNo }: MobileViewProps) => {
                 <tr>
                   <td className={tableLabelStyles()}>Billing address</td>
                   <td className={tableValueStyles()}>
-                    {orderDetails.billToAddress.street},{" "}
+                    #{orderDetails.soldTo}, {orderDetails.billToAddress.street},{" "}
                     {orderDetails.billToAddress.city},{" "}
                     {orderDetails.billToAddress.region},{" "}
                     {orderDetails.billToAddress.county},{" "}
@@ -161,7 +167,7 @@ const MobileView = async ({ orderNo }: MobileViewProps) => {
                 <tr>
                   <td className={tableLabelStyles()}>Ship to address</td>
                   <td className={tableValueStyles()}>
-                    {orderDetails.shipToAddress.street},{" "}
+                    #{orderDetails.shipTo}, {orderDetails.shipToAddress.street},{" "}
                     {orderDetails.shipToAddress.city},{" "}
                     {orderDetails.shipToAddress.region},{" "}
                     {orderDetails.shipToAddress.county},{" "}
@@ -175,7 +181,11 @@ const MobileView = async ({ orderNo }: MobileViewProps) => {
 
                 <tr>
                   <td className={tableLabelStyles()}>Contact person</td>
-                  <td className={tableValueStyles()}>{orderDetails.orderBy}</td>
+                  <td className={tableValueStyles()}>
+                    {orderDetails.orderBy !== orderDetails.email
+                      ? orderDetails.orderBy
+                      : `${orderDetails.firstName} ${orderDetails.lastName}`}
+                  </td>
                 </tr>
 
                 <tr>
@@ -191,6 +201,15 @@ const MobileView = async ({ orderNo }: MobileViewProps) => {
             className="h-px w-full bg-wurth-gray-150"
           />
         </section>
+
+        {orderDetails.completeDelivery && (
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>
+              This order will not ship until backorder item(s) are in stock.
+            </AlertTitle>
+          </Alert>
+        )}
 
         <section className="flex flex-col gap-4">
           <div className={containerClasses()}>

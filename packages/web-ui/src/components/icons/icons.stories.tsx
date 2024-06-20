@@ -19,6 +19,7 @@ import { ChevronRight } from "./chevron-right";
 import { ChevronUp } from "./chevron-up";
 import { Close } from "./close";
 import { Download } from "./download";
+import { Email } from "./email";
 import { Exit } from "./exit";
 import { Facebook } from "./facebook";
 import { FileDownload } from "./file-download";
@@ -164,6 +165,10 @@ export const Showcase: Story = {
 
         <IconContainer name="Download">
           <Download />
+        </IconContainer>
+
+        <IconContainer name="Email">
+          <Email />
         </IconContainer>
 
         <IconContainer name="Exit">

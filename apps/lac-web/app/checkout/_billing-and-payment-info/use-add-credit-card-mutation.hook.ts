@@ -16,12 +16,14 @@ const useAddCreditCardMutation = () => {
       holderName,
       type,
       defaultCard,
+      save,
     }: {
       token: string;
       expDate: string;
       holderName: string;
       type: string;
       defaultCard: boolean;
+      save: boolean;
     }) =>
       api
         .post("rest/my-account/creditcards", {
@@ -35,6 +37,7 @@ const useAddCreditCardMutation = () => {
             holdername: holderName,
             card_type: type,
             default: defaultCard ? "Y" : "",
+            save,
           },
         })
         .json<{

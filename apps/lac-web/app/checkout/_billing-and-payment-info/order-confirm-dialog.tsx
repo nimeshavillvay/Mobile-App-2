@@ -18,7 +18,7 @@ import { getPaymentId } from "./helpers";
 import useCheckoutMutation from "./use-checkout-mutation.hook";
 import useSuspenseCreditCards from "./use-suspense-credit-cards.hook";
 
-type OrderConfirmDialog = {
+type OrderConfirmDialogProps = {
   readonly token: string;
   readonly otherPaymentMethods: PaymentMethod[];
 };
@@ -26,10 +26,9 @@ type OrderConfirmDialog = {
 const OrderConfirmDialog = ({
   token,
   otherPaymentMethods,
-}: OrderConfirmDialog) => {
+}: OrderConfirmDialogProps) => {
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
-  const [buttonDisable, setButtonDisable] = useState(false);
 
   const cartQuery = useSuspenseCart(token);
   const creditCartsQuery = useSuspenseCreditCards(token);
@@ -44,11 +43,14 @@ const OrderConfirmDialog = ({
 
   const checkoutMutation = useCheckoutMutation();
 
-  const clickConfirmOrder = () => {
+  const clickConfirmOrder = async () => {
     // Check if a valid payment method is selected
     if (selectedPaymentId) {
-      checkoutMutation.mutate();
-      setButtonDisable(true);
+      try {
+        await checkoutMutation.mutateAsync();
+      } catch {
+        setOpen(false);
+      }
     } else {
       setOpen(false);
       toast({
@@ -81,10 +83,16 @@ const OrderConfirmDialog = ({
         </DialogHeader>
 
         <DialogFooter>
-          <Button disabled={buttonDisable} onClick={() => setOpen(false)}>
+          <Button
+            disabled={checkoutMutation.isPending}
+            onClick={() => setOpen(false)}
+          >
             Cancel
           </Button>
-          <Button onClick={() => clickConfirmOrder()} disabled={buttonDisable}>
+          <Button
+            onClick={() => clickConfirmOrder()}
+            disabled={checkoutMutation.isPending}
+          >
             Confirm
           </Button>
         </DialogFooter>

@@ -23,3 +23,5 @@ export const NOT_IN_STOCK = "notInStock" as const;
 export const NOT_AVAILABLE = "notAvailable" as const;
 
 export const MAX_QUANTITY = 100000 as const;
+
+export const UI_DATE_FORMAT = "ddd, MMM. DD YYYY" as const;
