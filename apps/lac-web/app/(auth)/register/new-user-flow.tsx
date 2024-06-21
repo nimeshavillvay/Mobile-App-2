@@ -68,6 +68,21 @@ const personalDetailsSchema = z.object({
   email: z.string().email(),
   password: z.string().min(8),
   confirmPassword: z.string().min(8),
+  phoneNumber: z
+    .string()
+    .trim()
+    .refine(
+      (value) => {
+        const numericCharacters = value.replace(/-/g, "");
+        const isValidLength =
+          numericCharacters.length >= 10 && numericCharacters.length <= 15;
+        const isValidFormat = /^[\d-]+$/.test(value);
+        return isValidLength && isValidFormat;
+      },
+      {
+        message: "Please enter a valid phone number",
+      },
+    ),
   type: z.enum(REGISTRATION_TYPES_VALUES),
   companyName: z.string(),
   industry: z.string(),
@@ -242,6 +257,7 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
       email: email ?? "",
       password: "",
       confirmPassword: "",
+      phoneNumber: "",
       type: "unselected",
       companyName: "",
       industry: "",
@@ -279,6 +295,7 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
       lastName,
       email,
       password,
+      phoneNumber,
       type,
       companyName,
       industry,
@@ -291,6 +308,7 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
         lastName,
         email,
         password,
+        phoneNumber,
         type,
         company: companyName,
         industry,
@@ -564,6 +582,29 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
                     </FormControl>
                     <FormDescription className="sr-only">
                       This is to confirm your password.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={personalDetailsForm.control}
+                name="phoneNumber"
+                disabled={registerNewUserMutation.isPending}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Phone Number</FormLabel>
+                    <FormControl>
+                      <Input
+                        required
+                        type="tel"
+                        autoComplete="phone-number"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormDescription className="sr-only">
+                      This is your phone number.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
