@@ -40,6 +40,7 @@ const useRegisterNewUserMutation = () => {
       lastName,
       email,
       password,
+      phoneNumber,
       type,
       company = "",
       industry = "",
@@ -52,6 +53,7 @@ const useRegisterNewUserMutation = () => {
       lastName: string;
       email: string;
       password: string;
+      phoneNumber: string;
       type: string;
       company?: string;
       industry?: string;
@@ -79,7 +81,7 @@ const useRegisterNewUserMutation = () => {
               county: billingAddress.county,
               locality: billingAddress.city,
               organization: company,
-              "phone-number": "244234", // TODO Verify field
+              "phone-number": phoneNumber,
               region: billingAddress.state,
               "street-address": billingAddress.address,
               "postal-code": billingAddress.postalCode,
@@ -91,7 +93,7 @@ const useRegisterNewUserMutation = () => {
               county: shippingAddress.county,
               locality: shippingAddress.city,
               organization: company,
-              "phone-number": "244234", // TODO Verify field
+              "phone-number": phoneNumber,
               region: shippingAddress.state,
               "street-address": shippingAddress.address,
               "postal-code": shippingAddress.postalCode,
