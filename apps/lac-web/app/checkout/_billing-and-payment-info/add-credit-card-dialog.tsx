@@ -160,9 +160,9 @@ const AddCreditCardDialog = ({
 
           if (key === "token") {
             if (value) {
-              form.setValue("token", value);
+              form.setValue("token", value, { shouldValidate: true });
             } else {
-              form.setValue("token", ""); // Clear the form state if empty
+              form.setValue("token", "", { shouldValidate: true }); // Clear the form state if empty
             }
           } else if (key === "brand") {
             form.setValue("brand", value ?? "");
