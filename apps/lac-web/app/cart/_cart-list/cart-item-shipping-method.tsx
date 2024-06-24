@@ -747,16 +747,17 @@ const CartItemShippingMethod = ({
                       id={MAIN_OPTIONS.WILL_CALL_TRANSFER}
                       willCallAnywhere={willCallAnywhere}
                       plants={plants}
+                      xPlant={availability.xplant}
                     />
                     {willCallAnywhere[1]?.backOrder && (
                       <BackOrderInfoBanner
-                        date={willCallAnywhere[0]?.backOrderDate_1 ?? ""}
+                        date={willCallAnywhere[1]?.backOrderDate_1 ?? ""}
                       />
                     )}
 
                     {willCallAnywhere[1]?.status === NOT_IN_STOCK && (
                       <BackOrderInfoBanner
-                        date={willCallAnywhere[0]?.willCallBackOrder ?? ""}
+                        date={willCallAnywhere[1]?.willCallBackOrder ?? ""}
                       />
                     )}
                   </RadioGroup>
@@ -806,18 +807,18 @@ const CartItemShippingMethod = ({
                       id={MAIN_OPTIONS.WILL_CALL_TRANSFER}
                       willCallAnywhere={willCallAnywhere}
                       plants={plants}
+                      xPlant={availability.xplant}
                     />
                     {willCallAnywhere[1]?.backOrder && (
                       <BackOrderInfoBanner
-                        date={willCallAnywhere[0]?.backOrderDate_1 ?? ""}
+                        date={willCallAnywhere[1]?.backOrderDate_1 ?? ""}
                       />
                     )}
-
                     {willCallAnywhere[1]?.status === NOT_IN_STOCK && (
                       <BackOrderInfoBanner
-                        date={willCallAnywhere[0]?.willCallBackOrder ?? ""}
+                        date={willCallAnywhere[1]?.willCallBackOrder ?? ""}
                       />
-                    )}
+                    )}{" "}
                   </RadioGroup>
                 )}
 
@@ -867,6 +868,7 @@ const CartItemShippingMethod = ({
                       id={MAIN_OPTIONS.WILL_CALL_TRANSFER}
                       willCallAnywhere={willCallAnywhere}
                       plants={plants}
+                      xPlant={availability.xplant}
                     />
                     {willCallAnywhere[1]?.backOrder && (
                       <BackOrderInfoBanner
