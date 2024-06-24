@@ -1,3 +1,5 @@
+console.log("> process.env.VERCEL_ENV: ", process.env.VERCEL_ENV);
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
