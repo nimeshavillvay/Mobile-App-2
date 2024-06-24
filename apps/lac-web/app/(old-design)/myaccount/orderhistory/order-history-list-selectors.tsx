@@ -1,4 +1,6 @@
-import type { Filters } from "@/_lib/types";
+"use client";
+
+import useSuspenseFilters from "@/_hooks/search/use-suspense-filters.hook";
 import { filterAndMapValues } from "@/_lib/utils";
 import DatePicker from "@/old/_components/date-picker";
 import { Button } from "@/old/_components/ui/button";
@@ -14,7 +16,7 @@ import {
 import { updateSearchParams } from "@/old/_utils/client-helpers";
 import dayjs from "dayjs";
 import { useSearchParams } from "next/navigation";
-import { useId, useRef, useState } from "react";
+import { useDeferredValue, useId, useRef, useState } from "react";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import {
   CUSTOM_DURATION,
@@ -34,28 +36,15 @@ import type { Option } from "./types";
 import { useFilterParams, type SelectedValues } from "./use-filter-params.hook";
 
 type OrderHistoryListSelectorsProps = {
-  readonly filters: Filters[];
-  readonly isLoading: boolean;
+  readonly token: string;
   readonly totalItems: number;
 };
 
 const OrderHistoryListSelectors = ({
-  filters,
-  isLoading,
+  token,
   totalItems,
 }: OrderHistoryListSelectorsProps) => {
   const urlSearchParams = useSearchParams();
-  const { selectedValues, searchParams } = useFilterParams(filters);
-
-  const mappedSelectedValues: (SelectedValues[string] & { id: string })[] = [];
-  for (const [key, value] of Object.entries(selectedValues)) {
-    mappedSelectedValues.push({ ...value, id: key });
-  }
-
-  const poNoFilter = filterAndMapValues(filters, "PO #");
-  const jobNameFilter = filterAndMapValues(filters, "Job Name");
-  const statusFilter = filterAndMapValues(filters, "Status");
-  const typesFilter = filterAndMapValues(filters, "Transaction Type");
 
   const urlFromDate = urlSearchParams.get(QUERY_KEYS.FROM_DATE);
   const urlToDate = urlSearchParams.get(QUERY_KEYS.TO_DATE);
@@ -74,6 +63,27 @@ const OrderHistoryListSelectors = ({
   const [orderTypes, setOrderTypes] = useState<number[]>([]);
   const [poNos, setPoNos] = useState<number[]>([]);
   const [jobNames, setJobNames] = useState<number[]>([]);
+
+  const deferredFromDate = useDeferredValue(fromDate);
+  const deferredToDate = useDeferredValue(toDate);
+
+  const filterQuery = useSuspenseFilters(token, {
+    type: "Order History",
+    from: dayjs(deferredFromDate).format(URL_DATE_FORMAT),
+    to: dayjs(deferredToDate).format(URL_DATE_FORMAT),
+  });
+
+  const { selectedValues, searchParams } = useFilterParams(filterQuery.data);
+
+  const mappedSelectedValues: (SelectedValues[string] & { id: string })[] = [];
+  for (const [key, value] of Object.entries(selectedValues)) {
+    mappedSelectedValues.push({ ...value, id: key });
+  }
+
+  const poNoFilter = filterAndMapValues(filterQuery.data, "PO #");
+  const jobNameFilter = filterAndMapValues(filterQuery.data, "Job Name");
+  const statusFilter = filterAndMapValues(filterQuery.data, "Status");
+  const typesFilter = filterAndMapValues(filterQuery.data, "Transaction Type");
 
   const formattedFromDate = urlFromDate
     ? dayjs(urlFromDate).format(URL_DATE_FORMAT)
@@ -326,7 +336,7 @@ const OrderHistoryListSelectors = ({
           </Button>
 
           <div>
-            {!isLoading && (
+            {!filterQuery.isLoading && (
               <div className="text-base font-bold text-brand-gray-500">
                 {(page - 1) * perPage + 1} -{" "}
                 {Math.min(page * perPage, totalItems)} of {totalItems}
@@ -351,7 +361,7 @@ const OrderHistoryListSelectors = ({
       <SelectorsForMobileDialog
         open={mobileFiltersOpen}
         onOpenChange={setMobileFiltersOpen}
-        filters={filters}
+        filters={filterQuery.data}
       />
     </>
   );

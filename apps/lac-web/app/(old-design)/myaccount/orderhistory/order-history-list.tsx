@@ -25,8 +25,8 @@ import {
   SORTING_DIRECTION,
   SORT_BY_FIELDS,
 } from "./constants";
-import OrderHistoryListFilters from "./order-history-list-filters";
 import OrderHistoryListForMobile from "./order-history-list-for-mobile";
+import OrderHistoryListSelectors from "./order-history-list-selectors";
 import OrderHistoryRow from "./order-history-row";
 import TotalCountAndPagination from "./total-count-and-pagination";
 import useSuspenseOrderHistorySearch from "./use-suspense-order-history-search.hook";
@@ -97,12 +97,7 @@ const OrderHistoryList = ({ token }: { readonly token: string }) => {
 
       <div className="space-y-4">
         <Suspense fallback={<div>Filters Loading...</div>}>
-          <OrderHistoryListFilters
-            token={token}
-            fromDate={fromDate}
-            toDate={toDate}
-            totalItems={totalItems}
-          />
+          <OrderHistoryListSelectors token={token} totalItems={totalItems} />
         </Suspense>
 
         {orderHistoryItems?.length > 0 ? (
