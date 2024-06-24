@@ -1,3 +1,9 @@
+console.log("> process.env.VERCEL_ENV: ", process.env.VERCEL_ENV);
+console.log(
+  '> process.env.VERCEL_ENV !== "production": ',
+  process.env.VERCEL_ENV !== "production",
+);
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
