@@ -1,3 +1,4 @@
+import { revalidateSiteLayout } from "@/_actions/revalidate";
 import ZipCodeInputField from "@/_components/zip-code-input-field";
 import useAddShippingAddressMutation from "@/_hooks/address/use-add-shipping-address-mutation.hook";
 import useUpdateBillingAddressMutation from "@/_hooks/address/use-update-billing-address-mutation.hook";
@@ -34,6 +35,7 @@ import {
   SelectValue,
 } from "@/old/_components/ui/select";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQueryClient } from "@tanstack/react-query";
 import { nanoid } from "nanoid";
 import type { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
@@ -63,6 +65,8 @@ const AddressDialog = ({
   isShippingAddressUpdate,
   address,
 }: AddressDialogProps) => {
+  const queryClient = useQueryClient();
+
   const addressDataSchema = z.object({
     county: z.string(),
     zip4: z.string().refine((value) => /^\d{0,10}$/.test(value), {
@@ -195,6 +199,8 @@ const AddressDialog = ({
             setAddress(addressData);
             setOpenAddressSuggestionDialog(true);
           }
+          queryClient.invalidateQueries();
+          revalidateSiteLayout("/myaccount/company-profile");
         },
       });
     }
