@@ -44,6 +44,7 @@ const useRegisterExistingUserMutation = () => {
         title: "Registered successfully",
       });
       queryClient.invalidateQueries();
+      revalidateSiteLayout("/");
     },
     onError: async (error) => {
       if (error?.response?.status === 400) {
