@@ -200,7 +200,6 @@ const AddressDialog = ({
             setOpenAddressSuggestionDialog(true);
           }
           queryClient.invalidateQueries();
-          revalidateSiteLayout("/myaccount/company-profile");
         },
       });
     }
