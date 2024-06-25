@@ -11,6 +11,8 @@ type OrderDetailsForMobileProps = {
     email: string;
     orderDate: string;
     orderBy: string;
+    firstName: string;
+    lastName: string;
     soldTo: string;
     shipTo: string;
     po: string;
@@ -106,7 +108,9 @@ const OrderDetailsForMobile = ({
             <div className="flex-1">
               <div className="text-sm">Order By</div>
               <div className="max-w-40 truncate text-black">
-                {orderDetail?.orderBy ?? "N/A"}
+                {orderDetail?.orderBy !== orderDetail?.email
+                  ? orderDetail?.orderBy
+                  : `${orderDetail.firstName} ${orderDetail.lastName}`}
               </div>
             </div>
             <div className="flex-1">
