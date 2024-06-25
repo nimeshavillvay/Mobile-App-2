@@ -59,7 +59,7 @@ const Providers = ({ children }: ProvidersProps) => {
           </WrapBalancer>
         </ReactQueryStreamedHydration>
 
-        <ReactQueryDevtools />
+        <ReactQueryDevtools buttonPosition="bottom-left" />
       </QueryClientProvider>
     </CookiesProvider>
   );

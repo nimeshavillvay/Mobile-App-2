@@ -1,9 +1,11 @@
 "use client";
 
+import { useCheckRecaptcha } from "@/_context/recaptcha-ref";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@repo/web-ui/components/ui/button";
 import { Input } from "@repo/web-ui/components/ui/input";
 import { Label } from "@repo/web-ui/components/ui/label";
+import { useToast } from "@repo/web-ui/components/ui/toast";
 import { useId } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -20,6 +22,8 @@ type ForgotPasswordFormProps = {
 const ForgotPasswordForm = ({ email }: ForgotPasswordFormProps) => {
   const id = useId();
   const emailId = `email-${id}`;
+  const checkRecaptcha = useCheckRecaptcha();
+  const { toast } = useToast();
 
   const emailForm = useForm<z.infer<typeof emailFormSchema>>({
     values: {
@@ -30,8 +34,17 @@ const ForgotPasswordForm = ({ email }: ForgotPasswordFormProps) => {
 
   const resetPasswordMutation = useResetPasswordMutation();
 
-  const onSubmit = emailForm.handleSubmit((data) => {
-    resetPasswordMutation.mutate(data.email);
+  const onSubmit = emailForm.handleSubmit(async (data) => {
+    try {
+      await checkRecaptcha();
+    } catch {
+      return toast({
+        variant: "destructive",
+        title: "Failed to send email.",
+      });
+    }
+
+    await resetPasswordMutation.mutateAsync(data.email);
   });
 
   return (
