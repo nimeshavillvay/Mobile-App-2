@@ -423,10 +423,33 @@ const CurrentUserFlow = ({ passwordPolicies }: CurrentUserFlowProps) => {
 
             <FormField
               control={form.control}
-              name="password"
+              name="phoneNumber"
               disabled={createUserMutation.isPending}
               render={({ field }) => (
                 <FormItem>
+                  <FormLabel>Phone Number</FormLabel>
+                  <FormControl>
+                    <Input
+                      required
+                      type="tel"
+                      autoComplete="phone-number"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormDescription className="sr-only">
+                    This is your phone number.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="password"
+              disabled={createUserMutation.isPending}
+              render={({ field }) => (
+                <FormItem className="md:row-start-4">
                   <FormLabel>Password</FormLabel>
                   <FormControl>
                     <Input
@@ -449,7 +472,7 @@ const CurrentUserFlow = ({ passwordPolicies }: CurrentUserFlowProps) => {
               name="confirmPassword"
               disabled={createUserMutation.isPending}
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="md:row-start-4">
                   <FormLabel>Confirm password</FormLabel>
                   <FormControl>
                     <Input
@@ -461,29 +484,6 @@ const CurrentUserFlow = ({ passwordPolicies }: CurrentUserFlowProps) => {
                   </FormControl>
                   <FormDescription className="sr-only">
                     Type the same password here to confirm it.
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="phoneNumber"
-              disabled={createUserMutation.isPending}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Phone Number</FormLabel>
-                  <FormControl>
-                    <Input
-                      required
-                      type="tel"
-                      autoComplete="phone-number"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormDescription className="sr-only">
-                    This is your phone number.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
