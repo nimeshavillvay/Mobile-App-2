@@ -34,7 +34,11 @@ const OrderHistoryRowForMobile = ({ order }: { readonly order: Order }) => {
   return (
     <Link className="flex flex-col gap-3 bg-white p-4" href={orderDetailHref}>
       <div className="flex flex-row justify-between">
-        <div className="font-bold">{order.orderBy}</div>
+        <div className="font-bold">
+          {order.attnName !== ""
+            ? order.attnName
+            : `${order.firstName} ${order.lastName}`}
+        </div>
         <div className="text-brand-gray-500">
           {order.orderDate
             ? dayjs(order.orderDate).format(UI_DATE_FORMAT)
