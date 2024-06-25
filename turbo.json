@@ -12,7 +12,7 @@
     "EXPO_USE_METRO_WORKSPACE_ROOT",
     "EXPO_PUBLIC_API_URL"
   ],
-  "pipeline": {
+  "tasks": {
     "dev": {
       "cache": false,
       "persistent": true,
