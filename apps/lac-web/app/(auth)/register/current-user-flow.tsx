@@ -1,3 +1,4 @@
+import { useCheckRecaptcha } from "@/_context/recaptcha-ref";
 import type { PasswordPolicies } from "@/_lib/types";
 import { cn, isErrorResponse } from "@/_lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,6 +14,7 @@ import {
   FormMessage,
 } from "@repo/web-ui/components/ui/form";
 import { Input } from "@repo/web-ui/components/ui/input";
+import { useToast } from "@repo/web-ui/components/ui/toast";
 import { useSearchParams } from "next/navigation";
 import { useId, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -38,6 +40,8 @@ type CurrentUserFlowProps = {
 const CurrentUserFlow = ({ passwordPolicies }: CurrentUserFlowProps) => {
   const id = useId();
   const formId = `form-${id}`;
+  const checkRecaptcha = useCheckRecaptcha();
+  const { toast } = useToast();
 
   const searchParams = useSearchParams();
   const email = searchParams.get("email");
@@ -107,8 +111,17 @@ const CurrentUserFlow = ({ passwordPolicies }: CurrentUserFlowProps) => {
   };
 
   const createUserMutation = useRegisterExistingUserMutation();
-  const onSubmit = form.handleSubmit((data) => {
-    createUserMutation.mutate(
+  const onSubmit = form.handleSubmit(async (data) => {
+    try {
+      await checkRecaptcha();
+    } catch {
+      return toast({
+        variant: "destructive",
+        title: "Registration failed.",
+      });
+    }
+
+    await createUserMutation.mutateAsync(
       {
         accountNo: data.soldToAccount,
         documentId: data.invoiceNo,

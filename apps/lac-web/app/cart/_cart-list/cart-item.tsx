@@ -1,4 +1,3 @@
-import AvailabilityStatus from "@/_components/availability-status";
 import NumberInputField from "@/_components/number-input-field";
 import useDeleteCartItemMutation from "@/_hooks/cart/use-delete-cart-item-mutation.hook";
 import useUpdateCartItemMutation from "@/_hooks/cart/use-update-cart-item-mutation.hook";
@@ -58,6 +57,7 @@ import {
   TAKE_ON_HAND,
 } from "../constants";
 import type { WillCallAnywhere } from "../types";
+import AvailabilityStatus from "./availability-status";
 import CartItemPrice from "./cart-item-price";
 import CartItemShippingMethod from "./cart-item-shipping-method";
 import FavoriteButton from "./favorite-button";
@@ -297,6 +297,13 @@ const CartItem = ({
                   options,
                   BACK_ORDER_ALL,
                 );
+
+                if (product.configuration.will_call_shipping) {
+                  return handleSelectWillCallPlant(
+                    product.configuration.plant_1,
+                  );
+                }
+
                 if (availableAll) {
                   handleSave(
                     createCartItemConfig({
@@ -478,6 +485,8 @@ const CartItem = ({
                   backOrderQuantity: willCallAnywhere[0]?.willCallQuantity,
                   shippingMethod: "W",
                 }),
+                will_call_plant:
+                  willCallAnywhere[0].willCallPlant ?? EMPTY_STRING,
               });
             }
           },
@@ -488,6 +497,10 @@ const CartItem = ({
 
   // // TODO - Need to optimize this logic based on priority to set the default option
   const setDefaultsForCartConfig = () => {
+    if (product.configuration.will_call_shipping) {
+      return handleSelectWillCallPlant(product.configuration.plant_1);
+    }
+
     if (availableAll) {
       handleSave(
         createCartItemConfig({
@@ -819,6 +832,7 @@ const CartItem = ({
               defaultShippingMethod={defaultShippingMethod}
               shippingMethods={shippingMethods}
               isDirectlyShippedFromVendor={product.isDirectlyShippedFromVendor}
+              handleSelectWillCallPlant={handleSelectWillCallPlant}
             />
           ))}
 
@@ -843,6 +857,7 @@ const CartItem = ({
               defaultShippingMethod={defaultShippingMethod}
               shippingMethods={shippingMethods}
               isDirectlyShippedFromVendor={product.isDirectlyShippedFromVendor}
+              handleSelectWillCallPlant={handleSelectWillCallPlant}
             />
           </Suspense>
         )}

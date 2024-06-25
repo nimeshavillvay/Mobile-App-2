@@ -120,6 +120,7 @@ export type CartItemConfiguration = {
   backorder_all: string;
   backorder_date: string;
   backorder_quantity: string;
+  will_call_shipping: string;
 };
 
 export type CartConfiguration = {

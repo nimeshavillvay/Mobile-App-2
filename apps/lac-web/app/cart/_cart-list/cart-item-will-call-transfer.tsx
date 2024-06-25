@@ -10,12 +10,14 @@ type CartItemWillCallTransferProps = {
   readonly willCallAnywhere: Availability["willCallAnywhere"];
   readonly value: string;
   readonly id: string;
+  readonly xPlant: string;
 };
 const CartItemWillCallTransfer = ({
   willCallAnywhere,
   plants,
   value,
   id,
+  xPlant,
 }: CartItemWillCallTransferProps) => {
   if (!willCallAnywhere[1] || willCallAnywhere.length <= 1) {
     return null;
@@ -31,18 +33,23 @@ const CartItemWillCallTransfer = ({
             <RadioGroupItem value={value} id={id} />
           </div>
           <div className="flex flex-col gap-0.5">
-            <div className="flex items-center text-sm">
+            <div className="flex flex-row items-center text-sm">
               <ItemCountBadge count={willCallItem.willCallQuantity} />
               &nbsp;
-              <span className="font-medium">transfer from</span>
-              &nbsp;
+              <span className="font-medium">
+                transfer from <PlantName plants={plants} plantCode={xPlant} />
+              </span>
+            </div>
+            <span className="font-medium">
+              to{" "}
               <PlantName
                 plants={plants}
                 plantCode={willCallItem.willCallPlant}
               />
-            </div>
+            </span>
+
             <span className="text-xs text-wurth-gray-500">
-              Your order will be ready for pick up the next day.
+              Your order will be ready for pick up next day.
             </span>
           </div>
         </div>
@@ -57,13 +64,17 @@ const CartItemWillCallTransfer = ({
             <div className="flex items-center text-sm">
               <ItemCountBadge count={willCallItem.willCallQuantity} />
               &nbsp;
-              <span className="font-medium">transfer from</span>
-              &nbsp;
+              <span className="font-medium">
+                transfer from <PlantName plants={plants} plantCode={xPlant} />
+              </span>
+            </div>
+            <span className="font-medium">
+              to{" "}
               <PlantName
                 plants={plants}
                 plantCode={willCallItem.willCallPlant}
               />
-            </div>
+            </span>
             {willCallItem.backOrder && (
               <BackOrderItemCountLabel
                 count={willCallItem.backOrderQuantity_1 ?? 0}
@@ -84,10 +95,7 @@ const CartItemWillCallTransfer = ({
           <div className="flex flex-col gap-0.5">
             <div className="rounded bg-red-800/10 px-2 py-1 text-sm text-red-800">
               This item is out of stock at&nbsp;
-              <PlantName
-                plants={plants}
-                plantCode={willCallItem.willCallPlant}
-              />
+              <PlantName plants={plants} plantCode={xPlant} />
             </div>
             {willCallItem.willCallQuantity && (
               <BackOrderItemCountLabel count={willCallItem.willCallQuantity} />

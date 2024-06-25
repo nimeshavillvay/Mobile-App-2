@@ -1,17 +1,12 @@
 "use client";
 
+import AvailabilityStatus from "@/_components/availability-status";
 import ProductNotAvailable from "@/_components/product-not-available";
 import useSuspenseWillCallPlant from "@/_hooks/address/use-suspense-will-call-plant.hook";
 import useDebouncedState from "@/_hooks/misc/use-debounced-state.hook";
 import useSuspenseCheckAvailability from "@/_hooks/product/use-suspense-check-availability.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
-import {
-  LIMITED_STOCK,
-  NOT_AVAILABLE,
-  NOT_IN_STOCK,
-  UI_DATE_FORMAT,
-} from "@/_lib/constants";
-import { cn } from "@/_lib/utils";
+import { NOT_AVAILABLE } from "@/_lib/constants";
 import { ChevronRight } from "@repo/web-ui/components/icons/chevron-right";
 import { Button } from "@repo/web-ui/components/ui/button";
 import {
@@ -19,7 +14,6 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@repo/web-ui/components/ui/collapsible";
-import dayjs from "dayjs";
 import { useDeferredValue } from "react";
 import useAddToCartForm from "../../use-add-to-cart-form.hook";
 
@@ -42,7 +36,7 @@ const LocationStocks = ({ token, productId }: LocationStocksProps) => {
 
   const willCallPlant = willCallPlantQuery.data;
   const willCallPlantCode = willCallPlant?.plantCode;
-  const { availableLocations, status } = checkAvailabilityQuery.data;
+  const { availableLocations } = checkAvailabilityQuery.data;
 
   const homeBranch = availableLocations?.find(
     (location) => location.location === willCallPlantCode,
@@ -50,8 +44,8 @@ const LocationStocks = ({ token, productId }: LocationStocksProps) => {
   const otherLocations = availableLocations?.filter(
     ({ location }) => location !== willCallPlantCode,
   );
-  const isNotInStock = status === NOT_IN_STOCK;
-  const isLimitedStock = status === LIMITED_STOCK;
+  const isNotInStock = homeBranch?.amount === 0;
+  const isLimitedStock = (homeBranch?.amount ?? 0) < Number(deferredQuantity);
 
   const backOrderDate =
     checkAvailabilityQuery.data.options[0]?.plants[0]?.backOrderDate;
@@ -69,34 +63,14 @@ const LocationStocks = ({ token, productId }: LocationStocksProps) => {
   return (
     <Collapsible className="flex flex-col gap-1">
       <div className="space-y-2 py-1 md:flex md:flex-row md:items-center md:justify-between md:space-y-0">
-        <div className="flex shrink-0 flex-row items-center gap-2">
-          <div
-            className={cn(
-              "rounded px-4 py-2 text-sm font-semibold leading-4 md:px-2 md:py-1",
-              isNotInStock || isLimitedStock || !homeBranch
-                ? "bg-yellow-50 text-yellow-700"
-                : "bg-green-50 text-green-700",
-            )}
-          >
-            {isNotInStock || !homeBranch
-              ? "Backordered"
-              : isLimitedStock
-                ? "Limited Stock"
-                : "In Stock"}
-          </div>
-
-          {homeBranch && !isNotInStock && (
-            <div className="text-sm font-medium text-wurth-gray-800">
-              {homeBranch?.amount} in stock at {homeBranch?.name}
-            </div>
-          )}
-          {(isNotInStock || !homeBranch) && !!backOrderDate && (
-            <div className="text-sm font-medium text-wurth-gray-800">
-              Items are expected to ship by{" "}
-              {dayjs(backOrderDate).format(UI_DATE_FORMAT)}.
-            </div>
-          )}
-        </div>
+        <AvailabilityStatus
+          amount={homeBranch?.amount ?? 0}
+          backOrderDate={backOrderDate ?? ""}
+          isHomeBranch={!!homeBranch}
+          isLimitedStock={isLimitedStock}
+          isNotInStock={isNotInStock}
+          location={homeBranch?.name ?? ""}
+        />
 
         {checkLoginQuery.data.status_code === "OK" &&
           !isNotInStock &&
