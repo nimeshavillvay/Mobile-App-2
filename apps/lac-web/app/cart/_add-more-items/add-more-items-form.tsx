@@ -245,12 +245,21 @@ const AddMoreItemsForm = ({ token }: { readonly token: string }) => {
     });
   };
 
+  const isFormRowFilled = (cartItem: CartItem): boolean => {
+    return !!cartItem?.sku || !!cartItem?.quantity;
+  };
+
   const isFormValid = (cartItems: CartItem[]): boolean => {
     let isValidForm = true;
     let i = 0;
 
     while (isValidForm && i < cartItems.length) {
       const cartItem = cartItems?.[i];
+
+      if (cartItem && !isFormRowFilled(cartItem)) {
+        i++;
+        continue;
+      }
 
       if (cartItem?.sku == "" || isInvalidQuantity(i) || cartItem?.isInvalid) {
         isValidForm = false;
@@ -261,9 +270,28 @@ const AddMoreItemsForm = ({ token }: { readonly token: string }) => {
     return isValidForm;
   };
 
+  const isAllFormRowsEmpty = (cartItems: CartItem[]): boolean => {
+    let i = 0;
+
+    while (i < cartItems.length) {
+      const cartItem = cartItems?.[i];
+
+      if (cartItem && isFormRowFilled(cartItem)) {
+        return false;
+      }
+      i++;
+    }
+
+    return true;
+  };
+
   const onSubmit = async (values: FormSchema) => {
     setIsFormInvalid(false);
     setIsFormSubmitted(true);
+
+    if (isAllFormRowsEmpty(values?.cart)) {
+      return;
+    }
 
     if (!isFormValid(values?.cart)) {
       setIsFormInvalid(true);
