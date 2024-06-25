@@ -1,45 +1,52 @@
-import { IN_STOCK, LIMITED_STOCK } from "@/_lib/constants";
+import { UI_DATE_FORMAT } from "@/_lib/constants";
 import { cn } from "@/_lib/utils";
+import dayjs from "dayjs";
 
 type AvailabilityStatusProps = {
-  readonly availabilityStatus: string;
+  readonly location: string;
   readonly amount: number;
-  readonly branch: string;
+  readonly isHomeBranch: boolean;
+  readonly backOrderDate: string;
+  readonly isLimitedStock: boolean;
+  readonly isNotInStock: boolean;
 };
 
 const AvailabilityStatus = ({
-  availabilityStatus,
+  isLimitedStock,
+  isNotInStock,
+  isHomeBranch,
   amount,
-  branch,
+  location,
+  backOrderDate,
 }: AvailabilityStatusProps) => {
-  const isLimitedStock = availabilityStatus === LIMITED_STOCK && amount > 0;
-  const isInStock = availabilityStatus === IN_STOCK && amount > 0;
-  let statusText = "";
-
-  if (isInStock) {
-    statusText = `${amount} in stock`;
-  } else if (isLimitedStock) {
-    statusText = `Only ${amount} in stock`;
-  } else {
-    statusText = "Out of stock";
-  }
-
   return (
-    <div className="text-sm text-wurth-gray-800">
-      <span
+    <div className="flex flex-row flex-wrap items-center gap-2">
+      <div
         className={cn(
-          "font-semibold",
-          isInStock
-            ? "text-green-700"
-            : isLimitedStock
-              ? "text-yellow-700"
-              : "text-red-700",
+          "rounded px-4 py-2 text-sm font-semibold leading-4 md:px-2 md:py-1",
+          isLimitedStock || isNotInStock || !isHomeBranch
+            ? "bg-yellow-50 text-yellow-700"
+            : "bg-green-50 text-green-700",
         )}
       >
-        {statusText}
-      </span>
-      &nbsp;at&nbsp;
-      {branch}
+        {isNotInStock || !isHomeBranch
+          ? "Backordered"
+          : isLimitedStock
+            ? "Limited Stock"
+            : "In Stock"}
+      </div>
+
+      {isHomeBranch && !isNotInStock && (
+        <div className="text-sm font-medium text-wurth-gray-800">
+          {amount} in stock at {location}
+        </div>
+      )}
+      {(isNotInStock || !isHomeBranch) && !!backOrderDate && (
+        <div className="flex-1 text-sm font-medium text-wurth-gray-800">
+          Items are expected to ship by{" "}
+          {dayjs(backOrderDate).format(UI_DATE_FORMAT)}.
+        </div>
+      )}
     </div>
   );
 };
