@@ -82,6 +82,7 @@ type CartItemShippingMethodProps = {
   readonly setSelectedWillCallTransfer: (option: WillCallOption) => void;
   readonly selectedWillCallTransfer: WillCallOption;
   readonly isDirectlyShippedFromVendor: boolean;
+  readonly handleSelectWillCallPlant: (plant: string) => void;
 };
 
 const CartItemShippingMethod = ({
@@ -101,6 +102,7 @@ const CartItemShippingMethod = ({
   defaultShippingMethod,
   shippingMethods,
   isDirectlyShippedFromVendor,
+  handleSelectWillCallPlant,
 }: CartItemShippingMethodProps) => {
   const id = useId();
   const shipToMeId = `${MAIN_OPTIONS.SHIP_TO_ME}-${id}`;
@@ -307,6 +309,7 @@ const CartItemShippingMethod = ({
           backOrderQuantity: item?.willCallQuantity,
           shippingMethod: item.shippingMethod,
         }),
+        will_call_plant: item?.willCallPlant ?? EMPTY_STRING,
       });
     }
   };
@@ -691,6 +694,9 @@ const CartItemShippingMethod = ({
               disabled={selectedShippingOption !== MAIN_OPTIONS.WILL_CALL}
               value={selectedWillCallPlant}
               onValueChange={(plant) => {
+                if (willCallAnywhere && willCallAnywhere[0]) {
+                  handleSelectWillCallPlant(plant);
+                }
                 setSelectedWillCallPlant(plant);
                 setSelectedWillCallTransfer(MAIN_OPTIONS.WILL_CALL);
                 setSelectedShippingOption(MAIN_OPTIONS.WILL_CALL);
@@ -747,16 +753,17 @@ const CartItemShippingMethod = ({
                       id={MAIN_OPTIONS.WILL_CALL_TRANSFER}
                       willCallAnywhere={willCallAnywhere}
                       plants={plants}
+                      xPlant={availability.xplant}
                     />
                     {willCallAnywhere[1]?.backOrder && (
                       <BackOrderInfoBanner
-                        date={willCallAnywhere[0]?.backOrderDate_1 ?? ""}
+                        date={willCallAnywhere[1]?.backOrderDate_1 ?? ""}
                       />
                     )}
 
                     {willCallAnywhere[1]?.status === NOT_IN_STOCK && (
                       <BackOrderInfoBanner
-                        date={willCallAnywhere[0]?.willCallBackOrder ?? ""}
+                        date={willCallAnywhere[1]?.willCallBackOrder ?? ""}
                       />
                     )}
                   </RadioGroup>
@@ -806,18 +813,18 @@ const CartItemShippingMethod = ({
                       id={MAIN_OPTIONS.WILL_CALL_TRANSFER}
                       willCallAnywhere={willCallAnywhere}
                       plants={plants}
+                      xPlant={availability.xplant}
                     />
                     {willCallAnywhere[1]?.backOrder && (
                       <BackOrderInfoBanner
-                        date={willCallAnywhere[0]?.backOrderDate_1 ?? ""}
+                        date={willCallAnywhere[1]?.backOrderDate_1 ?? ""}
                       />
                     )}
-
                     {willCallAnywhere[1]?.status === NOT_IN_STOCK && (
                       <BackOrderInfoBanner
-                        date={willCallAnywhere[0]?.willCallBackOrder ?? ""}
+                        date={willCallAnywhere[1]?.willCallBackOrder ?? ""}
                       />
-                    )}
+                    )}{" "}
                   </RadioGroup>
                 )}
 
@@ -867,6 +874,7 @@ const CartItemShippingMethod = ({
                       id={MAIN_OPTIONS.WILL_CALL_TRANSFER}
                       willCallAnywhere={willCallAnywhere}
                       plants={plants}
+                      xPlant={availability.xplant}
                     />
                     {willCallAnywhere[1]?.backOrder && (
                       <BackOrderInfoBanner
