@@ -8,11 +8,11 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "wurthlac-dev.x-shops.com", // Development
+        hostname: "wurthlac.x-shops.com",
       },
       {
         protocol: "https",
-        hostname: "wurthlac.x-shops.com", // Production
+        hostname: "wurthmachinery.com",
       },
     ],
     minimumCacheTTL: 60 * 60 * 24 * 365, // 1 year
