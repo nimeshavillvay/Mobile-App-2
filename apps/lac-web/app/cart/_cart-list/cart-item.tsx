@@ -352,6 +352,7 @@ const CartItem = ({
                         ? shipAlternativeBranch?.plants?.[0]?.backOrderQuantity
                         : 0,
                       backOrderAll: shipAlternativeBranch.backOrder,
+                      homePlant: willCallPlant.plantCode,
                     }),
                   );
                 } else if (backOrderAll) {
@@ -539,6 +540,7 @@ const CartItem = ({
           backOrderQuantity: shipAlternativeBranch.backOrder
             ? shipAlternativeBranch?.plants?.[0]?.backOrderQuantity
             : 0,
+          homePlant: willCallPlant.plantCode,
         }),
       );
     } else if (backOrderAll) {
@@ -833,6 +835,7 @@ const CartItem = ({
               shippingMethods={shippingMethods}
               isDirectlyShippedFromVendor={product.isDirectlyShippedFromVendor}
               handleSelectWillCallPlant={handleSelectWillCallPlant}
+              willCallPlant={willCallPlant}
             />
           ))}
 
@@ -858,6 +861,7 @@ const CartItem = ({
               shippingMethods={shippingMethods}
               isDirectlyShippedFromVendor={product.isDirectlyShippedFromVendor}
               handleSelectWillCallPlant={handleSelectWillCallPlant}
+              willCallPlant={willCallPlant}
             />
           </Suspense>
         )}

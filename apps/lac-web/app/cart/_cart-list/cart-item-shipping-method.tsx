@@ -83,6 +83,7 @@ type CartItemShippingMethodProps = {
   readonly selectedWillCallTransfer: WillCallOption;
   readonly isDirectlyShippedFromVendor: boolean;
   readonly handleSelectWillCallPlant: (plant: string) => void;
+  readonly willCallPlant: { plantCode: string; plantName: string };
 };
 
 const CartItemShippingMethod = ({
@@ -103,6 +104,7 @@ const CartItemShippingMethod = ({
   shippingMethods,
   isDirectlyShippedFromVendor,
   handleSelectWillCallPlant,
+  willCallPlant,
 }: CartItemShippingMethodProps) => {
   const id = useId();
   const shipToMeId = `${MAIN_OPTIONS.SHIP_TO_ME}-${id}`;
@@ -243,6 +245,7 @@ const CartItemShippingMethod = ({
                 ? shipAlternativeBranch?.plants?.[0]?.backOrderQuantity
                 : 0,
               backOrderAll: shipAlternativeBranch.backOrder,
+              homePlant: willCallPlant.plantCode,
             }),
           );
         }
@@ -377,6 +380,7 @@ const CartItemShippingMethod = ({
                   ? shipAlternativeBranch?.plants?.[0]?.backOrderQuantity
                   : 0,
                 backOrderAll: shipAlternativeBranch.backOrder,
+                homePlant: willCallPlant.plantCode,
               }),
             );
           }
@@ -392,9 +396,16 @@ const CartItemShippingMethod = ({
       setSelectedShippingMethod(defaultShippingMethod.code);
 
       if (shipToMe === TAKE_ON_HAND && takeOnHand) {
+        const setShippingMethod =
+          takeOnHandPlant?.shippingMethods.find(
+            (method) => method.code === selectedShippingMethod,
+          )?.code ||
+          takeOnHandPlant?.shippingMethods?.[0]?.code ||
+          selectedShippingMethod;
+        setSelectedShippingMethod(setShippingMethod);
         onSave(
           createCartItemConfig({
-            method: defaultShippingMethod.code,
+            method: setShippingMethod,
             quantity: takeOnHandPlant?.quantity ?? 0,
             plant: takeOnHandPlant?.plant ?? EMPTY_STRING,
             hash: takeOnHand.hash,
@@ -417,6 +428,7 @@ const CartItemShippingMethod = ({
               ? shipAlternativeBranch?.plants?.[0]?.backOrderQuantity
               : 0,
             backOrderAll: shipAlternativeBranch.backOrder,
+            homePlant: willCallPlant.plantCode,
           }),
         );
       }
@@ -632,12 +644,16 @@ const CartItemShippingMethod = ({
                                         </div>
                                         <div className="text-xs">
                                           via&nbsp;
-                                          {shippingMethods?.find(
-                                            (option) =>
-                                              option.code ===
-                                              selectedShippingMethod,
-                                          )?.name ??
-                                            defaultShippingMethod?.name}
+                                          {plant.plant ===
+                                            willCallPlant.plantCode &&
+                                            (shippingMethods?.find(
+                                              (option) =>
+                                                option.code ===
+                                                selectedShippingMethod,
+                                            )?.name ??
+                                              defaultShippingMethod?.name)}
+                                          {plant.plant !==
+                                            willCallPlant.plantCode && "Ground"}
                                         </div>
                                       </TableCell>
                                       <TableCell className="text-end">
