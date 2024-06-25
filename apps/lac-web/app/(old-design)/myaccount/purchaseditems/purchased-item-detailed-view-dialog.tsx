@@ -160,7 +160,7 @@ const PurchasedItemDetailedViewDialog = ({
 
               <div className="flex-1">
                 <div className="text-nowrap text-sm">Order Count</div>
-                <div className="font-bold">1</div>
+                <div className="font-bold">{item.totalItem ?? "N/A"}</div>
               </div>
             </div>
 
