@@ -645,15 +645,14 @@ const CartItemShippingMethod = ({
                                         <div className="text-xs">
                                           via&nbsp;
                                           {plant.plant ===
-                                            willCallPlant.plantCode &&
-                                            (shippingMethods?.find(
-                                              (option) =>
-                                                option.code ===
-                                                selectedShippingMethod,
-                                            )?.name ??
-                                              defaultShippingMethod?.name)}
-                                          {plant.plant !==
-                                            willCallPlant.plantCode && "Ground"}
+                                          willCallPlant.plantCode
+                                            ? shippingMethods?.find(
+                                                (option) =>
+                                                  option.code ===
+                                                  selectedShippingMethod,
+                                              )?.name ??
+                                              defaultShippingMethod?.name
+                                            : "Ground"}
                                         </div>
                                       </TableCell>
                                       <TableCell className="text-end">
