@@ -544,10 +544,33 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
 
               <FormField
                 control={personalDetailsForm.control}
-                name="password"
+                name="phoneNumber"
                 disabled={registerNewUserMutation.isPending}
                 render={({ field }) => (
                   <FormItem>
+                    <FormLabel>Phone Number</FormLabel>
+                    <FormControl>
+                      <Input
+                        required
+                        type="tel"
+                        autoComplete="phone-number"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormDescription className="sr-only">
+                      This is your phone number.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={personalDetailsForm.control}
+                name="password"
+                disabled={registerNewUserMutation.isPending}
+                render={({ field }) => (
+                  <FormItem className="md:row-start-3">
                     <FormLabel>Password</FormLabel>
                     <FormControl>
                       <Input
@@ -570,7 +593,7 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
                 name="confirmPassword"
                 disabled={registerNewUserMutation.isPending}
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="md:row-start-3">
                     <FormLabel>Confirm password</FormLabel>
                     <FormControl>
                       <Input
@@ -582,29 +605,6 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
                     </FormControl>
                     <FormDescription className="sr-only">
                       This is to confirm your password.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={personalDetailsForm.control}
-                name="phoneNumber"
-                disabled={registerNewUserMutation.isPending}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Phone Number</FormLabel>
-                    <FormControl>
-                      <Input
-                        required
-                        type="tel"
-                        autoComplete="phone-number"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormDescription className="sr-only">
-                      This is your phone number.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
