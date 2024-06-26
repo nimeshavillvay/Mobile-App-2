@@ -319,8 +319,8 @@ const CartItem = ({
                   const setShippingMethod =
                     takeOnHand.plants?.[0]?.shippingMethods.find(
                       (method) => method.code === selectedShippingMethod,
-                    )?.code ||
-                    takeOnHand.plants?.[0]?.shippingMethods?.[0]?.code ||
+                    )?.code ??
+                    takeOnHand.plants?.[0]?.shippingMethods?.[0]?.code ??
                     selectedShippingMethod;
                   setSelectedShippingMethod(setShippingMethod);
                   handleSave(
