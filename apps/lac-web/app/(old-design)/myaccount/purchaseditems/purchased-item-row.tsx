@@ -1,5 +1,5 @@
 import ProductNotAvailable from "@/_components/product-not-available";
-import RegionalExclusion from "@/_components/regional-exclusion";
+import Warning from "@/_components/warning";
 import useAddToCartMutation from "@/_hooks/cart/use-add-to-cart-mutation.hook";
 import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
 import useSuspenseProductExcluded from "@/_hooks/product/use-suspense-product-excluded.hook";
@@ -336,7 +336,10 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
             colSpan={3}
             className="flex flex-col gap-0.5 pb-0 text-sm text-brand-gray-500"
           >
-            <RegionalExclusion />
+            <Warning
+              title="Not Available"
+              description="This item is not available in your territory."
+            />
           </TableCell>
           <TableCell colSpan={6} />
         </TableRow>

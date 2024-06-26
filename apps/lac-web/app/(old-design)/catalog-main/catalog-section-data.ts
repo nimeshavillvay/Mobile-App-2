@@ -1,3 +1,5 @@
+const apiUrl = process.env.NEXT_PUBLIC_WURTH_LAC_API;
+
 export type CatalogSectionType = {
   letter: string;
   title: string;
@@ -13,14 +15,14 @@ export const catalogSectionData: CatalogSectionType[] = [
     rev: "Rev. 06/2022",
     online:
       "https://catalog.wurthlac.com/catalog/section-a-decorative-hardware/",
-    pdf: "https://wurthlac.com/literature/catalog/Section_A-WLAC_2022-23.pdf",
+    pdf: `${apiUrl}/assets/pdf/Section_A-WLAC_2022-23.pdf`,
   },
   {
     letter: "b",
     title: "Section B - Concealed Hinges",
     rev: "Rev. 06/2022",
     online: "https://catalog.wurthlac.com/catalog/section-b-concealed-hinges/",
-    pdf: "https://wurthlac.com/literature/catalog/Section_B-WLAC_2022-23.pdf",
+    pdf: `${apiUrl}/assets/pdf/Section_B-WLAC_2022-23.pdf`,
   },
   {
     letter: "c",
@@ -28,7 +30,7 @@ export const catalogSectionData: CatalogSectionType[] = [
     rev: "Rev. 06/2022",
     online:
       "https://catalog.wurthlac.com/catalog/section-c-lift-systems-semi-concealed-hinges/",
-    pdf: "https://wurthlac.com/literature/catalog/Section_C-WLAC_2022-23.pdf",
+    pdf: `${apiUrl}/assets/pdf/Section_C-WLAC_2022-23.pdf`,
   },
   {
     letter: "d",
@@ -36,14 +38,14 @@ export const catalogSectionData: CatalogSectionType[] = [
     rev: "Rev. 06/2022",
     online:
       "https://catalog.wurthlac.com/catalog/section-d-locks-latches-catches/",
-    pdf: "https://wurthlac.com/literature/catalog/Section_D-WLAC_2022-23.pdf",
+    pdf: `${apiUrl}/assets/pdf/Section_D-WLAC_2022-23.pdf`,
   },
   {
     letter: "e",
     title: "Section E - Drawer Slides",
     rev: "Rev. 06/2022",
     online: "https://catalog.wurthlac.com/catalog/section-e-drawer-slides/",
-    pdf: "https://wurthlac.com/literature/catalog/Section_E-WLAC_2022-23.pdf",
+    pdf: `${apiUrl}/assets/pdf/Section_E-WLAC_2022-23.pdf`,
   },
   {
     letter: "f",
@@ -51,7 +53,7 @@ export const catalogSectionData: CatalogSectionType[] = [
     rev: "Rev. 06/2022",
     online:
       "https://catalog.wurthlac.com/catalog/section-f-standards-brackets/",
-    pdf: "https://wurthlac.com/literature/catalog/Section_F-WLAC_2022-23.pdf",
+    pdf: `${apiUrl}/assets/pdf/Section_F-WLAC_2022-23.pdf`,
   },
   {
     letter: "g",
@@ -59,7 +61,7 @@ export const catalogSectionData: CatalogSectionType[] = [
     rev: "Rev. 06/2022",
     online:
       "https://catalog.wurthlac.com/catalog/section-g-drawer-construction-systems/",
-    pdf: "https://wurthlac.com/literature/catalog/Section_G-WLAC_2022-23.pdf",
+    pdf: `${apiUrl}/assets/pdf/Section_G-WLAC_2022-23.pdf`,
   },
   {
     letter: "h",
@@ -67,7 +69,7 @@ export const catalogSectionData: CatalogSectionType[] = [
     rev: "Rev. 06/2022",
     online:
       "https://catalog.wurthlac.com/catalog/section-h-workspace-accessories/",
-    pdf: "https://wurthlac.com/literature/catalog/Section_H-WLAC_2022-23.pdf",
+    pdf: `${apiUrl}/assets/pdf/Section_H-WLAC_2022-23.pdf`,
   },
   {
     letter: "i",
@@ -75,7 +77,7 @@ export const catalogSectionData: CatalogSectionType[] = [
     rev: "Rev. 06/2022",
     online:
       "https://catalog.wurthlac.com/catalog/section-i-table-work-surface-casters/",
-    pdf: "https://wurthlac.com/literature/catalog/Section_I-WLAC_2022-23.pdf",
+    pdf: `${apiUrl}/assets/pdf/Section_I-WLAC_2022-23.pdf`,
   },
   {
     letter: "j",
@@ -83,21 +85,21 @@ export const catalogSectionData: CatalogSectionType[] = [
     rev: "Rev. 06/2022",
     online:
       "https://catalog.wurthlac.com/catalog/section-j-lighting-accessories/",
-    pdf: "https://wurthlac.com/literature/catalog/Section_J-WLAC_2022-23.pdf",
+    pdf: `${apiUrl}/assets/pdf/Section_J-WLAC_2022-23.pdf`,
   },
   {
     letter: "k",
     title: "Section K - Kitchen & Bath",
     rev: "Rev. 06/2022",
     online: "https://catalog.wurthlac.com/catalog/section-k-kitchen-bath/",
-    pdf: "https://wurthlac.com/literature/catalog/Section_K-WLAC_2022-23.pdf",
+    pdf: `${apiUrl}/assets/pdf/Section_K-WLAC_2022-23.pdf`,
   },
   {
     letter: "l",
     title: "Section L - Decorative Wood",
     rev: "Rev. 06/2022",
     online: "https://catalog.wurthlac.com/catalog/section-l-decorative-wood/",
-    pdf: "https://wurthlac.com/literature/catalog/Section_L-WLAC_2022-23.pdf",
+    pdf: `${apiUrl}/assets/pdf/Section_L-WLAC_2022-23.pdf`,
   },
   {
     letter: "m",
@@ -105,7 +107,7 @@ export const catalogSectionData: CatalogSectionType[] = [
     rev: "Rev. 06/2022",
     online:
       "https://catalog.wurthlac.com/catalog/section-m-veneer-edgebanding/",
-    pdf: "https://wurthlac.com/literature/catalog/Section_M-WLAC_2022-23.pdf",
+    pdf: `${apiUrl}/assets/pdf/Section_M-WLAC_2022-23.pdf`,
   },
   {
     letter: "n",
@@ -113,7 +115,7 @@ export const catalogSectionData: CatalogSectionType[] = [
     rev: "Rev. 06/2022",
     online:
       "https://catalog.wurthlac.com/catalog/section-n-support-brackets-closet-hardware/",
-    pdf: "https://wurthlac.com/literature/catalog/Section_N-WLAC_2022-23.pdf",
+    pdf: `${apiUrl}/assets/pdf/Section_N-WLAC_2022-23.pdf`,
   },
   {
     letter: "o",
@@ -121,21 +123,21 @@ export const catalogSectionData: CatalogSectionType[] = [
     rev: "Rev. 06/2022",
     online:
       "https://catalog.wurthlac.com/catalog/section-o-architectural-hardware/",
-    pdf: "https://wurthlac.com/literature/catalog/Section_O-WLAC_2022-23.pdf",
+    pdf: `${apiUrl}/assets/pdf/Section_O-WLAC_2022-23.pdf`,
   },
   {
     letter: "p",
     title: "Section P - Fasteners",
     rev: "Rev. 06/2022",
     online: "https://catalog.wurthlac.com/catalog/section-p-fasteners/",
-    pdf: "https://wurthlac.com/literature/catalog/Section_P-WLAC_2022-23.pdf",
+    pdf: `${apiUrl}/assets/pdf/Section_P-WLAC_2022-23.pdf`,
   },
   {
     letter: "q",
     title: "Section Q - Abrasives",
     rev: "Rev. 06/2022",
     online: "https://catalog.wurthlac.com/catalog/section-q-abrasives/",
-    pdf: "https://wurthlac.com/literature/catalog/Section_Q-WLAC_2022-23.pdf",
+    pdf: `${apiUrl}/assets/pdf/Section_Q-WLAC_2022-23.pdf`,
   },
   {
     letter: "r",
@@ -143,7 +145,7 @@ export const catalogSectionData: CatalogSectionType[] = [
     rev: "Rev. 06/2022",
     online:
       "https://catalog.wurthlac.com/catalog/section-r-solvents-adhesives/",
-    pdf: "https://wurthlac.com/literature/catalog/Section_R-WLAC_2022-23.pdf",
+    pdf: `${apiUrl}/assets/pdf/Section_R-WLAC_2022-23.pdf`,
   },
   {
     letter: "s",
@@ -151,42 +153,42 @@ export const catalogSectionData: CatalogSectionType[] = [
     rev: "Rev. 06/2022",
     online:
       "https://catalog.wurthlac.com/catalog/section-s-shop-safety-supplies/",
-    pdf: "https://wurthlac.com/literature/catalog/Section_S-WLAC_2022-23.pdf",
+    pdf: `${apiUrl}/assets/pdf/Section_S-WLAC_2022-23.pdf`,
   },
   {
     letter: "t",
     title: "Section T - Spray Equipment",
     rev: "Rev. 06/2022",
     online: "https://catalog.wurthlac.com/catalog/section-t-spray-equipment/",
-    pdf: "https://wurthlac.com/literature/catalog/Section_T-WLAC_2022-23.pdf",
+    pdf: `${apiUrl}/assets/pdf/Section_T-WLAC_2022-23.pdf`,
   },
   {
     letter: "u",
     title: "Section U - Hand Tools & Jigs",
     rev: "Rev. 06/2022",
     online: "https://catalog.wurthlac.com/catalog/section-u-hand-tools-jigs/",
-    pdf: "https://wurthlac.com/literature/catalog/Section_U-WLAC_2022-23.pdf",
+    pdf: `${apiUrl}/assets/pdf/Section_U-WLAC_2022-23.pdf`,
   },
   {
     letter: "v",
     title: "Section V - Air & Power Tools",
     rev: "Rev. 06/2022",
     online: "https://catalog.wurthlac.com/catalog/section-v-air-power-tools/",
-    pdf: "https://wurthlac.com/literature/catalog/Section_V-WLAC_2022-23.pdf",
+    pdf: `${apiUrl}/assets/pdf/Section_V-WLAC_2022-23.pdf`,
   },
   {
     letter: "w",
     title: "Section W - Machinery",
     rev: "Rev. 06/2022",
     online: "https://catalog.wurthlac.com/catalog/section-w-machinery/",
-    pdf: "https://wurthlac.com/literature/catalog/Section_W-WLAC_2022-23.pdf",
+    pdf: `${apiUrl}/assets/pdf/Section_W-WLAC_2022-23.pdf`,
   },
   {
     letter: "x",
     title: "Section X - Sinks & Surfacing",
     rev: "Rev. 06/2022",
     online: "https://catalog.wurthlac.com/catalog/section-x-sinks-surfacing/",
-    pdf: "https://wurthlac.com/literature/catalog/Section_X-WLAC_2022-23.pdf",
+    pdf: `${apiUrl}/assets/pdf/Section_X-WLAC_2022-23.pdf`,
   },
   {
     letter: "y",
@@ -194,6 +196,6 @@ export const catalogSectionData: CatalogSectionType[] = [
     rev: "Rev. 06/2022",
     online:
       "https://catalog.wurthlac.com/catalog/section-y-bits-blades-cutters/",
-    pdf: "https://wurthlac.com/literature/catalog/Section_Y-WLAC_2022-23.pdf",
+    pdf: `${apiUrl}/assets/pdf/Section_Y-WLAC_2022-23.pdf`,
   },
 ];

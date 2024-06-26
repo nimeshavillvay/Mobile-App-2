@@ -1,6 +1,8 @@
+import Warning from "@/_components/warning";
 import useAddToCartMutation from "@/_hooks/cart/use-add-to-cart-mutation.hook";
 import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
 import useSuspenseCheckAvailability from "@/_hooks/product/use-suspense-check-availability.hook";
+import useSuspenseProductExcluded from "@/_hooks/product/use-suspense-product-excluded.hook";
 import { NOT_AVAILABLE } from "@/_lib/constants";
 import { cn } from "@/_lib/utils";
 import ErrorBoundary from "@/old/_components/error-boundary";
@@ -103,6 +105,12 @@ const PurchasedItemDetailedViewDialog = ({
   const disableAddToCartButton =
     checkAvailabilityQuery.data.status === NOT_AVAILABLE;
 
+  const productExcludedQuery = useSuspenseProductExcluded(
+    token,
+    item.productId,
+  );
+  const isRegionalExcluded = productExcludedQuery.data.isExcluded;
+
   return (
     <FormProvider {...methods}>
       <Dialog
@@ -160,10 +168,15 @@ const PurchasedItemDetailedViewDialog = ({
 
               <div className="flex-1">
                 <div className="text-nowrap text-sm">Order Count</div>
-                <div className="font-bold">1</div>
+                <div className="font-bold">{item.totalItem ?? "N/A"}</div>
               </div>
             </div>
-
+            {isRegionalExcluded && (
+              <Warning
+                title="Not Available"
+                description="This item is not available in your territory."
+              />
+            )}
             <div className="flex flex-row gap-2 p-3">
               <div className="flex-1">
                 <div className="text-sm">Item #</div>

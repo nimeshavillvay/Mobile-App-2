@@ -1,3 +1,4 @@
+import { RecaptchaRefProvider } from "@/_context/recaptcha-ref";
 import type { Metadata } from "next";
 import ForgotPasswordForm from "./forgot-password-form";
 
@@ -12,7 +13,11 @@ type ForgotPasswordProps = {
 const ForgotPassword = ({ searchParams }: ForgotPasswordProps) => {
   const email = searchParams.email?.toString() ?? "";
 
-  return <ForgotPasswordForm email={email} />;
+  return (
+    <RecaptchaRefProvider>
+      <ForgotPasswordForm email={email} />
+    </RecaptchaRefProvider>
+  );
 };
 
 export default ForgotPassword;

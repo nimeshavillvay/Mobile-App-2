@@ -1,21 +1,18 @@
 "use client";
 
+import AvailabilityStatus from "@/_components/availability-status";
 import NumberInputField from "@/_components/number-input-field";
 import ProductNotAvailable from "@/_components/product-not-available";
 import QuantityWarning from "@/_components/quantity-warning";
+import useSuspenseWillCallPlant from "@/_hooks/address/use-suspense-will-call-plant.hook";
 import useAddToCartMutation from "@/_hooks/cart/use-add-to-cart-mutation.hook";
 import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
 import useDebouncedState from "@/_hooks/misc/use-debounced-state.hook";
 import useItemInfo from "@/_hooks/product/use-item-info.hook";
 import useSuspenseCheckAvailability from "@/_hooks/product/use-suspense-check-availability.hook";
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
-import {
-  LIMITED_STOCK,
-  MAX_QUANTITY,
-  NOT_AVAILABLE,
-  NOT_IN_STOCK,
-  UI_DATE_FORMAT,
-} from "@/_lib/constants";
+import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
+import { MAX_QUANTITY, NOT_AVAILABLE } from "@/_lib/constants";
 import {
   calculateIncreaseQuantity,
   calculateReduceQuantity,
@@ -44,7 +41,6 @@ import {
 import { Input } from "@repo/web-ui/components/ui/input";
 import { Label } from "@repo/web-ui/components/ui/label";
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
-import dayjs from "dayjs";
 import Image from "next/image";
 import Link from "next/link";
 import { Suspense, useDeferredValue, useId } from "react";
@@ -477,10 +473,23 @@ const LocationStocks = ({
     qty: quantity,
   });
   const firstLocation = checkAvailabilityQuery.data.availableLocations[0];
-  const otherLocations =
-    checkAvailabilityQuery.data.availableLocations.slice(1);
-  const isBackordered = checkAvailabilityQuery.data.status === NOT_IN_STOCK;
-  const isLimitedStock = checkAvailabilityQuery.data.status === LIMITED_STOCK;
+
+  const checkLoginQuery = useSuspenseCheckLogin(token);
+
+  const willCallPlantQuery = useSuspenseWillCallPlant(token);
+
+  const willCallPlant = willCallPlantQuery.data;
+  const willCallPlantCode = willCallPlant?.plantCode;
+  const { availableLocations } = checkAvailabilityQuery.data;
+
+  const homeBranch = availableLocations?.find(
+    (location) => location.location === willCallPlantCode,
+  );
+  const otherLocations = availableLocations?.filter(
+    ({ location }) => location !== willCallPlantCode,
+  );
+  const isNotInStock = homeBranch?.amount === 0;
+  const isLimitedStock = (homeBranch?.amount ?? 0) < quantity;
 
   const backOrderDate =
     checkAvailabilityQuery.data.options[0]?.plants[0]?.backOrderDate;
@@ -497,49 +506,33 @@ const LocationStocks = ({
   return (
     <Collapsible className="flex flex-col gap-1">
       <div className="flex flex-row flex-wrap items-center justify-between gap-2 rounded-lg bg-wurth-gray-50 p-2">
-        <div className="flex flex-row flex-wrap items-center gap-2">
-          <div
-            className={cn(
-              "rounded px-4 py-2 text-sm font-semibold leading-4 md:px-2 md:py-1",
-              isBackordered || isLimitedStock
-                ? "bg-yellow-50 text-yellow-700"
-                : "bg-green-50 text-green-700",
-            )}
-          >
-            {isBackordered
-              ? "Backordered"
-              : isLimitedStock
-                ? "Limited Stock"
-                : "In Stock"}
-          </div>
-
-          {!isBackordered && (
-            <div className="text-sm font-medium text-wurth-gray-800">
-              {firstLocation?.amount} in stock at {firstLocation?.name}
-            </div>
+        <AvailabilityStatus
+          amount={firstLocation?.amount ?? 0}
+          backOrderDate={backOrderDate ?? ""}
+          isHomeBranch={!!homeBranch}
+          isLimitedStock={isLimitedStock}
+          isNotInStock={isNotInStock}
+          location={firstLocation?.name ?? ""}
+        />
+      </div>
+      <div className="items-center gap-2 rounded-lg bg-wurth-gray-50 p-2">
+        {checkLoginQuery.data.status_code === "OK" &&
+          !isNotInStock &&
+          otherLocations.length > 0 && (
+            <CollapsibleTrigger
+              asChild
+              className="group h-fit gap-1 p-0 pl-1 text-sm font-bold text-black"
+            >
+              <Button variant="subtle">
+                <span>Check Other Stores</span>
+                <ChevronRight
+                  width={16}
+                  height={16}
+                  className="transition duration-150 ease-out group-data-[state=open]:rotate-90"
+                />
+              </Button>
+            </CollapsibleTrigger>
           )}
-          {isBackordered && !!backOrderDate && (
-            <div className="flex-1 text-sm font-medium text-wurth-gray-800">
-              Items are expected to ship by{" "}
-              {dayjs(backOrderDate).format(UI_DATE_FORMAT)}.
-            </div>
-          )}
-        </div>
-        {!isBackordered && otherLocations.length > 0 && (
-          <CollapsibleTrigger
-            asChild
-            className="group h-fit gap-1 p-0 pl-1 text-sm font-bold text-black"
-          >
-            <Button variant="subtle">
-              <span>Check Other Stores</span>
-              <ChevronRight
-                width={16}
-                height={16}
-                className="transition duration-150 ease-out group-data-[state=open]:rotate-90"
-              />
-            </Button>
-          </CollapsibleTrigger>
-        )}
       </div>
 
       <CollapsibleContent>

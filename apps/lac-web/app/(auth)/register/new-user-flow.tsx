@@ -1,4 +1,5 @@
 import ZipCodeInputField from "@/_components/zip-code-input-field";
+import { useCheckRecaptcha } from "@/_context/recaptcha-ref";
 import useCounties from "@/_hooks/registration/use-counties.hook";
 import useCountries from "@/_hooks/registration/use-countries.hook";
 import useStates from "@/_hooks/registration/use-states.hook";
@@ -164,6 +165,7 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const email = searchParams.get("email");
+  const checkRecaptcha = useCheckRecaptcha();
 
   const [step, setStep] = useState<Step>("personal");
   const [openVerificationDialog, setOpenVerificationDialog] = useState(false);
@@ -289,7 +291,19 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
 
   const registerNewUserMutation = useRegisterNewUserMutation();
 
-  const registerUser = (values: AddressSchema, skipAddressCheck?: boolean) => {
+  const registerUser = async (
+    values: AddressSchema,
+    skipAddressCheck?: boolean,
+  ) => {
+    try {
+      await checkRecaptcha();
+    } catch {
+      return toast({
+        variant: "destructive",
+        title: "Registration failed.",
+      });
+    }
+
     const {
       firstName,
       lastName,
@@ -302,7 +316,7 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
       employees,
     } = personalDetailsForm.getValues();
 
-    registerNewUserMutation.mutate(
+    await registerNewUserMutation.mutateAsync(
       {
         firstName,
         lastName,
@@ -544,10 +558,33 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
 
               <FormField
                 control={personalDetailsForm.control}
-                name="password"
+                name="phoneNumber"
                 disabled={registerNewUserMutation.isPending}
                 render={({ field }) => (
                   <FormItem>
+                    <FormLabel>Phone Number</FormLabel>
+                    <FormControl>
+                      <Input
+                        required
+                        type="tel"
+                        autoComplete="phone-number"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormDescription className="sr-only">
+                      This is your phone number.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={personalDetailsForm.control}
+                name="password"
+                disabled={registerNewUserMutation.isPending}
+                render={({ field }) => (
+                  <FormItem className="md:row-start-3">
                     <FormLabel>Password</FormLabel>
                     <FormControl>
                       <Input
@@ -570,7 +607,7 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
                 name="confirmPassword"
                 disabled={registerNewUserMutation.isPending}
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="md:row-start-3">
                     <FormLabel>Confirm password</FormLabel>
                     <FormControl>
                       <Input
@@ -582,29 +619,6 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
                     </FormControl>
                     <FormDescription className="sr-only">
                       This is to confirm your password.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={personalDetailsForm.control}
-                name="phoneNumber"
-                disabled={registerNewUserMutation.isPending}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Phone Number</FormLabel>
-                    <FormControl>
-                      <Input
-                        required
-                        type="tel"
-                        autoComplete="phone-number"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormDescription className="sr-only">
-                      This is your phone number.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
