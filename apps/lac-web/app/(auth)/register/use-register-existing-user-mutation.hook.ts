@@ -19,6 +19,7 @@ const useRegisterExistingUserMutation = () => {
       lastName: string;
       email: string;
       password: string;
+      phoneNumber: string;
     }) => {
       const { status_code, type, id } = await api
         .post("rest/register/existing", {
