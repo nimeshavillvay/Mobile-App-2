@@ -23,6 +23,7 @@ const RegionalExclusionAndShippingMethods = ({
   shippingMethods,
   isDirectlyShippedFromVendor,
   handleSelectWillCallPlant,
+  willCallPlant,
 }: ComponentProps<typeof CartItemShippingMethod> & {
   readonly token: string;
   readonly productId: number;
@@ -57,6 +58,7 @@ const RegionalExclusionAndShippingMethods = ({
       shippingMethods={shippingMethods}
       isDirectlyShippedFromVendor={isDirectlyShippedFromVendor}
       handleSelectWillCallPlant={handleSelectWillCallPlant}
+      willCallPlant={willCallPlant}
     />
   );
 };
