@@ -65,7 +65,7 @@ const Header = async () => {
           <span className="sr-only">Home</span>
         </Link>
 
-        <div className="hidden max-w-[800px] flex-auto md:block">
+        <div className="mx-auto hidden max-w-[800px] flex-auto md:block">
           <SearchBar />
         </div>
 
