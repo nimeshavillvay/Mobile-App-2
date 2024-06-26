@@ -17,6 +17,8 @@ export const metadata: Metadata = {
   title: "Catalogs & Literature",
 };
 
+const apiUrl = process.env.NEXT_PUBLIC_WURTH_LAC_API;
+
 const Catalog = ({
   url,
   imageSrc,
@@ -78,7 +80,7 @@ const CatalogsLiteraturePage = () => {
         <div>
           <p className="mb-4">Or you can download the full pdf version here.</p>
           <a
-            href="/literature/catalog/WurthLAC_2022-2023_Full_Catalog.pdf"
+            href={`${apiUrl}/assets/pdf/WurthLAC_2022-2023_Full_Catalog.pdf`}
             title="WurthLAC 2022-2023 Full Catalog"
             target="_blank"
             rel="noopener noreferrer"
@@ -134,7 +136,7 @@ const CatalogsLiteraturePage = () => {
         </p>
 
         <a
-          href="/literature/catalog/WurthLAC_2022-2023_Full_Catalog.pdf"
+          href={`${apiUrl}/assets/pdf/Kessebohmer_Catalog.pdf`}
           title="WurthLAC Kessebohmer Catalog"
           target="_blank"
           rel="noopener noreferrer"
