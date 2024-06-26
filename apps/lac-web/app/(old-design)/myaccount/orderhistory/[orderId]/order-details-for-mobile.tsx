@@ -195,7 +195,9 @@ const OrderDetailsForMobile = ({
           <div className="flex flex-col p-[15px]">
             <div className="text-sm">Driver&rsquo;s Note</div>
             <div className="text-wrap text-black">
-              {orderDetail?.promoCode !== "" ? orderDetail.promoCode : "N/A"}
+              {orderDetail?.driverNotes !== ""
+                ? orderDetail.driverNotes
+                : "N/A"}
             </div>
           </div>
         </div>

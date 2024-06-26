@@ -276,7 +276,11 @@ const AddMoreItemsForm = ({ token }: { readonly token: string }) => {
     while (i < cartItems.length) {
       const cartItem = cartItems?.[i];
 
-      if (cartItem && isFormRowFilled(cartItem)) {
+      if (
+        cartItem &&
+        isFormRowFilled(cartItem) &&
+        cartItem.isInvalid !== undefined
+      ) {
         return false;
       }
       i++;
