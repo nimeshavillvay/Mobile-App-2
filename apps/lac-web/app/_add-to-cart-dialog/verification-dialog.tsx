@@ -515,10 +515,10 @@ const LocationStocks = ({
           location={firstLocation?.name ?? ""}
         />
       </div>
-      <div className="items-center gap-2 rounded-lg bg-wurth-gray-50 p-2">
-        {checkLoginQuery.data.status_code === "OK" &&
-          !isNotInStock &&
-          otherLocations.length > 0 && (
+      {checkLoginQuery.data.status_code === "OK" &&
+        !isNotInStock &&
+        otherLocations.length > 0 && (
+          <div className="items-center gap-2 rounded-lg bg-wurth-gray-50 p-2">
             <CollapsibleTrigger
               asChild
               className="group h-fit gap-1 p-0 pl-1 text-sm font-bold text-black"
@@ -532,8 +532,8 @@ const LocationStocks = ({
                 />
               </Button>
             </CollapsibleTrigger>
-          )}
-      </div>
+          </div>
+        )}
 
       <CollapsibleContent>
         <table className="w-full border-separate rounded-lg border border-wurth-gray-150 [&_td]:p-3 [&_th]:p-3">
