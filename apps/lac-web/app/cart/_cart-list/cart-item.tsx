@@ -319,8 +319,8 @@ const CartItem = ({
                   const setShippingMethod =
                     takeOnHand.plants?.[0]?.shippingMethods.find(
                       (method) => method.code === selectedShippingMethod,
-                    )?.code ||
-                    takeOnHand.plants?.[0]?.shippingMethods?.[0]?.code ||
+                    )?.code ??
+                    takeOnHand.plants?.[0]?.shippingMethods?.[0]?.code ??
                     selectedShippingMethod;
                   setSelectedShippingMethod(setShippingMethod);
                   handleSave(
@@ -352,6 +352,7 @@ const CartItem = ({
                         ? shipAlternativeBranch?.plants?.[0]?.backOrderQuantity
                         : 0,
                       backOrderAll: shipAlternativeBranch.backOrder,
+                      homePlant: willCallPlant.plantCode ?? DEFAULT_PLANT.code,
                     }),
                   );
                 } else if (backOrderAll) {
@@ -539,6 +540,7 @@ const CartItem = ({
           backOrderQuantity: shipAlternativeBranch.backOrder
             ? shipAlternativeBranch?.plants?.[0]?.backOrderQuantity
             : 0,
+          homePlant: willCallPlant.plantCode ?? DEFAULT_PLANT.code,
         }),
       );
     } else if (backOrderAll) {
@@ -833,6 +835,7 @@ const CartItem = ({
               shippingMethods={shippingMethods}
               isDirectlyShippedFromVendor={product.isDirectlyShippedFromVendor}
               handleSelectWillCallPlant={handleSelectWillCallPlant}
+              willCallPlant={willCallPlant}
             />
           ))}
 
@@ -858,6 +861,7 @@ const CartItem = ({
               shippingMethods={shippingMethods}
               isDirectlyShippedFromVendor={product.isDirectlyShippedFromVendor}
               handleSelectWillCallPlant={handleSelectWillCallPlant}
+              willCallPlant={willCallPlant}
             />
           </Suspense>
         )}

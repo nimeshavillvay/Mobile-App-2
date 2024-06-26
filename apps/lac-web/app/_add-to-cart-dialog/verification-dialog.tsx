@@ -473,8 +473,6 @@ const LocationStocks = ({
     qty: quantity,
   });
   const firstLocation = checkAvailabilityQuery.data.availableLocations[0];
-  const otherLocations =
-    checkAvailabilityQuery.data.availableLocations.slice(1);
 
   const checkLoginQuery = useSuspenseCheckLogin(token);
 
@@ -487,7 +485,9 @@ const LocationStocks = ({
   const homeBranch = availableLocations?.find(
     (location) => location.location === willCallPlantCode,
   );
-
+  const otherLocations = availableLocations?.filter(
+    ({ location }) => location !== willCallPlantCode,
+  );
   const isNotInStock = homeBranch?.amount === 0;
   const isLimitedStock = (homeBranch?.amount ?? 0) < quantity;
 
@@ -514,6 +514,8 @@ const LocationStocks = ({
           isNotInStock={isNotInStock}
           location={firstLocation?.name ?? ""}
         />
+      </div>
+      <div className="items-center gap-2 rounded-lg bg-wurth-gray-50 p-2">
         {checkLoginQuery.data.status_code === "OK" &&
           !isNotInStock &&
           otherLocations.length > 0 && (
