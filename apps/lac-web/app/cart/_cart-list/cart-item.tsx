@@ -352,7 +352,7 @@ const CartItem = ({
                         ? shipAlternativeBranch?.plants?.[0]?.backOrderQuantity
                         : 0,
                       backOrderAll: shipAlternativeBranch.backOrder,
-                      homePlant: willCallPlant.plantCode,
+                      homePlant: willCallPlant.plantCode ?? DEFAULT_PLANT.code,
                     }),
                   );
                 } else if (backOrderAll) {
@@ -540,7 +540,7 @@ const CartItem = ({
           backOrderQuantity: shipAlternativeBranch.backOrder
             ? shipAlternativeBranch?.plants?.[0]?.backOrderQuantity
             : 0,
-          homePlant: willCallPlant.plantCode,
+          homePlant: willCallPlant.plantCode ?? DEFAULT_PLANT.code,
         }),
       );
     } else if (backOrderAll) {

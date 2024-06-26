@@ -1,4 +1,5 @@
 import {
+  DEFAULT_PLANT,
   IN_STOCK,
   LIMITED_STOCK,
   NOT_IN_STOCK,
@@ -245,7 +246,7 @@ const CartItemShippingMethod = ({
                 ? shipAlternativeBranch?.plants?.[0]?.backOrderQuantity
                 : 0,
               backOrderAll: shipAlternativeBranch.backOrder,
-              homePlant: willCallPlant.plantCode,
+              homePlant: willCallPlant.plantCode ?? DEFAULT_PLANT.code,
             }),
           );
         }
@@ -380,7 +381,7 @@ const CartItemShippingMethod = ({
                   ? shipAlternativeBranch?.plants?.[0]?.backOrderQuantity
                   : 0,
                 backOrderAll: shipAlternativeBranch.backOrder,
-                homePlant: willCallPlant.plantCode,
+                homePlant: willCallPlant.plantCode ?? DEFAULT_PLANT.code,
               }),
             );
           }
@@ -428,7 +429,7 @@ const CartItemShippingMethod = ({
               ? shipAlternativeBranch?.plants?.[0]?.backOrderQuantity
               : 0,
             backOrderAll: shipAlternativeBranch.backOrder,
-            homePlant: willCallPlant.plantCode,
+            homePlant: willCallPlant.plantCode ?? DEFAULT_PLANT.code,
           }),
         );
       }

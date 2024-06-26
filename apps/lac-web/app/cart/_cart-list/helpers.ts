@@ -1,6 +1,5 @@
 import type { CartItemConfiguration } from "@/_lib/types";
 import {
-  DEFAULT_PLANT,
   EMPTY_STRING,
   EXCLUDED_SHIPPING_METHODS,
   FALSE_STRING,
@@ -70,7 +69,7 @@ export const getAlternativeBranchesConfig = ({
   backOrderQuantity?: number;
   backOrderDate?: string;
   backOrderAll?: boolean;
-  homePlant?: string;
+  homePlant: string;
 }) => {
   let config: Partial<CartItemConfiguration> = {
     hashvalue: hash,
@@ -78,7 +77,7 @@ export const getAlternativeBranchesConfig = ({
     backorder_date: backOrderDate,
     backorder_all: backOrderAll ? TRUE_STRING : FALSE_STRING,
   };
-  const plantName = homePlant ?? DEFAULT_PLANT;
+  const plantName = homePlant;
   const data = plants?.map((plant) => ({
     [`avail_${plant?.index}`]: (plant?.quantity ?? 0).toString(),
     [`plant_${plant?.index}`]: plant?.plant ?? "",
