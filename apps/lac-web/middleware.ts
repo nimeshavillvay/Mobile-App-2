@@ -1,6 +1,10 @@
 import { loginCheck } from "@/_hooks/user/use-suspense-check-login.hook";
 import { api } from "@/_lib/api";
-import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
+import {
+  PRIVATE_ROUTES,
+  SESSION_TOKEN_COOKIE,
+  TOKEN_MAX_AGE,
+} from "@/_lib/constants";
 import dayjs from "dayjs";
 import isBetween from "dayjs/plugin/isBetween";
 import type { ResponseCookie } from "next/dist/compiled/@edge-runtime/cookies";
@@ -9,14 +13,12 @@ import { NextResponse, type NextRequest } from "next/server";
 dayjs.extend(isBetween);
 
 const TOKEN_EXPIRE_COOKIE = "xid_00924_expire";
-const TOKEN_MAX_AGE = 7200;
 const PUBLIC_ONLY_ROUTES = [
   "/sign-in",
   "/register",
   "/forgot-password",
   "/password-reset",
 ];
-const PRIVATE_ROUTES = ["/osr", "/checkout", "/confirmation", "/myaccount"];
 
 export const middleware = async (request: NextRequest) => {
   // Exclude the following routes from the middleware
