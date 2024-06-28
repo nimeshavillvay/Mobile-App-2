@@ -61,6 +61,8 @@ const AddMoreItemsForm = ({ token }: { readonly token: string }) => {
     [],
   );
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [isItemSelectionProcessed, setIsItemSelectionProcessed] =
+    useState(true);
   const [isBulkUploadDone, setIsBulkUploadDone] = useState(false);
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
   const [isFormInvalid, setIsFormInvalid] = useState(false);
@@ -147,6 +149,7 @@ const AddMoreItemsForm = ({ token }: { readonly token: string }) => {
 
   const onSelectedItemChange = async (value: Product, index: number) => {
     setIsPopupOpen(false);
+    setIsItemSelectionProcessed(false);
 
     setValue(`cart.${index}.sku`, value.sku);
     setValue(`cart.${index}.isInvalid`, false);
@@ -168,6 +171,8 @@ const AddMoreItemsForm = ({ token }: { readonly token: string }) => {
         parseInt(validatedCartItem.productId),
       );
     }
+
+    setIsItemSelectionProcessed(true);
   };
 
   const setBulkUploadCSVDataToForm = async (
@@ -461,7 +466,9 @@ const AddMoreItemsForm = ({ token }: { readonly token: string }) => {
             type="submit"
             variant="default"
             className=""
-            disabled={addMultipleToCartMutation.isPending}
+            disabled={
+              addMultipleToCartMutation.isPending || !isItemSelectionProcessed
+            }
           >
             <AddToCart className="stroke-white stroke-2" width={16} />
             <span>Add all items to cart</span>
