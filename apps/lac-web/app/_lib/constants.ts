@@ -1,5 +1,13 @@
 export const BASE_URL = "https://wurthlac.com";
 export const SESSION_TOKEN_COOKIE = "xid_00924";
+export const TOKEN_MAX_AGE = 7200;
+
+export const PRIVATE_ROUTES = [
+  "/osr",
+  "/checkout",
+  "/confirmation",
+  "/myaccount",
+];
 
 export const DEFAULT_REVALIDATE = 60; // 1 minute
 
