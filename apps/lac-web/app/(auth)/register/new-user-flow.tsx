@@ -40,7 +40,7 @@ import {
 } from "@repo/web-ui/components/ui/select";
 import { useToast } from "@repo/web-ui/components/ui/toast";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useMemo, useRef, useState, type ComponentProps } from "react";
+import { useMemo, useState, type ComponentProps } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import AddressSelector from "./address-selector";
