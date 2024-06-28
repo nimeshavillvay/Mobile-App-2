@@ -232,7 +232,7 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
                   <ItemPrices
                     token={token}
                     productId={item.productId}
-                    quantity={1}
+                    quantity={item.minimumOrderQuantity}
                     uom={item.unitOfMeasure}
                     listPrice={item.listPrice}
                     showUnitPrice={true}
