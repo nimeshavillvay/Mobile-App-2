@@ -1,5 +1,6 @@
 import ZipCodeInputField from "@/_components/zip-code-input-field";
 import { useCheckRecaptcha } from "@/_context/recaptcha-ref";
+import usePhoneNumberFormatter from "@/_hooks/phone/use-phone-number-formatter.hook";
 import useCounties from "@/_hooks/registration/use-counties.hook";
 import useCountries from "@/_hooks/registration/use-countries.hook";
 import useStates from "@/_hooks/registration/use-states.hook";
@@ -39,7 +40,7 @@ import {
 } from "@repo/web-ui/components/ui/select";
 import { useToast } from "@repo/web-ui/components/ui/toast";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useMemo, useState, type ComponentProps } from "react";
+import { useMemo, useRef, useState, type ComponentProps } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import AddressSelector from "./address-selector";
@@ -169,6 +170,8 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
 
   const [step, setStep] = useState<Step>("personal");
   const [openVerificationDialog, setOpenVerificationDialog] = useState(false);
+
+  const { phoneNumber, formatPhoneNumber } = usePhoneNumberFormatter();
 
   const { toast } = useToast();
 
@@ -569,6 +572,8 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
                         type="tel"
                         autoComplete="phone-number"
                         {...field}
+                        value={phoneNumber}
+                        onChange={formatPhoneNumber}
                       />
                     </FormControl>
                     <FormDescription className="sr-only">
