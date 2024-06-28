@@ -1,6 +1,6 @@
 "use client";
 
-import type { Filters } from "@/_lib/types";
+import useSuspenseFilters from "@/_hooks/search/use-suspense-filters.hook";
 import { cn, filterAndMapValues } from "@/_lib/utils";
 import DatePicker from "@/old/_components/date-picker";
 import {
@@ -22,7 +22,13 @@ import { Label } from "@/old/_components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/old/_components/ui/radio-group";
 import { updateSearchParams } from "@/old/_utils/client-helpers";
 import dayjs from "dayjs";
-import { useState, type Dispatch, type SetStateAction } from "react";
+import { useSearchParams } from "next/navigation";
+import {
+  useDeferredValue,
+  useState,
+  type Dispatch,
+  type SetStateAction,
+} from "react";
 import { MdCheck } from "react-icons/md";
 import {
   DURATIONS,
@@ -35,30 +41,25 @@ import {
   SORTING_FILTERS_FOR_MOBILE,
   URL_DATE_FORMAT,
 } from "./constants";
-import { useFilterParams } from "./use-filter-params.hook";
 
 const customDuration = DURATIONS.at(-1);
 
 type SelectorsForMobileDialogProps = {
+  readonly token: string;
   readonly open: boolean;
-  readonly filters: Filters[];
   readonly onOpenChange: Dispatch<SetStateAction<boolean>>;
 };
 
 const SelectorsForMobileDialog = ({
+  token,
   open,
-  filters,
   onOpenChange,
 }: SelectorsForMobileDialogProps) => {
-  const { searchParams } = useFilterParams(filters);
+  const searchParams = useSearchParams();
+
   const urlSortBy = searchParams.get(QUERY_KEYS.SORT_TYPE) ?? INIT_SORT_TYPE;
   const urlSortDirection =
     searchParams.get(QUERY_KEYS.SORT_DIRECTION) ?? INIT_SORT_DIRECTION;
-
-  const poNoFilter = filterAndMapValues(filters, "PO #");
-  const jobNameFilter = filterAndMapValues(filters, "Job Name");
-  const statusFilter = filterAndMapValues(filters, "Status");
-  const typesFilter = filterAndMapValues(filters, "Transaction Type");
 
   const [fromDate, setFromDate] = useState(new Date(INIT_FROM_DATE));
   const [toDate, setToDate] = useState(new Date());
@@ -69,6 +70,20 @@ const SelectorsForMobileDialog = ({
   const [orderStatuses, setOrderStatuses] = useState<number[]>([]);
   const [sortBy, setSortBy] = useState(urlSortBy);
   const [sortDirection, setSortDirection] = useState(urlSortDirection);
+
+  const deferredFromDate = useDeferredValue(fromDate);
+  const deferredToDate = useDeferredValue(toDate);
+
+  const filterQuery = useSuspenseFilters(token, {
+    type: "Order History",
+    from: dayjs(deferredFromDate).format(URL_DATE_FORMAT),
+    to: dayjs(deferredToDate).format(URL_DATE_FORMAT),
+  });
+
+  const poNoFilter = filterAndMapValues(filterQuery.data, "PO #");
+  const jobNameFilter = filterAndMapValues(filterQuery.data, "Job Name");
+  const statusFilter = filterAndMapValues(filterQuery.data, "Status");
+  const typesFilter = filterAndMapValues(filterQuery.data, "Transaction Type");
 
   const handleDurationChange = (value: string) => {
     const duration = DURATIONS.find((duration) => duration.value === value);

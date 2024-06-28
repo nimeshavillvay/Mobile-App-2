@@ -9,6 +9,7 @@ import Footer from "./_footer";
 import Header from "./_header";
 import "./global.css";
 import Providers from "./providers";
+import SessionChecker from "./session-checker";
 
 const titleFont = localFont({
   src: [
@@ -62,8 +63,8 @@ const RootLayout = ({ children }: { readonly children: ReactNode }) => {
           <Footer />
 
           <Toaster />
-
           <AddToCartDialog />
+          <SessionChecker />
         </Providers>
       </body>
     </html>

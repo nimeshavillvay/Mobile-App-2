@@ -2,6 +2,7 @@ import ProductNotAvailable from "@/_components/product-not-available";
 import Warning from "@/_components/warning";
 import useAddToCartMutation from "@/_hooks/cart/use-add-to-cart-mutation.hook";
 import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
+import useItemInfo from "@/_hooks/product/use-item-info.hook";
 import useSuspenseProductExcluded from "@/_hooks/product/use-suspense-product-excluded.hook";
 import { cn } from "@/_lib/utils";
 import AlertInline from "@/old/_components/alert-inline";
@@ -115,6 +116,9 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
 
   const isItemNotAdded = !item.productSku;
   const isValidQuantity = !!(quantity && quantity >= 1);
+
+  const itemInfoQuery = useItemInfo([item.productId]);
+  const itemInfo = itemInfoQuery.data?.[0];
 
   return (
     <FormProvider {...methods}>
@@ -357,7 +361,7 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
           <Collapsible
             open={showItemAttributes}
             onOpenChange={setShowItemAttributes}
-            disabled={isItemNotAdded}
+            disabled={isItemNotAdded || !itemInfo}
           >
             <CollapsibleTrigger
               className={cn(

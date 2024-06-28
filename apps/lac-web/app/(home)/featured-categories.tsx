@@ -3,12 +3,7 @@ import { api } from "@/_lib/api";
 import { getCategoriesList } from "@/_lib/apis/server";
 import { DEFAULT_REVALIDATE } from "@/_lib/constants";
 import { cn } from "@/_lib/utils";
-import { Button, buttonVariants } from "@repo/web-ui/components/ui/button";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@repo/web-ui/components/ui/collapsible";
+import { buttonVariants } from "@repo/web-ui/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -36,43 +31,39 @@ const FeaturedCategories = async () => {
     getCategoriesList(),
   ]);
 
-  const showCategories = data.slice(0, SHOWN_CATEGORIES).map((category) => ({
-    id: category.id,
-    slug: category.slug,
-    image: category.img,
-    name: category.name,
-  }));
-  const hiddenCategories = data.slice(SHOWN_CATEGORIES).map((category) => ({
-    id: category.id,
-    slug: category.slug,
-    image: category.img,
-    name: category.name,
-  }));
-
   const viewAllCategory = categoriesList[0];
 
   return (
     <section className="container my-14 space-y-6 md:my-20 md:space-y-9">
       <SubHeading>Featured Categories</SubHeading>
 
-      <CategoriesGrid categories={showCategories} />
-
-      {hiddenCategories.length > 0 && (
-        <Collapsible className="flex flex-col space-y-6 md:space-y-9">
-          <CollapsibleContent asChild>
-            <CategoriesGrid categories={hiddenCategories} />
-          </CollapsibleContent>
-
-          <CollapsibleTrigger asChild>
-            <Button
-              variant="outline"
-              className="mx-auto py-2.5 font-bold text-black"
+      <ul className="w-full space-x-2 space-y-10 pb-4 text-center md:space-x-[1.875rem]">
+        {data.slice(0, SHOWN_CATEGORIES).map((category) => (
+          <li
+            key={category.id}
+            className="inline-block w-[7rem] md:w-[7.75rem]"
+          >
+            <Link
+              href={`/category/${category.id}/${category.slug}`}
+              className="flex flex-col items-center gap-4 md:gap-2"
             >
-              View all categories
-            </Button>
-          </CollapsibleTrigger>
-        </Collapsible>
-      )}
+              <div className="flex size-28 items-center justify-center overflow-hidden rounded-full p-4 shadow-sm md:size-[7.75rem]">
+                <Image
+                  src={category.img}
+                  alt={`An image of the category ${category.name}`}
+                  width={124}
+                  height={124}
+                  className="size-full object-contain object-center"
+                />
+              </div>
+
+              <span className="text-center text-[0.9375rem] font-semibold leading-5 text-black md:text-base">
+                {category.name}
+              </span>
+            </Link>
+          </li>
+        ))}
+      </ul>
 
       {!!viewAllCategory && (
         <div className="flex flex-row justify-center">
@@ -92,41 +83,3 @@ const FeaturedCategories = async () => {
 };
 
 export default FeaturedCategories;
-
-const CategoriesGrid = ({
-  categories,
-}: {
-  readonly categories: {
-    id: string;
-    slug: string;
-    image: string;
-    name: string;
-  }[];
-}) => {
-  return (
-    <ul className="w-full space-x-2 space-y-10 pb-4 text-center md:space-x-[1.875rem]">
-      {categories.map((category) => (
-        <li key={category.id} className="inline-block w-[7rem] md:w-[7.75rem]">
-          <Link
-            href={`/category/${category.id}/${category.slug}`}
-            className="flex flex-col items-center gap-4 md:gap-2"
-          >
-            <div className="flex size-28 items-center justify-center overflow-hidden rounded-full p-4 shadow-sm md:size-[7.75rem]">
-              <Image
-                src={category.image}
-                alt={`An image of the category ${category.name}`}
-                width={124}
-                height={124}
-                className="size-full object-contain object-center"
-              />
-            </div>
-
-            <span className="text-center text-[0.9375rem] font-semibold leading-5 text-black md:text-base">
-              {category.name}
-            </span>
-          </Link>
-        </li>
-      ))}
-    </ul>
-  );
-};

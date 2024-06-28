@@ -31,6 +31,7 @@ const currentUserSchema = z.object({
   lastName: z.string(),
   password: z.string().min(8),
   confirmPassword: z.string().min(8),
+  phoneNumber: z.string(),
 });
 
 type CurrentUserFlowProps = {
@@ -53,6 +54,22 @@ const CurrentUserFlow = ({ passwordPolicies }: CurrentUserFlowProps) => {
       currentUserSchema
         .extend({
           password: z.string().min(passwordPolicies.minimumLength),
+          phoneNumber: z
+            .string()
+            .trim()
+            .refine(
+              (value) => {
+                const numericCharacters = value.replace(/-/g, "");
+                const isValidLength =
+                  numericCharacters.length >= 10 &&
+                  numericCharacters.length <= 15;
+                const isValidFormat = /^[\d-]+$/.test(value);
+                return isValidLength && isValidFormat;
+              },
+              {
+                message: "Please enter a valid phone number",
+              },
+            ),
         })
         .superRefine(({ password, confirmPassword }, context) => {
           const containsAlphabet = (ch: string) => /[a-z,A-Z]/.test(ch);
@@ -101,6 +118,7 @@ const CurrentUserFlow = ({ passwordPolicies }: CurrentUserFlowProps) => {
       lastName: "",
       password: "",
       confirmPassword: "",
+      phoneNumber: "",
     },
   });
   const soldToAccount = form.watch("soldToAccount");
@@ -129,6 +147,7 @@ const CurrentUserFlow = ({ passwordPolicies }: CurrentUserFlowProps) => {
         lastName: data.lastName,
         email: email ?? "",
         password: data.password,
+        phoneNumber: data.phoneNumber,
       },
       {
         onError: async (error) => {
@@ -404,10 +423,33 @@ const CurrentUserFlow = ({ passwordPolicies }: CurrentUserFlowProps) => {
 
             <FormField
               control={form.control}
-              name="password"
+              name="phoneNumber"
               disabled={createUserMutation.isPending}
               render={({ field }) => (
                 <FormItem>
+                  <FormLabel>Phone Number</FormLabel>
+                  <FormControl>
+                    <Input
+                      required
+                      type="tel"
+                      autoComplete="phone-number"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormDescription className="sr-only">
+                    This is your phone number.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="password"
+              disabled={createUserMutation.isPending}
+              render={({ field }) => (
+                <FormItem className="md:row-start-4">
                   <FormLabel>Password</FormLabel>
                   <FormControl>
                     <Input
@@ -430,7 +472,7 @@ const CurrentUserFlow = ({ passwordPolicies }: CurrentUserFlowProps) => {
               name="confirmPassword"
               disabled={createUserMutation.isPending}
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="md:row-start-4">
                   <FormLabel>Confirm password</FormLabel>
                   <FormControl>
                     <Input
