@@ -359,9 +359,9 @@ const OrderHistoryListSelectors = ({
       </div>
 
       <SelectorsForMobileDialog
+        token={token}
         open={mobileFiltersOpen}
         onOpenChange={setMobileFiltersOpen}
-        filters={filterQuery.data}
       />
     </>
   );
