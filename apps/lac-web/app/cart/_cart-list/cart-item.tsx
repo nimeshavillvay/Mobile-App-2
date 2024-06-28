@@ -305,11 +305,18 @@ const CartItem = ({
                 }
 
                 if (availableAll) {
+                  const setShippingMethod =
+                    availableAll.plants
+                      ?.at(0)
+                      ?.shippingMethods?.find(
+                        (method) => method.code === selectedShippingMethod,
+                      )?.code ??
+                    availableAll.plants?.at(0)?.shippingMethods?.at(0)?.code ??
+                    selectedShippingMethod;
+                  setSelectedShippingMethod(setShippingMethod);
                   handleSave(
                     createCartItemConfig({
-                      method:
-                        availableAll.plants?.at(0)?.shippingMethods?.at(0)
-                          ?.code ?? EMPTY_STRING,
+                      method: setShippingMethod,
                       quantity: availableAll.plants?.at(0)?.quantity ?? 0,
                       plant: availableAll.plants?.at(0)?.plant ?? EMPTY_STRING,
                       hash: availableAll.hash,
@@ -317,7 +324,7 @@ const CartItem = ({
                   );
                 } else if (takeOnHand && homeBranchAvailability) {
                   const setShippingMethod =
-                    takeOnHand.plants?.[0]?.shippingMethods.find(
+                    takeOnHand.plants?.[0]?.shippingMethods?.find(
                       (method) => method.code === selectedShippingMethod,
                     )?.code ??
                     takeOnHand.plants?.[0]?.shippingMethods?.[0]?.code ??
@@ -351,7 +358,6 @@ const CartItem = ({
                       backOrderQuantity: shipAlternativeBranch.backOrder
                         ? shipAlternativeBranch?.plants?.[0]?.backOrderQuantity
                         : 0,
-                      backOrderAll: shipAlternativeBranch.backOrder,
                       homePlant: willCallPlant.plantCode ?? DEFAULT_PLANT.code,
                     }),
                   );
