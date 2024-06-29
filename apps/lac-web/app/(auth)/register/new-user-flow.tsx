@@ -122,7 +122,7 @@ const addressSchema = z
         });
       }
 
-      if (values.shippingCity.length < 6) {
+      if (values.shippingCity.length < 1) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           path: ["shippingCity"],
@@ -172,7 +172,11 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
   const [openVerificationDialog, setOpenVerificationDialog] = useState(false);
 
   const { phoneNumber, formatPhoneNumber } = usePhoneNumberFormatter();
-  const { zipCode, formatZipCode } = useZipCodeFormatter();
+  const { zipCode: billingZipCode, formatZipCode: formatBillingZipCode } =
+    useZipCodeFormatter();
+
+  const { zipCode: shippingZipCode, formatZipCode: formatShippingZipCode } =
+    useZipCodeFormatter();
 
   const { toast } = useToast();
 
@@ -957,9 +961,9 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
                         <Input
                           autoComplete="zip-code"
                           {...field}
-                          value={zipCode}
+                          value={billingZipCode}
                           onChange={(event) => {
-                            const formatted = formatZipCode(event);
+                            const formatted = formatBillingZipCode(event);
                             field.onChange(formatted ?? "");
                           }}
                         />
@@ -1188,9 +1192,9 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
                           <Input
                             autoComplete="zip-code"
                             {...field}
-                            value={zipCode}
+                            value={shippingZipCode}
                             onChange={(event) => {
-                              const formatted = formatZipCode(event);
+                              const formatted = formatShippingZipCode(event);
                               field.onChange(formatted ?? "");
                             }}
                           />
