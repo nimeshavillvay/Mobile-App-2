@@ -136,14 +136,15 @@ const ProductCard = ({
       )}
     >
       <ProductCardHero>
-        {discountPercent > 0 && (
-          <ProductCardDiscount>{discountPercent}</ProductCardDiscount>
-        )}
+        <div className="flex flex-row justify-between gap-2">
+          {discountPercent > 0 && (
+            <ProductCardDiscount>{discountPercent}</ProductCardDiscount>
+          )}
 
-        {orientation === "vertical" && (
-          <SaleBadges onSale={onSale} isNewItem={isNewItem} />
-        )}
-
+          {orientation === "vertical" && (
+            <SaleBadges onSale={onSale} isNewItem={isNewItem} />
+          )}
+        </div>
         <ProductCardImage
           src={image}
           alt="A placeholder product"

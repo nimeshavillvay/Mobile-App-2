@@ -9,19 +9,10 @@ type SaleBadgesProps = {
 
 const SaleBadges = ({ onSale, isNewItem }: SaleBadgesProps) => {
   return (
-    <>
-      {onSale && (
-        <div
-          className="float-right flex flex-row items-center gap-1 rounded bg-sky-50 px-2 py-1.5 text-sm font-semibold leading-4 text-wurth-blue-450"
-          style={{ marginLeft: "7px" }}
-        >
-          <Zap className="hidden size-4 stroke-wurth-blue-450 md:block" />
-          <span>Flash Deal</span>
-        </div>
-      )}
+    <div className="flex flex-row justify-end gap-2">
       {isNewItem && (
         <div
-          className="float-right flex flex-row items-center gap-1 rounded px-2 py-1.5 text-sm font-semibold leading-4"
+          className="flex flex-row items-center gap-1 rounded px-2 py-1.5 text-sm font-semibold leading-4"
           style={{
             color: "#A16207",
             backgroundColor: "#FEF2F2",
@@ -30,7 +21,14 @@ const SaleBadges = ({ onSale, isNewItem }: SaleBadgesProps) => {
           <span>New</span>
         </div>
       )}
-    </>
+
+      {onSale && (
+        <div className="flex flex-row items-center gap-1 rounded bg-sky-50 px-2 py-1.5 text-sm font-semibold leading-4 text-wurth-blue-450">
+          <Zap className="hidden size-4 stroke-wurth-blue-450 md:block" />
+          <span>Flash Deal</span>
+        </div>
+      )}
+    </div>
   );
 };
 
