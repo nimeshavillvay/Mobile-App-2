@@ -75,10 +75,10 @@ const personalDetailsSchema = z.object({
     .trim()
     .refine(
       (value) => {
-        const numericCharacters = value.replace(/-/g, "");
-        const isValidLength =
-          numericCharacters.length >= 10 && numericCharacters.length <= 15;
-        const isValidFormat = /^[\d-]+$/.test(value);
+        const numericCharacters = value.replace(/[()\s-]/g, "");
+        const isValidLength = numericCharacters.length === 10;
+        const isValidFormat = /[\d\-()\s]+$/.test(value);
+
         return isValidLength && isValidFormat;
       },
       {
@@ -573,7 +573,10 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
                         autoComplete="phone-number"
                         {...field}
                         value={phoneNumber}
-                        onChange={formatPhoneNumber}
+                        onChange={(value) => {
+                          const formatted = formatPhoneNumber(value);
+                          field.onChange(formatted ?? "");
+                        }}
                       />
                     </FormControl>
                     <FormDescription className="sr-only">
