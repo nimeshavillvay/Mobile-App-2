@@ -34,10 +34,10 @@ import {
 import { FormProvider, useForm } from "react-hook-form";
 import { MdKeyboardArrowDown, MdKeyboardArrowRight } from "react-icons/md";
 import * as z from "zod";
-import ErrorAlert from "./ErrorAlert";
 import ItemPrices from "./_item-prices/item-prices";
 import { generateItemUrl, isItemError } from "./client-helpers";
 import { DATE_FORMAT } from "./constants";
+import ErrorAlert from "./error-alert";
 import MobileFavoriteButton from "./mobile-favorite-button";
 import type { DetailedPurchasedItem } from "./types";
 

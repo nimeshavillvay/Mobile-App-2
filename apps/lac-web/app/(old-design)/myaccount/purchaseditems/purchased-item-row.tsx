@@ -25,11 +25,11 @@ import { Suspense, useId, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import * as z from "zod";
-import ErrorAlert from "./ErrorAlert";
 import ItemAttributes from "./_item-attributes/item-attributes";
 import ItemPrices from "./_item-prices/item-prices";
 import { generateItemUrl, isItemError } from "./client-helpers";
 import { DATE_FORMAT } from "./constants";
+import ErrorAlert from "./error-alert";
 import FavoriteButton from "./favorite-button";
 import type { DetailedPurchasedItem } from "./types";
 
