@@ -119,7 +119,7 @@ const ProductCardDiscount = ({
   return (
     <div
       className={cn(
-        "absolute left-0 top-0 flex flex-row items-center gap-0.5 bg-green-50 px-1.5 text-base text-green-600",
+        "flex items-center gap-0.5 bg-green-50 px-1.5 pr-5 text-base text-green-600",
         orientation === "vertical" && "md:px-2 md:text-lg",
         className,
       )}
