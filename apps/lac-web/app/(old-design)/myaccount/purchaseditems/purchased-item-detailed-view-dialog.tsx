@@ -37,6 +37,7 @@ import * as z from "zod";
 import ItemPrices from "./_item-prices/item-prices";
 import { generateItemUrl, isItemError } from "./client-helpers";
 import { DATE_FORMAT } from "./constants";
+import ErrorAlert from "./error-alert";
 import MobileFavoriteButton from "./mobile-favorite-button";
 import type { DetailedPurchasedItem } from "./types";
 
@@ -179,6 +180,8 @@ const PurchasedItemDetailedViewDialog = ({
                 description="This item is not available in your territory."
               />
             )}
+            {isItemError(item) && <ErrorAlert item={item} />}
+
             <div className="flex flex-row gap-2 p-3">
               <div className="flex-1">
                 <div className="text-sm">Item #</div>
