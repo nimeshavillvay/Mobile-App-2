@@ -6,6 +6,7 @@ import type {
   AddressCheckSuggestions,
   AddressFormData,
 } from "@/_lib/types";
+import { isErrorResponse } from "@/_lib/utils";
 import { useToast } from "@repo/web-ui/components/ui/toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
@@ -118,9 +119,17 @@ const useAddShippingAddressMutation = () => {
         });
       }
     },
-    onError: () => {
+    onError: async (error) => {
+      let errorMessage = "Failed to add the shipping address";
+      if (error?.response?.status === 400) {
+        const errorResponse = await error.response.json();
+        if (isErrorResponse(errorResponse)) {
+          errorMessage = errorResponse.message;
+        }
+      }
       toast({
-        description: "Failed to add the shipping address",
+        title: "Failed to add address",
+        description: errorMessage,
         variant: "destructive",
       });
     },
