@@ -13,7 +13,7 @@ import {
 import { CaretDownIcon, CaretUpIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { Suspense } from "react";
+import { Suspense, useDeferredValue } from "react";
 import {
   INIT_FROM_DATE,
   INIT_PAGE_NUMBER,
@@ -44,6 +44,8 @@ const OrderHistoryList = ({ token }: { readonly token: string }) => {
   const urlSortDirection =
     searchParams.get(QUERY_KEYS.SORT_DIRECTION) ?? INIT_SORT_DIRECTION;
 
+  const deferredPerPage = useDeferredValue(perPage);
+
   const filtersQuery = useSuspenseFilters(token, {
     type: "Order History",
     from: fromDate,
@@ -55,7 +57,7 @@ const OrderHistoryList = ({ token }: { readonly token: string }) => {
     fromDate,
     toDate,
     page,
-    perPage,
+    deferredPerPage,
     urlSortBy,
     urlSortDirection,
     filtersQuery.data,
