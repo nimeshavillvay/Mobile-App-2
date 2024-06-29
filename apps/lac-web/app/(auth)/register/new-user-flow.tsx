@@ -573,8 +573,8 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
                         autoComplete="phone-number"
                         {...field}
                         value={phoneNumber}
-                        onChange={(value) => {
-                          const formatted = formatPhoneNumber(value);
+                        onChange={(event) => {
+                          const formatted = formatPhoneNumber(event);
                           field.onChange(formatted ?? "");
                         }}
                       />
