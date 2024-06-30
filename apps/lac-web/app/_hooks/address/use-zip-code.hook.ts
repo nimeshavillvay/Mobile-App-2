@@ -1,4 +1,5 @@
-import { ChangeEvent, useState } from "react";
+import type { ChangeEvent } from "react";
+import { useState } from "react";
 
 export const useZipCodeFormatter = () => {
   const [zipCode, setZipCode] = useState<string | undefined>("");
