@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 
 export const usePhoneNumberFormatter = () => {
   const [phoneNumber, setPhoneNumber] = useState<string | undefined>("");
 
-  const formatPhoneNumber = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const formatPhoneNumber = (event: ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value
       .replace(/\D/g, "")
       .match(/(\d{0,3})(\d{0,3})(\d{0,4})/);

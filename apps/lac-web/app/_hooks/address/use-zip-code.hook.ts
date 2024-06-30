@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 
 export const useZipCodeFormatter = () => {
   const [zipCode, setZipCode] = useState<string | undefined>("");
 
-  const formatZipCode = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const formatZipCode = (event: ChangeEvent<HTMLInputElement>) => {
     let value = event.target.value.replace(/\D/g, "");
 
     if (value?.length > 5) {

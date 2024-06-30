@@ -1,6 +1,6 @@
 import { useCheckRecaptcha } from "@/_context/recaptcha-ref";
+import usePhoneNumberFormatter from "@/_hooks/address/use-phone-number-formatter.hook";
 import useZipCodeFormatter from "@/_hooks/address/use-zip-code.hook";
-import usePhoneNumberFormatter from "@/_hooks/phone/use-phone-number-formatter.hook";
 import useCounties from "@/_hooks/registration/use-counties.hook";
 import useCountries from "@/_hooks/registration/use-countries.hook";
 import useStates from "@/_hooks/registration/use-states.hook";
