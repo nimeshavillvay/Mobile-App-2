@@ -137,8 +137,10 @@ const ProductCard = ({
     >
       <ProductCardHero>
         <div className="flex flex-row justify-between gap-2">
-          {discountPercent > 0 && (
+          {discountPercent > 0 ? (
             <ProductCardDiscount>{discountPercent}</ProductCardDiscount>
+          ) : (
+            <div />
           )}
 
           {orientation === "vertical" && (
