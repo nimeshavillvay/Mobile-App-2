@@ -11,7 +11,7 @@ const ItemAttributes = ({ productId }: ItemAttributesProps) => {
   const attributes = itemAttributesQuery.data?.[0] ?? null;
 
   return (
-    <div className="flex flex-row py-2 text-sm text-brand-gray-500">
+    <div className="flex flex-row gap-2 py-2 text-sm text-brand-gray-500">
       {attributes ? (
         <>
           <div className="flex-1 flex-col">
@@ -53,9 +53,15 @@ const Attribute = ({
 }: {
   readonly label: string;
   readonly value: string;
-}) => (
-  <div className="flex flex-row">
-    <div className="flex-1 font-bold">{label}:</div>
-    <div className="flex-1" dangerouslySetInnerHTML={{ __html: value }} />
-  </div>
-);
+}) => {
+  if (!value) {
+    return null;
+  }
+
+  return (
+    <div className="flex flex-row">
+      <div className="flex-1 font-bold">{label}:</div>
+      <div className="flex-1" dangerouslySetInnerHTML={{ __html: value }} />
+    </div>
+  );
+};
