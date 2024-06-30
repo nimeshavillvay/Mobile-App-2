@@ -11,6 +11,7 @@ export const getItemInfo = async (productIdList: number[]) => {
   const response = await api
     .get("rest/getiteminfo", {
       searchParams: { productids: productIdList.toString() },
+      cache: "no-cache",
     })
     .json<
       {

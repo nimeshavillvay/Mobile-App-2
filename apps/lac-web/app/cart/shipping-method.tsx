@@ -82,7 +82,9 @@ const ShippingMethod = ({ token, options }: ShippingMethodProps) => {
       availability.willCallAnywhere[0] &&
       availability.willCallAnywhere[0].status === IN_STOCK
     ) {
-      config.shipping_method_1 = "0";
+      config.shipping_method_1 =
+        availability?.options?.at(0)?.plants?.at(0)?.shippingMethods?.at(0)
+          ?.code ?? "0";
       config.avail_1 =
         availability.willCallAnywhere[0]?.willCallQuantity.toString();
       config.backorder_date =
@@ -90,24 +92,31 @@ const ShippingMethod = ({ token, options }: ShippingMethodProps) => {
       config.will_call_avail =
         availability.willCallAnywhere[0]?.willCallQuantity.toString();
       config.will_call_plant = willCallPlant?.plantCode ?? DEFAULT_PLANT.code;
+      config.will_call_shipping = "W";
     } else if (
       availability.willCallAnywhere &&
       availability.willCallAnywhere[0] &&
       availability.willCallAnywhere[0].status === NOT_IN_STOCK
     ) {
       config.avail_1 = "0";
-      config.shipping_method_1 = "0";
+      config.shipping_method_1 =
+        availability?.options?.at(0)?.plants?.at(0)?.shippingMethods?.at(0)
+          ?.code ?? "0";
       config.backorder_all = "T";
       config.backorder_date =
         availability.willCallAnywhere[0]?.willCallBackOrder ?? "";
       config.backorder_quantity =
         availability.willCallAnywhere[0]?.willCallQuantity.toString();
+      config.will_call_plant = willCallPlant?.plantCode ?? DEFAULT_PLANT.code;
+      config.will_call_shipping = "W";
     } else if (
       availability.willCallAnywhere &&
       availability.willCallAnywhere[0] &&
       availability.willCallAnywhere[0].status === LIMITED_STOCK
     ) {
-      config.shipping_method_1 = "0";
+      config.shipping_method_1 =
+        availability?.options?.at(0)?.plants?.at(0)?.shippingMethods?.at(0)
+          ?.code ?? "0";
       config.avail_1 =
         availability.willCallAnywhere[0]?.willCallQuantity.toString();
       config.backorder_date =
@@ -118,6 +127,7 @@ const ShippingMethod = ({ token, options }: ShippingMethodProps) => {
       config.backorder_all = "F";
       config.backorder_quantity =
         availability.willCallAnywhere[0]?.backOrderQuantity_1?.toString() ?? "";
+      config.will_call_shipping = "W";
     }
     return config;
   };
@@ -212,7 +222,9 @@ const ShippingMethod = ({ token, options }: ShippingMethodProps) => {
           // Set hash value
           config.hashvalue = newHashValue;
         }
-
+        config.will_call_shipping = "";
+        config.will_call_avail = "";
+        config.will_call_plant = "";
         {
           return {
             cartItemId: item.cartItemId,

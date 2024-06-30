@@ -91,14 +91,17 @@ const ProductCard = ({
       )}
     >
       <ProductCardHero>
-        {discountPercent > 0 && (
-          <ProductCardDiscount>{discountPercent}</ProductCardDiscount>
-        )}
+        <div className="flex flex-row justify-between gap-2">
+          {discountPercent > 0 ? (
+            <ProductCardDiscount>{discountPercent}</ProductCardDiscount>
+          ) : (
+            <div />
+          )}
 
-        {orientation === "vertical" && (
-          <SaleBadges onSale={onSale} isNewItem={isNewItem} />
-        )}
-
+          {orientation === "vertical" && (
+            <SaleBadges onSale={onSale} isNewItem={isNewItem} />
+          )}
+        </div>
         {!!image && !!title && (
           <ProductCardImage
             src={image}

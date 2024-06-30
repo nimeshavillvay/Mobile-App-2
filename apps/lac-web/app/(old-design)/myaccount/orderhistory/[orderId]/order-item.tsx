@@ -51,6 +51,7 @@ type OrderItemProps = {
     isExcludedProduct?: boolean;
     productName?: string;
   };
+  readonly isDiscontinued: boolean;
   readonly getShippingMethodName: (shippingCode: string) => string;
   readonly getPlantName: (plantId: string) => string;
 };
@@ -58,6 +59,7 @@ type OrderItemProps = {
 const OrderItem = ({
   index,
   orderItem,
+  isDiscontinued,
   getShippingMethodName,
   getPlantName,
 }: OrderItemProps) => {
@@ -153,7 +155,10 @@ const OrderItem = ({
             </div>
           </div>
 
-          <BuyAgainButton disabled={isExcludedProduct} productId={productId} />
+          <BuyAgainButton
+            disabled={isExcludedProduct || isDiscontinued}
+            productId={productId}
+          />
         </div>
       </div>
 
@@ -226,6 +231,18 @@ const OrderItem = ({
                       <AlertInline
                         variant="destructive"
                         description="Back order dates are subject to change by suppliers without notice."
+                      />
+                    </TableCell>
+                  </TableRow>
+                )}
+
+                {isDiscontinued && (
+                  <TableRow>
+                    <TableCell colSpan={9} className="py-2">
+                      <AlertInline
+                        variant="destructive"
+                        title="DISCONTINUED"
+                        description="This item is no longer available"
                       />
                     </TableCell>
                   </TableRow>

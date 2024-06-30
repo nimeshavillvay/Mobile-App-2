@@ -1,4 +1,5 @@
 import { useCheckRecaptcha } from "@/_context/recaptcha-ref";
+import usePhoneNumberFormatter from "@/_hooks/address/use-phone-number-formatter.hook";
 import type { PasswordPolicies } from "@/_lib/types";
 import { cn, isErrorResponse } from "@/_lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -49,6 +50,8 @@ const CurrentUserFlow = ({ passwordPolicies }: CurrentUserFlowProps) => {
 
   const [step, setStep] = useState<Step>("account");
 
+  const { phoneNumber, formatPhoneNumber } = usePhoneNumberFormatter();
+
   const refinedCurrentUserSchema = useMemo(
     () =>
       currentUserSchema
@@ -59,11 +62,10 @@ const CurrentUserFlow = ({ passwordPolicies }: CurrentUserFlowProps) => {
             .trim()
             .refine(
               (value) => {
-                const numericCharacters = value.replace(/-/g, "");
-                const isValidLength =
-                  numericCharacters.length >= 10 &&
-                  numericCharacters.length <= 15;
-                const isValidFormat = /^[\d-]+$/.test(value);
+                const numericCharacters = value.replace(/[()\s-]/g, "");
+                const isValidLength = numericCharacters.length === 10;
+                const isValidFormat = /[\d\-()\s]+$/.test(value);
+
                 return isValidLength && isValidFormat;
               },
               {
@@ -434,6 +436,11 @@ const CurrentUserFlow = ({ passwordPolicies }: CurrentUserFlowProps) => {
                       type="tel"
                       autoComplete="phone-number"
                       {...field}
+                      value={phoneNumber}
+                      onChange={(event) => {
+                        const formatted = formatPhoneNumber(event);
+                        field.onChange(formatted ?? "");
+                      }}
                     />
                   </FormControl>
                   <FormDescription className="sr-only">

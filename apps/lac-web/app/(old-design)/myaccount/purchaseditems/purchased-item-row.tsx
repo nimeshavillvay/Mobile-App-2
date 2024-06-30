@@ -2,9 +2,9 @@ import ProductNotAvailable from "@/_components/product-not-available";
 import Warning from "@/_components/warning";
 import useAddToCartMutation from "@/_hooks/cart/use-add-to-cart-mutation.hook";
 import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
+import useItemInfo from "@/_hooks/product/use-item-info.hook";
 import useSuspenseProductExcluded from "@/_hooks/product/use-suspense-product-excluded.hook";
 import { cn } from "@/_lib/utils";
-import AlertInline from "@/old/_components/alert-inline";
 import ErrorBoundary from "@/old/_components/error-boundary";
 import { Button } from "@/old/_components/ui/button";
 import {
@@ -29,6 +29,7 @@ import ItemAttributes from "./_item-attributes/item-attributes";
 import ItemPrices from "./_item-prices/item-prices";
 import { generateItemUrl, isItemError } from "./client-helpers";
 import { DATE_FORMAT } from "./constants";
+import ErrorAlert from "./error-alert";
 import FavoriteButton from "./favorite-button";
 import type { DetailedPurchasedItem } from "./types";
 
@@ -115,6 +116,9 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
 
   const isItemNotAdded = !item.productSku;
   const isValidQuantity = !!(quantity && quantity >= 1);
+
+  const itemInfoQuery = useItemInfo([item.productId]);
+  const itemInfo = itemInfoQuery.data?.[0];
 
   return (
     <FormProvider {...methods}>
@@ -357,7 +361,7 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
           <Collapsible
             open={showItemAttributes}
             onOpenChange={setShowItemAttributes}
-            disabled={isItemNotAdded}
+            disabled={isItemNotAdded || !itemInfo}
           >
             <CollapsibleTrigger
               className={cn(
@@ -395,37 +399,3 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
 };
 
 export default PurchasedItemRow;
-
-const ErrorAlert = ({ item }: { readonly item: DetailedPurchasedItem }) => {
-  if (!item?.productSku) {
-    return (
-      <AlertInline
-        variant="destructive"
-        title="Error!"
-        description="Not available online. Please call Customer Service for availability"
-      />
-    );
-  }
-
-  if (item?.isDiscontinued || item?.productStatus === "DL") {
-    return (
-      <AlertInline
-        variant="destructive"
-        title="DISCONTINUED"
-        description="This item is no longer available"
-      />
-    );
-  }
-
-  if (item?.productStatus === "DU" || item?.productStatus === "DV") {
-    return (
-      <AlertInline
-        variant="destructive"
-        title="Will be Discontinued"
-        description="Stock is limited"
-      />
-    );
-  }
-
-  return null;
-};

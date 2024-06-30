@@ -36,9 +36,6 @@ const BillingAddress = ({ token }: { readonly token: string }) => {
       <div className="border-gray-100 bg-transparent p-3 text-gray-500 shadow hover:shadow-lg">
         <h3 className="font-title text-xl font-bold">Billing Address</h3>
         <div className="flex flex-row gap-5 pt-2">
-          <p className="my-auto flex-auto text-sm font-bold text-gray-500 md:text-base">
-            Address:
-          </p>
           <p className="my-auto flex-auto text-sm font-medium md:text-base">
             {billingAddress?.streetAddress}, {billingAddress?.locality},{" "}
             {billingAddress?.region},{" "}
@@ -61,6 +58,8 @@ const BillingAddress = ({ token }: { readonly token: string }) => {
             </Button>
           )}
         </div>
+        <span className="text-sm font-bold md:text-base">Phone:</span>{" "}
+        {billingAddress.phoneNumber}
       </div>
 
       <AddressDialog
