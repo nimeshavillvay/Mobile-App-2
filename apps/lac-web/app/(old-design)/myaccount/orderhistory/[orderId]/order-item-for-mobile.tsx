@@ -34,12 +34,14 @@ type OrderItemForMobileProps = {
     productName?: string;
     price: number;
   };
+  readonly isDiscontinued: boolean;
   readonly shippingMethods: ShippingMethod[];
   readonly plants: Plant[];
 };
 
 const OrderItemForMobile = ({
   orderItem,
+  isDiscontinued,
   shippingMethods,
   plants,
 }: OrderItemForMobileProps) => {
@@ -122,6 +124,7 @@ const OrderItemForMobile = ({
         <MoreItemDetailsForMobile
           productId={productId}
           lineItems={orderItem.lineItems}
+          isDiscontinued={isDiscontinued}
           shippingMethods={shippingMethods}
           plants={plants}
           isExcludedProduct={isExcludedProduct}

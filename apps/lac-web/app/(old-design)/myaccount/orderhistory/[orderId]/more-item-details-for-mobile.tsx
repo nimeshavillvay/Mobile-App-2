@@ -32,6 +32,7 @@ type MoreItemDetailsForMobileProps = {
     itemStatus: string;
     promoCode: string;
   }[];
+  readonly isDiscontinued: boolean;
   readonly shippingMethods: ShippingMethod[];
   readonly plants: Plant[];
   readonly isExcludedProduct?: boolean;
@@ -40,6 +41,7 @@ type MoreItemDetailsForMobileProps = {
 const MoreItemDetailsForMobile = ({
   productId,
   lineItems,
+  isDiscontinued,
   shippingMethods,
   plants,
   isExcludedProduct = false,
@@ -70,7 +72,10 @@ const MoreItemDetailsForMobile = ({
           </Button>
         </CollapsibleTrigger>
 
-        <BuyAgainButton productId={productId} disabled={isExcludedProduct} />
+        <BuyAgainButton
+          productId={productId}
+          disabled={isExcludedProduct || isDiscontinued}
+        />
       </div>
 
       <CollapsibleContent className="py-2">
@@ -127,6 +132,14 @@ const MoreItemDetailsForMobile = ({
                 <AlertInline
                   variant="destructive"
                   description="Back order dates are subject to change by suppliers without notice."
+                />
+              )}
+
+              {isDiscontinued && (
+                <AlertInline
+                  variant="destructive"
+                  title="DISCONTINUED"
+                  description="This item is no longer available"
                 />
               )}
             </div>

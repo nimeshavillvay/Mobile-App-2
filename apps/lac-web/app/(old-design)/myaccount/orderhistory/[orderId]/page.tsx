@@ -53,11 +53,13 @@ const DetailedOrderPage = async ({
 }: DetailedOrderPageProps) => {
   const orderDetail = await getOrder(orderId);
 
-  const [paymentMethods, shippingMethods, plants] = await Promise.all([
-    getPaymentMethods(),
-    getShippingMethods(),
-    getPlants(),
-  ]);
+  const [paymentMethods, shippingMethods, plants, itemsInfo] =
+    await Promise.all([
+      getPaymentMethods(),
+      getShippingMethods(),
+      getPlants(),
+      getItemInfo(orderDetail.items.map((item) => item.productId)),
+    ]);
 
   if (orderDetail?.items?.length) {
     const productIds = orderDetail.items.map((item) => item.productId);
@@ -286,6 +288,11 @@ const DetailedOrderPage = async ({
                 key={item.productId}
                 orderItem={item}
                 index={index}
+                // If the product is discontinued, the get item info API
+                // doesn't return anything
+                isDiscontinued={
+                  !itemsInfo.some((info) => info.productId === item.productId)
+                }
                 getShippingMethodName={getShippingMethodName}
                 getPlantName={getPlantName}
               />
@@ -306,6 +313,11 @@ const DetailedOrderPage = async ({
             <OrderItemForMobile
               key={item.productId}
               orderItem={item}
+              // If the product is discontinued, the get item info API
+              // doesn't return anything
+              isDiscontinued={
+                !itemsInfo.some((info) => info.productId === item.productId)
+              }
               shippingMethods={shippingMethods}
               plants={plants}
             />
