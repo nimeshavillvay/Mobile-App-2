@@ -1,5 +1,6 @@
-import ZipCodeInputField from "@/_components/zip-code-input-field";
 import { useCheckRecaptcha } from "@/_context/recaptcha-ref";
+import usePhoneNumberFormatter from "@/_hooks/address/use-phone-number-formatter.hook";
+import useZipCodeFormatter from "@/_hooks/address/use-zip-code.hook";
 import useCounties from "@/_hooks/registration/use-counties.hook";
 import useCountries from "@/_hooks/registration/use-countries.hook";
 import useStates from "@/_hooks/registration/use-states.hook";
@@ -74,10 +75,10 @@ const personalDetailsSchema = z.object({
     .trim()
     .refine(
       (value) => {
-        const numericCharacters = value.replace(/-/g, "");
-        const isValidLength =
-          numericCharacters.length >= 10 && numericCharacters.length <= 15;
-        const isValidFormat = /^[\d-]+$/.test(value);
+        const numericCharacters = value.replace(/[()\s-]/g, "");
+        const isValidLength = numericCharacters.length === 10;
+        const isValidFormat = /[\d\-()\s]+$/.test(value);
+
         return isValidLength && isValidFormat;
       },
       {
@@ -121,7 +122,7 @@ const addressSchema = z
         });
       }
 
-      if (values.shippingCity.length < 6) {
+      if (values.shippingCity.length < 1) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           path: ["shippingCity"],
@@ -169,6 +170,13 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
 
   const [step, setStep] = useState<Step>("personal");
   const [openVerificationDialog, setOpenVerificationDialog] = useState(false);
+
+  const { phoneNumber, formatPhoneNumber } = usePhoneNumberFormatter();
+  const { zipCode: billingZipCode, formatZipCode: formatBillingZipCode } =
+    useZipCodeFormatter();
+
+  const { zipCode: shippingZipCode, formatZipCode: formatShippingZipCode } =
+    useZipCodeFormatter();
 
   const { toast } = useToast();
 
@@ -569,6 +577,11 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
                         type="tel"
                         autoComplete="phone-number"
                         {...field}
+                        value={phoneNumber}
+                        onChange={(event) => {
+                          const formatted = formatPhoneNumber(event);
+                          field.onChange(formatted ?? "");
+                        }}
                       />
                     </FormControl>
                     <FormDescription className="sr-only">
@@ -841,7 +854,7 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
                   control={addressForm.control}
                   name="billingCountry"
                   render={({ field }) => (
-                    <FormItem className="col-span-3">
+                    <FormItem className="col-span-3 self-start">
                       <FormLabel>Country</FormLabel>
                       <Select
                         onValueChange={field.onChange}
@@ -873,7 +886,7 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
                   control={addressForm.control}
                   name="billingState"
                   render={({ field }) => (
-                    <FormItem className="col-span-3">
+                    <FormItem className="col-span-3 self-start">
                       <FormLabel>State</FormLabel>
                       <Select
                         onValueChange={field.onChange}
@@ -907,7 +920,7 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
                   control={addressForm.control}
                   name="billingCounty"
                   render={({ field }) => (
-                    <FormItem className="col-span-3 self-end">
+                    <FormItem className="col-span-3 mt-[0.85rem] self-start">
                       <FormLabel>County</FormLabel>
                       <Select
                         onValueChange={field.onChange}
@@ -942,12 +955,17 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
                   name="billingPostCode"
                   disabled={registerNewUserMutation.isPending}
                   render={({ field }) => (
-                    <FormItem className="col-span-2 self-end">
+                    <FormItem className="col-span-2 mt-[0.85rem] self-start">
                       <FormLabel>Zip/Post code</FormLabel>
                       <FormControl>
-                        <ZipCodeInputField
+                        <Input
+                          autoComplete="zip-code"
                           {...field}
-                          disabled={registerNewUserMutation.isPending}
+                          value={billingZipCode}
+                          onChange={(event) => {
+                            const formatted = formatBillingZipCode(event);
+                            field.onChange(formatted ?? "");
+                          }}
                         />
                       </FormControl>
                       <FormDescription className="sr-only">
@@ -963,7 +981,7 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
                   name="billingZipCode"
                   disabled={registerNewUserMutation.isPending}
                   render={({ field }) => (
-                    <FormItem className="col-span-1">
+                    <FormItem className="col-span-1 self-start">
                       <FormLabel className="overflow-hidden text-ellipsis text-wrap">
                         Zip4 (Optional)
                       </FormLabel>
@@ -1063,7 +1081,7 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
                     control={addressForm.control}
                     name="shippingCountry"
                     render={({ field }) => (
-                      <FormItem className="col-span-3">
+                      <FormItem className="col-span-3 self-start">
                         <FormLabel>Country</FormLabel>
                         <Select
                           onValueChange={field.onChange}
@@ -1098,7 +1116,7 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
                     control={addressForm.control}
                     name="shippingState"
                     render={({ field }) => (
-                      <FormItem className="col-span-3">
+                      <FormItem className="col-span-3 self-start">
                         <FormLabel>State</FormLabel>
                         <Select
                           onValueChange={field.onChange}
@@ -1133,7 +1151,7 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
                     control={addressForm.control}
                     name="shippingCounty"
                     render={({ field }) => (
-                      <FormItem className="col-span-3">
+                      <FormItem className="col-span-3 mt-[0.8rem] self-start">
                         <FormLabel>County</FormLabel>
                         <Select
                           onValueChange={field.onChange}
@@ -1168,12 +1186,17 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
                     name="shippingPostCode"
                     disabled={registerNewUserMutation.isPending}
                     render={({ field }) => (
-                      <FormItem className="col-span-2">
+                      <FormItem className="col-span-2 mt-[0.8rem] self-start">
                         <FormLabel>Zip/Post code</FormLabel>
                         <FormControl>
-                          <ZipCodeInputField
+                          <Input
+                            autoComplete="zip-code"
                             {...field}
-                            disabled={registerNewUserMutation.isPending}
+                            value={shippingZipCode}
+                            onChange={(event) => {
+                              const formatted = formatShippingZipCode(event);
+                              field.onChange(formatted ?? "");
+                            }}
                           />
                         </FormControl>
                         <FormDescription className="sr-only">
@@ -1189,7 +1212,7 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
                     name="shippingZipCode"
                     disabled={registerNewUserMutation.isPending}
                     render={({ field }) => (
-                      <FormItem className="col-span-1">
+                      <FormItem className="col-span-1 self-start">
                         <FormLabel className="overflow-hidden text-ellipsis text-wrap">
                           Zip4 (Optional)
                         </FormLabel>

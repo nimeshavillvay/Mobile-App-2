@@ -118,7 +118,7 @@ const FiltersForMobileDialog = ({ open, setOpen }: FiltersForMobileProps) => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="bottom-0 top-auto max-h-[80vh] max-w-[500px] translate-y-[0%] gap-0">
+      <DialogContent className="bottom-0 top-auto flex max-h-[calc(100vh-50px)] max-w-[500px] translate-y-[0%] flex-col gap-0">
         <DialogHeader>
           <DialogTitle className="text-left font-wurth font-extrabold">
             Sort & Filter
@@ -129,123 +129,121 @@ const FiltersForMobileDialog = ({ open, setOpen }: FiltersForMobileProps) => {
           </DialogDescription>
         </DialogHeader>
 
-        <div>
-          <Accordion
-            type="single"
-            collapsible
-            className="w-full"
-            defaultValue="item-1"
-          >
-            <AccordionItem value="item-1">
-              <AccordionTrigger className="bg-gray-100 px-5 py-3 text-xl text-[#000] hover:no-underline">
-                Duration
-              </AccordionTrigger>
+        <Accordion
+          type="single"
+          collapsible
+          className="w-full flex-1 overflow-y-scroll"
+          defaultValue="item-1"
+        >
+          <AccordionItem value="item-1">
+            <AccordionTrigger className="bg-gray-100 px-5 py-3 text-xl text-[#000] hover:no-underline">
+              Duration
+            </AccordionTrigger>
 
-              <AccordionContent className="grid gap-y-5 px-5 py-3">
-                <div className="mt-4 flex flex-row items-center justify-center gap-2">
-                  <DatePicker
-                    date={fromDate}
-                    onSelectDate={(date) => {
-                      setFromDate(date);
-                      setDuration(customDuration);
-                    }}
-                  />
+            <AccordionContent className="grid gap-y-5 px-5 py-3">
+              <div className="mt-4 flex flex-row items-center justify-center gap-2">
+                <DatePicker
+                  date={fromDate}
+                  onSelectDate={(date) => {
+                    setFromDate(date);
+                    setDuration(customDuration);
+                  }}
+                />
 
-                  <div>to</div>
+                <div>to</div>
 
-                  <DatePicker
-                    date={toDate}
-                    onSelectDate={(date) => {
-                      setToDate(date);
-                      setDuration(customDuration);
-                    }}
-                  />
-                </div>
+                <DatePicker
+                  date={toDate}
+                  onSelectDate={(date) => {
+                    setToDate(date);
+                    setDuration(customDuration);
+                  }}
+                />
+              </div>
 
-                <div>
-                  <RadioGroup
-                    value={duration?.value}
-                    defaultValue="12"
-                    onValueChange={(value) => {
-                      handleDurationChange(value);
-                    }}
-                    className="gap-auto grid grid-cols-2 justify-between md:grid-cols-4"
-                  >
-                    {DURATIONS.map(
-                      (durationObj) =>
-                        durationObj.value != "0" && (
-                          <div
-                            key={durationObj.label}
-                            className={cn(
-                              "flex items-center space-x-2 rounded border px-2 py-2",
-                              duration?.value == durationObj.value
-                                ? "border-brand-secondary bg-brand-secondary bg-opacity-20 text-brand-secondary"
-                                : "bg-gray-100",
-                            )}
+              <div>
+                <RadioGroup
+                  value={duration?.value}
+                  defaultValue="12"
+                  onValueChange={(value) => {
+                    handleDurationChange(value);
+                  }}
+                  className="gap-auto grid grid-cols-2 justify-between md:grid-cols-4"
+                >
+                  {DURATIONS.map(
+                    (durationObj) =>
+                      durationObj.value != "0" && (
+                        <div
+                          key={durationObj.label}
+                          className={cn(
+                            "flex items-center space-x-2 rounded border px-2 py-2",
+                            duration?.value == durationObj.value
+                              ? "border-brand-secondary bg-brand-secondary bg-opacity-20 text-brand-secondary"
+                              : "bg-gray-100",
+                          )}
+                        >
+                          <RadioGroupItem
+                            value={durationObj.value}
+                            id={`duration-${durationObj.value}`}
+                            className="min-h-4 min-w-4"
+                          />
+                          <Label
+                            htmlFor={`duration-${durationObj.value}`}
+                            className="w-full"
                           >
-                            <RadioGroupItem
-                              value={durationObj.value}
-                              id={`duration-${durationObj.value}`}
-                              className="min-h-4 min-w-4"
-                            />
-                            <Label
-                              htmlFor={`duration-${durationObj.value}`}
-                              className="w-full"
-                            >
-                              {durationObj.label}
-                            </Label>
-                          </div>
-                        ),
-                    )}
-                  </RadioGroup>
-                </div>
-              </AccordionContent>
-            </AccordionItem>
+                            {durationObj.label}
+                          </Label>
+                        </div>
+                      ),
+                  )}
+                </RadioGroup>
+              </div>
+            </AccordionContent>
+          </AccordionItem>
 
-            <AccordionItem value="item-2">
-              <AccordionTrigger className="bg-gray-100 px-5 py-3 text-xl text-[#000] hover:no-underline">
-                Sort
-              </AccordionTrigger>
+          <AccordionItem value="item-2">
+            <AccordionTrigger className="bg-gray-100 px-5 py-3 text-xl text-[#000] hover:no-underline">
+              Sort
+            </AccordionTrigger>
 
-              <AccordionContent className="grid">
-                {SORTING_FILTERS_FOR_MOBILE.map((sortingFilter) => (
-                  <div key={sortingFilter.title}>
-                    <MobileFilterSortItem
-                      key={sortingFilter.title}
-                      title={sortingFilter.title}
-                    />
-                    <div className="bg-white font-bold">
-                      {sortingFilter.options.map((sortingType) => (
-                        <MobileFilterSortItemOption
-                          key={sortingType.type}
-                          title={sortingType.title}
-                          activeFilter={activeFilter}
-                          setActiveFilter={setActiveFilter}
-                          sortingType={sortingType.type}
-                        />
-                      ))}
-                    </div>
+            <AccordionContent className="grid">
+              {SORTING_FILTERS_FOR_MOBILE.map((sortingFilter) => (
+                <div key={sortingFilter.title}>
+                  <MobileFilterSortItem
+                    key={sortingFilter.title}
+                    title={sortingFilter.title}
+                  />
+                  <div className="bg-white font-bold">
+                    {sortingFilter.options.map((sortingType) => (
+                      <MobileFilterSortItemOption
+                        key={sortingType.type}
+                        title={sortingType.title}
+                        activeFilter={activeFilter}
+                        setActiveFilter={setActiveFilter}
+                        sortingType={sortingType.type}
+                      />
+                    ))}
                   </div>
-                ))}
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
+                </div>
+              ))}
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
 
-          <div className="grid grid-cols-2 gap-3 p-5">
-            <Button
-              className="min-w-24 rounded-sm border border-brand-primary bg-transparent p-6 font-bold text-brand-primary"
-              onClick={onResetFiltersMobile}
-            >
-              Reset
-            </Button>
+        <div className="grid grid-cols-2 gap-3 p-5">
+          <Button
+            className="min-w-24 rounded-sm border border-brand-primary bg-transparent p-6 font-bold text-brand-primary"
+            onClick={onResetFiltersMobile}
+          >
+            Reset
+          </Button>
 
-            <Button
-              className="min-w-24 p-6"
-              onClick={() => onSearchMobileFilters()}
-            >
-              Apply
-            </Button>
-          </div>
+          <Button
+            className="min-w-24 p-6"
+            onClick={() => onSearchMobileFilters()}
+          >
+            Apply
+          </Button>
         </div>
       </DialogContent>
     </Dialog>

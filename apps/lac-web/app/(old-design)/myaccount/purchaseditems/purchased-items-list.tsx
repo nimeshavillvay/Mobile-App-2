@@ -52,6 +52,8 @@ const PurchasedItemsList = ({ token }: { readonly token: string }) => {
     searchParams.get(QUERY_KEYS.PER_PAGE) ?? INIT_PER_PAGE,
   );
 
+  const deferredPerPage = useDeferredValue(perPage);
+
   let isLoading = true;
   let totalItems = 0;
 
@@ -78,7 +80,7 @@ const PurchasedItemsList = ({ token }: { readonly token: string }) => {
     fromDate,
     toDate,
     page,
-    perPage,
+    deferredPerPage,
     orderBy,
     orderType,
     filtersQuery.data,

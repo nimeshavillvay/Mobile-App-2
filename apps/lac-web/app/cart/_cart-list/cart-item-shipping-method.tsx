@@ -213,31 +213,60 @@ const CartItemShippingMethod = ({
       // Ship to me configs
       if (selectedOption === MAIN_OPTIONS.SHIP_TO_ME) {
         if (availableAll) {
-          onSave(
-            createCartItemConfig({
-              method: selectedShippingMethod,
+          const setShippingMethod =
+            availableAllPlant?.shippingMethods?.find(
+              (method) => method.code === selectedShippingMethod,
+            )?.code ??
+            availableAllPlant?.shippingMethods?.at(0)?.code ??
+            selectedShippingMethod;
+          setSelectedShippingMethod(setShippingMethod);
+          onSave({
+            ...createCartItemConfig({
+              method: setShippingMethod,
               quantity: availableAllPlant?.quantity ?? 0,
               plant: availableAllPlant?.plant ?? EMPTY_STRING,
               hash: availableAll.hash,
               backOrderAll: false,
             }),
-          );
+            will_call_avail: EMPTY_STRING,
+            will_call_shipping: EMPTY_STRING,
+            will_call_plant: EMPTY_STRING,
+          });
         } else if (takeOnHand) {
-          onSave(
-            createCartItemConfig({
-              method: selectedShippingMethod,
+          const setShippingMethod =
+            takeOnHandPlant?.shippingMethods?.find(
+              (method) => method.code === selectedShippingMethod,
+            )?.code ??
+            takeOnHandPlant?.shippingMethods?.at(0)?.code ??
+            selectedShippingMethod;
+          setSelectedShippingMethod(setShippingMethod);
+          onSave({
+            ...createCartItemConfig({
+              method: setShippingMethod,
               quantity: takeOnHandPlant?.quantity ?? 0,
               plant: takeOnHandPlant?.plant ?? EMPTY_STRING,
               hash: takeOnHand.hash,
               backOrderDate: takeOnHandPlant?.backOrderDate,
               backOrderQuantity: takeOnHandPlant?.backOrderQuantity,
             }),
-          );
+            will_call_avail: EMPTY_STRING,
+            will_call_shipping: EMPTY_STRING,
+            will_call_plant: EMPTY_STRING,
+          });
         } else if (shipAlternativeBranch) {
+          const setShippingMethod =
+            shipAlternativeBranch.plants
+              ?.at(0)
+              ?.shippingMethods?.find(
+                (method) => method.code === selectedShippingMethod,
+              )?.code ??
+            shipAlternativeBranch.plants?.at(0)?.shippingMethods?.at(0)?.code ??
+            selectedShippingMethod;
+          setSelectedShippingMethod(setShippingMethod);
           onSave(
             getAlternativeBranchesConfig({
               plants: shipAlternativeBranch.plants,
-              method: selectedShippingMethod,
+              method: setShippingMethod,
               hash: shipAlternativeBranch.hash,
               backOrderDate: shipAlternativeBranch.backOrder
                 ? shipAlternativeBranch?.plants?.[0]?.backOrderDate
@@ -245,7 +274,6 @@ const CartItemShippingMethod = ({
               backOrderQuantity: shipAlternativeBranch.backOrder
                 ? shipAlternativeBranch?.plants?.[0]?.backOrderQuantity
                 : 0,
-              backOrderAll: shipAlternativeBranch.backOrder,
               homePlant: willCallPlant.plantCode ?? DEFAULT_PLANT.code,
             }),
           );
@@ -261,8 +289,8 @@ const CartItemShippingMethod = ({
       }
       // Back order all can have only this config
       if (selectedOption === MAIN_OPTIONS.BACK_ORDER && backOrderAll) {
-        onSave(
-          createCartItemConfig({
+        onSave({
+          ...createCartItemConfig({
             method: getFirstShippingCodeFromShippingMethod(
               backOrderAll?.plants,
             ),
@@ -273,7 +301,10 @@ const CartItemShippingMethod = ({
             backOrderDate: backOrderAll.plants[0]?.backOrderDate ?? "",
             backOrderQuantity: backOrderAll.plants[0]?.backOrderQuantity ?? 0,
           }),
-        );
+          will_call_avail: EMPTY_STRING,
+          will_call_shipping: EMPTY_STRING,
+          will_call_plant: EMPTY_STRING,
+        });
       }
     } else {
       setSelectedShippingOption(undefined);
@@ -380,7 +411,6 @@ const CartItemShippingMethod = ({
                 backOrderQuantity: shipAlternativeBranch.backOrder
                   ? shipAlternativeBranch?.plants?.[0]?.backOrderQuantity
                   : 0,
-                backOrderAll: shipAlternativeBranch.backOrder,
                 homePlant: willCallPlant.plantCode ?? DEFAULT_PLANT.code,
               }),
             );
@@ -398,7 +428,7 @@ const CartItemShippingMethod = ({
 
       if (shipToMe === TAKE_ON_HAND && takeOnHand) {
         const setShippingMethod =
-          takeOnHandPlant?.shippingMethods.find(
+          takeOnHandPlant?.shippingMethods?.find(
             (method) => method.code === selectedShippingMethod,
           )?.code ??
           takeOnHandPlant?.shippingMethods?.[0]?.code ??
@@ -428,7 +458,6 @@ const CartItemShippingMethod = ({
             backOrderQuantity: shipAlternativeBranch.backOrder
               ? shipAlternativeBranch?.plants?.[0]?.backOrderQuantity
               : 0,
-            backOrderAll: shipAlternativeBranch.backOrder,
             homePlant: willCallPlant.plantCode ?? DEFAULT_PLANT.code,
           }),
         );

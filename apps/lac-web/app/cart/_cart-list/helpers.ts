@@ -76,6 +76,9 @@ export const getAlternativeBranchesConfig = ({
     backorder_quantity: backOrderQuantity?.toString(),
     backorder_date: backOrderDate,
     backorder_all: backOrderAll ? TRUE_STRING : FALSE_STRING,
+    will_call_avail: EMPTY_STRING,
+    will_call_plant: EMPTY_STRING,
+    will_call_shipping: EMPTY_STRING,
   };
   const plantName = homePlant;
   const data = plants?.map((plant) => ({

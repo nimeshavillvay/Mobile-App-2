@@ -23,6 +23,7 @@ import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import dayjs from "dayjs";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   Suspense,
   useId,
@@ -36,6 +37,7 @@ import * as z from "zod";
 import ItemPrices from "./_item-prices/item-prices";
 import { generateItemUrl, isItemError } from "./client-helpers";
 import { DATE_FORMAT } from "./constants";
+import ErrorAlert from "./error-alert";
 import MobileFavoriteButton from "./mobile-favorite-button";
 import type { DetailedPurchasedItem } from "./types";
 
@@ -62,6 +64,7 @@ const PurchasedItemDetailedViewDialog = ({
   const id = useId();
   const quantityId = `quantity-${id}`;
   const formId = `purchase-add-to-cart-mobile-form-${id}`;
+  const router = useRouter();
 
   const { setQuantity } = useAddToCartDialog((state) => state.actions);
 
@@ -177,6 +180,8 @@ const PurchasedItemDetailedViewDialog = ({
                 description="This item is not available in your territory."
               />
             )}
+            {isItemError(item) && <ErrorAlert item={item} />}
+
             <div className="flex flex-row gap-2 p-3">
               <div className="flex-1">
                 <div className="text-sm">Item #</div>
@@ -331,14 +336,16 @@ const PurchasedItemDetailedViewDialog = ({
               onSubmit={onSubmit}
               className="flex flex-row gap-4"
             >
-              <Link href={generateItemUrl(item)} className="flex-1">
-                <Button
-                  variant="secondary"
-                  className="h-12 w-full border-brand-primary text-brand-primary"
-                >
-                  View Product
-                </Button>
-              </Link>
+              <Button
+                variant="secondary"
+                className="h-12 w-full flex-1 border-brand-primary text-brand-primary"
+                disabled={item.slug === ""}
+                onClick={() =>
+                  router.push(`/product/${item.productId}/${item.slug}`)
+                }
+              >
+                View Product
+              </Button>
 
               <Button
                 className="h-12 flex-1"
