@@ -12,7 +12,7 @@ export const usePhoneNumberFormatter = () => {
     if (value) {
       const formatted = !value[2]
         ? value[1]
-        : value[1] + "-" + value[2] + (value[3] ? "-" + value[3] : "");
+        : "(" + value[1] + ") " + value[2] + (value[3] ? "-" + value[3] : "");
 
       setPhoneNumber(formatted);
 
@@ -20,7 +20,7 @@ export const usePhoneNumberFormatter = () => {
     }
   };
 
-  return { phoneNumber, formatPhoneNumber };
+  return { phoneNumber, setPhoneNumber, formatPhoneNumber };
 };
 
 export default usePhoneNumberFormatter;

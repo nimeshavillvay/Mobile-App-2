@@ -55,6 +55,7 @@ const TotalCountAndPagination = ({
         value: value,
       },
     ]);
+    window.scrollTo(0, 0);
   };
 
   const onNextPage = () => {
@@ -66,6 +67,7 @@ const TotalCountAndPagination = ({
         },
       ]);
     }
+    window.scrollTo(0, 0);
   };
 
   const onPrevPage = () => {
@@ -77,6 +79,7 @@ const TotalCountAndPagination = ({
         },
       ]);
     }
+    window.scrollTo(0, 0);
   };
 
   return (

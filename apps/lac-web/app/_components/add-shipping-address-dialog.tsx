@@ -1,10 +1,13 @@
 import FullAddress from "@/_components/full-address";
 import useAddShippingAddressMutation from "@/_hooks/address/use-add-shipping-address-mutation.hook";
+import usePhoneNumberFormatter from "@/_hooks/address/use-phone-number-formatter.hook";
+import useZipCodeFormatter from "@/_hooks/address/use-zip-code.hook";
 import useCounties from "@/_hooks/registration/use-counties.hook";
 import useCountries from "@/_hooks/registration/use-countries.hook";
 import useStates from "@/_hooks/registration/use-states.hook";
 import type { Address } from "@/_lib/types";
 import { cn } from "@/_lib/utils";
+import { PHONE_NUMBER_VALIDATION } from "@/_lib/zod-helper";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckCircle } from "@repo/web-ui/components/icons/check-circle";
 import { Button } from "@repo/web-ui/components/ui/button";
@@ -36,7 +39,6 @@ import { nanoid } from "nanoid";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import ZipCodeInputField from "./zip-code-input-field";
 
 const formSchema = z.object({
   address: z.string().min(1),
@@ -46,6 +48,7 @@ const formSchema = z.object({
   county: z.string().optional(),
   postCode: z.string().min(5),
   zip: z.string().optional(),
+  phoneNumber: PHONE_NUMBER_VALIDATION,
 });
 
 type AddShippingAddressDialogProps = {
@@ -67,6 +70,7 @@ const AddShippingAddressDialog = ({
       county: "",
       postCode: "",
       zip: "",
+      phoneNumber: "",
     },
   });
 
@@ -82,6 +86,9 @@ const AddShippingAddressDialog = ({
   const [selectedSuggestionId, setSelectedSuggestionId] = useState("");
   const [addressSuggestions, setAddressSuggestions] = useState<Address[]>([]);
 
+  const { phoneNumber, formatPhoneNumber } = usePhoneNumberFormatter();
+  const { zipCode, formatZipCode } = useZipCodeFormatter();
+
   const selectedSuggestion = addressSuggestions.find(
     (address) => address.xcAddressId === selectedSuggestionId,
   );
@@ -93,7 +100,7 @@ const AddShippingAddressDialog = ({
         county: values.county,
         city: values.city,
         company: "",
-        phoneNumber: "244234",
+        phoneNumber: values.phoneNumber,
         state: values.state,
         addressLineOne: values.address,
         zipCode: values.postCode,
@@ -125,7 +132,7 @@ const AddShippingAddressDialog = ({
           county: selectedSuggestion.county ?? "",
           city: selectedSuggestion.locality,
           company: "",
-          phoneNumber: "244234",
+          phoneNumber: form.getValues("phoneNumber"),
           state: selectedSuggestion.region,
           addressLineOne: selectedSuggestion.streetAddress,
           zipCode: selectedSuggestion.postalCode,
@@ -316,9 +323,14 @@ const AddShippingAddressDialog = ({
                   <FormItem className="col-span-4">
                     <FormLabel>Zip/Post code</FormLabel>
                     <FormControl>
-                      <ZipCodeInputField
+                      <Input
+                        autoComplete="zip-code"
                         {...field}
-                        placeholder="Zip/Post code"
+                        value={zipCode}
+                        onChange={(event) => {
+                          const formatted = formatZipCode(event);
+                          field.onChange(formatted ?? "");
+                        }}
                       />
                     </FormControl>
                     <FormDescription className="sr-only">
@@ -340,6 +352,33 @@ const AddShippingAddressDialog = ({
                     </FormControl>
                     <FormDescription className="sr-only">
                       Enter your Zip4
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="phoneNumber"
+                render={({ field }) => (
+                  <FormItem className="col-span-6">
+                    <FormLabel>Phone Number</FormLabel>
+                    <FormControl>
+                      <Input
+                        required
+                        type="tel"
+                        autoComplete="phone-number"
+                        {...field}
+                        value={phoneNumber}
+                        onChange={(event) => {
+                          const formatted = formatPhoneNumber(event);
+                          field.onChange(formatted ?? "");
+                        }}
+                      />
+                    </FormControl>
+                    <FormDescription className="sr-only">
+                      Enter your city
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
