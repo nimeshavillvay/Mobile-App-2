@@ -60,7 +60,7 @@ const ProductSearchResult = ({
         )}
 
         <div>
-          {product.info.title.length > 65
+          {product.info.title?.length > 65
             ? product.info.title.substring(0, 65) + "..."
             : product.info.title}
         </div>
