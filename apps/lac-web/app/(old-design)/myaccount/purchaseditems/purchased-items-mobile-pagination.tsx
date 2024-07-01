@@ -46,6 +46,7 @@ const PurchasedItemsMobilePagination = ({
     changeSearchParams(urlSearchParams, searchParams);
 
     setOpen(false);
+    window.scrollTo(0, 0);
   };
 
   return (
