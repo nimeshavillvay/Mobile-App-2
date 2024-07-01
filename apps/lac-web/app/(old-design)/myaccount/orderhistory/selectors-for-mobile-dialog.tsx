@@ -85,6 +85,13 @@ const SelectorsForMobileDialog = ({
   const statusFilter = filterAndMapValues(filterQuery.data, "Status");
   const typesFilter = filterAndMapValues(filterQuery.data, "Transaction Type");
 
+  const resetFilters = () => {
+    setOrderTypes([]);
+    setOrderStatuses([]);
+    setPoNos([]);
+    setJobNames([]);
+  };
+
   const handleDurationChange = (value: string) => {
     const duration = DURATIONS.find((duration) => duration.value === value);
 
@@ -101,6 +108,8 @@ const SelectorsForMobileDialog = ({
       setFromDate(new Date(newFromDate));
       setToDate(new Date(newToDate));
     }
+
+    resetFilters();
   };
 
   const handleOrderTypeCheckedChanged = (id: number, checked: boolean) => {
@@ -199,10 +208,7 @@ const SelectorsForMobileDialog = ({
     setDuration(INIT_DURATION);
     setFromDate(new Date(INIT_FROM_DATE));
     setToDate(new Date());
-    setPoNos([]);
-    setOrderStatuses([]);
-    setJobNames([]);
-    setOrderTypes([]);
+    resetFilters();
     setSortBy(urlSortBy);
     setSortDirection(urlSortDirection);
     onOpenChange(false);
@@ -244,6 +250,7 @@ const SelectorsForMobileDialog = ({
                     onSelectDate={(date) => {
                       setFromDate(date);
                       setDuration(customDuration);
+                      resetFilters();
                     }}
                   />
 
@@ -254,6 +261,7 @@ const SelectorsForMobileDialog = ({
                     onSelectDate={(date) => {
                       setToDate(date);
                       setDuration(customDuration);
+                      resetFilters();
                     }}
                   />
                 </div>
