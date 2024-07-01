@@ -20,7 +20,7 @@ export const usePhoneNumberFormatter = () => {
     }
   };
 
-  return { phoneNumber, formatPhoneNumber };
+  return { phoneNumber, setPhoneNumber, formatPhoneNumber };
 };
 
 export default usePhoneNumberFormatter;

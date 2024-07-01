@@ -1,7 +1,8 @@
-import ZipCodeInputField from "@/_components/zip-code-input-field";
 import useAddShippingAddressMutation from "@/_hooks/address/use-add-shipping-address-mutation.hook";
+import usePhoneNumberFormatter from "@/_hooks/address/use-phone-number-formatter.hook";
 import useUpdateBillingAddressMutation from "@/_hooks/address/use-update-billing-address-mutation.hook";
 import useUpdateShippingAddressMutation from "@/_hooks/address/use-update-shipping-address-mutation.hook";
+import useZipCodeFormatter from "@/_hooks/address/use-zip-code.hook";
 import useCounties from "@/_hooks/registration/use-counties.hook";
 import useCountries from "@/_hooks/registration/use-countries.hook";
 import useStates from "@/_hooks/registration/use-states.hook";
@@ -10,6 +11,7 @@ import type {
   AddressCheckSuggestions,
   AddressFormData,
 } from "@/_lib/types";
+import { phoneNumberValidation } from "@/_lib/zod-helper";
 import {
   Dialog,
   DialogContent,
@@ -36,7 +38,8 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
 import { nanoid } from "nanoid";
-import type { Dispatch, SetStateAction } from "react";
+// eslint-disable-next-line no-restricted-imports
+import { useEffect, type Dispatch, type SetStateAction } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import type { AddressCheckSuggestionsWithUuid } from "./types";
@@ -85,21 +88,7 @@ const AddressDialog = ({
       .refine((value) => /^\d+$/.test(value), {
         message: "Please enter a valid ZIP Code",
       }),
-    phoneNumber: z
-      .string()
-      .trim()
-      .refine(
-        (value) => {
-          const numericCharacters = value.replace(/-/g, "");
-          const isValidLength =
-            numericCharacters.length >= 10 && numericCharacters.length <= 15;
-          const isValidFormat = /^[\d-]+$/.test(value);
-          return isValidLength && isValidFormat;
-        },
-        {
-          message: "Please enter a valid phone number",
-        },
-      ),
+    phoneNumber: phoneNumberValidation,
     country: z.string().trim().min(1, "Please enter country").max(40),
   });
 
@@ -124,6 +113,21 @@ const AddressDialog = ({
   const updateShippingAddressMutation = useUpdateShippingAddressMutation();
   const updateBillingAddressMutation = useUpdateBillingAddressMutation();
 
+  const { phoneNumber, setPhoneNumber, formatPhoneNumber } =
+    usePhoneNumberFormatter();
+  const { zipCode, setZipCode, formatZipCode } = useZipCodeFormatter();
+
+  useEffect(() => {
+    setPhoneNumber(address.phoneNumber ?? "");
+    setZipCode(address.postalCode ?? "");
+  }, [
+    open,
+    setPhoneNumber,
+    setZipCode,
+    address.phoneNumber,
+    address.postalCode,
+  ]);
+
   const getAddressSuggestionsWithUuid = (
     data: AddressCheckSuggestions,
   ): AddressCheckSuggestionsWithUuid => {
@@ -138,6 +142,12 @@ const AddressDialog = ({
     };
 
     return addressSuggestions;
+  };
+
+  const resetForm = () => {
+    form.reset();
+    setZipCode("");
+    setPhoneNumber("");
   };
 
   const onAddressSubmit = (data: AddressDataSchema) => {
@@ -164,7 +174,7 @@ const AddressDialog = ({
         updateShippingAddressMutation.mutate(requestData, {
           onSuccess: (data) => {
             setOpenAddressDialog(false);
-            form.reset();
+            resetForm();
 
             if ("checkType" in data) {
               setAddressCheckSuggestions(getAddressSuggestionsWithUuid(data));
@@ -177,7 +187,7 @@ const AddressDialog = ({
         addShippingAddressMutation.mutate(addressData, {
           onSuccess: (data) => {
             setOpenAddressDialog(false);
-            form.reset();
+            resetForm();
 
             if ("checkType" in data) {
               setAddressCheckSuggestions(getAddressSuggestionsWithUuid(data));
@@ -191,7 +201,7 @@ const AddressDialog = ({
       updateBillingAddressMutation.mutate(addressData, {
         onSuccess: (data) => {
           setOpenAddressDialog(false);
-          form.reset();
+          resetForm();
 
           if ("checkType" in data) {
             setAddressCheckSuggestions(getAddressSuggestionsWithUuid(data));
@@ -214,7 +224,7 @@ const AddressDialog = ({
   const handleOpenChange = (open: boolean) => {
     setOpenAddressDialog(open);
     if (!open) {
-      form.reset();
+      resetForm();
     }
   };
 
@@ -430,12 +440,17 @@ const AddressDialog = ({
                       <FormDescription className="sr-only">
                         Zip Code
                       </FormDescription>
-
                       <FormControl>
-                        <ZipCodeInputField
+                        <Input
+                          autoComplete="zip-code"
+                          placeholder="Zip Code"
                           className="h-8 rounded-sm border-brand-gray-400 font-medium"
                           {...field}
-                          placeholder="Zip Code"
+                          value={zipCode}
+                          onChange={(event) => {
+                            const formatted = formatZipCode(event);
+                            field.onChange(formatted ?? "");
+                          }}
                         />
                       </FormControl>
                       <FormDescription className="sr-only">
@@ -480,9 +495,15 @@ const AddressDialog = ({
 
                     <FormControl>
                       <Input
+                        type="tel"
+                        autoComplete="phone-number"
                         placeholder="Phone Number"
-                        type="text"
                         {...field}
+                        value={phoneNumber}
+                        onChange={(event) => {
+                          const formatted = formatPhoneNumber(event);
+                          field.onChange(formatted ?? "");
+                        }}
                       />
                     </FormControl>
                     <FormDescription className="sr-only">

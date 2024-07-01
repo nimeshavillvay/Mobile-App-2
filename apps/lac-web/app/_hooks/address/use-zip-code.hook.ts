@@ -17,7 +17,7 @@ export const useZipCodeFormatter = () => {
     }
   };
 
-  return { zipCode, formatZipCode };
+  return { zipCode, setZipCode, formatZipCode };
 };
 
 export default useZipCodeFormatter;

@@ -2,6 +2,7 @@ import { useCheckRecaptcha } from "@/_context/recaptcha-ref";
 import usePhoneNumberFormatter from "@/_hooks/address/use-phone-number-formatter.hook";
 import type { PasswordPolicies } from "@/_lib/types";
 import { cn, isErrorResponse } from "@/_lib/utils";
+import { phoneNumberValidation } from "@/_lib/zod-helper";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckCircle } from "@repo/web-ui/components/icons/check-circle";
 import { Button } from "@repo/web-ui/components/ui/button";
@@ -57,21 +58,7 @@ const CurrentUserFlow = ({ passwordPolicies }: CurrentUserFlowProps) => {
       currentUserSchema
         .extend({
           password: z.string().min(passwordPolicies.minimumLength),
-          phoneNumber: z
-            .string()
-            .trim()
-            .refine(
-              (value) => {
-                const numericCharacters = value.replace(/[()\s-]/g, "");
-                const isValidLength = numericCharacters.length === 10;
-                const isValidFormat = /[\d\-()\s]+$/.test(value);
-
-                return isValidLength && isValidFormat;
-              },
-              {
-                message: "Please enter a valid phone number",
-              },
-            ),
+          phoneNumber: phoneNumberValidation,
         })
         .superRefine(({ password, confirmPassword }, context) => {
           const containsAlphabet = (ch: string) => /[a-z,A-Z]/.test(ch);
