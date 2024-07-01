@@ -226,7 +226,7 @@ const PurchasedItemDetailedViewDialog = ({
                         <ItemPrices
                           token={token}
                           productId={item.productId}
-                          quantity={1}
+                          quantity={item.minimumOrderQuantity}
                           uom={item.unitOfMeasure}
                           listPrice={item.listPrice}
                           unitPriceOnly
@@ -315,7 +315,7 @@ const PurchasedItemDetailedViewDialog = ({
                     <ItemPrices
                       token={token}
                       productId={item.productId}
-                      quantity={1}
+                      quantity={item.minimumOrderQuantity}
                       uom={item.unitOfMeasure}
                       listPrice={item.listPrice}
                     />
