@@ -35,18 +35,11 @@ const MultiSelect = ({
     removeSelectedItem,
     selectedItems,
   } = useMultipleSelection({ initialSelectedItems });
-  // Have to filter the selected items here because selected filters can become
-  // unavailable when the duration changes.
-  const filteredSelectedItems = selectedItems?.filter((item) =>
-    data.some(
-      (dataItem) => dataItem.id === item.id && dataItem.value === item.value,
-    ),
-  );
 
   const filteredItems = data;
 
   const isItemSelected = (item: Option) => {
-    return filteredSelectedItems.some(
+    return selectedItems.some(
       (selectedItem) => selectedItem.value === item.value,
     );
   };
@@ -117,12 +110,12 @@ const MultiSelect = ({
 
   const deselectItem = (selectedItem: Option) => {
     removeSelectedItem(selectedItem);
-    return filteredSelectedItems.filter((item) => item.id !== selectedItem.id);
+    return selectedItems.filter((item) => item.id !== selectedItem.id);
   };
 
   const selectItem = (selectedItem: Option) => {
     addSelectedItem(selectedItem);
-    return [...filteredSelectedItems, selectedItem];
+    return [...selectedItems, selectedItem];
   };
 
   const removeAllSelectedItems = () => {
@@ -130,7 +123,7 @@ const MultiSelect = ({
       onClear();
     }
 
-    filteredSelectedItems.forEach((item) => {
+    selectedItems.forEach((item) => {
       removeSelectedItem(item);
     });
 
@@ -151,9 +144,9 @@ const MultiSelect = ({
         </Label>
 
         <div className="flex h-8 min-w-[138px] flex-1 flex-row items-center justify-between rounded-sm border bg-white px-1 focus-within:border-brand-gray-300">
-          {filteredSelectedItems.length > 0 && (
+          {selectedItems.length > 0 && (
             <div className="flex flex-row items-center rounded-md bg-brand-gray-100 px-1 focus:bg-brand-gray-300">
-              <span>{filteredSelectedItems.length} Selected </span>
+              <span>{selectedItems.length} Selected </span>
               <Button
                 variant="ghost"
                 className="h-4 gap-0 px-0.5"
@@ -168,13 +161,13 @@ const MultiSelect = ({
             variant="ghost"
             className={cn(
               "font-base flex h-6 cursor-pointer flex-row items-center justify-between gap-0 px-1 font-normal normal-case",
-              filteredSelectedItems.length === 0 ? "w-full" : "",
+              selectedItems.length === 0 ? "w-full" : "",
             )}
             {...getToggleButtonProps(
               getDropdownProps({ preventKeyAction: isOpen }),
             )}
           >
-            <span>{filteredSelectedItems.length === 0 && placeholder}</span>
+            <span>{selectedItems.length === 0 && placeholder}</span>
 
             <ChevronDown
               className={cn(

@@ -99,6 +99,17 @@ const OrderHistoryListSelectors = ({
   const id = useId();
   const durationId = `duration-${id}`;
 
+  const resetFilters = () => {
+    setOrderTypes([]);
+    setOrderStatuses([]);
+    setPoNos([]);
+    setJobNames([]);
+
+    resetPoNosRef.current = true;
+    resetJobNamesRef.current = true;
+    resetOrderStatusesRef.current = true;
+  };
+
   const handleDurationChange = (value: string) => {
     const duration = DURATIONS.find((duration) => duration.value === value);
     if (duration) {
@@ -113,6 +124,9 @@ const OrderHistoryListSelectors = ({
       new Date(dayjs().subtract(Number(value), "days").format(URL_DATE_FORMAT)),
     );
     setToDate(new Date(dayjs().format(URL_DATE_FORMAT)));
+
+    // Reset selected filters when the duration changes
+    resetFilters();
   };
 
   const handleSearch = () => {
@@ -167,13 +181,7 @@ const OrderHistoryListSelectors = ({
     setDuration(INIT_DURATION);
     setFromDate(new Date(INIT_FROM_DATE));
     setToDate(new Date(INIT_TO_DATE));
-    setOrderStatuses([]);
-    setOrderTypes([]);
-    setPoNos([]);
-    setJobNames([]);
-    resetPoNosRef.current = true;
-    resetJobNamesRef.current = true;
-    resetOrderStatusesRef.current = true;
+    resetFilters();
 
     const params = new URLSearchParams();
 
@@ -239,6 +247,7 @@ const OrderHistoryListSelectors = ({
                 onSelectDate={(date) => {
                   setFromDate(date);
                   setDuration(CUSTOM_DURATION);
+                  resetFilters();
                 }}
                 dateFormat={UI_DATE_FORMAT}
               />
@@ -250,6 +259,7 @@ const OrderHistoryListSelectors = ({
                 onSelectDate={(date) => {
                   setToDate(date);
                   setDuration(CUSTOM_DURATION);
+                  resetFilters();
                 }}
                 dateFormat={UI_DATE_FORMAT}
               />
