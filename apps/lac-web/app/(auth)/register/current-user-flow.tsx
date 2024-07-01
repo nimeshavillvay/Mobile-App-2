@@ -2,7 +2,7 @@ import { useCheckRecaptcha } from "@/_context/recaptcha-ref";
 import usePhoneNumberFormatter from "@/_hooks/address/use-phone-number-formatter.hook";
 import type { PasswordPolicies } from "@/_lib/types";
 import { cn, isErrorResponse } from "@/_lib/utils";
-import { phoneNumberValidation } from "@/_lib/zod-helper";
+import { PHONE_NUMBER_VALIDATION } from "@/_lib/zod-helper";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckCircle } from "@repo/web-ui/components/icons/check-circle";
 import { Button } from "@repo/web-ui/components/ui/button";
@@ -58,7 +58,7 @@ const CurrentUserFlow = ({ passwordPolicies }: CurrentUserFlowProps) => {
       currentUserSchema
         .extend({
           password: z.string().min(passwordPolicies.minimumLength),
-          phoneNumber: phoneNumberValidation,
+          phoneNumber: PHONE_NUMBER_VALIDATION,
         })
         .superRefine(({ password, confirmPassword }, context) => {
           const containsAlphabet = (ch: string) => /[a-z,A-Z]/.test(ch);

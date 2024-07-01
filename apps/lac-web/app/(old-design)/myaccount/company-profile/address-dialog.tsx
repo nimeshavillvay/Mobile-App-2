@@ -11,7 +11,7 @@ import type {
   AddressCheckSuggestions,
   AddressFormData,
 } from "@/_lib/types";
-import { phoneNumberValidation } from "@/_lib/zod-helper";
+import { PHONE_NUMBER_VALIDATION } from "@/_lib/zod-helper";
 import {
   Dialog,
   DialogContent,
@@ -38,8 +38,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
 import { nanoid } from "nanoid";
-// eslint-disable-next-line no-restricted-imports
-import { useEffect, type Dispatch, type SetStateAction } from "react";
+import { type Dispatch, type SetStateAction } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import type { AddressCheckSuggestionsWithUuid } from "./types";
@@ -88,7 +87,7 @@ const AddressDialog = ({
       .refine((value) => /^\d+$/.test(value), {
         message: "Please enter a valid ZIP Code",
       }),
-    phoneNumber: phoneNumberValidation,
+    phoneNumber: PHONE_NUMBER_VALIDATION,
     country: z.string().trim().min(1, "Please enter country").max(40),
   });
 
@@ -113,20 +112,8 @@ const AddressDialog = ({
   const updateShippingAddressMutation = useUpdateShippingAddressMutation();
   const updateBillingAddressMutation = useUpdateBillingAddressMutation();
 
-  const { phoneNumber, setPhoneNumber, formatPhoneNumber } =
-    usePhoneNumberFormatter();
-  const { zipCode, setZipCode, formatZipCode } = useZipCodeFormatter();
-
-  useEffect(() => {
-    setPhoneNumber(address.phoneNumber ?? "");
-    setZipCode(address.postalCode ?? "");
-  }, [
-    open,
-    setPhoneNumber,
-    setZipCode,
-    address.phoneNumber,
-    address.postalCode,
-  ]);
+  const { formatPhoneNumber } = usePhoneNumberFormatter();
+  const { formatZipCode } = useZipCodeFormatter();
 
   const getAddressSuggestionsWithUuid = (
     data: AddressCheckSuggestions,
@@ -142,12 +129,6 @@ const AddressDialog = ({
     };
 
     return addressSuggestions;
-  };
-
-  const resetForm = () => {
-    form.reset();
-    setZipCode("");
-    setPhoneNumber("");
   };
 
   const onAddressSubmit = (data: AddressDataSchema) => {
@@ -174,7 +155,7 @@ const AddressDialog = ({
         updateShippingAddressMutation.mutate(requestData, {
           onSuccess: (data) => {
             setOpenAddressDialog(false);
-            resetForm();
+            form.reset();
 
             if ("checkType" in data) {
               setAddressCheckSuggestions(getAddressSuggestionsWithUuid(data));
@@ -187,7 +168,7 @@ const AddressDialog = ({
         addShippingAddressMutation.mutate(addressData, {
           onSuccess: (data) => {
             setOpenAddressDialog(false);
-            resetForm();
+            form.reset();
 
             if ("checkType" in data) {
               setAddressCheckSuggestions(getAddressSuggestionsWithUuid(data));
@@ -201,7 +182,7 @@ const AddressDialog = ({
       updateBillingAddressMutation.mutate(addressData, {
         onSuccess: (data) => {
           setOpenAddressDialog(false);
-          resetForm();
+          form.reset();
 
           if ("checkType" in data) {
             setAddressCheckSuggestions(getAddressSuggestionsWithUuid(data));
@@ -224,7 +205,7 @@ const AddressDialog = ({
   const handleOpenChange = (open: boolean) => {
     setOpenAddressDialog(open);
     if (!open) {
-      resetForm();
+      form.reset();
     }
   };
 
@@ -446,7 +427,6 @@ const AddressDialog = ({
                           placeholder="Zip Code"
                           className="h-8 rounded-sm border-brand-gray-400 font-medium"
                           {...field}
-                          value={zipCode}
                           onChange={(event) => {
                             const formatted = formatZipCode(event);
                             field.onChange(formatted ?? "");
@@ -499,7 +479,6 @@ const AddressDialog = ({
                         autoComplete="phone-number"
                         placeholder="Phone Number"
                         {...field}
-                        value={phoneNumber}
                         onChange={(event) => {
                           const formatted = formatPhoneNumber(event);
                           field.onChange(formatted ?? "");

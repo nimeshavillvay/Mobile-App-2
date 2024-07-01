@@ -8,7 +8,7 @@ export const NUMBER_TYPE = z
   .transform((x) => Number(x))
   .pipe(z.number());
 
-export const phoneNumberValidation = z
+export const PHONE_NUMBER_VALIDATION = z
   .string()
   .trim()
   .refine(

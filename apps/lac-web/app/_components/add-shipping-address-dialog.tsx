@@ -7,7 +7,7 @@ import useCountries from "@/_hooks/registration/use-countries.hook";
 import useStates from "@/_hooks/registration/use-states.hook";
 import type { Address } from "@/_lib/types";
 import { cn } from "@/_lib/utils";
-import { phoneNumberValidation } from "@/_lib/zod-helper";
+import { PHONE_NUMBER_VALIDATION } from "@/_lib/zod-helper";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckCircle } from "@repo/web-ui/components/icons/check-circle";
 import { Button } from "@repo/web-ui/components/ui/button";
@@ -48,7 +48,7 @@ const formSchema = z.object({
   county: z.string().optional(),
   postCode: z.string().min(5),
   zip: z.string().optional(),
-  phoneNumber: phoneNumberValidation,
+  phoneNumber: PHONE_NUMBER_VALIDATION,
 });
 
 type AddShippingAddressDialogProps = {

@@ -5,7 +5,7 @@ import useCounties from "@/_hooks/registration/use-counties.hook";
 import useCountries from "@/_hooks/registration/use-countries.hook";
 import useStates from "@/_hooks/registration/use-states.hook";
 import type { PasswordPolicies } from "@/_lib/types";
-import { NUMBER_TYPE, phoneNumberValidation } from "@/_lib/zod-helper";
+import { NUMBER_TYPE, PHONE_NUMBER_VALIDATION } from "@/_lib/zod-helper";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   AlertDialog,
@@ -70,7 +70,7 @@ const personalDetailsSchema = z.object({
   email: z.string().email(),
   password: z.string().min(8),
   confirmPassword: z.string().min(8),
-  phoneNumber: phoneNumberValidation,
+  phoneNumber: PHONE_NUMBER_VALIDATION,
   type: z.enum(REGISTRATION_TYPES_VALUES),
   companyName: z.string(),
   industry: z.string(),
