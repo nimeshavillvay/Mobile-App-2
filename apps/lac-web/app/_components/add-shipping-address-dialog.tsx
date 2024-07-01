@@ -378,7 +378,7 @@ const AddShippingAddressDialog = ({
                       />
                     </FormControl>
                     <FormDescription className="sr-only">
-                      Enter your city
+                      Enter your phone number
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
