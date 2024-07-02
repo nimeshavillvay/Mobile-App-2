@@ -4,6 +4,7 @@ import type { Filters } from "@/_lib/types";
 import { Close } from "@repo/web-ui/components/icons/close";
 import { Button } from "@repo/web-ui/components/ui/button";
 import { Separator } from "@repo/web-ui/components/ui/separator";
+import { QUERY_KEYS } from "./constants";
 import { useFilterParams, type SelectedValues } from "./use-filter-params.hook";
 
 export const ProductsGridDesktopFiltersHeader = ({
@@ -20,6 +21,7 @@ export const ProductsGridDesktopFiltersHeader = ({
   const clear = (attributeId: string, valueId?: string) => {
     const newParams = new URLSearchParams(searchParams);
     newParams.delete(attributeId, valueId);
+    newParams.delete(QUERY_KEYS.page);
     window.history.pushState(null, "", `?${newParams.toString()}`);
   };
 
@@ -29,7 +31,7 @@ export const ProductsGridDesktopFiltersHeader = ({
     mappedSelectedValues.forEach((selectedValue) => {
       newParams.delete(selectedValue.id);
     });
-
+    newParams.delete(QUERY_KEYS.page);
     window.history.pushState(null, "", `?${newParams.toString()}`);
   };
 
