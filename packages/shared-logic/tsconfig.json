@@ -1,20 +1,24 @@
 {
   "compilerOptions": {
     "esModuleInterop": true,
-    "incremental": false,
-    "isolatedModules": true,
-    "lib": ["es2022", "DOM", "DOM.Iterable"],
-    "module": "ESNext",
-    "moduleDetection": "force",
-    "moduleResolution": "Bundler",
-    "noUncheckedIndexedAccess": true,
-    "resolveJsonModule": true,
     "skipLibCheck": true,
+    "target": "es2022",
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "moduleDetection": "force",
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
     "strict": true,
-    "target": "ES2022",
-    "jsx": "react-jsx",
-    "outDir": "dist"
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "module": "preserve",
+    "noEmit": true,
+    "lib": ["es2022", "dom", "dom.iterable"],
+    "baseUrl": ".",
+    "paths": {
+      "~/*": ["./src/*"]
+    }
   },
-  "include": ["src", "global-error-registration.d.ts", "reset.d.ts"],
-  "exclude": ["node_modules", "dist"]
+  "include": ["src", "next-env.d.ts", "reset.d.ts"],
+  "exclude": ["node_modules"]
 }

@@ -1,8 +1,8 @@
 import SubHeading from "@/_components/sub-heading";
-import { api } from "@/_lib/api";
 import { getCategoriesList } from "@/_lib/apis/server";
-import { DEFAULT_REVALIDATE } from "@/_lib/constants";
+import { API_BASE_URL, API_KEY } from "@/_lib/constants";
 import { cn } from "@/_lib/utils";
+import getFeaturedCategories from "@repo/shared-logic/apis/server/category/get-featured-categories.server";
 import { buttonVariants } from "@repo/web-ui/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
@@ -11,23 +11,10 @@ const SHOWN_CATEGORIES = 9;
 
 const FeaturedCategories = async () => {
   const [data, categoriesList] = await Promise.all([
-    api
-      .get("rest/featuredcategories", {
-        next: {
-          revalidate: DEFAULT_REVALIDATE,
-        },
-      })
-      .json<
-        {
-          id: string;
-          name: string;
-          slug: string;
-          shortcode: string;
-          item_count: string;
-          direct_item_count: string;
-          img: string;
-        }[]
-      >(),
+    getFeaturedCategories({
+      baseUrl: API_BASE_URL,
+      apiKey: API_KEY,
+    }),
     getCategoriesList(),
   ]);
 
@@ -48,13 +35,17 @@ const FeaturedCategories = async () => {
               className="flex flex-col items-center gap-4 md:gap-2"
             >
               <div className="flex size-28 items-center justify-center overflow-hidden rounded-full p-4 shadow-sm md:size-[7.75rem]">
-                <Image
-                  src={category.img}
-                  alt={`An image of the category ${category.name}`}
-                  width={124}
-                  height={124}
-                  className="size-full object-contain object-center"
-                />
+                {category.img ? (
+                  <Image
+                    src={category.img}
+                    alt={category.name}
+                    width={124}
+                    height={124}
+                    className="size-full object-contain object-center"
+                  />
+                ) : (
+                  <div className="size-[124px]" />
+                )}
               </div>
 
               <span className="text-center text-[0.9375rem] font-semibold leading-5 text-black md:text-base">

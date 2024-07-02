@@ -49,5 +49,23 @@ module.exports = {
     curly: ["error", "all"],
     "import/newline-after-import": "error",
     "react-hooks/exhaustive-deps": "error",
+    "no-restricted-imports": [
+      "error",
+      {
+        patterns: [
+          {
+            group: ["~/*"],
+            message:
+              'Direct importing from the web-ui package is not allowed. Import from "@repo/web-ui" instead.',
+          },
+          {
+            group: ["react"],
+            importNames: ["useEffect"],
+            message:
+              "`useEffect` often leads to bugs which are very hard to debug and code that is hard to develop and maintain. Please look for alternatives.",
+          },
+        ],
+      },
+    ],
   },
 };

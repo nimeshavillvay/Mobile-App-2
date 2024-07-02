@@ -1,8 +1,6 @@
-import { api } from "@/_lib/api";
-import { useSuspenseQuery } from "@tanstack/react-query";
 import { z } from "zod";
 
-export const AddressSchema = z.object({
+export const addressSchema = z.object({
   "address-id": z.string(),
   "xc-addressid": z.string(),
   name: z.string(),
@@ -26,14 +24,15 @@ export const AddressSchema = z.object({
     .optional(),
   "phone-no": z.string().optional(),
 });
-const accountListSchema = z.object({
+
+export const accountListSchema = z.object({
   accounts: z.array(
     z.object({
       isAssociate: z.boolean(),
       name: z.string(),
       "account-no": z.string(),
-      addresses: z.array(AddressSchema),
-      "billing-address": AddressSchema,
+      addresses: z.array(addressSchema),
+      "billing-address": addressSchema,
     }),
   ),
   "given-name": z.string(),
@@ -54,23 +53,3 @@ const accountListSchema = z.object({
     z.array(z.unknown()).length(0),
   ]),
 });
-
-const useSuspenseAccountList = (token: string) => {
-  return useSuspenseQuery({
-    queryKey: ["user", "account-list", token],
-    queryFn: async () => {
-      const response = await api
-        .get("rest/auth/account-list", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          cache: "no-store",
-        })
-        .json();
-
-      return await accountListSchema.parseAsync(response);
-    },
-  });
-};
-
-export default useSuspenseAccountList;

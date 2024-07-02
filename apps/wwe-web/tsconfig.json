@@ -1,0 +1,19 @@
+{
+  "extends": "@repo/typescript-config/next.json",
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["./app/*"],
+      "~/*": ["../../packages/web-ui/src/*"],
+      "@/old/*": ["./app/(old-design)/*"]
+    }
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "reset.d.ts",
+    "global-error-registration.d.ts"
+  ],
+  "exclude": ["node_modules"]
+}

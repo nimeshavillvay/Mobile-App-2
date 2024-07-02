@@ -1,7 +1,8 @@
 "use client";
 
-import useSuspenseAccountList from "@/_hooks/user/use-suspense-account-list.hook";
+import { API_BASE_URL, API_KEY } from "@/_lib/constants";
 import { cn } from "@/_lib/utils";
+import useSuspenseAccountList from "@repo/shared-logic/apis/hooks/account/use-suspense-account-list.hook";
 import { Email } from "@repo/web-ui/components/icons/email";
 import { Phone } from "@repo/web-ui/components/icons/phone";
 import { buttonVariants } from "@repo/web-ui/components/ui/button";
@@ -12,7 +13,11 @@ type SalesRepresentativeProps = {
 };
 
 const SalesRepresentative = ({ token }: SalesRepresentativeProps) => {
-  const accountListQuery = useSuspenseAccountList(token);
+  const accountListQuery = useSuspenseAccountList({
+    baseUrl: API_BASE_URL,
+    token,
+    apiKey: API_KEY,
+  });
 
   if (Array.isArray(accountListQuery.data.sales_rep)) {
     // If there is not sales rep, the field is an empty array

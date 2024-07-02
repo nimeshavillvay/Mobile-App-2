@@ -1,9 +1,9 @@
 {
-  "extends": "expo/tsconfig.base",
-  "compilerOptions": {
-    "strict": true,
-    "moduleResolution": "Bundler",
-    "noUncheckedIndexedAccess": true
-  },
-  "include": ["reset.d.ts"]
+  "extends": "@repo/typescript-config/expo.json",
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "reset.d.ts",
+    "global-error-registration.d.ts"
+  ]
 }

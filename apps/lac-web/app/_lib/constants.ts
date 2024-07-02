@@ -1,3 +1,6 @@
+export const API_BASE_URL = process.env.NEXT_PUBLIC_WURTH_LAC_API ?? "";
+export const API_KEY = process.env.NEXT_PUBLIC_WURTH_LAC_API_KEY ?? "";
+
 export const BASE_URL = "https://wurthlac.com";
 export const SESSION_TOKEN_COOKIE = "xid_00924";
 export const TOKEN_MAX_AGE = 7200;

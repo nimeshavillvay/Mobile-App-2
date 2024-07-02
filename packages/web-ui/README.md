@@ -35,6 +35,18 @@ Also add the TypeScript absolute path to the project that is importing this pack
 }
 ```
 
+### Next.js
+
+Add this package to the transpile packages list in the Next.js config file.
+
+```js
+const nextConfig = {
+  transpilePackages: ["@repo/web-ui"],
+};
+
+export default nextConfig;
+```
+
 ## Shared dependencies
 
 These packages that are shared between the project such as `react` and `clsx` should be installed in this package with the `--save-peer` flag.
