@@ -330,7 +330,6 @@ const AddMoreItemsForm = ({ token }: { readonly token: string }) => {
     addMultipleToCartMutation.mutateAsync(cartItemDetails, {
       onSuccess: () => {
         resetForm();
-        discontinuedProductIds.length = 0;
       },
     });
   };

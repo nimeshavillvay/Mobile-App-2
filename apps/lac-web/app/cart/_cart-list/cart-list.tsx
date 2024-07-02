@@ -128,7 +128,7 @@ const CartList = ({ token, plants }: CartListProps) => {
                     ? " Product has"
                     : " Products have",
                 )
-                .concat(" has been discontinued")}
+                .concat(" been discontinued")}
             </AlertDescription>
           </AlertContent>
           <Button
