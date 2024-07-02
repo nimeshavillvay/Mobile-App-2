@@ -72,6 +72,9 @@ const AddMoreItemsForm = ({ token }: { readonly token: string }) => {
     { sku: string; quantity: string; jobName: string }[]
   >([]);
   const [deleteConfirmation, setDeleteConfirmation] = useState(false);
+  const [discontinuedProductIds, setDiscontinuedProductIds] = useState<
+    number[]
+  >([]);
 
   const addMultipleToCartMutation = useAddMultipleToCartMutation(token);
   const debouncedSearchInput = useDebouncedState(searchInput);
@@ -163,13 +166,18 @@ const AddMoreItemsForm = ({ token }: { readonly token: string }) => {
     const validatedCartItems = await getStatus({
       products: [{ sku: value.sku }],
     });
-
     if (validatedCartItems != undefined && validatedCartItems.length > 0) {
       const validatedCartItem = validatedCartItems?.[0] ?? { productId: "" };
       setValue(
         `cart.${index}.info.productId`,
         parseInt(validatedCartItem.productId),
       );
+      if (validatedCartItems[0]?.product_discontinue) {
+        setDiscontinuedProductIds((products) => [
+          ...products,
+          Number(validatedCartItem.productId),
+        ]);
+      }
     }
 
     setIsItemSelectionProcessed(true);
@@ -313,12 +321,16 @@ const AddMoreItemsForm = ({ token }: { readonly token: string }) => {
         quantity: item.quantity,
         poOrJobName: item.jobName,
         sku: item.sku,
+        isDiscontinued: !!discontinuedProductIds.find(
+          (productId) => productId === item.info?.productId,
+        ),
       };
     });
 
     addMultipleToCartMutation.mutateAsync(cartItemDetails, {
       onSuccess: () => {
         resetForm();
+        discontinuedProductIds.length = 0;
       },
     });
   };

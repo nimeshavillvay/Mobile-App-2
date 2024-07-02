@@ -9,8 +9,11 @@ import useCartStore from "../use-cart-store.hook";
 const useAddMultipleToCartMutation = (token: string) => {
   const queryClient = useQueryClient();
   const { toast } = useToast();
-  const { setExcludedSkus } = useCartStore((state) => state.actions);
+  const { setExcludedSkus, setDiscontinuedSkus } = useCartStore(
+    (state) => state.actions,
+  );
   const excludedSkus = useCartStore((state) => state.excludedSkus);
+  const discontinuedSkus = useCartStore((state) => state.discontinuedSkus);
 
   return useMutation({
     mutationFn: async (
@@ -19,6 +22,7 @@ const useAddMultipleToCartMutation = (token: string) => {
         quantity: number | null | undefined;
         poOrJobName?: string;
         sku: string;
+        isDiscontinued?: boolean;
       }[],
     ) => {
       /**
@@ -54,7 +58,15 @@ const useAddMultipleToCartMutation = (token: string) => {
         backorder_date: "",
       };
 
+      const discontinuedSkuList = [...discontinuedSkus];
+
       const productsInfo = products.map((product) => {
+        if (
+          product.isDiscontinued &&
+          !discontinuedSkuList.includes(product.sku)
+        ) {
+          discontinuedSkuList.push(product.sku);
+        }
         return {
           productid: product.productId,
           quantity: product.quantity,
@@ -63,6 +75,7 @@ const useAddMultipleToCartMutation = (token: string) => {
             ...configuration,
             poOrJobName: product.poOrJobName,
           },
+          isDiscontinued: product.isDiscontinued,
         };
       });
 
@@ -74,7 +87,8 @@ const useAddMultipleToCartMutation = (token: string) => {
           const canBeAddedToCart =
             product.productid !== undefined &&
             product.quantity !== undefined &&
-            product.quantity !== null;
+            product.quantity !== null &&
+            !product.isDiscontinued;
           if (canBeAddedToCart) {
             if (productMap.has(product.productid)) {
               productMap.get(product.productid).quantity += product.quantity;
@@ -85,7 +99,7 @@ const useAddMultipleToCartMutation = (token: string) => {
         });
 
         let uniqueProducts = Array.from(productMap.values());
-
+        console.log("uniqueProducts", uniqueProducts);
         // Create availability promises only for unique products
         const availabilityPromises = uniqueProducts.map((product) => {
           return checkAvailability(token, {
@@ -97,7 +111,7 @@ const useAddMultipleToCartMutation = (token: string) => {
         const availabilityResults = await Promise.all(availabilityPromises);
 
         const excludedSkuList = [...excludedSkus];
-
+        console.log("discontinuedSkuList", discontinuedSkuList);
         // Process each resolved value
         availabilityResults.forEach(({ product, availability }) => {
           if (availability.status === NOT_AVAILABLE) {
@@ -148,6 +162,7 @@ const useAddMultipleToCartMutation = (token: string) => {
           }
         });
         setExcludedSkus(excludedSkuList);
+        setDiscontinuedSkus(discontinuedSkuList);
         return uniqueProducts;
       };
 
