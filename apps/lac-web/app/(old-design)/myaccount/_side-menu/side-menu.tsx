@@ -90,7 +90,7 @@ const SideMenu = ({ token }: { readonly token: string }) => {
         className={cn(menuItem({ status: "inactive" }), "w-full text-left")}
       >
         My Shopping Lists
-      </Link>{" "}
+      </Link>
       <Link
         href="/tax-form"
         className={cn(menuItem({ status: "inactive" }), "w-full text-left")}
