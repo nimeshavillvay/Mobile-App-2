@@ -316,7 +316,7 @@ const CartItemShippingMethod = ({
     if (item && !isNotInStock) {
       onSave({
         ...createCartItemConfig({
-          method: "0",
+          method: "G",
           quantity: item?.willCallQuantity,
           plant: item?.willCallPlant,
           hash: item.hash,
@@ -335,7 +335,7 @@ const CartItemShippingMethod = ({
     if (item && isNotInStock) {
       onSave({
         ...createCartItemConfig({
-          method: "0",
+          method: "G",
           quantity: 0,
           plant: item.willCallPlant,
           hash: item.hash,

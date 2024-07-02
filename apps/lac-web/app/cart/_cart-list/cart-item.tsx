@@ -264,6 +264,10 @@ const CartItem = ({
     defaultShippingMethod?.code ?? "",
   );
 
+  useEffect(() => {
+    setSelectedShippingMethod(defaultShippingMethod?.code ?? "");
+  }, [defaultShippingMethod]);
+
   const handleChangeQtyOrPO = (quantity?: number) => {
     const newQuantity = quantity ?? Number(deferredQuantity);
 
@@ -462,7 +466,7 @@ const CartItem = ({
             ) {
               handleSave({
                 ...createCartItemConfig({
-                  method: "0",
+                  method: "G",
                   quantity: willCallAnywhere[0]?.willCallQuantity,
                   plant: willCallAnywhere[0]?.willCallPlant,
                   hash: willCallAnywhere[0].hash,
@@ -483,7 +487,7 @@ const CartItem = ({
             ) {
               handleSave({
                 ...createCartItemConfig({
-                  method: "0",
+                  method: "G",
                   quantity: 0,
                   plant: willCallAnywhere[0].willCallPlant,
                   hash: willCallAnywhere[0].hash,

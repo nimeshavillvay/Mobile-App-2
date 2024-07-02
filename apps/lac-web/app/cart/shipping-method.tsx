@@ -24,6 +24,8 @@ import { useId, useState } from "react";
 import {
   ALTERNATIVE_BRANCHES,
   AVAILABLE_ALL,
+  BACKORDER_DISABLED,
+  BACKORDER_ENABLED,
   BACK_ORDER_ALL,
   EXCLUDED_SHIPPING_METHODS,
   TAKE_ON_HAND,
@@ -38,6 +40,11 @@ type ShippingMethodProps = {
   readonly token: string;
   readonly options: ShippingMethod[];
 };
+
+type ConfigKey =
+  | `avail_${number}`
+  | `plant_${number}`
+  | `shipping_method_${number}`;
 
 const ShippingMethod = ({ token, options }: ShippingMethodProps) => {
   const id = useId();
@@ -160,22 +167,28 @@ const ShippingMethod = ({ token, options }: ShippingMethodProps) => {
         );
 
         // Get all methods for "Ship to me"
-        const shippingMethods =
-          allAvailableOption?.plants.at(0)?.shippingMethods ?? // First check for all available
-          takeOnHandOption?.plants.at(0)?.shippingMethods ?? // Then for order some and back order the rest
-          alternativeBranchesOption?.plants.at(0)?.shippingMethods ?? // Then for alternative branches
-          backOrderAllOption?.plants.at(0)?.shippingMethods ?? // Finally backorder everything
-          [];
+        const options = [
+          allAvailableOption,
+          takeOnHandOption,
+          alternativeBranchesOption,
+          backOrderAllOption,
+        ];
 
+        const selectedOption = options.find((option) =>
+          option?.plants.some((plant) =>
+            plant?.shippingMethods.some((method) => method?.code === value),
+          ),
+        );
+
+        const shippingMethods =
+          selectedOption?.plants.at(0)?.shippingMethods ?? [];
         return {
           id: item.itemInfo.productId,
-          hashvalue:
-            allAvailableOption?.hash ??
-            takeOnHandOption?.hash ??
-            alternativeBranchesOption?.hash ??
-            backOrderAllOption?.hash ??
-            "",
+          hashvalue: selectedOption?.hash ?? "",
           shippingMethods,
+          plants: selectedOption?.plants,
+          backOrder: selectedOption?.backOrder,
+          type: selectedOption?.type,
         };
       }),
     );
@@ -203,28 +216,65 @@ const ShippingMethod = ({ token, options }: ShippingMethodProps) => {
             newHashValue = shippingMethod.hashvalue;
           }
         }
-
         // Change the shipping method only if it can be changed
-        if (newValue && newHashValue) {
-          // Check the 1st available shipping method
-          if (config.shipping_method_1) {
-            config.shipping_method_1 = newValue;
-          } else if (config.shipping_method_2) {
-            config.shipping_method_2 = newValue;
-          } else if (config.shipping_method_3) {
-            config.shipping_method_3 = newValue;
-          } else if (config.shipping_method_4) {
-            config.shipping_method_4 = newValue;
-          } else if (config.shipping_method_5) {
-            config.shipping_method_5 = newValue;
-          }
+        const selectedOption = shippingMethod;
+        const addedIndexes: number[] = [];
 
+        if (newValue && newHashValue) {
+          config.will_call_shipping = "";
+          config.will_call_avail = "";
+          config.will_call_plant = "";
           // Set hash value
           config.hashvalue = newHashValue;
+          if (selectedOption) {
+            config.backorder_all =
+              selectedOption.type === "backOrderAll" && selectedOption.backOrder
+                ? BACKORDER_ENABLED
+                : BACKORDER_DISABLED;
+            config.backorder_quantity =
+              selectedOption.plants?.[0]?.backOrderQuantity?.toString() ?? "0";
+            config.backorder_date =
+              selectedOption.plants?.[0]?.backOrderDate?.toString() ?? "";
+          }
+
+          for (let i = 0; i < 5; i++) {
+            if (
+              selectedOption &&
+              selectedOption.plants &&
+              selectedOption.plants[i]
+            ) {
+              const selectedPlant = selectedOption.plants[i];
+
+              if (selectedPlant) {
+                const quantity = selectedPlant.quantity ?? "";
+                const index = selectedPlant.index;
+                addedIndexes.push(index);
+
+                (config as Record<ConfigKey, string>)[`avail_${index}`] =
+                  quantity?.toString() ?? "";
+                (config as Record<ConfigKey, string>)[`plant_${index}`] =
+                  selectedPlant.plant ?? "";
+                (config as Record<ConfigKey, string>)[
+                  `shipping_method_${index}`
+                ] =
+                  selectedPlant.plant !== willCallPlant?.plantCode
+                    ? "G"
+                    : newValue || "";
+              }
+            }
+          }
+
+          // Add the missing plants
+          for (let i = 1; i <= 5; i++) {
+            if (!addedIndexes.includes(i)) {
+              (config as Record<ConfigKey, string>)[`avail_${i}`] = "";
+              (config as Record<ConfigKey, string>)[`plant_${i}`] = "";
+              (config as Record<ConfigKey, string>)[`shipping_method_${i}`] =
+                "";
+            }
+          }
         }
-        config.will_call_shipping = "";
-        config.will_call_avail = "";
-        config.will_call_plant = "";
+
         {
           return {
             cartItemId: item.cartItemId,
