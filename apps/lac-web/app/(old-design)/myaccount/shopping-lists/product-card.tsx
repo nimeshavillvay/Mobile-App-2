@@ -58,10 +58,10 @@ const ProductCard = ({
 
   let listPrice = 0;
   let currentPrice = 0;
-  console.log("priceData", priceData);
+
   if (priceData) {
     listPrice = priceData.listPrice;
-    currentPrice = priceData?.price;
+    currentPrice = priceData?.uomPrice ?? priceData?.price;
   }
 
   const discountPercent = Math.round(
