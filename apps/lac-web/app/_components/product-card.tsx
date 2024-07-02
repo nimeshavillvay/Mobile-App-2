@@ -110,7 +110,7 @@ const ProductCard = ({
 
   if (priceData) {
     listPrice = priceData.listPrice;
-    currentPrice = priceData?.uomPrice ?? priceData?.price;
+    currentPrice = priceData?.price;
   }
 
   const discountPercent = Math.round(
