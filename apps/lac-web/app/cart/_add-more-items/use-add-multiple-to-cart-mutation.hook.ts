@@ -99,7 +99,6 @@ const useAddMultipleToCartMutation = (token: string) => {
         });
 
         let uniqueProducts = Array.from(productMap.values());
-        console.log("uniqueProducts", uniqueProducts);
         // Create availability promises only for unique products
         const availabilityPromises = uniqueProducts.map((product) => {
           return checkAvailability(token, {
@@ -111,7 +110,7 @@ const useAddMultipleToCartMutation = (token: string) => {
         const availabilityResults = await Promise.all(availabilityPromises);
 
         const excludedSkuList = [...excludedSkus];
-        console.log("discontinuedSkuList", discontinuedSkuList);
+
         // Process each resolved value
         availabilityResults.forEach(({ product, availability }) => {
           if (availability.status === NOT_AVAILABLE) {
