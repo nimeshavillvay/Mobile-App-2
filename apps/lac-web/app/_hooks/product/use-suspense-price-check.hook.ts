@@ -11,6 +11,7 @@ type ItemPriceOld = {
   coupon: string | null;
   price_breakdowns: PriceBreakDowns;
   uom_price?: number;
+  uom_list_price?: number;
   uom_price_unit?: string;
 };
 
@@ -68,6 +69,7 @@ const useSuspensePriceCheck = (token: string, products: Product[]) => {
           coupon,
           price_breakdowns,
           uom_price,
+          uom_list_price,
           uom_price_unit,
         }) => ({
           productId: productid,
@@ -78,6 +80,7 @@ const useSuspensePriceCheck = (token: string, products: Product[]) => {
           couponCode: coupon,
           priceBreakDowns: getPriceBreakDowns(price_breakdowns),
           uomPrice: uom_price,
+          uomListPrice: uom_list_price,
           uomPriceUnit: uom_price_unit,
         }),
       );
