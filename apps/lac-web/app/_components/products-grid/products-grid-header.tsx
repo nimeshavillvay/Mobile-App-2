@@ -15,7 +15,7 @@ export const ProductsGridHeader = ({
   return (
     <div className="flex flex-row items-end justify-between text-wurth-gray-800">
       <div className="font-title text-lg font-medium tracking-normal md:text-3xl md:tracking-[-0.01406rem]">
-        {totalCount} {totalCount === 1 ? "item" : "items"}
+        {totalCount} {totalCount === 1 ? "Result" : "Results"}
       </div>
 
       <div className="text-sm font-normal md:text-base">
