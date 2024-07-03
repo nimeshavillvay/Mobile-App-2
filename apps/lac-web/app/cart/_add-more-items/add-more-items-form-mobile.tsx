@@ -154,6 +154,7 @@ const AddMoreItemsFormMobile = ({ token }: { readonly token: string }) => {
           quantity: values.quantity,
           poOrJobName: values.poJobName,
           sku: values.sku,
+          isDiscontinued: product.product_discontinue,
         },
       ],
       {
