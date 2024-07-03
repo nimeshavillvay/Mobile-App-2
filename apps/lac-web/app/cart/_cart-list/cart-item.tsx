@@ -176,8 +176,7 @@ const CartItem = ({
   const deleteCartItemMutation = useDeleteCartItemMutation(token);
   const checkAvailabilityMutation = useCheckAvailabilityMutation(token);
 
-  const delayedWillCallPlant = useDebouncedState(selectedWillCallPlant);
-  const deferredWillCallPlant = useDeferredValue(delayedWillCallPlant);
+  const deferredWillCallPlant = useDeferredValue(selectedWillCallPlant);
 
   const checkAvailabilityQuery = useSuspenseCheckAvailability(token, {
     productId: product.id,
