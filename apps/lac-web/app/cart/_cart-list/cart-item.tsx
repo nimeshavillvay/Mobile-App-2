@@ -52,6 +52,7 @@ import {
   ALTERNATIVE_BRANCHES,
   AVAILABLE_ALL,
   BACK_ORDER_ALL,
+  DEFAULT_SHIPPING_METHOD,
   EMPTY_STRING,
   MAIN_OPTIONS,
   TAKE_ON_HAND,
@@ -261,12 +262,8 @@ const CartItem = ({
 
   // User selected shipping method (ship-to-me)
   const [selectedShippingMethod, setSelectedShippingMethod] = useState(
-    defaultShippingMethod?.code ?? "",
+    defaultShippingMethod?.code ?? product.configuration.shipping_method_1,
   );
-
-  useEffect(() => {
-    setSelectedShippingMethod(defaultShippingMethod?.code ?? "");
-  }, [defaultShippingMethod]);
 
   const handleChangeQtyOrPO = (quantity?: number) => {
     const newQuantity = quantity ?? Number(deferredQuantity);
@@ -466,7 +463,7 @@ const CartItem = ({
             ) {
               handleSave({
                 ...createCartItemConfig({
-                  method: "G",
+                  method: DEFAULT_SHIPPING_METHOD,
                   quantity: willCallAnywhere[0]?.willCallQuantity,
                   plant: willCallAnywhere[0]?.willCallPlant,
                   hash: willCallAnywhere[0].hash,
@@ -487,7 +484,7 @@ const CartItem = ({
             ) {
               handleSave({
                 ...createCartItemConfig({
-                  method: "G",
+                  method: DEFAULT_SHIPPING_METHOD,
                   quantity: 0,
                   plant: willCallAnywhere[0].willCallPlant,
                   hash: willCallAnywhere[0].hash,

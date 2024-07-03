@@ -27,6 +27,7 @@ import {
   BACKORDER_DISABLED,
   BACKORDER_ENABLED,
   BACK_ORDER_ALL,
+  DEFAULT_SHIPPING_METHOD,
   EXCLUDED_SHIPPING_METHODS,
   TAKE_ON_HAND,
 } from "./constants";
@@ -41,10 +42,7 @@ type ShippingMethodProps = {
   readonly options: ShippingMethod[];
 };
 
-type ConfigKey =
-  | `avail_${number}`
-  | `plant_${number}`
-  | `shipping_method_${number}`;
+type ConfigKey = keyof CartItemConfiguration;
 
 const ShippingMethod = ({ token, options }: ShippingMethodProps) => {
   const id = useId();
@@ -74,6 +72,24 @@ const ShippingMethod = ({ token, options }: ShippingMethodProps) => {
       }
     });
   };
+
+  function setConfigValues(
+    config: CartItemConfiguration,
+    index: number,
+    availValue: string,
+    plantValue: string,
+    shippingMethodValue: string,
+  ): void {
+    const configKeyAvail: ConfigKey = `avail_${index}` as ConfigKey;
+    const configKeyPlant: ConfigKey = `plant_${index}` as ConfigKey;
+    const configKeyShippingMethod: ConfigKey =
+      `shipping_method_${index}` as ConfigKey;
+
+    config[configKeyAvail] = availValue;
+    config[configKeyPlant] = plantValue;
+    config[configKeyShippingMethod] = shippingMethodValue;
+  }
+
   const transformConfiguration = (
     availability: Availability,
     config: CartItemConfiguration,
@@ -250,16 +266,21 @@ const ShippingMethod = ({ token, options }: ShippingMethodProps) => {
                 const index = selectedPlant.index;
                 addedIndexes.push(index);
 
-                (config as Record<ConfigKey, string>)[`avail_${index}`] =
-                  quantity?.toString() ?? "";
-                (config as Record<ConfigKey, string>)[`plant_${index}`] =
-                  selectedPlant.plant ?? "";
-                (config as Record<ConfigKey, string>)[
-                  `shipping_method_${index}`
-                ] =
+                const availValue = quantity?.toString() ?? "";
+                const plantValue = selectedPlant.plant ?? "";
+                const shippingMethodValue =
                   selectedPlant.plant !== willCallPlant?.plantCode
-                    ? "G"
-                    : newValue || "";
+                    ? DEFAULT_SHIPPING_METHOD
+                    : newValue ?? "";
+
+                // Set values for the selected plant
+                setConfigValues(
+                  config,
+                  index,
+                  availValue,
+                  plantValue,
+                  shippingMethodValue,
+                );
               }
             }
           }
@@ -267,10 +288,7 @@ const ShippingMethod = ({ token, options }: ShippingMethodProps) => {
           // Add the missing plants
           for (let i = 1; i <= 5; i++) {
             if (!addedIndexes.includes(i)) {
-              (config as Record<ConfigKey, string>)[`avail_${i}`] = "";
-              (config as Record<ConfigKey, string>)[`plant_${i}`] = "";
-              (config as Record<ConfigKey, string>)[`shipping_method_${i}`] =
-                "";
+              setConfigValues(config, i, "", "", "");
             }
           }
         }
