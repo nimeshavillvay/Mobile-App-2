@@ -22,4 +22,6 @@ export const DEFAULT_PLANT = "L010";
 export const BACKORDER_ENABLED = "T";
 export const BACKORDER_DISABLED = "F";
 
+export const DEFAULT_SHIPPING_METHOD = "G";
+
 export const EXCLUDED_SHIPPING_METHODS = ["W", "X"] as const;
