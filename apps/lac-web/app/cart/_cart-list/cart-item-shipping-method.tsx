@@ -45,6 +45,7 @@ import {
   ALTERNATIVE_BRANCHES,
   AVAILABLE_ALL,
   BACK_ORDER_ALL,
+  DEFAULT_SHIPPING_METHOD,
   EMPTY_STRING,
   MAIN_OPTIONS,
   TAKE_ON_HAND,
@@ -316,7 +317,7 @@ const CartItemShippingMethod = ({
     if (item && !isNotInStock) {
       onSave({
         ...createCartItemConfig({
-          method: "0",
+          method: DEFAULT_SHIPPING_METHOD,
           quantity: item?.willCallQuantity,
           plant: item?.willCallPlant,
           hash: item.hash,
@@ -335,7 +336,7 @@ const CartItemShippingMethod = ({
     if (item && isNotInStock) {
       onSave({
         ...createCartItemConfig({
-          method: "0",
+          method: DEFAULT_SHIPPING_METHOD,
           quantity: 0,
           plant: item.willCallPlant,
           hash: item.hash,
