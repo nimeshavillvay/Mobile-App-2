@@ -268,7 +268,7 @@ const PriceCheck = ({
   const initialPrice =
     initialPriceData?.uomPrice ?? initialPriceData?.price ?? 0;
   const isLaminateItem = !!priceData?.uomPrice && !!priceData?.uomPriceUnit;
-  const DisplayUom = initialPriceData?.uomPriceUnit ?? uom;
+  const displayUom = initialPriceData?.uomPriceUnit ?? uom;
 
   const isDiscounted =
     priceData?.price &&
@@ -297,7 +297,7 @@ const PriceCheck = ({
             {formatNumberToPrice(priceData?.listPrice)}
           </span>
         )}
-        <span>/{DisplayUom}</span>
+        <span>/{displayUom}</span>
       </div>
 
       <div className="grid grid-cols-2 gap-0.5">
