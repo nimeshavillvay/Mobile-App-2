@@ -35,15 +35,17 @@ const ItemPrices = ({
     { productId: productId, qty: quantity },
   ]);
   const prices = itemPricesQuery.data.productPrices[0] ?? null;
-  const priceUnit = prices?.priceUnit ?? "";
+  const priceUnit = prices?.uomPriceUnit ?? prices?.priceUnit ?? "";
   const priceBreakDownArray = prices?.priceBreakDowns;
+
+  const displayPrice = prices?.uomPrice ? prices?.uomPrice : prices?.price ?? 0;
 
   if (unitPriceOnly && prices) {
     return (
       <UnitPriceRowForMobile
-        listPrice={listPrice}
+        listPrice={prices?.uomPrice ?? listPrice}
         uom={priceUnit}
-        price={prices.price}
+        price={displayPrice}
       />
     );
   }
@@ -81,9 +83,9 @@ const ItemPrices = ({
 
       {showUnitPrice && prices && (
         <UnitPriceRow
-          listPrice={listPrice}
+          listPrice={prices?.uomPrice ?? listPrice}
           uom={priceUnit}
-          price={prices.price}
+          price={displayPrice}
         />
       )}
     </div>
