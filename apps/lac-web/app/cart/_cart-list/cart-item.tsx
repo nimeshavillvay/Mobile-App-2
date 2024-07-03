@@ -56,6 +56,7 @@ import {
   EMPTY_STRING,
   MAIN_OPTIONS,
   TAKE_ON_HAND,
+  WILLCALL_SHIPING_METHOD,
 } from "../constants";
 import type { WillCallAnywhere } from "../types";
 import AvailabilityStatus from "./availability-status";
@@ -175,10 +176,12 @@ const CartItem = ({
   const deleteCartItemMutation = useDeleteCartItemMutation(token);
   const checkAvailabilityMutation = useCheckAvailabilityMutation(token);
 
+  const deferredWillCallPlant = useDeferredValue(selectedWillCallPlant);
+
   const checkAvailabilityQuery = useSuspenseCheckAvailability(token, {
     productId: product.id,
     qty: Number(deferredQuantity ?? product.quantity),
-    plant: selectedWillCallPlant !== "" ? selectedWillCallPlant : undefined,
+    plant: deferredWillCallPlant !== "" ? deferredWillCallPlant : undefined,
   });
 
   const {
@@ -469,7 +472,7 @@ const CartItem = ({
                   hash: willCallAnywhere[0].hash,
                   backOrderDate: willCallAnywhere[0]?.backOrderDate_1,
                   backOrderQuantity: willCallAnywhere[0]?.backOrderQuantity_1,
-                  shippingMethod: "W",
+                  shippingMethod: WILLCALL_SHIPING_METHOD,
                 }),
                 will_call_avail: (willCallAnywhere[0]?.status === NOT_IN_STOCK
                   ? 0
@@ -491,7 +494,7 @@ const CartItem = ({
                   backOrderAll: true,
                   backOrderDate: willCallAnywhere[0]?.willCallBackOrder,
                   backOrderQuantity: willCallAnywhere[0]?.willCallQuantity,
-                  shippingMethod: "W",
+                  shippingMethod: WILLCALL_SHIPING_METHOD,
                 }),
                 will_call_plant:
                   willCallAnywhere[0].willCallPlant ?? EMPTY_STRING,

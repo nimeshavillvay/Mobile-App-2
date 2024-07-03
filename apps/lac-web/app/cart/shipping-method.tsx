@@ -30,6 +30,7 @@ import {
   DEFAULT_SHIPPING_METHOD,
   EXCLUDED_SHIPPING_METHODS,
   TAKE_ON_HAND,
+  WILLCALL_SHIPING_METHOD,
 } from "./constants";
 import type { Availability, ShippingMethod } from "./types";
 import useCartPageStore from "./use-cart-page-store.hook";
@@ -115,7 +116,7 @@ const ShippingMethod = ({ token, options }: ShippingMethodProps) => {
       config.will_call_avail =
         availability.willCallAnywhere[0]?.willCallQuantity.toString();
       config.will_call_plant = willCallPlant?.plantCode ?? DEFAULT_PLANT.code;
-      config.will_call_shipping = "W";
+      config.will_call_shipping = WILLCALL_SHIPING_METHOD;
     } else if (
       availability.willCallAnywhere &&
       availability.willCallAnywhere[0] &&
@@ -131,7 +132,7 @@ const ShippingMethod = ({ token, options }: ShippingMethodProps) => {
       config.backorder_quantity =
         availability.willCallAnywhere[0]?.willCallQuantity.toString();
       config.will_call_plant = willCallPlant?.plantCode ?? DEFAULT_PLANT.code;
-      config.will_call_shipping = "W";
+      config.will_call_shipping = WILLCALL_SHIPING_METHOD;
     } else if (
       availability.willCallAnywhere &&
       availability.willCallAnywhere[0] &&
@@ -150,7 +151,7 @@ const ShippingMethod = ({ token, options }: ShippingMethodProps) => {
       config.backorder_all = "F";
       config.backorder_quantity =
         availability.willCallAnywhere[0]?.backOrderQuantity_1?.toString() ?? "";
-      config.will_call_shipping = "W";
+      config.will_call_shipping = WILLCALL_SHIPING_METHOD;
     }
     return config;
   };
