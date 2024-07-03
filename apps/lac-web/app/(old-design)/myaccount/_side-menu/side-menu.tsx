@@ -15,7 +15,6 @@ import { cva } from "cva";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Suspense } from "react";
-import FavoritesFilters from "./favorites-filters";
 import PurchasesFilters from "./purchases-filters";
 
 const menuItem = cva({
@@ -66,7 +65,6 @@ const SideMenu = ({ token }: { readonly token: string }) => {
           {link.name}
         </Link>
       ))}
-
       <Accordion
         type="single"
         value={pathname}
@@ -86,19 +84,14 @@ const SideMenu = ({ token }: { readonly token: string }) => {
             </Suspense>
           </AccordionContent>
         </AccordionItem>
-
-        <AccordionItem value="/myaccount/shopping-lists">
-          <AccordionTrigger className="font-bold text-black hover:no-underline data-[state=open]:text-brand-primary">
-            My Shopping Lists
-          </AccordionTrigger>
-
-          <AccordionContent className="pb-0">
-            <Suspense fallback={<Skeleton className="mb-4 h-32" />}>
-              <FavoritesFilters token={token} />
-            </Suspense>
-          </AccordionContent>
-        </AccordionItem>
       </Accordion>
+
+      <Link
+        href="/myaccount/shopping-lists"
+        className={cn(menuItem({ status: "inactive" }), "w-full text-left")}
+      >
+        My Shopping Lists
+      </Link>
 
       <Link
         href="/tax-form"
@@ -106,7 +99,6 @@ const SideMenu = ({ token }: { readonly token: string }) => {
       >
         Sales Tax
       </Link>
-
       <button
         onClick={() => {
           if (isOsr) {

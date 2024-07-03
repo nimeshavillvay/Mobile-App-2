@@ -31,6 +31,13 @@ const ItemPrices = ({
   showUnitPrice = false,
   unitPriceOnly = false,
 }: ItemPricesProps) => {
+  const initialPriceCheckQuery = useSuspensePriceCheck(token, [
+    { productId, qty: 1 },
+  ]);
+  const initialPriceData = initialPriceCheckQuery.data.productPrices[0];
+  const initialPrice =
+    initialPriceData?.uomPrice ?? initialPriceData?.price ?? 0;
+
   const itemPricesQuery = useSuspensePriceCheck(token, [
     { productId: productId, qty: quantity },
   ]);
@@ -74,7 +81,7 @@ const ItemPrices = ({
                 key={`${breakDown.price}_${index}`}
                 quantity={breakDown.quantity}
                 uom={uom}
-                price={`$${formatNumberToPrice(breakDown.price)} / ${priceUnit}`}
+                price={`$${formatNumberToPrice(Math.min(breakDown.price, initialPrice))} / ${priceUnit}`}
               />
             ))}
           </TableBody>
