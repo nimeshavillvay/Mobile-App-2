@@ -23,5 +23,7 @@ export const BACKORDER_ENABLED = "T";
 export const BACKORDER_DISABLED = "F";
 
 export const DEFAULT_SHIPPING_METHOD = "G";
+export const WILLCALL_SHIPING_METHOD = "W";
+export const WILLCALL_TRANSFER_SHIPING_METHOD = "X";
 
 export const EXCLUDED_SHIPPING_METHODS = ["W", "X"] as const;
