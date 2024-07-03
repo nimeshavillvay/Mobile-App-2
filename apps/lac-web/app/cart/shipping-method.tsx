@@ -73,13 +73,13 @@ const ShippingMethod = ({ token, options }: ShippingMethodProps) => {
     });
   };
 
-  function setConfigValues(
+  const setConfigValues = (
     config: CartItemConfiguration,
     index: number,
     availValue: string,
     plantValue: string,
     shippingMethodValue: string,
-  ): void {
+  ): void => {
     const configKeyAvail: ConfigKey = `avail_${index}` as ConfigKey;
     const configKeyPlant: ConfigKey = `plant_${index}` as ConfigKey;
     const configKeyShippingMethod: ConfigKey =
@@ -88,7 +88,7 @@ const ShippingMethod = ({ token, options }: ShippingMethodProps) => {
     config[configKeyAvail] = availValue;
     config[configKeyPlant] = plantValue;
     config[configKeyShippingMethod] = shippingMethodValue;
-  }
+  };
 
   const transformConfiguration = (
     availability: Availability,
