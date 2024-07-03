@@ -181,7 +181,7 @@ const CartItem = ({
   const checkAvailabilityQuery = useSuspenseCheckAvailability(token, {
     productId: product.id,
     qty: Number(deferredQuantity ?? product.quantity),
-    plant: selectedWillCallPlant !== "" ? deferredWillCallPlant : undefined,
+    plant: deferredWillCallPlant !== "" ? deferredWillCallPlant : undefined,
   });
 
   const {
