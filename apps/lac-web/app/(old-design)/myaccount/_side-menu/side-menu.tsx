@@ -85,12 +85,14 @@ const SideMenu = ({ token }: { readonly token: string }) => {
           </AccordionContent>
         </AccordionItem>
       </Accordion>
+
       <Link
         href="/myaccount/shopping-lists"
         className={cn(menuItem({ status: "inactive" }), "w-full text-left")}
       >
         My Shopping Lists
       </Link>
+
       <Link
         href="/tax-form"
         className={cn(menuItem({ status: "inactive" }), "w-full text-left")}
