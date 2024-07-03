@@ -449,7 +449,6 @@ export type ItemPrice = {
   couponCode: string | null;
   priceBreakDowns: { quantity: number; price: number }[];
   uomPrice: number | undefined;
-  uomListPrice: number | undefined;
   uomPriceUnit: string | undefined;
 };
 

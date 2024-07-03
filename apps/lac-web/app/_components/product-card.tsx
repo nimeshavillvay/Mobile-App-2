@@ -109,7 +109,7 @@ const ProductCard = ({
   let currentPrice = 0;
 
   if (priceData) {
-    listPrice = priceData?.uomListPrice ?? priceData.listPrice;
+    listPrice = priceData.listPrice;
     currentPrice = priceData?.uomPrice ?? priceData?.price;
     if (priceData?.uomPriceUnit) {
       uom = priceData?.uomPriceUnit;
@@ -119,6 +119,7 @@ const ProductCard = ({
   const discountPercent = Math.round(
     ((listPrice - currentPrice) / listPrice) * 100,
   );
+  const isLaminateItem = !!priceData?.uomPrice && !!priceData?.uomPriceUnit;
 
   const { setOpen, setProductId } = useAddToCartDialog(
     (state) => state.actions,
@@ -140,7 +141,7 @@ const ProductCard = ({
     >
       <ProductCardHero>
         <div className="flex flex-row justify-between gap-2">
-          {discountPercent > 0 ? (
+          {!isLaminateItem && discountPercent > 0 ? (
             <ProductCardDiscount>{discountPercent}</ProductCardDiscount>
           ) : (
             <div />
@@ -172,6 +173,7 @@ const ProductCard = ({
             price={currentPrice}
             uom={uom}
             actualPrice={listPrice}
+            isLaminateItem={isLaminateItem}
           />
 
           {product.variants.length > 1 ? (

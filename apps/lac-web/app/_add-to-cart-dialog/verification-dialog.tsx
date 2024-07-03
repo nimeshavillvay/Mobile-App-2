@@ -267,6 +267,8 @@ const PriceCheck = ({
   const initialPriceData = initialPriceCheckQuery.data.productPrices[0];
   const initialPrice =
     initialPriceData?.uomPrice ?? initialPriceData?.price ?? 0;
+  const isLaminateItem = !!priceData?.uomPrice && !!priceData?.uomPriceUnit;
+  const DisplayUom = initialPriceData?.uomPriceUnit ?? uom;
 
   const isDiscounted =
     priceData?.price &&
@@ -276,25 +278,26 @@ const PriceCheck = ({
   return (
     <div className="flex flex-col gap-1">
       <div className="text-sm leading-none text-wurth-gray-800">
-        <span className={isDiscounted ? "text-green-700" : "text-inherit"}>
-          $
-        </span>
         <span
-          className={cn(
-            "mr-1 text-xl font-medium leading-7 tracking-[-0.1px]",
-            isDiscounted ? "text-green-700" : "text-inherit",
-          )}
+          className={
+            !isLaminateItem && isDiscounted ? "text-green-700" : "text-inherit"
+          }
         >
-          {formatNumberToPrice(priceData?.price)}
+          $
+          <span
+            className={cn(
+              "mr-1 text-xl font-medium leading-7 tracking-[-0.1px]",
+            )}
+          >
+            {formatNumberToPrice(initialPrice)}
+          </span>
         </span>
-
-        {isDiscounted && (
+        {!isLaminateItem && isDiscounted && (
           <span className="text-base leading-6 text-wurth-gray-400 line-through">
             {formatNumberToPrice(priceData?.listPrice)}
           </span>
         )}
-
-        <span>/{uom}</span>
+        <span>/{DisplayUom}</span>
       </div>
 
       <div className="grid grid-cols-2 gap-0.5">
