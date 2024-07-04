@@ -297,6 +297,7 @@ export const getOrderDetails = async (token: string, orderId: string) => {
             categoryName: string;
             brandName: string;
             img: string;
+            is_willcall: boolean;
           }[];
           itemSubTotal: number;
           promoCode: string;
@@ -392,6 +393,7 @@ export const getOrderDetails = async (token: string, orderId: string) => {
                   categoryName: lineItem.categoryName,
                   brandName: lineItem.brandName,
                   itemImage: lineItem.img,
+                  isWillCall: lineItem.is_willcall,
                 }))
               : [],
             itemSubTotal: item.itemSubTotal,
