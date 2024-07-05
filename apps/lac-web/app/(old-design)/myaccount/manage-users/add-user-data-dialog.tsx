@@ -29,6 +29,7 @@ import {
 } from "@/old/_components/ui/select";
 import type { Role } from "@/old/_lib/types";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Checkbox } from "@repo/web-ui/components/ui/checkbox";
 import type { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
 import { MdPermIdentity } from "react-icons/md";
@@ -48,6 +49,7 @@ const addUserDataSchema = z
     permission: z.string().min(1, "Please enter permission type."),
     password: z.string(),
     confirmPassword: z.string(),
+    forcePasswordReset: z.boolean(),
   })
   .refine(({ password, confirmPassword }) => password === confirmPassword, {
     message: "The passwords did not match",
@@ -90,6 +92,7 @@ const AddUserDataDialog = ({
       password: "",
       confirmPassword: "",
       permission: "",
+      forcePasswordReset: false,
     },
   });
 
@@ -102,10 +105,12 @@ const AddUserDataDialog = ({
         email: email,
         password: data.password ?? "",
         permission: data.permission,
+        forcePasswordReset: data.forcePasswordReset,
       },
       {
         onSuccess: () => {
           setOpen(false);
+          form.reset();
         },
       },
     );
@@ -309,6 +314,28 @@ const AddUserDataDialog = ({
                         </FormControl>
 
                         <FormMessage className="text-xs dark:text-brand-primary" />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                  <FormField
+                    control={form.control}
+                    name="forcePasswordReset"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row items-center gap-2">
+                        <FormControl>
+                          <Checkbox
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                          />
+                        </FormControl>
+
+                        <FormLabel>Force password reset.</FormLabel>
+
+                        <FormDescription className="sr-only">
+                          Force user to reset the password
+                        </FormDescription>
                       </FormItem>
                     )}
                   />
