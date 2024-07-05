@@ -1,7 +1,5 @@
 "use client";
 
-import FullAddress from "@/_components/full-address";
-import useSuspenseBillingAddress from "@/_hooks/address/use-suspense-billing-address.hook";
 import useSuspenseCart from "@/_hooks/cart/use-suspense-cart.hook";
 import useUpdateCartConfigMutation from "@/_hooks/cart/use-update-cart-config-mutation.hook";
 import type { PaymentMethod } from "@/_lib/types";
@@ -55,7 +53,6 @@ const BillingAndPaymentInfo = ({
 
   const cartQuery = useSuspenseCart(token);
   const creditCartsQuery = useSuspenseCreditCards(token);
-  const billingAddressQuery = useSuspenseBillingAddress(token);
 
   const availablePaymentMethodIds =
     cartQuery.data.configuration.avail_payment_options.split(",");
@@ -136,38 +133,92 @@ const BillingAndPaymentInfo = ({
   return (
     <section className="flex flex-col gap-5 rounded-lg border border-wurth-gray-250 p-5 shadow-lg md:gap-6 md:p-6">
       <h2 className="font-title text-xl font-medium text-wurth-gray-800 md:text-2xl md:tracking-[-0.144px]">
-        Billing and Payment Info
+        Payment Info
       </h2>
-
       <div className="flex flex-col gap-5 md:flex-row md:gap-6">
         <div className="flex-1 space-y-4">
-          <div className="space-y-1">
-            <h3 className="text-sm font-semibold text-black">
-              Wurth LAC account #
-            </h3>
+          <h3 className="text-sm font-semibold text-black">Payment method</h3>
+          <RadioGroup value={paymentId} onValueChange={selectPayment} asChild>
+            <ul className="grid grid-cols-1 gap-5">
+              {showCreditCards &&
+                creditCartsQuery.data.map((card) => (
+                  <li
+                    key={card.id}
+                    className="relative flex min-h-[4.75rem] flex-row items-center gap-3 rounded-lg border-2 border-wurth-gray-150 p-4"
+                  >
+                    <RadioGroupItem
+                      value={card.id.toString()}
+                      id={getId(card.id.toString())}
+                      disabled={isExpiredCreditCard(card.expiryDate)}
+                    />
 
-            <div className="text-base text-wurth-gray-800">
-              {billingAddressQuery.data.soldTo}
-            </div>
-          </div>
+                    <Label
+                      htmlFor={getId(card.id.toString())}
+                      className="flex flex-row items-center gap-3"
+                    >
+                      {card.type === "MC" && (
+                        <Mastercard width={44} height={70} />
+                      )}
+                      {card.type === "VISA" && <Visa width={44} height={44} />}
 
-          <div className="space-y-1">
-            <h3 className="text-sm font-semibold text-black">
-              Billing Address
-            </h3>
+                      <span className="flex flex-col">
+                        <span className="text-base text-wurth-gray-800">
+                          &#x2022;&#x2022;&#x2022;&#x2022;
+                          &#x2022;&#x2022;&#x2022;&#x2022;
+                          &#x2022;&#x2022;&#x2022;&#x2022;{" "}
+                          {card.number.substring(card.number.length - 4)}
+                        </span>
 
-            <div className="text-base text-wurth-gray-800">
-              {!!billingAddressQuery.data.organization && (
-                <div>{billingAddressQuery.data.organization}</div>
-              )}
-              <FullAddress
-                address={billingAddressQuery.data}
-                showCountry={true}
-              />
-            </div>
-          </div>
+                        <span className="text-sm text-wurth-gray-500">
+                          {isExpiredCreditCard(card.expiryDate) ? (
+                            <span className="text-wurth-red-650">
+                              Expired {card.expiryDate}
+                            </span>
+                          ) : (
+                            <span>Expires {card.expiryDate}</span>
+                          )}
+                        </span>
+                      </span>
+                    </Label>
+
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="absolute right-3 top-3 size-4 p-0"
+                      onClick={() => deleteCreditCardMutation.mutate(card.id)}
+                    >
+                      <Close width={16} height={16} />
+                      <span className="sr-only">Remove</span>
+                    </Button>
+                  </li>
+                ))}
+
+              {otherPaymentMethods.map((paymentMethod) => (
+                <li
+                  key={paymentMethod.code}
+                  className="flex min-h-[4.75rem] flex-row items-center gap-3 rounded-lg border-2 border-wurth-gray-150 p-4"
+                >
+                  <RadioGroupItem
+                    value={paymentMethod.code}
+                    id={getId(paymentMethod.code)}
+                  />
+
+                  <Label
+                    htmlFor={getId(paymentMethod.code)}
+                    className="text-base font-normal text-wurth-gray-800"
+                  >
+                    {paymentMethod.name}
+                  </Label>
+                </li>
+              ))}
+            </ul>
+          </RadioGroup>
+          <AddCreditCardDialog
+            token={token}
+            paymentMethods={paymentMethods}
+            onCreatedNewCreditCard={setPaymentId}
+          />
         </div>
-
         <div className="flex-1 space-y-4">
           <h3 className="text-sm font-semibold text-black">
             Order Confirmation
@@ -221,92 +272,6 @@ const BillingAndPaymentInfo = ({
             </form>
           </Form>
         </div>
-      </div>
-
-      <div className="flex flex-col gap-5 md:gap-4">
-        <h3 className="text-sm font-semibold text-black">Payment method</h3>
-
-        <RadioGroup value={paymentId} onValueChange={selectPayment} asChild>
-          <ul className="grid grid-cols-1 gap-5 md:grid-cols-2">
-            {showCreditCards &&
-              creditCartsQuery.data.map((card) => (
-                <li
-                  key={card.id}
-                  className="relative flex min-h-[4.75rem] flex-row items-center gap-3 rounded-lg border-2 border-wurth-gray-150 p-4"
-                >
-                  <RadioGroupItem
-                    value={card.id.toString()}
-                    id={getId(card.id.toString())}
-                    disabled={isExpiredCreditCard(card.expiryDate)}
-                  />
-
-                  <Label
-                    htmlFor={getId(card.id.toString())}
-                    className="flex flex-row items-center gap-3"
-                  >
-                    {card.type === "MC" && (
-                      <Mastercard width={44} height={70} />
-                    )}
-                    {card.type === "VISA" && <Visa width={44} height={44} />}
-
-                    <span className="flex flex-col">
-                      <span className="text-base text-wurth-gray-800">
-                        &#x2022;&#x2022;&#x2022;&#x2022;
-                        &#x2022;&#x2022;&#x2022;&#x2022;
-                        &#x2022;&#x2022;&#x2022;&#x2022;{" "}
-                        {card.number.substring(card.number.length - 4)}
-                      </span>
-
-                      <span className="text-sm text-wurth-gray-500">
-                        {isExpiredCreditCard(card.expiryDate) ? (
-                          <span className="text-wurth-red-650">
-                            Expired {card.expiryDate}
-                          </span>
-                        ) : (
-                          <span>Expires {card.expiryDate}</span>
-                        )}
-                      </span>
-                    </span>
-                  </Label>
-
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="absolute right-3 top-3 size-4 p-0"
-                    onClick={() => deleteCreditCardMutation.mutate(card.id)}
-                  >
-                    <Close width={16} height={16} />
-                    <span className="sr-only">Remove</span>
-                  </Button>
-                </li>
-              ))}
-
-            {otherPaymentMethods.map((paymentMethod) => (
-              <li
-                key={paymentMethod.code}
-                className="flex min-h-[4.75rem] flex-row items-center gap-3 rounded-lg border-2 border-wurth-gray-150 p-4"
-              >
-                <RadioGroupItem
-                  value={paymentMethod.code}
-                  id={getId(paymentMethod.code)}
-                />
-
-                <Label
-                  htmlFor={getId(paymentMethod.code)}
-                  className="text-base font-normal text-wurth-gray-800"
-                >
-                  {paymentMethod.name}
-                </Label>
-              </li>
-            ))}
-          </ul>
-        </RadioGroup>
-
-        <AddCreditCardDialog
-          token={token}
-          paymentMethods={paymentMethods}
-          onCreatedNewCreditCard={setPaymentId}
-        />
       </div>
 
       <OrderConfirmDialog
