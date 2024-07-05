@@ -116,8 +116,15 @@ const AddUserDataDialog = ({
     );
   };
 
+  const handleOpenChange = (open: boolean) => {
+    setOpen(open);
+    if (!open) {
+      form.reset();
+    }
+  };
+
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="old-design-text-base max-w-[500px] gap-0">
         <DialogHeader>
           <DialogTitle className="text-left font-wurth">Add User</DialogTitle>
