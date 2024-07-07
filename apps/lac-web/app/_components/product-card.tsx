@@ -32,7 +32,7 @@ type ProductProps = {
 };
 
 const ProductCard = ({
-  orientation,
+  orientation = "vertical",
   product,
   token,
   stretchWidth = false,
@@ -140,7 +140,7 @@ const ProductCard = ({
       )}
     >
       <ProductCardHero>
-        <div className="flex flex-row justify-between gap-2">
+        <div className="flex flex-row justify-between gap-2 @container/labels">
           {!isLaminateItem && discountPercent > 0 ? (
             <ProductCardDiscount>{discountPercent}</ProductCardDiscount>
           ) : (
@@ -161,7 +161,7 @@ const ProductCard = ({
 
       <ProductCardContent>
         {orientation === "horizontal" && (
-          <div>
+          <div className="@container/labels">
             <SaleBadges onSale={onSale} isNewItem={isNewItem} />
           </div>
         )}
