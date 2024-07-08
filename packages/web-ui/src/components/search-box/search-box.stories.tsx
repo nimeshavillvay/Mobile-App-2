@@ -188,7 +188,7 @@ export const Default: Story = {
           setValue={setValue}
           placeholder="What are you looking for?"
         />
-        {value && <SearchClearButton />}
+        {!!value && <SearchClearButton />}
         <SearchBoxButton />
       </SearchBox>
     );

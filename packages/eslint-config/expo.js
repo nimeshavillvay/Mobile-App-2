@@ -61,5 +61,7 @@ module.exports = {
         ],
       },
     ],
+    "react/jsx-pascal-case": "error",
+    "react/jsx-no-leaked-render": "error",
   },
 };

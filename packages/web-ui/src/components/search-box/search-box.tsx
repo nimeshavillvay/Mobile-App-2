@@ -163,8 +163,7 @@ export const SearchBoxInput = ({
         } absolute left-0 right-0 z-50 mt-4 rounded-b-lg bg-white p-0 pl-4 text-sm shadow-sm`}
         {...getMenuProps()}
       >
-        {isOpen && value && (
-          <>
+        {isOpen && !!value ? <>
             {brands.summary.total > 0 && (
               <>
                 <li className="text-black-500 break-all px-3 py-1 font-semibold">
@@ -190,15 +189,13 @@ export const SearchBoxInput = ({
                           }
                         }}
                       >
-                        {brand.brandImage && brand.brandName && (
-                          <Image
+                        {brand.brandImage && brand.brandName ? <Image
                             src={brand.brandImage}
                             alt={brand.brandName}
                             className="mr-2 min-h-10 min-w-10 object-contain"
                             width={40}
                             height={40}
-                          />
-                        )}
+                          /> : null}
                         {!brand.brandImage && (
                           <div className="h-10 w-10 rounded-full" />
                         )}
@@ -298,8 +295,7 @@ export const SearchBoxInput = ({
                 </ul>
               </>
             )}
-          </>
-        )}
+          </> : null}
       </ul>
     </div>
   );
