@@ -29,6 +29,7 @@ import {
   BACK_ORDER_ALL,
   DEFAULT_SHIPPING_METHOD,
   EXCLUDED_SHIPPING_METHODS,
+  FALSE_STRING,
   TAKE_ON_HAND,
   WILLCALL_SHIPING_METHOD,
 } from "./constants";
@@ -117,6 +118,7 @@ const ShippingMethod = ({ token, options }: ShippingMethodProps) => {
         availability.willCallAnywhere[0]?.willCallQuantity.toString();
       config.will_call_plant = willCallPlant?.plantCode ?? DEFAULT_PLANT.code;
       config.will_call_shipping = WILLCALL_SHIPING_METHOD;
+      config.will_call_not_in_stock = FALSE_STRING;
     } else if (
       availability.willCallAnywhere &&
       availability.willCallAnywhere[0] &&
@@ -133,6 +135,7 @@ const ShippingMethod = ({ token, options }: ShippingMethodProps) => {
         availability.willCallAnywhere[0]?.willCallQuantity.toString();
       config.will_call_plant = willCallPlant?.plantCode ?? DEFAULT_PLANT.code;
       config.will_call_shipping = WILLCALL_SHIPING_METHOD;
+      config.will_call_not_in_stock = FALSE_STRING;
     } else if (
       availability.willCallAnywhere &&
       availability.willCallAnywhere[0] &&
@@ -152,6 +155,7 @@ const ShippingMethod = ({ token, options }: ShippingMethodProps) => {
       config.backorder_quantity =
         availability.willCallAnywhere[0]?.backOrderQuantity_1?.toString() ?? "";
       config.will_call_shipping = WILLCALL_SHIPING_METHOD;
+      config.will_call_not_in_stock = FALSE_STRING;
     }
     return config;
   };
@@ -241,6 +245,7 @@ const ShippingMethod = ({ token, options }: ShippingMethodProps) => {
           config.will_call_shipping = "";
           config.will_call_avail = "";
           config.will_call_plant = "";
+          config.will_call_not_in_stock = FALSE_STRING;
           // Set hash value
           config.hashvalue = newHashValue;
           if (selectedOption) {
