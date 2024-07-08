@@ -24,6 +24,8 @@ const RegionalExclusionAndShippingMethods = ({
   isDirectlyShippedFromVendor,
   handleSelectWillCallPlant,
   willCallPlant,
+  setSelectedBackorderShippingMethod,
+  selectedBackorderShippingMethod,
 }: ComponentProps<typeof CartItemShippingMethod> & {
   readonly token: string;
   readonly productId: number;
@@ -53,6 +55,8 @@ const RegionalExclusionAndShippingMethods = ({
       selectedWillCallTransfer={selectedWillCallTransfer}
       setSelectedShippingMethod={setSelectedShippingMethod}
       selectedShippingMethod={selectedShippingMethod}
+      setSelectedBackorderShippingMethod={setSelectedBackorderShippingMethod}
+      selectedBackorderShippingMethod={selectedBackorderShippingMethod}
       onSave={onSave}
       defaultShippingMethod={defaultShippingMethod}
       shippingMethods={shippingMethods}
