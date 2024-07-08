@@ -3,7 +3,11 @@ import { checkAvailability } from "@/_lib/apis/shared";
 import { NOT_AVAILABLE } from "@/_lib/constants";
 import { useToast } from "@repo/web-ui/components/ui/toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { BACKORDER_DISABLED, BACKORDER_ENABLED } from "../constants";
+import {
+  BACKORDER_DISABLED,
+  BACKORDER_ENABLED,
+  FALSE_STRING,
+} from "../constants";
 import useCartStore from "../use-cart-store.hook";
 
 const useAddMultipleToCartMutation = (token: string) => {
@@ -56,6 +60,7 @@ const useAddMultipleToCartMutation = (token: string) => {
         shipping_method_5: "",
         backorder_quantity: "",
         backorder_date: "",
+        will_call_not_in_stock: FALSE_STRING,
       };
 
       const discontinuedSkuList = [...discontinuedSkus];

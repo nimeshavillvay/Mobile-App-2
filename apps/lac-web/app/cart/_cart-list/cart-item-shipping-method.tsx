@@ -2,6 +2,7 @@ import {
   DEFAULT_PLANT,
   IN_STOCK,
   LIMITED_STOCK,
+  NOT_AVAILABLE,
   NOT_IN_STOCK,
   UI_DATE_FORMAT,
 } from "@/_lib/constants";
@@ -47,8 +48,10 @@ import {
   BACK_ORDER_ALL,
   DEFAULT_SHIPPING_METHOD,
   EMPTY_STRING,
+  FALSE_STRING,
   MAIN_OPTIONS,
   TAKE_ON_HAND,
+  TRUE_STRING,
 } from "../constants";
 import type { Availability, WillCallAnywhere } from "../types";
 import CartItemWillCallTransfer from "./cart-item-will-call-transfer";
@@ -226,6 +229,7 @@ const CartItemShippingMethod = ({
             will_call_avail: EMPTY_STRING,
             will_call_shipping: EMPTY_STRING,
             will_call_plant: EMPTY_STRING,
+            will_call_not_in_stock: FALSE_STRING,
           });
         } else if (takeOnHand) {
           const setShippingMethod =
@@ -247,6 +251,7 @@ const CartItemShippingMethod = ({
             will_call_avail: EMPTY_STRING,
             will_call_shipping: EMPTY_STRING,
             will_call_plant: EMPTY_STRING,
+            will_call_not_in_stock: FALSE_STRING,
           });
         } else if (shipAlternativeBranch) {
           const setShippingMethod =
@@ -258,8 +263,8 @@ const CartItemShippingMethod = ({
             shipAlternativeBranch.plants?.at(0)?.shippingMethods?.at(0)?.code ??
             selectedShippingMethod;
           setSelectedShippingMethod(setShippingMethod);
-          onSave(
-            getAlternativeBranchesConfig({
+          onSave({
+            ...getAlternativeBranchesConfig({
               plants: shipAlternativeBranch.plants,
               method: setShippingMethod,
               hash: shipAlternativeBranch.hash,
@@ -271,7 +276,8 @@ const CartItemShippingMethod = ({
                 : 0,
               homePlant: willCallPlant.plantCode ?? DEFAULT_PLANT.code,
             }),
-          );
+            will_call_not_in_stock: FALSE_STRING,
+          });
         }
       }
       if (
@@ -306,6 +312,7 @@ const CartItemShippingMethod = ({
           will_call_avail: EMPTY_STRING,
           will_call_shipping: EMPTY_STRING,
           will_call_plant: EMPTY_STRING,
+          will_call_not_in_stock: FALSE_STRING,
         });
       }
     } else {
@@ -331,6 +338,8 @@ const CartItemShippingMethod = ({
           : item?.willCallQuantity ?? 0
         ).toString(),
         will_call_plant: item?.willCallPlant ?? EMPTY_STRING,
+        will_call_not_in_stock:
+          item?.status === NOT_AVAILABLE ? TRUE_STRING : FALSE_STRING,
       });
     }
     // Will call pickup configs and all are backorder
@@ -347,6 +356,8 @@ const CartItemShippingMethod = ({
           shippingMethod: item.shippingMethod,
         }),
         will_call_plant: item?.willCallPlant ?? EMPTY_STRING,
+        will_call_not_in_stock:
+          item?.status === NOT_AVAILABLE ? TRUE_STRING : FALSE_STRING,
       });
     }
   };
@@ -463,8 +474,8 @@ const CartItemShippingMethod = ({
           takeOnHandPlant?.shippingMethods?.[0]?.code ??
           selectedShippingMethod;
         setSelectedShippingMethod(setShippingMethod);
-        onSave(
-          createCartItemConfig({
+        onSave({
+          ...createCartItemConfig({
             method: setShippingMethod,
             quantity: takeOnHandPlant?.quantity ?? 0,
             plant: takeOnHandPlant?.plant ?? EMPTY_STRING,
@@ -472,12 +483,13 @@ const CartItemShippingMethod = ({
             backOrderDate: takeOnHandPlant?.backOrderDate,
             backOrderQuantity: takeOnHandPlant?.backOrderQuantity,
           }),
-        );
+          will_call_not_in_stock: FALSE_STRING,
+        });
       }
 
       if (shipToMe === ALTERNATIVE_BRANCHES && shipAlternativeBranch) {
-        onSave(
-          getAlternativeBranchesConfig({
+        onSave({
+          ...getAlternativeBranchesConfig({
             plants: shipAlternativeBranch?.plants,
             method: defaultShippingMethod.code,
             hash: shipAlternativeBranch.hash,
@@ -489,7 +501,8 @@ const CartItemShippingMethod = ({
               : 0,
             homePlant: willCallPlant.plantCode ?? DEFAULT_PLANT.code,
           }),
-        );
+          will_call_not_in_stock: FALSE_STRING,
+        });
       }
     }
   };
@@ -963,6 +976,48 @@ const CartItemShippingMethod = ({
                     )}
                   </RadioGroup>
                 )}
+
+                {willCallAnywhere[0].status === NOT_AVAILABLE && (
+                  <RadioGroup
+                    value={selectedWillCallTransfer}
+                    onValueChange={(value) =>
+                      handleWillCallOptions(value as WillCallOption)
+                    }
+                  >
+                    <div className="flex flex-row gap-2 rounded-lg border border-wurth-gray-150 px-2 py-2 text-sm shadow-sm">
+                      <RadioGroupItem
+                        value={MAIN_OPTIONS.WILL_CALL}
+                        id={MAIN_OPTIONS.WILL_CALL}
+                      />
+
+                      <div className="flex flex-col gap-0.5">
+                        <div className="rounded bg-red-800/10 px-2 py-1 text-sm text-red-800">
+                          This item is not available for pick up at this
+                          location.
+                        </div>
+
+                        {willCallAnywhere[0]?.willCallQuantity && (
+                          <BackOrderItemCountLabel
+                            count={willCallAnywhere[0].willCallQuantity}
+                          />
+                        )}
+                      </div>
+                    </div>
+
+                    <NotAvailableInfoBanner />
+
+                    <CartItemWillCallTransfer
+                      value={MAIN_OPTIONS.WILL_CALL_TRANSFER}
+                      id={MAIN_OPTIONS.WILL_CALL_TRANSFER}
+                      willCallAnywhere={willCallAnywhere}
+                      plants={plants}
+                      xPlant={availability.xplant}
+                    />
+                    {willCallAnywhere[1]?.status === NOT_AVAILABLE && (
+                      <NotAvailableInfoBanner />
+                    )}
+                  </RadioGroup>
+                )}
               </div>
             )}
           </div>
@@ -1071,6 +1126,19 @@ const BackOrderInfoBanner = ({ date }: { readonly date: string }) => {
       </div>
       <div className="text-xs text-wurth-gray-500">
         Delivery dates are subject to change without notice.
+      </div>
+    </div>
+  );
+};
+
+const NotAvailableInfoBanner = () => {
+  return (
+    <div className="flex flex-col items-center gap-1 rounded-xl bg-red-800/10 px-4 py-2 text-sm">
+      <div className="text-red-800">
+        This item is not available for pick up at this location.
+      </div>
+      <div className="text-xs text-wurth-gray-500">
+        To proceed, please select a valid shipping option.
       </div>
     </div>
   );

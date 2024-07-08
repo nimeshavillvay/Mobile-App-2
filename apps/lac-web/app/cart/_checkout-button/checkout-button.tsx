@@ -8,6 +8,7 @@ import { Button } from "@repo/web-ui/components/ui/button";
 import { useRouter } from "next/navigation";
 import { type ComponentProps } from "react";
 import { useCartFormIdContext } from "../cart-form-id-context";
+import { TRUE_STRING } from "../constants";
 
 type CheckoutButtonProps = {
   readonly token: string;
@@ -23,7 +24,9 @@ const CheckoutButton = ({ token }: CheckoutButtonProps) => {
 
   // Check if all cart items have complete configurations
   const areAllCartItemsConfigured = cartQuery.data.cartItems.every(
-    (cartItem) => cartItem.configuration.hashvalue !== "",
+    (cartItem) =>
+      cartItem.configuration.hashvalue !== "" ||
+      cartItem.configuration.will_call_not_in_stock !== TRUE_STRING,
   );
 
   const isButtonDisabled =
