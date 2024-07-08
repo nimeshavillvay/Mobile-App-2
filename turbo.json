@@ -20,7 +20,7 @@
       "dependsOn": ["^build"]
     },
     "build": {
-      "dependsOn": ["^build", "lint"],
+      "dependsOn": ["^build", "lint", "test"],
       "outputs": [
         ".next/**",
         "!.next/cache/**",
@@ -36,8 +36,6 @@
     "lint": {
       "dependsOn": ["^lint"]
     },
-    "test": {
-      "dependsOn": ["^test", "lint"]
-    }
+    "test": {}
   }
 }
