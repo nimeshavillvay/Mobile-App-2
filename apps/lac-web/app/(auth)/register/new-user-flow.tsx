@@ -1,3 +1,4 @@
+import NumberInputField from "@/_components/number-input-field";
 import { useCheckRecaptcha } from "@/_context/recaptcha-ref";
 import usePhoneNumberFormatter from "@/_hooks/address/use-phone-number-formatter.hook";
 import useZipCodeFormatter from "@/_hooks/address/use-zip-code.hook";
@@ -736,8 +737,9 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
                     <FormItem>
                       <FormLabel>Number of employees</FormLabel>
                       <FormControl>
-                        <Input
-                          type="number"
+                        <NumberInputField
+                          removeDefaultStyles={true}
+                          label="Number of employees"
                           required={type === "C"}
                           disabled={registerNewUserMutation.isPending}
                           {...field}
