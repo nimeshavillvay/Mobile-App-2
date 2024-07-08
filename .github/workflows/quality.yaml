@@ -48,8 +48,8 @@ jobs:
         run: pnpm install
       - name: Check formatting with Prettier
         run: pnpm prettier:check
-  eslint:
-    name: ESLint
+  linting-and-testing:
+    name: Linting and Testing
     runs-on: ubuntu-22.04
     strategy:
       matrix:
@@ -86,3 +86,5 @@ jobs:
         run: pnpm install
       - name: Run ESLint
         run: pnpm lint
+      - name: Run Unit Tests
+        run: pnpm test
