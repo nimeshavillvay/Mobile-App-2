@@ -58,7 +58,7 @@ import {
   TAKE_ON_HAND,
   WILLCALL_SHIPING_METHOD,
 } from "../constants";
-import type { WillCallAnywhere } from "../types";
+import type { ShippingMethod, WillCallAnywhere } from "../types";
 import AvailabilityStatus from "./availability-status";
 import CartItemPrice from "./cart-item-price";
 import CartItemShippingMethod from "./cart-item-shipping-method";
@@ -212,11 +212,34 @@ const CartItem = ({
     ALTERNATIVE_BRANCHES,
   );
 
+  const findDefaultMethod = (
+    methods: ShippingMethod[],
+    productConfigMethod: CartItemConfiguration["shipping_method_1"],
+    cartConfigDefault: CartConfiguration["default_shipping"],
+  ) => {
+    let defaultMethod = methods.find(
+      (method) => method.code === productConfigMethod,
+    );
+
+    if (!defaultMethod && methods?.length > 0 && cartConfigDefault) {
+      const shipToDefaultMethod = methods.find(
+        (method) => method?.code === cartConfigDefault,
+      );
+      defaultMethod = shipToDefaultMethod ?? methods[0];
+    }
+
+    return defaultMethod;
+  };
+
   // Select the available shipping options based on the priority
   const AVAILABLE_OPTIONS_MAP = {
     [AVAILABLE_ALL]: availableAll,
     [TAKE_ON_HAND]: takeOnHand,
     [ALTERNATIVE_BRANCHES]: shipAlternativeBranch,
+  };
+
+  const BACKORDER_OPTIONS_MAP = {
+    [BACK_ORDER_ALL]: backOrderAll,
   };
 
   const [selectedShipToMe, setSelectedShipToMe] = useState<ShipToMeOption>(
@@ -242,31 +265,30 @@ const CartItem = ({
     selectedShipToMe,
     AVAILABLE_OPTIONS_MAP,
   );
-
-  // Find the default option (available first option)
-  let defaultShippingMethod = shippingMethods.find(
-    (method) => method.code === product.configuration.shipping_method_1,
+  const backorderShippingMethods = getShippingMethods(
+    BACK_ORDER_ALL,
+    BACKORDER_OPTIONS_MAP,
   );
 
-  if (
-    !defaultShippingMethod &&
-    shippingMethods?.length > 0 &&
-    cartConfiguration?.default_shipping
-  ) {
-    const shipToDefaultShippingMethod = shippingMethods.find(
-      (method) => method?.code === cartConfiguration.default_shipping,
-    );
-    if (shipToDefaultShippingMethod) {
-      defaultShippingMethod = shipToDefaultShippingMethod;
-    } else {
-      shippingMethods.at(0);
-    }
-  }
+  const defaultShippingMethod = findDefaultMethod(
+    shippingMethods,
+    product.configuration.shipping_method_1,
+    cartConfiguration?.default_shipping,
+  );
+
+  const defaultBackOrderShippingMethod = findDefaultMethod(
+    backorderShippingMethods,
+    product.configuration.shipping_method_1,
+    cartConfiguration?.default_shipping,
+  );
 
   // User selected shipping method (ship-to-me)
   const [selectedShippingMethod, setSelectedShippingMethod] = useState(
     defaultShippingMethod?.code ?? product.configuration.shipping_method_1,
   );
+
+  const [selectedBackorderShippingMethod, setSelectedBackorderShippingMethod] =
+    useState(defaultBackOrderShippingMethod?.code ?? DEFAULT_SHIPPING_METHOD);
 
   const handleChangeQtyOrPO = (quantity?: number) => {
     const newQuantity = quantity ?? Number(deferredQuantity);
@@ -367,11 +389,19 @@ const CartItem = ({
                   );
                 } else if (backOrderAll) {
                   setSelectedShippingOption(MAIN_OPTIONS.BACK_ORDER);
+                  const setShippingMethod =
+                    backOrderAll.plants
+                      ?.at(0)
+                      ?.shippingMethods?.find(
+                        (method) =>
+                          method.code === selectedBackorderShippingMethod,
+                      )?.code ??
+                    backOrderAll.plants?.at(0)?.shippingMethods?.at(0)?.code ??
+                    selectedBackorderShippingMethod;
+                  setSelectedBackorderShippingMethod(setShippingMethod);
                   handleSave(
                     createCartItemConfig({
-                      method:
-                        backOrderAll.plants?.at(0)?.shippingMethods?.at(0)
-                          ?.code ?? EMPTY_STRING,
+                      method: setShippingMethod,
                       quantity: 0,
                       plant: backOrderAll.plants?.at(0)?.plant ?? EMPTY_STRING,
                       hash: backOrderAll.hash,
@@ -554,11 +584,18 @@ const CartItem = ({
         }),
       );
     } else if (backOrderAll) {
+      const setShippingMethod =
+        backOrderAll.plants
+          ?.at(0)
+          ?.shippingMethods?.find(
+            (method) => method.code === selectedBackorderShippingMethod,
+          )?.code ??
+        backOrderAll.plants?.at(0)?.shippingMethods?.at(0)?.code ??
+        selectedBackorderShippingMethod;
+      setSelectedBackorderShippingMethod(setShippingMethod);
       handleSave(
         createCartItemConfig({
-          method:
-            backOrderAll.plants?.at(0)?.shippingMethods?.at(0)?.code ??
-            EMPTY_STRING,
+          method: setShippingMethod,
           quantity: 0,
           plant: backOrderAll.plants?.at(0)?.plant ?? EMPTY_STRING,
           hash: backOrderAll.hash,
@@ -840,6 +877,10 @@ const CartItem = ({
               selectedShipToMe={selectedShipToMe}
               setSelectedShippingMethod={setSelectedShippingMethod}
               selectedShippingMethod={selectedShippingMethod}
+              setSelectedBackorderShippingMethod={
+                setSelectedBackorderShippingMethod
+              }
+              selectedBackorderShippingMethod={selectedBackorderShippingMethod}
               onSave={handleSave}
               defaultShippingMethod={defaultShippingMethod}
               shippingMethods={shippingMethods}
@@ -866,6 +907,10 @@ const CartItem = ({
               selectedWillCallTransfer={selectedWillCallTransfer}
               setSelectedShippingMethod={setSelectedShippingMethod}
               selectedShippingMethod={selectedShippingMethod}
+              setSelectedBackorderShippingMethod={
+                setSelectedBackorderShippingMethod
+              }
+              selectedBackorderShippingMethod={selectedBackorderShippingMethod}
               onSave={handleSave}
               defaultShippingMethod={defaultShippingMethod}
               shippingMethods={shippingMethods}

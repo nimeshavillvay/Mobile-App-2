@@ -26,5 +26,5 @@ export type WillCallOption =
   | typeof MAIN_OPTIONS.WILL_CALL_TRANSFER;
 
 export type MainOption = (typeof MAIN_OPTIONS)[keyof typeof MAIN_OPTIONS];
-
+export type BackOrderOption = (typeof MAIN_OPTIONS.BACK_ORDER)[keyof typeof MAIN_OPTIONS.BACK_ORDER];
 export type ViewportTypes = "desktop" | "mobile";
