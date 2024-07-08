@@ -138,6 +138,7 @@ const BillingAndPaymentInfo = ({
       <div className="flex flex-col gap-5 md:flex-row md:gap-6">
         <div className="flex-1 space-y-4">
           <h3 className="text-sm font-semibold text-black">Payment method</h3>
+
           <RadioGroup value={paymentId} onValueChange={selectPayment} asChild>
             <ul className="grid grid-cols-1 gap-5">
               {showCreditCards &&
@@ -213,6 +214,7 @@ const BillingAndPaymentInfo = ({
               ))}
             </ul>
           </RadioGroup>
+
           <AddCreditCardDialog
             token={token}
             paymentMethods={paymentMethods}
