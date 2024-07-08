@@ -35,12 +35,6 @@
     },
     "lint": {
       "dependsOn": ["^lint"]
-    },
-    "//#prettier:format:script": {
-      "outputs": [".prettier/**"]
-    },
-    "//#prettier:check:script": {
-      "outputs": [".prettier/**"]
     }
   }
 }

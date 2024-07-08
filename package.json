@@ -6,10 +6,8 @@
     "build": "dotenv -c -- turbo build",
     "start": "dotenv -c -- turbo start",
     "lint": "dotenv -c -- turbo lint",
-    "prettier:format": "dotenv -c -- turbo prettier:format:script",
-    "prettier:check": "dotenv -c -- turbo prettier:check:script",
-    "prettier:format:script": "prettier --write \"**/*.{js,jsx,ts,tsx,md,json,yaml}\" --cache --cache-location=.prettier/cache",
-    "prettier:check:script": "prettier --check \"**/*.{js,jsx,ts,tsx,md,json,yaml}\" --cache --cache-location=.prettier/cache"
+    "prettier:format": "prettier --write \"**/*.{js,jsx,ts,tsx,md,json,yaml}\" --cache --cache-location=.prettier/cache",
+    "prettier:check": "prettier --check \"**/*.{js,jsx,ts,tsx,md,json,yaml}\" --cache --cache-location=.prettier/cache"
   },
   "engines": {
     "node": ">=20.12.2",

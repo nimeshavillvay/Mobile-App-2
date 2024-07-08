@@ -7,7 +7,7 @@ on:
     branches: [main, qa, dev]
 jobs:
   cache:
-    name: Setup pnpm cache
+    name: Setup pnpm and Prettier cache
     runs-on: ubuntu-22.04
     strategy:
       matrix:
@@ -37,5 +37,15 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
           save-always: true
+      - uses: actions/cache@v4
+        name: Setup Prettier cache
+        with:
+          path: .prettier/cache
+          key: ${{ runner.os }}-prettier-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-prettier-
+          save-always: true
       - name: Install dependencies
         run: pnpm install
+      - name: Check formatting with Prettier
+        run: pnpm prettier:check
