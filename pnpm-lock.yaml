@@ -315,6 +315,9 @@ importers:
       '@repo/prettier-config':
         specifier: workspace:*
         version: link:../../packages/prettier-config
+      '@repo/shared-logic':
+        specifier: workspace:*
+        version: link:../../packages/shared-logic
       '@repo/tailwindcss-config':
         specifier: workspace:*
         version: link:../../packages/tailwindcss-config
