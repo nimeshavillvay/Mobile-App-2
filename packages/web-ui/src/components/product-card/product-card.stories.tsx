@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
+import { TooltipProvider } from "~/components/ui/tooltip";
 import {
   ProductCard,
   ProductCardActions,
@@ -33,32 +34,34 @@ const addToCart = () => {
 export const WithDiscount: Story = {
   render: () => {
     return (
-      <ProductCard>
-        <ProductCardHero>
-          <ProductCardDiscount>30</ProductCardDiscount>
+      <TooltipProvider>
+        <ProductCard>
+          <ProductCardHero>
+            <ProductCardDiscount>30</ProductCardDiscount>
 
-          <ProductCardImage
-            src={productImage}
-            alt="The product image"
-            href="/product/771770/PROMD3-MB"
-            title="The product title"
-          />
+            <ProductCardImage
+              src={productImage}
+              alt="The product image"
+              href="/product/771770/PROMD3-MB"
+              title="The product title"
+            />
 
-          <ProductCardLabel>Label</ProductCardLabel>
-        </ProductCardHero>
+            <ProductCardLabel>Label</ProductCardLabel>
+          </ProductCardHero>
 
-        <ProductCardContent>
-          <ProductCardDetails
-            title='blum 21" Tandem Plus 563H Undermount Drawer Slide for 5/8" Material, 100lb Capacity Full Extension with BLUMOTION Soft-Closing'
-            sku="SCMN100CR+"
-            href="/product/771770/PROMD3-MB"
-          />
+          <ProductCardContent>
+            <ProductCardDetails
+              title='blum 21" Tandem Plus 563H Undermount Drawer Slide for 5/8" Material, 100lb Capacity Full Extension with BLUMOTION Soft-Closing'
+              sku="SCMN100CR+"
+              href="/product/771770/PROMD3-MB"
+            />
 
-          <ProductCardPrice price={39} uom="pair" actualPrice={49} />
+            <ProductCardPrice price={39} uom="pair" actualPrice={49} />
 
-          <ProductCardActions addToCart={addToCart} />
-        </ProductCardContent>
-      </ProductCard>
+            <ProductCardActions addToCart={addToCart} />
+          </ProductCardContent>
+        </ProductCard>
+      </TooltipProvider>
     );
   },
 };
@@ -66,30 +69,32 @@ export const WithDiscount: Story = {
 export const WithoutDiscount: Story = {
   render: () => {
     return (
-      <ProductCard>
-        <ProductCardHero>
-          <ProductCardImage
-            src={productImage}
-            alt="The product image"
-            href="/product/771770/PROMD3-MB"
-            title="The product title"
-          />
+      <TooltipProvider>
+        <ProductCard>
+          <ProductCardHero>
+            <ProductCardImage
+              src={productImage}
+              alt="The product image"
+              href="/product/771770/PROMD3-MB"
+              title="The product title"
+            />
 
-          <ProductCardLabel>Label</ProductCardLabel>
-        </ProductCardHero>
+            <ProductCardLabel>Label</ProductCardLabel>
+          </ProductCardHero>
 
-        <ProductCardContent>
-          <ProductCardDetails
-            title='blum 21" Tandem Plus 563H Undermount Drawer Slide for 5/8" Material, 100lb Capacity Full Extension with BLUMOTION Soft-Closing'
-            sku="SCMN100CR+"
-            href="/product/771770/PROMD3-MB"
-          />
+          <ProductCardContent>
+            <ProductCardDetails
+              title='blum 21" Tandem Plus 563H Undermount Drawer Slide for 5/8" Material, 100lb Capacity Full Extension with BLUMOTION Soft-Closing'
+              sku="SCMN100CR+"
+              href="/product/771770/PROMD3-MB"
+            />
 
-          <ProductCardPrice price={39} uom="pair" />
+            <ProductCardPrice price={39} uom="pair" />
 
-          <ProductCardActions addToCart={addToCart} />
-        </ProductCardContent>
-      </ProductCard>
+            <ProductCardActions addToCart={addToCart} />
+          </ProductCardContent>
+        </ProductCard>
+      </TooltipProvider>
     );
   },
 };
@@ -97,32 +102,34 @@ export const WithoutDiscount: Story = {
 export const Horizontal: Story = {
   render: () => {
     return (
-      <ProductCard orientation="horizontal">
-        <ProductCardHero>
-          <ProductCardDiscount>30</ProductCardDiscount>
+      <TooltipProvider>
+        <ProductCard orientation="horizontal">
+          <ProductCardHero>
+            <ProductCardDiscount>30</ProductCardDiscount>
 
-          <ProductCardImage
-            src={productImage}
-            alt="The product image"
-            href="/product/771770/PROMD3-MB"
-            title="The product title"
-          />
-        </ProductCardHero>
+            <ProductCardImage
+              src={productImage}
+              alt="The product image"
+              href="/product/771770/PROMD3-MB"
+              title="The product title"
+            />
+          </ProductCardHero>
 
-        <ProductCardContent>
-          <ProductCardLabel>Label</ProductCardLabel>
+          <ProductCardContent>
+            <ProductCardLabel>Label</ProductCardLabel>
 
-          <ProductCardDetails
-            title='blum 21" Tandem Plus 563H Undermount Drawer Slide for 5/8" Material, 100lb Capacity Full Extension with BLUMOTION Soft-Closing'
-            sku="SCMN100CR+"
-            href="/product/771770/PROMD3-MB"
-          />
+            <ProductCardDetails
+              title='blum 21" Tandem Plus 563H Undermount Drawer Slide for 5/8" Material, 100lb Capacity Full Extension with BLUMOTION Soft-Closing'
+              sku="SCMN100CR+"
+              href="/product/771770/PROMD3-MB"
+            />
 
-          <ProductCardPrice price={39} uom="pair" actualPrice={49} />
+            <ProductCardPrice price={39} uom="pair" actualPrice={49} />
 
-          <ProductCardActions addToCart={addToCart} />
-        </ProductCardContent>
-      </ProductCard>
+            <ProductCardActions addToCart={addToCart} />
+          </ProductCardContent>
+        </ProductCard>
+      </TooltipProvider>
     );
   },
 };
@@ -137,42 +144,44 @@ export const WithVariantSelector: Story = {
     };
 
     return (
-      <ProductCard>
-        <ProductCardHero>
-          <ProductCardDiscount>30</ProductCardDiscount>
+      <TooltipProvider>
+        <ProductCard>
+          <ProductCardHero>
+            <ProductCardDiscount>30</ProductCardDiscount>
 
-          <ProductCardImage
-            src={productImage}
-            alt="The product image"
-            href="/product/771770/PROMD3-MB"
-            title="The product title"
-          />
+            <ProductCardImage
+              src={productImage}
+              alt="The product image"
+              href="/product/771770/PROMD3-MB"
+              title="The product title"
+            />
 
-          <ProductCardLabel>Label</ProductCardLabel>
-        </ProductCardHero>
+            <ProductCardLabel>Label</ProductCardLabel>
+          </ProductCardHero>
 
-        <ProductCardContent>
-          <ProductCardDetails
-            title='blum 21" Tandem Plus 563H Undermount Drawer Slide for 5/8" Material, 100lb Capacity Full Extension with BLUMOTION Soft-Closing'
-            sku="SCMN100CR+"
-            href="/product/771770/PROMD3-MB"
-          />
+          <ProductCardContent>
+            <ProductCardDetails
+              title='blum 21" Tandem Plus 563H Undermount Drawer Slide for 5/8" Material, 100lb Capacity Full Extension with BLUMOTION Soft-Closing'
+              sku="SCMN100CR+"
+              href="/product/771770/PROMD3-MB"
+            />
 
-          <ProductCardVariantSelector
-            href="/item/id/slug"
-            variants={[
-              { value: "1", title: "Variant 1" },
-              { value: "2", title: "Variant 2" },
-              { value: "3", title: "Variant 3" },
-            ]}
-            value={id}
-            onValueChange={onVariantSelect}
-            addToCart={addToCart}
-            isFavorite={false}
-            onClickShoppingList={() => {}}
-          />
-        </ProductCardContent>
-      </ProductCard>
+            <ProductCardVariantSelector
+              href="/item/id/slug"
+              variants={[
+                { value: "1", title: "Variant 1" },
+                { value: "2", title: "Variant 2" },
+                { value: "3", title: "Variant 3" },
+              ]}
+              value={id}
+              onValueChange={onVariantSelect}
+              addToCart={addToCart}
+              isFavorite={false}
+              onClickShoppingList={() => {}}
+            />
+          </ProductCardContent>
+        </ProductCard>
+      </TooltipProvider>
     );
   },
 };
