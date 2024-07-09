@@ -9,6 +9,7 @@ import {
 import { Checkbox } from "@repo/web-ui/components/ui/checkbox";
 import { Label } from "@repo/web-ui/components/ui/label";
 import { useId } from "react";
+import { QUERY_KEYS } from "./constants";
 import { useFilterParams } from "./use-filter-params.hook";
 
 type FiltersAccordionProps = {
@@ -41,6 +42,7 @@ const FiltersAccordion = ({ filters }: FiltersAccordionProps) => {
     } else {
       newUrlSearchParams.delete(attributeId, valueId.toString());
     }
+    newUrlSearchParams.delete(QUERY_KEYS.page);
 
     window.history.pushState(null, "", `?${newUrlSearchParams.toString()}`);
   };

@@ -181,10 +181,14 @@ const DesktopView = async ({ orderNo }: DesktopViewProps) => {
                     </td>
                   </tr>
 
-                  <tr>
-                    <td className={tableLabelStyles()}>Phone no.</td>
-                    <td className={tableValueStyles()}>800 42 24389</td>
-                  </tr>
+                  {!!orderDetails.shipToAddress.phoneNumber && (
+                    <tr>
+                      <td className={tableLabelStyles()}>Phone no.</td>
+                      <td className={tableValueStyles()}>
+                        {orderDetails.shipToAddress.phoneNumber}
+                      </td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
             </div>
@@ -247,7 +251,7 @@ const DesktopView = async ({ orderNo }: DesktopViewProps) => {
                           colSpan={3}
                           className="ml-2 flex flex-row items-center gap-2 rounded bg-wurth-gray-50 px-2 py-0.5 text-sm"
                         >
-                          {lineItem.shipQuantity > 0 && (
+                          {lineItem.shipQuantity > 0 && lineItem.isWillCall && (
                             <div>
                               {lineItem.shipQuantity} items pickup at{" "}
                               {
@@ -257,6 +261,17 @@ const DesktopView = async ({ orderNo }: DesktopViewProps) => {
                               }
                             </div>
                           )}
+                          {lineItem.shipQuantity > 0 &&
+                            !lineItem.isWillCall && (
+                              <div>
+                                {lineItem.shipQuantity} items ship from{" "}
+                                {
+                                  plants.find(
+                                    (plant) => plant.code === lineItem.plant,
+                                  )?.name
+                                }
+                              </div>
+                            )}
                           {lineItem.shipQuantity > 0 && lineItem.boQty > 0 && (
                             <span>&bull;</span>
                           )}

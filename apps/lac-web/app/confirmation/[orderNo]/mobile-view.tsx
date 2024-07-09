@@ -188,10 +188,14 @@ const MobileView = async ({ orderNo }: MobileViewProps) => {
                   </td>
                 </tr>
 
-                <tr>
-                  <td className={tableLabelStyles()}>Phone no.</td>
-                  <td className={tableValueStyles()}>800 42 24389</td>
-                </tr>
+                {!!orderDetails.shipToAddress.phoneNumber && (
+                  <tr>
+                    <td className={tableLabelStyles()}>Phone no.</td>
+                    <td className={tableValueStyles()}>
+                      {orderDetails.shipToAddress.phoneNumber}
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>
@@ -259,9 +263,19 @@ const MobileView = async ({ orderNo }: MobileViewProps) => {
                     </div>
 
                     <div className="space-y-1 text-sm text-wurth-gray-800">
-                      {lineItem.shipQuantity > 0 && (
+                      {lineItem.shipQuantity > 0 && lineItem.isWillCall && (
                         <div>
                           {lineItem.shipQuantity} items pickup at{" "}
+                          {
+                            plants.find(
+                              (plant) => plant.code === lineItem.plant,
+                            )?.name
+                          }
+                        </div>
+                      )}
+                      {lineItem.shipQuantity > 0 && !lineItem.isWillCall && (
+                        <div>
+                          {lineItem.shipQuantity} items ship from{" "}
                           {
                             plants.find(
                               (plant) => plant.code === lineItem.plant,
