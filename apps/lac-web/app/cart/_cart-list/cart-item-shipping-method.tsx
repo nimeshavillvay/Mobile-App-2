@@ -984,28 +984,15 @@ const CartItemShippingMethod = ({
                       handleWillCallOptions(value as WillCallOption)
                     }
                   >
-                    <div className="flex flex-row gap-2 rounded-lg border border-wurth-gray-150 px-2 py-2 text-sm shadow-sm">
-                      <RadioGroupItem
-                        value={MAIN_OPTIONS.WILL_CALL}
-                        id={MAIN_OPTIONS.WILL_CALL}
+                    <NotAvailableInfoBanner
+                      plants={plants}
+                      willCallPlant={willCallAnywhere[0].willCallPlant ?? ""}
+                    />
+                    {willCallAnywhere[0]?.backOrder && (
+                      <BackOrderInfoBanner
+                        date={willCallAnywhere[0]?.backOrderDate_1 ?? ""}
                       />
-
-                      <div className="flex flex-col gap-0.5">
-                        <div className="rounded bg-red-800/10 px-2 py-1 text-sm text-red-800">
-                          This item is not available for pick up at this
-                          location.
-                        </div>
-
-                        {willCallAnywhere[0]?.willCallQuantity && (
-                          <BackOrderItemCountLabel
-                            count={willCallAnywhere[0].willCallQuantity}
-                          />
-                        )}
-                      </div>
-                    </div>
-
-                    <NotAvailableInfoBanner />
-
+                    )}
                     <CartItemWillCallTransfer
                       value={MAIN_OPTIONS.WILL_CALL_TRANSFER}
                       id={MAIN_OPTIONS.WILL_CALL_TRANSFER}
@@ -1013,8 +1000,10 @@ const CartItemShippingMethod = ({
                       plants={plants}
                       xPlant={availability.xplant}
                     />
-                    {willCallAnywhere[1]?.status === NOT_AVAILABLE && (
-                      <NotAvailableInfoBanner />
+                    {willCallAnywhere[1]?.status === NOT_IN_STOCK && (
+                      <BackOrderInfoBanner
+                        date={willCallAnywhere[1]?.willCallBackOrder ?? ""}
+                      />
                     )}
                   </RadioGroup>
                 )}
@@ -1131,11 +1120,18 @@ const BackOrderInfoBanner = ({ date }: { readonly date: string }) => {
   );
 };
 
-const NotAvailableInfoBanner = () => {
+const NotAvailableInfoBanner = ({
+  plants,
+  willCallPlant,
+}: {
+  readonly plants: Plant[];
+  readonly willCallPlant: string;
+}) => {
   return (
     <div className="flex flex-col items-center gap-1 rounded-xl bg-red-800/10 px-4 py-2 text-sm">
       <div className="text-red-800">
-        This item is not available for pick up at this location.
+        This item is not available for pick up at{" "}
+        <PlantName plants={plants} plantCode={willCallPlant} />
       </div>
       <div className="text-xs text-wurth-gray-500">
         To proceed, please select a valid shipping option.

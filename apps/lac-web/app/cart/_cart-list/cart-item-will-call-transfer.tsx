@@ -111,18 +111,10 @@ const CartItemWillCallTransfer = ({
 
       {willCallItem.status === NOT_AVAILABLE && (
         <div className="flex flex-row gap-2 rounded-lg border border-wurth-gray-150 px-2 py-2 text-sm shadow-sm">
-          <div className="w-4">
-            <RadioGroupItem value={value} id={id} />
-          </div>
-          <div className="flex flex-col gap-0.5">
-            <div className="rounded bg-red-800/10 px-2 py-1 text-sm text-red-800">
-              This item is not available for pick up at this location.
-            </div>
-            {willCallItem.willCallQuantity && (
-              <BackOrderItemCountLabel count={willCallItem.willCallQuantity} />
-            )}
-          </div>
-          <NotAvailableInfoBanner />
+          <NotAvailableInfoBanner
+            plants={plants}
+            willCallPlant={willCallItem.willCallPlant}
+          />
         </div>
       )}
     </>
@@ -161,11 +153,18 @@ const BackOrderItemCountLabel = ({ count }: { readonly count: number }) => {
   );
 };
 
-const NotAvailableInfoBanner = () => {
+const NotAvailableInfoBanner = ({
+  plants,
+  willCallPlant,
+}: {
+  readonly plants: Plant[];
+  readonly willCallPlant: string;
+}) => {
   return (
     <div className="flex flex-col items-center gap-1 rounded-xl bg-red-800/10 px-4 py-2 text-sm">
       <div className="text-red-800">
-        This item is not available for pick up at this location.
+        This item is not available for pick up at{" "}
+        <PlantName plants={plants} plantCode={willCallPlant} />
       </div>
       <div className="text-xs text-wurth-gray-500">
         To proceed, please select a valid shipping option.

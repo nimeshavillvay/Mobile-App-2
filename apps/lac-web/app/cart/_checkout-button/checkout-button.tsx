@@ -25,7 +25,7 @@ const CheckoutButton = ({ token }: CheckoutButtonProps) => {
   // Check if all cart items have complete configurations
   const areAllCartItemsConfigured = cartQuery.data.cartItems.every(
     (cartItem) =>
-      cartItem.configuration.hashvalue !== "" ||
+      cartItem.configuration.hashvalue !== "" &&
       cartItem.configuration.will_call_not_in_stock !== TRUE_STRING,
   );
 

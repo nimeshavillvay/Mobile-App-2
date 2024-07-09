@@ -26,7 +26,6 @@ import {
   AVAILABLE_ALL,
   BACKORDER_DISABLED,
   BACKORDER_ENABLED,
-  BACK_ORDER_ALL,
   DEFAULT_SHIPPING_METHOD,
   EXCLUDED_SHIPPING_METHODS,
   FALSE_STRING,
@@ -183,16 +182,12 @@ const ShippingMethod = ({ token, options }: ShippingMethodProps) => {
         const alternativeBranchesOption = availability.options.find(
           (option) => option.type === ALTERNATIVE_BRANCHES,
         );
-        const backOrderAllOption = availability.options.find(
-          (option) => option.type === BACK_ORDER_ALL,
-        );
 
         // Get all methods for "Ship to me"
         const options = [
           allAvailableOption,
           takeOnHandOption,
           alternativeBranchesOption,
-          backOrderAllOption,
         ];
 
         const selectedOption = options.find((option) =>

@@ -517,7 +517,9 @@ const CartItem = ({
                 will_call_plant:
                   willCallAnywhere[0]?.willCallPlant ?? EMPTY_STRING,
                 will_call_not_in_stock:
-                  willCallAnywhere[0]?.status  === NOT_AVAILABLE ? TRUE_STRING : FALSE_STRING,
+                  willCallAnywhere[0]?.status === NOT_AVAILABLE
+                    ? TRUE_STRING
+                    : FALSE_STRING,
               });
             } else if (
               willCallAnywhere[0] &&
