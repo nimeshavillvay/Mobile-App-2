@@ -14,6 +14,7 @@ type SalesRepresentativeProps = {
 const SalesRepresentative = ({ token }: SalesRepresentativeProps) => {
   const accountListQuery = useSuspenseAccountList(token);
   const salesRep = accountListQuery.data.sales_rep;
+
   if (Array.isArray(salesRep) || !("fullname" in salesRep)) {
     // If there is not sales rep, the field is an empty array
     return null;
