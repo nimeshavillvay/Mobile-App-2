@@ -181,7 +181,7 @@ const DesktopView = async ({ orderNo }: DesktopViewProps) => {
                     </td>
                   </tr>
 
-                  {orderDetails.shipToAddress.phoneNumber && (
+                  {!!orderDetails.shipToAddress.phoneNumber && (
                     <tr>
                       <td className={tableLabelStyles()}>Phone no.</td>
                       <td className={tableValueStyles()}>
