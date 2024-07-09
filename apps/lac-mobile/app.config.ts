@@ -5,12 +5,14 @@ import "ts-node/register"; // Add this to import TypeScript files
 // import { ExpoConfig } from '@expo/config-types';
 
 const config: ExpoConfig = {
-  name: "mobile",
-  slug: "mobile",
+  name: "Wurth LAC",
+  slug: "wurth-lac",
   version: "1.0.0",
   orientation: "portrait",
   icon: "./assets/icon.png",
   userInterfaceStyle: "light",
+  plugins: ["expo-router"],
+  scheme: "wurthlac",
   splash: {
     image: "./assets/splash.png",
     resizeMode: "contain",
