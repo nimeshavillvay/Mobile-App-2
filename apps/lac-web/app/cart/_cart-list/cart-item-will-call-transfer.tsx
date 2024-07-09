@@ -1,8 +1,14 @@
-import { IN_STOCK, LIMITED_STOCK, NOT_IN_STOCK } from "@/_lib/constants";
+import {
+  IN_STOCK,
+  LIMITED_STOCK,
+  NOT_AVAILABLE,
+  NOT_IN_STOCK,
+} from "@/_lib/constants";
 import type { Plant } from "@/_lib/types";
 import { cn } from "@/_lib/utils";
 import { RadioGroupItem } from "@repo/web-ui/components/ui/radio-group";
 import type { Availability } from "../types";
+import NotAvailableInfoBanner from "./cart-item-not-available-banner";
 import PlantName from "./plant-name";
 
 type CartItemWillCallTransferProps = {
@@ -102,6 +108,13 @@ const CartItemWillCallTransfer = ({
             )}
           </div>
         </div>
+      )}
+
+      {willCallItem.status === NOT_AVAILABLE && (
+        <NotAvailableInfoBanner
+          plants={plants}
+          willCallPlant={willCallItem.willCallPlant}
+        />
       )}
     </>
   );

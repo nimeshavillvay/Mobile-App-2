@@ -5,7 +5,7 @@ import useDebouncedState from "@/_hooks/misc/use-debounced-state.hook";
 import useSuspenseCheckAvailability from "@/_hooks/product/use-suspense-check-availability.hook";
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
-import { DEFAULT_PLANT, NOT_IN_STOCK } from "@/_lib/constants";
+import { DEFAULT_PLANT, NOT_AVAILABLE, NOT_IN_STOCK } from "@/_lib/constants";
 import type {
   CartConfiguration,
   CartItemConfiguration,
@@ -54,8 +54,10 @@ import {
   BACK_ORDER_ALL,
   DEFAULT_SHIPPING_METHOD,
   EMPTY_STRING,
+  FALSE_STRING,
   MAIN_OPTIONS,
   TAKE_ON_HAND,
+  TRUE_STRING,
   WILLCALL_SHIPING_METHOD,
 } from "../constants";
 import type { ShippingMethod, WillCallAnywhere } from "../types";
@@ -340,14 +342,15 @@ const CartItem = ({
                     availableAll.plants?.at(0)?.shippingMethods?.at(0)?.code ??
                     selectedShippingMethod;
                   setSelectedShippingMethod(setShippingMethod);
-                  handleSave(
-                    createCartItemConfig({
+                  handleSave({
+                    ...createCartItemConfig({
                       method: setShippingMethod,
                       quantity: availableAll.plants?.at(0)?.quantity ?? 0,
                       plant: availableAll.plants?.at(0)?.plant ?? EMPTY_STRING,
                       hash: availableAll.hash,
                     }),
-                  );
+                    will_call_not_in_stock: FALSE_STRING,
+                  });
                 } else if (takeOnHand && homeBranchAvailability) {
                   const setShippingMethod =
                     takeOnHand.plants?.[0]?.shippingMethods?.find(
@@ -356,8 +359,8 @@ const CartItem = ({
                     takeOnHand.plants?.[0]?.shippingMethods?.[0]?.code ??
                     selectedShippingMethod;
                   setSelectedShippingMethod(setShippingMethod);
-                  handleSave(
-                    createCartItemConfig({
+                  handleSave({
+                    ...createCartItemConfig({
                       method:
                         takeOnHand.plants?.at(0)?.shippingMethods?.at(0)
                           ?.code ?? EMPTY_STRING,
@@ -368,10 +371,11 @@ const CartItem = ({
                       backOrderQuantity:
                         takeOnHand.plants?.at(0)?.backOrderQuantity,
                     }),
-                  );
+                    will_call_not_in_stock: FALSE_STRING,
+                  });
                 } else if (shipAlternativeBranch && homeBranchAvailability) {
-                  handleSave(
-                    getAlternativeBranchesConfig({
+                  handleSave({
+                    ...getAlternativeBranchesConfig({
                       plants: shipAlternativeBranch.plants,
                       method:
                         shipAlternativeBranch.plants
@@ -386,7 +390,8 @@ const CartItem = ({
                         : 0,
                       homePlant: willCallPlant.plantCode ?? DEFAULT_PLANT.code,
                     }),
-                  );
+                    will_call_not_in_stock: FALSE_STRING,
+                  });
                 } else if (backOrderAll) {
                   setSelectedShippingOption(MAIN_OPTIONS.BACK_ORDER);
                   const setShippingMethod =
@@ -399,8 +404,8 @@ const CartItem = ({
                     backOrderAll.plants?.at(0)?.shippingMethods?.at(0)?.code ??
                     selectedBackorderShippingMethod;
                   setSelectedBackorderShippingMethod(setShippingMethod);
-                  handleSave(
-                    createCartItemConfig({
+                  handleSave({
+                    ...createCartItemConfig({
                       method: setShippingMethod,
                       quantity: 0,
                       plant: backOrderAll.plants?.at(0)?.plant ?? EMPTY_STRING,
@@ -410,7 +415,8 @@ const CartItem = ({
                         backOrderAll.plants?.at(0)?.backOrderQuantity,
                       backOrderAll: true,
                     }),
-                  );
+                    will_call_not_in_stock: FALSE_STRING,
+                  });
                 }
               }
             },
@@ -510,6 +516,10 @@ const CartItem = ({
                 ).toString(),
                 will_call_plant:
                   willCallAnywhere[0]?.willCallPlant ?? EMPTY_STRING,
+                will_call_not_in_stock:
+                  willCallAnywhere[0]?.status === NOT_AVAILABLE
+                    ? TRUE_STRING
+                    : FALSE_STRING,
               });
             } else if (
               willCallAnywhere[0] &&
@@ -528,6 +538,7 @@ const CartItem = ({
                 }),
                 will_call_plant:
                   willCallAnywhere[0].willCallPlant ?? EMPTY_STRING,
+                will_call_not_in_stock: FALSE_STRING,
               });
             }
           },
@@ -543,8 +554,8 @@ const CartItem = ({
     }
 
     if (availableAll) {
-      handleSave(
-        createCartItemConfig({
+      handleSave({
+        ...createCartItemConfig({
           method:
             availableAll.plants?.at(0)?.shippingMethods?.at(0)?.code ??
             EMPTY_STRING,
@@ -552,10 +563,11 @@ const CartItem = ({
           plant: availableAll.plants?.at(0)?.plant ?? EMPTY_STRING,
           hash: availableAll.hash,
         }),
-      );
+        will_call_not_in_stock: FALSE_STRING,
+      });
     } else if (takeOnHand && homeBranchAvailability) {
-      handleSave(
-        createCartItemConfig({
+      handleSave({
+        ...createCartItemConfig({
           method:
             takeOnHand.plants?.at(0)?.shippingMethods?.at(0)?.code ??
             EMPTY_STRING,
@@ -565,10 +577,11 @@ const CartItem = ({
           backOrderDate: takeOnHand.plants?.at(0)?.backOrderDate,
           backOrderQuantity: takeOnHand.plants?.at(0)?.backOrderQuantity,
         }),
-      );
+        will_call_not_in_stock: FALSE_STRING,
+      });
     } else if (shipAlternativeBranch && homeBranchAvailability) {
-      handleSave(
-        getAlternativeBranchesConfig({
+      handleSave({
+        ...getAlternativeBranchesConfig({
           plants: shipAlternativeBranch.plants,
           method:
             shipAlternativeBranch.plants?.at(0)?.shippingMethods?.at(0)?.code ??
@@ -582,7 +595,8 @@ const CartItem = ({
             : 0,
           homePlant: willCallPlant.plantCode ?? DEFAULT_PLANT.code,
         }),
-      );
+        will_call_not_in_stock: FALSE_STRING,
+      });
     } else if (backOrderAll) {
       const setShippingMethod =
         backOrderAll.plants
@@ -593,8 +607,8 @@ const CartItem = ({
         backOrderAll.plants?.at(0)?.shippingMethods?.at(0)?.code ??
         selectedBackorderShippingMethod;
       setSelectedBackorderShippingMethod(setShippingMethod);
-      handleSave(
-        createCartItemConfig({
+      handleSave({
+        ...createCartItemConfig({
           method: setShippingMethod,
           quantity: 0,
           plant: backOrderAll.plants?.at(0)?.plant ?? EMPTY_STRING,
@@ -603,7 +617,8 @@ const CartItem = ({
           backOrderQuantity: backOrderAll.plants?.at(0)?.backOrderQuantity,
           backOrderAll: true,
         }),
-      );
+        will_call_not_in_stock: FALSE_STRING,
+      });
     }
   };
 
