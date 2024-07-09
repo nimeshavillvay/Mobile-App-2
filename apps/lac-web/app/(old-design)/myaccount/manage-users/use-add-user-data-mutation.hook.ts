@@ -18,6 +18,7 @@ const useAddUserDataMutation = () => {
       email,
       password,
       permission,
+      forcePasswordReset,
     }: {
       firstName: string;
       lastName: string;
@@ -25,6 +26,7 @@ const useAddUserDataMutation = () => {
       email: string;
       password: string;
       permission: string;
+      forcePasswordReset: boolean;
     }) =>
       api
         .post("rest/my-account/create-user", {
@@ -38,6 +40,7 @@ const useAddUserDataMutation = () => {
             email,
             password,
             permission,
+            change_password: forcePasswordReset,
           },
         })
         .json<{ status_code: string; message: string; user_id: number }>(),
