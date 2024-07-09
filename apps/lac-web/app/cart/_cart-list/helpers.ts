@@ -1,5 +1,6 @@
 import type { CartItemConfiguration } from "@/_lib/types";
 import {
+  DEFAULT_SHIPPING_METHOD,
   EMPTY_STRING,
   EXCLUDED_SHIPPING_METHODS,
   FALSE_STRING,
@@ -85,7 +86,7 @@ export const getAlternativeBranchesConfig = ({
     [`avail_${plant?.index}`]: (plant?.quantity ?? 0).toString(),
     [`plant_${plant?.index}`]: plant?.plant ?? "",
     [`shipping_method_${plant?.index}`]:
-      plant?.plant !== plantName ? "G" : method,
+      plant?.plant !== plantName ? DEFAULT_SHIPPING_METHOD : method,
   }));
 
   config = Object.assign(config, ...data);

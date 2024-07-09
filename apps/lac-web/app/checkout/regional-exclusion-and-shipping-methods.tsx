@@ -56,7 +56,11 @@ const RegionalExclusionAndShippingMethods = ({
                   &nbsp;
                   {itemLine?.quantity === 1 ? "item" : "items"}
                 </span>
-                &nbsp;pickup at&nbsp;
+                {mappedConfiguration?.willCallPlant ? (
+                  <>&nbsp;pickup at&nbsp;</>
+                ) : (
+                  <>&nbsp;ship from&nbsp;</>
+                )}
                 {plants.find((plant) => plant.code === itemLine.plant)?.name ??
                   "Plant N/A"}
                 &nbsp;&nbsp;

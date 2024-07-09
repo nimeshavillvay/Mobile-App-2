@@ -206,17 +206,19 @@ const ProductCardPrice = ({
   price,
   uom,
   actualPrice,
+  isLaminateItem,
 }: {
   readonly price: number;
   readonly uom: string;
   readonly actualPrice?: number;
+  readonly isLaminateItem: boolean;
 }) => {
   return (
     <div className="text-xs font-normal text-wurth-gray-800 md:text-sm md:leading-none">
       <span
         className={cn(
           "font-bold",
-          actualPrice && price < actualPrice
+          !isLaminateItem && actualPrice && price < actualPrice
             ? "text-green-600"
             : "text-wurth-gray-800",
         )}
@@ -226,7 +228,7 @@ const ProductCardPrice = ({
           {formatNumberToPrice(price)}
         </span>
       </span>
-      {!!actualPrice && price < actualPrice && (
+      {!isLaminateItem && !!actualPrice && price < actualPrice && (
         <span className="ml-1 text-base font-normal text-wurth-gray-400 line-through md:text-lg">
           {formatNumberToPrice(actualPrice)}
         </span>

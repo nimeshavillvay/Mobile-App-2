@@ -3,14 +3,21 @@ import { checkAvailability } from "@/_lib/apis/shared";
 import { NOT_AVAILABLE } from "@/_lib/constants";
 import { useToast } from "@repo/web-ui/components/ui/toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { BACKORDER_DISABLED, BACKORDER_ENABLED } from "../constants";
+import {
+  BACKORDER_DISABLED,
+  BACKORDER_ENABLED,
+  FALSE_STRING,
+} from "../constants";
 import useCartStore from "../use-cart-store.hook";
 
 const useAddMultipleToCartMutation = (token: string) => {
   const queryClient = useQueryClient();
   const { toast } = useToast();
-  const { setExcludedSkus } = useCartStore((state) => state.actions);
+  const { setExcludedSkus, setDiscontinuedSkus } = useCartStore(
+    (state) => state.actions,
+  );
   const excludedSkus = useCartStore((state) => state.excludedSkus);
+  const discontinuedSkus = useCartStore((state) => state.discontinuedSkus);
 
   return useMutation({
     mutationFn: async (
@@ -19,6 +26,7 @@ const useAddMultipleToCartMutation = (token: string) => {
         quantity: number | null | undefined;
         poOrJobName?: string;
         sku: string;
+        isDiscontinued?: boolean;
       }[],
     ) => {
       /**
@@ -52,9 +60,18 @@ const useAddMultipleToCartMutation = (token: string) => {
         shipping_method_5: "",
         backorder_quantity: "",
         backorder_date: "",
+        will_call_not_in_stock: FALSE_STRING,
       };
 
+      const discontinuedSkuList = [...discontinuedSkus];
+
       const productsInfo = products.map((product) => {
+        if (
+          product.isDiscontinued &&
+          !discontinuedSkuList.includes(product.sku)
+        ) {
+          discontinuedSkuList.push(product.sku);
+        }
         return {
           productid: product.productId,
           quantity: product.quantity,
@@ -63,6 +80,7 @@ const useAddMultipleToCartMutation = (token: string) => {
             ...configuration,
             poOrJobName: product.poOrJobName,
           },
+          isDiscontinued: product.isDiscontinued,
         };
       });
 
@@ -74,7 +92,8 @@ const useAddMultipleToCartMutation = (token: string) => {
           const canBeAddedToCart =
             product.productid !== undefined &&
             product.quantity !== undefined &&
-            product.quantity !== null;
+            product.quantity !== null &&
+            !product.isDiscontinued;
           if (canBeAddedToCart) {
             if (productMap.has(product.productid)) {
               productMap.get(product.productid).quantity += product.quantity;
@@ -85,7 +104,6 @@ const useAddMultipleToCartMutation = (token: string) => {
         });
 
         let uniqueProducts = Array.from(productMap.values());
-
         // Create availability promises only for unique products
         const availabilityPromises = uniqueProducts.map((product) => {
           return checkAvailability(token, {
@@ -148,6 +166,7 @@ const useAddMultipleToCartMutation = (token: string) => {
           }
         });
         setExcludedSkus(excludedSkuList);
+        setDiscontinuedSkus(discontinuedSkuList);
         return uniqueProducts;
       };
 
