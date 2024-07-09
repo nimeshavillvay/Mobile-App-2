@@ -8,6 +8,7 @@ import type { Plant } from "@/_lib/types";
 import { cn } from "@/_lib/utils";
 import { RadioGroupItem } from "@repo/web-ui/components/ui/radio-group";
 import type { Availability } from "../types";
+import NotAvailableInfoBanner from "./cart-item-not-available-banner";
 import PlantName from "./plant-name";
 
 type CartItemWillCallTransferProps = {
@@ -110,12 +111,10 @@ const CartItemWillCallTransfer = ({
       )}
 
       {willCallItem.status === NOT_AVAILABLE && (
-        <div className="flex flex-row gap-2 rounded-lg border border-wurth-gray-150 px-2 py-2 text-sm shadow-sm">
-          <NotAvailableInfoBanner
-            plants={plants}
-            willCallPlant={willCallItem.willCallPlant}
-          />
-        </div>
+        <NotAvailableInfoBanner
+          plants={plants}
+          willCallPlant={willCallItem.willCallPlant}
+        />
       )}
     </>
   );
@@ -149,26 +148,6 @@ const BackOrderItemCountLabel = ({ count }: { readonly count: number }) => {
         Backorder
       </span>
       &nbsp;{count}&nbsp;{count > 1 ? "items" : "item"}
-    </div>
-  );
-};
-
-const NotAvailableInfoBanner = ({
-  plants,
-  willCallPlant,
-}: {
-  readonly plants: Plant[];
-  readonly willCallPlant: string;
-}) => {
-  return (
-    <div className="flex flex-col items-center gap-1 rounded-xl bg-red-800/10 px-4 py-2 text-sm">
-      <div className="text-red-800">
-        This item is not available for pick up at{" "}
-        <PlantName plants={plants} plantCode={willCallPlant} />
-      </div>
-      <div className="text-xs text-wurth-gray-500">
-        To proceed, please select a valid shipping option.
-      </div>
     </div>
   );
 };
