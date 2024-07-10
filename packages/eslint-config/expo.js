@@ -5,10 +5,10 @@ const project = resolve(process.cwd(), "tsconfig.json");
 /** @type {import("eslint").Linter.Config} */
 module.exports = {
   extends: [
+    "expo",
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:@tanstack/eslint-plugin-query/recommended",
-    "universe/native",
     "prettier",
     "eslint-config-turbo",
   ],
