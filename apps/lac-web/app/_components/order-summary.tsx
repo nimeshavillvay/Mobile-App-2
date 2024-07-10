@@ -23,6 +23,7 @@ import {
   FormMessage,
 } from "@repo/web-ui/components/ui/form";
 import { Input } from "@repo/web-ui/components/ui/input";
+import { useQueryClient } from "@tanstack/react-query";
 import { useState, type ReactNode } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -58,6 +59,8 @@ const OrderSummary = ({ token, children }: OrderSummaryProps) => {
     // Open the promo code section if a promo code is already applied
     !!simulationCheckoutQuery.data.configuration.coupon,
   );
+  const queryClient = useQueryClient();
+  const [oldCoupon, setOldCoupon] = useState("");
 
   const form = useForm<z.infer<typeof promoSchema>>({
     resolver: zodResolver(promoSchema),
@@ -76,6 +79,12 @@ const OrderSummary = ({ token, children }: OrderSummaryProps) => {
       { coupon: promo },
       {
         onSuccess: (data) => {
+          if (coupon !== oldCoupon) {
+            queryClient.invalidateQueries({
+              queryKey: ["user", "price-check"],
+            });
+            setOldCoupon(coupon ?? "");
+          }
           if (data.error.coupon) {
             form.setError("promo", {
               message: "Invalid Promo Code",
