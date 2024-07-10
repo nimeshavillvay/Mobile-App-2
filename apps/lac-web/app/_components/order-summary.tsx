@@ -1,5 +1,6 @@
 "use client";
 
+import useSuspenseCart from "@/_hooks/cart/use-suspense-cart.hook";
 import useSuspenseSimulationCheckout from "@/_hooks/cart/use-suspense-simulation-checkout.hook";
 import useUpdateCartConfigMutation from "@/_hooks/cart/use-update-cart-config-mutation.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
@@ -60,8 +61,7 @@ const OrderSummary = ({ token, children }: OrderSummaryProps) => {
     !!simulationCheckoutQuery.data.configuration.coupon,
   );
   const queryClient = useQueryClient();
-  const [oldCoupon, setOldCoupon] = useState("");
-
+  const cartQuery = useSuspenseCart(token);
   const form = useForm<z.infer<typeof promoSchema>>({
     resolver: zodResolver(promoSchema),
     values: {
@@ -79,11 +79,10 @@ const OrderSummary = ({ token, children }: OrderSummaryProps) => {
       { coupon: promo },
       {
         onSuccess: (data) => {
-          if (coupon !== oldCoupon) {
+          if (promo !== cartQuery.data.configuration.coupon) {
             queryClient.invalidateQueries({
               queryKey: ["user", "price-check"],
             });
-            setOldCoupon(coupon ?? "");
           }
           if (data.error.coupon) {
             form.setError("promo", {
