@@ -66,6 +66,9 @@ const useUpdateProfileMutation = () => {
       queryClient.invalidateQueries({
         queryKey: ["user", "manage-users"],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["user", "login-status"],
+      });
     },
   });
 };

@@ -1,6 +1,8 @@
 "use client";
 
+import useUpdateProfileMutation from "@/(old-design)/myaccount/manage-users/use-update-profile-mutation.hook";
 import { PasswordInput } from "@/_components/password-input";
+import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
 import type { PasswordPolicies } from "@/_lib/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@repo/web-ui/components/ui/button";
@@ -22,12 +24,14 @@ type PasswordResetFormProps = {
   readonly userKey: string;
   readonly userId: string;
   readonly passwordPolicies: PasswordPolicies;
+  readonly token: string;
 };
 
 const PasswordResetForm = ({
   userKey,
   userId,
   passwordPolicies,
+  token,
 }: PasswordResetFormProps) => {
   const router = useRouter();
 
@@ -74,20 +78,41 @@ const PasswordResetForm = ({
   });
 
   const passwordResetConfirmMutation = usePasswordResetConfirmMutation();
+  const updateProfileMutation = useUpdateProfileMutation();
+  const loginCheckResponse = useSuspenseCheckLogin(token);
 
   const onPasswordResetSubmit = (formData: PasswordResetSchema) => {
-    passwordResetConfirmMutation.mutate(
-      {
-        userKey: userKey,
-        userId: userId,
-        password: formData.password,
-      },
-      {
-        onSuccess: () => {
-          router.replace("/sign-in");
+    if (
+      loginCheckResponse.data.change_password &&
+      loginCheckResponse.data.status_code === "OK"
+    ) {
+      updateProfileMutation.mutate(
+        {
+          userId: Number(userId),
+          password: formData.password,
         },
-      },
-    );
+        {
+          onSuccess: () => {
+            router.replace("/");
+          },
+        },
+      );
+    } else if (!userKey || !userId) {
+      router.replace("/sign-in");
+    } else {
+      passwordResetConfirmMutation.mutate(
+        {
+          userKey: userKey,
+          userId: userId,
+          password: formData.password,
+        },
+        {
+          onSuccess: () => {
+            router.replace("/sign-in");
+          },
+        },
+      );
+    }
   };
 
   return (

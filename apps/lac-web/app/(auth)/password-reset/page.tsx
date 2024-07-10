@@ -1,5 +1,8 @@
+import { loginCheck } from "@/_hooks/user/use-suspense-check-login.hook";
 import { getPasswordPolicies } from "@/_lib/apis/server";
+import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { checkPasswordReset } from "./api";
 import PasswordResetForm from "./password-reset-form";
@@ -13,12 +16,34 @@ type PasswordResetProps = {
 };
 
 const PasswordReset = async ({ searchParams }: PasswordResetProps) => {
-  if (!searchParams.password_reset_key || !searchParams.user) {
+  const userKey = searchParams.password_reset_key?.toString();
+  const userId = searchParams.user?.toString();
+  const cookiesStore = cookies();
+  const sessionCookie = cookiesStore.get(SESSION_TOKEN_COOKIE);
+  const passwordPolicies = await getPasswordPolicies();
+  const token = sessionCookie?.value ?? "";
+  const loginCheckResponse = await loginCheck(token);
+
+  if (userId) {
+    if (
+      loginCheckResponse.change_password &&
+      loginCheckResponse.status_code === "OK"
+    ) {
+      return (
+        <PasswordResetForm
+          userKey={""}
+          userId={userId}
+          passwordPolicies={passwordPolicies}
+          token={token}
+        />
+      );
+    }
+  }
+
+  if (!userKey || !userId) {
     redirect("/sign-in");
   }
 
-  const userKey = searchParams.password_reset_key.toString();
-  const userId = searchParams.user.toString();
   const passwordResetCheck = await checkPasswordReset(userKey, userId);
 
   if (passwordResetCheck.statusCode && passwordResetCheck.statusCode !== "OK") {
@@ -31,13 +56,12 @@ const PasswordReset = async ({ searchParams }: PasswordResetProps) => {
     );
   }
 
-  const passwordPolicies = await getPasswordPolicies();
-
   return (
     <PasswordResetForm
       userKey={userKey}
       userId={userId}
       passwordPolicies={passwordPolicies}
+      token={token}
     />
   );
 };
