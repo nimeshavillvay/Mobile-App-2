@@ -986,6 +986,7 @@ const CartItemShippingMethod = ({
                     }
                   >
                     <NotAvailableInfoBanner
+                      willCallType={MAIN_OPTIONS.WILL_CALL}
                       plants={plants}
                       willCallPlant={willCallAnywhere[0].willCallPlant ?? ""}
                     />
