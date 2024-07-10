@@ -20,9 +20,11 @@ const config: ExpoConfig = {
   },
   assetBundlePatterns: ["**/*"],
   ios: {
+    bundleIdentifier: "com.wurth.lac",
     supportsTablet: true,
   },
   android: {
+    package: "com.wurth.lac",
     adaptiveIcon: {
       foregroundImage: "./assets/adaptive-icon.png",
       backgroundColor: "#ffffff",

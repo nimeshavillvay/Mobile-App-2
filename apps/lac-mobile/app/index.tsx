@@ -1,9 +1,10 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
+import { Button } from "tamagui";
 
 const HomePage = () => {
   return (
     <View style={styles.container}>
-      <Text>test</Text>
+      <Button>Hello World!!!</Button>
     </View>
   );
 };

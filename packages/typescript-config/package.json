@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "devDependencies": {
-    "expo": "^51.0.17"
+    "expo": "^51.0.18"
   },
   "peerDependencies": {
     "expo": "^51.0.17"
