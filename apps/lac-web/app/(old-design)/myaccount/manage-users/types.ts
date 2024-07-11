@@ -29,8 +29,6 @@ export type CurrentUser = {
   email: string;
 };
 
-// Types used in new-design
-
 // Types used in old-design
 // TODO: Remove these types once old-design is removed
 export type UpdateField = {
