@@ -26,20 +26,19 @@ const PasswordReset = async ({ searchParams }: PasswordResetProps) => {
     loginCheck(token),
   ]);
 
-  if (userId) {
-    if (
-      loginCheckResponse.change_password &&
-      loginCheckResponse.status_code === "OK"
-    ) {
-      return (
-        <PasswordResetForm
-          userKey={""}
-          userId={userId}
-          passwordPolicies={passwordPolicies}
-          token={token}
-        />
-      );
-    }
+  if (
+    userId &&
+    loginCheckResponse.change_password &&
+    loginCheckResponse.status_code === "OK"
+  ) {
+    return (
+      <PasswordResetForm
+        userKey={""}
+        userId={userId}
+        passwordPolicies={passwordPolicies}
+        token={token}
+      />
+    );
   }
 
   if (!userKey || !userId) {
