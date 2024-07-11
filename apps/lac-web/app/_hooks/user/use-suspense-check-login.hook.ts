@@ -16,6 +16,7 @@ export const loginCheck = async (token: string) => {
           status_code: "OK";
           user_id: string;
           sales_rep_id?: string;
+          change_password: boolean;
           user: {
             billto: string;
             user_id: string;
@@ -26,7 +27,10 @@ export const loginCheck = async (token: string) => {
             sales_rep: string;
           };
         }
-      | { status_code: "NOT_LOGGED_IN" }
+      | {
+          change_password: false;
+          status_code: "NOT_LOGGED_IN";
+        }
     >();
 };
 
