@@ -1,15 +1,15 @@
 import { StyleSheet, View } from "react-native";
-import { Button } from "tamagui";
+import { Text } from "tamagui";
 
-const HomePage = () => {
+const CartPage = () => {
   return (
     <View style={styles.container}>
-      <Button>Hello World!!!</Button>
+      <Text>Cart Page</Text>
     </View>
   );
 };
 
-export default HomePage;
+export default CartPage;
 
 const styles = StyleSheet.create({
   container: {

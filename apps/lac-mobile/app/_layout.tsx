@@ -1,6 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useFonts } from "expo-font";
-import { Slot } from "expo-router";
+import { Stack } from "expo-router/stack";
 import * as SplashScreen from "expo-splash-screen";
 // eslint-disable-next-line no-restricted-imports
 import { useEffect } from "react";
@@ -37,7 +37,9 @@ const RootLayout = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <TamaguiProvider config={tamaguiConfig}>
-        <Slot />
+        <Stack>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        </Stack>
       </TamaguiProvider>
     </QueryClientProvider>
   );
