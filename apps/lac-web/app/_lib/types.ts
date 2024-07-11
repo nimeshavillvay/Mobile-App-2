@@ -457,3 +457,14 @@ export type ItemsPriceResult = {
   error: true | null;
   productPrices: ItemPrice[];
 };
+
+export type UpdateUser = {
+  userId: number;
+  firstName?: string;
+  lastName?: string;
+  jobTitle?: string;
+  email?: string;
+  password?: string;
+  permission?: string;
+  status?: string;
+};

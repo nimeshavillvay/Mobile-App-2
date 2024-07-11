@@ -30,16 +30,6 @@ export type CurrentUser = {
 };
 
 // Types used in new-design
-export type UpdateUser = {
-  userId: number;
-  firstName?: string;
-  lastName?: string;
-  jobTitle?: string;
-  email?: string;
-  password?: string;
-  permission?: string;
-  status?: string;
-};
 
 // Types used in old-design
 // TODO: Remove these types once old-design is removed
