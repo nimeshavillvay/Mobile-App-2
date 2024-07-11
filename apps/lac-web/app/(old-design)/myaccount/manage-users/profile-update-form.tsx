@@ -1,3 +1,4 @@
+import useUpdateProfileMutation from "@/_hooks/user/use-update-profile-mutation.hook";
 import type { PasswordPolicies } from "@/_lib/types";
 import { checkPasswordComplexity } from "@/_lib/utils";
 import { Button } from "@/old/_components/ui/button";
@@ -24,7 +25,6 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { USER_PERMISSIONS, USER_STATUSES } from "./constants";
 import type { UpdateUser, UserProfile } from "./types";
-import useUpdateProfileMutation from "./use-update-profile-mutation.hook";
 
 const updateProfileSchema = z
   .object({

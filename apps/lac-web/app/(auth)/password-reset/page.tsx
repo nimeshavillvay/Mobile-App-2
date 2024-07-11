@@ -20,9 +20,11 @@ const PasswordReset = async ({ searchParams }: PasswordResetProps) => {
   const userId = searchParams.user?.toString();
   const cookiesStore = cookies();
   const sessionCookie = cookiesStore.get(SESSION_TOKEN_COOKIE);
-  const passwordPolicies = await getPasswordPolicies();
   const token = sessionCookie?.value ?? "";
-  const loginCheckResponse = await loginCheck(token);
+  const [passwordPolicies, loginCheckResponse] = await Promise.all([
+    getPasswordPolicies(),
+    loginCheck(token),
+  ]);
 
   if (userId) {
     if (

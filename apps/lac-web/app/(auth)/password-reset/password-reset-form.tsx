@@ -1,8 +1,8 @@
 "use client";
 
-import useUpdateProfileMutation from "@/(old-design)/myaccount/manage-users/use-update-profile-mutation.hook";
 import { PasswordInput } from "@/_components/password-input";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
+import useUpdateProfileMutation from "@/_hooks/user/use-update-profile-mutation.hook";
 import type { PasswordPolicies } from "@/_lib/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@repo/web-ui/components/ui/button";
