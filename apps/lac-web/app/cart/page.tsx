@@ -51,7 +51,7 @@ const CartPage = async () => {
         <CartHeading token={sessionToken.value} />
       </Suspense>
 
-      <div className="flex flex-col md:container md:flex-row md:gap-12">
+      <div className="ml-2 flex flex-col md:container xl:flex-row xl:gap-12">
         <div className="flex-1">
           <Suspense
             fallback={
@@ -75,7 +75,7 @@ const CartPage = async () => {
           </Suspense>
         </div>
 
-        <aside className="flex shrink-0 flex-col gap-5 px-6 py-4 md:w-[19.75rem] md:px-0 md:py-0">
+        <aside className="flex shrink-0 flex-col gap-5 px-6 py-4 xl:w-[19.75rem] xl:px-0 xl:py-0">
           <Suspense
             fallback={<Skeleton className="h-[182px] rounded-lg shadow-md" />}
           >
