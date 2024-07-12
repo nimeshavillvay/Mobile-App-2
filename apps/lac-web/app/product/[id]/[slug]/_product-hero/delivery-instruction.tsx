@@ -1,4 +1,3 @@
-"use client";
 import Instructions from "@/confirmation/[orderNo]/instructions";
 import { Button } from "@repo/web-ui/components/ui/button";
 import {
@@ -8,13 +7,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@repo/web-ui/components/ui/dialog";
-import { useState } from "react";
 
 const DeliveryInstruction = () => {
-  const [open, setOpen] = useState(false);
-
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog>
       <DialogTrigger asChild>
         <Button
           variant="ghost"
@@ -28,12 +24,12 @@ const DeliveryInstruction = () => {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Instructions</DialogTitle>
-
-          <Instructions
-            type="mobile"
-            className="top-auto max-h-[calc(100vh-150px)] overflow-y-auto"
-          />
         </DialogHeader>
+
+        <Instructions
+          type="mobile"
+          className="top-auto max-h-[calc(100vh-150px)] overflow-y-auto"
+        />
       </DialogContent>
     </Dialog>
   );
