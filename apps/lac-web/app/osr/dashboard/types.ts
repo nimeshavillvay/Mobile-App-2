@@ -19,4 +19,5 @@ export type Customer = {
   fullName: string;
   totalItems: number;
   salesRep: string;
+  permission: string;
 };
