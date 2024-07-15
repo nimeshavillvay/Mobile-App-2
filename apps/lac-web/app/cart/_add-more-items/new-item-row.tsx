@@ -90,7 +90,7 @@ const NewItemRow = ({
         {...registerJobNameField}
         id={`sku-${index}-${id}`}
         placeholder="PO number / job name"
-        className="h-10 min-w-[8rem] px-3 py-2"
+        className="h-10 min-w-32 px-3 py-2"
       />
 
       <Input
