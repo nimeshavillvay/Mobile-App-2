@@ -1,4 +1,4 @@
-import useExpDateFormatter from "@/_hooks/address/exp-date-formatter.hook";
+import useExpDateFormatter from "@/_hooks/address/use-exp-date-formatter.hook";
 import useUpdateCartConfigMutation from "@/_hooks/cart/use-update-cart-config-mutation.hook";
 import type { PaymentMethod } from "@/_lib/types";
 import { cn } from "@/_lib/utils";
