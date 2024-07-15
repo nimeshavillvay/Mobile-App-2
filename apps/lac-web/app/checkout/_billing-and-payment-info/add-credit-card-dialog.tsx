@@ -1,3 +1,4 @@
+import useExpDateFormatter from "@/_hooks/address/exp-date-formatter.hook";
 import useUpdateCartConfigMutation from "@/_hooks/cart/use-update-cart-config-mutation.hook";
 import type { PaymentMethod } from "@/_lib/types";
 import { cn } from "@/_lib/utils";
@@ -102,6 +103,7 @@ const AddCreditCardDialog = ({
     },
   });
 
+  const { date, formatDate } = useExpDateFormatter();
   const addCreditCardMutation = useAddCreditCardMutation();
   const updateCartConfigMutation = useUpdateCartConfigMutation();
 
@@ -285,7 +287,15 @@ const AddCreditCardDialog = ({
                 <FormItem>
                   <FormLabel>Expiration date</FormLabel>
                   <FormControl>
-                    <Input placeholder="MM / YY" {...field} />
+                    <Input
+                      placeholder="MM / YY"
+                      {...field}
+                      value={date}
+                      onChange={(event) => {
+                        const formatted = formatDate(event);
+                        field.onChange(formatted ?? "");
+                      }}
+                    />
                   </FormControl>
                   <FormDescription className="sr-only">
                     The expiration data of the card.
