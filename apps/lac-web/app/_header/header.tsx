@@ -21,7 +21,7 @@ const Header = async () => {
   return (
     <header className="flex flex-col gap-4 border-b border-b-wurth-gray-250 pb-5 shadow-[0px_1px_5px_0px_rgba(0,0,0,0.05),0px_1px_2px_-1px_rgba(0,0,0,0.05)] md:border-0 md:pb-0 print:hidden">
       <div className="bg-wurth-gray-50">
-        <div className="container flex flex-row items-center justify-between pb-3 pt-12 text-sm font-medium md:py-3">
+        <div className="container flex flex-row items-center justify-between pb-3 pt-5 text-sm font-medium md:py-3">
           <div className="flex items-center gap-5">
             <WillCallPlant />
 

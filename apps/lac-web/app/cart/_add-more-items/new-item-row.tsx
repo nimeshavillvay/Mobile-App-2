@@ -122,7 +122,7 @@ const NewItemRow = ({
         }}
       />
 
-      <div className="h-10 min-w-96">
+      <div className="flex-grow">
         <ProductSearchResult
           product={{
             isInvalid: lineItemFormData?.isInvalid,
@@ -135,10 +135,10 @@ const NewItemRow = ({
 
       <Button
         variant="ghost"
-        className="h-6 w-6 cursor-pointer px-1.5"
+        className="flex h-10 w-10 items-center justify-center"
         onClick={removeLineItem}
       >
-        <Close width={12} height={12} className="stroke-2 hover:stroke-black" />
+        <Close width={16} height={16} className="stroke-2 hover:stroke-black" />
       </Button>
     </div>
   );
