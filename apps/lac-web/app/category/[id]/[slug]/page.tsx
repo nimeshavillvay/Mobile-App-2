@@ -98,7 +98,7 @@ const CategoryPage = async ({ params: { id, slug } }: CategoryPageProps) => {
       </Breadcrumb>
 
       <section className="container md:my-10">
-        <div className="grid overflow-hidden rounded-lg border border-wurth-gray-250 bg-white shadow-lg md:max-h-[21rem] md:grid-cols-2">
+        <div className="grid overflow-hidden rounded-lg border border-wurth-gray-250 bg-white shadow-lg md:min-h-[21rem] md:grid-cols-2">
           <div className="relative aspect-2 md:hidden">
             {!!category.image && (
               <Image
@@ -111,20 +111,20 @@ const CategoryPage = async ({ params: { id, slug } }: CategoryPageProps) => {
             )}
           </div>
 
-          <div className="flex flex-col justify-center space-y-3 p-6 md:max-h-[21rem] md:flex-1 md:space-y-5 md:p-10">
+          <div className="flex flex-col justify-center space-y-3 p-6 md:min-h-[21rem] md:flex-1 md:space-y-5 md:p-10">
             <h1 className="line-clamp-3 text-balance font-title text-4xl font-medium tracking-tight text-wurth-gray-800 md:text-5xl md:leading-[3.5rem] md:tracking-[-0.036rem]">
               {category.title}
             </h1>
 
             {!!category.description && (
               <div
-                className="text-base text-wurth-gray-800 md:line-clamp-3 md:text-lg"
+                className="text-base text-wurth-gray-800 md:text-lg"
                 dangerouslySetInnerHTML={{ __html: category.description }}
               />
             )}
           </div>
 
-          <div className="relative hidden aspect-2 md:block md:max-h-[21rem] md:w-full">
+          <div className="relative hidden md:block md:min-h-[21rem] md:w-full">
             {!!category.image && (
               <Image
                 src={category.image}

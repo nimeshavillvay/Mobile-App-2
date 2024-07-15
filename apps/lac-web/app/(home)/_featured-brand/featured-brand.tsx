@@ -1,6 +1,12 @@
 import ProductCard from "@/_components/product-card";
 import ProductCardSkeleton from "@/_components/product-card-skeleton";
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
+import {
+  ScrollableContainer,
+  ScrollableNextButton,
+  ScrollablePreviousButton,
+  ScrollableRoot,
+} from "@repo/web-ui/components/scrollable";
 import { cookies } from "next/headers";
 import Image from "next/image";
 import { Suspense, type CSSProperties } from "react";
@@ -84,15 +90,21 @@ const FeaturedBrand = async () => {
         </div>
       </div>
 
-      <div className="container flex snap-x scroll-pl-4 flex-row gap-4 overflow-x-auto md:scroll-pl-8 md:gap-6">
-        <Suspense
-          fallback={Array.from({ length: 7 }).map((_, index) => (
-            <ProductCardSkeleton key={index} />
-          ))}
-        >
-          <FeaturedBrandList />
-        </Suspense>
-      </div>
+      <ScrollableRoot className="container">
+        <ScrollablePreviousButton />
+
+        <ScrollableContainer className="snap-x scroll-pl-4 items-stretch gap-4 md:scroll-pl-8 md:gap-6">
+          <Suspense
+            fallback={Array.from({ length: 7 }).map((_, index) => (
+              <ProductCardSkeleton key={index} />
+            ))}
+          >
+            <FeaturedBrandList />
+          </Suspense>
+        </ScrollableContainer>
+
+        <ScrollableNextButton />
+      </ScrollableRoot>
     </section>
   );
 };

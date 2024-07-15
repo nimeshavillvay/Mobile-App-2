@@ -4,11 +4,14 @@ import { api } from "@/_lib/api";
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import { useToast } from "@repo/web-ui/components/ui/toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { usePathname, useRouter } from "next/navigation";
 
 const useSignInMutation = () => {
   const [cookies] = useCookies();
   const queryClient = useQueryClient();
   const { toast } = useToast();
+  const router = useRouter();
+  const pathname = usePathname();
 
   return useMutation({
     mutationFn: async ({
@@ -39,11 +42,9 @@ const useSignInMutation = () => {
             change_password?: boolean;
             is_sales_rep?: boolean;
           };
-          change_password?: boolean;
         }>();
 
-      const { status_code, user_id, authentication, change_password } =
-        response;
+      const { status_code, user_id, authentication } = response;
 
       const authorities = authentication?.authorities;
       const authority = authorities?.[0]?.authority;
@@ -56,10 +57,9 @@ const useSignInMutation = () => {
             authority: authority,
           },
           name: authentication?.name,
-          isPasswordChanged: authentication?.change_password,
+          changePassword: authentication?.change_password,
           isSalesRep: authentication?.is_sales_rep,
         },
-        isPasswordChanged: change_password,
       };
 
       return transformData;
@@ -70,6 +70,12 @@ const useSignInMutation = () => {
       });
       queryClient.invalidateQueries();
 
+      if (
+        data.authentication.changePassword &&
+        !pathname.startsWith("/password-reset")
+      ) {
+        return router.push(`/password-reset?user=${data.userId}`);
+      }
       if (data.authentication.isSalesRep) {
         return revalidateSiteLayout("/osr/dashboard");
       }

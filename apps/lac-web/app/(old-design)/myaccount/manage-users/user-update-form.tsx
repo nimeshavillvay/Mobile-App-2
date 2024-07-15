@@ -1,4 +1,5 @@
-import type { Status } from "@/_lib/types";
+import useUpdateProfileMutation from "@/_hooks/user/use-update-profile-mutation.hook";
+import type { Status, UpdateUser } from "@/_lib/types";
 import { Button } from "@/old/_components/ui/button";
 import {
   Form,
@@ -24,8 +25,7 @@ import type { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { USER_PERMISSIONS, USER_STATUSES } from "./constants";
-import type { ForgetPasswordResponse, UpdateUser, UserProfile } from "./types";
-import useUpdateProfileMutation from "./use-update-profile-mutation.hook";
+import type { ForgetPasswordResponse, UserProfile } from "./types";
 
 const PASSWORD_RESET_INACTIVE_MSG =
   "This User is currently flagged as deactive in the system. please contact web support at websupport@wurthlac.com, or call 800-422-4389 x1014.";

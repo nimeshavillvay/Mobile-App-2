@@ -672,20 +672,22 @@ const CartItemShippingMethod = ({
                           disabled={selectedShipToMe !== ALTERNATIVE_BRANCHES}
                         >
                           <CollapsibleTrigger
-                            className="group flex h-7 w-full flex-row items-center justify-start"
+                            className="group flex h-7 flex-row items-center justify-start"
                             asChild
                           >
                             <Button
                               type="button"
                               variant="subtle"
-                              className="gap-2 px-2"
+                              className="h-full gap-2 px-2"
                             >
                               <ChevronDown
                                 width={16}
                                 height={16}
                                 className="transition duration-150 ease-out group-data-[state=open]:rotate-180"
                               />
-                              <span>Show breakdown by branch</span>
+                              <span className="text-balance text-left">
+                                Show breakdown by branch
+                              </span>
                             </Button>
                           </CollapsibleTrigger>
 
@@ -821,17 +823,18 @@ const CartItemShippingMethod = ({
                         />
 
                         <div className="flex flex-col gap-0.5">
-                          <div className="flex items-center text-sm">
+                          <div className="text-wrap font-medium">
                             <ItemCountBadge
                               count={willCallAnywhere[0].willCallQuantity}
                             />
                             &nbsp;
-                            <span className="font-medium">pick up at</span>
-                            &nbsp;
-                            <PlantName
-                              plants={plants}
-                              plantCode={willCallAnywhere[0].willCallPlant}
-                            />
+                            <span className="font-medium">
+                              pick up at &nbsp;
+                              <PlantName
+                                plants={plants}
+                                plantCode={willCallAnywhere[0].willCallPlant}
+                              />
+                            </span>
                           </div>
                         </div>
                       </div>
@@ -876,12 +879,13 @@ const CartItemShippingMethod = ({
                             count={willCallAnywhere[0].willCallQuantity}
                           />
                           &nbsp;
-                          <span className="font-medium">pick up at</span>
-                          &nbsp;
-                          <PlantName
-                            plants={plants}
-                            plantCode={willCallAnywhere[0].willCallPlant}
-                          />
+                          <span className="font-medium">
+                            pick up at &nbsp;
+                            <PlantName
+                              plants={plants}
+                              plantCode={willCallAnywhere[0].willCallPlant}
+                            />
+                          </span>
                         </div>
 
                         {willCallAnywhere[0]?.backOrder && (
@@ -986,6 +990,7 @@ const CartItemShippingMethod = ({
                     }
                   >
                     <NotAvailableInfoBanner
+                      willCallType={MAIN_OPTIONS.WILL_CALL}
                       plants={plants}
                       willCallPlant={willCallAnywhere[0].willCallPlant ?? ""}
                     />

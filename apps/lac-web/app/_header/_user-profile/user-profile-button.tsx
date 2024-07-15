@@ -50,6 +50,10 @@ const UserProfileButton = ({
   }
 
   if (type === "mobile") {
+    if (loginCheckData.change_password) {
+      return null;
+    }
+
     return (
       <UserMobileNavigation token={token} shippingMethods={shippingMethods} />
     );
@@ -102,6 +106,7 @@ const UserProfileDropdown = ({
 
   const logoutMutation = useLogoutMutation();
   const osrLogoutMutation = useOSRLogoutMutation();
+  const checkLoginQuery = useSuspenseCheckLogin(token);
 
   const [openShippingDialog, setOpenShippingDialog] = useState(false);
   const displayName = userProfile.firstName
@@ -109,6 +114,14 @@ const UserProfileDropdown = ({
     : userProfile.lastName
       ? userProfile.lastName
       : "User";
+
+  if (checkLoginQuery.data.change_password) {
+    return (
+      <span className="sr-only min-w-0 shrink md:not-sr-only md:min-w-0 md:shrink md:truncate md:text-base md:font-semibold">
+        Hi, {userProfile.firstName !== "" ? userProfile.firstName : "User"}
+      </span>
+    );
+  }
 
   return (
     <>
