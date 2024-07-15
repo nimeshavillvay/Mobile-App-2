@@ -206,10 +206,10 @@ const CurrentUserFlow = ({ passwordPolicies }: CurrentUserFlowProps) => {
                     placeholder="XXXXXXXX"
                     form={formId}
                     {...field}
-                    className={
-                      form?.formState?.errors?.soldToAccount?.message &&
-                      "border-red-500"
-                    }
+                    className={cn(
+                      !!form?.formState?.errors?.soldToAccount?.message &&
+                        "border-red-500",
+                    )}
                   />
                 </FormControl>
                 <FormDescription>
@@ -234,10 +234,10 @@ const CurrentUserFlow = ({ passwordPolicies }: CurrentUserFlowProps) => {
                     placeholder="XXXXXXXX"
                     form={formId}
                     {...field}
-                    className={
-                      form?.formState?.errors?.invoiceNo?.message &&
-                      "border-red-500"
-                    }
+                    className={cn(
+                      !!form?.formState?.errors?.invoiceNo?.message &&
+                        "border-red-500",
+                    )}
                   />
                 </FormControl>
                 <FormDescription>
