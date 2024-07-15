@@ -3,7 +3,6 @@ import { useCheckRecaptcha } from "@/_context/recaptcha-ref";
 import usePhoneNumberFormatter from "@/_hooks/address/use-phone-number-formatter.hook";
 import useZipCodeFormatter from "@/_hooks/address/use-zip-code.hook";
 import useCounties from "@/_hooks/registration/use-counties.hook";
-import useCountries from "@/_hooks/registration/use-countries.hook";
 import useStates from "@/_hooks/registration/use-states.hook";
 import type { PasswordPolicies } from "@/_lib/types";
 import { NUMBER_TYPE, PHONE_NUMBER_VALIDATION } from "@/_lib/zod-helper";
@@ -50,7 +49,7 @@ import {
   StepContainerClosed,
   StepContainerOpen,
 } from "./step-container";
-import type { Industry } from "./types";
+import type { Country, Industry } from "./types";
 import type { ResponseAddress } from "./use-register-new-user-mutation.hook";
 import useRegisterNewUserMutation, {
   isVerifyAddressResponse,
@@ -147,9 +146,14 @@ type AddressSchema = z.infer<typeof addressSchema>;
 type NewUserFlowProps = {
   readonly passwordPolicies: PasswordPolicies;
   readonly industries: Industry[];
+  readonly countries: Country[];
 };
 
-const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
+const NewUserFlow = ({
+  passwordPolicies,
+  industries,
+  countries,
+}: NewUserFlowProps) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const email = searchParams.get("email");
@@ -178,7 +182,7 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
   const [formValues, setFormValues] = useState<AddressSchema>({
     billingAddress: "",
     billingCity: "",
-    billingCountry: "",
+    billingCountry: countries[0]?.code ?? "",
     billingState: "",
     billingCounty: "",
     billingPostCode: "",
@@ -186,7 +190,7 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
     same: true,
     shippingAddress: "",
     shippingCity: "",
-    shippingCountry: "",
+    shippingCountry: countries[0]?.code ?? "",
     shippingState: "",
     shippingCounty: "",
     shippingPostCode: "",
@@ -278,7 +282,6 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
   const shippingCountry = addressForm.watch("shippingCountry");
   const shippingState = addressForm.watch("shippingState");
 
-  const countriesQuery = useCountries();
   const billingStateQuery = useStates(billingCountry);
   const billingCountyQuery = useCounties(billingState);
   const shippingStateQuery = useStates(shippingCountry);
@@ -846,7 +849,7 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
                       <FormLabel>Country</FormLabel>
                       <Select
                         onValueChange={field.onChange}
-                        defaultValue={field.value}
+                        value={field.value}
                         disabled={registerNewUserMutation.isPending}
                       >
                         <FormControl>
@@ -855,7 +858,7 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {countriesQuery.data?.map((country) => (
+                          {countries?.map((country) => (
                             <SelectItem key={country.code} value={country.code}>
                               {country.country}
                             </SelectItem>
@@ -990,7 +993,7 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
               </div>
 
               <div className="space-y-5 pt-2">
-                <h3 className="text-base text-wurth-gray-800">
+                <h3 className="text-base font-semibold text-wurth-gray-800">
                   Shipping address
                 </h3>
 
@@ -1082,7 +1085,7 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            {countriesQuery.data?.map((country) => (
+                            {countries.map((country) => (
                               <SelectItem
                                 key={country.code}
                                 value={country.code}
@@ -1108,7 +1111,7 @@ const NewUserFlow = ({ passwordPolicies, industries }: NewUserFlowProps) => {
                         <FormLabel>State</FormLabel>
                         <Select
                           onValueChange={field.onChange}
-                          defaultValue={field.value}
+                          value={field.value}
                           disabled={
                             !shippingCountry ||
                             registerNewUserMutation.isPending
