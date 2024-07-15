@@ -18,13 +18,12 @@ const SalesRepresentative = ({ token }: SalesRepresentativeProps) => {
     token,
     apiKey: API_KEY,
   });
+  const salesRep = accountListQuery.data.sales_rep;
 
-  if (Array.isArray(accountListQuery.data.sales_rep)) {
+  if (Array.isArray(salesRep) || !("fullname" in salesRep)) {
     // If there is not sales rep, the field is an empty array
     return null;
   }
-
-  const salesRep = accountListQuery.data.sales_rep;
 
   return (
     <div className="space-y-6 rounded-lg border p-6 font-body text-wurth-gray-800 shadow-md">

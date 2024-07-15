@@ -7,6 +7,7 @@ import { GiRadioactive } from "react-icons/gi";
 import { html, transform } from "ultrahtml";
 import swap from "ultrahtml/transformers/swap";
 import { getProduct } from "../apis";
+import DeliveryInstruction from "./delivery-instruction";
 import ProductDownloads from "./product-downloads";
 
 export const ProductNumbers = ({
@@ -82,9 +83,13 @@ export const SpecialShippingNotice = ({
       <div className="flex flex-row gap-2 rounded-lg bg-wurth-gray-50 p-4">
         <FiPackage className="mt-1 shrink-0 text-base leading-none" />
 
-        <p className="flex-1 text-sm leading-6 text-wurth-gray-500">
-          This item may incur additional shipping costs and lead times.
-        </p>
+        <div className="flex-1 space-y-1">
+          <p className="text-sm leading-6 text-wurth-gray-500">
+            This item may incur additional shipping costs and lead times.
+          </p>
+
+          <DeliveryInstruction />
+        </div>
       </div>
     </section>
   );

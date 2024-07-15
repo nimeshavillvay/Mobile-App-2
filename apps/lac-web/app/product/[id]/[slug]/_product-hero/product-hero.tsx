@@ -118,12 +118,12 @@ const ProductHero = async ({ id, slug }: ProductHeroProps) => {
 
           {product.selectedProduct.isHazardous && <HazardousMaterialNotice />}
 
-          {!!product.selectedProduct.specialShipping && (
-            <SpecialShippingNotice />
-          )}
-
           {product.selectedProduct.isDirectlyShippedFromVendor && (
             <DropShipItemNotice />
+          )}
+
+          {!!product.selectedProduct.specialShipping && (
+            <SpecialShippingNotice />
           )}
         </div>
 
@@ -205,12 +205,12 @@ const ProductHero = async ({ id, slug }: ProductHeroProps) => {
           <HazardousMaterialNotice className="container my-6 md:hidden" />
         )}
 
-        {!!product.selectedProduct.specialShipping && (
-          <SpecialShippingNotice className="container my-6 md:hidden" />
-        )}
-
         {product.selectedProduct.isDirectlyShippedFromVendor && (
           <DropShipItemNotice className="container my-6 md:hidden" />
+        )}
+
+        {!!product.selectedProduct.specialShipping && (
+          <SpecialShippingNotice className="container my-6 md:hidden" />
         )}
 
         <ProductDetails

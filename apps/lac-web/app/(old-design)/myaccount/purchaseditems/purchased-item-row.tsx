@@ -121,7 +121,7 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
   const itemInfo = itemInfoQuery.data?.[0];
 
   return (
-    <FormProvider {...methods}>
+    <>
       <TableRow
         key={`${index}_0`}
         className={cn(
@@ -248,52 +248,54 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
         </TableCell>
 
         <TableCell className="flex flex-col gap-0.5 pb-0 text-sm text-brand-gray-500">
-          <Label htmlFor={quantityId} className="sr-only">
-            Quantity
-          </Label>
-          <Input
-            id={quantityId}
-            form={formId}
-            type="number"
-            className={cn(
-              "h-6 w-16 px-1 text-right text-base leading-4",
-              !!methods.formState.errors.quantity?.message &&
-                "border-wurth-red-650",
-            )}
-            disabled={addToCartMutation.isPending || isItemError(item)}
-            {...methods.register("quantity", {
-              valueAsNumber: true,
-            })}
-          />
-          {!!methods.formState.errors.quantity?.message && (
-            <div className="text-wurth-red-650">
-              {methods.formState.errors.quantity?.message}
-            </div>
-          )}
-          {!isItemError(item) && (
-            <>
-              <div className="text-nowrap">
-                <span className="font-bold text-black">Min: </span>
-                {item.minimumOrderQuantity}
-              </div>
+          <FormProvider {...methods}>
+            <form id={formId} onSubmit={onSubmit}>
+              <Label htmlFor={quantityId} className="sr-only">
+                Quantity
+              </Label>
+              <Input
+                id={quantityId}
+                type="number"
+                className={cn(
+                  "h-6 w-16 px-1 text-right text-base leading-4",
+                  !!methods.formState.errors.quantity?.message &&
+                    "border-wurth-red-650",
+                )}
+                disabled={addToCartMutation.isPending || isItemError(item)}
+                {...methods.register("quantity", {
+                  valueAsNumber: true,
+                })}
+              />
+              {!!methods.formState.errors.quantity?.message && (
+                <div className="text-wurth-red-650">
+                  {methods.formState.errors.quantity?.message}
+                </div>
+              )}
+              {!isItemError(item) && (
+                <>
+                  <div className="text-nowrap">
+                    <span className="font-bold text-black">Min: </span>
+                    {item.minimumOrderQuantity}
+                  </div>
 
-              <div className="text-nowrap">
-                <span className="font-bold text-black">Multiples: </span>
-                {item.quantityByIncrements}
-              </div>
-            </>
-          )}
+                  <div className="text-nowrap">
+                    <span className="font-bold text-black">Multiples: </span>
+                    {item.quantityByIncrements}
+                  </div>
+                </>
+              )}
+
+              {isItemError(item) && <ErrorAlert item={item} />}
+            </form>
+          </FormProvider>
 
           {isEligible(item) && (
-            <form
-              id={formId}
-              onSubmit={onSubmit}
-              className="flex flex-row items-end justify-end gap-2"
-            >
+            <div className="flex flex-row items-end justify-end gap-2">
               <Button
                 type="submit"
                 className="w-[170px]"
                 disabled={!isValidQuantity || addToCartMutation.isPending}
+                form={formId}
               >
                 Add to cart
               </Button>
@@ -301,7 +303,7 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
               <Suspense fallback={<Skeleton className="h-9 w-14" />}>
                 <FavoriteButton productId={item.productId} token={token} />
               </Suspense>
-            </form>
+            </div>
           )}
 
           {isItemError(item) && <ErrorAlert item={item} />}
@@ -394,7 +396,7 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
 
         <TableCell colSpan={4} />
       </TableRow>
-    </FormProvider>
+    </>
   );
 };
 

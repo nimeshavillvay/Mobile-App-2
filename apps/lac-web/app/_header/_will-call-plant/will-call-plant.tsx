@@ -26,6 +26,18 @@ type WillCallPlantProps = {
 const WillCallPlantDrawer = ({ token }: WillCallPlantProps) => {
   const willCallPlantQuery = useSuspenseWillCallPlant(token);
   const { plantName, address, operationHours } = willCallPlantQuery.data;
+  const checkLoginQuery = useSuspenseCheckLogin(token);
+
+  if (checkLoginQuery.data.change_password) {
+    return (
+      <>
+        <Shop width={16} height={16} />
+        <span className="flex h-fit flex-row items-center gap-2 p-0 text-black">
+          {plantName ?? DEFAULT_PLANT.name}
+        </span>
+      </>
+    );
+  }
 
   return (
     <Drawer>

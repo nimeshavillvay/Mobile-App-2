@@ -121,6 +121,7 @@ export type CartItemConfiguration = {
   backorder_date: string;
   backorder_quantity: string;
   will_call_shipping: string;
+  will_call_not_in_stock: string;
 };
 
 export type CartConfiguration = {
@@ -455,4 +456,15 @@ export type ItemPrice = {
 export type ItemsPriceResult = {
   error: true | null;
   productPrices: ItemPrice[];
+};
+
+export type UpdateUser = {
+  userId: number;
+  firstName?: string;
+  lastName?: string;
+  jobTitle?: string;
+  email?: string;
+  password?: string;
+  permission?: string;
+  status?: string;
 };

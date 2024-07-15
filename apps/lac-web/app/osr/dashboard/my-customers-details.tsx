@@ -24,6 +24,7 @@ import {
   columnCartSubtotal,
   columnEmailAndPhone,
   columnNameAndCompany,
+  columnPermission,
   columnPrimaryRep,
   columnStreetAddress,
   columnTotalOrders,
@@ -75,6 +76,8 @@ const MyCustomerDetails = ({
         return customer.company;
       case columnStreetAddress:
         return `${customer.streetAddress} ${customer.locality}  ${customer.postalCode} ${customer.region}`;
+      case columnPermission:
+        return customer.permission;
       case columnPrimaryRep:
         return customer.salesRep;
       case columnTotalOrders:

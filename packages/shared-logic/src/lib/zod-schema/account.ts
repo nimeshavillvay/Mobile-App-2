@@ -51,5 +51,6 @@ export const accountListSchema = z.object({
       email: z.string(),
     }),
     z.array(z.unknown()).length(0),
+    z.object({}),
   ]),
 });

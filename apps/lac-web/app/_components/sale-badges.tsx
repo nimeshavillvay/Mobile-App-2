@@ -24,8 +24,8 @@ const SaleBadges = ({ onSale, isNewItem }: SaleBadgesProps) => {
 
       {onSale && (
         <div className="flex flex-row items-center gap-1 rounded bg-sky-50 px-2 py-1.5 text-sm font-semibold leading-4 text-wurth-blue-450">
-          <Zap className="hidden size-4 stroke-wurth-blue-450 md:block" />
-          <span>Flash Deal</span>
+          <Zap className="size-4 stroke-wurth-blue-450" />
+          <span className="hidden @[12rem]/labels:block">Flash Deal</span>
         </div>
       )}
     </div>
