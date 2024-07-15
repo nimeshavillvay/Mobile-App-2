@@ -2,11 +2,11 @@
 
 import { useScrollable } from "@storefront-ui/react";
 import {
+  createContext,
+  useContext,
   type ComponentProps,
   type ComponentPropsWithoutRef,
-  createContext,
   type LegacyRef,
-  useContext,
 } from "react";
 import { cn } from "~/lib/utils";
 import { ArrowLeft } from "../icons/arrow-left";
