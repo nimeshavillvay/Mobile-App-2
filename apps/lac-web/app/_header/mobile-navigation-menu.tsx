@@ -179,7 +179,6 @@ const SubCategorySheet = ({ category, onCloseMain }: SubCategorySheetProps) => {
               >
                 <Link href={`/category/${subcategory.id}/${subcategory.slug}`}>
                   <span>{subcategory.name}</span>
-                  <ChevronRight className="size-5" />
                 </Link>
               </SheetClose>
             </li>
