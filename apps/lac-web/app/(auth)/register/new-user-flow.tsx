@@ -289,6 +289,15 @@ const NewUserFlow = ({
 
   const registerNewUserMutation = useRegisterNewUserMutation();
 
+  const scrollToTopOfPage = () => {
+    // The timeout is there because Apple can't be bothered to fix
+    // their dumpster fire of a browser called Safari.
+    // https://stackoverflow.com/a/75763546
+    setTimeout(() => {
+      window.scrollTo({ top: 500, behavior: "smooth" });
+    }, 100);
+  };
+
   const registerUser = async (
     values: AddressSchema,
     skipAddressCheck?: boolean,
@@ -362,12 +371,20 @@ const NewUserFlow = ({
               });
             }
 
+            let scrollToTop = false;
+
             if (Array.isArray(data.suggestions["billing-address"])) {
               setBillingSuggestions(data.suggestions["billing-address"]);
+              scrollToTop = true;
             }
 
             if (Array.isArray(data.suggestions["shipping-address"])) {
               setShippingSuggestions(data.suggestions["shipping-address"]);
+              scrollToTop = true;
+            }
+
+            if (scrollToTop) {
+              scrollToTopOfPage();
             }
           } else {
             setOpenVerificationDialog(true);
@@ -399,8 +416,8 @@ const NewUserFlow = ({
     // Clear all suggestions
     setBillingSuggestions([]);
     setShippingSuggestions([]);
-    // Scroll to the address form of the page
-    window.scrollTo({ top: 500, behavior: "smooth" });
+
+    scrollToTopOfPage();
   };
 
   const updateAddress: ComponentProps<
