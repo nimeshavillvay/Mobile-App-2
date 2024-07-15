@@ -1,4 +1,5 @@
-import type { PasswordPolicies } from "@/_lib/types";
+import useUpdateProfileMutation from "@/_hooks/user/use-update-profile-mutation.hook";
+import type { PasswordPolicies, UpdateUser } from "@/_lib/types";
 import { checkPasswordComplexity } from "@/_lib/utils";
 import { Button } from "@/old/_components/ui/button";
 import {
@@ -23,8 +24,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { USER_PERMISSIONS, USER_STATUSES } from "./constants";
-import type { UpdateUser, UserProfile } from "./types";
-import useUpdateProfileMutation from "./use-update-profile-mutation.hook";
+import type { UserProfile } from "./types";
 
 const updateProfileSchema = z
   .object({

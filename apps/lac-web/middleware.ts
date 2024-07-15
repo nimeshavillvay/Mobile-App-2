@@ -50,6 +50,19 @@ export const middleware = async (request: NextRequest) => {
     loginCheck(sessionToken?.value),
   ]);
 
+  const isForcePasswordReset = loginCheckResponse.change_password;
+  if (
+    isForcePasswordReset &&
+    !request.nextUrl.pathname.startsWith("/password-reset")
+  ) {
+    return NextResponse.redirect(
+      new URL(
+        `/password-reset?user=${loginCheckResponse.user.user_id}`,
+        request.url,
+      ),
+    );
+  }
+
   // Refresh the token only if it's close to expiring.
   // We shouldn't refresh it on every page navigation, because it makes the TanStack
   // Query cache useless.
@@ -64,6 +77,7 @@ export const middleware = async (request: NextRequest) => {
     request.nextUrl.pathname.startsWith(route),
   );
   if (
+    !isForcePasswordReset &&
     isPublicRoute &&
     sessionToken &&
     loginCheckResponse.status_code === "OK"
@@ -82,7 +96,7 @@ export const middleware = async (request: NextRequest) => {
   const isPrivateRoute = !!PRIVATE_ROUTES.find((route) =>
     request.nextUrl.pathname.startsWith(route),
   );
-  if (isPrivateRoute && sessionToken) {
+  if (!isForcePasswordReset && isPrivateRoute && sessionToken) {
     if (loginCheckResponse.status_code === "NOT_LOGGED_IN") {
       // Redirect to sign in page if user is not logged in
       const response = NextResponse.redirect(new URL("/sign-in", request.url));

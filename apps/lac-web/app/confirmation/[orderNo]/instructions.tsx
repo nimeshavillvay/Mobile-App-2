@@ -2,14 +2,16 @@ import { cn } from "@/_lib/utils";
 
 type InstructionsProps = {
   readonly type: "desktop" | "mobile";
+  readonly className?: string;
 };
 
-const Instructions = ({ type }: InstructionsProps) => {
+const Instructions = ({ type, className }: InstructionsProps) => {
   return (
     <section
       className={cn(
         "grid gap-5 text-sm text-wurth-gray-800 print:hidden",
         type === "mobile" ? "grid-cols-1" : "grid-cols-2",
+        className,
       )}
     >
       <h2
