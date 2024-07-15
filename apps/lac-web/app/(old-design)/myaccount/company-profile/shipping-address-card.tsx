@@ -45,7 +45,7 @@ const ShippingAddressCard = ({
           <p className="text-sm font-medium md:text-base">
             {shippingAddress?.streetAddress}, {shippingAddress?.locality},{" "}
             {shippingAddress?.region},{" "}
-            {shippingAddress?.county?.length ?? 0 > 0
+            {(shippingAddress?.county?.length ?? 0) > 0
               ? shippingAddress?.county + ", "
               : ""}
             {shippingAddress?.postalCode}

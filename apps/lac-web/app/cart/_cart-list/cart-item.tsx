@@ -512,7 +512,7 @@ const CartItem = ({
                 }),
                 will_call_avail: (willCallAnywhere[0]?.status === NOT_IN_STOCK
                   ? 0
-                  : willCallAnywhere[0]?.willCallQuantity ?? 0
+                  : (willCallAnywhere[0]?.willCallQuantity ?? 0)
                 ).toString(),
                 will_call_plant:
                   willCallAnywhere[0]?.willCallPlant ?? EMPTY_STRING,

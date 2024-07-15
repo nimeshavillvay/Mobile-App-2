@@ -45,7 +45,9 @@ const ItemPrices = ({
   const priceUnit = prices?.uomPriceUnit ?? prices?.priceUnit ?? "";
   const priceBreakDownArray = prices?.priceBreakDowns;
 
-  const displayPrice = prices?.uomPrice ? prices?.uomPrice : prices?.price ?? 0;
+  const displayPrice = prices?.uomPrice
+    ? prices?.uomPrice
+    : (prices?.price ?? 0);
 
   if (unitPriceOnly && prices) {
     return (

@@ -187,7 +187,7 @@ const AddressSuggestionDialog = ({
               <div className="font-bold text-brand-gray-500">
                 {addressSuggestion?.streetAddress},{" "}
                 {addressSuggestion?.locality}, {addressSuggestion?.region},{" "}
-                {addressSuggestion?.county?.length ?? 0 > 0
+                {(addressSuggestion?.county?.length ?? 0) > 0
                   ? addressSuggestion?.county + ","
                   : ""}
                 {addressSuggestion?.countryName},{" "}

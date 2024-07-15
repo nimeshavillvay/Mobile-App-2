@@ -39,7 +39,7 @@ const BillingAddress = ({ token }: { readonly token: string }) => {
           <p className="my-auto flex-auto text-sm font-medium md:text-base">
             {billingAddress?.streetAddress}, {billingAddress?.locality},{" "}
             {billingAddress?.region},{" "}
-            {billingAddress?.county?.length ?? 0 > 0
+            {(billingAddress?.county?.length ?? 0) > 0
               ? billingAddress?.county + ","
               : ""}
             {billingAddress?.countryName}, {billingAddress?.postalCode}

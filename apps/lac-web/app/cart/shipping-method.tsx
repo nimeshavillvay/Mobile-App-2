@@ -272,7 +272,7 @@ const ShippingMethod = ({ token, options }: ShippingMethodProps) => {
                 const shippingMethodValue =
                   selectedPlant.plant !== willCallPlant?.plantCode
                     ? DEFAULT_SHIPPING_METHOD
-                    : newValue ?? "";
+                    : (newValue ?? "");
 
                 // Set values for the selected plant
                 setConfigValues(

@@ -336,7 +336,7 @@ const CartItemShippingMethod = ({
         }),
         will_call_avail: (item?.status === NOT_IN_STOCK
           ? 0
-          : item?.willCallQuantity ?? 0
+          : (item?.willCallQuantity ?? 0)
         ).toString(),
         will_call_plant: item?.willCallPlant ?? EMPTY_STRING,
         will_call_not_in_stock:
@@ -719,12 +719,12 @@ const CartItemShippingMethod = ({
                                           via&nbsp;
                                           {plant.plant ===
                                           willCallPlant.plantCode
-                                            ? shippingMethods?.find(
+                                            ? (shippingMethods?.find(
                                                 (option) =>
                                                   option.code ===
                                                   selectedShippingMethod,
                                               )?.name ??
-                                              defaultShippingMethod?.name
+                                              defaultShippingMethod?.name)
                                             : "Ground"}
                                         </div>
                                       </TableCell>
