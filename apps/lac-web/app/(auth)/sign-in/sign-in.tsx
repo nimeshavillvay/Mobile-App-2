@@ -135,8 +135,8 @@ const SignIn = () => {
     });
   });
 
-  const handleOpenDialog = () => {
-    if (open) {
+  const handleOpenDialog = (isOpen: boolean) => {
+    if (isOpen) {
       setOpen(false);
     }
   };
