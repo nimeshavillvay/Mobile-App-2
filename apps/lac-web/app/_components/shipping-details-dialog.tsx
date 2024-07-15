@@ -40,7 +40,10 @@ const ShippingDetailsDialog = ({
 }: ShippingDetailsDialogProps) => {
   const checkLoginQuery = useSuspenseCheckLogin(token);
 
-  if (checkLoginQuery?.data?.status_code === "NOT_LOGGED_IN") {
+  if (
+    checkLoginQuery?.data?.status_code === "NOT_LOGGED_IN" ||
+    checkLoginQuery.data.change_password
+  ) {
     return null;
   }
 
@@ -58,6 +61,7 @@ const ShippingDetailsDialogButton = ({
 }: ShippingDetailsDialogProps) => {
   const shippingAddressListQuery = useSuspenseShippingAddressList(token);
   const billingAddressQuery = useSuspenseBillingAddress(token);
+  const checkLoginQuery = useSuspenseCheckLogin(token);
 
   const defaultAddress = shippingAddressListQuery.data.find(
     (address) => address.default,
@@ -74,6 +78,19 @@ const ShippingDetailsDialogButton = ({
   // if needed
   const open = externalOpen ?? internalOpen;
   const setOpen = externalSetOpen ?? setInternalOpen;
+
+  if (checkLoginQuery.data.change_password) {
+    return (
+      <>
+        <Truck width={16} height={16} />
+
+        <span className="h-fit px-0 py-0 text-sm font-medium leading-5">
+          #{defaultAddress?.postalCode}
+        </span>
+      </>
+    );
+  }
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
