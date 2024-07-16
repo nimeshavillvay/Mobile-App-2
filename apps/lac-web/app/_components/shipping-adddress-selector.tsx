@@ -18,6 +18,7 @@ import {
   DialogTrigger,
 } from "@repo/web-ui/components/ui/dialog";
 import { useToast } from "@repo/web-ui/components/ui/toast";
+import { useQueryClient } from "@tanstack/react-query";
 import { useState, type ReactNode } from "react";
 import AddShippingAddressDialog from "./add-shipping-address-dialog";
 
@@ -32,6 +33,8 @@ const ShippingAddressSelector = ({
 }: ShippingAddressSelectorProps) => {
   const shippingAddressListQuery = useSuspenseShippingAddressList(token);
   const { toast } = useToast();
+
+  const queryClient = useQueryClient();
 
   const defaultAddress = shippingAddressListQuery.data.find(
     (address) => address.default,
@@ -59,6 +62,9 @@ const ShippingAddressSelector = ({
         },
         {
           onSuccess: () => {
+            queryClient.invalidateQueries({
+              queryKey: ["cart", "shipping-methods"],
+            });
             shippingAddressListQuery.refetch();
             setOpen(false);
             toast({

@@ -388,9 +388,9 @@ const AddMoreItemsForm = ({ token }: { readonly token: string }) => {
         Add more items to your cart
       </div>
 
-      <div className="mb-5 mt-4 flex flex-col gap-4 rounded-lg border p-5 shadow-md">
+      <div className="mb-5 mt-4 rounded-lg border p-5 shadow-md">
         {fields.map((field, index) => (
-          <div key={field.id} className="w-full">
+          <div key={field.id}>
             <NewItemRow
               index={index}
               id={id}
