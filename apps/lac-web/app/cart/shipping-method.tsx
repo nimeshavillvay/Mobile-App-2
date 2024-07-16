@@ -51,11 +51,13 @@ const ShippingMethod = ({ token }: ShippingMethodProps) => {
   const shipToMeId = `${SHIP_TO_ME}-${id}`;
   const willCallId = `${WILL_CALL}-${id}`;
 
-  const isForCart = useSuspenseCheckLogin(token).data.status_code === "OK";
+  const checkLoginQuery = useSuspenseCheckLogin(token);
 
-  const options = useSuspenseShippingMethods(token, isForCart);
+  const isForCart = checkLoginQuery.data.status_code === "OK";
 
-  const shippingMethods = options?.data.filter(
+  const shippingMethodsQuery = useSuspenseShippingMethods(token, isForCart);
+
+  const shippingMethods = shippingMethodsQuery?.data.filter(
     (method) => !EXCLUDED_SHIPPING_METHODS.includes(method.code),
   );
 

@@ -207,22 +207,17 @@ const SignIn = () => {
           </form>
           <div className="text-center font-normal">
             Don&apos;t Have an Account?
-            <Button
-              className="text-sm font-normal hover:bg-transparent hover:underline"
-              variant="ghost"
+            <Link
+              href={"/sign-up"}
+              className={cn(
+                buttonVariants({
+                  variant: "link",
+                }),
+                "mx-auto inline-block h-fit p-0 px-4 py-2 text-center text-sm font-normal",
+              )}
             >
-              <Link
-                href={"/sign-up"}
-                className={cn(
-                  buttonVariants({
-                    variant: "link",
-                  }),
-                  "mx-auto inline-block h-fit p-0 text-center text-sm font-normal",
-                )}
-              >
-                Sign up
-              </Link>
-            </Button>
+              Sign up
+            </Link>
           </div>
         </div>
       </div>
