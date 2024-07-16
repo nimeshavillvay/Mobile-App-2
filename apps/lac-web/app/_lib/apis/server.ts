@@ -1,3 +1,4 @@
+import { unstable_cache as cache } from "next/cache";
 import { notFound } from "next/navigation";
 import "server-only";
 import { api } from "../api";
@@ -6,9 +7,9 @@ import type {
   PasswordPolicies,
   PaymentMethod,
   Plant,
-  ShippingMethod,
   TransformedCategory,
 } from "../types";
+import { shippingMethods } from "./shared";
 
 export const getBreadcrumbs = async (
   id: string,
@@ -162,15 +163,13 @@ export const getPasswordPolicies = async (): Promise<PasswordPolicies> => {
   };
 };
 
-export const getShippingMethods = async () => {
-  return await api
-    .get("rest/shipping-methods", {
-      next: {
-        revalidate: DEFAULT_REVALIDATE,
-      },
-    })
-    .json<ShippingMethod[]>();
-};
+export const getShippingMethods = cache(
+  () => shippingMethods(),
+  ["shipping-methods"],
+  {
+    revalidate: DEFAULT_REVALIDATE,
+  },
+);
 
 export const getPaymentMethods = async (): Promise<PaymentMethod[]> => {
   const response = await api
