@@ -17,6 +17,7 @@ import {
   DialogTrigger,
 } from "@repo/web-ui/components/ui/dialog";
 import { useToast } from "@repo/web-ui/components/ui/toast";
+import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -37,6 +38,8 @@ const SelectAddressDialog = ({ token }: SelectAddressDialogProps) => {
     cartQuery.data.configuration.shippingAddressId ?? "",
   );
 
+  const queryClient = useQueryClient();
+
   const updateCartConfigMutation = useUpdateCartConfigMutation();
 
   const handleConfirm = () => {
@@ -46,6 +49,9 @@ const SelectAddressDialog = ({ token }: SelectAddressDialogProps) => {
       },
       {
         onSuccess: () => {
+          queryClient.invalidateQueries({
+            queryKey: ["cart", "shipping-methods"],
+          });
           toast({
             title: "Address selected",
             description:

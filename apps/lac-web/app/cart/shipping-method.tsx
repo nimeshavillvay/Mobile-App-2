@@ -2,7 +2,9 @@
 
 import useSuspenseWillCallPlant from "@/_hooks/address/use-suspense-will-call-plant.hook";
 import useSuspenseCart from "@/_hooks/cart/use-suspense-cart.hook";
+import useSuspenseShippingMethods from "@/_hooks/cart/use-suspense-shipping-method.hook";
 import useUpdateCartItemMutation from "@/_hooks/cart/use-update-cart-item-mutation.hook";
+import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
 import { checkAvailability } from "@/_lib/apis/shared";
 import {
   DEFAULT_PLANT,
@@ -40,17 +42,22 @@ const WILL_CALL = "will-call";
 
 type ShippingMethodProps = {
   readonly token: string;
-  readonly options: ShippingMethod[];
 };
 
 type ConfigKey = keyof CartItemConfiguration;
 
-const ShippingMethod = ({ token, options }: ShippingMethodProps) => {
+const ShippingMethod = ({ token }: ShippingMethodProps) => {
   const id = useId();
   const shipToMeId = `${SHIP_TO_ME}-${id}`;
   const willCallId = `${WILL_CALL}-${id}`;
 
-  const shippingMethods = options?.filter(
+  const checkLoginQuery = useSuspenseCheckLogin(token);
+
+  const isForCart = checkLoginQuery.data.status_code === "OK";
+
+  const shippingMethodsQuery = useSuspenseShippingMethods(token, isForCart);
+
+  const shippingMethods = shippingMethodsQuery?.data.filter(
     (method) => !EXCLUDED_SHIPPING_METHODS.includes(method.code),
   );
 
