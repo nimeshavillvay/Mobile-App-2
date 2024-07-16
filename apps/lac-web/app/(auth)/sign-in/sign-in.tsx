@@ -208,10 +208,20 @@ const SignIn = () => {
           <div className="text-center font-normal">
             Don&apos;t Have an Account?
             <Button
-              className="hover:bg-transparent hover:underline"
+              className="text-sm font-normal hover:bg-transparent hover:underline"
               variant="ghost"
             >
-              <Link href="/sign-up">Sign up</Link>
+              <Link
+                href={"/sign-up"}
+                className={cn(
+                  buttonVariants({
+                    variant: "link",
+                  }),
+                  "mx-auto inline-block h-fit p-0 text-center text-sm font-normal",
+                )}
+              >
+                Sign up
+              </Link>
             </Button>
           </div>
         </div>
