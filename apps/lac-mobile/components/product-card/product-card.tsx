@@ -1,0 +1,135 @@
+import { Bookmark } from "@tamagui/lucide-icons";
+import { Image, type ImageProps } from "expo-image";
+import { useId } from "react";
+import { StyleSheet } from "react-native";
+import { Button, Card, H2, Text, XStack, YStack } from "tamagui";
+
+type ProductCardProps = Readonly<{
+  productId: number;
+  image: ImageProps["source"];
+  title?: string;
+  sku?: string;
+  details: {
+    price: number;
+    listPrice: number;
+    uom: string;
+  };
+}>;
+
+export const ProductCard = ({
+  image,
+  title,
+  sku,
+  details,
+}: ProductCardProps) => {
+  const id = useId();
+  const isDiscounted = details.price < details.listPrice;
+
+  return (
+    <Card backgroundColor="$colorTransparent" flex={1} padding={12}>
+      <YStack gap="$2" alignItems="flex-start" justifyContent="center">
+        <Image
+          style={styles.image}
+          source={image}
+          contentFit="contain"
+          testID={`product-image-${id}`}
+        />
+
+        {!!title && (
+          <H2 numberOfLines={2} style={styles.title}>
+            {title}
+          </H2>
+        )}
+
+        {!!sku && (
+          <Text style={styles.sku} testID={`sku-${id}`}>
+            {sku}
+          </Text>
+        )}
+
+        <XStack alignItems="flex-end">
+          <Text
+            style={StyleSheet.compose(
+              styles.price,
+              isDiscounted && styles.saleText,
+            )}
+          >
+            $
+            <Text
+              style={StyleSheet.compose(
+                styles.priceValue,
+                isDiscounted && styles.saleText,
+              )}
+              testID={`price-${id}`}
+            >
+              {details.price}
+            </Text>
+          </Text>
+
+          {!!isDiscounted && (
+            <Text style={styles.previousPrice} testID={`previous-price-${id}`}>
+              ${details.listPrice}
+            </Text>
+          )}
+
+          <Text style={styles.uom} testID={`uom-${id}`}>
+            /{details.uom}
+          </Text>
+        </XStack>
+
+        <Button
+          icon={<Bookmark size={16} />}
+          padding="$2"
+          circular
+          position="absolute"
+          top="$0"
+          right="$0"
+          backgroundColor="white"
+          borderWidth={1}
+          borderColor="#E2E2E2"
+          testID={`add-to-list-${id}`}
+        />
+      </YStack>
+    </Card>
+  );
+};
+
+const styles = StyleSheet.create({
+  image: {
+    width: "100%",
+    aspectRatio: 1,
+  },
+  title: {
+    fontSize: 16,
+    fontWeight: 400,
+    lineHeight: 20,
+  },
+  sku: {
+    marginBottom: 5,
+    fontSize: 13,
+    fontWeight: 400,
+    color: "#74767B",
+  },
+  price: {
+    color: "rgba(0,0,0,0.91)",
+    fontSize: 16,
+    fontWeight: 700,
+  },
+  priceValue: {
+    color: "rgba(0,0,0,0.91)",
+    fontSize: 18,
+    fontWeight: 700,
+  },
+  previousPrice: {
+    color: "rgba(0,0,0,0.22)",
+    fontSize: 14,
+    textDecorationLine: "line-through",
+  },
+  uom: {
+    color: "rgba(0,0,0,0.91)",
+    fontSize: 13,
+  },
+  saleText: {
+    color: "#236E4A",
+  },
+});

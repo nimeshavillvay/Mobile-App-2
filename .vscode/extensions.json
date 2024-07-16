@@ -8,6 +8,7 @@
     "yoavbls.pretty-ts-errors",
     "bradlc.vscode-tailwindcss",
     "gruntfuggly.todo-tree",
-    "github.vscode-github-actions"
+    "github.vscode-github-actions",
+    "fernandotherojo.nandorojo-tamagui"
   ]
 }
