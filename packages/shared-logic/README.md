@@ -31,7 +31,7 @@ export default nextConfig;
 
 ## Shared dependencies
 
-These packages that are shared between the project such as `@tanstack/react-query` should be installed in this package with the `--save-peer` flag.
+Packages that are shared between the projects such as `@tanstack/react-query` should be installed in this package with the `--save-peer` flag so that they're not included in the build.
 
 ```shell
 pnpm install @tanstack/react-query -D --save-peer
