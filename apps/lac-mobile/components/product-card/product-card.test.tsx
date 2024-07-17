@@ -121,7 +121,7 @@ describe("Product Card", () => {
     await act(() => promise);
   });
 
-  test("displays only one price when there is no discount", async () => {
+  test("displays only one price and hides the discount label when there is no discount", async () => {
     const promise = Promise.resolve();
 
     const price = 34.11;
@@ -144,6 +144,7 @@ describe("Product Card", () => {
 
     expect(priceElement).toBeOnTheScreen();
     expect(screen.queryByTestId(/^previous-price-/)).toBeNull();
+    expect(screen.queryByTestId(/^discount-label-/)).toBeNull();
 
     // Check value
     expect(priceElement.props.children).toBe(price);
@@ -151,11 +152,14 @@ describe("Product Card", () => {
     await act(() => promise);
   });
 
-  test("displays both the current price and list price when there is a discount", async () => {
+  test("displays both the current price and list price, and shows the discount label when there is a discount", async () => {
     const promise = Promise.resolve();
 
     const price = 18.32;
     const listPrice = 24.32;
+    const discountPercentage = Math.ceil(
+      ((listPrice - price) / listPrice) * 100,
+    );
 
     render(
       <ProductCard
@@ -173,13 +177,21 @@ describe("Product Card", () => {
 
     const priceElement = screen.getByTestId(/^price-/);
     const listPriceElement = screen.getByTestId(/^previous-price-/);
+    const discountLabelElement = screen.getByTestId(/^discount-label-/);
 
     expect(priceElement).toBeOnTheScreen();
     expect(listPriceElement).toBeOnTheScreen();
+    expect(discountLabelElement).toBeOnTheScreen();
+
+    const discountValueElement = screen.getByTestId(/^discount-amount-/);
 
     // Check values
     expect(priceElement.props.children).toBe(price);
     expect(listPriceElement.props.children).toStrictEqual(["$", listPrice]);
+    expect(discountValueElement.props.children).toStrictEqual([
+      discountPercentage,
+      "%",
+    ]);
 
     await act(() => promise);
   });

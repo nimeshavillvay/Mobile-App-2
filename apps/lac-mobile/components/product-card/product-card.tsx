@@ -24,6 +24,9 @@ export const ProductCard = ({
 }: ProductCardProps) => {
   const id = useId();
   const isDiscounted = details.price < details.listPrice;
+  const discountPercentage = isDiscounted
+    ? Math.ceil(((details.listPrice - details.price) / details.listPrice) * 100)
+    : 0;
 
   return (
     <Card backgroundColor="$colorTransparent" flex={1} padding={12}>
@@ -77,18 +80,47 @@ export const ProductCard = ({
           </Text>
         </XStack>
 
-        <Button
-          icon={<Bookmark size={16} />}
-          padding="$2"
-          circular
+        <XStack
           position="absolute"
+          left="$0"
           top="$0"
           right="$0"
-          backgroundColor="white"
-          borderWidth={1}
-          borderColor="#E2E2E2"
-          testID={`add-to-list-${id}`}
-        />
+          flexDirection="row-reverse"
+          justifyContent="space-between"
+          alignItems="flex-start"
+        >
+          <Button
+            icon={<Bookmark size={16} />}
+            padding="$2"
+            circular
+            backgroundColor="white"
+            borderWidth={1}
+            borderColor="#E2E2E2"
+            testID={`add-to-list-${id}`}
+          />
+
+          {!!isDiscounted && discountPercentage > 0 && (
+            <XStack
+              backgroundColor="#E5FBEB"
+              paddingHorizontal={10}
+              height="$1.5"
+              alignItems="center"
+              gap="$0.5"
+              borderRadius={8}
+              testID={`discount-label-${id}`}
+            >
+              <Text
+                style={styles.discountLabelText}
+                fontWeight={700}
+                testID={`discount-amount-${id}`}
+              >
+                {discountPercentage}%
+              </Text>
+
+              <Text style={styles.discountLabelText}>off</Text>
+            </XStack>
+          )}
+        </XStack>
       </YStack>
     </Card>
   );
@@ -131,5 +163,10 @@ const styles = StyleSheet.create({
   },
   saleText: {
     color: "#236E4A",
+  },
+  discountLabelText: {
+    color: "#236E4A",
+    fontSize: 12,
+    lineHeight: 12,
   },
 });
