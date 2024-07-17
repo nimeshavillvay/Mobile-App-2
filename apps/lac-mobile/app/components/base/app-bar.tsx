@@ -4,7 +4,13 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { Link, usePathname, useRouter } from "expo-router";
 import { Button, Text, View } from "tamagui";
 
-const AppBar = ({ title, type }: { title: string; type?: string }) => {
+const AppBar = ({
+  title,
+  type,
+}: {
+  readonly title: string;
+  readonly type?: string;
+}) => {
   const router = useRouter();
   const path = usePathname();
 

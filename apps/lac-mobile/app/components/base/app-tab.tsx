@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 import { YStack } from "tamagui";
 import AppBar from "./app-bar";
 
@@ -6,8 +6,8 @@ const AppTab = ({
   title,
   children,
 }: {
-  title: string;
-  children: ReactNode;
+  readonly title: string;
+  readonly children: ReactNode;
 }) => {
   return (
     <YStack flex={1} backgroundColor="white">
