@@ -1,0 +1,26 @@
+{
+  "name": "@repo/native-ui",
+  "types": "./types/index.d.ts",
+  "main": "dist/cjs",
+  "module": "dist/esm",
+  "module:jsx": "dist/jsx",
+  "files": [
+    "types",
+    "src",
+    "dist"
+  ],
+  "sideEffects": [
+    "*.css"
+  ],
+  "scripts": {
+    "dev": "tamagui-build --watch",
+    "build": "tamagui-build"
+  },
+  "devDependencies": {
+    "@tamagui/build": "1.102.2",
+    "tamagui": "^1.102.1"
+  },
+  "peerDependencies": {
+    "tamagui": "^1.102.1"
+  }
+}

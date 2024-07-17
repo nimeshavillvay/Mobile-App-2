@@ -14,15 +14,17 @@
     "noImplicitOverride": true,
 
     "module": "preserve",
-    "noEmit": true,
 
-    "lib": ["es2022", "dom", "dom.iterable"],
+    "types": ["node", "react"],
+    "lib": ["dom", "esnext"],
 
+    "jsx": "react-jsx",
+    "composite": true,
     "baseUrl": ".",
     "paths": {
       "~/*": ["./src/*"]
     }
   },
-  "include": ["src", "next-env.d.ts", "reset.d.ts"],
+  "include": ["src"],
   "exclude": ["node_modules"]
 }
