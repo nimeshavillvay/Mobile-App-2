@@ -1,5 +1,6 @@
 "use client";
 
+import type { Country } from "@/(auth)/register/types";
 import ShippingDetailsDialog from "@/_components/shipping-details-dialog";
 import useLogoutMutation from "@/_hooks/user/use-logout-mutation.hook";
 import useOSRLogoutMutation from "@/_hooks/user/use-osr-logout-mutation.hook";
@@ -33,10 +34,12 @@ const UserProfileButton = ({
   token,
   type,
   shippingMethods,
+  countries,
 }: {
   readonly token: string;
   readonly type: ViewportTypes;
   readonly shippingMethods: ShippingMethod[];
+  readonly countries: Country[];
 }) => {
   const checkLoginQuery = useSuspenseCheckLogin(token);
 
@@ -55,7 +58,11 @@ const UserProfileButton = ({
     }
 
     return (
-      <UserMobileNavigation token={token} shippingMethods={shippingMethods} />
+      <UserMobileNavigation
+        token={token}
+        shippingMethods={shippingMethods}
+        countries={countries}
+      />
     );
   } else {
     // Desktop
@@ -80,6 +87,7 @@ const UserProfileButton = ({
         }
         customerDetails={customerDetails}
         shippingMethods={shippingMethods}
+        countries={countries}
       />
     );
   }
@@ -93,12 +101,14 @@ const UserProfileDropdown = ({
   isOSRLoggedInAsCustomer,
   customerDetails,
   shippingMethods,
+  countries,
 }: {
   readonly token: string;
   readonly isOSRUser: boolean;
   readonly isOSRLoggedInAsCustomer: boolean;
   readonly customerDetails: string;
   readonly shippingMethods: ShippingMethod[];
+  readonly countries: Country[];
 }) => {
   const router = useRouter();
   const usersListQuery = useSuspenseUsersList(token);
@@ -132,6 +142,7 @@ const UserProfileDropdown = ({
         shippingMethods={shippingMethods}
         open={openShippingDialog}
         setOpen={setOpenShippingDialog}
+        countries={countries}
       >
         {/* This is to disable the fallback button in the ShippingDetailsDialog component */}
         {/* eslint-disable-next-line react/jsx-no-useless-fragment */}

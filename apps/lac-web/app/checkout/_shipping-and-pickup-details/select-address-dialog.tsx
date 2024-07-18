@@ -1,3 +1,4 @@
+import type { Country } from "@/(auth)/register/types";
 import AddShippingAddressDialog from "@/_components/add-shipping-address-dialog";
 import FullAddress from "@/_components/full-address";
 import useSuspenseShippingAddressList from "@/_hooks/address/use-suspense-shipping-address-list.hook";
@@ -23,9 +24,13 @@ import { useState } from "react";
 
 type SelectAddressDialogProps = {
   readonly token: string;
+  readonly countries: Country[];
 };
 
-const SelectAddressDialog = ({ token }: SelectAddressDialogProps) => {
+const SelectAddressDialog = ({
+  token,
+  countries,
+}: SelectAddressDialogProps) => {
   const [open, setOpen] = useState(false);
   const [openAdd, setOpenAdd] = useState(false);
   const { toast } = useToast();
@@ -151,6 +156,7 @@ const SelectAddressDialog = ({ token }: SelectAddressDialogProps) => {
           setOpenAdd(false);
           setOpen(true);
         }}
+        countries={countries}
       />
     </>
   );

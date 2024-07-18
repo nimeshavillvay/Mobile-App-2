@@ -1,9 +1,9 @@
+import type { Country } from "@/(auth)/register/types";
 import FullAddress from "@/_components/full-address";
 import useAddShippingAddressMutation from "@/_hooks/address/use-add-shipping-address-mutation.hook";
 import usePhoneNumberFormatter from "@/_hooks/address/use-phone-number-formatter.hook";
 import useZipCodeFormatter from "@/_hooks/address/use-zip-code.hook";
 import useCounties from "@/_hooks/registration/use-counties.hook";
-import useCountries from "@/_hooks/registration/use-countries.hook";
 import useStates from "@/_hooks/registration/use-states.hook";
 import type { Address } from "@/_lib/types";
 import { cn } from "@/_lib/utils";
@@ -54,18 +54,20 @@ const formSchema = z.object({
 type AddShippingAddressDialogProps = {
   readonly open: boolean;
   readonly closeDialog: () => void;
+  readonly countries: Country[];
 };
 
 const AddShippingAddressDialog = ({
   open,
   closeDialog,
+  countries,
 }: AddShippingAddressDialogProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       address: "",
       city: "",
-      country: "",
+      country: countries?.[0]?.code,
       state: "",
       county: "",
       postCode: "",
@@ -77,7 +79,6 @@ const AddShippingAddressDialog = ({
   const selectedCountry = form.watch("country");
   const selectedState = form.watch("state");
 
-  const countriesQuery = useCountries();
   const statesQuery = useStates(selectedCountry);
   const countiesQuery = useCounties(selectedState);
 
@@ -221,10 +222,7 @@ const AddShippingAddressDialog = ({
                 render={({ field }) => (
                   <FormItem className="col-span-6">
                     <FormLabel>Country</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
+                    <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Country" />
@@ -232,7 +230,7 @@ const AddShippingAddressDialog = ({
                       </FormControl>
 
                       <SelectContent>
-                        {countriesQuery.data?.map((country) => (
+                        {countries?.map((country) => (
                           <SelectItem key={country.code} value={country.code}>
                             {country.country}
                           </SelectItem>

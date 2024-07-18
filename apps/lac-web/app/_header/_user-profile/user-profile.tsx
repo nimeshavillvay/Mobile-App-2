@@ -1,3 +1,4 @@
+import { getCountries } from "@/(auth)/register/apis";
 import { getShippingMethods } from "@/_lib/apis/server";
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import { cookies } from "next/headers";
@@ -13,7 +14,10 @@ const UserProfile = async ({ type }: UserProfileProps) => {
   const cookieStore = cookies();
   const sessionCookie = cookieStore.get(SESSION_TOKEN_COOKIE);
 
-  const shippingMethods = await getShippingMethods();
+  const [shippingMethods, countries] = await Promise.all([
+    getShippingMethods(),
+    getCountries(),
+  ]);
 
   if (!sessionCookie?.value) {
     return <UserProfileSkeleton type={type} />;
@@ -24,6 +28,7 @@ const UserProfile = async ({ type }: UserProfileProps) => {
       token={sessionCookie.value}
       type={type}
       shippingMethods={shippingMethods}
+      countries={countries}
     />
   );
 };

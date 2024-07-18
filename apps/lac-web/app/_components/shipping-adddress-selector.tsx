@@ -1,5 +1,6 @@
 "use client";
 
+import type { Country } from "@/(auth)/register/types";
 import FullAddress from "@/_components/full-address";
 import useSuspenseShippingAddressList from "@/_hooks/address/use-suspense-shipping-address-list.hook";
 import useUpdateShippingAddressMutation from "@/_hooks/address/use-update-shipping-address-mutation.hook";
@@ -25,11 +26,13 @@ import AddShippingAddressDialog from "./add-shipping-address-dialog";
 type ShippingAddressSelectorProps = {
   readonly token: Token;
   readonly children: ReactNode;
+  readonly countries: Country[];
 };
 
 const ShippingAddressSelector = ({
   token,
   children,
+  countries,
 }: ShippingAddressSelectorProps) => {
   const shippingAddressListQuery = useSuspenseShippingAddressList(token);
   const { toast } = useToast();
@@ -159,6 +162,7 @@ const ShippingAddressSelector = ({
           setOpen(true);
           setOpenNewAddressDialog(false);
         }}
+        countries={countries}
       />
     </>
   );

@@ -1,5 +1,6 @@
 "use client";
 
+import type { Country } from "@/(auth)/register/types";
 import FullAddress from "@/_components/full-address";
 import ShippingAddressSelector from "@/_components/shipping-adddress-selector";
 import useSuspenseBillingAddress from "@/_hooks/address/use-suspense-billing-address.hook";
@@ -32,6 +33,7 @@ type ShippingDetailsDialogProps = {
   readonly children?: ReactNode;
   readonly open?: boolean;
   readonly setOpen?: (open: boolean) => void;
+  readonly countries: Country[];
 };
 
 const ShippingDetailsDialog = ({
@@ -58,6 +60,7 @@ const ShippingDetailsDialogButton = ({
   children,
   open: externalOpen,
   setOpen: externalSetOpen,
+  countries,
 }: ShippingDetailsDialogProps) => {
   const shippingAddressListQuery = useSuspenseShippingAddressList(token);
   const billingAddressQuery = useSuspenseBillingAddress(token);
@@ -136,7 +139,7 @@ const ShippingDetailsDialogButton = ({
               </div>
             </div>
 
-            <ShippingAddressSelector token={token}>
+            <ShippingAddressSelector token={token} countries={countries}>
               <Button variant="outline" className="px-3 font-bold shadow">
                 Change
               </Button>

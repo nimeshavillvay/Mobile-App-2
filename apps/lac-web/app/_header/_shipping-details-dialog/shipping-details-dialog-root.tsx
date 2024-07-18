@@ -1,3 +1,4 @@
+import { getCountries } from "@/(auth)/register/apis";
 import ShippingDetailsDialog from "@/_components/shipping-details-dialog";
 import { getShippingMethods } from "@/_lib/apis/server";
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
@@ -9,7 +10,10 @@ const ShippingDetailsDialogMain = async () => {
   const cookiesStore = cookies();
   const sessionCookies = cookiesStore.get(SESSION_TOKEN_COOKIE);
 
-  const shippingMethods = await getShippingMethods();
+  const [shippingMethods, countries] = await Promise.all([
+    getShippingMethods(),
+    getCountries(),
+  ]);
 
   if (!sessionCookies?.value) {
     return null;
@@ -19,6 +23,7 @@ const ShippingDetailsDialogMain = async () => {
     <ShippingDetailsDialog
       token={sessionCookies.value}
       shippingMethods={shippingMethods}
+      countries={countries}
     />
   );
 };

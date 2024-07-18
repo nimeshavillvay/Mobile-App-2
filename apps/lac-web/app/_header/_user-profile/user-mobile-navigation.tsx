@@ -1,3 +1,4 @@
+import type { Country } from "@/(auth)/register/types";
 import ShippingDetailsDialog from "@/_components/shipping-details-dialog";
 import useLogoutMutation from "@/_hooks/user/use-logout-mutation.hook";
 import useOSRLogoutMutation from "@/_hooks/user/use-osr-logout-mutation.hook";
@@ -31,11 +32,13 @@ const dividerStyles = cva({
 type UserMobileNavigationProps = {
   readonly token: string;
   readonly shippingMethods: ShippingMethod[];
+  readonly countries: Country[];
 };
 
 const UserMobileNavigation = ({
   token,
   shippingMethods,
+  countries,
 }: UserMobileNavigationProps) => {
   const checkLoginQuery = useSuspenseCheckLogin(token);
 
@@ -88,6 +91,7 @@ const UserMobileNavigation = ({
     <UserMobileProfileNavigation
       token={token}
       shippingMethods={shippingMethods}
+      countries={countries}
     />
   );
 };
@@ -97,6 +101,7 @@ export default UserMobileNavigation;
 const UserMobileProfileNavigation = ({
   token,
   shippingMethods,
+  countries,
 }: UserMobileNavigationProps) => {
   const usersListQuery = useSuspenseUsersList(token);
   const userProfile = usersListQuery.data.manageContact.yourProfile;
@@ -151,6 +156,7 @@ const UserMobileProfileNavigation = ({
                 <ShippingDetailsDialog
                   token={token}
                   shippingMethods={shippingMethods}
+                  countries={countries}
                 >
                   <Button
                     variant="ghost"

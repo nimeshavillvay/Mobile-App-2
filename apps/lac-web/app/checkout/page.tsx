@@ -1,3 +1,4 @@
+import { getCountries } from "@/(auth)/register/apis";
 import OrderSummary from "@/_components/order-summary";
 import { getPaymentMethods, getPlants } from "@/_lib/apis/server";
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
@@ -21,9 +22,10 @@ const CheckoutPage = async () => {
     return null;
   }
 
-  const [plants, paymentMethods] = await Promise.all([
+  const [plants, paymentMethods, countries] = await Promise.all([
     getPlants(),
     getPaymentMethods(),
+    getCountries(),
   ]);
 
   return (
@@ -47,7 +49,10 @@ const CheckoutPage = async () => {
               <Skeleton className="h-[694px] rounded-lg shadow-lg md:h-[350px]" />
             }
           >
-            <ShippingAndPickupDetails token={sessionCookie.value} />
+            <ShippingAndPickupDetails
+              token={sessionCookie.value}
+              countries={countries}
+            />
           </Suspense>
 
           <Suspense
