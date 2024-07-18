@@ -146,7 +146,7 @@ const ShippingDetailsDialogButton = ({
           <div className="grid h-fit w-full grid-cols-1 divide-y rounded-lg border border-wurth-gray-150">
             <div className="p-3">
               <div className="font-light text-wurth-gray-500">
-                Preferred Shipping Method
+                Order Ships Via
               </div>
               <div className="font-semibold">
                 {shippingMethod?.name ? shippingMethod.name : "Not Available"}

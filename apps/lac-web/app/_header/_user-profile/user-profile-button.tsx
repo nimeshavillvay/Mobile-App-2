@@ -7,9 +7,9 @@ import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
 import useSuspenseUsersList from "@/_hooks/user/use-suspense-users-list.hook";
 import type { ShippingMethod } from "@/_lib/types";
 import { cn } from "@/_lib/utils";
+import { BookmarkOutline } from "@repo/web-ui/components/icons/bookmark-outline";
 import { Building } from "@repo/web-ui/components/icons/building";
 import { Exit } from "@repo/web-ui/components/icons/exit";
-import { HeartOutline } from "@repo/web-ui/components/icons/heart-outline";
 import { MapPin } from "@repo/web-ui/components/icons/map-pin";
 import { Switch } from "@repo/web-ui/components/icons/switch";
 import { UserGroup } from "@repo/web-ui/components/icons/user-group";
@@ -217,7 +217,7 @@ const UserProfileDropdown = ({
           >
             <Link href="/myaccount/shopping-lists">
               <DropdownMenuShortcut className="ml-0">
-                <HeartOutline className="size-4 stroke-black stroke-2" />
+                <BookmarkOutline className="size-4 stroke-black stroke-2" />
               </DropdownMenuShortcut>
 
               <span>My Shopping Lists</span>

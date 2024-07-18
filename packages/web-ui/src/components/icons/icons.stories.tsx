@@ -9,6 +9,8 @@ import { ArrowUp } from "./arrow-up";
 import { ArrowUpRight } from "./arrow-up-right";
 import { BarcodeScan } from "./barcode-scan";
 import { Bell } from "./bell";
+import { BookmarkFilled } from "./bookmark-filled";
+import { BookmarkOutline } from "./bookmark-outline";
 import { Building } from "./building";
 import { Check } from "./check";
 import { CheckCircle } from "./check-circle";
@@ -25,8 +27,6 @@ import { Facebook } from "./facebook";
 import { FileDownload } from "./file-download";
 import { Gear } from "./gear";
 import { Headset } from "./headset";
-import { HeartFilled } from "./heart-filled";
-import { HeartOutline } from "./heart-outline";
 import { Instagram } from "./instagram";
 import { LinkedIn } from "./linkedin";
 import { MagnifyingGlass } from "./magnifying-glass";
@@ -191,12 +191,12 @@ export const Showcase: Story = {
           <Headset />
         </IconContainer>
 
-        <IconContainer name="HeartFilled">
-          <HeartFilled />
+        <IconContainer name="BookmarkFilled">
+          <BookmarkFilled />
         </IconContainer>
 
-        <IconContainer name="HeartOutline">
-          <HeartOutline />
+        <IconContainer name="BookmarkOutline">
+          <BookmarkOutline />
         </IconContainer>
 
         <IconContainer name="Instagram">

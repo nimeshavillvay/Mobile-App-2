@@ -1,21 +1,25 @@
 import { type ComponentProps } from "react";
 import { cn } from "~/lib/utils";
 
-export const HeartOutline = ({
+export const BookmarkOutline = ({
   className,
   ...delegated
 }: ComponentProps<"svg">) => {
   return (
     <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
+      width="16"
+      height="21"
+      viewBox="0 0 16 21"
       fill="none"
-      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
       className={cn("stroke-black", className)}
       {...delegated}
     >
-      <path d="M12 5.376c6.504-6.63 17.654 5.681 0 15.624-17.654-9.942-6.504-22.253 0-15.624z" />
+      <path
+        d="M15.5 19.5V0.5H0.5V19.5L8 15.5L15.5 19.5Z"
+        stroke="black"
+        stroke-linecap="round"
+      />
     </svg>
   );
 };
