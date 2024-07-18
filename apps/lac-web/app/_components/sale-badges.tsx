@@ -5,11 +5,17 @@ import { Zap } from "@repo/web-ui/components/icons/zap";
 type SaleBadgesProps = {
   readonly onSale: boolean;
   readonly isNewItem: boolean;
+  readonly showFlashDealText: boolean;
 };
 
-const SaleBadges = ({ onSale, isNewItem }: SaleBadgesProps) => {
+const SaleBadges = ({
+  onSale,
+  isNewItem,
+  showFlashDealText,
+}: SaleBadgesProps) => {
   return (
     <div className="flex flex-row justify-end gap-2">
+      {showFlashDealText}
       {isNewItem && (
         <div
           className="flex flex-row items-center gap-1 rounded px-2 py-1.5 text-sm font-semibold leading-4"
@@ -25,7 +31,9 @@ const SaleBadges = ({ onSale, isNewItem }: SaleBadgesProps) => {
       {onSale && (
         <div className="flex flex-row items-center gap-1 rounded bg-sky-50 px-2 py-1.5 text-sm font-semibold leading-4 text-wurth-blue-450">
           <Zap className="size-4 stroke-wurth-blue-450" />
-          <span className="hidden @[12rem]/labels:block">Flash Deal</span>
+          {showFlashDealText && (
+            <span className="hidden @[12rem]/labels:block">Flash Deal</span>
+          )}
         </div>
       )}
     </div>
