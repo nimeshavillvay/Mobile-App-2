@@ -1,26 +1,41 @@
 {
   "name": "@repo/native-ui",
-  "types": "./types/index.d.ts",
-  "main": "dist/cjs",
-  "module": "dist/esm",
-  "module:jsx": "dist/jsx",
-  "files": [
-    "types",
-    "src",
-    "dist"
-  ],
-  "sideEffects": [
-    "*.css"
-  ],
+  "private": true,
+  "exports": {
+    "./components/*": {
+      "types": "./dist/*/index.d.ts",
+      "default": "./dist/*/index.mjs"
+    }
+  },
   "scripts": {
-    "dev": "tamagui-build --watch",
-    "build": "tamagui-build"
+    "dev": "tsup --watch",
+    "build": "tsup",
+    "lint": "eslint . --max-warnings 0",
+    "test": "jest"
   },
   "devDependencies": {
-    "@tamagui/build": "1.102.2",
-    "tamagui": "^1.102.1"
+    "@repo/eslint-config": "workspace:*",
+    "@tamagui/config": "1.102.1",
+    "@tamagui/lucide-icons": "1.102.1",
+    "@testing-library/react-native": "12.5.1",
+    "@types/jest": "^29.5.12",
+    "eslint": "8.57.0",
+    "expo": "51.0.20",
+    "expo-image": "~1.12.12",
+    "jest": "^29.7.0",
+    "jest-expo": "^51.0.3",
+    "react": "^18.3.1",
+    "react-native": "0.74.3",
+    "tamagui": "^1.102.1",
+    "tsup": "8.1.1",
+    "typescript": "~5.5.3"
   },
   "peerDependencies": {
+    "@tamagui/lucide-icons": "1.102.1",
+    "expo": "51.0.20",
+    "expo-image": "~1.12.12",
+    "react": "^18.3.1",
+    "react-native": "0.74.3",
     "tamagui": "^1.102.1"
   }
 }

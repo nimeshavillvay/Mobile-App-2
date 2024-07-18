@@ -21,17 +21,17 @@ config.resolver.nodeModulesPaths = [
 ];
 
 config.resolver.resolveRequest = (context, moduleName, platform) => {
-  // Custom resolver for since the "@repo/shared-logic" package is in
-  // a folder called 'shared-logic'
-  if (moduleName.startsWith("@repo/shared-logic/")) {
+  // Custom resolver for since the "@repo/native-ui" package is in
+  // a folder called 'native-ui'
+  if (moduleName.startsWith("@repo/native-ui/")) {
     return {
       type: "sourceFile",
       filePath: path.resolve(
         workspaceRoot,
         `${moduleName.replace(
-          "@repo/shared-logic",
-          "packages/shared-logic/src",
-        )}/index.ts`,
+          "@repo/native-ui/components",
+          "packages/native-ui/dist",
+        )}/index.mjs`,
       ),
     };
   }

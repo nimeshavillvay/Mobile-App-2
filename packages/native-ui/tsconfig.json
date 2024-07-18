@@ -7,24 +7,25 @@
     "resolveJsonModule": true,
     "moduleDetection": "force",
     "isolatedModules": true,
-    "verbatimModuleSyntax": true,
 
     "strict": true,
     "noUncheckedIndexedAccess": true,
     "noImplicitOverride": true,
 
+    "moduleResolution": "bundler",
     "module": "preserve",
+    "noEmit": true,
 
     "types": ["node", "react"],
     "lib": ["dom", "esnext"],
 
     "jsx": "react-jsx",
-    "composite": true,
+    "outDir": "dist",
     "baseUrl": ".",
     "paths": {
       "~/*": ["./src/*"]
     }
   },
-  "include": ["src"],
+  "include": ["**/*.ts", "**/*.tsx", "jest.config.ts", "jest.setup.ts"],
   "exclude": ["node_modules"]
 }
