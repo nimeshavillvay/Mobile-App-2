@@ -39,21 +39,6 @@ export const ProductNumbers = ({
   );
 };
 
-export const ProductDescription = ({
-  children,
-  className,
-}: {
-  readonly children: string;
-  readonly className?: string;
-}) => {
-  return (
-    <div
-      className={cn("text-base text-wurth-gray-500", className)}
-      dangerouslySetInnerHTML={{ __html: children }}
-    />
-  );
-};
-
 export const HazardousMaterialNotice = ({
   className,
 }: {
