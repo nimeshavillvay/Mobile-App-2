@@ -289,7 +289,7 @@ const PriceCheck = ({
               "mr-1 text-xl font-medium leading-7 tracking-[-0.1px]",
             )}
           >
-            {formatNumberToPrice(initialPrice)}
+            {formatNumberToPrice(priceData?.uomPrice ?? priceData?.price)}
           </span>
         </span>
         {!isLaminateItem && isDiscounted && (
@@ -425,6 +425,8 @@ const AddToCart = ({
                 step={increments}
                 className="md:w-[6.125rem]"
                 label="Quantity"
+                //  eslint-disable-next-line jsx-a11y/no-autofocus
+                autoFocus
               />
             )}
           />
