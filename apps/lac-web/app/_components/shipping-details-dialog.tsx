@@ -79,13 +79,19 @@ const ShippingDetailsDialogButton = ({
   const open = externalOpen ?? internalOpen;
   const setOpen = externalSetOpen ?? setInternalOpen;
 
+  const capitalizeFirstChar = (text?: string) => {
+    return text !== undefined
+      ? text.toLowerCase().replace(/\b\w/g, (char) => char.toUpperCase())
+      : "";
+  };
+
   if (checkLoginQuery.data.change_password) {
     return (
       <>
         <Truck width={16} height={16} />
 
         <span className="h-fit px-0 py-0 text-sm font-medium leading-5">
-          #{defaultAddress?.postalCode}
+          {capitalizeFirstChar(defaultAddress?.streetAddress)}
         </span>
       </>
     );
@@ -102,7 +108,7 @@ const ShippingDetailsDialogButton = ({
           >
             <Truck width={16} height={16} />
 
-            <span>#{defaultAddress?.postalCode}</span>
+            <span>{capitalizeFirstChar(defaultAddress?.streetAddress)}</span>
           </Button>
         )}
       </DialogTrigger>
