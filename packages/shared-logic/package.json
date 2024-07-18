@@ -4,16 +4,13 @@
   "type": "module",
   "exports": {
     "./apis/*": {
-      "types": "./dist/apis/*.d.ts",
-      "default": "./dist/apis/*.js"
+      "import": "./src/apis/*.ts"
     },
     "./zod-schema/*": {
-      "types": "./lib/zod-schema/*.d.ts",
-      "default": "./lib/zod-schema/*.js"
+      "import": "./src/lib/zod-schema/*.ts"
     }
   },
   "scripts": {
-    "build": "tsup",
     "lint": "eslint . --max-warnings 0"
   },
   "devDependencies": {
@@ -29,7 +26,6 @@
     "next": "^14.2.4",
     "react": "^18.3.1",
     "server-only": "0.0.1",
-    "tsup": "8.1.1",
     "typescript": "^5.5.3",
     "zod": "^3.23.8"
   },

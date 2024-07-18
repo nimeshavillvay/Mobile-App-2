@@ -30,8 +30,8 @@ config.resolver.resolveRequest = (context, moduleName, platform) => {
         workspaceRoot,
         `${moduleName.replace(
           "@repo/native-ui/components",
-          "packages/native-ui/dist",
-        )}/index.mjs`,
+          "packages/native-ui/src/components",
+        )}/index.ts`,
       ),
     };
   }
