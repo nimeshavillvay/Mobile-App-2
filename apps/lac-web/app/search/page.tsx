@@ -50,7 +50,6 @@ const SearchPage = async ({
     searchResults.summary.plp &&
     !Array.isArray(searchResults.results) &&
     searchResults.results.productStatus != "discontinued" &&
-    searchResults.results.groupId !== "0" &&
     searchResults.results.categoryName !== ""
   ) {
     return redirect(
@@ -62,10 +61,9 @@ const SearchPage = async ({
     searchResults.summary.plp &&
     !Array.isArray(searchResults.results) &&
     searchResults.results.productStatus != "discontinued" &&
-    (searchResults.results.groupId === "0" ||
-      searchResults.results.categoryName === "")
+    searchResults.results.categoryName === ""
   ) {
-    throw new Error("Product group or category is not set");
+    throw new Error("Product category is not set");
   }
 
   return (
