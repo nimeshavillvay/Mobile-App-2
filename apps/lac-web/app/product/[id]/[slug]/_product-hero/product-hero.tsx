@@ -18,7 +18,6 @@ import ProductDesktopCarousel from "./product-desktop-carousel";
 import {
   DropShipItemNotice,
   HazardousMaterialNotice,
-  ProductDescription,
   ProductDetails,
   ProductNumbers,
   ProductSpecifications,
@@ -93,10 +92,6 @@ const ProductHero = async ({ id, slug }: ProductHeroProps) => {
               sku={product.selectedProduct.productSku}
               manufacturerNo={product.selectedProduct.mfrPartNo}
             />
-
-            <ProductDescription>
-              {product.selectedProduct.productDescription}
-            </ProductDescription>
           </div>
 
           <ProductPrices
@@ -146,10 +141,6 @@ const ProductHero = async ({ id, slug }: ProductHeroProps) => {
           manufacturerNo={product.selectedProduct.mfrPartNo}
           className="container my-2 md:hidden"
         />
-
-        <ProductDescription className="container my-2 md:hidden">
-          {product.selectedProduct.productDescription}
-        </ProductDescription>
 
         <Carousel className="mb-10 mt-5 md:hidden">
           <CarouselContent>
