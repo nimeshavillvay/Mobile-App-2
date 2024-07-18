@@ -1,5 +1,12 @@
 {
   "extends": "@repo/typescript-config/expo.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/components/*": ["./components/*"],
+      "@/lib/*": ["./lib/*"]
+    }
+  },
   "include": [
     "**/*.ts",
     "**/*.tsx",

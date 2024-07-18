@@ -11,7 +11,7 @@ const config: ExpoConfig = {
   orientation: "portrait",
   icon: "./assets/icon.png",
   userInterfaceStyle: "light",
-  plugins: ["expo-router"],
+  plugins: ["expo-router", "expo-font"],
   scheme: "wurthlac",
   splash: {
     image: "./assets/splash.png",

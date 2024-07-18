@@ -1,3 +1,6 @@
 {
-  "extends": ["@repo/eslint-config/expo.js"]
+  "extends": ["@repo/eslint-config/expo.js"],
+  "rules": {
+    "import/no-unresolved": "off"
+  }
 }

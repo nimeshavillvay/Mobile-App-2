@@ -14,8 +14,12 @@ module.exports = {
   ],
   plugins: ["react-compiler", "prefer-arrow-functions", "import"],
   settings: {
+    "import/parsers": {
+      "@typescript-eslint/parser": [".ts", ".tsx"],
+    },
     "import/resolver": {
       typescript: {
+        alwaysTryTypes: true,
         project,
       },
     },
