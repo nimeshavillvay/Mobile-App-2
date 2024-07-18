@@ -1,4 +1,4 @@
-import { act, render, screen } from "@/lib/test-utils";
+import { act, render, screen } from "~/lib/test-utils";
 import { ProductCard } from "./product-card";
 
 const title =

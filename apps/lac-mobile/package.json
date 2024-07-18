@@ -12,6 +12,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@repo/native-ui": "workspace:*",
     "@repo/shared-logic": "workspace:*",
     "@tamagui/config": "1.102.1",
     "@tamagui/font-inter": "1.102.1",

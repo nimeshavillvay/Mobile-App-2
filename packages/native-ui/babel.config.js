@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 module.exports = (api) => {
   api.cache(true);
   return {
@@ -6,7 +7,7 @@ module.exports = (api) => {
       [
         "@tamagui/babel-plugin",
         {
-          components: ["@repo/native-ui", "tamagui"],
+          components: ["tamagui"],
           config: "./tamagui.config.ts",
           logTimings: true,
           disableExtraction: process.env.NODE_ENV === "development",

@@ -5,17 +5,6 @@ export const Circle = styled(YStack, {
   justifyContent: "center",
   borderRadius: 100_000_000,
   overflow: "hidden",
-
-  variants: {
-    size: {
-      "...size": (size, { tokens }) => {
-        return {
-          width: tokens.size[size] ?? size,
-          height: tokens.size[size] ?? size,
-        };
-      },
-    },
-  },
 });
 
 export type CircleProps = GetProps<typeof Circle>;
