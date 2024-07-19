@@ -478,7 +478,9 @@ const AddMoreItemsForm = ({ token }: { readonly token: string }) => {
             variant="default"
             className=""
             disabled={
-              addMultipleToCartMutation.isPending || !isItemSelectionProcessed
+              addMultipleToCartMutation.isPending ||
+              !isItemSelectionProcessed ||
+              (!isFileProcessing && !isBulkUploadDone && !!file)
             }
           >
             <AddToCart className="stroke-white stroke-2" width={16} />
