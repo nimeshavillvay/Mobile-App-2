@@ -29,6 +29,7 @@ const OrderConfirmDialog = ({
 }: OrderConfirmDialogProps) => {
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
+  const [confirmClicked, setConfirmClicked] = useState(false);
 
   const cartQuery = useSuspenseCart(token);
   const creditCartsQuery = useSuspenseCreditCards(token);
@@ -46,6 +47,7 @@ const OrderConfirmDialog = ({
   const clickConfirmOrder = async () => {
     // Check if a valid payment method is selected
     if (selectedPaymentId) {
+      setConfirmClicked(true);
       try {
         await checkoutMutation.mutateAsync();
       } catch {
@@ -75,10 +77,14 @@ const OrderConfirmDialog = ({
 
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Confirm Your Order</DialogTitle>
+          <DialogTitle>
+            {confirmClicked ? "Please wait" : "Confirm Your Order"}
+          </DialogTitle>
 
           <DialogDescription>
-            Upon confirmation, your order will be placed.
+            {confirmClicked
+              ? "Order is processing"
+              : "Place your OrderUpon confirmation, your order will be placed."}
           </DialogDescription>
         </DialogHeader>
 
