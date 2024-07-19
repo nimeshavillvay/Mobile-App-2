@@ -36,6 +36,32 @@ config.resolver.resolveRequest = (context, moduleName, platform) => {
     };
   }
 
+  // Custom resolvers for since the "@repo/shared-logic" package is in
+  // a folder called 'shared-logic'
+  if (moduleName.startsWith("@repo/shared-logic/apis/")) {
+    return {
+      type: "sourceFile",
+      filePath: path.resolve(
+        workspaceRoot,
+        `${moduleName.replace(
+          "@repo/shared-logic/apis/",
+          "packages/shared-logic/src/apis/",
+        )}.ts`,
+      ),
+    };
+  } else if (moduleName.startsWith("@repo/shared-logic/zod-schema/")) {
+    return {
+      type: "sourceFile",
+      filePath: path.resolve(
+        workspaceRoot,
+        `${moduleName.replace(
+          "@repo/shared-logic/zod-schema/",
+          "packages/shared-logic/src/lib/zod-schema/",
+        )}.ts`,
+      ),
+    };
+  }
+
   // Ensure you call the default resolver.
   return context.resolveRequest(context, moduleName, platform);
 };
