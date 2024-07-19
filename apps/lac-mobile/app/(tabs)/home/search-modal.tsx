@@ -1,4 +1,4 @@
-import SearchModalLayout from "../../components/search/search-modal";
+import { SearchModalLayout } from "@repo/native-ui/components/search/search-modal";
 
 const SearchModal = () => {
   return <SearchModalLayout />;
