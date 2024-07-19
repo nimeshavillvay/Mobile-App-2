@@ -816,6 +816,7 @@ const CartItem = ({
                   <Minus className="size-4" />
                   <span className="sr-only">Reduce quantity</span>
                 </Button>
+
                 <Controller
                   control={control}
                   name="quantity"
@@ -850,6 +851,7 @@ const CartItem = ({
                     />
                   )}
                 />
+
                 <Button
                   type="button"
                   variant="subtle"
