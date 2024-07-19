@@ -1,12 +1,11 @@
 "use client";
 
-import type { Country } from "@/(auth)/register/types";
 import FullAddress from "@/_components/full-address";
 import ShippingAddressSelector from "@/_components/shipping-adddress-selector";
 import useSuspenseBillingAddress from "@/_hooks/address/use-suspense-billing-address.hook";
 import useSuspenseShippingAddressList from "@/_hooks/address/use-suspense-shipping-address-list.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
-import type { ShippingMethod, Token } from "@/_lib/types";
+import type { Country, ShippingMethod, Token } from "@/_lib/types";
 import { Truck } from "@repo/web-ui/components/icons/truck";
 import { Button } from "@repo/web-ui/components/ui/button";
 import {

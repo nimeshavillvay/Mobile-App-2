@@ -1,11 +1,10 @@
-import type { Country } from "@/(auth)/register/types";
 import FullAddress from "@/_components/full-address";
 import useAddShippingAddressMutation from "@/_hooks/address/use-add-shipping-address-mutation.hook";
 import usePhoneNumberFormatter from "@/_hooks/address/use-phone-number-formatter.hook";
 import useZipCodeFormatter from "@/_hooks/address/use-zip-code.hook";
 import useCounties from "@/_hooks/registration/use-counties.hook";
 import useStates from "@/_hooks/registration/use-states.hook";
-import type { Address } from "@/_lib/types";
+import type { Address, Country } from "@/_lib/types";
 import { cn } from "@/_lib/utils";
 import { PHONE_NUMBER_VALIDATION } from "@/_lib/zod-helper";
 import { zodResolver } from "@hookform/resolvers/zod";

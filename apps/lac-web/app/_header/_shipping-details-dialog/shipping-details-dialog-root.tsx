@@ -1,6 +1,5 @@
-import { getCountries } from "@/(auth)/register/apis";
 import ShippingDetailsDialog from "@/_components/shipping-details-dialog";
-import { getShippingMethods } from "@/_lib/apis/server";
+import { getCountries, getShippingMethods } from "@/_lib/apis/server";
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import { cookies } from "next/headers";

@@ -1,5 +1,4 @@
-import { getCountries } from "@/(auth)/register/apis";
-import { getShippingMethods } from "@/_lib/apis/server";
+import { getCountries, getShippingMethods } from "@/_lib/apis/server";
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import { cookies } from "next/headers";
 import { type ComponentProps } from "react";

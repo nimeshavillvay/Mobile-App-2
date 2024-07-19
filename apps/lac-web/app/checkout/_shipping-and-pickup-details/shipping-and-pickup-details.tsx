@@ -1,10 +1,10 @@
 "use client";
 
-import type { Country } from "@/(auth)/register/types";
 import FullAddress from "@/_components/full-address";
 import useSuspenseShippingAddressList from "@/_hooks/address/use-suspense-shipping-address-list.hook";
 import useSuspenseCart from "@/_hooks/cart/use-suspense-cart.hook";
 import useUpdateCartConfigMutation from "@/_hooks/cart/use-update-cart-config-mutation.hook";
+import type { Country } from "@/_lib/types";
 import { cn } from "@/_lib/utils";
 import { Button } from "@repo/web-ui/components/ui/button";
 import { Calendar } from "@repo/web-ui/components/ui/calendar";

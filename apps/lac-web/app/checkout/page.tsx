@@ -1,6 +1,5 @@
-import { getCountries } from "@/(auth)/register/apis";
 import OrderSummary from "@/_components/order-summary";
-import { getPaymentMethods, getPlants } from "@/_lib/apis/server";
+import { getCountries, getPaymentMethods, getPlants } from "@/_lib/apis/server";
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import type { Metadata } from "next";

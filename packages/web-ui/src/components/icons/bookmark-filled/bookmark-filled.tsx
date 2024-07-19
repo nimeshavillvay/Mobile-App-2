@@ -18,7 +18,7 @@ export const BookmarkFilled = ({
       <path
         d="M15.5 19.5V0.5H0.5V19.5L8 15.5L15.5 19.5Z"
         stroke="black"
-        stroke-linecap="round"
+        strokeLinecap-linecap="round"
       />
     </svg>
   );

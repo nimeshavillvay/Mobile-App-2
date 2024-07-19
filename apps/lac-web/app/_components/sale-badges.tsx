@@ -15,7 +15,6 @@ const SaleBadges = ({
 }: SaleBadgesProps) => {
   return (
     <div className="flex flex-row justify-end gap-2">
-      {showFlashDealText}
       {isNewItem && (
         <div
           className="flex flex-row items-center gap-1 rounded px-2 py-1.5 text-sm font-semibold leading-4"

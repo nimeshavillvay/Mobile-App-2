@@ -1,10 +1,10 @@
-import type { Country } from "@/(auth)/register/types";
 import AddShippingAddressDialog from "@/_components/add-shipping-address-dialog";
 import FullAddress from "@/_components/full-address";
 import useSuspenseShippingAddressList from "@/_hooks/address/use-suspense-shipping-address-list.hook";
 import useSuspenseCart from "@/_hooks/cart/use-suspense-cart.hook";
 import useUpdateCartConfigMutation from "@/_hooks/cart/use-update-cart-config-mutation.hook";
 import useSuspenseUsersList from "@/_hooks/user/use-suspense-users-list.hook";
+import type { Country } from "@/_lib/types";
 import { cn } from "@/_lib/utils";
 import { CheckCircle } from "@repo/web-ui/components/icons/check-circle";
 import { CheckCircleFilled } from "@repo/web-ui/components/icons/check-circle-filled";

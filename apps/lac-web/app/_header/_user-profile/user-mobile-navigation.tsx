@@ -1,11 +1,10 @@
-import type { Country } from "@/(auth)/register/types";
 import ShippingDetailsDialog from "@/_components/shipping-details-dialog";
 import useLogoutMutation from "@/_hooks/user/use-logout-mutation.hook";
 import useOSRLogoutMutation from "@/_hooks/user/use-osr-logout-mutation.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
 import useSuspenseUsersList from "@/_hooks/user/use-suspense-users-list.hook";
 import { cva } from "@/_lib/cva.config";
-import type { ShippingMethod } from "@/_lib/types";
+import type { Country, ShippingMethod } from "@/_lib/types";
 import { ChevronRight } from "@repo/web-ui/components/icons/chevron-right";
 import { Button } from "@repo/web-ui/components/ui/button";
 import {

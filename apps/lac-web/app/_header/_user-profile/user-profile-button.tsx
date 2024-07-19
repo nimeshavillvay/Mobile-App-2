@@ -1,12 +1,11 @@
 "use client";
 
-import type { Country } from "@/(auth)/register/types";
 import ShippingDetailsDialog from "@/_components/shipping-details-dialog";
 import useLogoutMutation from "@/_hooks/user/use-logout-mutation.hook";
 import useOSRLogoutMutation from "@/_hooks/user/use-osr-logout-mutation.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
 import useSuspenseUsersList from "@/_hooks/user/use-suspense-users-list.hook";
-import type { ShippingMethod } from "@/_lib/types";
+import type { Country, ShippingMethod } from "@/_lib/types";
 import { cn } from "@/_lib/utils";
 import { BookmarkOutline } from "@repo/web-ui/components/icons/bookmark-outline";
 import { Building } from "@repo/web-ui/components/icons/building";
