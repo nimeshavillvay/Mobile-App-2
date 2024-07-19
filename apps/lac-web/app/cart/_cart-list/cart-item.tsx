@@ -5,7 +5,12 @@ import useDebouncedState from "@/_hooks/misc/use-debounced-state.hook";
 import useSuspenseCheckAvailability from "@/_hooks/product/use-suspense-check-availability.hook";
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
-import { DEFAULT_PLANT, NOT_AVAILABLE, NOT_IN_STOCK } from "@/_lib/constants";
+import {
+  DEFAULT_PLANT,
+  MAX_QUANTITY,
+  NOT_AVAILABLE,
+  NOT_IN_STOCK,
+} from "@/_lib/constants";
 import type {
   CartConfiguration,
   CartItemConfiguration,
@@ -54,7 +59,6 @@ import { Controller, useForm } from "react-hook-form";
 import { GiRadioactive } from "react-icons/gi";
 import Balancer from "react-wrap-balancer";
 import { z } from "zod";
-import { MAX_QUANTITY } from "../../_lib/constants";
 import { useCartFormIdContext } from "../cart-form-id-context";
 import {
   ALTERNATIVE_BRANCHES,
