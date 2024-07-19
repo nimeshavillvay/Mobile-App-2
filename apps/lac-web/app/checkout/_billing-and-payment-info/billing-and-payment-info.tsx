@@ -86,13 +86,20 @@ const BillingAndPaymentInfo = ({
 
   const deleteCreditCardMutation = useDeleteCreditCardMutation();
 
+  const [paymentMethodSelected, setPaymentMethodSelected] = useState(
+    !!cartQuery.data.configuration.paymentToken ||
+      otherPaymentMethods.length > 0,
+  );
+
   const [paymentId, setPaymentId] = useState(() =>
     getPaymentId(
       {
         paymentToken: cartQuery.data.configuration.paymentToken,
-        paymentMethod: cartQuery.data.configuration.paymentMethod,
       },
-      { creditCards: creditCartsQuery.data, paymentMethods },
+      {
+        creditCards: creditCartsQuery.data,
+        paymentMethods: mappedPaymentMethods,
+      },
     ),
   );
 
@@ -104,6 +111,7 @@ const BillingAndPaymentInfo = ({
       (card) => card.id.toString() === id,
     );
     if (selectedCreditCard) {
+      setPaymentMethodSelected(true);
       return updateCartConfigMutation.mutate({
         cardName: selectedCreditCard.name,
         cardType: selectedCreditCard.type,
@@ -120,6 +128,7 @@ const BillingAndPaymentInfo = ({
       (paymentMethod) => paymentMethod.code === id,
     );
     if (selectedPaymentMethod) {
+      setPaymentMethodSelected(true);
       return updateCartConfigMutation.mutate({
         cardName: "",
         cardType: "",
@@ -128,6 +137,43 @@ const BillingAndPaymentInfo = ({
         paymentToken: "0000",
       });
     }
+  };
+
+  const deleteCreditCard = (cardId: number) => {
+    deleteCreditCardMutation.mutate(cardId, {
+      onSuccess: () => {
+        updateCartConfigMutation.mutate(
+          {
+            cardName: "",
+            cardType: "",
+            expireDate: "",
+            paymentMethod: paymentMethods.find(
+              (paymentMethod) => paymentMethod.isCreditCard,
+            )?.code,
+            paymentToken: "",
+          },
+          {
+            onSuccess: () => {
+              const selectedPaymentId = getPaymentId(
+                {
+                  paymentToken: "",
+                },
+                {
+                  creditCards: creditCartsQuery.data.filter(
+                    (card) => card.id !== cardId,
+                  ),
+                  paymentMethods: mappedPaymentMethods,
+                },
+              );
+              if (selectedPaymentId === "") {
+                setPaymentMethodSelected(false);
+              }
+              setPaymentId(selectedPaymentId);
+            },
+          },
+        );
+      },
+    });
   };
 
   return (
@@ -186,7 +232,7 @@ const BillingAndPaymentInfo = ({
                       variant="ghost"
                       size="icon"
                       className="absolute right-3 top-3 size-4 p-0"
-                      onClick={() => deleteCreditCardMutation.mutate(card.id)}
+                      onClick={() => deleteCreditCard(card.id)}
                     >
                       <Close width={16} height={16} />
                       <span className="sr-only">Remove</span>
@@ -278,7 +324,7 @@ const BillingAndPaymentInfo = ({
 
       <OrderConfirmDialog
         token={token}
-        otherPaymentMethods={otherPaymentMethods}
+        paymentMethodSelected={paymentMethodSelected}
       />
     </section>
   );

@@ -24,6 +24,7 @@ import {
 } from "@repo/web-ui/components/ui/form";
 import { Input, inputStyles } from "@repo/web-ui/components/ui/input";
 import dayjs from "dayjs";
+import type { ChangeEvent } from "react";
 // eslint-disable-next-line no-restricted-imports
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -192,6 +193,9 @@ const AddCreditCardDialog = ({
         } else {
           // Clear form when the dialog is closed
           form.reset();
+          formatDate({
+            target: { value: "" },
+          } as ChangeEvent<HTMLInputElement>);
         }
       }}
     >
