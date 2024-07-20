@@ -91,7 +91,9 @@ const MyCustomerDetails = ({
       case columnCartItemCount:
         return customer.totalItems > 0 ? customer.totalItems : null;
       case columnCartLastUpdate:
-        return dayjs(customer.date.toString()).format("DD/MM/YYYY");
+        return customer.date
+          ? dayjs(customer.date.toString()).format("MM/DD/YYYY")
+          : "";
     }
   };
 

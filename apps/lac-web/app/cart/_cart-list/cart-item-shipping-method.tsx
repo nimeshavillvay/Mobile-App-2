@@ -757,6 +757,64 @@ const CartItemShippingMethod = ({
         </li>
       )}
 
+      {isBackOrderAllEnabled && (
+        <li className="flex flex-col items-stretch gap-2">
+          <div className="flex flex-row items-center gap-3">
+            <Checkbox
+              id={backOrderId}
+              className="size-5 rounded-full"
+              iconClassName="size-4"
+              checked={selectedShippingOption === MAIN_OPTIONS.BACK_ORDER}
+              onCheckedChange={(checked) =>
+                handleDeliveryOptionSelect({
+                  checked: checked === true,
+                  selectedOption: MAIN_OPTIONS.BACK_ORDER,
+                })
+              }
+              disabled={!backOrderAll}
+            />
+
+            <Label htmlFor={backOrderId} className="text-base">
+              Backorder everything
+            </Label>
+          </div>
+          <div className="ml-[1.625rem] flex flex-col gap-2">
+            {backOrderAll?.plants[0]?.shippingMethods &&
+              backOrderAll?.plants[0]?.shippingMethods.length > 0 && (
+                <Select
+                  disabled={
+                    selectedShippingOption !== MAIN_OPTIONS.BACK_ORDER ||
+                    backOrderAll.plants[0]?.shippingMethods?.length <= 1
+                  }
+                  value={selectedBackorderShippingMethod}
+                  onValueChange={(method) => handleBackorderMethod(method)}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select a delivery method" />
+                  </SelectTrigger>
+
+                  <SelectContent>
+                    {backOrderAll.plants[0]?.shippingMethods.map((option) => (
+                      <SelectItem key={option.code} value={option.code}>
+                        {option.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+          </div>
+          {selectedShippingOption === MAIN_OPTIONS.BACK_ORDER && (
+            <div className="ml-[1.625rem]">
+              <BackOrderInfoBanner
+                date={
+                  getFirstBackOrderDateFromPlants(backOrderAll?.plants) ?? "N/A"
+                }
+              />
+            </div>
+          )}
+        </li>
+      )}
+
       <li className="flex flex-col items-stretch gap-2">
         <div className="flex flex-row items-center gap-3">
           <Checkbox
@@ -1018,64 +1076,6 @@ const CartItemShippingMethod = ({
           </div>
         )}
       </li>
-
-      {isBackOrderAllEnabled && (
-        <li className="flex flex-col items-stretch gap-2">
-          <div className="flex flex-row items-center gap-3">
-            <Checkbox
-              id={backOrderId}
-              className="size-5 rounded-full"
-              iconClassName="size-4"
-              checked={selectedShippingOption === MAIN_OPTIONS.BACK_ORDER}
-              onCheckedChange={(checked) =>
-                handleDeliveryOptionSelect({
-                  checked: checked === true,
-                  selectedOption: MAIN_OPTIONS.BACK_ORDER,
-                })
-              }
-              disabled={!backOrderAll}
-            />
-
-            <Label htmlFor={backOrderId} className="text-base">
-              Backorder everything
-            </Label>
-          </div>
-          <div className="ml-[1.625rem] flex flex-col gap-2">
-            {backOrderAll?.plants[0]?.shippingMethods &&
-              backOrderAll?.plants[0]?.shippingMethods.length > 0 && (
-                <Select
-                  disabled={
-                    selectedShippingOption !== MAIN_OPTIONS.BACK_ORDER ||
-                    backOrderAll.plants[0]?.shippingMethods?.length <= 1
-                  }
-                  value={selectedBackorderShippingMethod}
-                  onValueChange={(method) => handleBackorderMethod(method)}
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select a delivery method" />
-                  </SelectTrigger>
-
-                  <SelectContent>
-                    {backOrderAll.plants[0]?.shippingMethods.map((option) => (
-                      <SelectItem key={option.code} value={option.code}>
-                        {option.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              )}
-          </div>
-          {selectedShippingOption === MAIN_OPTIONS.BACK_ORDER && (
-            <div className="ml-[1.625rem]">
-              <BackOrderInfoBanner
-                date={
-                  getFirstBackOrderDateFromPlants(backOrderAll?.plants) ?? "N/A"
-                }
-              />
-            </div>
-          )}
-        </li>
-      )}
     </ul>
   );
 };
