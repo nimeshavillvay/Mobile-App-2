@@ -10,7 +10,7 @@ const Layout = () => {
         }}
       />
       <Stack.Screen
-        name="search-modal"
+        name="search"
         options={{
           presentation: "modal",
           headerShown: false,

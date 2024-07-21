@@ -1,5 +1,5 @@
+import { AppTab } from "@repo/native-ui/components/base/app-tab";
 import { Text, View } from "tamagui";
-import AppTab from "../../components/base/app-tab";
 
 const ShopPage = () => {
   return (

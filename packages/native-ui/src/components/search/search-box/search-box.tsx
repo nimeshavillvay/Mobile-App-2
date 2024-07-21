@@ -1,13 +1,15 @@
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Feather from "@expo/vector-icons/Feather";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { Input, View, XStack } from "tamagui";
 
 export const SearchBox = () => {
   const inputRef = useRef<Input>(null);
+  const [value, setValue] = useState("");
 
   return (
     <View
+      testID="search-box-container"
       flexBasis="auto"
       flexDirection="row"
       borderRadius={7}
@@ -20,10 +22,23 @@ export const SearchBox = () => {
       alignItems="center"
       backgroundColor="$gray2Light"
     >
-      <XStack alignItems="center" justifyContent="flex-start" width="90%">
-        <AntDesign name="search1" size={20} color="#cccccc" />
+      <XStack
+        testID="search-box-xstack"
+        alignItems="center"
+        justifyContent="flex-start"
+        width="90%"
+      >
+        <AntDesign
+          testID="search-icon"
+          name="search1"
+          size={20}
+          color="#cccccc"
+        />
         <Input
+          testID="search-input"
           ref={inputRef}
+          value={value}
+          onChangeText={setValue}
           placeholder="What are you looking for?"
           backgroundColor="$colorTransparent"
           borderWidth={0}
@@ -33,10 +48,11 @@ export const SearchBox = () => {
         />
       </XStack>
       <Feather
+        testID="clear-icon"
         name="x"
         size={20}
         style={{ marginLeft: "auto" }}
-        onPress={() => inputRef.current?.clear()}
+        onPress={() => setValue("")}
       />
     </View>
   );

@@ -15,8 +15,14 @@ export const AppBar = ({
   const path = usePathname();
 
   return (
-    <View flexBasis="auto" alignItems="stretch">
-      <View pb={10} minHeight={60} flexDirection="row" alignItems="center">
+    <View flexBasis="auto" alignItems="stretch" testID="app-bar-main-view">
+      <View
+        pb={10}
+        minHeight={60}
+        flexDirection="row"
+        alignItems="center"
+        testID="app-bar-inner-view"
+      >
         {router.canGoBack() && (
           <Button
             onPress={() => router.back()}
@@ -37,6 +43,7 @@ export const AppBar = ({
               pr={20}
               alignItems="center"
               columnGap={20}
+              testID="app-bar-icons-view"
             >
               <Link href={path + "/search"} testID="search-icon">
                 <AntDesign name="search1" size={24} />

@@ -4,7 +4,12 @@ import { SearchBox } from "~/components/search/search-box";
 
 export const SearchModalLayout = () => {
   return (
-    <YStack backgroundColor="white" flex={1} paddingHorizontal={12}>
+    <YStack
+      testID="search-modal-layout"
+      backgroundColor="white"
+      flex={1}
+      paddingHorizontal={12}
+    >
       <AppBar title="Search" type="search" />
       <SearchBox />
     </YStack>

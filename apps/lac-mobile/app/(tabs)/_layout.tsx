@@ -18,7 +18,7 @@ const TabLayout = () => {
           tabBarActiveTintColor: "#e5484d",
           tabBarStyle: {
             backgroundColor: "rgba(0,0,0,0.91)",
-            display: usePathname().endsWith("search-modal") ? "none" : "flex",
+            display: usePathname().endsWith("search") ? "none" : "flex",
           },
           headerShown: false,
         }}
