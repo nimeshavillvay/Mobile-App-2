@@ -11,6 +11,7 @@
     "test": "jest"
   },
   "devDependencies": {
+    "@react-native-masked-view/masked-view": "^0.3.1",
     "@repo/eslint-config": "workspace:*",
     "@tamagui/config": "1.102.1",
     "@tamagui/lucide-icons": "1.102.1",
@@ -23,15 +24,20 @@
     "jest-expo": "^51.0.3",
     "react": "^18.3.1",
     "react-native": "0.74.3",
+    "react-native-linear-gradient": "^2.8.3",
+    "react-native-skeleton-placeholder": "^5.2.4",
     "tamagui": "^1.102.1",
     "typescript": "~5.5.3"
   },
   "peerDependencies": {
+    "@react-native-masked-view/masked-view": "^0.3.1",
     "@tamagui/lucide-icons": "1.102.1",
     "expo": "51.0.20",
     "expo-image": "~1.12.12",
     "react": "^18.3.1",
     "react-native": "0.74.3",
+    "react-native-linear-gradient": "^2.8.3",
+    "react-native-skeleton-placeholder": "^5.2.4",
     "tamagui": "^1.102.1"
   }
 }

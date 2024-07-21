@@ -6,6 +6,7 @@
     "paths": {
       "@/components/*": ["./components/*"],
       "@/lib/*": ["./lib/*"],
+      "@/mocks/*": ["./mocks/*"],
       "~/*": [
         "../../packages/native-ui/src/*",
         "../../packages/shared-logic/src/*"
