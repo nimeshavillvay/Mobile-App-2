@@ -360,11 +360,14 @@ const OrderHistoryListSelectors = ({
             label="Duration"
             value={`${formattedFromDate} - ${formattedToDate}`}
           />
-
-          <FilterDetailsBoxForMobile
-            label="Order Type"
-            value={`Return, Credit (+2)`}
-          />
+          {typesFilter?.values?.length &&
+            typesFilter.values.map((orderType) => (
+              <FilterDetailsBoxForMobile
+                key={`type-${orderType.id}`}
+                label="Order Type"
+                value={orderType.value}
+              />
+            ))}
         </div>
       </div>
 
