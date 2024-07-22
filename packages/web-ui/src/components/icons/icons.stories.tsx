@@ -27,6 +27,8 @@ import { Facebook } from "./facebook";
 import { FileDownload } from "./file-download";
 import { Gear } from "./gear";
 import { Headset } from "./headset";
+import { HeartFilled } from "./heart-filled";
+import { HeartOutline } from "./heart-outline";
 import { Instagram } from "./instagram";
 import { LinkedIn } from "./linkedin";
 import { MagnifyingGlass } from "./magnifying-glass";
@@ -127,6 +129,14 @@ export const Showcase: Story = {
           <Bell />
         </IconContainer>
 
+        <IconContainer name="BookmarkFilled">
+          <BookmarkFilled />
+        </IconContainer>
+
+        <IconContainer name="BookmarkOutline">
+          <BookmarkOutline />
+        </IconContainer>
+
         <IconContainer name="Building">
           <Building />
         </IconContainer>
@@ -191,12 +201,12 @@ export const Showcase: Story = {
           <Headset />
         </IconContainer>
 
-        <IconContainer name="BookmarkFilled">
-          <BookmarkFilled />
+        <IconContainer name="HeartFilled">
+          <HeartFilled />
         </IconContainer>
 
-        <IconContainer name="BookmarkOutline">
-          <BookmarkOutline />
+        <IconContainer name="HeartOutline">
+          <HeartOutline />
         </IconContainer>
 
         <IconContainer name="Instagram">
