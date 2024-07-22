@@ -4,6 +4,7 @@ import "server-only";
 import { api } from "../api";
 import { DEFAULT_REVALIDATE } from "../constants";
 import type {
+  Country,
   PasswordPolicies,
   PaymentMethod,
   Plant,
@@ -475,4 +476,14 @@ export const getCategoriesList = async () => {
   };
 
   return categories.map(transformCategory);
+};
+
+export const getCountries = async () => {
+  return await api
+    .get("rest/register/countries", {
+      next: {
+        revalidate: DEFAULT_REVALIDATE,
+      },
+    })
+    .json<Country[]>();
 };

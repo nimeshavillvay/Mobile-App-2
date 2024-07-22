@@ -9,6 +9,8 @@ import { ArrowUp } from "./arrow-up";
 import { ArrowUpRight } from "./arrow-up-right";
 import { BarcodeScan } from "./barcode-scan";
 import { Bell } from "./bell";
+import { BookmarkFilled } from "./bookmark-filled";
+import { BookmarkOutline } from "./bookmark-outline";
 import { Building } from "./building";
 import { Check } from "./check";
 import { CheckCircle } from "./check-circle";
@@ -18,6 +20,7 @@ import { ChevronLeft } from "./chevron-left";
 import { ChevronRight } from "./chevron-right";
 import { ChevronUp } from "./chevron-up";
 import { Close } from "./close";
+import { CloudDownload } from "./cloud-download";
 import { Download } from "./download";
 import { Email } from "./email";
 import { Exit } from "./exit";
@@ -127,6 +130,14 @@ export const Showcase: Story = {
           <Bell />
         </IconContainer>
 
+        <IconContainer name="BookmarkFilled">
+          <BookmarkFilled />
+        </IconContainer>
+
+        <IconContainer name="BookmarkOutline">
+          <BookmarkOutline />
+        </IconContainer>
+
         <IconContainer name="Building">
           <Building />
         </IconContainer>
@@ -161,6 +172,10 @@ export const Showcase: Story = {
 
         <IconContainer name="Close">
           <Close />
+        </IconContainer>
+
+        <IconContainer name="CloudDownload">
+          <CloudDownload />
         </IconContainer>
 
         <IconContainer name="Download">

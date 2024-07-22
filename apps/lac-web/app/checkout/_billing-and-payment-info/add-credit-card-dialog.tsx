@@ -192,6 +192,7 @@ const AddCreditCardDialog = ({
         } else {
           // Clear form when the dialog is closed
           form.reset();
+          formatDate("");
         }
       }}
     >
@@ -292,7 +293,7 @@ const AddCreditCardDialog = ({
                       {...field}
                       value={date}
                       onChange={(event) => {
-                        const formatted = formatDate(event);
+                        const formatted = formatDate(event.target.value);
                         field.onChange(formatted ?? "");
                       }}
                     />

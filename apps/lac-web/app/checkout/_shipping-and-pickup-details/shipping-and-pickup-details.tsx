@@ -4,6 +4,7 @@ import FullAddress from "@/_components/full-address";
 import useSuspenseShippingAddressList from "@/_hooks/address/use-suspense-shipping-address-list.hook";
 import useSuspenseCart from "@/_hooks/cart/use-suspense-cart.hook";
 import useUpdateCartConfigMutation from "@/_hooks/cart/use-update-cart-config-mutation.hook";
+import type { Country } from "@/_lib/types";
 import { cn } from "@/_lib/utils";
 import { Button } from "@repo/web-ui/components/ui/button";
 import { Calendar } from "@repo/web-ui/components/ui/calendar";
@@ -25,14 +26,17 @@ dayjs.extend(advancedFormat);
 
 type ShippingAndPickupDetailsProps = {
   readonly token: string;
+  readonly countries: Country[];
 };
 
-const ShippingAndPickupDetails = ({ token }: ShippingAndPickupDetailsProps) => {
+const ShippingAndPickupDetails = ({
+  token,
+  countries,
+}: ShippingAndPickupDetailsProps) => {
   const id = useId();
   const shipOrderId = `ship-order-${id}`;
   const driversNoteId = `drivers-note-${id}`;
 
-  const [open, setOpen] = useState(true);
   const [openCalendar, setOpenCalendar] = useState(false);
 
   const shippingAddressListQuery = useSuspenseShippingAddressList(token);
@@ -87,16 +91,6 @@ const ShippingAndPickupDetails = ({ token }: ShippingAndPickupDetailsProps) => {
         <h2 className="font-title text-xl font-medium text-wurth-gray-800 md:text-2xl md:tracking-[-0.144px]">
           Shipping and Pickup Details
         </h2>
-
-        {!open && (
-          <Button
-            variant="outline"
-            className="font-bold text-black shadow-md"
-            onClick={() => setOpen(true)}
-          >
-            Edit
-          </Button>
-        )}
       </div>
 
       <div className="flex flex-col gap-8 lg:flex-row lg:items-start">
@@ -112,127 +106,103 @@ const ShippingAndPickupDetails = ({ token }: ShippingAndPickupDetailsProps) => {
             </div>
           </div>
 
-          {open && <SelectAddressDialog token={token} />}
+          <SelectAddressDialog token={token} countries={countries} />
         </div>
 
         <div className="flex-1 space-y-4">
-          {open ? (
-            <>
-              <div className="space-y-1">
-                <h3 className="text-sm text-black">Default Shipping</h3>
+          <div className="space-y-1">
+            <h3 className="text-sm text-black">Default Shipping</h3>
 
-                <p className="text-base text-wurth-gray-800">
-                  Standard Shipping via Truck
-                </p>
-              </div>
+            <p className="text-base text-wurth-gray-800">
+              Standard Shipping via Truck
+            </p>
+          </div>
 
-              <div className="space-y-2">
-                <h3 className="text-sm text-black">Set Future Delivery Date</h3>
+          <div className="space-y-2">
+            <h3 className="text-sm text-black">Set Future Delivery Date</h3>
 
-                <Popover open={openCalendar} onOpenChange={setOpenCalendar}>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
+            <Popover open={openCalendar} onOpenChange={setOpenCalendar}>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  className={cn(
+                    "w-full justify-start border-wurth-gray-250 text-left font-normal",
+                    !date && "text-muted-foreground",
+                  )}
+                >
+                  <CalendarIcon
+                    className={cn(
+                      "mr-2 h-4 w-4 stroke-wurth-gray-250",
+                      !!date && "stroke-wurth-gray-800",
+                    )}
+                  />
+                  {date ? (
+                    dayjs(date).format("MMMM Do, YYYY")
+                  ) : (
+                    <span
                       className={cn(
-                        "w-full justify-start border-wurth-gray-250 text-left font-normal",
-                        !date && "text-muted-foreground",
+                        "text-base text-wurth-gray-250",
+                        !!date && "text-wurth-gray-800",
                       )}
                     >
-                      <CalendarIcon
-                        className={cn(
-                          "mr-2 h-4 w-4 stroke-wurth-gray-250",
-                          !!date && "stroke-wurth-gray-800",
-                        )}
-                      />
-                      {date ? (
-                        dayjs(date).format("MMMM Do, YYYY")
-                      ) : (
-                        <span
-                          className={cn(
-                            "text-base text-wurth-gray-250",
-                            !!date && "text-wurth-gray-800",
-                          )}
-                        >
-                          Delivery date
-                        </span>
-                      )}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0">
-                    <Calendar
-                      mode="single"
-                      selected={date}
-                      onSelect={handleDateChange}
-                      initialFocus
-                      fromDate={new Date()}
-                      defaultMonth={date}
-                    />
-                  </PopoverContent>
-                </Popover>
-              </div>
+                      Delivery date
+                    </span>
+                  )}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0">
+                <Calendar
+                  mode="single"
+                  selected={date}
+                  onSelect={handleDateChange}
+                  initialFocus
+                  fromDate={new Date()}
+                  defaultMonth={date}
+                />
+              </PopoverContent>
+            </Popover>
+          </div>
 
-              <div>
-                <div className="flex flex-row items-center gap-2">
-                  <Checkbox
-                    id={shipOrderId}
-                    checked={checked}
-                    onCheckedChange={handleCheckboxChange}
-                  />
+          <div>
+            <div className="flex flex-row items-center gap-2">
+              <Checkbox
+                id={shipOrderId}
+                checked={checked}
+                onCheckedChange={handleCheckboxChange}
+              />
 
-                  <Label
-                    htmlFor={shipOrderId}
-                    className="text-sm font-medium text-wurth-gray-800"
-                  >
-                    Ships order complete
-                  </Label>
-                </div>
-
-                <p className="ml-[1.375rem] text-sm text-wurth-gray-500">
-                  Hold order until all items are in
-                </p>
-              </div>
-            </>
-          ) : (
-            <div className="space-y-1">
-              <h3 className="text-sm text-black">Set Future Delivery Date</h3>
-
-              <p className="text-base text-wurth-gray-800">
-                {dayjs(date).format("MMMM Do, YYYY")}
-              </p>
+              <Label
+                htmlFor={shipOrderId}
+                className="text-sm font-medium text-wurth-gray-800"
+              >
+                Ships order complete
+              </Label>
             </div>
-          )}
+
+            <p className="ml-[1.375rem] text-sm text-wurth-gray-500">
+              Hold order until all items are in
+            </p>
+          </div>
         </div>
 
         <div className="flex-1 space-y-1.5">
-          {open && (
-            <>
-              <Label
-                htmlFor={driversNoteId}
-                className="text-sm text-wurth-gray-800"
-              >
-                Driver&apos; Notes
-              </Label>
+          <Label
+            htmlFor={driversNoteId}
+            className="text-sm text-wurth-gray-800"
+          >
+            Driver&apos; Notes
+          </Label>
 
-              <Textarea
-                id={driversNoteId}
-                placeholder="Note here"
-                className="min-h-[130px] resize-none p-3 text-base"
-                value={driversNote}
-                onChange={handleDriversNoteChange}
-                onBlur={handleDriversNoteBlur}
-              />
-            </>
-          )}
+          <Textarea
+            id={driversNoteId}
+            placeholder="Note here"
+            className="min-h-[130px] resize-none p-3 text-base"
+            value={driversNote}
+            onChange={handleDriversNoteChange}
+            onBlur={handleDriversNoteBlur}
+          />
         </div>
       </div>
-
-      {open && (
-        <div className="flex flex-row justify-end">
-          <Button className="font-bold" onClick={() => setOpen(false)}>
-            Save and Continue
-          </Button>
-        </div>
-      )}
     </section>
   );
 };

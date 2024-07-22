@@ -4,7 +4,7 @@ import useOSRLogoutMutation from "@/_hooks/user/use-osr-logout-mutation.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
 import useSuspenseUsersList from "@/_hooks/user/use-suspense-users-list.hook";
 import { cva } from "@/_lib/cva.config";
-import type { ShippingMethod } from "@/_lib/types";
+import type { Country, ShippingMethod } from "@/_lib/types";
 import { ChevronRight } from "@repo/web-ui/components/icons/chevron-right";
 import { Button } from "@repo/web-ui/components/ui/button";
 import {
@@ -31,11 +31,13 @@ const dividerStyles = cva({
 type UserMobileNavigationProps = {
   readonly token: string;
   readonly shippingMethods: ShippingMethod[];
+  readonly countries: Country[];
 };
 
 const UserMobileNavigation = ({
   token,
   shippingMethods,
+  countries,
 }: UserMobileNavigationProps) => {
   const checkLoginQuery = useSuspenseCheckLogin(token);
 
@@ -88,6 +90,7 @@ const UserMobileNavigation = ({
     <UserMobileProfileNavigation
       token={token}
       shippingMethods={shippingMethods}
+      countries={countries}
     />
   );
 };
@@ -97,6 +100,7 @@ export default UserMobileNavigation;
 const UserMobileProfileNavigation = ({
   token,
   shippingMethods,
+  countries,
 }: UserMobileNavigationProps) => {
   const usersListQuery = useSuspenseUsersList(token);
   const userProfile = usersListQuery.data.manageContact.yourProfile;
@@ -151,6 +155,7 @@ const UserMobileProfileNavigation = ({
                 <ShippingDetailsDialog
                   token={token}
                   shippingMethods={shippingMethods}
+                  countries={countries}
                 >
                   <Button
                     variant="ghost"
