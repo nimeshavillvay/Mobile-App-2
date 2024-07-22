@@ -1,18 +1,13 @@
-import { AppTab } from "@repo/native-ui/components/base/app-tab";
-import { Text, View } from "tamagui";
+import { ScreenLayout } from "@repo/native-ui/components/base/screen-layout";
+import { Text } from "tamagui";
+import { ScreenHeader } from "~/components/base/screen-header";
 
 const CartPage = () => {
   return (
-    <AppTab title="Home">
-      <View
-        flex={1}
-        backgroundColor="white"
-        alignItems="center"
-        justifyContent="center"
-      >
-        <Text>Cart Page</Text>
-      </View>
-    </AppTab>
+    <ScreenLayout>
+      <ScreenHeader title="Home" />
+      <Text>Cart Page</Text>
+    </ScreenLayout>
   );
 };
 

@@ -4,7 +4,7 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { Link, usePathname, useRouter } from "expo-router";
 import { Button, Text, View } from "tamagui";
 
-export const AppBar = ({
+export const ScreenHeader = ({
   title,
   type,
 }: {
@@ -15,13 +15,17 @@ export const AppBar = ({
   const path = usePathname();
 
   return (
-    <View flexBasis="auto" alignItems="stretch" testID="app-bar-main-view">
+    <View
+      flexBasis="auto"
+      alignItems="stretch"
+      testID="screen-header-main-view"
+    >
       <View
         pb={10}
         minHeight={60}
         flexDirection="row"
         alignItems="center"
-        testID="app-bar-inner-view"
+        testID="screen-header-inner-view"
       >
         {router.canGoBack() && (
           <Button
@@ -43,9 +47,9 @@ export const AppBar = ({
               pr={20}
               alignItems="center"
               columnGap={20}
-              testID="app-bar-icons-view"
+              testID="screen-header-icons-view"
             >
-              <Link href={path + "/search"} testID="search-icon">
+              <Link href={`${path}/search`} testID="search-icon">
                 <AntDesign name="search1" size={24} />
               </Link>
               <Link href={path}>

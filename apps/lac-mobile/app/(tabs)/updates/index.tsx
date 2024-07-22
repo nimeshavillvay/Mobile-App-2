@@ -1,18 +1,13 @@
-import { AppTab } from "@repo/native-ui/components/base/app-tab";
-import { Text, View } from "tamagui";
+import { ScreenHeader } from "@repo/native-ui/components/base/screen-header";
+import { ScreenLayout } from "@repo/native-ui/components/base/screen-layout";
+import { Text } from "tamagui";
 
 const UpdatesPage = () => {
   return (
-    <AppTab title="Home">
-      <View
-        flex={1}
-        backgroundColor="white"
-        alignItems="center"
-        justifyContent="center"
-      >
-        <Text>Updates Page</Text>
-      </View>
-    </AppTab>
+    <ScreenLayout>
+      <ScreenHeader title="Home" />
+      <Text>Updates Page</Text>
+    </ScreenLayout>
   );
 };
 

@@ -1,7 +1,7 @@
-import { SearchModalLayout } from "@repo/native-ui/components/search/search-modal";
+import { SearchLayout } from "@/components/search-layout";
 
 const Search = () => {
-  return <SearchModalLayout />;
+  return <SearchLayout />;
 };
 
 export default Search;
