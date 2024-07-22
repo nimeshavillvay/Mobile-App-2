@@ -11,7 +11,7 @@ import catalogCover from "./WLAC_Catalog_Cover.png";
 import { FileDownload } from "@repo/web-ui/components/icons/file-download";
 import type { ReactNode } from "react";
 import { SubTitle } from "../_components/sub-title";
-import { catalogData, nonInteractiveCatalogs } from "./catalog-data";
+import { nonInteractiveCatalogs } from "./catalog-data";
 
 export const metadata: Metadata = {
   title: "Catalogs & Literature",
@@ -192,33 +192,6 @@ const CatalogsLiteraturePage = () => {
             </h4>
           </div>
         </a>
-      </div>
-
-      <SubTitle>Other Catalogs</SubTitle>
-
-      <p className="mt-6">
-        <span className="block">Order directly from the catalog!</span>
-        <span className="block">
-          Open any of the catalogs below to see an interactive version of the
-          catalog.
-        </span>
-        <span className="block">
-          Click any <span className="bg-yellow-300">yellow highlighted</span>{" "}
-          item number to see the website page and add the item to your cart.
-          (Item numbers that are not highlighted in yellow may not be available
-          on the Web or may no longer be available.)
-        </span>
-      </p>
-
-      <div className="grid grid-cols-2 gap-8 gap-x-12 p-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
-        {catalogData.map((catalog) => (
-          <Catalog
-            url={catalog.url}
-            imageSrc={catalog.imageSrc}
-            alt={catalog.alt}
-            key={catalog.id}
-          />
-        ))}
       </div>
 
       <SubTitle>Non-Interactive Catalogs (PDF)</SubTitle>

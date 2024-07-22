@@ -229,4 +229,10 @@ export const nonInteractiveCatalogs: NonInteractiveCatalogDataType[] = [
     title: "Wurth Hand Tools Catalog PDF",
     text: "Hand Tools",
   },
+  {
+    id: "pg_catalog",
+    url: `${apiUrl}/assets/pdf/LP2049_Studio917_12-Pg_Catalog.pdf`,
+    title: "Studio 917 Hardware Catalog",
+    text: "Studio 917 Hardware Catalog",
+  },
 ];
