@@ -95,15 +95,19 @@ const ProductCard = ({
       )}
     >
       <ProductCardHero>
-        <div className="flex flex-row justify-between gap-2">
+        <div className="flex flex-row justify-between gap-2 @container/labels">
           {!isLaminateItem && discountPercent > 0 ? (
             <ProductCardDiscount>{discountPercent}</ProductCardDiscount>
           ) : (
-            <div />
+            <div className="invisible md:text-lg">0</div>
           )}
 
           {orientation === "vertical" && (
-            <SaleBadges onSale={onSale} isNewItem={isNewItem} />
+            <SaleBadges
+              onSale={onSale}
+              isNewItem={isNewItem}
+              showFlashDealText={!(discountPercent > 0 && onSale && isNewItem)}
+            />
           )}
         </div>
         {!!image && !!title && (
@@ -118,8 +122,12 @@ const ProductCard = ({
 
       <ProductCardContent>
         {orientation === "horizontal" && (
-          <div>
-            <SaleBadges onSale={onSale} isNewItem={isNewItem} />
+          <div className="@container/labels">
+            <SaleBadges
+              onSale={onSale}
+              isNewItem={isNewItem}
+              showFlashDealText={true}
+            />
           </div>
         )}
 

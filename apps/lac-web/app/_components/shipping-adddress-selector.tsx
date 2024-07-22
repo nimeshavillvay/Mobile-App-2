@@ -4,7 +4,7 @@ import FullAddress from "@/_components/full-address";
 import useSuspenseShippingAddressList from "@/_hooks/address/use-suspense-shipping-address-list.hook";
 import useUpdateShippingAddressMutation from "@/_hooks/address/use-update-shipping-address-mutation.hook";
 import useSuspenseUsersList from "@/_hooks/user/use-suspense-users-list.hook";
-import type { Token } from "@/_lib/types";
+import type { Country, Token } from "@/_lib/types";
 import { cn } from "@/_lib/utils";
 import { CheckCircle } from "@repo/web-ui/components/icons/check-circle";
 import { CheckCircleFilled } from "@repo/web-ui/components/icons/check-circle-filled";
@@ -25,11 +25,13 @@ import AddShippingAddressDialog from "./add-shipping-address-dialog";
 type ShippingAddressSelectorProps = {
   readonly token: Token;
   readonly children: ReactNode;
+  readonly countries: Country[];
 };
 
 const ShippingAddressSelector = ({
   token,
   children,
+  countries,
 }: ShippingAddressSelectorProps) => {
   const shippingAddressListQuery = useSuspenseShippingAddressList(token);
   const { toast } = useToast();
@@ -159,6 +161,7 @@ const ShippingAddressSelector = ({
           setOpen(true);
           setOpenNewAddressDialog(false);
         }}
+        countries={countries}
       />
     </>
   );

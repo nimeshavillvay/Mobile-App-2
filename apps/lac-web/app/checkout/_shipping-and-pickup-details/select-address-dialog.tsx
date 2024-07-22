@@ -4,6 +4,7 @@ import useSuspenseShippingAddressList from "@/_hooks/address/use-suspense-shippi
 import useSuspenseCart from "@/_hooks/cart/use-suspense-cart.hook";
 import useUpdateCartConfigMutation from "@/_hooks/cart/use-update-cart-config-mutation.hook";
 import useSuspenseUsersList from "@/_hooks/user/use-suspense-users-list.hook";
+import type { Country } from "@/_lib/types";
 import { cn } from "@/_lib/utils";
 import { CheckCircle } from "@repo/web-ui/components/icons/check-circle";
 import { CheckCircleFilled } from "@repo/web-ui/components/icons/check-circle-filled";
@@ -23,9 +24,13 @@ import { useState } from "react";
 
 type SelectAddressDialogProps = {
   readonly token: string;
+  readonly countries: Country[];
 };
 
-const SelectAddressDialog = ({ token }: SelectAddressDialogProps) => {
+const SelectAddressDialog = ({
+  token,
+  countries,
+}: SelectAddressDialogProps) => {
   const [open, setOpen] = useState(false);
   const [openAdd, setOpenAdd] = useState(false);
   const { toast } = useToast();
@@ -151,6 +156,7 @@ const SelectAddressDialog = ({ token }: SelectAddressDialogProps) => {
           setOpenAdd(false);
           setOpen(true);
         }}
+        countries={countries}
       />
     </>
   );

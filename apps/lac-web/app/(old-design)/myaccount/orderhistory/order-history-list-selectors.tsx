@@ -30,6 +30,7 @@ import {
   UI_DATE_FORMAT,
   URL_DATE_FORMAT,
 } from "./constants";
+import FilterDetailsBoxForMobile from "./filter-details-box-for-mobile";
 import MultiSelect from "./multi-select";
 import SelectorsForMobileDialog from "./selectors-for-mobile-dialog";
 import type { Option } from "./types";
@@ -355,24 +356,19 @@ const OrderHistoryListSelectors = ({
           </div>
         </div>
 
-        <div className="flex flex-row justify-between text-brand-gray-500">
+        <div className="flex flex-row justify-between overflow-x-auto whitespace-nowrap text-brand-gray-500">
           <FilterDetailsBoxForMobile
             label="Duration"
             value={`${formattedFromDate} - ${formattedToDate}`}
           />
 
-          <FilterDetailsBoxForMobile
-            label="Order Type"
-            value={`Return, Credit (+2)`}
+          <SelectorsForMobileDialog
+            token={token}
+            open={mobileFiltersOpen}
+            onOpenChange={setMobileFiltersOpen}
           />
         </div>
       </div>
-
-      <SelectorsForMobileDialog
-        token={token}
-        open={mobileFiltersOpen}
-        onOpenChange={setMobileFiltersOpen}
-      />
     </>
   );
 };
@@ -401,22 +397,6 @@ const OrderTypeCheckbox = ({
       <Label htmlFor={`type-${id}`} className="text-wrap">
         {value}
       </Label>
-    </div>
-  );
-};
-
-// TODO: Move this to a separate file (Reusable component)
-const FilterDetailsBoxForMobile = ({
-  label,
-  value,
-}: {
-  readonly label: string;
-  readonly value: string;
-}) => {
-  return (
-    <div className="w-fit rounded-md bg-gray-100 p-2">
-      <div className="text-[10px] uppercase">{label}</div>
-      <div className="font-bold">{value}</div>
     </div>
   );
 };

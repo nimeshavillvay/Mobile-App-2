@@ -10,13 +10,11 @@ export const metadata: Metadata = {
 const CatalogSection = ({
   title,
   rev,
-  online,
   pdf,
   children,
 }: {
   readonly title: string;
   readonly rev: string;
-  readonly online: string;
   readonly pdf: string;
   readonly children: React.ReactNode;
 }) => {
@@ -29,14 +27,6 @@ const CatalogSection = ({
         <h4 className="text-red-700">{title}</h4>
         <span>{rev}</span>
         <div className="grid w-fit grid-cols-2 gap-2">
-          <a
-            href={online}
-            rel="noopener noreferrer"
-            target="_blank"
-            className="rounded border bg-blue-300 p-2 font-wurth text-sm uppercase hover:bg-blue-400 sm:text-base"
-          >
-            view online
-          </a>
           <a
             href={pdf}
             rel="noopener noreferrer"
@@ -77,7 +67,6 @@ const CatalogMainPage = () => {
             key={catalog.letter}
             title={catalog.title}
             rev={catalog.rev}
-            online={catalog.online}
             pdf={catalog.pdf}
           >
             {catalog.letter}

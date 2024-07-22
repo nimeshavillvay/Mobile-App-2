@@ -144,11 +144,15 @@ const ProductCard = ({
           {!isLaminateItem && discountPercent > 0 ? (
             <ProductCardDiscount>{discountPercent}</ProductCardDiscount>
           ) : (
-            <div />
+            <div className="invisible md:text-lg">0</div>
           )}
 
           {orientation === "vertical" && (
-            <SaleBadges onSale={onSale} isNewItem={isNewItem} />
+            <SaleBadges
+              onSale={onSale}
+              isNewItem={isNewItem}
+              showFlashDealText={!(discountPercent > 0 && onSale && isNewItem)}
+            />
           )}
         </div>
         <ProductCardImage
@@ -162,7 +166,11 @@ const ProductCard = ({
       <ProductCardContent>
         {orientation === "horizontal" && (
           <div className="@container/labels">
-            <SaleBadges onSale={onSale} isNewItem={isNewItem} />
+            <SaleBadges
+              onSale={onSale}
+              isNewItem={isNewItem}
+              showFlashDealText={true}
+            />
           </div>
         )}
 

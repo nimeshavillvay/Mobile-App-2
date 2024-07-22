@@ -2,8 +2,8 @@
 
 import AddToShoppingListDialog from "@/_components/shopping-list/add-to-shopping-list-dialog";
 import useSuspenseFavoriteSKUs from "@/_hooks/shopping-list/use-suspense-favorite-skus.hook";
-import { HeartFilled } from "@repo/web-ui/components/icons/heart-filled";
-import { HeartOutline } from "@repo/web-ui/components/icons/heart-outline";
+import { BookmarkFilled } from "@repo/web-ui/components/icons/bookmark-filled";
+import { BookmarkOutline } from "@repo/web-ui/components/icons/bookmark-outline";
 import { Button } from "@repo/web-ui/components/ui/button";
 import { useState } from "react";
 
@@ -35,9 +35,9 @@ const FavoriteButtonForLoggedIn = ({
         }}
       >
         {isFavorite ? (
-          <HeartFilled className="size-4" />
+          <BookmarkFilled className="size-4" />
         ) : (
-          <HeartOutline className="size-4" />
+          <BookmarkOutline className="size-4" />
         )}
 
         <span className="sr-only">Add to favorites</span>

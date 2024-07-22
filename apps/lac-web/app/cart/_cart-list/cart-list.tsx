@@ -199,7 +199,7 @@ const CartList = ({ token, plants }: CartListProps) => {
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
-                  <AlertDialogTitle>Confirm Action</AlertDialogTitle>
+                  <AlertDialogTitle>Delete Cart</AlertDialogTitle>
                   <AlertDialogDescription>
                     Are you sure want to delete your cart?
                   </AlertDialogDescription>
