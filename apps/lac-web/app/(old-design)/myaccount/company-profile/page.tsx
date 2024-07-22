@@ -1,13 +1,13 @@
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import Separator from "@/old/_components/separator";
 import Title from "@/old/_components/title";
+import { CloudDownload } from "@repo/web-ui/components/icons/cloud-download";
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
-import { CloudDownload } from "../../../../../../packages/web-ui/src/components/icons/cloud-download/cloud-download";
 import BillingAddress from "./billing-address";
 import CompanyProfileImage from "./company-profile-image";
 import SalesRepresentative from "./sales-representative";
