@@ -470,3 +470,8 @@ export type UpdateUser = {
   permission?: string;
   status?: string;
 };
+
+export type Country = {
+  code: string;
+  country: string;
+};

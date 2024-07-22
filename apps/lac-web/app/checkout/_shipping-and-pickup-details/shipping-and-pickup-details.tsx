@@ -4,6 +4,7 @@ import FullAddress from "@/_components/full-address";
 import useSuspenseShippingAddressList from "@/_hooks/address/use-suspense-shipping-address-list.hook";
 import useSuspenseCart from "@/_hooks/cart/use-suspense-cart.hook";
 import useUpdateCartConfigMutation from "@/_hooks/cart/use-update-cart-config-mutation.hook";
+import type { Country } from "@/_lib/types";
 import { cn } from "@/_lib/utils";
 import { Button } from "@repo/web-ui/components/ui/button";
 import { Calendar } from "@repo/web-ui/components/ui/calendar";
@@ -25,9 +26,13 @@ dayjs.extend(advancedFormat);
 
 type ShippingAndPickupDetailsProps = {
   readonly token: string;
+  readonly countries: Country[];
 };
 
-const ShippingAndPickupDetails = ({ token }: ShippingAndPickupDetailsProps) => {
+const ShippingAndPickupDetails = ({
+  token,
+  countries,
+}: ShippingAndPickupDetailsProps) => {
   const id = useId();
   const shipOrderId = `ship-order-${id}`;
   const driversNoteId = `drivers-note-${id}`;
@@ -101,7 +106,7 @@ const ShippingAndPickupDetails = ({ token }: ShippingAndPickupDetailsProps) => {
             </div>
           </div>
 
-          <SelectAddressDialog token={token} />
+          <SelectAddressDialog token={token} countries={countries} />
         </div>
 
         <div className="flex-1 space-y-4">

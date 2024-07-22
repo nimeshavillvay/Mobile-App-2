@@ -1,7 +1,7 @@
-import { getPasswordPolicies } from "@/_lib/apis/server";
+import { getCountries, getPasswordPolicies } from "@/_lib/apis/server";
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { getCountries, getIndustries } from "./apis";
+import { getIndustries } from "./apis";
 import Register from "./register";
 
 export const metadata: Metadata = {

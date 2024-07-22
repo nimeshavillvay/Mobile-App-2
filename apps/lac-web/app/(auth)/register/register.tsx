@@ -1,7 +1,7 @@
 "use client";
 
 import { RecaptchaRefProvider } from "@/_context/recaptcha-ref";
-import type { PasswordPolicies } from "@/_lib/types";
+import type { Country, PasswordPolicies } from "@/_lib/types";
 import { cn } from "@/_lib/utils";
 import { CheckCircle } from "@repo/web-ui/components/icons/check-circle";
 import { CheckCircleFilled } from "@repo/web-ui/components/icons/check-circle-filled";
@@ -12,7 +12,7 @@ import { useState } from "react";
 import Balancer from "react-wrap-balancer";
 import CurrentUserFlow from "./current-user-flow";
 import NewUserFlow from "./new-user-flow";
-import type { Country, Industry } from "./types";
+import type { Industry } from "./types";
 
 const IS_CURRENT_USER = ["Yes", "No"] as const;
 
