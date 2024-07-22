@@ -9,7 +9,7 @@ const FavoriteButtonSkeleton = ({
     <>
       {display == "desktop" && (
         <div className="flex w-full items-center gap-2">
-          <span className="text-[13px] leading-5">Add to favorite</span>
+          <span className="text-[13px] leading-5">Add to List</span>
           <Skeleton className="h-4 w-4" />
         </div>
       )}

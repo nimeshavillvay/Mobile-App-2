@@ -5,17 +5,29 @@ import useDebouncedState from "@/_hooks/misc/use-debounced-state.hook";
 import useSuspenseCheckAvailability from "@/_hooks/product/use-suspense-check-availability.hook";
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
-import { DEFAULT_PLANT, NOT_AVAILABLE, NOT_IN_STOCK } from "@/_lib/constants";
+import {
+  DEFAULT_PLANT,
+  MAX_QUANTITY,
+  NOT_AVAILABLE,
+  NOT_IN_STOCK,
+} from "@/_lib/constants";
 import type {
   CartConfiguration,
   CartItemConfiguration,
   Plant,
   Token,
 } from "@/_lib/types";
-import { cn, formatNumberToPrice } from "@/_lib/utils";
+import {
+  calculateIncreaseQuantity,
+  calculateReduceQuantity,
+  cn,
+  formatNumberToPrice,
+} from "@/_lib/utils";
 import { NUMBER_TYPE } from "@/_lib/zod-helper";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Alert } from "@repo/web-ui/components/icons/alert";
+import { Minus } from "@repo/web-ui/components/icons/minus";
+import { Plus } from "@repo/web-ui/components/icons/plus";
 import { Trash } from "@repo/web-ui/components/icons/trash";
 import { WurthFullBlack } from "@repo/web-ui/components/logos/wurth-full-black";
 import {
@@ -145,7 +157,7 @@ const CartItem = ({
   const [selectedShippingOption, setSelectedShippingOption] =
     useState<MainOption>();
 
-  const { register, getValues, watch, control } = useForm<
+  const { register, getValues, setValue, watch, control } = useForm<
     z.infer<typeof cartItemSchema>
   >({
     resolver: zodResolver(cartItemSchema),
@@ -680,6 +692,29 @@ const CartItem = ({
     itemConfigWillCallPlant,
   ]); // Disabling ESLint for the dependency array because it's exhaustive when including all relevant dependencies
 
+  const reduceQuantity = () => {
+    // Use `Number(quantity)` because `quantity` is a string at runtime
+    setValue(
+      "quantity",
+      calculateReduceQuantity(
+        Number(quantity),
+        product.minAmount,
+        product.increment,
+      ),
+    );
+  };
+  const increaseQuantity = () => {
+    // Use `Number(quantity)` because `quantity` is a string at runtime
+    setValue(
+      "quantity",
+      calculateIncreaseQuantity(
+        Number(quantity),
+        product.minAmount,
+        product.increment,
+      ),
+    );
+  };
+
   return (
     <div className="flex flex-col gap-6 md:flex-row">
       <div className="flex flex-row items-start gap-3 md:flex-1">
@@ -769,52 +804,74 @@ const CartItem = ({
           {product.isHazardous && isHazardClick && <HazardousMaterialNotice />}
 
           <div className="flex flex-col gap-2 md:flex-row md:items-center">
-            <Controller
-              control={control}
-              name="quantity"
-              render={({ field: { onChange, onBlur, value, name, ref } }) => (
-                <div className="flex items-center">
-                  <NumberInputField
-                    onBlur={onBlur}
-                    onChange={(event) => {
-                      if (
-                        Number(event.target.value) >= product.minAmount &&
-                        Number(event.target.value) % product.increment === 0
-                      ) {
-                        handleChangeQtyOrPO(Number(event.target.value));
-                      }
+            <div className="flex w-44 flex-col rounded-md border border-wurth-gray-250 p-0.5">
+              <div className="text-center text-xs font-medium uppercase leading-none text-wurth-gray-400">
+                Qty / {product.uom}
+              </div>
+              <div className="flex flex-row items-center justify-between gap-2 shadow-sm">
+                <Button
+                  type="button"
+                  variant="subtle"
+                  size="icon"
+                  className="h-7 w-7 rounded-sm"
+                  onClick={reduceQuantity}
+                  disabled={!quantity || Number(quantity) === product.minAmount}
+                >
+                  <Minus className="size-4" />
+                  <span className="sr-only">Reduce quantity</span>
+                </Button>
 
-                      onChange(event);
-                    }}
-                    value={value}
-                    ref={ref}
-                    name={name}
-                    removeDefaultStyles
-                    className={cn(
-                      "h-fit w-24 rounded-none rounded-l border-r-0 px-2.5 py-1 text-base focus:border-none focus:outline-none focus:ring-0 md:w-20",
-                      isQuantityLessThanMin ? "border-red-700" : "",
-                    )}
-                    required
-                    min={product.minAmount}
-                    step={product.increment}
-                    disabled={checkAvailabilityQuery.isPending}
-                    form={cartFormId} // This is to check the validity when clicking "checkout"
-                    label="Quantity"
-                  />
+                <Controller
+                  control={control}
+                  name="quantity"
+                  render={({
+                    field: { onChange, onBlur, value, name, ref },
+                  }) => (
+                    <NumberInputField
+                      onBlur={onBlur}
+                      onChange={(event) => {
+                        if (
+                          Number(event.target.value) >= product.minAmount &&
+                          Number(event.target.value) % product.increment === 0
+                        ) {
+                          handleChangeQtyOrPO(Number(event.target.value));
+                        }
 
-                  <span
-                    className={cn(
-                      "rounded-r border border-l-0 p-1 pr-1.5 lowercase text-zinc-500",
-                      isQuantityLessThanMin
-                        ? "border-red-700"
-                        : "border-gray-200",
-                    )}
-                  >
-                    {product.uom}
-                  </span>
-                </div>
-              )}
-            />
+                        onChange(event);
+                      }}
+                      value={value}
+                      ref={ref}
+                      name={name}
+                      className={cn(
+                        "h-fit w-24 rounded border-r-0 px-2.5 py-1 text-base focus:border-none focus:outline-none focus:ring-0 md:w-20",
+                        isQuantityLessThanMin ? "border-red-700" : "",
+                      )}
+                      required
+                      min={product.minAmount}
+                      step={product.increment}
+                      disabled={checkAvailabilityQuery.isPending}
+                      form={cartFormId} // This is to check the validity when clicking "checkout"
+                      label="Quantity"
+                    />
+                  )}
+                />
+
+                <Button
+                  type="button"
+                  variant="subtle"
+                  size="icon"
+                  className="h-7 w-7 rounded-sm"
+                  onClick={increaseQuantity}
+                  disabled={
+                    quantity?.toString().length > 5 ||
+                    Number(quantity) + product.increment >= MAX_QUANTITY
+                  }
+                >
+                  <Plus className="size-4" />
+                  <span className="sr-only">Increase quantity</span>
+                </Button>
+              </div>
+            </div>
 
             {homeBranchAvailability ? (
               <AvailabilityStatus
@@ -978,7 +1035,7 @@ const CartItem = ({
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Confirm Action</AlertDialogTitle>
+            <AlertDialogTitle>Remove from Cart</AlertDialogTitle>
 
             <AlertDialogDescription>
               Are you sure want to remove this item from cart?

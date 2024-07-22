@@ -135,20 +135,11 @@ const SignIn = () => {
     });
   });
 
-  const handleOpenDialog = (isOpen: boolean) => {
-    if (isOpen) {
-      setOpen(false);
-    }
-  };
-
   if (!email) {
     return (
       <div className="container">
         <div className="mx-auto my-20 max-w-[25rem] rounded-lg border border-wurth-gray-250 p-6 shadow-lg">
-          <form
-            onSubmit={onSubmitEmail}
-            className="mx-auto max-w-[25rem] space-y-4"
-          >
+          <form className="mx-auto max-w-[25rem] space-y-4">
             <h1 className="text-center font-title text-xl font-medium tracking-[-0.1px] text-wurth-gray-800">
               <Balancer>Enter your email address to sign in</Balancer>
             </h1>
@@ -172,12 +163,13 @@ const SignIn = () => {
                 {emailForm.formState.errors.email.message}
               </p>
             )}
-            <Dialog open={open} onOpenChange={handleOpenDialog}>
+            <Dialog open={open} onOpenChange={setOpen}>
               <DialogTrigger asChild>
                 <Button
                   type="submit"
                   className="w-full py-2.5 font-bold"
                   disabled={checkEmailMutation.isPending}
+                  onClick={onSubmitEmail}
                 >
                   Continue
                   <span className="sr-only">Confirm Action</span>
