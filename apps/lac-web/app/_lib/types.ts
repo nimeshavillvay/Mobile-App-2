@@ -219,16 +219,18 @@ export type Plant = {
   name: string;
 };
 
+export type FilterValues = {
+  id: number;
+  value: string;
+  icon: string | null;
+  tooltip: string | null;
+  active: boolean;
+}[];
+
 export type Filters = {
   id: string;
   filter: string;
-  values: {
-    id: number;
-    value: string;
-    icon: string | null;
-    tooltip: string | null;
-    active: boolean;
-  }[];
+  values: FilterValues;
 };
 
 export type Address = {

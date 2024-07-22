@@ -1,9 +1,11 @@
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import Separator from "@/old/_components/separator";
 import Title from "@/old/_components/title";
+import { CloudDownload } from "@repo/web-ui/components/icons/cloud-download";
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import BillingAddress from "./billing-address";
@@ -22,6 +24,7 @@ const CompanyProfilePage = () => {
   if (!sessionToken) {
     return redirect("/");
   }
+  const apiUrl = process.env.NEXT_PUBLIC_WURTH_LAC_API;
 
   return (
     <>
@@ -47,9 +50,18 @@ const CompanyProfilePage = () => {
           <Suspense fallback={<Skeleton className="h-72" />}>
             <SalesRepresentative token={sessionToken.value} />
           </Suspense>
+          <div className="mt-3 flex items-center">
+            <Link
+              className="flex items-center text-nowrap rounded-sm bg-brand-secondary px-4 py-2 text-center font-wurth font-extrabold uppercase text-white hover:bg-[#008fc6]"
+              href={`${apiUrl}/assets/Account_Application.pdf`}
+              target="_blank"
+            >
+              <CloudDownload className="ml-2 mr-4 h-5 w-5" />
+              <span>Request for Payment Terms</span>
+            </Link>
+          </div>
         </div>
       </div>
-
       <ShippingAddress token={sessionToken?.value} />
     </>
   );
