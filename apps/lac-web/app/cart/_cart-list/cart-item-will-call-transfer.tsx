@@ -95,7 +95,12 @@ const CartItemWillCallTransfer = ({
           <div className="flex flex-col gap-0.5">
             <div className="rounded bg-red-800/10 px-2 py-1 text-sm text-red-800">
               This item is out of stock at&nbsp;
-              <PlantName plants={plants} plantCode={xPlant} />
+              <PlantName plants={plants} plantCode={xPlant} /> and cannot be
+              transferred to{" "}
+              <PlantName
+                plants={plants}
+                plantCode={willCallItem.willCallPlant}
+              />
             </div>
             {willCallItem.willCallQuantity && (
               <BackOrderItemCountLabel count={willCallItem.willCallQuantity} />

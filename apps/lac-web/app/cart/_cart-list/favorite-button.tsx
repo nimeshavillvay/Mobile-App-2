@@ -39,7 +39,7 @@ const FavoriteButton = ({ token, productId, display }: FavoriteButtonProps) => {
               router.push("/sign-in");
             }}
           >
-            <span className="text-[13px] leading-5">Add to favorite</span>
+            <span className="text-[13px] leading-5">Add to List</span>
             <HeartOutline className="size-4" />
           </Button>
         ))}

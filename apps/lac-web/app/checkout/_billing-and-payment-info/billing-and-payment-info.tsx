@@ -255,7 +255,7 @@ const BillingAndPaymentInfo = ({
                 name="addressTo"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Address to:</FormLabel>
+                    <FormLabel>Attention:</FormLabel>
                     <FormControl>
                       <Input
                         placeholder="Name"

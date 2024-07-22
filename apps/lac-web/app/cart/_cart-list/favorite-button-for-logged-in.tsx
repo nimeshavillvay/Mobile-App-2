@@ -38,7 +38,7 @@ const FavoriteButtonForLoggedIn = ({
             setShowShoppingListsDialog(true);
           }}
         >
-          <span className="text-[13px] leading-5">Add to favorite</span>
+          <span className="text-[13px] leading-5">Add to List</span>
 
           {isFavorite ? (
             <HeartFilled className="size-4" />

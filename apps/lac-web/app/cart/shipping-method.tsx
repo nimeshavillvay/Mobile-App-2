@@ -22,6 +22,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@repo/web-ui/components/ui/select";
+import { useToast } from "@repo/web-ui/components/ui/toast";
 import { useId, useState } from "react";
 import {
   ALTERNATIVE_BRANCHES,
@@ -47,6 +48,7 @@ type ShippingMethodProps = {
 type ConfigKey = keyof CartItemConfiguration;
 
 const ShippingMethod = ({ token }: ShippingMethodProps) => {
+  const { toast } = useToast();
   const id = useId();
   const shipToMeId = `${SHIP_TO_ME}-${id}`;
   const willCallId = `${WILL_CALL}-${id}`;
@@ -67,6 +69,9 @@ const ShippingMethod = ({ token }: ShippingMethodProps) => {
   const cartQuery = useSuspenseCart(token);
   const willCallPlantQuery = useSuspenseWillCallPlant(token);
   const willCallPlant = willCallPlantQuery.data;
+
+  const [isShipToMeSelected, setIsShipToMeSelected] = useState(false);
+  const [isWillCallSelected, setIsWillCallSelected] = useState(false);
 
   const updateCartItemMutation = useUpdateCartItemMutation(token);
 
@@ -311,6 +316,9 @@ const ShippingMethod = ({ token }: ShippingMethodProps) => {
       }),
       {
         onSuccess: () => {
+          toast({ description: "Updated delivery method for all items" });
+          setIsShipToMeSelected(false);
+          setSelectedDeliveryMethod(undefined);
           incrementCartItemKey();
         },
       },
@@ -347,6 +355,8 @@ const ShippingMethod = ({ token }: ShippingMethodProps) => {
 
     await updateCartItemMutation.mutateAsync(cartItems, {
       onSuccess: () => {
+        toast({ description: "Updated delivery method for all items" });
+        setIsWillCallSelected(false);
         incrementCartItemKey();
       },
     });
@@ -354,7 +364,9 @@ const ShippingMethod = ({ token }: ShippingMethodProps) => {
 
   return (
     <div className="space-y-3 rounded-lg border border-wurth-gray-150 px-5 py-4 shadow-md">
-      <h3 className="pb-2 text-sm text-black">Default delivery method</h3>
+      <h3 className="pb-2 text-sm text-black">
+        Set Delivery Method for All Items
+      </h3>
 
       <ul className="flex flex-col gap-3">
         <li className="flex flex-col items-stretch gap-2">
@@ -362,14 +374,16 @@ const ShippingMethod = ({ token }: ShippingMethodProps) => {
             <Checkbox
               id={shipToMeId}
               className="rounded-full"
-              checked={selectedSection === SHIP_TO_ME}
+              checked={selectedSection === SHIP_TO_ME && isShipToMeSelected}
               onCheckedChange={(checked) => {
                 if (checked === true) {
+                  setIsShipToMeSelected(true);
                   setSelectedSection(SHIP_TO_ME);
                   if (selectedDeliveryMethod) {
                     handleSelectValueChange(selectedDeliveryMethod);
                   }
                 } else {
+                  setIsShipToMeSelected(false);
                   setSelectedSection(undefined);
                 }
               }}
@@ -383,8 +397,11 @@ const ShippingMethod = ({ token }: ShippingMethodProps) => {
             <Select
               disabled={
                 selectedSection !== SHIP_TO_ME ||
-                updateCartItemMutation.isPending
+                updateCartItemMutation.isPending ||
+                !isShipToMeSelected
               }
+              key={selectedDeliveryMethod}
+              value={selectedDeliveryMethod}
               onValueChange={handleSelectValueChange}
             >
               <SelectTrigger className="w-full">
@@ -406,12 +423,14 @@ const ShippingMethod = ({ token }: ShippingMethodProps) => {
           <Checkbox
             id={willCallId}
             className="rounded-full"
-            checked={selectedSection === WILL_CALL}
+            checked={selectedSection === WILL_CALL && isWillCallSelected}
             onCheckedChange={(checked) => {
               if (checked === true) {
+                setIsWillCallSelected(true);
                 setSelectedSection(WILL_CALL);
                 handleGlobalWillCall();
               } else {
+                setIsWillCallSelected(false);
                 setSelectedSection(undefined);
               }
             }}
