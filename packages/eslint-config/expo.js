@@ -57,6 +57,10 @@ module.exports = {
       {
         patterns: [
           {
+            group: ["~/*"],
+            message: "Direct importing from outside packages is not allowed.",
+          },
+          {
             group: ["react"],
             importNames: ["useEffect"],
             message:
