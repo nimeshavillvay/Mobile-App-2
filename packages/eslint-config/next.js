@@ -59,8 +59,7 @@ module.exports = {
         patterns: [
           {
             group: ["~/*"],
-            message:
-              'Direct importing from the web-ui package is not allowed. Import from "@repo/web-ui" instead.',
+            message: "Direct importing from outside packages is not allowed.",
           },
           {
             group: ["react"],
