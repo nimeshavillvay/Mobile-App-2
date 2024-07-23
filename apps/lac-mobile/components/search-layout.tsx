@@ -1,15 +1,26 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { ScreenHeader } from "@repo/native-ui/components/base/screen-header";
 import { SearchBox } from "@repo/native-ui/components/search/search-box";
+import { SearchModalLayout } from "@repo/native-ui/components/search/search-modal-layout";
 import { useRef } from "react";
 import { Controller, useForm } from "react-hook-form";
 import type { TextInput } from "react-native";
 import { Form, VisuallyHidden } from "tamagui";
-import { SearchModalLayout } from "~/components/search/search-modal-layout";
+import { z } from "zod";
+
+const searchSchema = z.object({
+  searchInput: z.string(),
+});
 
 export const SearchLayout = () => {
   const ref = useRef<TextInput>(null);
 
-  const form = useForm<{ searchInput: string }>();
+  const form = useForm<z.infer<typeof searchSchema>>({
+    resolver: zodResolver(searchSchema),
+    values: {
+      searchInput: "",
+    },
+  });
   const searchTerm = form.watch("searchInput");
 
   const clearSearchTerm = () => {
@@ -36,7 +47,6 @@ export const SearchLayout = () => {
               }}
               value={value}
               placeholder="What are you looking for?"
-              {...form.register("searchInput")}
               ref={ref}
               onSubmit={onSubmit}
               onClear={clearSearchTerm}
