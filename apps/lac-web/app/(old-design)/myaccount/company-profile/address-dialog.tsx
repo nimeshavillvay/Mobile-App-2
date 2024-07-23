@@ -103,7 +103,7 @@ const AddressDialog = ({
       zipCode: address.postalCode,
       phoneNumber: address.phoneNumber ?? "",
       zip4: address.zip4,
-      country: address.countryName,
+      country: address.country ?? address.countryName,
       county: address.county ?? "",
     },
   });
