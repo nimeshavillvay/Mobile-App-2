@@ -36,11 +36,9 @@ describe("Product Card", () => {
         image={image}
         title={title}
         sku={sku}
-        details={{
-          price,
-          listPrice: price,
-          uom,
-        }}
+        price={price}
+        listPrice={price}
+        uom={uom}
       />,
     );
 
@@ -79,11 +77,9 @@ describe("Product Card", () => {
         productId={1}
         image={image}
         sku={sku}
-        details={{
-          price,
-          listPrice: price,
-          uom,
-        }}
+        price={price}
+        listPrice={price}
+        uom={uom}
       />,
     );
 
@@ -107,11 +103,9 @@ describe("Product Card", () => {
         productId={1}
         image={image}
         title={title}
-        details={{
-          price,
-          listPrice: price,
-          uom,
-        }}
+        price={price}
+        listPrice={price}
+        uom={uom}
       />,
     );
 
@@ -132,11 +126,9 @@ describe("Product Card", () => {
         image={image}
         title={title}
         sku={sku}
-        details={{
-          price,
-          listPrice: price,
-          uom,
-        }}
+        price={price}
+        listPrice={price}
+        uom={uom}
       />,
     );
 
@@ -167,11 +159,9 @@ describe("Product Card", () => {
         image={image}
         title={title}
         sku={sku}
-        details={{
-          price,
-          listPrice,
-          uom,
-        }}
+        price={price}
+        listPrice={listPrice}
+        uom={uom}
       />,
     );
 
@@ -207,11 +197,9 @@ describe("Product Card", () => {
         image={image}
         title={title}
         sku={sku}
-        details={{
-          price,
-          listPrice: price,
-          uom,
-        }}
+        price={price}
+        listPrice={price}
+        uom={uom}
       />,
     );
 

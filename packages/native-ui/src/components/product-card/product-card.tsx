@@ -2,30 +2,41 @@ import { Bookmark } from "@tamagui/lucide-icons";
 import { Image, type ImageProps } from "expo-image";
 import { useId } from "react";
 import { StyleSheet } from "react-native";
-import { Button, Card, H2, Text, XStack, YStack } from "tamagui";
+import SkeletonPlaceholder from "react-native-skeleton-placeholder";
+import { Button, Card, H2, Text, View, XStack, YStack } from "tamagui";
 
 type ProductCardProps = Readonly<{
   productId: number;
   image: ImageProps["source"];
   title?: string;
   sku?: string;
-  details: {
-    price: number;
-    listPrice: number;
-    uom: string;
-  };
+  price: number;
+  listPrice: number;
+  uom: string;
 }>;
+
+export const ProductCardSkeleton = () => {
+  const id = useId();
+
+  return (
+    <SkeletonPlaceholder>
+      <View height={300} testID={`product-card-skeleton-${id}`} />
+    </SkeletonPlaceholder>
+  );
+};
 
 export const ProductCard = ({
   image,
   title,
   sku,
-  details,
+  price,
+  listPrice,
+  uom,
 }: ProductCardProps) => {
   const id = useId();
-  const isDiscounted = details.price < details.listPrice;
+  const isDiscounted = price < listPrice;
   const discountPercentage = isDiscounted
-    ? Math.ceil(((details.listPrice - details.price) / details.listPrice) * 100)
+    ? Math.ceil(((listPrice - price) / listPrice) * 100)
     : 0;
 
   return (
@@ -65,18 +76,18 @@ export const ProductCard = ({
               )}
               testID={`price-${id}`}
             >
-              {details.price}
+              {price}
             </Text>
           </Text>
 
           {!!isDiscounted && (
             <Text style={styles.previousPrice} testID={`previous-price-${id}`}>
-              ${details.listPrice}
+              ${listPrice}
             </Text>
           )}
 
           <Text style={styles.uom} testID={`uom-${id}`}>
-            /{details.uom}
+            /{uom}
           </Text>
         </XStack>
 
