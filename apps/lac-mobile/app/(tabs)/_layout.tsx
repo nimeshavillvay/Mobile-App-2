@@ -5,7 +5,7 @@ import { Tabs, usePathname } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const TabLayout = () => {
-  const currentPath = usePathname();
+  const pathname = usePathname();
 
   return (
     <SafeAreaView
@@ -20,7 +20,7 @@ const TabLayout = () => {
           tabBarActiveTintColor: "#e5484d",
           tabBarStyle: {
             backgroundColor: "rgba(0,0,0,0.91)",
-            display: currentPath.endsWith("search") ? "none" : "flex",
+            display: pathname.endsWith("search") ? "none" : "flex",
           },
           headerShown: false,
         }}

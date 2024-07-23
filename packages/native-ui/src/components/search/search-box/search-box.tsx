@@ -1,15 +1,16 @@
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Feather from "@expo/vector-icons/Feather";
 import { forwardRef } from "react";
-import type { TextInput, TextInputProps } from "react-native";
+import { type TextInput, type TextInputProps } from "react-native";
 import { Input, View, XStack } from "tamagui";
 
 type SearchInputProps = TextInputProps & {
+  readonly onSubmit: () => void;
   readonly onClear: () => void;
 };
 
 export const SearchBox = forwardRef<TextInput, SearchInputProps>(
-  ({ onChangeText, onClear }, ref) => {
+  ({ onSubmit, onClear, ...delegated }, ref) => {
     return (
       <View
         testID="search-box-container"
@@ -40,13 +41,14 @@ export const SearchBox = forwardRef<TextInput, SearchInputProps>(
           <Input
             testID="search-input"
             ref={ref}
-            onChangeText={onChangeText}
             placeholder="What are you looking for?"
             backgroundColor="$colorTransparent"
             borderWidth={0}
             overflow="hidden"
             width="100%"
             returnKeyType="search"
+            onSubmitEditing={onSubmit}
+            {...delegated}
           />
         </XStack>
         <Feather
