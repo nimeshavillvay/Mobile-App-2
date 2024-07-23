@@ -12,6 +12,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@hookform/resolvers": "3.9.0",
     "@repo/native-ui": "workspace:*",
     "@repo/shared-logic": "workspace:*",
     "@tamagui/config": "1.102.1",
