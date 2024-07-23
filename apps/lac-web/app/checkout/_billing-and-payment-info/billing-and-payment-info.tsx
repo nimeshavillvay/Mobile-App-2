@@ -135,14 +135,24 @@ const BillingAndPaymentInfo = ({
   const deleteCreditCard = (cardId: number) => {
     deleteCreditCardMutation.mutate(cardId, {
       onSuccess: () => {
+        const isAvailableOtherPaymentMethods =
+          creditCartsQuery.data.filter((card) => card.id !== cardId).length ===
+            0 &&
+          mappedPaymentMethods.find(
+            (paymentMethod) => !paymentMethod.isCreditCard,
+          );
         updateCartConfigMutation.mutate(
           {
             cardName: "",
             cardType: "",
             expireDate: "",
-            paymentMethod: paymentMethods.find(
-              (paymentMethod) => paymentMethod.isCreditCard,
-            )?.code,
+            paymentMethod: isAvailableOtherPaymentMethods
+              ? mappedPaymentMethods.find(
+                  (paymentMethod) => !paymentMethod.isCreditCard,
+                )?.code
+              : mappedPaymentMethods.find(
+                  (paymentMethod) => paymentMethod.isCreditCard,
+                )?.code,
             paymentToken: "",
           },
           {
