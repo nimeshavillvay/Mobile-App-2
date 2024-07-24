@@ -12,7 +12,7 @@ const searchSchema = z.object({
   searchInput: z.string(),
 });
 
-export const SearchLayout = () => {
+const SearchLayout = () => {
   const ref = useRef<TextInput>(null);
 
   const form = useForm<z.infer<typeof searchSchema>>({
@@ -63,3 +63,5 @@ export const SearchLayout = () => {
     </SearchModalLayout>
   );
 };
+
+export default SearchLayout;
