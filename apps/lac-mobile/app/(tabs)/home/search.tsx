@@ -1,4 +1,4 @@
-import { SearchLayout } from "@/components/search-layout";
+import SearchLayout from "@/components/search-layout";
 
 const Search = () => {
   return <SearchLayout />;
