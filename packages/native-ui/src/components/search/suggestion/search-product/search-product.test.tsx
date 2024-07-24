@@ -2,6 +2,20 @@ import { SearchProduct } from "~/components/search/suggestion/search-product";
 import { render, screen } from "~/lib/test-utils";
 
 describe("SearchProduct", () => {
+  beforeEach(() => {
+    jest.spyOn(console, "error");
+    // @ts-expect-error jest.spyOn adds this functionality
+    console.error.mockImplementation(() => null);
+  });
+
+  // TODO Remove workaround after upgrading Expo and jest-expo
+  // Suppress console.error because of this error "Warning: Unexpected ref object provided for ExpoImage. Use either a ref-setter function or React.createRef()."
+  // https://github.com/expo/expo/issues/28831
+  afterEach(() => {
+    // @ts-expect-error jest.spyOn adds this functionality
+    console.error.mockRestore();
+  });
+
   const defaultProps = {
     imageUrl: "https://example.com/image.jpg",
     title: "Test Product",

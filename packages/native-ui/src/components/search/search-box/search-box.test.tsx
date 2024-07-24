@@ -11,6 +11,7 @@ describe("SearchBox", () => {
   const mockOnChangeText = jest.fn();
   const mockOnClear = jest.fn();
   const mockRef = jest.fn();
+  const mockSubmit = jest.fn();
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -21,6 +22,7 @@ describe("SearchBox", () => {
       <SearchBox
         onChangeText={mockOnChangeText}
         onClear={mockOnClear}
+        onSubmit={mockSubmit}
         ref={mockRef}
       />,
     );
@@ -36,6 +38,7 @@ describe("SearchBox", () => {
       <SearchBox
         onChangeText={mockOnChangeText}
         onClear={mockOnClear}
+        onSubmit={mockSubmit}
         ref={mockRef}
       />,
     );
@@ -54,6 +57,7 @@ describe("SearchBox", () => {
       <SearchBox
         onChangeText={mockOnChangeText}
         onClear={mockOnClear}
+        onSubmit={mockSubmit}
         ref={mockRef}
       />,
     );
@@ -70,6 +74,7 @@ describe("SearchBox", () => {
       <SearchBox
         onChangeText={mockOnChangeText}
         onClear={mockOnClear}
+        onSubmit={mockSubmit}
         ref={mockRef}
       />,
     );
@@ -84,6 +89,7 @@ describe("SearchBox", () => {
       <SearchBox
         onChangeText={mockOnChangeText}
         onClear={mockOnClear}
+        onSubmit={mockSubmit}
         ref={mockRef}
       />,
     );
@@ -97,6 +103,7 @@ describe("SearchBox", () => {
       <SearchBox
         onChangeText={mockOnChangeText}
         onClear={mockOnClear}
+        onSubmit={mockSubmit}
         ref={mockRef}
       />,
     );
@@ -111,6 +118,7 @@ describe("SearchBox", () => {
       <SearchBox
         onChangeText={mockOnChangeText}
         onClear={mockOnClear}
+        onSubmit={mockSubmit}
         ref={mockRef}
       />,
     );
@@ -124,6 +132,7 @@ describe("SearchBox", () => {
       <SearchBox
         onChangeText={mockOnChangeText}
         onClear={mockOnClear}
+        onSubmit={mockSubmit}
         ref={mockRef}
       />,
     );
@@ -138,6 +147,7 @@ describe("SearchBox", () => {
       <SearchBox
         onChangeText={mockOnChangeText}
         onClear={mockOnClear}
+        onSubmit={mockSubmit}
         ref={ref}
       />,
     );
