@@ -5,3 +5,7 @@ export type ApiConfig = {
 export type AuthenticatedApiConfig = ApiConfig & {
   token: string;
 };
+
+export type SearchApiConfig = {
+  baseUrl: string;
+};
