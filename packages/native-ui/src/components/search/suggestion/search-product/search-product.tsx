@@ -1,5 +1,6 @@
+import { Image } from "expo-image";
 import type { ComponentProps } from "react";
-import { Image, Text, View, XStack, YStack } from "tamagui";
+import { Text, View, XStack, YStack } from "tamagui";
 
 type SearchProductProps = {
   readonly imageUrl: string;
@@ -26,8 +27,7 @@ export const SearchProduct = ({
       <View borderColor="lightgray" borderWidth={1}>
         <Image
           testID="search-product-image"
-          h={80}
-          w={80}
+          style={{ height: 80, width: 80 }}
           source={{
             uri: imageUrl,
           }}

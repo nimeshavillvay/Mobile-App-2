@@ -13,7 +13,7 @@ describe("SearchProduct", () => {
 
     // Check if the image is rendered with correct props
     const image = screen.getByTestId("search-product-image");
-    expect(image).toHaveProperty("props.source.uri", defaultProps.imageUrl);
+    expect(image).toHaveProperty("props.source[0].uri", defaultProps.imageUrl);
     expect(image).toHaveProperty("props.style.height", 80);
     expect(image).toHaveProperty("props.style.width", 80);
 
