@@ -2,7 +2,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ScreenHeader } from "@repo/native-ui/components/base/screen-header";
 import { SearchBox } from "@repo/native-ui/components/search/search-box";
 import { SearchModalLayout } from "@repo/native-ui/components/search/search-modal-layout";
-import { SearchProduct } from "@repo/native-ui/components/search/suggestion/search-product";
 import { useRef } from "react";
 import { Controller, useForm } from "react-hook-form";
 import type { TextInput } from "react-native";
