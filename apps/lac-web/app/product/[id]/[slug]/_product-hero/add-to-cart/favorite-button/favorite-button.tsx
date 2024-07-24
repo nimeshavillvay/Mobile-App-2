@@ -33,7 +33,7 @@ const FavoriteButton = ({ token, productId }: FavoriteButtonProps) => {
     >
       <BookmarkOutline className="size-4" />
 
-      <span className="sr-only">Add to favorites</span>
+      <span className="sr-only">Add to list</span>
     </Button>
   );
 };

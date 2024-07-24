@@ -172,7 +172,7 @@ const ShoppingListProductCardActions = ({
         variant="outline"
         size="icon"
         className="size-10"
-        aria-label="Add to favorites"
+        aria-label="Add to List"
         onClick={removeFromShoppingList}
         disabled={disabled}
       >
