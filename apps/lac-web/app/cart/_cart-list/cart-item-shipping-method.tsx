@@ -508,14 +508,28 @@ const CartItemShippingMethod = ({
     }
   };
 
+  if (isVendorShipped) {
+    const date = backOrderAll?.plants
+      ? getFirstBackOrderDateFromPlants(backOrderAll?.plants)
+      : "N/A";
+    return (
+      <ul className="flex flex-col gap-3">
+        <li>
+          <div className="flex flex-col gap-1 rounded-xl bg-yellow-50 px-4 py-2 text-sm">
+            <div>Drop Ship Item</div>
+            <div className="text-xs text-wurth-gray-500">
+              This item ships directly from the vendor. Additional freight
+              charges may apply. Expected shipping date:{" "}
+              {date !== "" ? dayjs(date).format(UI_DATE_FORMAT) : "N/A"}.
+            </div>
+          </div>
+        </li>
+      </ul>
+    );
+  }
+
   return (
     <ul className="flex flex-col gap-3">
-      {isVendorShipped && (
-        <li className="text-sm text-wurth-gray-500">
-          This item is shipped by the vendor
-        </li>
-      )}
-
       {isShipToMeEnabled && (
         <li className="flex flex-col items-stretch gap-2">
           <div className="flex flex-row items-center gap-3">
