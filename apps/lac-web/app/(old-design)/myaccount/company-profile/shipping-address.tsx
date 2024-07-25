@@ -3,7 +3,7 @@
 import useSuspenseBillingAddress from "@/_hooks/address/use-suspense-billing-address.hook";
 import useSuspenseShippingAddressList from "@/_hooks/address/use-suspense-shipping-address-list.hook";
 import useSuspenseUsersList from "@/_hooks/user/use-suspense-users-list.hook";
-import type { Address, AddressFormData } from "@/_lib/types";
+import type { Address, AddressFormData, Country } from "@/_lib/types";
 import Separator from "@/old/_components/separator";
 import Title from "@/old/_components/title";
 import { useState } from "react";
@@ -12,22 +12,29 @@ import AddressSuggestionDialog from "./address-suggestion-dialog";
 import ShippingAddressCard from "./shipping-address-card";
 import type { AddressCheckSuggestionsWithUuid } from "./types";
 
-const emptyShippingAddress: Address = {
-  xcAddressId: "",
-  countryName: "",
-  county: "",
-  locality: "",
-  organization: "",
-  phoneNumber: "",
-  region: "",
-  streetAddress: "",
-  postalCode: "",
-  zip4: "",
-  shipTo: "",
-  default: false,
-};
+const ShippingAddress = ({
+  token,
+  countries,
+}: {
+  readonly token: string;
+  readonly countries: Country[];
+}) => {
+  const emptyShippingAddress: Address = {
+    xcAddressId: "",
+    countryName: "",
+    county: "",
+    locality: "",
+    organization: "",
+    phoneNumber: "",
+    region: "",
+    streetAddress: "",
+    postalCode: "",
+    zip4: "",
+    shipTo: "",
+    default: false,
+    country: countries?.[0]?.code,
+  };
 
-const ShippingAddress = ({ token }: { readonly token: string }) => {
   const [openShippingAddressDialog, setOpenShippingAddressDialog] =
     useState(false);
 

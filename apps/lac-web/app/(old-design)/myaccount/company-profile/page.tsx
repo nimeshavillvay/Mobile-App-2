@@ -1,3 +1,4 @@
+import { getCountries } from "@/_lib/apis/server";
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import Separator from "@/old/_components/separator";
 import Title from "@/old/_components/title";
@@ -17,7 +18,7 @@ export const metadata: Metadata = {
   title: "Company Profile",
 };
 
-const CompanyProfilePage = () => {
+const CompanyProfilePage = async () => {
   const cookieStore = cookies();
   const sessionToken = cookieStore.get(SESSION_TOKEN_COOKIE);
 
@@ -25,6 +26,8 @@ const CompanyProfilePage = () => {
     return redirect("/");
   }
   const apiUrl = process.env.NEXT_PUBLIC_WURTH_LAC_API;
+
+  const countries = await getCountries();
 
   return (
     <>
@@ -62,7 +65,7 @@ const CompanyProfilePage = () => {
           </div>
         </div>
       </div>
-      <ShippingAddress token={sessionToken?.value} />
+      <ShippingAddress token={sessionToken?.value} countries={countries} />
     </>
   );
 };

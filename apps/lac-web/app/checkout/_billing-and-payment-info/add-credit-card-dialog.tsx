@@ -185,6 +185,7 @@ const AddCreditCardDialog = ({
       open={open}
       onOpenChange={(open) => {
         setOpen(open);
+        formatDate("");
 
         // Refetch the credit card signature when the dialog is opened to get a new requestId
         if (open) {
@@ -192,7 +193,6 @@ const AddCreditCardDialog = ({
         } else {
           // Clear form when the dialog is closed
           form.reset();
-          formatDate("");
         }
       }}
     >
