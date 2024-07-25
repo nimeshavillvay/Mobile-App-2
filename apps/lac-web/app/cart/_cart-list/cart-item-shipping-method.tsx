@@ -510,6 +510,7 @@ const CartItemShippingMethod = ({
     const date = backOrderAll?.plants
       ? getFirstBackOrderDateFromPlants(backOrderAll?.plants)
       : "N/A";
+
     return (
       <ul className="flex flex-col gap-3">
         <li>
