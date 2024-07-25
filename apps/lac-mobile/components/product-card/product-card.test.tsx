@@ -1,4 +1,4 @@
-import { render, screen } from "@/lib/test-utils";
+import { cleanup, render, screen } from "@/lib/test-utils";
 import { server } from "@/mocks/server";
 import ProductCard from "./product-card";
 
@@ -57,5 +57,7 @@ describe("Product Card", () => {
     // Check for certain fields
     expect(screen.getByRole("header")).toBeOnTheScreen();
     expect(screen.getByTestId(/^price/)).toBeOnTheScreen();
+
+    cleanup();
   });
 });
