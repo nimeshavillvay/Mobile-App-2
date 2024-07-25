@@ -5,7 +5,7 @@ import {
   type CameraProps,
 } from "expo-camera";
 import { Zap, ZapOff } from "lucide-react-native";
-import { createContext, useContext, type ReactNode } from "react";
+import { createContext, useContext, useId, type ReactNode } from "react";
 import { StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import type { TextProps } from "tamagui";
@@ -67,7 +67,8 @@ export const BarcodeScannerCameraView = ({
   style,
   enableTorch = false,
   ...delegated
-}: CameraProps) => {
+}: Omit<CameraProps, "testID">) => {
+  const id = useId();
   const [permission] = useCameraPermissions();
 
   if (!permission?.granted) {
@@ -79,6 +80,7 @@ export const BarcodeScannerCameraView = ({
       <CameraView
         style={StyleSheet.flatten([styles.camera, style])}
         enableTorch={enableTorch}
+        testID={`barcode-scanner-camera-view-${id}`}
         {...delegated}
       >
         <SafeAreaView>{children}</SafeAreaView>
@@ -94,9 +96,8 @@ export const BarcodeScannerHeader = ({
   readonly onClosePress?: () => void;
   readonly toggleEnableTorch: (enableTorch: boolean) => void;
 }) => {
+  const id = useId();
   const enableTorch = useEnableTorchContext();
-
-  const FlashIcon = enableTorch ? Zap : ZapOff;
 
   return (
     <XStack justifyContent="space-between" alignItems="center" padding={16}>
@@ -113,13 +114,21 @@ export const BarcodeScannerHeader = ({
       <H1 style={styles.heading}>Scan QR or Barcode</H1>
 
       <Button
-        icon={<FlashIcon size={24} color="#ffffff" />}
+        icon={
+          enableTorch ? (
+            <Zap size={24} color="#ffffff" testID={`torch-on-icon-${id}`} />
+          ) : (
+            <ZapOff size={24} color="#ffffff" testID={`torch-off-icon-${id}`} />
+          )
+        }
         circular
         size="$2.5"
         backgroundColor="transparent"
         onPress={() => toggleEnableTorch(!enableTorch)}
       >
-        <VisuallyHidden>Close QR/Barcode scanner</VisuallyHidden>
+        <VisuallyHidden>
+          {enableTorch ? "Switch off torch" : "Switch on torch"}
+        </VisuallyHidden>
       </Button>
     </XStack>
   );
