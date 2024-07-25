@@ -316,8 +316,6 @@ const CartItemShippingMethod = ({
           will_call_not_in_stock: FALSE_STRING,
         });
       }
-    } else {
-      setSelectedShippingOption(undefined);
     }
   };
 
