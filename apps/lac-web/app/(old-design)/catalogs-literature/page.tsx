@@ -2,9 +2,6 @@ import type { Metadata } from "next";
 import type { StaticImageData } from "next/image";
 import Image from "next/image";
 import { MainTitle } from "../_components/main-title";
-import kessebohmerCatalogInteractive from "./Kessebohmer-Catalog-interactive.jpg";
-import kessebohmerCatalog from "./Kessebohmer-Catalog.jpg";
-import kessebohmerLogo from "./Kessebohmer-logo.png";
 import pdfCatalogThumb from "./PDF_Catalog_Thumb.jpg";
 import catalogCover from "./WLAC_Catalog_Cover.png";
 
