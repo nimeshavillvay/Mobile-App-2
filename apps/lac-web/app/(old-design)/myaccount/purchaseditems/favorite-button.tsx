@@ -1,9 +1,9 @@
 "use client";
 
-import { IoMdHeart, IoMdHeartEmpty } from "react-icons/io";
-
 import AddToShoppingListDialog from "@/_components/shopping-list/add-to-shopping-list-dialog";
 import useSuspenseFavoriteSKUs from "@/_hooks/shopping-list/use-suspense-favorite-skus.hook";
+import { BookmarkFilled } from "@repo/web-ui/components/icons/bookmark-filled";
+import { BookmarkOutline } from "@repo/web-ui/components/icons/bookmark-outline";
 import { Button } from "@repo/web-ui/components/ui/button";
 import { useState } from "react";
 
@@ -31,9 +31,9 @@ const FavoriteButton = ({ token, productId }: FavoriteButtonProps) => {
         onClick={() => setShowShoppingListsDialog(true)}
       >
         {isFavorite ? (
-          <IoMdHeart className="fill-black text-2xl text-brand-primary" />
+          <BookmarkFilled className="fill-black text-2xl text-brand-primary" />
         ) : (
-          <IoMdHeartEmpty className="text-2xl text-brand-gray-500" />
+          <BookmarkOutline className="text-2xl text-brand-gray-500" />
         )}
       </Button>
 

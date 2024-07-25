@@ -257,6 +257,7 @@ export type Address = {
     route: string | null;
     routeName: string;
   };
+  country?: string;
 };
 
 export type AddressCheckSuggestions = {
