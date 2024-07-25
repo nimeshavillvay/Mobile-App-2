@@ -9,32 +9,32 @@ import { Cookies } from "react-cookie";
 
 dayjs.extend(isBetween);
 
+const HARD_RELOAD_BEFORE = 5; // 5 minutes
+const CHECK_INTERVAL = 60000; // 1 minute in milliseconds
+
 const SessionChecker = () => {
-  const HARD_RELOAD_BEFORE = 5; // 5 minutes
-  const CHECK_INTERVAL = 60000; // 1 minute in milliseconds
-
-  const checkTokenExpiration = () => {
-    const cookies = new Cookies();
-    const tokenExpire = cookies.get(TOKEN_EXPIRE_COOKIE);
-    const tokenExpiryDate = dayjs(tokenExpire);
-    const now = dayjs();
-
-    if (tokenExpire) {
-      const shouldRefreshToken =
-        now.isAfter(tokenExpiryDate) ||
-        now.isBetween(
-          tokenExpiryDate.subtract(HARD_RELOAD_BEFORE, "minute"),
-          tokenExpiryDate,
-          "second",
-        );
-
-      if (shouldRefreshToken) {
-        window.location.reload();
-      }
-    }
-  };
-
   useEffect(() => {
+    const checkTokenExpiration = () => {
+      const cookies = new Cookies();
+      const tokenExpire = cookies.get(TOKEN_EXPIRE_COOKIE);
+      const tokenExpiryDate = dayjs(tokenExpire);
+      const now = dayjs();
+
+      if (tokenExpire) {
+        const shouldRefreshToken =
+          now.isAfter(tokenExpiryDate) ||
+          now.isBetween(
+            tokenExpiryDate.subtract(HARD_RELOAD_BEFORE, "minute"),
+            tokenExpiryDate,
+            "second",
+          );
+
+        if (shouldRefreshToken) {
+          window.location.reload();
+        }
+      }
+    };
+
     // Check token expiration immediately on mount
     checkTokenExpiration();
 
