@@ -2,8 +2,8 @@
 
 import { TOKEN_EXPIRE_COOKIE } from "@/_lib/constants";
 import dayjs from "dayjs";
-// eslint-disable-next-line no-restricted-imports
 import isBetween from "dayjs/plugin/isBetween";
+// eslint-disable-next-line no-restricted-imports
 import { useEffect } from "react";
 import { Cookies } from "react-cookie";
 
