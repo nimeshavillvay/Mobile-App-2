@@ -10,6 +10,7 @@ import {
   DEFAULT_PLANT,
   IN_STOCK,
   LIMITED_STOCK,
+  NOT_AVAILABLE,
   NOT_IN_STOCK,
 } from "@/_lib/constants";
 import type { CartItemConfiguration } from "@/_lib/types";
@@ -341,8 +342,13 @@ const ShippingMethod = ({ token }: ShippingMethodProps) => {
         ...item.configuration,
       };
       const availability = cartItemsAvailability.find(
-        (willCall) => willCall.productId === item.itemInfo.productId,
+        (willCall) =>
+          willCall.productId === item.itemInfo.productId &&
+          willCall.willCallAnywhere[0]?.shippingMethod ===
+            WILLCALL_SHIPING_METHOD &&
+          willCall.willCallAnywhere[0]?.status !== NOT_AVAILABLE,
       );
+
       const transformedConfig = availability
         ? transformConfiguration(availability, config)
         : config;

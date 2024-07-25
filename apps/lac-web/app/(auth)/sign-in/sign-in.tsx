@@ -280,7 +280,7 @@ const SignIn = () => {
             </Button>
 
             <Link
-              href={`/forgot-password?email=${email}`}
+              href={`/forgot-password?${new URLSearchParams({ email }).toString()}`}
               className={cn(
                 buttonVariants({
                   variant: "link",

@@ -929,7 +929,7 @@ const NewUserFlow = ({
                   name="billingCounty"
                   render={({ field }) => (
                     <FormItem className="col-span-3 mt-[0.85rem] self-start">
-                      <FormLabel>County</FormLabel>
+                      <FormLabel>County (Optional)</FormLabel>
                       <Select
                         onValueChange={field.onChange}
                         defaultValue={field.value}
@@ -1160,7 +1160,7 @@ const NewUserFlow = ({
                     name="shippingCounty"
                     render={({ field }) => (
                       <FormItem className="col-span-3 mt-[0.8rem] self-start">
-                        <FormLabel>County</FormLabel>
+                        <FormLabel>County (Optional)</FormLabel>
                         <Select
                           onValueChange={field.onChange}
                           defaultValue={field.value}

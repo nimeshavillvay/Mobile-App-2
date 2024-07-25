@@ -25,6 +25,7 @@ const OrderConfirmDialog = ({
 }: OrderConfirmDialogProps) => {
   const [open, setOpen] = useState(false);
   const [confirmClicked, setConfirmClicked] = useState(false);
+  const [buttonDisable, setButtonDisable] = useState(false);
 
   const cartQuery = useSuspenseCart(token);
 
@@ -35,6 +36,7 @@ const OrderConfirmDialog = ({
     setConfirmClicked(true);
     try {
       await checkoutMutation.mutateAsync();
+      setButtonDisable(true);
     } catch {
       setOpen(false);
     }
@@ -62,20 +64,20 @@ const OrderConfirmDialog = ({
           <DialogDescription>
             {confirmClicked
               ? "Order is processing"
-              : "Place your OrderUpon confirmation, your order will be placed."}
+              : "Upon confirmation, your order will be placed."}
           </DialogDescription>
         </DialogHeader>
 
         <DialogFooter>
           <Button
-            disabled={checkoutMutation.isPending}
+            disabled={checkoutMutation.isPending || buttonDisable}
             onClick={() => setOpen(false)}
           >
             Cancel
           </Button>
           <Button
             onClick={() => clickConfirmOrder()}
-            disabled={checkoutMutation.isPending}
+            disabled={checkoutMutation.isPending || buttonDisable}
           >
             Confirm
           </Button>
