@@ -1,58 +1,61 @@
 "use client";
 
-import {
-  PRIVATE_ROUTES,
-  SESSION_TOKEN_COOKIE,
-  TOKEN_MAX_AGE,
-} from "@/_lib/constants";
-import { useToast } from "@repo/web-ui/components/ui/toast";
-import { useQuery } from "@tanstack/react-query";
-import { usePathname, useRouter } from "next/navigation";
+import { TOKEN_EXPIRE_COOKIE } from "@/_lib/constants";
+import dayjs from "dayjs";
 // eslint-disable-next-line no-restricted-imports
+import isBetween from "dayjs/plugin/isBetween";
 import { useEffect } from "react";
 import { Cookies } from "react-cookie";
 
+dayjs.extend(isBetween);
+
 const SessionChecker = () => {
-  const pathname = usePathname();
-  const router = useRouter();
-  const { toast } = useToast();
+  const HARD_RELOAD_BEFORE = 5; // 5 minutes
+  const CHECK_INTERVAL = 60000; // 1 minute in milliseconds
 
-  const sessionTokenQuery = useQuery({
-    queryKey: ["session-checker"],
-    queryFn: async () => {
-      const cookies = new Cookies();
-      const sessionCookie = cookies.get(SESSION_TOKEN_COOKIE);
+  const checkTokenExpiration = () => {
+    const cookies = new Cookies();
+    const tokenExpire = cookies.get(TOKEN_EXPIRE_COOKIE);
+    const tokenExpiryDate = dayjs(tokenExpire);
+    const now = dayjs();
 
-      if (sessionCookie && typeof sessionCookie === "string") {
-        return sessionCookie;
-      }
+    if (tokenExpire) {
+      const shouldRefreshToken =
+        now.isAfter(tokenExpiryDate) ||
+        now.isBetween(
+          tokenExpiryDate.subtract(HARD_RELOAD_BEFORE, "minute"),
+          tokenExpiryDate,
+          "second",
+        );
 
-      return null;
-    },
-    staleTime: 0,
-    refetchInterval: (TOKEN_MAX_AGE / 10) * 1000,
-  });
-
-  useEffect(() => {
-    if (!sessionTokenQuery.isFetching && sessionTokenQuery.data === null) {
-      toast({
-        title: "Session expired",
-        variant: "destructive",
-      });
-
-      if (PRIVATE_ROUTES.some((route) => pathname.startsWith(route))) {
-        return router.replace("/sign-in");
-      } else {
-        return router.replace(pathname);
+      if (shouldRefreshToken) {
+        window.location.reload();
       }
     }
-  }, [
-    sessionTokenQuery.isFetching,
-    sessionTokenQuery.data,
-    pathname,
-    router,
-    toast,
-  ]);
+  };
+
+  useEffect(() => {
+    // Check token expiration immediately on mount
+    checkTokenExpiration();
+
+    // Check token expiration at regular intervals
+    // TODO: Try to catch idle user in a better way. Check for performance optimizations.
+    const interval = setInterval(checkTokenExpiration, CHECK_INTERVAL);
+
+    // Handle visibility change to check token expiration when returning to the tab
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        checkTokenExpiration();
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, []);
 
   return null;
 };

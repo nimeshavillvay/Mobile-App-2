@@ -3,6 +3,7 @@ import { api } from "@/_lib/api";
 import {
   PRIVATE_ROUTES,
   SESSION_TOKEN_COOKIE,
+  TOKEN_EXPIRE_COOKIE,
   TOKEN_MAX_AGE,
 } from "@/_lib/constants";
 import dayjs from "dayjs";
@@ -12,7 +13,6 @@ import { NextResponse, type NextRequest } from "next/server";
 
 dayjs.extend(isBetween);
 
-const TOKEN_EXPIRE_COOKIE = "xid_00924_expire";
 const PUBLIC_ONLY_ROUTES = [
   "/sign-in",
   "/register",
