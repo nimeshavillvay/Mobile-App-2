@@ -1,21 +1,7 @@
-import { StyleSheet, View } from "react-native";
-import { Text } from "tamagui";
+import { Redirect } from "expo-router";
 
-const HomePage = () => {
-  return (
-    <View style={styles.container}>
-      <Text>Home Page</Text>
-    </View>
-  );
+const Home = () => {
+  return <Redirect href="/home" />;
 };
 
-export default HomePage;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
+export default Home;
