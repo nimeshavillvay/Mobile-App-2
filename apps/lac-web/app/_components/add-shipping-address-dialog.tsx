@@ -284,7 +284,7 @@ const AddShippingAddressDialog = ({
                 name="county"
                 render={({ field }) => (
                   <FormItem className="col-span-3">
-                    <FormLabel>County</FormLabel>
+                    <FormLabel>County (Optional)</FormLabel>
                     <Select
                       onValueChange={field.onChange}
                       defaultValue={field.value}
@@ -345,7 +345,7 @@ const AddShippingAddressDialog = ({
                   <FormItem className="col-span-2">
                     <FormLabel>Zip4 (Optional)</FormLabel>
                     <FormControl>
-                      <Input placeholder="Zip4 (Optional)" {...field} />
+                      <Input placeholder="Zip4" {...field} />
                     </FormControl>
                     <FormDescription className="sr-only">
                       Enter your Zip4
@@ -367,6 +367,7 @@ const AddShippingAddressDialog = ({
                         type="tel"
                         autoComplete="phone-number"
                         {...field}
+                        placeholder="Phone Number"
                         value={phoneNumber}
                         onChange={(event) => {
                           const formatted = formatPhoneNumber(event);

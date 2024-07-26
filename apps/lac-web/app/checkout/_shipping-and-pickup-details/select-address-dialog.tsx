@@ -55,7 +55,10 @@ const SelectAddressDialog = ({
       {
         onSuccess: () => {
           queryClient.invalidateQueries({
-            queryKey: ["cart", "shipping-methods"],
+            queryKey: ["cart"],
+          });
+          queryClient.invalidateQueries({
+            queryKey: ["my-account", "shipping-addresses"],
           });
           toast({
             title: "Address selected",
