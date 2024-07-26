@@ -74,7 +74,7 @@ const UserMobileNavigation = ({
             </li>
             <li>
               <SheetClose asChild className={sectionLinkStyles()}>
-                <Link href="/sign-in">
+                <Link href="/sign-up">
                   Create an account
                   <ChevronRight className="stroke-wurth-gray-400" />
                 </Link>

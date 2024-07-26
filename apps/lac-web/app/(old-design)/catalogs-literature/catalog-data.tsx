@@ -235,4 +235,10 @@ export const nonInteractiveCatalogs: NonInteractiveCatalogDataType[] = [
     title: "Studio 917 Hardware Catalog",
     text: "Studio 917 Hardware Catalog",
   },
+  {
+    id: "kessebohmer_catalog",
+    url: `${apiUrl}/assets/pdf/Kessebohmer_Catalog.pdf`,
+    title: "Kessebohmer Catalog",
+    text: "Kessebohmer Catalog",
+  },
 ];
