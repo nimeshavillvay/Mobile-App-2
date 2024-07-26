@@ -65,7 +65,7 @@ const ShippingAddressSelector = ({
         {
           onSuccess: () => {
             queryClient.invalidateQueries({
-              queryKey: ["cart", "shipping-methods"],
+              queryKey: ["cart"],
             });
             shippingAddressListQuery.refetch();
             setOpen(false);

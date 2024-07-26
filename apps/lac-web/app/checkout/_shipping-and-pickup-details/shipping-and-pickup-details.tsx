@@ -106,7 +106,12 @@ const ShippingAndPickupDetails = ({
             </div>
           </div>
 
-          <SelectAddressDialog token={token} countries={countries} />
+          <SelectAddressDialog
+            token={token}
+            countries={countries}
+            // Adding key property to re-render when the address get changed
+            key={cartQuery.data.configuration.shippingAddressId}
+          />
         </div>
 
         <div className="flex-1 space-y-4">
