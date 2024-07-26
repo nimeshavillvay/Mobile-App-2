@@ -4,6 +4,7 @@ import { Stack } from "expo-router/stack";
 import * as SplashScreen from "expo-splash-screen";
 // eslint-disable-next-line no-restricted-imports
 import { useEffect } from "react";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import { TamaguiProvider } from "tamagui";
 
 import tamaguiConfig from "../tamagui.config";
@@ -37,9 +38,19 @@ const RootLayout = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <TamaguiProvider config={tamaguiConfig}>
-        <Stack>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        </Stack>
+        <SafeAreaProvider>
+          <Stack>
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+
+            <Stack.Screen
+              name="search"
+              options={{
+                presentation: "modal",
+                headerShown: false,
+              }}
+            />
+          </Stack>
+        </SafeAreaProvider>
       </TamaguiProvider>
     </QueryClientProvider>
   );

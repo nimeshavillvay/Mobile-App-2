@@ -1,7 +1,14 @@
-import { Redirect } from "expo-router";
+import { ScreenHeader } from "@repo/native-ui/components/base/screen-header";
+import { ScreenLayout } from "@repo/native-ui/components/base/screen-layout";
+import { Text } from "tamagui";
 
-const Home = () => {
-  return <Redirect href="/home" />;
+const HomePage = () => {
+  return (
+    <ScreenLayout edges={["top", "right", "left"]}>
+      <ScreenHeader title="Home" />
+      <Text>Home Page</Text>
+    </ScreenLayout>
+  );
 };
 
-export default Home;
+export default HomePage;

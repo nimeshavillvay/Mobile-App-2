@@ -4,7 +4,7 @@ import { Text } from "tamagui";
 
 const MorePage = () => {
   return (
-    <ScreenLayout>
+    <ScreenLayout edges={["top", "right", "left"]}>
       <ScreenHeader title="Home" />
       <Text>More Page</Text>
     </ScreenLayout>

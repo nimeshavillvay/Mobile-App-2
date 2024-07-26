@@ -2,34 +2,34 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ScreenHeader } from "@repo/native-ui/components/base/screen-header";
 import { SearchBox } from "@repo/native-ui/components/search/search-box";
 import { SearchModalLayout } from "@repo/native-ui/components/search/search-modal-layout";
-import { useRef } from "react";
+import { router } from "expo-router";
 import { Controller, useForm } from "react-hook-form";
-import type { TextInput } from "react-native";
-import { Form, VisuallyHidden } from "tamagui";
+import { Form } from "tamagui";
 import { z } from "zod";
 
 const searchSchema = z.object({
   searchInput: z.string(),
 });
 
-const SearchLayout = () => {
-  const ref = useRef<TextInput>(null);
-
+const Search = () => {
   const form = useForm<z.infer<typeof searchSchema>>({
     resolver: zodResolver(searchSchema),
     values: {
       searchInput: "",
     },
   });
-  const searchTerm = form.watch("searchInput");
 
   const clearSearchTerm = () => {
-    ref.current?.clear();
+    form.reset();
   };
 
-  const onSubmit = () => {
-    console.log(searchTerm);
-  };
+  const handleSubmit = form.handleSubmit((data) => {
+    const searchParams = new URLSearchParams({
+      query: data.searchInput,
+    });
+
+    router.replace(`/search-results?${searchParams.toString()}`);
+  });
 
   return (
     <SearchModalLayout>
@@ -39,29 +39,21 @@ const SearchLayout = () => {
           control={form.control}
           name="searchInput"
           defaultValue=""
-          render={({ field: { onChange, value } }) => (
+          render={({ field: { onBlur, onChange, value } }) => (
             <SearchBox
               testID="search-input"
-              onChangeText={(text) => {
-                onChange(text);
-              }}
+              onBlur={onBlur}
+              onChangeText={onChange}
               value={value}
               placeholder="What are you looking for?"
-              ref={ref}
-              onSubmit={onSubmit}
+              onSubmit={handleSubmit}
               onClear={clearSearchTerm}
             />
           )}
         />
       </Form>
-
-      {/*
-      Just adding this to stop linter complaining about unused variable.
-      This will be used to query the search api 
-      */}
-      <VisuallyHidden>{searchTerm}</VisuallyHidden>
     </SearchModalLayout>
   );
 };
 
-export default SearchLayout;
+export default Search;

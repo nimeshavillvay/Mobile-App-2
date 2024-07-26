@@ -2,13 +2,13 @@ import { ScreenHeader } from "@repo/native-ui/components/base/screen-header";
 import { ScreenLayout } from "@repo/native-ui/components/base/screen-layout";
 import { Text } from "tamagui";
 
-const ShopPage = () => {
+const CartPage = () => {
   return (
-    <ScreenLayout>
+    <ScreenLayout edges={["top", "right", "left"]}>
       <ScreenHeader title="Home" />
-      <Text>Shop Page</Text>
+      <Text>Cart Page</Text>
     </ScreenLayout>
   );
 };
 
-export default ShopPage;
+export default CartPage;
