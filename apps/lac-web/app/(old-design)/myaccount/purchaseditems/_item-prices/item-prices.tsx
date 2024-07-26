@@ -31,19 +31,28 @@ const ItemPrices = ({
   showUnitPrice = false,
   unitPriceOnly = false,
 }: ItemPricesProps) => {
+  const initialPriceCheckQuery = useSuspensePriceCheck(token, [
+    { productId, qty: 1 },
+  ]);
+  const initialPriceData = initialPriceCheckQuery.data.productPrices[0];
+  const initialPrice =
+    initialPriceData?.uomPrice ?? initialPriceData?.price ?? 0;
+
   const itemPricesQuery = useSuspensePriceCheck(token, [
     { productId: productId, qty: quantity },
   ]);
   const prices = itemPricesQuery.data.productPrices[0] ?? null;
-  const priceUnit = prices?.priceUnit ?? "";
+  const priceUnit = prices?.uomPriceUnit ?? prices?.priceUnit ?? "";
   const priceBreakDownArray = prices?.priceBreakDowns;
+
+  const displayPrice = prices?.uomPrice ? prices?.uomPrice : prices?.price ?? 0;
 
   if (unitPriceOnly && prices) {
     return (
       <UnitPriceRowForMobile
-        listPrice={listPrice}
+        listPrice={prices?.uomPrice ?? listPrice}
         uom={priceUnit}
-        price={prices.price}
+        price={displayPrice}
       />
     );
   }
@@ -72,7 +81,7 @@ const ItemPrices = ({
                 key={`${breakDown.price}_${index}`}
                 quantity={breakDown.quantity}
                 uom={uom}
-                price={`$${formatNumberToPrice(breakDown.price)} / ${priceUnit}`}
+                price={`$${formatNumberToPrice(Math.min(breakDown.price, initialPrice))} / ${priceUnit}`}
               />
             ))}
           </TableBody>
@@ -81,9 +90,9 @@ const ItemPrices = ({
 
       {showUnitPrice && prices && (
         <UnitPriceRow
-          listPrice={listPrice}
+          listPrice={prices?.uomPrice ?? listPrice}
           uom={priceUnit}
-          price={prices.price}
+          price={displayPrice}
         />
       )}
     </div>

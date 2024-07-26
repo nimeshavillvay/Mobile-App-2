@@ -17,6 +17,7 @@ type OldCustomer = {
   county: string;
   locality: string;
   organization: string;
+  permission: string;
   "phone-number": string;
   region: string;
   "street-address": string;
@@ -119,6 +120,7 @@ const useSuspenseMyCustomers = (
           county: customer.county,
           locality: customer.county,
           organization: customer.organization,
+          permission: customer.permission,
           phoneNumber: customer["phone-number"],
           region: customer.region,
           streetAddress: customer["street-address"],

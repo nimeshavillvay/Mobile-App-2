@@ -4,7 +4,11 @@ import { checkAvailability } from "@/_lib/apis/shared";
 import { NOT_AVAILABLE } from "@/_lib/constants";
 import { useToast } from "@repo/web-ui/components/ui/toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { BACKORDER_DISABLED, BACKORDER_ENABLED } from "../../cart/constants";
+import {
+  BACKORDER_DISABLED,
+  BACKORDER_ENABLED,
+  FALSE_STRING,
+} from "../../cart/constants";
 
 const useAddToCartMutation = (
   token: string,
@@ -30,6 +34,7 @@ const useAddToCartMutation = (
         will_call_avail: "",
         will_call_plant: "",
         selectedOption: "",
+        will_call_not_in_stock: FALSE_STRING,
       };
 
       const availability = await checkAvailability(token, {

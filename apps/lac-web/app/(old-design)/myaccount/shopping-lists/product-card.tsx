@@ -40,10 +40,10 @@ const ProductCard = ({
   const title = product.itemName;
   const image = product.img;
   const sku = product.txtWurthLacItem;
-  const uom = product.txtUom;
   const onSale = getBoolean(product.onSale);
   const isNewItem = getBoolean(product.isNewItem);
   const href = `/product/${product.productId}/${product.slug}`;
+  let uom = product.txtUom;
 
   const removeShoppingListItemMutation = useRemoveShoppingListItemMutation();
 
@@ -62,11 +62,15 @@ const ProductCard = ({
   if (priceData) {
     listPrice = priceData.listPrice;
     currentPrice = priceData?.uomPrice ?? priceData?.price;
+    if (priceData?.uomPriceUnit) {
+      uom = priceData?.uomPriceUnit;
+    }
   }
 
   const discountPercent = Math.round(
     ((listPrice - currentPrice) / listPrice) * 100,
   );
+  const isLaminateItem = !!priceData?.uomPrice && !!priceData?.uomPriceUnit;
 
   const { setOpen, setProductId } = useAddToCartDialog(
     (state) => state.actions,
@@ -91,15 +95,19 @@ const ProductCard = ({
       )}
     >
       <ProductCardHero>
-        <div className="flex flex-row justify-between gap-2">
-          {discountPercent > 0 ? (
+        <div className="flex flex-row justify-between gap-2 @container/labels">
+          {!isLaminateItem && discountPercent > 0 ? (
             <ProductCardDiscount>{discountPercent}</ProductCardDiscount>
           ) : (
-            <div />
+            <div className="invisible md:text-lg">0</div>
           )}
 
           {orientation === "vertical" && (
-            <SaleBadges onSale={onSale} isNewItem={isNewItem} />
+            <SaleBadges
+              onSale={onSale}
+              isNewItem={isNewItem}
+              showFlashDealText={!(discountPercent > 0 && onSale && isNewItem)}
+            />
           )}
         </div>
         {!!image && !!title && (
@@ -114,8 +122,12 @@ const ProductCard = ({
 
       <ProductCardContent>
         {orientation === "horizontal" && (
-          <div>
-            <SaleBadges onSale={onSale} isNewItem={isNewItem} />
+          <div className="@container/labels">
+            <SaleBadges
+              onSale={onSale}
+              isNewItem={isNewItem}
+              showFlashDealText={true}
+            />
           </div>
         )}
 
@@ -129,6 +141,7 @@ const ProductCard = ({
               price={currentPrice}
               uom={uom}
               actualPrice={listPrice}
+              isLaminateItem={isLaminateItem}
             />
           )}
 
@@ -159,7 +172,7 @@ const ShoppingListProductCardActions = ({
         variant="outline"
         size="icon"
         className="size-10"
-        aria-label="Add to favorites"
+        aria-label="Add to List"
         onClick={removeFromShoppingList}
         disabled={disabled}
       >

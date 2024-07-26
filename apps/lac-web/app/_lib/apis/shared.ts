@@ -4,6 +4,7 @@ import { api } from "../api";
 import type {
   AvailabilityParameters,
   CheckAvailability,
+  ShippingMethod,
   Token,
 } from "../types";
 
@@ -135,4 +136,18 @@ export const checkAvailability = async (
     xplant: response.xplant,
     availableLocations: response.available_locations,
   };
+};
+
+export const shippingMethods = async (token?: string, isForCart?: boolean) => {
+  return await api
+    .get("rest/shipping-methods", {
+      searchParams: {
+        for_cart: isForCart ?? false,
+      },
+      headers: {
+        Authorization: token ? `Bearer ${token}` : undefined,
+      },
+      cache: "no-cache",
+    })
+    .json<ShippingMethod[]>();
 };

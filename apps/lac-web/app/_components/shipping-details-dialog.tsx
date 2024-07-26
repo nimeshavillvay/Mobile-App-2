@@ -5,7 +5,7 @@ import ShippingAddressSelector from "@/_components/shipping-adddress-selector";
 import useSuspenseBillingAddress from "@/_hooks/address/use-suspense-billing-address.hook";
 import useSuspenseShippingAddressList from "@/_hooks/address/use-suspense-shipping-address-list.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
-import type { ShippingMethod, Token } from "@/_lib/types";
+import type { Country, ShippingMethod, Token } from "@/_lib/types";
 import { Truck } from "@repo/web-ui/components/icons/truck";
 import { Button } from "@repo/web-ui/components/ui/button";
 import {
@@ -32,6 +32,7 @@ type ShippingDetailsDialogProps = {
   readonly children?: ReactNode;
   readonly open?: boolean;
   readonly setOpen?: (open: boolean) => void;
+  readonly countries: Country[];
 };
 
 const ShippingDetailsDialog = ({
@@ -40,7 +41,10 @@ const ShippingDetailsDialog = ({
 }: ShippingDetailsDialogProps) => {
   const checkLoginQuery = useSuspenseCheckLogin(token);
 
-  if (checkLoginQuery?.data?.status_code === "NOT_LOGGED_IN") {
+  if (
+    checkLoginQuery?.data?.status_code === "NOT_LOGGED_IN" ||
+    checkLoginQuery.data.change_password
+  ) {
     return null;
   }
 
@@ -55,9 +59,11 @@ const ShippingDetailsDialogButton = ({
   children,
   open: externalOpen,
   setOpen: externalSetOpen,
+  countries,
 }: ShippingDetailsDialogProps) => {
   const shippingAddressListQuery = useSuspenseShippingAddressList(token);
   const billingAddressQuery = useSuspenseBillingAddress(token);
+  const checkLoginQuery = useSuspenseCheckLogin(token);
 
   const defaultAddress = shippingAddressListQuery.data.find(
     (address) => address.default,
@@ -74,6 +80,25 @@ const ShippingDetailsDialogButton = ({
   // if needed
   const open = externalOpen ?? internalOpen;
   const setOpen = externalSetOpen ?? setInternalOpen;
+
+  const capitalizeFirstChar = (text?: string) => {
+    return text !== undefined
+      ? text.toLowerCase().replace(/\b\w/g, (char) => char.toUpperCase())
+      : "";
+  };
+
+  if (checkLoginQuery.data.change_password) {
+    return (
+      <>
+        <Truck width={16} height={16} />
+
+        <span className="h-fit px-0 py-0 text-sm font-medium leading-5">
+          {capitalizeFirstChar(defaultAddress?.streetAddress)}
+        </span>
+      </>
+    );
+  }
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
@@ -85,7 +110,7 @@ const ShippingDetailsDialogButton = ({
           >
             <Truck width={16} height={16} />
 
-            <span>#{defaultAddress?.postalCode}</span>
+            <span>{capitalizeFirstChar(defaultAddress?.streetAddress)}</span>
           </Button>
         )}
       </DialogTrigger>
@@ -119,7 +144,7 @@ const ShippingDetailsDialogButton = ({
               </div>
             </div>
 
-            <ShippingAddressSelector token={token}>
+            <ShippingAddressSelector token={token} countries={countries}>
               <Button variant="outline" className="px-3 font-bold shadow">
                 Change
               </Button>
@@ -129,7 +154,7 @@ const ShippingDetailsDialogButton = ({
           <div className="grid h-fit w-full grid-cols-1 divide-y rounded-lg border border-wurth-gray-150">
             <div className="p-3">
               <div className="font-light text-wurth-gray-500">
-                Preferred Shipping Method
+                Order Ships Via
               </div>
               <div className="font-semibold">
                 {shippingMethod?.name ? shippingMethod.name : "Not Available"}

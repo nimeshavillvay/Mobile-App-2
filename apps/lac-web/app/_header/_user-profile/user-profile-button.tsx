@@ -5,11 +5,11 @@ import useLogoutMutation from "@/_hooks/user/use-logout-mutation.hook";
 import useOSRLogoutMutation from "@/_hooks/user/use-osr-logout-mutation.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
 import useSuspenseUsersList from "@/_hooks/user/use-suspense-users-list.hook";
-import type { ShippingMethod } from "@/_lib/types";
+import type { Country, ShippingMethod } from "@/_lib/types";
 import { cn } from "@/_lib/utils";
+import { BookmarkOutline } from "@repo/web-ui/components/icons/bookmark-outline";
 import { Building } from "@repo/web-ui/components/icons/building";
 import { Exit } from "@repo/web-ui/components/icons/exit";
-import { HeartOutline } from "@repo/web-ui/components/icons/heart-outline";
 import { MapPin } from "@repo/web-ui/components/icons/map-pin";
 import { Switch } from "@repo/web-ui/components/icons/switch";
 import { UserGroup } from "@repo/web-ui/components/icons/user-group";
@@ -33,10 +33,12 @@ const UserProfileButton = ({
   token,
   type,
   shippingMethods,
+  countries,
 }: {
   readonly token: string;
   readonly type: ViewportTypes;
   readonly shippingMethods: ShippingMethod[];
+  readonly countries: Country[];
 }) => {
   const checkLoginQuery = useSuspenseCheckLogin(token);
 
@@ -50,8 +52,16 @@ const UserProfileButton = ({
   }
 
   if (type === "mobile") {
+    if (loginCheckData.change_password) {
+      return null;
+    }
+
     return (
-      <UserMobileNavigation token={token} shippingMethods={shippingMethods} />
+      <UserMobileNavigation
+        token={token}
+        shippingMethods={shippingMethods}
+        countries={countries}
+      />
     );
   } else {
     // Desktop
@@ -76,6 +86,7 @@ const UserProfileButton = ({
         }
         customerDetails={customerDetails}
         shippingMethods={shippingMethods}
+        countries={countries}
       />
     );
   }
@@ -89,12 +100,14 @@ const UserProfileDropdown = ({
   isOSRLoggedInAsCustomer,
   customerDetails,
   shippingMethods,
+  countries,
 }: {
   readonly token: string;
   readonly isOSRUser: boolean;
   readonly isOSRLoggedInAsCustomer: boolean;
   readonly customerDetails: string;
   readonly shippingMethods: ShippingMethod[];
+  readonly countries: Country[];
 }) => {
   const router = useRouter();
   const usersListQuery = useSuspenseUsersList(token);
@@ -102,6 +115,7 @@ const UserProfileDropdown = ({
 
   const logoutMutation = useLogoutMutation();
   const osrLogoutMutation = useOSRLogoutMutation();
+  const checkLoginQuery = useSuspenseCheckLogin(token);
 
   const [openShippingDialog, setOpenShippingDialog] = useState(false);
   const displayName = userProfile.firstName
@@ -109,6 +123,14 @@ const UserProfileDropdown = ({
     : userProfile.lastName
       ? userProfile.lastName
       : "User";
+
+  if (checkLoginQuery.data.change_password) {
+    return (
+      <span className="sr-only min-w-0 shrink md:not-sr-only md:min-w-0 md:shrink md:truncate md:text-base md:font-semibold">
+        Hi, {userProfile.firstName !== "" ? userProfile.firstName : "User"}
+      </span>
+    );
+  }
 
   return (
     <>
@@ -119,6 +141,7 @@ const UserProfileDropdown = ({
         shippingMethods={shippingMethods}
         open={openShippingDialog}
         setOpen={setOpenShippingDialog}
+        countries={countries}
       >
         {/* This is to disable the fallback button in the ShippingDetailsDialog component */}
         {/* eslint-disable-next-line react/jsx-no-useless-fragment */}
@@ -204,7 +227,7 @@ const UserProfileDropdown = ({
           >
             <Link href="/myaccount/shopping-lists">
               <DropdownMenuShortcut className="ml-0">
-                <HeartOutline className="size-4 stroke-black stroke-2" />
+                <BookmarkOutline className="size-4 stroke-black stroke-2" />
               </DropdownMenuShortcut>
 
               <span>My Shopping Lists</span>

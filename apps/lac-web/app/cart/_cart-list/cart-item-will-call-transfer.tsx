@@ -1,8 +1,15 @@
-import { IN_STOCK, LIMITED_STOCK, NOT_IN_STOCK } from "@/_lib/constants";
+import {
+  IN_STOCK,
+  LIMITED_STOCK,
+  NOT_AVAILABLE,
+  NOT_IN_STOCK,
+} from "@/_lib/constants";
 import type { Plant } from "@/_lib/types";
 import { cn } from "@/_lib/utils";
 import { RadioGroupItem } from "@repo/web-ui/components/ui/radio-group";
+import { MAIN_OPTIONS } from "../constants";
 import type { Availability } from "../types";
+import NotAvailableInfoBanner from "./cart-item-not-available-banner";
 import PlantName from "./plant-name";
 
 type CartItemWillCallTransferProps = {
@@ -34,20 +41,16 @@ const CartItemWillCallTransfer = ({
           </div>
           <div className="flex flex-col gap-0.5">
             <div className="flex flex-row items-center text-sm">
-              <ItemCountBadge count={willCallItem.willCallQuantity} />
-              &nbsp;
               <span className="font-medium">
-                transfer from <PlantName plants={plants} plantCode={xPlant} />
+                <ItemCountBadge count={willCallItem.willCallQuantity} />
+                &nbsp; transfer from&nbsp;
+                <PlantName plants={plants} plantCode={xPlant} /> to&nbsp;
+                <PlantName
+                  plants={plants}
+                  plantCode={willCallItem.willCallPlant}
+                />
               </span>
             </div>
-            <span className="font-medium">
-              to{" "}
-              <PlantName
-                plants={plants}
-                plantCode={willCallItem.willCallPlant}
-              />
-            </span>
-
             <span className="text-xs text-wurth-gray-500">
               Your order will be ready for pick up next day.
             </span>
@@ -62,19 +65,16 @@ const CartItemWillCallTransfer = ({
           </div>
           <div className="flex flex-col gap-0.5">
             <div className="flex items-center text-sm">
-              <ItemCountBadge count={willCallItem.willCallQuantity} />
-              &nbsp;
               <span className="font-medium">
-                transfer from <PlantName plants={plants} plantCode={xPlant} />
+                <ItemCountBadge count={willCallItem.willCallQuantity} />
+                &nbsp;transfer from&nbsp;
+                <PlantName plants={plants} plantCode={xPlant} /> to&nbsp;
+                <PlantName
+                  plants={plants}
+                  plantCode={willCallItem.willCallPlant}
+                />
               </span>
             </div>
-            <span className="font-medium">
-              to{" "}
-              <PlantName
-                plants={plants}
-                plantCode={willCallItem.willCallPlant}
-              />
-            </span>
             {willCallItem.backOrder && (
               <BackOrderItemCountLabel
                 count={willCallItem.backOrderQuantity_1 ?? 0}
@@ -95,13 +95,27 @@ const CartItemWillCallTransfer = ({
           <div className="flex flex-col gap-0.5">
             <div className="rounded bg-red-800/10 px-2 py-1 text-sm text-red-800">
               This item is out of stock at&nbsp;
-              <PlantName plants={plants} plantCode={xPlant} />
+              <PlantName plants={plants} plantCode={xPlant} /> and cannot be
+              transferred to{" "}
+              <PlantName
+                plants={plants}
+                plantCode={willCallItem.willCallPlant}
+              />
             </div>
             {willCallItem.willCallQuantity && (
               <BackOrderItemCountLabel count={willCallItem.willCallQuantity} />
             )}
           </div>
         </div>
+      )}
+
+      {willCallItem.status === NOT_AVAILABLE && (
+        <NotAvailableInfoBanner
+          willCallType={MAIN_OPTIONS.WILL_CALL_TRANSFER}
+          plants={plants}
+          willCallPlant={xPlant}
+          willCallTransferPlant={willCallItem.willCallPlant}
+        />
       )}
     </>
   );

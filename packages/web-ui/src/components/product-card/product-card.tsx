@@ -3,7 +3,7 @@
 import Image, { type ImageProps } from "next/image";
 import Link, { type LinkProps } from "next/link";
 import { createContext, useContext, type ComponentProps } from "react";
-import { HeartOutline } from "~/components/icons/heart-outline";
+import { BookmarkOutline } from "~/components/icons/bookmark-outline";
 import { Badge, type BadgeProps } from "~/components/ui/badge";
 import { Button, buttonVariants } from "~/components/ui/button";
 import {
@@ -22,7 +22,7 @@ import {
   TooltipTrigger,
 } from "~/components/ui/tooltip";
 import { cn, formatNumberToPrice } from "~/lib/utils";
-import { HeartFilled } from "../icons/heart-filled";
+import { BookmarkFilled } from "../icons/bookmark-filled";
 
 type Orientation = "vertical" | "horizontal";
 
@@ -206,17 +206,19 @@ const ProductCardPrice = ({
   price,
   uom,
   actualPrice,
+  isLaminateItem,
 }: {
   readonly price: number;
   readonly uom: string;
   readonly actualPrice?: number;
+  readonly isLaminateItem: boolean;
 }) => {
   return (
     <div className="text-xs font-normal text-wurth-gray-800 md:text-sm md:leading-none">
       <span
         className={cn(
           "font-bold",
-          actualPrice && price < actualPrice
+          !isLaminateItem && actualPrice && price < actualPrice
             ? "text-green-600"
             : "text-wurth-gray-800",
         )}
@@ -226,7 +228,7 @@ const ProductCardPrice = ({
           {formatNumberToPrice(price)}
         </span>
       </span>
-      {!!actualPrice && price < actualPrice && (
+      {!isLaminateItem && !!actualPrice && price < actualPrice && (
         <span className="ml-1 text-base font-normal text-wurth-gray-400 line-through md:text-lg">
           {formatNumberToPrice(actualPrice)}
         </span>
@@ -261,14 +263,14 @@ const ProductCardActions = ({
         variant="outline"
         size="icon"
         className="size-10"
-        aria-label="Add to favorites"
+        aria-label="Add to list"
         disabled={disabled}
         onClick={onClickShoppingList}
       >
         {isFavorite ? (
-          <HeartFilled className="size-4" />
+          <BookmarkFilled className="size-4" />
         ) : (
-          <HeartOutline className="size-4" />
+          <BookmarkOutline className="size-4" />
         )}
       </Button>
     </div>

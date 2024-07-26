@@ -5,17 +5,29 @@ import useDebouncedState from "@/_hooks/misc/use-debounced-state.hook";
 import useSuspenseCheckAvailability from "@/_hooks/product/use-suspense-check-availability.hook";
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
-import { DEFAULT_PLANT, NOT_IN_STOCK } from "@/_lib/constants";
+import {
+  DEFAULT_PLANT,
+  MAX_QUANTITY,
+  NOT_AVAILABLE,
+  NOT_IN_STOCK,
+} from "@/_lib/constants";
 import type {
   CartConfiguration,
   CartItemConfiguration,
   Plant,
   Token,
 } from "@/_lib/types";
-import { cn, formatNumberToPrice } from "@/_lib/utils";
+import {
+  calculateIncreaseQuantity,
+  calculateReduceQuantity,
+  cn,
+  formatNumberToPrice,
+} from "@/_lib/utils";
 import { NUMBER_TYPE } from "@/_lib/zod-helper";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Alert } from "@repo/web-ui/components/icons/alert";
+import { Minus } from "@repo/web-ui/components/icons/minus";
+import { Plus } from "@repo/web-ui/components/icons/plus";
 import { Trash } from "@repo/web-ui/components/icons/trash";
 import { WurthFullBlack } from "@repo/web-ui/components/logos/wurth-full-black";
 import {
@@ -52,11 +64,15 @@ import {
   ALTERNATIVE_BRANCHES,
   AVAILABLE_ALL,
   BACK_ORDER_ALL,
+  DEFAULT_SHIPPING_METHOD,
   EMPTY_STRING,
+  FALSE_STRING,
   MAIN_OPTIONS,
   TAKE_ON_HAND,
+  TRUE_STRING,
+  WILLCALL_SHIPING_METHOD,
 } from "../constants";
-import type { WillCallAnywhere } from "../types";
+import type { ShippingMethod, WillCallAnywhere } from "../types";
 import AvailabilityStatus from "./availability-status";
 import CartItemPrice from "./cart-item-price";
 import CartItemShippingMethod from "./cart-item-shipping-method";
@@ -141,7 +157,7 @@ const CartItem = ({
   const [selectedShippingOption, setSelectedShippingOption] =
     useState<MainOption>();
 
-  const { register, getValues, watch, control } = useForm<
+  const { register, getValues, setValue, watch, control } = useForm<
     z.infer<typeof cartItemSchema>
   >({
     resolver: zodResolver(cartItemSchema),
@@ -174,10 +190,12 @@ const CartItem = ({
   const deleteCartItemMutation = useDeleteCartItemMutation(token);
   const checkAvailabilityMutation = useCheckAvailabilityMutation(token);
 
+  const deferredWillCallPlant = useDeferredValue(selectedWillCallPlant);
+
   const checkAvailabilityQuery = useSuspenseCheckAvailability(token, {
     productId: product.id,
     qty: Number(deferredQuantity ?? product.quantity),
-    plant: selectedWillCallPlant !== "" ? selectedWillCallPlant : undefined,
+    plant: deferredWillCallPlant !== "" ? deferredWillCallPlant : undefined,
   });
 
   const {
@@ -208,11 +226,34 @@ const CartItem = ({
     ALTERNATIVE_BRANCHES,
   );
 
+  const findDefaultMethod = (
+    methods: ShippingMethod[],
+    productConfigMethod: CartItemConfiguration["shipping_method_1"],
+    cartConfigDefault: CartConfiguration["default_shipping"],
+  ) => {
+    let defaultMethod = methods.find(
+      (method) => method.code === productConfigMethod,
+    );
+
+    if (!defaultMethod && methods?.length > 0 && cartConfigDefault) {
+      const shipToDefaultMethod = methods.find(
+        (method) => method?.code === cartConfigDefault,
+      );
+      defaultMethod = shipToDefaultMethod ?? methods[0];
+    }
+
+    return defaultMethod;
+  };
+
   // Select the available shipping options based on the priority
   const AVAILABLE_OPTIONS_MAP = {
     [AVAILABLE_ALL]: availableAll,
     [TAKE_ON_HAND]: takeOnHand,
     [ALTERNATIVE_BRANCHES]: shipAlternativeBranch,
+  };
+
+  const BACKORDER_OPTIONS_MAP = {
+    [BACK_ORDER_ALL]: backOrderAll,
   };
 
   const [selectedShipToMe, setSelectedShipToMe] = useState<ShipToMeOption>(
@@ -238,31 +279,30 @@ const CartItem = ({
     selectedShipToMe,
     AVAILABLE_OPTIONS_MAP,
   );
-
-  // Find the default option (available first option)
-  let defaultShippingMethod = shippingMethods.find(
-    (method) => method.code === product.configuration.shipping_method_1,
+  const backorderShippingMethods = getShippingMethods(
+    BACK_ORDER_ALL,
+    BACKORDER_OPTIONS_MAP,
   );
 
-  if (
-    !defaultShippingMethod &&
-    shippingMethods?.length > 0 &&
-    cartConfiguration?.default_shipping
-  ) {
-    const shipToDefaultShippingMethod = shippingMethods.find(
-      (method) => method?.code === cartConfiguration.default_shipping,
-    );
-    if (shipToDefaultShippingMethod) {
-      defaultShippingMethod = shipToDefaultShippingMethod;
-    } else {
-      shippingMethods.at(0);
-    }
-  }
+  const defaultShippingMethod = findDefaultMethod(
+    shippingMethods,
+    product.configuration.shipping_method_1,
+    cartConfiguration?.default_shipping,
+  );
+
+  const defaultBackOrderShippingMethod = findDefaultMethod(
+    backorderShippingMethods,
+    product.configuration.shipping_method_1,
+    cartConfiguration?.default_shipping,
+  );
 
   // User selected shipping method (ship-to-me)
   const [selectedShippingMethod, setSelectedShippingMethod] = useState(
-    defaultShippingMethod?.code ?? "",
+    defaultShippingMethod?.code ?? product.configuration.shipping_method_1,
   );
+
+  const [selectedBackorderShippingMethod, setSelectedBackorderShippingMethod] =
+    useState(defaultBackOrderShippingMethod?.code ?? DEFAULT_SHIPPING_METHOD);
 
   const handleChangeQtyOrPO = (quantity?: number) => {
     const newQuantity = quantity ?? Number(deferredQuantity);
@@ -314,14 +354,15 @@ const CartItem = ({
                     availableAll.plants?.at(0)?.shippingMethods?.at(0)?.code ??
                     selectedShippingMethod;
                   setSelectedShippingMethod(setShippingMethod);
-                  handleSave(
-                    createCartItemConfig({
+                  handleSave({
+                    ...createCartItemConfig({
                       method: setShippingMethod,
                       quantity: availableAll.plants?.at(0)?.quantity ?? 0,
                       plant: availableAll.plants?.at(0)?.plant ?? EMPTY_STRING,
                       hash: availableAll.hash,
                     }),
-                  );
+                    will_call_not_in_stock: FALSE_STRING,
+                  });
                 } else if (takeOnHand && homeBranchAvailability) {
                   const setShippingMethod =
                     takeOnHand.plants?.[0]?.shippingMethods?.find(
@@ -330,8 +371,8 @@ const CartItem = ({
                     takeOnHand.plants?.[0]?.shippingMethods?.[0]?.code ??
                     selectedShippingMethod;
                   setSelectedShippingMethod(setShippingMethod);
-                  handleSave(
-                    createCartItemConfig({
+                  handleSave({
+                    ...createCartItemConfig({
                       method:
                         takeOnHand.plants?.at(0)?.shippingMethods?.at(0)
                           ?.code ?? EMPTY_STRING,
@@ -342,10 +383,11 @@ const CartItem = ({
                       backOrderQuantity:
                         takeOnHand.plants?.at(0)?.backOrderQuantity,
                     }),
-                  );
+                    will_call_not_in_stock: FALSE_STRING,
+                  });
                 } else if (shipAlternativeBranch && homeBranchAvailability) {
-                  handleSave(
-                    getAlternativeBranchesConfig({
+                  handleSave({
+                    ...getAlternativeBranchesConfig({
                       plants: shipAlternativeBranch.plants,
                       method:
                         shipAlternativeBranch.plants
@@ -360,14 +402,23 @@ const CartItem = ({
                         : 0,
                       homePlant: willCallPlant.plantCode ?? DEFAULT_PLANT.code,
                     }),
-                  );
+                    will_call_not_in_stock: FALSE_STRING,
+                  });
                 } else if (backOrderAll) {
                   setSelectedShippingOption(MAIN_OPTIONS.BACK_ORDER);
-                  handleSave(
-                    createCartItemConfig({
-                      method:
-                        backOrderAll.plants?.at(0)?.shippingMethods?.at(0)
-                          ?.code ?? EMPTY_STRING,
+                  const setShippingMethod =
+                    backOrderAll.plants
+                      ?.at(0)
+                      ?.shippingMethods?.find(
+                        (method) =>
+                          method.code === selectedBackorderShippingMethod,
+                      )?.code ??
+                    backOrderAll.plants?.at(0)?.shippingMethods?.at(0)?.code ??
+                    selectedBackorderShippingMethod;
+                  setSelectedBackorderShippingMethod(setShippingMethod);
+                  handleSave({
+                    ...createCartItemConfig({
+                      method: setShippingMethod,
                       quantity: 0,
                       plant: backOrderAll.plants?.at(0)?.plant ?? EMPTY_STRING,
                       hash: backOrderAll.hash,
@@ -376,7 +427,8 @@ const CartItem = ({
                         backOrderAll.plants?.at(0)?.backOrderQuantity,
                       backOrderAll: true,
                     }),
-                  );
+                    will_call_not_in_stock: FALSE_STRING,
+                  });
                 }
               }
             },
@@ -462,13 +514,13 @@ const CartItem = ({
             ) {
               handleSave({
                 ...createCartItemConfig({
-                  method: "0",
+                  method: DEFAULT_SHIPPING_METHOD,
                   quantity: willCallAnywhere[0]?.willCallQuantity,
                   plant: willCallAnywhere[0]?.willCallPlant,
                   hash: willCallAnywhere[0].hash,
                   backOrderDate: willCallAnywhere[0]?.backOrderDate_1,
                   backOrderQuantity: willCallAnywhere[0]?.backOrderQuantity_1,
-                  shippingMethod: "W",
+                  shippingMethod: WILLCALL_SHIPING_METHOD,
                 }),
                 will_call_avail: (willCallAnywhere[0]?.status === NOT_IN_STOCK
                   ? 0
@@ -476,6 +528,10 @@ const CartItem = ({
                 ).toString(),
                 will_call_plant:
                   willCallAnywhere[0]?.willCallPlant ?? EMPTY_STRING,
+                will_call_not_in_stock:
+                  willCallAnywhere[0]?.status === NOT_AVAILABLE
+                    ? TRUE_STRING
+                    : FALSE_STRING,
               });
             } else if (
               willCallAnywhere[0] &&
@@ -483,17 +539,18 @@ const CartItem = ({
             ) {
               handleSave({
                 ...createCartItemConfig({
-                  method: "0",
+                  method: DEFAULT_SHIPPING_METHOD,
                   quantity: 0,
                   plant: willCallAnywhere[0].willCallPlant,
                   hash: willCallAnywhere[0].hash,
                   backOrderAll: true,
                   backOrderDate: willCallAnywhere[0]?.willCallBackOrder,
                   backOrderQuantity: willCallAnywhere[0]?.willCallQuantity,
-                  shippingMethod: "W",
+                  shippingMethod: WILLCALL_SHIPING_METHOD,
                 }),
                 will_call_plant:
                   willCallAnywhere[0].willCallPlant ?? EMPTY_STRING,
+                will_call_not_in_stock: FALSE_STRING,
               });
             }
           },
@@ -509,8 +566,8 @@ const CartItem = ({
     }
 
     if (availableAll) {
-      handleSave(
-        createCartItemConfig({
+      handleSave({
+        ...createCartItemConfig({
           method:
             availableAll.plants?.at(0)?.shippingMethods?.at(0)?.code ??
             EMPTY_STRING,
@@ -518,10 +575,11 @@ const CartItem = ({
           plant: availableAll.plants?.at(0)?.plant ?? EMPTY_STRING,
           hash: availableAll.hash,
         }),
-      );
+        will_call_not_in_stock: FALSE_STRING,
+      });
     } else if (takeOnHand && homeBranchAvailability) {
-      handleSave(
-        createCartItemConfig({
+      handleSave({
+        ...createCartItemConfig({
           method:
             takeOnHand.plants?.at(0)?.shippingMethods?.at(0)?.code ??
             EMPTY_STRING,
@@ -531,10 +589,11 @@ const CartItem = ({
           backOrderDate: takeOnHand.plants?.at(0)?.backOrderDate,
           backOrderQuantity: takeOnHand.plants?.at(0)?.backOrderQuantity,
         }),
-      );
+        will_call_not_in_stock: FALSE_STRING,
+      });
     } else if (shipAlternativeBranch && homeBranchAvailability) {
-      handleSave(
-        getAlternativeBranchesConfig({
+      handleSave({
+        ...getAlternativeBranchesConfig({
           plants: shipAlternativeBranch.plants,
           method:
             shipAlternativeBranch.plants?.at(0)?.shippingMethods?.at(0)?.code ??
@@ -548,13 +607,21 @@ const CartItem = ({
             : 0,
           homePlant: willCallPlant.plantCode ?? DEFAULT_PLANT.code,
         }),
-      );
+        will_call_not_in_stock: FALSE_STRING,
+      });
     } else if (backOrderAll) {
-      handleSave(
-        createCartItemConfig({
-          method:
-            backOrderAll.plants?.at(0)?.shippingMethods?.at(0)?.code ??
-            EMPTY_STRING,
+      const setShippingMethod =
+        backOrderAll.plants
+          ?.at(0)
+          ?.shippingMethods?.find(
+            (method) => method.code === selectedBackorderShippingMethod,
+          )?.code ??
+        backOrderAll.plants?.at(0)?.shippingMethods?.at(0)?.code ??
+        selectedBackorderShippingMethod;
+      setSelectedBackorderShippingMethod(setShippingMethod);
+      handleSave({
+        ...createCartItemConfig({
+          method: setShippingMethod,
           quantity: 0,
           plant: backOrderAll.plants?.at(0)?.plant ?? EMPTY_STRING,
           hash: backOrderAll.hash,
@@ -562,7 +629,8 @@ const CartItem = ({
           backOrderQuantity: backOrderAll.plants?.at(0)?.backOrderQuantity,
           backOrderAll: true,
         }),
-      );
+        will_call_not_in_stock: FALSE_STRING,
+      });
     }
   };
 
@@ -623,6 +691,29 @@ const CartItem = ({
     matchedAvailabilityOption,
     itemConfigWillCallPlant,
   ]); // Disabling ESLint for the dependency array because it's exhaustive when including all relevant dependencies
+
+  const reduceQuantity = () => {
+    // Use `Number(quantity)` because `quantity` is a string at runtime
+    setValue(
+      "quantity",
+      calculateReduceQuantity(
+        Number(quantity),
+        product.minAmount,
+        product.increment,
+      ),
+    );
+  };
+  const increaseQuantity = () => {
+    // Use `Number(quantity)` because `quantity` is a string at runtime
+    setValue(
+      "quantity",
+      calculateIncreaseQuantity(
+        Number(quantity),
+        product.minAmount,
+        product.increment,
+      ),
+    );
+  };
 
   return (
     <div className="flex flex-col gap-6 md:flex-row">
@@ -713,52 +804,74 @@ const CartItem = ({
           {product.isHazardous && isHazardClick && <HazardousMaterialNotice />}
 
           <div className="flex flex-col gap-2 md:flex-row md:items-center">
-            <Controller
-              control={control}
-              name="quantity"
-              render={({ field: { onChange, onBlur, value, name, ref } }) => (
-                <div className="flex items-center">
-                  <NumberInputField
-                    onBlur={onBlur}
-                    onChange={(event) => {
-                      if (
-                        Number(event.target.value) >= product.minAmount &&
-                        Number(event.target.value) % product.increment === 0
-                      ) {
-                        handleChangeQtyOrPO(Number(event.target.value));
-                      }
+            <div className="flex w-44 flex-col rounded-md border border-wurth-gray-250 p-0.5">
+              <div className="text-center text-xs font-medium uppercase leading-none text-wurth-gray-400">
+                Qty / {product.uom}
+              </div>
+              <div className="flex flex-row items-center justify-between gap-2 shadow-sm">
+                <Button
+                  type="button"
+                  variant="subtle"
+                  size="icon"
+                  className="h-7 w-7 rounded-sm"
+                  onClick={reduceQuantity}
+                  disabled={!quantity || Number(quantity) === product.minAmount}
+                >
+                  <Minus className="size-4" />
+                  <span className="sr-only">Reduce quantity</span>
+                </Button>
 
-                      onChange(event);
-                    }}
-                    value={value}
-                    ref={ref}
-                    name={name}
-                    removeDefaultStyles
-                    className={cn(
-                      "h-fit w-24 rounded-none rounded-l border-r-0 px-2.5 py-1 text-base focus:border-none focus:outline-none focus:ring-0 md:w-20",
-                      isQuantityLessThanMin ? "border-red-700" : "",
-                    )}
-                    required
-                    min={product.minAmount}
-                    step={product.increment}
-                    disabled={checkAvailabilityQuery.isPending}
-                    form={cartFormId} // This is to check the validity when clicking "checkout"
-                    label="Quantity"
-                  />
+                <Controller
+                  control={control}
+                  name="quantity"
+                  render={({
+                    field: { onChange, onBlur, value, name, ref },
+                  }) => (
+                    <NumberInputField
+                      onBlur={onBlur}
+                      onChange={(event) => {
+                        if (
+                          Number(event.target.value) >= product.minAmount &&
+                          Number(event.target.value) % product.increment === 0
+                        ) {
+                          handleChangeQtyOrPO(Number(event.target.value));
+                        }
 
-                  <span
-                    className={cn(
-                      "rounded-r border border-l-0 p-1 pr-1.5 lowercase text-zinc-500",
-                      isQuantityLessThanMin
-                        ? "border-red-700"
-                        : "border-gray-200",
-                    )}
-                  >
-                    {product.uom}
-                  </span>
-                </div>
-              )}
-            />
+                        onChange(event);
+                      }}
+                      value={value}
+                      ref={ref}
+                      name={name}
+                      className={cn(
+                        "h-fit w-24 rounded border-r-0 px-2.5 py-1 text-base focus:border-none focus:outline-none focus:ring-0 md:w-20",
+                        isQuantityLessThanMin ? "border-red-700" : "",
+                      )}
+                      required
+                      min={product.minAmount}
+                      step={product.increment}
+                      disabled={checkAvailabilityQuery.isPending}
+                      form={cartFormId} // This is to check the validity when clicking "checkout"
+                      label="Quantity"
+                    />
+                  )}
+                />
+
+                <Button
+                  type="button"
+                  variant="subtle"
+                  size="icon"
+                  className="h-7 w-7 rounded-sm"
+                  onClick={increaseQuantity}
+                  disabled={
+                    quantity?.toString().length > 5 ||
+                    Number(quantity) + product.increment >= MAX_QUANTITY
+                  }
+                >
+                  <Plus className="size-4" />
+                  <span className="sr-only">Increase quantity</span>
+                </Button>
+              </div>
+            </div>
 
             {homeBranchAvailability ? (
               <AvailabilityStatus
@@ -836,6 +949,10 @@ const CartItem = ({
               selectedShipToMe={selectedShipToMe}
               setSelectedShippingMethod={setSelectedShippingMethod}
               selectedShippingMethod={selectedShippingMethod}
+              setSelectedBackorderShippingMethod={
+                setSelectedBackorderShippingMethod
+              }
+              selectedBackorderShippingMethod={selectedBackorderShippingMethod}
               onSave={handleSave}
               defaultShippingMethod={defaultShippingMethod}
               shippingMethods={shippingMethods}
@@ -862,6 +979,10 @@ const CartItem = ({
               selectedWillCallTransfer={selectedWillCallTransfer}
               setSelectedShippingMethod={setSelectedShippingMethod}
               selectedShippingMethod={selectedShippingMethod}
+              setSelectedBackorderShippingMethod={
+                setSelectedBackorderShippingMethod
+              }
+              selectedBackorderShippingMethod={selectedBackorderShippingMethod}
               onSave={handleSave}
               defaultShippingMethod={defaultShippingMethod}
               shippingMethods={shippingMethods}
@@ -914,7 +1035,7 @@ const CartItem = ({
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Confirm Action</AlertDialogTitle>
+            <AlertDialogTitle>Remove from Cart</AlertDialogTitle>
 
             <AlertDialogDescription>
               Are you sure want to remove this item from cart?

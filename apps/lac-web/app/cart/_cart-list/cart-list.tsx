@@ -81,7 +81,10 @@ const CartList = ({ token, plants }: CartListProps) => {
   const cartItemKey = useCartPageStore((state) => state.cartItemKey);
 
   const excludedSkus = useCartStore((state) => state.excludedSkus);
-  const { setExcludedSkus } = useCartStore((state) => state.actions);
+  const discontinuedSkus = useCartStore((state) => state.discontinuedSkus);
+  const { setExcludedSkus, setDiscontinuedSkus } = useCartStore(
+    (state) => state.actions,
+  );
 
   return (
     <>
@@ -106,6 +109,33 @@ const CartList = ({ token, plants }: CartListProps) => {
             variant="ghost"
             type="button"
             onClick={() => setExcludedSkus([])}
+          >
+            <Close className="stroke-red-800" width={12} height={12} />
+          </Button>
+        </Alert>
+      )}
+
+      {Array.isArray(discontinuedSkus) && discontinuedSkus.length > 0 && (
+        <Alert variant="destructive" className="mb-2">
+          <AlertIcon className="size-4" />
+          <AlertContent>
+            <AlertTitle>Error</AlertTitle>
+            <AlertDescription>
+              {discontinuedSkus
+                .join(", ")
+                .concat(
+                  discontinuedSkus.length === 1
+                    ? " Product has"
+                    : " Products have",
+                )
+                .concat(" been discontinued")}
+            </AlertDescription>
+          </AlertContent>
+          <Button
+            className="absolute right-1 top-1 h-fit w-fit cursor-pointer hover:bg-transparent"
+            variant="ghost"
+            type="button"
+            onClick={() => setDiscontinuedSkus([])}
           >
             <Close className="stroke-red-800" width={12} height={12} />
           </Button>
@@ -169,7 +199,7 @@ const CartList = ({ token, plants }: CartListProps) => {
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
-                  <AlertDialogTitle>Confirm Action</AlertDialogTitle>
+                  <AlertDialogTitle>Delete Cart</AlertDialogTitle>
                   <AlertDialogDescription>
                     Are you sure want to delete your cart?
                   </AlertDialogDescription>

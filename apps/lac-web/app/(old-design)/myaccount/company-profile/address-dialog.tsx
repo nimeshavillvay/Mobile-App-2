@@ -103,7 +103,7 @@ const AddressDialog = ({
       zipCode: address.postalCode,
       phoneNumber: address.phoneNumber ?? "",
       zip4: address.zip4,
-      country: address.countryName,
+      country: address.country ?? address.countryName,
       county: address.county ?? "",
     },
   });
@@ -366,7 +366,7 @@ const AddressDialog = ({
                     >
                       <FormControl>
                         <SelectTrigger className="h-8 rounded-sm py-0 focus:ring-brand-gray-500">
-                          <SelectValue placeholder="State" />
+                          <SelectValue placeholder="County" />
                         </SelectTrigger>
                       </FormControl>
 

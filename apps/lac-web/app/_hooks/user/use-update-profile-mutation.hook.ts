@@ -1,9 +1,9 @@
 import useCookies from "@/_hooks/storage/use-cookies.hook";
 import { api } from "@/_lib/api";
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
+import type { UpdateUser } from "@/_lib/types";
 import { useToast } from "@repo/web-ui/components/ui/toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import type { UpdateUser } from "./types";
 
 const useUpdateProfileMutation = () => {
   const [cookies] = useCookies();
@@ -64,7 +64,7 @@ const useUpdateProfileMutation = () => {
     },
     onSettled: () => {
       queryClient.invalidateQueries({
-        queryKey: ["user", "manage-users"],
+        queryKey: ["user"],
       });
     },
   });

@@ -121,6 +121,7 @@ export type CartItemConfiguration = {
   backorder_date: string;
   backorder_quantity: string;
   will_call_shipping: string;
+  will_call_not_in_stock: string;
 };
 
 export type CartConfiguration = {
@@ -218,16 +219,18 @@ export type Plant = {
   name: string;
 };
 
+export type FilterValues = {
+  id: number;
+  value: string;
+  icon: string | null;
+  tooltip: string | null;
+  active: boolean;
+}[];
+
 export type Filters = {
   id: string;
   filter: string;
-  values: {
-    id: number;
-    value: string;
-    icon: string | null;
-    tooltip: string | null;
-    active: boolean;
-  }[];
+  values: FilterValues;
 };
 
 export type Address = {
@@ -254,6 +257,7 @@ export type Address = {
     route: string | null;
     routeName: string;
   };
+  country?: string;
 };
 
 export type AddressCheckSuggestions = {
@@ -455,4 +459,20 @@ export type ItemPrice = {
 export type ItemsPriceResult = {
   error: true | null;
   productPrices: ItemPrice[];
+};
+
+export type UpdateUser = {
+  userId: number;
+  firstName?: string;
+  lastName?: string;
+  jobTitle?: string;
+  email?: string;
+  password?: string;
+  permission?: string;
+  status?: string;
+};
+
+export type Country = {
+  code: string;
+  country: string;
 };

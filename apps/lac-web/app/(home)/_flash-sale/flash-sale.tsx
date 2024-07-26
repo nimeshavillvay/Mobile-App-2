@@ -2,6 +2,12 @@ import ProductCard from "@/_components/product-card";
 import ProductCardSkeleton from "@/_components/product-card-skeleton";
 import SubHeading from "@/_components/sub-heading";
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
+import {
+  ScrollableContainer,
+  ScrollableNextButton,
+  ScrollablePreviousButton,
+  ScrollableRoot,
+} from "@repo/web-ui/components/scrollable";
 import { cookies } from "next/headers";
 import { Suspense } from "react";
 import { getSaleItems } from "./apis";
@@ -45,7 +51,7 @@ const FlashSale = () => {
   return (
     <section className="my-14 space-y-6 md:my-20 md:space-y-10">
       <header className="text-center">
-        <SubHeading>Flash Sale</SubHeading>
+        <SubHeading>Today&apos;s Specials</SubHeading>
 
         <p className="mt-2 text-base text-wurth-gray-800 md:mt-6 md:text-lg">
           Lorem ipsum dolor sit amet consectetur. Amet vitae tempus laoreet et
@@ -53,15 +59,21 @@ const FlashSale = () => {
         </p>
       </header>
 
-      <div className="container flex w-full snap-x scroll-pl-4 flex-row items-stretch gap-4 overflow-x-auto md:scroll-pl-8 md:gap-5">
-        <Suspense
-          fallback={Array.from({ length: 7 }).map((_, index) => (
-            <ProductCardSkeleton key={index} />
-          ))}
-        >
-          <FlashSaleList />
-        </Suspense>
-      </div>
+      <ScrollableRoot className="container">
+        <ScrollablePreviousButton />
+
+        <ScrollableContainer className="w-full snap-x scroll-pl-4 items-stretch gap-4 md:scroll-pl-8 md:gap-5">
+          <Suspense
+            fallback={Array.from({ length: 7 }).map((_, index) => (
+              <ProductCardSkeleton key={index} />
+            ))}
+          >
+            <FlashSaleList />
+          </Suspense>
+        </ScrollableContainer>
+
+        <ScrollableNextButton />
+      </ScrollableRoot>
     </section>
   );
 };

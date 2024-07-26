@@ -122,7 +122,7 @@ const NewItemRow = ({
         }}
       />
 
-      <div className="h-10 min-w-96">
+      <div className="h-10 min-w-52 lg:min-w-96">
         <ProductSearchResult
           product={{
             isInvalid: lineItemFormData?.isInvalid,

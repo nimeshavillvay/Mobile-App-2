@@ -1,17 +1,25 @@
 "use client";
 
-import AlertInline from "@/(old-design)/_components/alert-inline";
 import { PasswordInput } from "@/_components/password-input";
 import useCheckEmailMutation from "@/_hooks/user/use-check-email-mutation.hook";
 import { cn, isErrorResponse } from "@/_lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, buttonVariants } from "@repo/web-ui/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@repo/web-ui/components/ui/dialog";
 import { Input } from "@repo/web-ui/components/ui/input";
 import { Label } from "@repo/web-ui/components/ui/label";
 import { HTTPError } from "ky";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useId } from "react";
+import { useId, useState } from "react";
 import { useForm } from "react-hook-form";
 import Balancer from "react-wrap-balancer";
 import { z } from "zod";
@@ -26,13 +34,13 @@ const loginFormSchema = z.object({
 });
 
 const SignIn = () => {
+  const [open, setOpen] = useState(false);
   const id = useId();
   const emailId = `email-${id}`;
   const passwordId = `password-${id}`;
 
   const searchParams = useSearchParams();
   const email = searchParams.get("email");
-  const timeout = searchParams.get("timeout");
 
   const router = useRouter();
 
@@ -44,15 +52,19 @@ const SignIn = () => {
   });
   const checkEmailMutation = useCheckEmailMutation();
 
+  const createNewUser = (email: string) => {
+    const newURLSearchParams = new URLSearchParams({
+      email,
+    });
+
+    router.replace(`/register?${newURLSearchParams.toString()}`);
+  };
+
   const onSubmitEmail = emailForm.handleSubmit((data) => {
     checkEmailMutation.mutate(data.email, {
       onSuccess: (data, email) => {
-        if (data.statusCode === "USER_NEW") {
-          const newURLSearchParams = new URLSearchParams({
-            email,
-          });
-
-          router.replace(`/register?${newURLSearchParams.toString()}`);
+        if (data.statusCode === "USER_NEW" && email) {
+          setOpen(true);
         }
       },
       onError: async (error, email) => {
@@ -126,49 +138,80 @@ const SignIn = () => {
   if (!email) {
     return (
       <div className="container">
-        <form
-          onSubmit={onSubmitEmail}
-          className="mx-auto my-20 max-w-[25rem] space-y-4 rounded-lg border border-wurth-gray-250 p-6 shadow-lg"
-        >
-          {timeout && (
-            <AlertInline
-              variant="destructive"
-              description="Your session has timed out. Please sign in again."
+        <div className="mx-auto my-20 max-w-[25rem] rounded-lg border border-wurth-gray-250 p-6 shadow-lg">
+          <form className="mx-auto max-w-[25rem] space-y-4">
+            <h1 className="text-center font-title text-xl font-medium tracking-[-0.1px] text-wurth-gray-800">
+              <Balancer>Enter your email address to sign in</Balancer>
+            </h1>
+
+            <Label htmlFor={emailId} className="sr-only">
+              Email
+            </Label>
+
+            <Input
+              {...emailForm.register("email")}
+              id={emailId}
+              type="email"
+              autoComplete="email"
+              required
+              placeholder="someone@example.com"
+              className="rounded border-wurth-gray-250 px-3 py-2 text-center text-base shadow-sm"
+              disabled={checkEmailMutation.isPending}
             />
-          )}
-          <h1 className="text-center font-title text-xl font-medium tracking-[-0.1px] text-wurth-gray-800">
-            <Balancer>
-              Enter your email address to sign in or to create an account
-            </Balancer>
-          </h1>
+            {!!emailForm?.formState?.errors?.email?.message && (
+              <p className="text-center text-sm text-wurth-gray-500">
+                {emailForm.formState.errors.email.message}
+              </p>
+            )}
+            <Dialog open={open} onOpenChange={setOpen}>
+              <DialogTrigger asChild>
+                <Button
+                  type="submit"
+                  className="w-full py-2.5 font-bold"
+                  disabled={checkEmailMutation.isPending}
+                  onClick={onSubmitEmail}
+                >
+                  Continue
+                  <span className="sr-only">Confirm Action</span>
+                </Button>
+              </DialogTrigger>
 
-          <Label htmlFor={emailId} className="sr-only">
-            Email
-          </Label>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Confirm Action</DialogTitle>
+                  <DialogDescription>
+                    We Couldn&apos;t Find Your Email Address. Do you want to
+                    check your email and try again?
+                  </DialogDescription>
+                </DialogHeader>
 
-          <Input
-            {...emailForm.register("email")}
-            id={emailId}
-            type="email"
-            autoComplete="email"
-            required
-            placeholder="someone@example.com"
-            className="rounded border-wurth-gray-250 px-3 py-2 text-center text-base shadow-sm"
-            disabled={checkEmailMutation.isPending}
-          />
-          {!!emailForm?.formState?.errors?.email?.message && (
-            <p className="text-center text-sm text-wurth-gray-500">
-              {emailForm.formState.errors.email.message}
-            </p>
-          )}
-          <Button
-            type="submit"
-            className="w-full py-2.5 font-bold"
-            disabled={checkEmailMutation.isPending}
-          >
-            Continue
-          </Button>
-        </form>
+                <DialogFooter>
+                  <Button onClick={() => setOpen(false)}>Yes</Button>
+                  <Button
+                    disabled={checkEmailMutation.isPending}
+                    onClick={() => createNewUser(emailForm.getValues("email"))}
+                  >
+                    No
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          </form>
+          <div className="text-center font-normal">
+            Don&apos;t Have an Account?
+            <Link
+              href={"/sign-up"}
+              className={cn(
+                buttonVariants({
+                  variant: "link",
+                }),
+                "mx-auto inline-block h-fit p-0 px-4 py-2 text-center text-sm font-normal",
+              )}
+            >
+              Sign up
+            </Link>
+          </div>
+        </div>
       </div>
     );
   }
@@ -179,13 +222,6 @@ const SignIn = () => {
         <h1 className="text-center font-title text-3xl font-medium tracking-[-0.225px] text-wurth-gray-800">
           Welcome back!
         </h1>
-
-        {timeout && (
-          <AlertInline
-            variant="destructive"
-            description="Your session has timed out. Please sign in again."
-          />
-        )}
 
         <div className="flex flex-row items-center justify-between p-2.5">
           <h2 className="text-lg">{email}</h2>
@@ -244,7 +280,7 @@ const SignIn = () => {
             </Button>
 
             <Link
-              href={`/forgot-password?email=${email}`}
+              href={`/forgot-password?${new URLSearchParams({ email }).toString()}`}
               className={cn(
                 buttonVariants({
                   variant: "link",
