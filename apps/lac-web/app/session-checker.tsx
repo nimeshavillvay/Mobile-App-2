@@ -14,23 +14,18 @@ const CHECK_INTERVAL = 60000; // 1 minute in milliseconds
 const SessionChecker = () => {
   useEffect(() => {
     const checkTokenExpiration = () => {
-      console.log("checkTokenExpiration triggered");
       const cookies = new Cookies();
       const tokenExpire = cookies.get(TOKEN_EXPIRE_COOKIE);
       const tokenExpiryDate = dayjs(tokenExpire);
       const now = dayjs();
 
       if (tokenExpire) {
-        console.log("found expire token = ", tokenExpire);
         const shouldRefreshToken = now.isAfter(tokenExpiryDate);
 
-        console.log("shouldRefreshToken ? ", shouldRefreshToken);
         if (shouldRefreshToken) {
-          console.log("Lets Redirect to sign in page");
-          window.location.href = "/sign-in"; //TODO: pass message to user
+          window.location.href = "/sign-in?timeout=true";
         }
       }
-      console.log("checkTokenExpiration method end ----------------------");
     };
 
     // Check token expiration immediately on mount
@@ -43,7 +38,6 @@ const SessionChecker = () => {
     // Handle visibility change to check token expiration when returning to the tab
     const handleVisibilityChange = () => {
       checkTokenExpiration();
-      console.log("handleVisibilityChange triggered");
     };
 
     document.addEventListener("visibilitychange", handleVisibilityChange);
