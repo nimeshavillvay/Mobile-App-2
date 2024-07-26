@@ -1,5 +1,6 @@
 "use client";
 
+import AlertInline from "@/(old-design)/_components/alert-inline";
 import { PasswordInput } from "@/_components/password-input";
 import useCheckEmailMutation from "@/_hooks/user/use-check-email-mutation.hook";
 import { cn, isErrorResponse } from "@/_lib/utils";
@@ -31,6 +32,7 @@ const SignIn = () => {
 
   const searchParams = useSearchParams();
   const email = searchParams.get("email");
+  const timeout = searchParams.get("timeout");
 
   const router = useRouter();
 
@@ -128,6 +130,12 @@ const SignIn = () => {
           onSubmit={onSubmitEmail}
           className="mx-auto my-20 max-w-[25rem] space-y-4 rounded-lg border border-wurth-gray-250 p-6 shadow-lg"
         >
+          {timeout && (
+            <AlertInline
+              variant="destructive"
+              description="Your session has timed out. Please sign in again."
+            />
+          )}
           <h1 className="text-center font-title text-xl font-medium tracking-[-0.1px] text-wurth-gray-800">
             <Balancer>
               Enter your email address to sign in or to create an account
@@ -171,6 +179,13 @@ const SignIn = () => {
         <h1 className="text-center font-title text-3xl font-medium tracking-[-0.225px] text-wurth-gray-800">
           Welcome back!
         </h1>
+
+        {timeout && (
+          <AlertInline
+            variant="destructive"
+            description="Your session has timed out. Please sign in again."
+          />
+        )}
 
         <div className="flex flex-row items-center justify-between p-2.5">
           <h2 className="text-lg">{email}</h2>
