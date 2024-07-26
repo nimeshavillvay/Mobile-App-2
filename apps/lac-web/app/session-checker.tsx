@@ -30,6 +30,7 @@ const SessionChecker = () => {
           window.location.href = "/sign-in"; //TODO: pass message to user
         }
       }
+      console.log("checkTokenExpiration method end ----------------------");
     };
 
     // Check token expiration immediately on mount
@@ -41,10 +42,8 @@ const SessionChecker = () => {
 
     // Handle visibility change to check token expiration when returning to the tab
     const handleVisibilityChange = () => {
-      if (!document.hidden) {
-        checkTokenExpiration();
-        console.log("handleVisibilityChange triggered");
-      }
+      checkTokenExpiration();
+      console.log("handleVisibilityChange triggered");
     };
 
     document.addEventListener("visibilitychange", handleVisibilityChange);
