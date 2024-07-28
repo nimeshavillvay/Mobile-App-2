@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { getBarcodeSearch } from "~/apis/base/search/get-barcode-search";
+import { getBarcodeSearch } from "~/apis/base/elasticsearch/get-barcode-search";
 import type { SearchApiConfig } from "~/lib/types";
 
 const useBarcodeSearchMutation = ({ baseUrl }: SearchApiConfig) => {
