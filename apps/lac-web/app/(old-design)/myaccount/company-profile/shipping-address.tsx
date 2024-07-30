@@ -2,6 +2,7 @@
 
 import useSuspenseBillingAddress from "@/_hooks/address/use-suspense-billing-address.hook";
 import useSuspenseShippingAddressList from "@/_hooks/address/use-suspense-shipping-address-list.hook";
+import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
 import useSuspenseUsersList from "@/_hooks/user/use-suspense-users-list.hook";
 import type { Address, AddressFormData, Country } from "@/_lib/types";
 import Separator from "@/old/_components/separator";
@@ -58,6 +59,11 @@ const ShippingAddress = ({
   const { permission } = usersListQuery.data.manageContact.yourProfile;
   const isAdmin = permission.toLowerCase() === "admin";
 
+  const checkLoginQuery = useSuspenseCheckLogin(token);
+  const isOsr =
+    checkLoginQuery.data.status_code === "OK" &&
+    !!checkLoginQuery.data.sales_rep_id;
+
   return (
     <>
       <div className="mb-4 flex flex-row items-center gap-2.5">
@@ -77,10 +83,10 @@ const ShippingAddress = ({
             key={address.xcAddressId}
             shippingAddress={address}
             soldTo={billingAddress.soldTo ?? ""}
-            isAdmin={isAdmin}
+            isAdminOrOsr={isAdmin || isOsr}
           />
         ))}
-        {isAdmin && (
+        {(isAdmin || isOsr) && (
           <button
             className="flex cursor-pointer flex-row items-center justify-center space-y-3 border-gray-100 bg-transparent p-5 text-center font-bold shadow hover:shadow-lg md:space-y-5 md:p-6"
             onClick={() => setOpenShippingAddressDialog(true)}

@@ -1,5 +1,6 @@
 "use client";
 
+import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
 import useSuspenseUsersList from "@/_hooks/user/use-suspense-users-list.hook";
 import type { PasswordPolicies } from "@/_lib/types";
 import Separator from "@/old/_components/separator";
@@ -56,13 +57,18 @@ const UsersList = ({
   const yourProfile = usersListQuery?.data?.manageContact?.yourProfile ?? null;
   const currentUsers = usersListQuery?.data?.manageContact?.contactList ?? null;
 
+  const checkLoginQuery = useSuspenseCheckLogin(token);
+  const isOsr =
+    checkLoginQuery.data.status_code === "OK" &&
+    !!checkLoginQuery.data.sales_rep_id;
+
   return (
     <>
       <div className="flex flex-row items-center justify-between">
         <h2 className="font-wurth text-xl font-medium text-brand-primary">
           Manage Users
         </h2>
-        {isAdmin && (
+        {(isAdmin || isOsr) && (
           <Button
             type="submit"
             className="mb-2 px-6"
@@ -154,7 +160,7 @@ const UsersList = ({
       </Collapsible>
 
       {/* Current Users Section */}
-      {isAdmin && (
+      {(isAdmin || isOsr) && (
         <Collapsible open={showCurrentUsers} onOpenChange={setShowCurrentUsers}>
           <div className="my-5 flex justify-between">
             <h6 className="flex font-wurth text-base font-medium capitalize text-brand-gray-500">
