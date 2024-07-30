@@ -284,8 +284,6 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
                   </div>
                 </>
               )}
-
-              {isItemError(item) && <ErrorAlert item={item} />}
             </form>
           </FormProvider>
 
