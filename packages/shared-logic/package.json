@@ -6,6 +6,9 @@
     "./apis/*": {
       "import": "./src/apis/*.ts"
     },
+    "./models/*": {
+      "import": "./src/lib/models/*.ts"
+    },
     "./zod-schema/*": {
       "import": "./src/lib/zod-schema/*.ts"
     }
