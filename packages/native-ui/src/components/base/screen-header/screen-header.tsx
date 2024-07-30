@@ -7,9 +7,13 @@ import { Button, Text, View } from "tamagui";
 export const ScreenHeader = ({
   title,
   type,
+  hideSearchButton = false,
+  hideBarcodeScanner = false,
 }: {
   readonly title: string;
   readonly type?: string;
+  readonly hideSearchButton?: boolean;
+  readonly hideBarcodeScanner?: boolean;
 }) => {
   const router = useRouter();
   const path = usePathname();
@@ -49,16 +53,21 @@ export const ScreenHeader = ({
               columnGap={20}
               testID="screen-header-icons-view"
             >
-              <Link href={`${path}/search`} testID="search-icon">
-                <AntDesign name="search1" size={24} />
-              </Link>
-              <Link href={path}>
-                <MaterialCommunityIcons
-                  name="barcode-scan"
-                  size={24}
-                  testID="barcode-scan-icon"
-                />
-              </Link>
+              {!hideSearchButton && (
+                <Link href={`/search`} testID="search-icon">
+                  <AntDesign name="search1" size={24} />
+                </Link>
+              )}
+
+              {!hideBarcodeScanner && (
+                <Link href={path}>
+                  <MaterialCommunityIcons
+                    name="barcode-scan"
+                    size={24}
+                    testID="barcode-scan-icon"
+                  />
+                </Link>
+              )}
             </View>
           </>
         )}

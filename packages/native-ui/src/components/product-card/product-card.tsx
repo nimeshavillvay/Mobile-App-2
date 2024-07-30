@@ -1,9 +1,10 @@
 import { Bookmark } from "@tamagui/lucide-icons";
 import { Image, type ImageProps } from "expo-image";
+import { MotiView } from "moti";
+import { Skeleton } from "moti/skeleton";
 import { useId } from "react";
 import { StyleSheet } from "react-native";
-import SkeletonPlaceholder from "react-native-skeleton-placeholder";
-import { Button, Card, H2, Text, View, XStack, YStack } from "tamagui";
+import { Button, Card, H2, Text, XStack, YStack } from "tamagui";
 
 type ProductCardProps = Readonly<{
   productId: number;
@@ -19,9 +20,9 @@ export const ProductCardSkeleton = () => {
   const id = useId();
 
   return (
-    <SkeletonPlaceholder>
-      <View height={300} testID={`product-card-skeleton-${id}`} />
-    </SkeletonPlaceholder>
+    <MotiView testID={`product-card-skeleton-${id}`}>
+      <Skeleton height={300} width="100%" colorMode="light" />
+    </MotiView>
   );
 };
 

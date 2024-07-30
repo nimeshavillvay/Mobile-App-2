@@ -3,6 +3,8 @@
   "private": true,
   "scripts": {
     "dev": "dotenv -c -- turbo dev",
+    "android": "dotenv -c -- turbo android",
+    "ios": "dotenv -c -- turbo ios",
     "build": "dotenv -c -- turbo build",
     "start": "dotenv -c -- turbo start",
     "lint": "dotenv -c -- turbo lint",

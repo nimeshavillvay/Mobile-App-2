@@ -8,7 +8,7 @@ import {
   BarcodeScannerRoot,
   BarcodeScannerScanArea,
 } from "@repo/native-ui/components/barcode-scanner";
-import useBarcodeSearchMutation from "@repo/shared-logic/apis/hooks/search/use-barcode-search-mutation.hook";
+import useBarcodeSearchMutation from "@repo/shared-logic/apis/hooks/elasticsearch/use-barcode-search-mutation.hook";
 import type { ComponentProps } from "react";
 import { useState } from "react";
 import { View } from "tamagui";
