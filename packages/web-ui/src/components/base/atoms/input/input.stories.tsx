@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { Button } from "~/components/base/atom/button";
-import { Label } from "~/components/base/atom/label";
+import { Button } from "~/components/base/atoms/button";
+import { Label } from "~/components/base/atoms/label";
 import { Input } from "./input";
 
 const meta: Meta = {

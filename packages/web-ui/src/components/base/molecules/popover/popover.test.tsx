@@ -1,8 +1,8 @@
 import "@testing-library/jest-dom";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { Button } from "~/components/base/atom/button";
-import { Input } from "~/components/base/atom/input";
-import { Label } from "~/components/base/atom/label";
+import { Button } from "~/components/base/atoms/button";
+import { Input } from "~/components/base/atoms/input";
+import { Label } from "~/components/base/atoms/label";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 
 describe("Popover Component", () => {

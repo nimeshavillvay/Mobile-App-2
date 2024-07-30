@@ -1,6 +1,6 @@
 import "@testing-library/jest-dom";
 import { fireEvent, render, screen } from "@testing-library/react";
-import { Label } from "~/components/base/atom/label";
+import { Label } from "~/components/base/atoms/label";
 import { Input, inputStyles } from "./input";
 
 describe("Input Component", () => {
