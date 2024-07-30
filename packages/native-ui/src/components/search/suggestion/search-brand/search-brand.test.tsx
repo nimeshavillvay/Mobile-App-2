@@ -4,6 +4,7 @@ import { fireEvent, render, screen } from "~/lib/test-utils";
 const defaultProps = {
   imageUrl: "https://example.com/image.jpg",
   brandName: "Test Brand",
+  link: "/example",
 };
 
 describe("SearchBrand", () => {
@@ -31,7 +32,9 @@ describe("SearchBrand", () => {
     expect(brandNameElement).toBeOnTheScreen();
 
     const imageElement = screen.getByTestId("brand-image");
-    expect(imageElement.props.source.uri).toBe("https://example.com/image.jpg");
+    expect(imageElement.props.source[0].uri).toBe(
+      "https://example.com/image.jpg",
+    );
   });
 
   it("applies custom styles", () => {

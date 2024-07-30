@@ -1,19 +1,22 @@
+import { Image } from "expo-image";
+import { Link } from "expo-router";
 import type { ComponentProps } from "react";
-import { Pressable } from "react-native";
-import { Image, Text, XStack } from "tamagui";
+import { Text, XStack } from "tamagui";
 
 type SearchBrandProps = {
   readonly imageUrl: string;
   readonly brandName: string;
+  readonly link: string;
 } & ComponentProps<typeof XStack>;
 
 export const SearchBrand = ({
   imageUrl,
   brandName,
+  link,
   ...style
 }: SearchBrandProps) => {
   return (
-    <Pressable>
+    <Link href={link}>
       <XStack
         flex={1}
         alignItems="center"
@@ -32,6 +35,6 @@ export const SearchBrand = ({
         />
         <Text>{brandName}</Text>
       </XStack>
-    </Pressable>
+    </Link>
   );
 };
