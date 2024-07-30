@@ -21,10 +21,8 @@ export const SearchCategory = ({
         size={20}
         color="#74767B"
       />
-      <Link testID="link" href={link}>
-        <Text testID="text" color="#CC0000">
-          {category}
-        </Text>
+      <Link testID="link" href={link} style={{ color: "#CC0000" }}>
+        {category}
       </Link>
     </XStack>
   );
