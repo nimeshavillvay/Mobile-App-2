@@ -4,14 +4,24 @@ import type { SearchApiConfig } from "~/lib/types";
 
 const useSuspenseInfiniteSearchResults = (
   config: SearchApiConfig,
-  query: string,
+  {
+    query,
+    searchParams,
+  }: {
+    query: string;
+    searchParams?: string;
+  },
 ) => {
   return useSuspenseInfiniteQuery({
-    queryKey: ["search", query, config],
-    queryFn: ({ pageParam }) =>
-      getSearchResults(config, { query, pageNo: pageParam }),
+    queryKey: ["search", query, searchParams, config],
+    queryFn: async ({ pageParam }) =>
+      getSearchResults(config, {
+        query,
+        pageNo: pageParam,
+        searchParams,
+      }),
     initialPageParam: 1,
-    getNextPageParam: (lastPage, pages) => pages.length,
+    getNextPageParam: (lastPage) => lastPage.summary.pageNo + 1,
   });
 };
 

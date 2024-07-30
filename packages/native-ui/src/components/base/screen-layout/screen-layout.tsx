@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { StyleSheet } from "react-native";
 import type { SafeAreaViewProps } from "react-native-safe-area-context";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { ScrollView, YStack } from "tamagui";
+import { View, YStack } from "tamagui";
 
 export const ScreenLayout = ({
   children,
@@ -13,7 +13,7 @@ export const ScreenLayout = ({
 }) => {
   return (
     <SafeAreaView style={styles.safeArea} edges={edges}>
-      <ScrollView flex={1} backgroundColor="white">
+      <View flex={1} backgroundColor="white">
         <YStack
           flex={1}
           backgroundColor="white"
@@ -21,7 +21,7 @@ export const ScreenLayout = ({
         >
           {children}
         </YStack>
-      </ScrollView>
+      </View>
     </SafeAreaView>
   );
 };

@@ -69,6 +69,9 @@ importers:
       expo-image:
         specifier: ~1.12.12
         version: 1.12.12(expo@51.0.20(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7)))
+      expo-linear-gradient:
+        specifier: ~13.0.2
+        version: 13.0.2(expo@51.0.20(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7)))
       expo-linking:
         specifier: ~6.3.1
         version: 6.3.1(expo@51.0.20(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7)))
@@ -84,6 +87,9 @@ importers:
       ky:
         specifier: 1.4.0
         version: 1.4.0
+      moti:
+        specifier: 0.29.0
+        version: 0.29.0(react-dom@18.3.1(react@18.3.1))(react-native-reanimated@3.13.0(@babel/core@7.24.7)(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7))(@types/react@18.3.3)(react@18.3.1))(react@18.3.1))(react@18.3.1)
       react:
         specifier: 18.3.1
         version: 18.3.1
@@ -93,6 +99,9 @@ importers:
       react-native:
         specifier: 0.74.3
         version: 0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7))(@types/react@18.3.3)(react@18.3.1)
+      react-native-gesture-handler:
+        specifier: ~2.16.1
+        version: 2.16.2(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7))(@types/react@18.3.3)(react@18.3.1))(react@18.3.1)
       react-native-reanimated:
         specifier: 3.13.0
         version: 3.13.0(@babel/core@7.24.7)(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7))(@types/react@18.3.3)(react@18.3.1))(react@18.3.1)
@@ -509,7 +518,7 @@ importers:
         version: link:../eslint-config
       '@tamagui/config':
         specifier: 1.102.1
-        version: 1.102.1(moti@0.29.0(react-dom@18.3.1(react@18.3.1))(react-native-reanimated@3.13.0(@babel/core@7.24.7)(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7))(@types/react@18.3.3)(react@18.3.1))(react@18.3.1))(react@18.3.1))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7))(@types/react@18.3.3)(react@18.3.1))(react@18.3.1)
+        version: 1.102.1(moti@0.29.0(react-dom@18.3.1(react@18.3.1))(react-native-reanimated@3.10.1(@babel/core@7.24.7)(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7))(@types/react@18.3.3)(react@18.3.1))(react@18.3.1))(react@18.3.1))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7))(@types/react@18.3.3)(react@18.3.1))(react@18.3.1)
       '@tamagui/lucide-icons':
         specifier: 1.102.1
         version: 1.102.1(react-native-svg@15.2.0(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7))(@types/react@18.3.3)(react@18.3.1))(react@18.3.1))(react@18.3.1)
@@ -528,6 +537,9 @@ importers:
       expo-image:
         specifier: ~1.12.12
         version: 1.12.12(expo@51.0.20(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7)))
+      expo-linear-gradient:
+        specifier: ~13.0.2
+        version: 13.0.2(expo@51.0.20(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7)))
       jest:
         specifier: ^29.7.0
         version: 29.7.0(@types/node@20.14.11)
@@ -537,21 +549,24 @@ importers:
       lucide-react-native:
         specifier: ^0.414.0
         version: 0.414.0(react-native-svg@15.2.0(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7))(@types/react@18.3.3)(react@18.3.1))(react@18.3.1))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7))(@types/react@18.3.3)(react@18.3.1))(react@18.3.1)
+      moti:
+        specifier: ^0.29.0
+        version: 0.29.0(react-dom@18.3.1(react@18.3.1))(react-native-reanimated@3.10.1(@babel/core@7.24.7)(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7))(@types/react@18.3.3)(react@18.3.1))(react@18.3.1))(react@18.3.1)
       react:
         specifier: ^18.3.1
         version: 18.3.1
       react-native:
         specifier: 0.74.3
         version: 0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7))(@types/react@18.3.3)(react@18.3.1)
-      react-native-linear-gradient:
-        specifier: ^2.8.3
-        version: 2.8.3(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7))(@types/react@18.3.3)(react@18.3.1))(react@18.3.1)
+      react-native-gesture-handler:
+        specifier: ~2.16.2
+        version: 2.16.2(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7))(@types/react@18.3.3)(react@18.3.1))(react@18.3.1)
+      react-native-reanimated:
+        specifier: ~3.10.1
+        version: 3.10.1(@babel/core@7.24.7)(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7))(@types/react@18.3.3)(react@18.3.1))(react@18.3.1)
       react-native-safe-area-context:
         specifier: ^4.10.1
         version: 4.10.1(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7))(@types/react@18.3.3)(react@18.3.1))(react@18.3.1)
-      react-native-skeleton-placeholder:
-        specifier: ^5.2.4
-        version: 5.2.4(@react-native-masked-view/masked-view@0.3.1(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7))(@types/react@18.3.3)(react@18.3.1))(react@18.3.1))(react-native-linear-gradient@2.8.3(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7))(@types/react@18.3.3)(react@18.3.1))(react@18.3.1))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7))(@types/react@18.3.3)(react@18.3.1))(react@18.3.1)
       react-native-svg:
         specifier: ^15.2.0
         version: 15.2.0(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7))(@types/react@18.3.3)(react@18.3.1))(react@18.3.1)
@@ -1650,6 +1665,10 @@ packages:
   '@cspotcode/source-map-support@0.8.1':
     resolution: {integrity: sha512-IchNf6dN4tHoMFIn/7OE8LWZ19Y6q/67Bmf6vnGREv8RSbBVb9LPJxEcnwrcwX6ixSvaiGoomAUvu4YSxXrVgw==}
     engines: {node: '>=12'}
+
+  '@egjs/hammerjs@2.0.17':
+    resolution: {integrity: sha512-XQsZgjm2EcVUiZQf11UBJQfmZeEmOW8DpI1gsFeln6w0ae0ii4dMQEQ0kjl6DspdWX1aGY1/loyXnP0JS06e/A==}
+    engines: {node: '>=0.8.0'}
 
   '@emnapi/runtime@1.2.0':
     resolution: {integrity: sha512-bV21/9LQmcQeCPEg3BDFtvwL6cwiTMksYNWQQ4KOxCZikEGalWtenoZ0wCiukJINlGCIi2KXx01g4FoH/LxpzQ==}
@@ -4232,6 +4251,9 @@ packages:
   '@types/graceful-fs@4.1.9':
     resolution: {integrity: sha512-olP3sd1qOEe5dXTSaFvQG+02VdRXcdytWLAZsAq1PecU8uqQAhkrnbli7DagjtXKW/Bl7YJbUsa8MPcuc8LHEQ==}
 
+  '@types/hammerjs@2.0.45':
+    resolution: {integrity: sha512-qkcUlZmX6c4J8q45taBKTL3p+LbITgyx7qhlPYOdOHZB7B31K0mXbP5YA7i7SgDeEGuI9MnumiKPEMrxg8j3KQ==}
+
   '@types/hast@3.0.4':
     resolution: {integrity: sha512-WPs+bbQw5aCj+x6laNGWLH3wviHtoCv/P3+otBhbOhJgG8qtpdAMlTCxLtsTWA7LH1Oh/bFCHsBn0TPS5m30EQ==}
 
@@ -6380,6 +6402,11 @@ packages:
 
   expo-keep-awake@13.0.2:
     resolution: {integrity: sha512-kKiwkVg/bY0AJ5q1Pxnm/GvpeB6hbNJhcFsoOWDh2NlpibhCLaHL826KHUM+WsnJRbVRxJ+K9vbPRHEMvFpVyw==}
+    peerDependencies:
+      expo: '*'
+
+  expo-linear-gradient@13.0.2:
+    resolution: {integrity: sha512-EDcILUjRKu4P1rtWcwciN6CSyGtH7Bq4ll3oTRV7h3h8oSzSilH1g6z7kTAMlacPBKvMnkkWOGzW6KtgMKEiTg==}
     peerDependencies:
       expo: '*'
 
@@ -8921,14 +8948,21 @@ packages:
   react-is@18.3.1:
     resolution: {integrity: sha512-/LLMVyas0ljjAtoYiPqYiL8VWXzUUdThrmU5+n20DZv+a+ClRoevUzw5JxU+Ieh5/c87ytoTBV9G1FiKfNJdmg==}
 
+  react-native-gesture-handler@2.16.2:
+    resolution: {integrity: sha512-vGFlrDKlmyI+BT+FemqVxmvO7nqxU33cgXVsn6IKAFishvlG3oV2Ds67D5nPkHMea8T+s1IcuMm0bF8ntZtAyg==}
+    peerDependencies:
+      react: '*'
+      react-native: '*'
+
   react-native-helmet-async@2.0.4:
     resolution: {integrity: sha512-m3CkXWss6B1dd6mCMleLpzDCJJGGaHOLQsUzZv8kAASJmMfmVT4d2fx375iXKTRWT25ThBfae3dECuX5cq/8hg==}
     peerDependencies:
       react: ^16.6.0 || ^17.0.0 || ^18.0.0
 
-  react-native-linear-gradient@2.8.3:
-    resolution: {integrity: sha512-KflAXZcEg54PXkLyflaSZQ3PJp4uC4whM7nT/Uot9m0e/qxFV3p6uor1983D1YOBJbJN7rrWdqIjq0T42jOJyA==}
+  react-native-reanimated@3.10.1:
+    resolution: {integrity: sha512-sfxg6vYphrDc/g4jf/7iJ7NRi+26z2+BszPmvmk0Vnrz6FL7HYljJqTf531F1x6tFmsf+FEAmuCtTUIXFLVo9w==}
     peerDependencies:
+      '@babel/core': ^7.0.0-0
       react: '*'
       react-native: '*'
 
@@ -8950,14 +8984,6 @@ packages:
     peerDependencies:
       react: '*'
       react-native: '*'
-
-  react-native-skeleton-placeholder@5.2.4:
-    resolution: {integrity: sha512-OZntVq1hU1UX33FltxK2ezT2v9vHIhV8YnEbnMWUCvxT0N9OsgD1qxiHm6qb9YRJVgq2o5z3S7dNPsPnDF/jNg==}
-    peerDependencies:
-      '@react-native-masked-view/masked-view': ^0.2.8
-      react: '>=0.14.8'
-      react-native: '>=0.50.1'
-      react-native-linear-gradient: ^2.5.6
 
   react-native-svg@15.2.0:
     resolution: {integrity: sha512-R0E6IhcJfVLsL0lRmnUSm72QO+mTqcAOM5Jb8FVGxJqX3NfJMlMP0YyvcajZiaRR8CqQUpEoqrY25eyZb006kw==}
@@ -11736,6 +11762,10 @@ snapshots:
     dependencies:
       '@jridgewell/trace-mapping': 0.3.9
 
+  '@egjs/hammerjs@2.0.17':
+    dependencies:
+      '@types/hammerjs': 2.0.45
+
   '@emnapi/runtime@1.2.0':
     dependencies:
       tslib: 2.6.3
@@ -12562,41 +12592,6 @@ snapshots:
       jest-message-util: 29.7.0
       jest-util: 29.7.0
       slash: 3.0.0
-
-  '@jest/core@29.7.0(ts-node@10.9.2(@swc/core@1.6.13(@swc/helpers@0.5.12))(@types/node@20.14.9)(typescript@5.5.3))':
-    dependencies:
-      '@jest/console': 29.7.0
-      '@jest/reporters': 29.7.0
-      '@jest/test-result': 29.7.0
-      '@jest/transform': 29.7.0
-      '@jest/types': 29.6.3
-      '@types/node': 20.14.9
-      ansi-escapes: 4.3.2
-      chalk: 4.1.2
-      ci-info: 3.9.0
-      exit: 0.1.2
-      graceful-fs: 4.2.11
-      jest-changed-files: 29.7.0
-      jest-config: 29.7.0(@types/node@20.14.9)(ts-node@10.9.2(@swc/core@1.6.13(@swc/helpers@0.5.12))(@types/node@20.14.9)(typescript@5.5.3))
-      jest-haste-map: 29.7.0
-      jest-message-util: 29.7.0
-      jest-regex-util: 29.6.3
-      jest-resolve: 29.7.0
-      jest-resolve-dependencies: 29.7.0
-      jest-runner: 29.7.0
-      jest-runtime: 29.7.0
-      jest-snapshot: 29.7.0
-      jest-util: 29.7.0
-      jest-validate: 29.7.0
-      jest-watcher: 29.7.0
-      micromatch: 4.0.7
-      pretty-format: 29.7.0
-      slash: 3.0.0
-      strip-ansi: 6.0.1
-    transitivePeerDependencies:
-      - babel-plugin-macros
-      - supports-color
-      - ts-node
 
   '@jest/core@29.7.0(ts-node@10.9.2(@types/node@20.14.9)(typescript@5.5.3))':
     dependencies:
@@ -14532,6 +14527,13 @@ snapshots:
       '@tamagui/web': 1.102.1(react@18.3.1)
       react: 18.3.1
 
+  '@tamagui/animations-moti@1.102.1(moti@0.29.0(react-dom@18.3.1(react@18.3.1))(react-native-reanimated@3.10.1(@babel/core@7.24.7)(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7))(@types/react@18.3.3)(react@18.3.1))(react@18.3.1))(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      '@tamagui/use-presence': 1.102.1(react@18.3.1)
+      '@tamagui/web': 1.102.1(react@18.3.1)
+      moti: 0.29.0(react-dom@18.3.1(react@18.3.1))(react-native-reanimated@3.10.1(@babel/core@7.24.7)(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7))(@types/react@18.3.3)(react@18.3.1))(react@18.3.1))(react@18.3.1)
+      react: 18.3.1
+
   '@tamagui/animations-moti@1.102.1(moti@0.29.0(react-dom@18.3.1(react@18.3.1))(react-native-reanimated@3.13.0(@babel/core@7.24.7)(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7))(@types/react@18.3.3)(react@18.3.1))(react@18.3.1))(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@tamagui/use-presence': 1.102.1(react@18.3.1)
@@ -14686,6 +14688,23 @@ snapshots:
       '@tamagui/shorthands': 1.102.1
     transitivePeerDependencies:
       - react
+
+  '@tamagui/config@1.102.1(moti@0.29.0(react-dom@18.3.1(react@18.3.1))(react-native-reanimated@3.10.1(@babel/core@7.24.7)(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7))(@types/react@18.3.3)(react@18.3.1))(react@18.3.1))(react@18.3.1))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7))(@types/react@18.3.3)(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      '@tamagui/animations-css': 1.102.1(react@18.3.1)
+      '@tamagui/animations-moti': 1.102.1(moti@0.29.0(react-dom@18.3.1(react@18.3.1))(react-native-reanimated@3.10.1(@babel/core@7.24.7)(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7))(@types/react@18.3.3)(react@18.3.1))(react@18.3.1))(react@18.3.1))(react@18.3.1)
+      '@tamagui/animations-react-native': 1.102.1(react@18.3.1)
+      '@tamagui/colors': 1.102.1
+      '@tamagui/font-inter': 1.102.1(react@18.3.1)
+      '@tamagui/font-silkscreen': 1.102.1(react@18.3.1)
+      '@tamagui/react-native-media-driver': 1.102.1(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7))(@types/react@18.3.3)(react@18.3.1))(react@18.3.1)
+      '@tamagui/shorthands': 1.102.1
+      '@tamagui/themes': 1.102.1(react@18.3.1)
+      '@tamagui/web': 1.102.1(react@18.3.1)
+    transitivePeerDependencies:
+      - moti
+      - react
+      - react-native
 
   '@tamagui/config@1.102.1(moti@0.29.0(react-dom@18.3.1(react@18.3.1))(react-native-reanimated@3.13.0(@babel/core@7.24.7)(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7))(@types/react@18.3.3)(react@18.3.1))(react@18.3.1))(react@18.3.1))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7))(@types/react@18.3.3)(react@18.3.1))(react@18.3.1)':
     dependencies:
@@ -15629,6 +15648,8 @@ snapshots:
   '@types/graceful-fs@4.1.9':
     dependencies:
       '@types/node': 20.14.9
+
+  '@types/hammerjs@2.0.45': {}
 
   '@types/hast@3.0.4':
     dependencies:
@@ -17132,21 +17153,6 @@ snapshots:
       - supports-color
       - ts-node
 
-  create-jest@29.7.0(@types/node@20.14.9)(ts-node@10.9.2(@swc/core@1.6.13(@swc/helpers@0.5.12))(@types/node@20.14.9)(typescript@5.5.3)):
-    dependencies:
-      '@jest/types': 29.6.3
-      chalk: 4.1.2
-      exit: 0.1.2
-      graceful-fs: 4.2.11
-      jest-config: 29.7.0(@types/node@20.14.9)(ts-node@10.9.2(@swc/core@1.6.13(@swc/helpers@0.5.12))(@types/node@20.14.9)(typescript@5.5.3))
-      jest-util: 29.7.0
-      prompts: 2.4.2
-    transitivePeerDependencies:
-      - '@types/node'
-      - babel-plugin-macros
-      - supports-color
-      - ts-node
-
   create-jest@29.7.0(@types/node@20.14.9)(ts-node@10.9.2(@types/node@20.14.9)(typescript@5.5.3)):
     dependencies:
       '@jest/types': 29.6.3
@@ -18411,6 +18417,10 @@ snapshots:
     dependencies:
       expo: 51.0.20(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7))
 
+  expo-linear-gradient@13.0.2(expo@51.0.20(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7))):
+    dependencies:
+      expo: 51.0.20(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7))
+
   expo-linking@6.3.1(expo@51.0.20(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7))):
     dependencies:
       expo-constants: 16.0.2(expo@51.0.20(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7)))
@@ -19541,14 +19551,14 @@ snapshots:
 
   jest-cli@29.7.0(@types/node@20.14.9)(ts-node@10.9.2(@swc/core@1.6.13(@swc/helpers@0.5.12))(@types/node@20.14.9)(typescript@5.5.3)):
     dependencies:
-      '@jest/core': 29.7.0(ts-node@10.9.2(@swc/core@1.6.13(@swc/helpers@0.5.12))(@types/node@20.14.9)(typescript@5.5.3))
+      '@jest/core': 29.7.0(ts-node@10.9.2(@types/node@20.14.9)(typescript@5.5.3))
       '@jest/test-result': 29.7.0
       '@jest/types': 29.6.3
       chalk: 4.1.2
-      create-jest: 29.7.0(@types/node@20.14.9)(ts-node@10.9.2(@swc/core@1.6.13(@swc/helpers@0.5.12))(@types/node@20.14.9)(typescript@5.5.3))
+      create-jest: 29.7.0(@types/node@20.14.9)(ts-node@10.9.2(@types/node@20.14.9)(typescript@5.5.3))
       exit: 0.1.2
       import-local: 3.1.0
-      jest-config: 29.7.0(@types/node@20.14.9)(ts-node@10.9.2(@swc/core@1.6.13(@swc/helpers@0.5.12))(@types/node@20.14.9)(typescript@5.5.3))
+      jest-config: 29.7.0(@types/node@20.14.9)(ts-node@10.9.2(@types/node@20.14.9)(typescript@5.5.3))
       jest-util: 29.7.0
       jest-validate: 29.7.0
       yargs: 17.7.2
@@ -19623,37 +19633,6 @@ snapshots:
       strip-json-comments: 3.1.1
     optionalDependencies:
       '@types/node': 20.14.11
-    transitivePeerDependencies:
-      - babel-plugin-macros
-      - supports-color
-
-  jest-config@29.7.0(@types/node@20.14.9)(ts-node@10.9.2(@swc/core@1.6.13(@swc/helpers@0.5.12))(@types/node@20.14.9)(typescript@5.5.3)):
-    dependencies:
-      '@babel/core': 7.24.7
-      '@jest/test-sequencer': 29.7.0
-      '@jest/types': 29.6.3
-      babel-jest: 29.7.0(@babel/core@7.24.7)
-      chalk: 4.1.2
-      ci-info: 3.9.0
-      deepmerge: 4.3.1
-      glob: 7.2.3
-      graceful-fs: 4.2.11
-      jest-circus: 29.7.0
-      jest-environment-node: 29.7.0
-      jest-get-type: 29.6.3
-      jest-regex-util: 29.6.3
-      jest-resolve: 29.7.0
-      jest-runner: 29.7.0
-      jest-util: 29.7.0
-      jest-validate: 29.7.0
-      micromatch: 4.0.7
-      parse-json: 5.2.0
-      pretty-format: 29.7.0
-      slash: 3.0.0
-      strip-json-comments: 3.1.1
-    optionalDependencies:
-      '@types/node': 20.14.9
-      ts-node: 10.9.2(@swc/core@1.6.13(@swc/helpers@0.5.12))(@types/node@20.14.9)(typescript@5.5.3)
     transitivePeerDependencies:
       - babel-plugin-macros
       - supports-color
@@ -20044,7 +20023,7 @@ snapshots:
 
   jest@29.7.0(@types/node@20.14.9)(ts-node@10.9.2(@swc/core@1.6.13(@swc/helpers@0.5.12))(@types/node@20.14.9)(typescript@5.5.3)):
     dependencies:
-      '@jest/core': 29.7.0(ts-node@10.9.2(@swc/core@1.6.13(@swc/helpers@0.5.12))(@types/node@20.14.9)(typescript@5.5.3))
+      '@jest/core': 29.7.0(ts-node@10.9.2(@types/node@20.14.9)(typescript@5.5.3))
       '@jest/types': 29.6.3
       import-local: 3.1.0
       jest-cli: 29.7.0(@types/node@20.14.9)(ts-node@10.9.2(@swc/core@1.6.13(@swc/helpers@0.5.12))(@types/node@20.14.9)(typescript@5.5.3))
@@ -20734,6 +20713,14 @@ snapshots:
       minimist: 1.2.8
 
   mkdirp@1.0.4: {}
+
+  moti@0.29.0(react-dom@18.3.1(react@18.3.1))(react-native-reanimated@3.10.1(@babel/core@7.24.7)(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7))(@types/react@18.3.3)(react@18.3.1))(react@18.3.1))(react@18.3.1):
+    dependencies:
+      framer-motion: 6.5.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      react-native-reanimated: 3.10.1(@babel/core@7.24.7)(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7))(@types/react@18.3.3)(react@18.3.1))(react@18.3.1)
+    transitivePeerDependencies:
+      - react
+      - react-dom
 
   moti@0.29.0(react-dom@18.3.1(react@18.3.1))(react-native-reanimated@3.13.0(@babel/core@7.24.7)(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7))(@types/react@18.3.3)(react@18.3.1))(react@18.3.1))(react@18.3.1):
     dependencies:
@@ -21616,6 +21603,16 @@ snapshots:
 
   react-is@18.3.1: {}
 
+  react-native-gesture-handler@2.16.2(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7))(@types/react@18.3.3)(react@18.3.1))(react@18.3.1):
+    dependencies:
+      '@egjs/hammerjs': 2.0.17
+      hoist-non-react-statics: 3.3.2
+      invariant: 2.2.4
+      lodash: 4.17.21
+      prop-types: 15.8.1
+      react: 18.3.1
+      react-native: 0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7))(@types/react@18.3.3)(react@18.3.1)
+
   react-native-helmet-async@2.0.4(react@18.3.1):
     dependencies:
       invariant: 2.2.4
@@ -21623,10 +21620,21 @@ snapshots:
       react-fast-compare: 3.2.2
       shallowequal: 1.1.0
 
-  react-native-linear-gradient@2.8.3(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7))(@types/react@18.3.3)(react@18.3.1))(react@18.3.1):
+  react-native-reanimated@3.10.1(@babel/core@7.24.7)(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7))(@types/react@18.3.3)(react@18.3.1))(react@18.3.1):
     dependencies:
+      '@babel/core': 7.24.7
+      '@babel/plugin-transform-arrow-functions': 7.24.7(@babel/core@7.24.7)
+      '@babel/plugin-transform-nullish-coalescing-operator': 7.24.7(@babel/core@7.24.7)
+      '@babel/plugin-transform-optional-chaining': 7.24.7(@babel/core@7.24.7)
+      '@babel/plugin-transform-shorthand-properties': 7.24.7(@babel/core@7.24.7)
+      '@babel/plugin-transform-template-literals': 7.24.7(@babel/core@7.24.7)
+      '@babel/preset-typescript': 7.24.7(@babel/core@7.24.7)
+      convert-source-map: 2.0.0
+      invariant: 2.2.4
       react: 18.3.1
       react-native: 0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7))(@types/react@18.3.3)(react@18.3.1)
+    transitivePeerDependencies:
+      - supports-color
 
   react-native-reanimated@3.13.0(@babel/core@7.24.7)(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7))(@types/react@18.3.3)(react@18.3.1))(react@18.3.1):
     dependencies:
@@ -21655,13 +21663,6 @@ snapshots:
       react-freeze: 1.0.4(react@18.3.1)
       react-native: 0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7))(@types/react@18.3.3)(react@18.3.1)
       warn-once: 0.1.1
-
-  react-native-skeleton-placeholder@5.2.4(@react-native-masked-view/masked-view@0.3.1(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7))(@types/react@18.3.3)(react@18.3.1))(react@18.3.1))(react-native-linear-gradient@2.8.3(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7))(@types/react@18.3.3)(react@18.3.1))(react@18.3.1))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7))(@types/react@18.3.3)(react@18.3.1))(react@18.3.1):
-    dependencies:
-      '@react-native-masked-view/masked-view': 0.3.1(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7))(@types/react@18.3.3)(react@18.3.1))(react@18.3.1)
-      react: 18.3.1
-      react-native: 0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7))(@types/react@18.3.3)(react@18.3.1)
-      react-native-linear-gradient: 2.8.3(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7))(@types/react@18.3.3)(react@18.3.1))(react@18.3.1)
 
   react-native-svg@15.2.0(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7))(@types/react@18.3.3)(react@18.3.1))(react@18.3.1):
     dependencies:

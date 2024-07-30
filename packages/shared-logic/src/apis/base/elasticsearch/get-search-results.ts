@@ -3,7 +3,7 @@ import { api } from "~/lib/api";
 import type { SearchApiConfig } from "~/lib/types";
 
 const searchResultSchema = z.object({
-  brandName: z.string(),
+  brandName: z.string().optional(),
   id: z.number(),
   lastUpdatedDate: z.number().optional(),
   MFRPartNo: z.string(),
@@ -46,7 +46,11 @@ const searchDataSchema = z.object({
 
 export const getSearchResults = async (
   { baseUrl }: SearchApiConfig,
-  { query, pageNo = 1 }: { query: string; pageNo?: number },
+  {
+    query,
+    pageNo = 1,
+    searchParams,
+  }: { query: string; pageNo?: number; searchParams?: string },
 ) => {
   const response = await api
     .get("search", {
@@ -58,7 +62,7 @@ export const getSearchResults = async (
         pageSize: "24",
       }),
       headers: {
-        searchParams: query,
+        searchParams: searchParams,
       },
       cache: "no-store",
     })
