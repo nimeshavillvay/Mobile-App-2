@@ -1,6 +1,6 @@
 "use client";
 
-import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
+import useSuspenseIsAdminOrOsr from "@/_hooks/user/use-suspense-is-admin-or-osr.hook";
 import useSuspenseUsersList from "@/_hooks/user/use-suspense-users-list.hook";
 import type { PasswordPolicies } from "@/_lib/types";
 import Separator from "@/old/_components/separator";
@@ -51,16 +51,10 @@ const UsersList = ({
 
   const usersListQuery = useSuspenseUsersList(token);
 
-  const { permission } = usersListQuery.data.manageContact.yourProfile;
-  const isAdmin = permission.toLowerCase() === "admin";
-
   const yourProfile = usersListQuery?.data?.manageContact?.yourProfile ?? null;
   const currentUsers = usersListQuery?.data?.manageContact?.contactList ?? null;
 
-  const checkLoginQuery = useSuspenseCheckLogin(token);
-  const isOsr =
-    checkLoginQuery.data.status_code === "OK" &&
-    !!checkLoginQuery.data.sales_rep_id;
+  const isAdminOrOsr = useSuspenseIsAdminOrOsr(token);
 
   return (
     <>
@@ -68,7 +62,7 @@ const UsersList = ({
         <h2 className="font-wurth text-xl font-medium text-brand-primary">
           Manage Users
         </h2>
-        {(isAdmin || isOsr) && (
+        {isAdminOrOsr && (
           <Button
             type="submit"
             className="mb-2 px-6"
@@ -160,7 +154,7 @@ const UsersList = ({
       </Collapsible>
 
       {/* Current Users Section */}
-      {(isAdmin || isOsr) && (
+      {isAdminOrOsr && (
         <Collapsible open={showCurrentUsers} onOpenChange={setShowCurrentUsers}>
           <div className="my-5 flex justify-between">
             <h6 className="flex font-wurth text-base font-medium capitalize text-brand-gray-500">

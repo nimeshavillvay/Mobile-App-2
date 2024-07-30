@@ -2,8 +2,7 @@
 
 import { Button } from "@/(old-design)/_components/ui/button";
 import useSuspenseBillingAddress from "@/_hooks/address/use-suspense-billing-address.hook";
-import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
-import useSuspenseUsersList from "@/_hooks/user/use-suspense-users-list.hook";
+import useSuspenseIsAdminOrOsr from "@/_hooks/user/use-suspense-is-admin-or-osr.hook";
 import type { AddressFormData } from "@/_lib/types";
 import { useState } from "react";
 import { MdOutlineEdit } from "react-icons/md";
@@ -27,15 +26,7 @@ const BillingAddress = ({ token }: { readonly token: string }) => {
   const billingAddressQuery = useSuspenseBillingAddress(token);
   const billingAddress = billingAddressQuery?.data;
 
-  const usersListQuery = useSuspenseUsersList(token);
-
-  const { permission } = usersListQuery.data.manageContact.yourProfile;
-  const isAdmin = permission.toLowerCase() === "admin";
-
-  const checkLoginQuery = useSuspenseCheckLogin(token);
-  const isOsr =
-    checkLoginQuery.data.status_code === "OK" &&
-    !!checkLoginQuery.data.sales_rep_id;
+  const isAdminOrOsr = useSuspenseIsAdminOrOsr(token);
 
   return (
     <>
@@ -53,7 +44,7 @@ const BillingAddress = ({ token }: { readonly token: string }) => {
               ? "- " + billingAddress?.zip4
               : ""}
           </p>
-          {(isAdmin || isOsr) && (
+          {isAdminOrOsr && (
             <Button
               variant="ghost"
               className="flex-auto text-center hover:bg-gray-200"
