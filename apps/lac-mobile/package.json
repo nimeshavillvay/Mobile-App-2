@@ -52,6 +52,7 @@
     "@repo/prettier-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@tamagui/babel-plugin": "1.102.1",
+    "@testing-library/jest-native": "5.4.3",
     "@testing-library/react-native": "12.5.1",
     "@total-typescript/ts-reset": "0.5.1",
     "@types/jest": "^29.5.12",
