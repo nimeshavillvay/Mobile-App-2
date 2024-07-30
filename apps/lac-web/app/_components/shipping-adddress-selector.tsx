@@ -3,7 +3,7 @@
 import FullAddress from "@/_components/full-address";
 import useSuspenseShippingAddressList from "@/_hooks/address/use-suspense-shipping-address-list.hook";
 import useUpdateShippingAddressMutation from "@/_hooks/address/use-update-shipping-address-mutation.hook";
-import useSuspenseUsersList from "@/_hooks/user/use-suspense-users-list.hook";
+import useSuspenseIsAdminOrOsr from "@/_hooks/user/use-suspense-is-admin-or-osr.hook";
 import type { Country, Token } from "@/_lib/types";
 import { cn } from "@/_lib/utils";
 import { CheckCircle } from "@repo/web-ui/components/icons/check-circle";
@@ -78,10 +78,7 @@ const ShippingAddressSelector = ({
     }
   };
 
-  const usersListQuery = useSuspenseUsersList(token);
-
-  const { permission } = usersListQuery.data.manageContact.yourProfile;
-  const isAdmin = permission.toLowerCase() === "admin";
+  const isAdminOrOsr = useSuspenseIsAdminOrOsr(token);
 
   return (
     <>
@@ -130,7 +127,7 @@ const ShippingAddressSelector = ({
           </ul>
 
           <DialogFooter>
-            {isAdmin && (
+            {isAdminOrOsr && (
               <Button
                 variant="outline"
                 className="font-bold"

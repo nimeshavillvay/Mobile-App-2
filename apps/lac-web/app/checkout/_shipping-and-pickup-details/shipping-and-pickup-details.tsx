@@ -115,14 +115,6 @@ const ShippingAndPickupDetails = ({
         </div>
 
         <div className="flex-1 space-y-4">
-          <div className="space-y-1">
-            <h3 className="text-sm text-black">Default Shipping</h3>
-
-            <p className="text-base text-wurth-gray-800">
-              Standard Shipping via Truck
-            </p>
-          </div>
-
           <div className="space-y-2">
             <h3 className="text-sm text-black">Set Future Delivery Date</h3>
 
@@ -195,7 +187,7 @@ const ShippingAndPickupDetails = ({
             htmlFor={driversNoteId}
             className="text-sm text-wurth-gray-800"
           >
-            Driver&apos; Notes
+            Notes for Delivery Driver
           </Label>
 
           <Textarea
