@@ -1,7 +1,7 @@
 import Feather from "@expo/vector-icons/Feather";
 import { Link } from "expo-router";
 import type { ComponentProps } from "react";
-import { Text, XStack } from "tamagui";
+import { XStack } from "tamagui";
 
 type SearchCategoryProps = {
   readonly category: string;
