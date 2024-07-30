@@ -68,9 +68,7 @@ describe("ScreenHeader", () => {
 
   it("sets correct href for search icon", () => {
     render(<ScreenHeader title="Test" />);
-    expect(screen.getByTestId("search-icon").props.href).toBe(
-      "/current-path/search",
-    );
+    expect(screen.getByTestId("search-icon").props.href).toBe("/search");
   });
 
   it("sets correct href for barcode scan icon", () => {
