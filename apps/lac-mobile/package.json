@@ -16,7 +16,6 @@
     "@react-native-cookies/cookies": "6.2.1",
     "@repo/native-ui": "workspace:*",
     "@repo/shared-logic": "workspace:*",
-    "@sentry/react-native": "~5.22.0",
     "@shopify/flash-list": "1.6.4",
     "@tamagui/config": "1.102.1",
     "@tamagui/font-inter": "1.102.1",
