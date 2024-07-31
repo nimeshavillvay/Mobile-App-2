@@ -9,7 +9,6 @@ import { Cookies } from "react-cookie";
 
 dayjs.extend(isBetween);
 
-const HARD_RELOAD_BEFORE = 5; // 5 minutes
 const CHECK_INTERVAL = 60000; // 1 minute in milliseconds
 
 const SessionChecker = () => {
@@ -21,16 +20,10 @@ const SessionChecker = () => {
       const now = dayjs();
 
       if (tokenExpire) {
-        const shouldRefreshToken =
-          now.isAfter(tokenExpiryDate) ||
-          now.isBetween(
-            tokenExpiryDate.subtract(HARD_RELOAD_BEFORE, "minute"),
-            tokenExpiryDate,
-            "second",
-          );
+        const shouldRefreshToken = now.isAfter(tokenExpiryDate);
 
         if (shouldRefreshToken) {
-          window.location.reload();
+          window.location.href = "/sign-in?timeout=true";
         }
       }
     };
@@ -44,9 +37,7 @@ const SessionChecker = () => {
 
     // Handle visibility change to check token expiration when returning to the tab
     const handleVisibilityChange = () => {
-      if (!document.hidden) {
-        checkTokenExpiration();
-      }
+      checkTokenExpiration();
     };
 
     document.addEventListener("visibilitychange", handleVisibilityChange);

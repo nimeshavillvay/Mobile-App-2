@@ -3,7 +3,7 @@ import FullAddress from "@/_components/full-address";
 import useSuspenseShippingAddressList from "@/_hooks/address/use-suspense-shipping-address-list.hook";
 import useSuspenseCart from "@/_hooks/cart/use-suspense-cart.hook";
 import useUpdateCartConfigMutation from "@/_hooks/cart/use-update-cart-config-mutation.hook";
-import useSuspenseUsersList from "@/_hooks/user/use-suspense-users-list.hook";
+import useSuspenseIsAdminOrOsr from "@/_hooks/user/use-suspense-is-admin-or-osr.hook";
 import type { Country } from "@/_lib/types";
 import { cn } from "@/_lib/utils";
 import { CheckCircle } from "@repo/web-ui/components/icons/check-circle";
@@ -72,10 +72,7 @@ const SelectAddressDialog = ({
     );
   };
 
-  const usersListQuery = useSuspenseUsersList(token);
-
-  const { permission } = usersListQuery.data.manageContact.yourProfile;
-  const isAdmin = permission.toLowerCase() === "admin";
+  const isAdminOrOsr = useSuspenseIsAdminOrOsr(token);
 
   return (
     <>
@@ -129,7 +126,7 @@ const SelectAddressDialog = ({
           </ul>
 
           <DialogFooter>
-            {isAdmin && (
+            {isAdminOrOsr && (
               <Button
                 variant="outline"
                 className="font-bold shadow-md"

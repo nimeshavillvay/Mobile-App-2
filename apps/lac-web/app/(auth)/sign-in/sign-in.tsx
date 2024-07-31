@@ -4,6 +4,13 @@ import { PasswordInput } from "@/_components/password-input";
 import useCheckEmailMutation from "@/_hooks/user/use-check-email-mutation.hook";
 import { cn, isErrorResponse } from "@/_lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Alert as AlertIcon } from "@repo/web-ui/components/icons/alert";
+import {
+  Alert,
+  AlertContent,
+  AlertDescription,
+  AlertTitle,
+} from "@repo/web-ui/components/ui/alert";
 import { Button, buttonVariants } from "@repo/web-ui/components/ui/button";
 import {
   Dialog,
@@ -41,6 +48,7 @@ const SignIn = () => {
 
   const searchParams = useSearchParams();
   const email = searchParams.get("email");
+  const timeout = searchParams.get("timeout");
 
   const router = useRouter();
 
@@ -140,6 +148,17 @@ const SignIn = () => {
       <div className="container">
         <div className="mx-auto my-20 max-w-[25rem] rounded-lg border border-wurth-gray-250 p-6 shadow-lg">
           <form className="mx-auto max-w-[25rem] space-y-4">
+            {timeout && timeout === "true" && (
+              <Alert variant="destructive">
+                <AlertIcon className="size-4" />
+                <AlertContent>
+                  <AlertTitle>Session Timed Out</AlertTitle>
+                  <AlertDescription>
+                    Your session has timed out. Please sign in again.
+                  </AlertDescription>
+                </AlertContent>
+              </Alert>
+            )}
             <h1 className="text-center font-title text-xl font-medium tracking-[-0.1px] text-wurth-gray-800">
               <Balancer>Enter your email address to sign in</Balancer>
             </h1>
