@@ -1,6 +1,5 @@
 import { SearchCategory } from "@repo/native-ui/components/search/suggestion/search-category";
-import type { FlashListProps } from "@shopify/flash-list";
-import { FlashList } from "@shopify/flash-list";
+import { FlashList, type FlashListProps } from "@shopify/flash-list";
 import type { ComponentProps } from "react";
 
 type SearchCategoryItem = ComponentProps<typeof SearchCategory>;
@@ -13,7 +12,7 @@ type SearchCategoryProps = Readonly<
   >
 >;
 
-const CategoryDropdown = ({ ...delegated }: SearchCategoryProps) => {
+const CategorySearchList = ({ ...delegated }: SearchCategoryProps) => {
   return (
     <FlashList
       horizontal={false}
@@ -27,4 +26,4 @@ const CategoryDropdown = ({ ...delegated }: SearchCategoryProps) => {
   );
 };
 
-export default CategoryDropdown;
+export default CategorySearchList;

@@ -1,6 +1,5 @@
 import { SearchProduct } from "@repo/native-ui/components/search/suggestion/search-product";
-import type { FlashListProps } from "@shopify/flash-list";
-import { FlashList } from "@shopify/flash-list";
+import { FlashList, type FlashListProps } from "@shopify/flash-list";
 import type { ComponentProps } from "react";
 
 type SearchProductItem = ComponentProps<typeof SearchProduct>;
@@ -13,7 +12,7 @@ type SearchProductProps = Readonly<
   >
 >;
 
-const ProductDropdown = ({ ...delegated }: SearchProductProps) => {
+const ProductSearchList = ({ ...delegated }: SearchProductProps) => {
   return (
     <FlashList
       horizontal={false}
@@ -31,4 +30,4 @@ const ProductDropdown = ({ ...delegated }: SearchProductProps) => {
   );
 };
 
-export default ProductDropdown;
+export default ProductSearchList;
