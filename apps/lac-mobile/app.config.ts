@@ -3,6 +3,7 @@ import "ts-node/register"; // Add this to import TypeScript files
 
 // Set profile specific environment variables
 // https://stackoverflow.com/a/74500506
+// The `ENVIRONMENT` variable is set in the `eas.json` file
 const profilePrefix = `${process.env.ENVIRONMENT?.toUpperCase()}_`;
 Object.entries(process.env)
   .filter(([key]) => key.startsWith(profilePrefix))
