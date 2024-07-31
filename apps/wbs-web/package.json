@@ -1,5 +1,5 @@
 {
-  "name": "wwe-web",
+  "name": "wbs-web",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -10,18 +10,21 @@
     "test": "jest"
   },
   "dependencies": {
+    "@repo/shared-logic": "workspace:*",
+    "@repo/web-ui": "workspace:*",
     "@tanstack/react-query": "5.49.2",
     "@tanstack/react-query-devtools": "5.49.2",
     "@tanstack/react-query-next-experimental": "5.49.2",
     "next": "14.2.4",
-    "react": "^18",
-    "react-dom": "^18",
-    "sharp": "0.33.4"
+    "nextjs-toploader": "1.6.12",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "sharp": "0.33.4",
+    "zod": "3.23.8"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
     "@repo/prettier-config": "workspace:*",
-    "@repo/shared-logic": "workspace:*",
     "@repo/tailwindcss-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@testing-library/jest-dom": "^6.4.6",

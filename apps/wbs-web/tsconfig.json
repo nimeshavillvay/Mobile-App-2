@@ -3,7 +3,10 @@
   "compilerOptions": {
     "paths": {
       "@/*": ["./app/*"],
-      "~/*": ["../../packages/web-ui/src/*"]
+      "~/*": [
+        "../../packages/web-ui/src/*",
+        "../../packages/shared-logic/src/*"
+      ]
     }
   },
   "include": [
