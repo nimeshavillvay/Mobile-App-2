@@ -22,6 +22,7 @@ export const SearchBrand = ({
         alignItems="center"
         gap={10}
         borderWidth={1}
+        borderColor="#E5E7EB"
         p={10}
         pressStyle={{ backgroundColor: "$blue3" }}
         {...style}

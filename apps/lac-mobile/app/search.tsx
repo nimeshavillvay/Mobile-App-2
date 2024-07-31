@@ -4,7 +4,8 @@ import { SearchBox } from "@repo/native-ui/components/search/search-box";
 import { SearchModalLayout } from "@repo/native-ui/components/search/search-modal-layout";
 import { router } from "expo-router";
 import { Controller, useForm } from "react-hook-form";
-import { Form } from "tamagui";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Form, View } from "tamagui";
 import { z } from "zod";
 
 const searchSchema = z.object({
@@ -32,9 +33,9 @@ const Search = () => {
   });
 
   return (
-    <SearchModalLayout>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
       <ScreenHeader title="Search" type="search" />
-      <Form>
+      <Form style={{ paddingHorizontal: 12 }}>
         <Controller
           control={form.control}
           name="searchInput"
@@ -52,7 +53,10 @@ const Search = () => {
           )}
         />
       </Form>
-    </SearchModalLayout>
+      <SearchModalLayout>
+        <View />
+      </SearchModalLayout>
+    </SafeAreaView>
   );
 };
 

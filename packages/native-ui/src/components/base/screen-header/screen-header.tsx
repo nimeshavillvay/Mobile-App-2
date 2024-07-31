@@ -31,18 +31,17 @@ export const ScreenHeader = ({
         alignItems="center"
         testID="screen-header-inner-view"
       >
-        {router.canGoBack() && (
-          <Button
-            onPress={() => router.back()}
-            backgroundColor="white"
-            testID="back-button"
-          >
-            <FontAwesome name="angle-left" size={28} />
-          </Button>
-        )}
-
-        {type !== "search" && (
+        {type !== "search" ? (
           <>
+            {router.canGoBack() && (
+              <Button
+                onPress={() => router.back()}
+                backgroundColor="white"
+                testID="back-button"
+              >
+                <FontAwesome name="angle-left" size={28} />
+              </Button>
+            )}
             <Text fontSize="$7" ml={12} mr="auto">
               {title}
             </Text>
@@ -69,6 +68,22 @@ export const ScreenHeader = ({
                 </Link>
               )}
             </View>
+          </>
+        ) : (
+          <>
+            <Button
+              pos="absolute"
+              top={5}
+              onPress={() => router.back()}
+              backgroundColor="white"
+              testID="back-button"
+            >
+              <FontAwesome name="angle-left" size={28} />
+            </Button>
+
+            <Text fontSize="$7" ml="auto" mr="auto" alignSelf="center">
+              Search
+            </Text>
           </>
         )}
       </View>
