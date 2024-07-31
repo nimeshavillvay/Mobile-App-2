@@ -122,7 +122,7 @@ const SearchSuggestionsList = ({ query }: { readonly query: string }) => {
 
           <BrandSearch
             summary={data.brands.summary}
-            results={data.brands.results.slice(0, 5)}
+            results={data.brands.results.slice(0, 10)}
           />
         </YStack>
       )}

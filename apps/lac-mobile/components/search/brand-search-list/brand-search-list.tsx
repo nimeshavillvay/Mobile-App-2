@@ -27,7 +27,7 @@ const BrandSearchList = ({ ...delegated }: SearchBrandProps) => {
           link={item.link}
         />
       )}
-      estimatedItemSize={5}
+      estimatedItemSize={10}
       onEndReachedThreshold={0.8}
       {...delegated}
     />
