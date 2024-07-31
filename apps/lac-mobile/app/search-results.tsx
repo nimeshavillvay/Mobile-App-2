@@ -1,5 +1,4 @@
 import ProductsList from "@/components/products-list";
-import useSessionTokenStorage from "@/hooks/auth/use-session-token-storage.hook";
 import { SEARCH_API_BASE_URL } from "@/lib/constants";
 import { ScreenHeader } from "@repo/native-ui/components/base/screen-header";
 import { ScreenLayout } from "@repo/native-ui/components/base/screen-layout";
@@ -62,16 +61,16 @@ const styles = StyleSheet.create({
 });
 
 const SearchResultsList = ({ query }: { readonly query: string }) => {
-  const token = useSessionTokenStorage((state) => state.token);
-
   const [searchParams, setSearchParams] = useState<string | undefined>(
     undefined,
   );
+
+  const deferredQuery = useDeferredValue(query);
   const deferredSearchParams = useDeferredValue(searchParams);
 
   const { data, fetchNextPage } = useSuspenseInfiniteSearchResults(
     { baseUrl: SEARCH_API_BASE_URL },
-    { query, searchParams: deferredSearchParams },
+    { query: deferredQuery, searchParams: deferredSearchParams },
   );
 
   const firstPageSearchParams = data?.pages[0]?.summary.searchParams;
@@ -86,19 +85,19 @@ const SearchResultsList = ({ query }: { readonly query: string }) => {
   }, [firstPageSearchParams]);
 
   const products = data.pages.flatMap((page) => page.results);
+  const deferredProducts = useDeferredValue(products);
 
   return (
     <ProductsList
-      data={products.map((product) => ({
+      data={deferredProducts.map((product) => ({
         productId: product.id,
         title: product.productTitle,
         sku: product.groupId,
         image: product.itemImage,
         uom: product.uom ?? "",
       }))}
-      token={token}
       onEndReached={fetchNextPage}
-      onEndReachedThreshold={0.8}
+      onEndReachedThreshold={0.5}
     />
   );
 };
