@@ -58,8 +58,8 @@ const Page = () => {
             <Button variant="outline">Edit Profile</Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[52rem]">
-            <div className="gap-4 lg:flex">
-              <div className="flex w-full lg:w-60 lg:flex-none">
+            <div className="flex flex-col gap-4 lg:flex-row">
+              <div className="flex w-full gap-4 lg:w-60 lg:flex-col">
                 <div>
                   <Image
                     src="https://wurthlac.com/api/pim//Brand%20Logos/Greenlam.png"
@@ -119,16 +119,12 @@ const Page = () => {
                   <TableHeader>
                     <TableRow>
                       <TableHead className="w-40">Size</TableHead>
-                      <TableHead className="text-center">
-                        Stock
+                      <TableHead>Stock/EA</TableHead>
+                      {/* <TableHead className="text-center">
+                        Alt Branch
                         <br />
-                        <span className="text-xs">(Home Branch)</span>
-                      </TableHead>
-                      <TableHead className="text-center">
-                        Stock
-                        <br />
-                        <span className="text-xs">(Alt Branch)</span>
-                      </TableHead>
+                        <span className="text-xs">(Stock)</span>
+                      </TableHead> */}
                       <TableHead className="text-center">QTY</TableHead>
                       <TableHead className="text-right font-medium">
                         Amount
@@ -140,8 +136,13 @@ const Page = () => {
                       <TableCell className="w-40 text-nowrap">
                         96&quot; x 48&quot;
                       </TableCell>
-                      <TableCell className="text-center">681</TableCell>
-                      <TableCell className="text-center">23</TableCell>
+                      <TableCell className="text-nowrap">
+                        Home Branch: 681
+                        <br />
+                        Alt Branch: 28
+                        <br />
+                      </TableCell>
+                      {/* <TableCell className="text-center">23</TableCell> */}
                       <TableCell className="text-right">
                         <Input type="number" className="w-16" />
                       </TableCell>
@@ -153,8 +154,14 @@ const Page = () => {
                       <TableCell className="w-40 text-nowrap">
                         96&quot; x 48&quot;
                       </TableCell>
-                      <TableCell className="text-center">681</TableCell>
-                      <TableCell className="text-center">23</TableCell>
+                      <TableCell className="text-nowrap">
+                        Home Branch:{" "}
+                        <strong className="font-semibold">681</strong>
+                        <br />
+                        Alt Branch:{" "}
+                        <strong className="font-semibold">34</strong>
+                        <br />
+                      </TableCell>
                       <TableCell className="text-right">
                         <Input type="number" className="w-16" />
                       </TableCell>
