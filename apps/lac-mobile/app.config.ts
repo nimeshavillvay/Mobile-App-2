@@ -1,8 +1,14 @@
 import type { ExpoConfig } from "expo/config";
 import "ts-node/register"; // Add this to import TypeScript files
 
-// In SDK 46 and lower, use the following import instead:
-// import { ExpoConfig } from '@expo/config-types';
+// Set profile specific environment variables
+// https://stackoverflow.com/a/74500506
+const profilePrefix = `${process.env.ENVIRONMENT?.toUpperCase()}_`;
+Object.entries(process.env)
+  .filter(([key]) => key.startsWith(profilePrefix))
+  .forEach(([key, value]) => {
+    process.env[key.slice(profilePrefix.length)] = value;
+  });
 
 const config: ExpoConfig = {
   name: "Wurth LAC",
