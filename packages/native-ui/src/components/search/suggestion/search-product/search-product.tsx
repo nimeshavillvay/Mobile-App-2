@@ -1,6 +1,16 @@
 import { Image } from "expo-image";
+import { MotiView } from "moti";
+import { Skeleton } from "moti/skeleton";
 import type { ComponentProps } from "react";
 import { Text, View, XStack, YStack } from "tamagui";
+
+export const SearchProductSkeleton = () => {
+  return (
+    <MotiView>
+      <Skeleton height={80} width="100%" colorMode="light" />
+    </MotiView>
+  );
+};
 
 type SearchProductProps = {
   readonly imageUrl: string;
@@ -33,11 +43,11 @@ export const SearchProduct = ({
           }}
         />
       </View>
-      <YStack flex={1} justifyContent="space-between" h="100%">
-        <XStack flex={1}>
+      <YStack flex={1} h="100%">
+        <XStack pb={10}>
           <Text numberOfLines={3}>{title}</Text>
         </XStack>
-        <XStack alignItems="flex-end" flex={1} gap={10}>
+        <XStack gap={10}>
           <Text color="$gray10">Item #</Text>
           <Text color="$gray10">{itemNo}</Text>
         </XStack>
