@@ -161,7 +161,7 @@ const CartItem = ({
     z.infer<typeof cartItemSchema>
   >({
     resolver: zodResolver(cartItemSchema),
-    values: {
+    defaultValues: {
       quantity: product.quantity,
       po: product.configuration.poOrJobName ?? "",
     },
