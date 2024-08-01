@@ -15,6 +15,12 @@ import {
   TableRow,
 } from "@/old/_components/ui/table";
 import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@repo/web-ui/components/ui/accordion";
+import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
@@ -29,6 +35,15 @@ import {
   DialogTrigger,
 } from "@repo/web-ui/components/ui/dialog";
 import { Input } from "@repo/web-ui/components/ui/input";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@repo/web-ui/components/ui/pagination";
 import {
   Select,
   SelectContent,
@@ -60,6 +75,126 @@ const Page = () => {
         <h1 className="line-clamp-3 text-balance font-title text-4xl font-medium tracking-tight text-wurth-gray-800 md:text-5xl md:leading-[3.5rem] md:tracking-[-0.036rem]">
           Laminate Finder
         </h1>
+        <div className="mt-4 flex gap-10">
+          <aside className="w-[236px] shrink-0">
+            Side filters Lorem ipsum dolor sit amet consectetur 5x4 grid = 20
+            items colours = 16 chips
+          </aside>
+          <section className="grow">
+            <div>
+              <p>Select colors</p>
+              <ul className="my-2 flex flex-row flex-wrap gap-4">
+                <li>
+                  <input type="checkbox" id="colorWhite" name="colorWhite" />
+                  <label for="colorWhite">White</label>
+                  <span>#fcfcfc</span>
+                </li>
+                <li>
+                  <label for="colorNatural">
+                    <input
+                      type="checkbox"
+                      id="colorNatural"
+                      name="colorNatural"
+                    />{" "}
+                    Natural
+                  </label>
+                  <span>#dbd0c6</span>
+                </li>
+                <li>
+                  <input type="checkbox" id="colorTaupe" name="colorTaupe" />
+                  <label for="colorTaupe">Taupe</label>
+                  <span>#c0b398</span>
+                </li>
+                <li>
+                  <input type="checkbox" id="colorSilver" name="colorSilver" />
+                  <label for="colorSilver">Silver</label>
+                  <span>#c7cac7</span>
+                </li>
+              </ul>
+            </div>
+            <div className="grid grid-cols-5 gap-4">
+              <div>
+                <Image
+                  src="https://wurthlac.com/api/pim/Product-Assets/Images/300x300/105-FeatherGray.jpg"
+                  alt=""
+                  width={203}
+                  height={203}
+                />
+                <h5 className="font-medium">969-58 Navy Blue</h5>
+              </div>
+              <div>
+                <Image
+                  src="https://wurthlac.com/api/pim/Product-Assets/Images/300x300/105-FeatherGray.jpg"
+                  alt=""
+                  width={203}
+                  height={203}
+                />
+                <h5 className="font-medium">969-58 Navy Blue</h5>
+              </div>
+              <div>
+                <Image
+                  src="https://wurthlac.com/api/pim/Product-Assets/Images/300x300/105-FeatherGray.jpg"
+                  alt=""
+                  width={203}
+                  height={203}
+                />
+                <h5 className="font-medium">969-58 Navy Blue</h5>
+              </div>
+              <div>
+                <Image
+                  src="https://wurthlac.com/api/pim/Product-Assets/Images/300x300/105-FeatherGray.jpg"
+                  alt=""
+                  width={203}
+                  height={203}
+                />
+                <h5 className="font-medium">969-58 Navy Blue</h5>
+              </div>
+              <div>
+                <Image
+                  src="https://wurthlac.com/api/pim/Product-Assets/Images/300x300/105-FeatherGray.jpg"
+                  alt=""
+                  width={203}
+                  height={203}
+                />
+                <h5 className="font-medium">969-58 Navy Blue</h5>
+              </div>
+              <div>
+                <Image
+                  src="https://wurthlac.com/api/pim/Product-Assets/Images/300x300/105-FeatherGray.jpg"
+                  alt=""
+                  width={203}
+                  height={203}
+                />
+                <h5 className="font-medium">969-58 Navy Blue</h5>
+              </div>
+              <div>
+                <Image
+                  src="https://wurthlac.com/api/pim/Product-Assets/Images/300x300/105-FeatherGray.jpg"
+                  alt=""
+                  width={203}
+                  height={203}
+                />
+                <h5 className="font-medium">969-58 Navy Blue</h5>
+              </div>
+            </div>
+            <Pagination>
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious href="#" />
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationLink href="#">1</PaginationLink>
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationEllipsis />
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationNext href="#" />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+          </section>
+        </div>
       </div>
 
       <div>
@@ -87,11 +222,11 @@ const Page = () => {
       <div>
         <Dialog>
           <DialogTrigger asChild>
-            <Button variant="outline">Edit Profile</Button>
+            <Button variant="outline">open modal</Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[52rem]">
-            <div className="gap-4 lg:flex">
-              <div className="flex w-full lg:w-60 lg:flex-none">
+            <div className="flex flex-col gap-4 lg:flex-row">
+              <div className="flex w-full gap-4 lg:w-60 lg:flex-col">
                 <div>
                   <Image
                     src="https://wurthlac.com/api/pim//Brand%20Logos/Greenlam.png"
@@ -151,16 +286,12 @@ const Page = () => {
                   <TableHeader>
                     <TableRow>
                       <TableHead className="w-40">Size</TableHead>
-                      <TableHead className="text-center">
-                        Stock
+                      <TableHead>Stock/EA</TableHead>
+                      {/* <TableHead className="text-center">
+                        Alt Branch
                         <br />
-                        <span className="text-xs">(Home Branch)</span>
-                      </TableHead>
-                      <TableHead className="text-center">
-                        Stock
-                        <br />
-                        <span className="text-xs">(Alt Branch)</span>
-                      </TableHead>
+                        <span className="text-xs">(Stock)</span>
+                      </TableHead> */}
                       <TableHead className="text-center">QTY</TableHead>
                       <TableHead className="text-right font-medium">
                         Amount
@@ -172,8 +303,15 @@ const Page = () => {
                       <TableCell className="w-40 text-nowrap">
                         96&quot; x 48&quot;
                       </TableCell>
-                      <TableCell className="text-center">681</TableCell>
-                      <TableCell className="text-center">23</TableCell>
+                      <TableCell className="text-nowrap">
+                        Home Branch:{" "}
+                        <strong className="font-semibold">681</strong>
+                        <br />
+                        Alt Branch:{" "}
+                        <strong className="font-semibold">34</strong>
+                        <br />
+                      </TableCell>
+                      {/* <TableCell className="text-center">23</TableCell> */}
                       <TableCell className="text-right">
                         <Input type="number" className="w-16" />
                       </TableCell>
@@ -185,8 +323,14 @@ const Page = () => {
                       <TableCell className="w-40 text-nowrap">
                         96&quot; x 48&quot;
                       </TableCell>
-                      <TableCell className="text-center">681</TableCell>
-                      <TableCell className="text-center">23</TableCell>
+                      <TableCell className="text-nowrap">
+                        Home Branch:{" "}
+                        <strong className="font-semibold">681</strong>
+                        <br />
+                        Alt Branch:{" "}
+                        <strong className="font-semibold">34</strong>
+                        <br />
+                      </TableCell>
                       <TableCell className="text-right">
                         <Input type="number" className="w-16" />
                       </TableCell>
@@ -204,6 +348,22 @@ const Page = () => {
                   <Button>Add to cart</Button>
                 </div>
               </div>
+            </div>
+            <div className="mt-4 border-t pt-4">
+              <h4 className="pb-2 text-xl font-semibold">
+                Matching Edgebanding
+              </h4>
+              <Accordion type="single" collapsible>
+                <AccordionItem value="item-1">
+                  <AccordionTrigger>
+                    3D Edgebanding, Color 3D700R Brushed Aluminum, 2mm Thick
+                    15/16"
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    Yes. It adheres to the WAI-ARIA design pattern.
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
             </div>
           </DialogContent>
         </Dialog>
