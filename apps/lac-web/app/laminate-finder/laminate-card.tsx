@@ -36,7 +36,6 @@ const LaminateCard = ({
   readonly product: Product;
   readonly token: string;
 }) => {
-  console.log(token);
 
   return (
     <div>

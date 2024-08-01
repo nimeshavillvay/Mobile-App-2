@@ -6,10 +6,19 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@repo/web-ui/components/ui/breadcrumb";
-import ColorPalette from "./color-palette";
+import ColorPicker from "./color-picker";
 import LaminatesList from "./laminates-list";
+import { cookies } from "next/headers";
+import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 
 const Page = () => {
+  const cookieStore = cookies();
+  const tokenCookie = cookieStore.get(SESSION_TOKEN_COOKIE);
+
+  if (!tokenCookie) {
+    return null;
+  }
+
   return (
     <div className="md mx-width container mb-10">
       <div className="py-3">
@@ -30,7 +39,7 @@ const Page = () => {
       </h1>
       <div className="mt-4 flex gap-10">
         <section className="grow">
-          <ColorPalette />
+          <ColorPicker token={tokenCookie.value} />
           <LaminatesList />
         </section>
       </div>

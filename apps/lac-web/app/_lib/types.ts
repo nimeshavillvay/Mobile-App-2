@@ -231,6 +231,7 @@ export type Filters = {
   id: string;
   filter: string;
   values: FilterValues;
+  is_colorpicker: boolean;
 };
 
 export type Address = {

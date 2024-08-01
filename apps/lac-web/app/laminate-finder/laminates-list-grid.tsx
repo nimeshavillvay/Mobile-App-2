@@ -1,13 +1,13 @@
 "use client";
 
-import { ProductsGridList } from "@/_components/products-grid";
 import { type ComponentProps } from "react";
 import useSuspenseLaminateFilters from "./use-suspense-laminate-filters.hook";
 import useSuspenseSearchLaminateList from "./use-suspense-search-laminate-list.hook";
+import { LaminatesGridList } from "./laminates-grid-list";
 
 type LaminateListGridProps = {
   readonly token: string;
-  readonly type: ComponentProps<typeof ProductsGridList>["type"];
+  readonly type: ComponentProps<typeof LaminatesGridList>["type"];
 };
 
 const LaminateListGrid = ({ token, type }: LaminateListGridProps) => {
@@ -19,7 +19,7 @@ const LaminateListGrid = ({ token, type }: LaminateListGridProps) => {
     categoryFiltersQuery.data,
   );
 
-  const products: ComponentProps<typeof ProductsGridList>["products"] =
+  const products: ComponentProps<typeof LaminatesGridList>["products"] =
     data.groupList.map((product) => ({
       prop: {
         groupName: product.productGroupName,
@@ -40,7 +40,7 @@ const LaminateListGrid = ({ token, type }: LaminateListGridProps) => {
       },
     }));
 
-  return <ProductsGridList products={products} type={type} token={token} />;
+  return <LaminatesGridList products={products} type={type} token={token} />;
 };
 
 export default LaminateListGrid;
