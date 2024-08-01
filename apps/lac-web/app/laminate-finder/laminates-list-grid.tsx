@@ -5,12 +5,12 @@ import { type ComponentProps } from "react";
 import useSuspenseLaminateFilters from "./use-suspense-laminate-filters.hook";
 import useSuspenseSearchLaminateList from "./use-suspense-search-laminate-list.hook";
 
-type ProductListGridProps = {
+type LaminateListGridProps = {
   readonly token: string;
   readonly type: ComponentProps<typeof ProductsGridList>["type"];
 };
 
-const ProductListGrid = ({ token, type }: ProductListGridProps) => {
+const LaminateListGrid = ({ token, type }: LaminateListGridProps) => {
   const categoryFiltersQuery = useSuspenseLaminateFilters({
     token,
   });
@@ -43,4 +43,4 @@ const ProductListGrid = ({ token, type }: ProductListGridProps) => {
   return <ProductsGridList products={products} type={type} token={token} />;
 };
 
-export default ProductListGrid;
+export default LaminateListGrid;

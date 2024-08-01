@@ -90,6 +90,7 @@ const useSuspenseLaminateSearch = (
           fclassid,
           itemSkuList,
           variationsCount,
+          txt_meta_title,
         }) => ({
           groupId: groupid,
           type: type,
@@ -100,6 +101,7 @@ const useSuspenseLaminateSearch = (
           groupImage: group_img,
           complianceFlags: compliance_flags,
           fClassId: fclassid,
+          metaTitle: txt_meta_title,
           productSkuList: itemSkuList.map((item) => ({
             productId: item.productid,
             isExcludedProduct: item.is_product_exclude,

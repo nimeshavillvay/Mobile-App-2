@@ -4,11 +4,11 @@ import { ProductsGridHeader } from "@/_components/products-grid";
 import useSuspenseLaminateFilters from "./use-suspense-laminate-filters.hook";
 import useSuspenseSearchLaminateList from "./use-suspense-search-laminate-list.hook";
 
-type ProductsListHeaderProps = {
+type LaminatesListHeaderProps = {
   readonly token: string;
 };
 
-const ProductsListHeader = ({ token }: ProductsListHeaderProps) => {
+const LaminatesListHeader = ({ token }: LaminatesListHeaderProps) => {
   const categoryFiltersQuery = useSuspenseLaminateFilters({
     token,
   });
@@ -27,4 +27,4 @@ const ProductsListHeader = ({ token }: ProductsListHeaderProps) => {
   );
 };
 
-export default ProductsListHeader;
+export default LaminatesListHeader;

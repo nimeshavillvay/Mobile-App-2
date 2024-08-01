@@ -3,13 +3,13 @@
 import { ProductsGridDesktopFiltersHeader } from "@/_components/products-grid";
 import useSuspenseLaminateFilters from "./use-suspense-laminate-filters.hook";
 
-type ProductsListDesktopFiltersHeaderProps = {
+type LaminatesListDesktopFiltersHeaderProps = {
   readonly token: string;
 };
 
-const ProductsListDesktopFiltersHeader = ({
+const LaminatesListDesktopFiltersHeader = ({
   token,
-}: ProductsListDesktopFiltersHeaderProps) => {
+}: LaminatesListDesktopFiltersHeaderProps) => {
   const categoryFiltersQuery = useSuspenseLaminateFilters({
     token,
   });
@@ -19,4 +19,4 @@ const ProductsListDesktopFiltersHeader = ({
   );
 };
 
-export default ProductsListDesktopFiltersHeader;
+export default LaminatesListDesktopFiltersHeader;

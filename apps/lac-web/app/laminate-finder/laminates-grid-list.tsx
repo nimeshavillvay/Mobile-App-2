@@ -1,11 +1,11 @@
 "use client";
 
-import ProductCard from "@/_components/product-card";
 import ProductCardSkeleton from "@/_components/product-card-skeleton";
 import { cn } from "@/_lib/utils";
 import { Suspense, type ComponentProps, type ReactNode } from "react";
+import LaminateCard from "./laminate-card";
 
-const ProductsGridListContainer = ({
+const LaminatesGridListContainer = ({
   type,
   children,
 }: {
@@ -25,14 +25,14 @@ const ProductsGridListContainer = ({
   );
 };
 
-export const ProductsGridList = ({
+export const LaminatesGridList = ({
   type,
   products,
   token,
 }: {
-  readonly type: ComponentProps<typeof ProductsGridListContainer>["type"];
+  readonly type: ComponentProps<typeof LaminatesGridListContainer>["type"];
   readonly products: {
-    prop: ComponentProps<typeof ProductCard>["product"];
+    prop: ComponentProps<typeof LaminateCard>["product"];
     info: { groupId: string };
   }[];
   readonly token: string;
@@ -40,7 +40,7 @@ export const ProductsGridList = ({
   const orientation = type === "mobile" ? "horizontal" : "vertical";
 
   return (
-    <ProductsGridListContainer type={type}>
+    <LaminatesGridListContainer type={type}>
       {products.map(({ prop, info }) => (
         <Suspense
           key={info.groupId}
@@ -51,25 +51,20 @@ export const ProductsGridList = ({
             />
           }
         >
-           <ProductCard
-            orientation={orientation}
-            product={prop}
-            token={token}
-            stretchWidth={orientation === "vertical"}
-          />
+          <LaminateCard product={prop} token={token} />
         </Suspense>
       ))}
-    </ProductsGridListContainer>
+    </LaminatesGridListContainer>
   );
 };
 
-export const ProductsGridListSkeleton = ({
+export const LaminatesGridListSkeleton = ({
   type,
 }: {
-  readonly type: ComponentProps<typeof ProductsGridListContainer>["type"];
+  readonly type: ComponentProps<typeof LaminatesGridListContainer>["type"];
 }) => {
   return (
-    <ProductsGridListContainer type={type}>
+    <LaminatesGridListContainer type={type}>
       {Array.from({ length: 20 }).map((_, index) => (
         <ProductCardSkeleton
           key={index}
@@ -77,6 +72,6 @@ export const ProductsGridListSkeleton = ({
           stretchWidth={type === "desktop"}
         />
       ))}
-    </ProductsGridListContainer>
+    </LaminatesGridListContainer>
   );
 };
