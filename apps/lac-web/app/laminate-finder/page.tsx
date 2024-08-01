@@ -1,4 +1,12 @@
 import {
+  ProductsGrid,
+  ProductsGridDesktopContainer,
+  ProductsGridFiltersSkeleton,
+  ProductsGridHeaderSkeleton,
+  ProductsGridListSkeleton,
+  ProductsGridPaginationSkeleton,
+} from "@/_components/products-grid";
+import {
   Table,
   TableBody,
   TableCell,
@@ -29,6 +37,8 @@ import {
   SelectValue,
 } from "@repo/web-ui/components/ui/select";
 import Image from "next/image";
+import { Suspense } from "react";
+import LaminatesList from "./laminates-list";
 
 const Page = () => {
   return (
@@ -50,6 +60,28 @@ const Page = () => {
         <h1 className="line-clamp-3 text-balance font-title text-4xl font-medium tracking-tight text-wurth-gray-800 md:text-5xl md:leading-[3.5rem] md:tracking-[-0.036rem]">
           Laminate Finder
         </h1>
+      </div>
+
+      <div>
+        {/* <SubCategoriesList categories={subCategories} /> */}
+
+        <Suspense
+          fallback={
+            <ProductsGrid>
+              <ProductsGridHeaderSkeleton />
+
+              <ProductsGridDesktopContainer>
+                <ProductsGridFiltersSkeleton />
+
+                <ProductsGridListSkeleton type="desktop" />
+              </ProductsGridDesktopContainer>
+
+              <ProductsGridPaginationSkeleton />
+            </ProductsGrid>
+          }
+        >
+          <LaminatesList />
+        </Suspense>
       </div>
 
       <div>
