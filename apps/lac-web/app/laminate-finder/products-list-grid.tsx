@@ -7,7 +7,6 @@ import useSuspenseSearchLaminateList from "./use-suspense-search-laminate-list.h
 
 type ProductListGridProps = {
   readonly token: string;
-  readonly categoryId: string;
   readonly type: ComponentProps<typeof ProductsGridList>["type"];
 };
 

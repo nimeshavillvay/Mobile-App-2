@@ -1,12 +1,4 @@
 import {
-  ProductsGrid,
-  ProductsGridDesktopContainer,
-  ProductsGridFiltersSkeleton,
-  ProductsGridHeaderSkeleton,
-  ProductsGridListSkeleton,
-  ProductsGridPaginationSkeleton,
-} from "@/_components/products-grid";
-import {
   Table,
   TableBody,
   TableCell,
@@ -36,15 +28,6 @@ import {
 } from "@repo/web-ui/components/ui/dialog";
 import { Input } from "@repo/web-ui/components/ui/input";
 import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@repo/web-ui/components/ui/pagination";
-import {
   Select,
   SelectContent,
   SelectItem,
@@ -52,7 +35,7 @@ import {
   SelectValue,
 } from "@repo/web-ui/components/ui/select";
 import Image from "next/image";
-import { Suspense } from "react";
+import ColorPalette from "./color-palette";
 import LaminatesList from "./laminates-list";
 
 const Page = () => {
@@ -76,147 +59,15 @@ const Page = () => {
           Laminate Finder
         </h1>
         <div className="mt-4 flex gap-10">
-          <aside className="w-[236px] shrink-0">
+          {/* <aside className="w-[236px] shrink-0">
             Side filters Lorem ipsum dolor sit amet consectetur 5x4 grid = 20
             items colours = 16 chips
-          </aside>
+          </aside> */}
           <section className="grow">
-            <div>
-              <p>Select colors</p>
-              <ul className="my-2 flex flex-row flex-wrap gap-4">
-                <li>
-                  <input type="checkbox" id="colorWhite" name="colorWhite" />
-                  <label for="colorWhite">White</label>
-                  <span>#fcfcfc</span>
-                </li>
-                <li>
-                  <label for="colorNatural">
-                    <input
-                      type="checkbox"
-                      id="colorNatural"
-                      name="colorNatural"
-                    />{" "}
-                    Natural
-                  </label>
-                  <span>#dbd0c6</span>
-                </li>
-                <li>
-                  <input type="checkbox" id="colorTaupe" name="colorTaupe" />
-                  <label for="colorTaupe">Taupe</label>
-                  <span>#c0b398</span>
-                </li>
-                <li>
-                  <input type="checkbox" id="colorSilver" name="colorSilver" />
-                  <label for="colorSilver">Silver</label>
-                  <span>#c7cac7</span>
-                </li>
-              </ul>
-            </div>
-            <div className="grid grid-cols-5 gap-4">
-              <div>
-                <Image
-                  src="https://wurthlac.com/api/pim/Product-Assets/Images/300x300/105-FeatherGray.jpg"
-                  alt=""
-                  width={203}
-                  height={203}
-                />
-                <h5 className="font-medium">969-58 Navy Blue</h5>
-              </div>
-              <div>
-                <Image
-                  src="https://wurthlac.com/api/pim/Product-Assets/Images/300x300/105-FeatherGray.jpg"
-                  alt=""
-                  width={203}
-                  height={203}
-                />
-                <h5 className="font-medium">969-58 Navy Blue</h5>
-              </div>
-              <div>
-                <Image
-                  src="https://wurthlac.com/api/pim/Product-Assets/Images/300x300/105-FeatherGray.jpg"
-                  alt=""
-                  width={203}
-                  height={203}
-                />
-                <h5 className="font-medium">969-58 Navy Blue</h5>
-              </div>
-              <div>
-                <Image
-                  src="https://wurthlac.com/api/pim/Product-Assets/Images/300x300/105-FeatherGray.jpg"
-                  alt=""
-                  width={203}
-                  height={203}
-                />
-                <h5 className="font-medium">969-58 Navy Blue</h5>
-              </div>
-              <div>
-                <Image
-                  src="https://wurthlac.com/api/pim/Product-Assets/Images/300x300/105-FeatherGray.jpg"
-                  alt=""
-                  width={203}
-                  height={203}
-                />
-                <h5 className="font-medium">969-58 Navy Blue</h5>
-              </div>
-              <div>
-                <Image
-                  src="https://wurthlac.com/api/pim/Product-Assets/Images/300x300/105-FeatherGray.jpg"
-                  alt=""
-                  width={203}
-                  height={203}
-                />
-                <h5 className="font-medium">969-58 Navy Blue</h5>
-              </div>
-              <div>
-                <Image
-                  src="https://wurthlac.com/api/pim/Product-Assets/Images/300x300/105-FeatherGray.jpg"
-                  alt=""
-                  width={203}
-                  height={203}
-                />
-                <h5 className="font-medium">969-58 Navy Blue</h5>
-              </div>
-            </div>
-            <Pagination>
-              <PaginationContent>
-                <PaginationItem>
-                  <PaginationPrevious href="#" />
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink href="#">1</PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationEllipsis />
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationNext href="#" />
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
+            <ColorPalette />
+            <LaminatesList />
           </section>
         </div>
-      </div>
-
-      <div>
-        {/* <SubCategoriesList categories={subCategories} /> */}
-
-        <Suspense
-          fallback={
-            <ProductsGrid>
-              <ProductsGridHeaderSkeleton />
-
-              <ProductsGridDesktopContainer>
-                <ProductsGridFiltersSkeleton />
-
-                <ProductsGridListSkeleton type="desktop" />
-              </ProductsGridDesktopContainer>
-
-              <ProductsGridPaginationSkeleton />
-            </ProductsGrid>
-          }
-        >
-          <LaminatesList />
-        </Suspense>
       </div>
 
       <div>
@@ -357,7 +208,7 @@ const Page = () => {
                 <AccordionItem value="item-1">
                   <AccordionTrigger>
                     3D Edgebanding, Color 3D700R Brushed Aluminum, 2mm Thick
-                    15/16"
+                    15/16 inch(need to get from api)
                   </AccordionTrigger>
                   <AccordionContent>
                     Yes. It adheres to the WAI-ARIA design pattern.

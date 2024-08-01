@@ -18,7 +18,6 @@ import ProductsListPagination from "./products-list-pagination";
 const LaminatesList = () => {
   const cookieStore = cookies();
   const tokenCookie = cookieStore.get(SESSION_TOKEN_COOKIE);
-  const categoryId = "897";
 
   if (!tokenCookie) {
     return null;
@@ -40,19 +39,12 @@ const LaminatesList = () => {
         </Suspense>
 
         <Suspense fallback={<ProductsGridListSkeleton type="desktop" />}>
-          <ProductsListGrid
-            type="desktop"
-            token={tokenCookie.value}
-            categoryId={categoryId}
-          />
+          <ProductsListGrid type="desktop" token={tokenCookie.value} />
         </Suspense>
       </ProductsGridDesktopContainer>
 
       <Suspense fallback={<ProductsGridPaginationSkeleton />}>
-        <ProductsListPagination
-          token={tokenCookie.value}
-          categoryId={categoryId}
-        />
+        <ProductsListPagination token={tokenCookie.value} />
       </Suspense>
     </ProductsGrid>
   );

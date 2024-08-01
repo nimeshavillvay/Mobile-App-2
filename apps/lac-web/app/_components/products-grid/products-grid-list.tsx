@@ -1,9 +1,9 @@
 "use client";
 
-import ProductCard from "@/_components/product-card";
 import ProductCardSkeleton from "@/_components/product-card-skeleton";
 import { cn } from "@/_lib/utils";
 import { Suspense, type ComponentProps, type ReactNode } from "react";
+import LaminateCard from "./laminate-card";
 
 const ProductsGridListContainer = ({
   type,
@@ -32,7 +32,7 @@ export const ProductsGridList = ({
 }: {
   readonly type: ComponentProps<typeof ProductsGridListContainer>["type"];
   readonly products: {
-    prop: ComponentProps<typeof ProductCard>["product"];
+    prop: ComponentProps<typeof LaminateCard>["product"];
     info: { groupId: string };
   }[];
   readonly token: string;
@@ -51,12 +51,7 @@ export const ProductsGridList = ({
             />
           }
         >
-          <ProductCard
-            orientation={orientation}
-            product={prop}
-            token={token}
-            stretchWidth={orientation === "vertical"}
-          />
+          <LaminateCard product={prop} token={token} />
         </Suspense>
       ))}
     </ProductsGridListContainer>

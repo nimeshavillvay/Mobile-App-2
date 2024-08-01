@@ -6,7 +6,6 @@ import useSuspenseSearchLaminateList from "./use-suspense-search-laminate-list.h
 
 type ProductsListPaginationProps = {
   readonly token: string;
-  readonly categoryId: string;
 };
 
 const ProductsListPagination = ({ token }: ProductsListPaginationProps) => {
