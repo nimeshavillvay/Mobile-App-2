@@ -9,12 +9,12 @@ import { SearchModalLayout } from "@repo/native-ui/components/search/search-moda
 import { SearchBrandSkeleton } from "@repo/native-ui/components/search/suggestion/search-brand";
 import { SearchCategorySkeleton } from "@repo/native-ui/components/search/suggestion/search-category";
 import { SearchProductSkeleton } from "@repo/native-ui/components/search/suggestion/search-product";
+import useSuspenseMultiSearch from "@repo/shared-logic/apis/hooks/elasticsearch/use-suspense-multi-search.hook";
 import type {
   brandDataSchema,
   categoryDataSchema,
   productDataSchema,
-} from "@repo/shared-logic/apis/base/elasticsearch/get-multisearch-results";
-import useSuspenseMultiSearch from "@repo/shared-logic/apis/hooks/elasticsearch/use-suspense-multi-search.hook";
+} from "@repo/shared-logic/zod-schema/multisearch";
 import { FlashList } from "@shopify/flash-list";
 import { router } from "expo-router";
 import { Suspense, useDeferredValue } from "react";
@@ -94,10 +94,7 @@ const SearchSuggestionsList = ({ query }: { readonly query: string }) => {
     <YStack flex={1} mt={20} paddingHorizontal={10}>
       {data.products.summary.total > 0 && (
         <View flex={1} mb={40} minHeight={10}>
-          <ProductSearch
-            summary={data.products.summary}
-            results={data.products.results.slice(0, 5)}
-          />
+          <ProductSearch products={data.products.results.slice(0, 5)} />
         </View>
       )}
 
@@ -107,10 +104,7 @@ const SearchSuggestionsList = ({ query }: { readonly query: string }) => {
             Categories for "{query}"
           </Text>
 
-          <CategorySearch
-            summary={data.categories.summary}
-            results={data.categories.results.slice(0, 5)}
-          />
+          <CategorySearch categories={data.categories.results.slice(0, 5)} />
         </YStack>
       )}
 
@@ -120,10 +114,7 @@ const SearchSuggestionsList = ({ query }: { readonly query: string }) => {
             Brands for "{query}"
           </Text>
 
-          <BrandSearch
-            summary={data.brands.summary}
-            results={data.brands.results.slice(0, 10)}
-          />
+          <BrandSearch brands={data.brands.results.slice(0, 10)} />
         </YStack>
       )}
     </YStack>
@@ -165,8 +156,10 @@ const SearchResultsSkeleton = () => {
 };
 
 const ProductSearch = ({
-  results: products,
-}: z.infer<typeof productDataSchema>) => {
+  products,
+}: {
+  readonly products: z.infer<typeof productDataSchema.shape.results>;
+}) => {
   return (
     <ProductSearchList
       data={products.map((product) => ({
@@ -179,8 +172,10 @@ const ProductSearch = ({
 };
 
 const CategorySearch = ({
-  results: categories,
-}: z.infer<typeof categoryDataSchema>) => {
+  categories,
+}: {
+  readonly categories: z.infer<typeof categoryDataSchema.shape.results>;
+}) => {
   return (
     <CategorySearchList
       data={categories.map((category) => ({
@@ -191,7 +186,11 @@ const CategorySearch = ({
   );
 };
 
-const BrandSearch = ({ results: brands }: z.infer<typeof brandDataSchema>) => {
+const BrandSearch = ({
+  brands,
+}: {
+  readonly brands: z.infer<typeof brandDataSchema.shape.results>;
+}) => {
   return (
     <BrandSearchList
       data={brands.map((brand) => ({
