@@ -1,7 +1,5 @@
 import type { LiteProduct } from "@repo/shared-logic/models/product";
-import type React from "react";
-import { TooltipProvider } from "~/components/ui/tooltip";
-import { calculateDiscount } from "~/lib/utils";
+import type { ComponentProps } from "react";
 import {
   ProductCard,
   ProductCardContent,
@@ -11,17 +9,16 @@ import {
   ProductCardImage,
   ProductCardPrice,
   ProductCardVariantSelector,
-} from "../../../product-card/product-card"; // Adjust the import path as needed
+} from "~/components/product-card/product-card";
+import { TooltipProvider } from "~/components/ui/tooltip";
+import { calculateDiscount } from "~/lib/utils";
 
-interface ProductCardItemProps {
+type ProductCardItemProps = {
   readonly product: LiteProduct;
-  readonly orientation: "vertical" | "horizontal";
-}
+  readonly orientation?: ComponentProps<typeof ProductCard>["orientation"];
+};
 
-const ProductCardItem: React.FC<ProductCardItemProps> = ({
-  product,
-  orientation,
-}) => {
+const ProductCardItem = ({ product, orientation }: ProductCardItemProps) => {
   const mainVariant = product.variants?.[0]; // Assuming the first variant is the main one
 
   const discount = mainVariant?.pricing
