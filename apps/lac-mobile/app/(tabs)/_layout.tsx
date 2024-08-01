@@ -1,6 +1,6 @@
-import Entypo from "@expo/vector-icons/Entypo";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { Store } from "@tamagui/lucide-icons";
 import { Tabs, usePathname } from "expo-router";
 
 const TabLayout = () => {
@@ -32,9 +32,7 @@ const TabLayout = () => {
         name="shop"
         options={{
           title: "Shop",
-          tabBarIcon: ({ color }) => (
-            <Entypo size={28} name="shop" color={color} />
-          ),
+          tabBarIcon: ({ color }) => <Store size={28} color={color} />,
         }}
       />
       <Tabs.Screen
