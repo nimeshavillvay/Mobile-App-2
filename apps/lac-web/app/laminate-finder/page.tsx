@@ -67,7 +67,8 @@ const Page = () => {
         </h1>
         <div className="mt-4 flex gap-10">
           <aside className="w-[236px] shrink-0">
-            Lorem ipsum dolor sit amet consectetur
+            Side filters Lorem ipsum dolor sit amet consectetur 5x4 grid = 20
+            items colours = 16 chips
           </aside>
           <section className="grow">
             <div>
@@ -76,7 +77,6 @@ const Page = () => {
                 <li>
                   <input type="checkbox" id="colorWhite" name="colorWhite" />
                   <label for="colorWhite">White</label>
-
                   <span>#fcfcfc</span>
                 </li>
                 <li>
@@ -272,9 +272,11 @@ const Page = () => {
                         96&quot; x 48&quot;
                       </TableCell>
                       <TableCell className="text-nowrap">
-                        Home Branch: 681
+                        Home Branch:{" "}
+                        <strong className="font-semibold">681</strong>
                         <br />
-                        Alt Branch: 28
+                        Alt Branch:{" "}
+                        <strong className="font-semibold">34</strong>
                         <br />
                       </TableCell>
                       {/* <TableCell className="text-center">23</TableCell> */}
