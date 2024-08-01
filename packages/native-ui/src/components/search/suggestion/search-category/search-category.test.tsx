@@ -33,8 +33,8 @@ describe("SearchCategory", () => {
 
   it("renders the category text in the correct color", () => {
     render(<SearchCategory {...defaultProps} />);
-    const link = screen.getByTestId("link");
-    expect(link.props.style.color).toBe("#CC0000");
+    const text = screen.getByTestId("text");
+    expect(text.props.style.color).toBe("#CC0000");
   });
 
   it("renders the icon with the correct size and color", () => {

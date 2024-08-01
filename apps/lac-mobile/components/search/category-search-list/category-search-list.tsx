@@ -1,6 +1,7 @@
 import { SearchCategory } from "@repo/native-ui/components/search/suggestion/search-category";
 import { FlashList, type FlashListProps } from "@shopify/flash-list";
 import type { ComponentProps } from "react";
+import { View } from "tamagui";
 
 type SearchCategoryItem = ComponentProps<typeof SearchCategory>;
 type ListProps = FlashListProps<SearchCategoryItem>;
@@ -16,6 +17,9 @@ const CategorySearchList = ({ ...delegated }: SearchCategoryProps) => {
   return (
     <FlashList
       horizontal={false}
+      ItemSeparatorComponent={() => {
+        return <View marginVertical={5} />;
+      }}
       renderItem={({ item }) => (
         <SearchCategory category={item.category} link={item.link} />
       )}
