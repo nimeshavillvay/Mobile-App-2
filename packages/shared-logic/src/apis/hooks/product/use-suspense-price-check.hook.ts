@@ -10,7 +10,6 @@ const useSuspensePriceCheck = (
   return useSuspenseQuery({
     queryKey: ["user", "price-check", products, config],
     queryFn: () => priceCheck(config, products),
-    staleTime: 60000, // 10 minutes
   });
 };
 
