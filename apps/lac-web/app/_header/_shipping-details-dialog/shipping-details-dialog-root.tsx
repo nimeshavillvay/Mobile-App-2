@@ -1,5 +1,5 @@
 import ShippingDetailsDialog from "@/_components/shipping-details-dialog";
-import { getShippingMethods } from "@/_lib/apis/server";
+import { getCountries, getShippingMethods } from "@/_lib/apis/server";
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import { cookies } from "next/headers";
@@ -9,7 +9,10 @@ const ShippingDetailsDialogMain = async () => {
   const cookiesStore = cookies();
   const sessionCookies = cookiesStore.get(SESSION_TOKEN_COOKIE);
 
-  const shippingMethods = await getShippingMethods();
+  const [shippingMethods, countries] = await Promise.all([
+    getShippingMethods(),
+    getCountries(),
+  ]);
 
   if (!sessionCookies?.value) {
     return null;
@@ -19,6 +22,7 @@ const ShippingDetailsDialogMain = async () => {
     <ShippingDetailsDialog
       token={sessionCookies.value}
       shippingMethods={shippingMethods}
+      countries={countries}
     />
   );
 };

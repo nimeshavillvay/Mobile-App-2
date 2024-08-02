@@ -11,6 +11,7 @@ const useSearch = (searchText: string) => {
         .get("search", {
           searchParams: {
             query: searchText,
+            "quick-order": true,
           },
         })
         .json<SearchData>(),

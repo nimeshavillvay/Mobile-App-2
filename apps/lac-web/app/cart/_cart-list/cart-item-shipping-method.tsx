@@ -316,8 +316,6 @@ const CartItemShippingMethod = ({
           will_call_not_in_stock: FALSE_STRING,
         });
       }
-    } else {
-      setSelectedShippingOption(undefined);
     }
   };
 
@@ -508,14 +506,29 @@ const CartItemShippingMethod = ({
     }
   };
 
+  if (isVendorShipped) {
+    const date = backOrderAll?.plants
+      ? getFirstBackOrderDateFromPlants(backOrderAll?.plants)
+      : "N/A";
+
+    return (
+      <ul className="flex flex-col gap-3">
+        <li>
+          <div className="flex flex-col gap-1 rounded-xl bg-yellow-50 px-4 py-2 text-sm">
+            <div>Drop Ship Item</div>
+            <div className="text-xs text-wurth-gray-500">
+              This item ships directly from the vendor. Additional freight
+              charges may apply. Expected shipping date:{" "}
+              {date !== "" ? dayjs(date).format(UI_DATE_FORMAT) : "N/A"}.
+            </div>
+          </div>
+        </li>
+      </ul>
+    );
+  }
+
   return (
     <ul className="flex flex-col gap-3">
-      {isVendorShipped && (
-        <li className="text-sm text-wurth-gray-500">
-          This item is shipped by the vendor
-        </li>
-      )}
-
       {isShipToMeEnabled && (
         <li className="flex flex-col items-stretch gap-2">
           <div className="flex flex-row items-center gap-3">
@@ -672,20 +685,22 @@ const CartItemShippingMethod = ({
                           disabled={selectedShipToMe !== ALTERNATIVE_BRANCHES}
                         >
                           <CollapsibleTrigger
-                            className="group flex h-7 w-full flex-row items-center justify-start"
+                            className="group flex h-7 flex-row items-center justify-start"
                             asChild
                           >
                             <Button
                               type="button"
                               variant="subtle"
-                              className="gap-2 px-2"
+                              className="h-full gap-2 px-2"
                             >
                               <ChevronDown
                                 width={16}
                                 height={16}
                                 className="transition duration-150 ease-out group-data-[state=open]:rotate-180"
                               />
-                              <span>Show breakdown by branch</span>
+                              <span className="text-balance text-left">
+                                Show breakdown by branch
+                              </span>
                             </Button>
                           </CollapsibleTrigger>
 
@@ -755,6 +770,64 @@ const CartItemShippingMethod = ({
         </li>
       )}
 
+      {isBackOrderAllEnabled && (
+        <li className="flex flex-col items-stretch gap-2">
+          <div className="flex flex-row items-center gap-3">
+            <Checkbox
+              id={backOrderId}
+              className="size-5 rounded-full"
+              iconClassName="size-4"
+              checked={selectedShippingOption === MAIN_OPTIONS.BACK_ORDER}
+              onCheckedChange={(checked) =>
+                handleDeliveryOptionSelect({
+                  checked: checked === true,
+                  selectedOption: MAIN_OPTIONS.BACK_ORDER,
+                })
+              }
+              disabled={!backOrderAll}
+            />
+
+            <Label htmlFor={backOrderId} className="text-base">
+              Backorder everything
+            </Label>
+          </div>
+          <div className="ml-[1.625rem] flex flex-col gap-2">
+            {backOrderAll?.plants[0]?.shippingMethods &&
+              backOrderAll?.plants[0]?.shippingMethods.length > 0 && (
+                <Select
+                  disabled={
+                    selectedShippingOption !== MAIN_OPTIONS.BACK_ORDER ||
+                    backOrderAll.plants[0]?.shippingMethods?.length <= 1
+                  }
+                  value={selectedBackorderShippingMethod}
+                  onValueChange={(method) => handleBackorderMethod(method)}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select a delivery method" />
+                  </SelectTrigger>
+
+                  <SelectContent>
+                    {backOrderAll.plants[0]?.shippingMethods.map((option) => (
+                      <SelectItem key={option.code} value={option.code}>
+                        {option.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+          </div>
+          {selectedShippingOption === MAIN_OPTIONS.BACK_ORDER && (
+            <div className="ml-[1.625rem]">
+              <BackOrderInfoBanner
+                date={
+                  getFirstBackOrderDateFromPlants(backOrderAll?.plants) ?? "N/A"
+                }
+              />
+            </div>
+          )}
+        </li>
+      )}
+
       <li className="flex flex-col items-stretch gap-2">
         <div className="flex flex-row items-center gap-3">
           <Checkbox
@@ -821,17 +894,18 @@ const CartItemShippingMethod = ({
                         />
 
                         <div className="flex flex-col gap-0.5">
-                          <div className="flex items-center text-sm">
+                          <div className="text-wrap font-medium">
                             <ItemCountBadge
                               count={willCallAnywhere[0].willCallQuantity}
                             />
                             &nbsp;
-                            <span className="font-medium">pick up at</span>
-                            &nbsp;
-                            <PlantName
-                              plants={plants}
-                              plantCode={willCallAnywhere[0].willCallPlant}
-                            />
+                            <span className="font-medium">
+                              pick up at &nbsp;
+                              <PlantName
+                                plants={plants}
+                                plantCode={willCallAnywhere[0].willCallPlant}
+                              />
+                            </span>
                           </div>
                         </div>
                       </div>
@@ -876,12 +950,13 @@ const CartItemShippingMethod = ({
                             count={willCallAnywhere[0].willCallQuantity}
                           />
                           &nbsp;
-                          <span className="font-medium">pick up at</span>
-                          &nbsp;
-                          <PlantName
-                            plants={plants}
-                            plantCode={willCallAnywhere[0].willCallPlant}
-                          />
+                          <span className="font-medium">
+                            pick up at &nbsp;
+                            <PlantName
+                              plants={plants}
+                              plantCode={willCallAnywhere[0].willCallPlant}
+                            />
+                          </span>
                         </div>
 
                         {willCallAnywhere[0]?.backOrder && (
@@ -1014,64 +1089,6 @@ const CartItemShippingMethod = ({
           </div>
         )}
       </li>
-
-      {isBackOrderAllEnabled && (
-        <li className="flex flex-col items-stretch gap-2">
-          <div className="flex flex-row items-center gap-3">
-            <Checkbox
-              id={backOrderId}
-              className="size-5 rounded-full"
-              iconClassName="size-4"
-              checked={selectedShippingOption === MAIN_OPTIONS.BACK_ORDER}
-              onCheckedChange={(checked) =>
-                handleDeliveryOptionSelect({
-                  checked: checked === true,
-                  selectedOption: MAIN_OPTIONS.BACK_ORDER,
-                })
-              }
-              disabled={!backOrderAll}
-            />
-
-            <Label htmlFor={backOrderId} className="text-base">
-              Backorder everything
-            </Label>
-          </div>
-          <div className="ml-[1.625rem] flex flex-col gap-2">
-            {backOrderAll?.plants[0]?.shippingMethods &&
-              backOrderAll?.plants[0]?.shippingMethods.length > 0 && (
-                <Select
-                  disabled={
-                    selectedShippingOption !== MAIN_OPTIONS.BACK_ORDER ||
-                    backOrderAll.plants[0]?.shippingMethods?.length <= 1
-                  }
-                  value={selectedBackorderShippingMethod}
-                  onValueChange={(method) => handleBackorderMethod(method)}
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select a delivery method" />
-                  </SelectTrigger>
-
-                  <SelectContent>
-                    {backOrderAll.plants[0]?.shippingMethods.map((option) => (
-                      <SelectItem key={option.code} value={option.code}>
-                        {option.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              )}
-          </div>
-          {selectedShippingOption === MAIN_OPTIONS.BACK_ORDER && (
-            <div className="ml-[1.625rem]">
-              <BackOrderInfoBanner
-                date={
-                  getFirstBackOrderDateFromPlants(backOrderAll?.plants) ?? "N/A"
-                }
-              />
-            </div>
-          )}
-        </li>
-      )}
     </ul>
   );
 };
