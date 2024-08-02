@@ -21,7 +21,7 @@ const BarcodeScanner = () => {
       query: scanningResult.data,
     });
 
-    router.push(`/barcode-scanner?${searchParams.toString()}`);
+    router.push(`/search-results?${searchParams.toString()}`);
   };
 
   return (
