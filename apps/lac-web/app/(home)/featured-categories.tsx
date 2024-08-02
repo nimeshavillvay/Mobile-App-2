@@ -35,7 +35,16 @@ const FeaturedCategories = async () => {
 
   return (
     <section className="container my-14 space-y-6 md:my-20 md:space-y-9">
-      <SubHeading>Featured Categories</SubHeading>
+      <SubHeading>Top Categories for Woodworking and Shop Supplies</SubHeading>
+
+      <p className="mt-2 text-center text-base text-wurth-gray-800 md:mt-6 md:text-lg">
+        Explore our top categories to find the best woodworking and shop
+        supplies for your projects. From high-quality drawer slides and cabinet
+        hinges to decorative hardware and essential woodworking machinery, these
+        categories feature our most sought-after products. Whether you&apos;re a
+        professional craftsman or a dedicated hobbyist, you&apos;ll have access
+        to all the tools and materials you need.
+      </p>
 
       <ul className="w-full space-x-2 space-y-10 pb-4 text-center md:space-x-[1.875rem]">
         {data.slice(0, SHOWN_CATEGORIES).map((category) => (

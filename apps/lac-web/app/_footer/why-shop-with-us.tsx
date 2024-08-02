@@ -18,8 +18,18 @@ const WhyShopWithUs = () => {
   return (
     <section className="container space-y-6 pb-3 md:space-y-12 md:pb-9">
       <h2 className="text-center font-title text-3xl font-medium capitalize tracking-[-0.3px] text-black md:text-5xl md:tracking-[-0.576px]">
-        Why shop with us?
+        The Würth Louis and Company Difference
       </h2>
+
+      <p className="mt-2 text-center text-base text-wurth-gray-800 md:mt-6 md:text-lg">
+        Würth Louis and Company is committed to service, quality, and
+        convenience to ensure you have a seamless experience every time. With
+        flexible ordering options, a comprehensive selection of products, and
+        next-day delivery, we cater to all your woodworking and shop supply
+        needs. We appreciate your trust in our expertise and dedication to
+        providing you with the best tools and materials, helping you achieve
+        outstanding results in your projects.
+      </p>
 
       <ul className="grid grid-cols-2 gap-4 lg:grid-cols-4 lg:gap-8">
         {REASONS.map(({ title, Icon, description }) => (
@@ -39,7 +49,7 @@ const WhyShopWithUs = () => {
                 <Icon className="stroke-white md:size-12" />
               </div>
 
-              <h3 className="text-clip break-words font-title text-2xl leading-7 tracking-[-0.12px] text-wurth-blue-450 md:text-[1.75rem] md:leading-8 md:tracking-[-0.14px]">
+              <h3 className="text-clip break-words font-title text-2xl uppercase leading-7 tracking-[-0.12px] text-wurth-blue-450 md:text-[1.75rem] md:leading-8 md:tracking-[-0.14px]">
                 {title}
               </h3>
             </div>
