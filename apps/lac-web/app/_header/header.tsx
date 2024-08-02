@@ -38,14 +38,14 @@ const Header = async () => {
               className="group h-fit px-0 py-0 font-medium"
               asChild
             >
-              <a href="tel:800-444-0043">
+              <a href="tel:+18004224389">
                 <Phone
                   width={16}
                   height={16}
                   className="group-hover:stroke-red-800"
                 />
 
-                <span>(800) 444-0043</span>
+                <span>(800) 422-4389</span>
               </a>
             </Button>
 

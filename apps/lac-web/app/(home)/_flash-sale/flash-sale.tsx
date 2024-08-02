@@ -51,11 +51,20 @@ const FlashSale = () => {
   return (
     <section className="my-14 space-y-6 md:my-20 md:space-y-10">
       <header className="text-center">
-        <SubHeading>Today&apos;s Specials</SubHeading>
+        <SubHeading>
+          Today&apos;s Specials: Unbeatable Deals on Woodworking and Shop
+          Supplies
+        </SubHeading>
 
-        <p className="mt-2 text-base text-wurth-gray-800 md:mt-6 md:text-lg">
-          Lorem ipsum dolor sit amet consectetur. Amet vitae tempus laoreet et
-          sit. Venenatis maecenas scelerisque massa arcu sed.
+        <p className="container mt-2 text-base text-wurth-gray-800 md:mt-6 md:text-lg">
+          Discover Today&apos;s Specials at Würth Louis and Company, featuring
+          exclusive deals on high-quality woodworking and shop supplies. Whether
+          you&apos;re a professional woodworker, a business owner, or a
+          dedicated hobbyist, our daily specials provide exceptional savings on
+          top brands. Don&apos;t miss out on these limited time offers to stock
+          up on essential tools and materials while quantities last. Shop now
+          and enjoy the exceptional value and quality that only Würth Louis and
+          Company can deliver.
         </p>
       </header>
 
