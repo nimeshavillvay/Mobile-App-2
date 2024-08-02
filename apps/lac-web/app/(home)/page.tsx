@@ -10,6 +10,8 @@ import ad1 from "./ad-1.png";
 import ad2 from "./ad-2.png";
 import FeaturedCategories from "./featured-categories";
 import HeroBanners from "./hero-banners";
+import wlacImage1 from "./wlac-image-1.jpg";
+import wlacImage2 from "./wlac-image-2.jpg";
 
 type Colors = {
   text: string;
@@ -140,23 +142,37 @@ const HomePage = async () => {
       </section>
 
       <section className="container">
-        <div className="flex flex-col gap-6 rounded-lg bg-wurth-gray-800 px-6 py-9 md:flex-row md:items-center md:gap-8 md:p-10">
+        <div className="flex flex-col items-center gap-6 rounded-lg bg-wurth-gray-800 px-6 py-9 lg:flex-row lg:gap-8 lg:p-10">
           <div className="space-y-3 text-white md:flex-1">
             <h2 className="font-title text-4xl font-medium leading-none tracking-[-0.01688rem]">
-              <Balancer>Crafted for Craftsmen. Built for Business.</Balancer>
+              <Balancer>
+                Woodworking and Metalworking for Every Passion and Profession
+              </Balancer>
             </h2>
 
             <p className="text-lg">
-              Whittle away inefficiencies with our streamlined ecommerce
-              platform. We deliver top-quality woodworking products straight to
-              your workshop, so you can focus on what matters most - creating
-              exceptional pieces.
+              We provide top-tier woodworking and metalworking supplies, serving
+              both professionals and hobbyists. With renowned brands like Blum,
+              Rev-a-Shelf, SCM and SawStop, 24/7 online ordering, and fast
+              delivery, we make it easy for everyone from businesses to DIY
+              enthusiasts to find the right tools and materials. Our expert
+              support ensures success for projects of any scale.
             </p>
           </div>
 
-          <div className="h-[17rem] rounded-lg bg-white md:h-80 md:flex-1" />
+          <Image
+            src={wlacImage1}
+            alt="A female worker using an industrial machine"
+            placeholder="blur"
+            className="h-[17rem] rounded-lg bg-white object-cover object-left md:h-80 md:min-w-0 md:flex-1"
+          />
 
-          <div className="h-[17rem] rounded-lg bg-white md:h-80 md:flex-1" />
+          <Image
+            src={wlacImage2}
+            alt="A male worker using a wood cutter"
+            placeholder="blur"
+            className="h-[17rem] rounded-lg bg-white object-cover object-right md:h-80 md:min-w-0 md:flex-1"
+          />
         </div>
       </section>
 
