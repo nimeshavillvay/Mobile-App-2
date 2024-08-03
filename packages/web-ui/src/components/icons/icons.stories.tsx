@@ -50,7 +50,6 @@ import { Shield } from "./shield";
 import { Shop } from "./shop";
 import { ShoppingCart } from "./shopping-cart";
 import { Switch } from "./switch";
-import { Text } from "./text";
 import { TikTok } from "./tiktok";
 import { Timetable } from "./timetable";
 import { Trash } from "./trash";
@@ -293,10 +292,6 @@ export const Showcase: Story = {
 
         <IconContainer name="Switch">
           <Switch />
-        </IconContainer>
-
-        <IconContainer name="Switch">
-          <Text />
         </IconContainer>
 
         <IconContainer name="TikTok">
