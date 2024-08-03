@@ -14,6 +14,7 @@ import DesktopNavigationMenu from "./desktop-navigation-menu";
 import MobileNavigationMenu from "./mobile-navigation-menu";
 import OSRDetails from "./osr-details";
 import SearchBar from "./search-bar";
+import { Text } from '@repo/web-ui/components/icons/text';
 
 const Header = async () => {
   const categories = await getCategoriesList();
@@ -48,10 +49,21 @@ const Header = async () => {
                 <span>(800) 422-4389</span>
               </a>
             </Button>
+            <Button
+              variant="link"
+              className="group h-fit px-0 py-0 font-medium"
+              asChild
+            >
+              <a href="sms://+18004224389">
+                <Text
+                  width={16}
+                  height={16}
+                  className="group-hover:stroke-red-800"
+                />
 
-            <div className="font-normal text-wurth-gray-800">
-              Wurth Louis and Company
-            </div>
+                <span>(800) 422-4389</span>
+              </a>
+            </Button>
           </div>
         </div>
       </div>
