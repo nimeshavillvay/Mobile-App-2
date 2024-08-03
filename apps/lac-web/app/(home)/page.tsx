@@ -6,8 +6,9 @@ import { type CSSProperties, type ComponentProps } from "react";
 import Balancer from "react-wrap-balancer";
 import FeaturedBrand from "./_featured-brand";
 import FlashSale from "./_flash-sale";
-import ad1 from "./ad-1.png";
-import ad2 from "./ad-2.png";
+import block1 from "./block-1.jpg";
+import block2 from "./block-2.jpg";
+import block3 from "./block-3.jpg";
 import FeaturedCategories from "./featured-categories";
 import HeroBanners from "./hero-banners";
 import wlacImage1 from "./wlac-image-1.jpg";
@@ -37,30 +38,32 @@ const ADS: (
 )[] = [
   {
     id: 1,
-    type: "sale",
-    title: "Waste Pull-outs",
+    type: "spotlight",
+    title: "LeMans Il Promotion!",
+    subtitle:"Maximize your blind corner cabinet storage with the accessibility of LeMans!",
     colors: { text: "#FFF", background: "#053868", accent: "#000" },
-    image: ad1,
+    image: block1,
   },
   {
     id: 2,
     type: "spotlight",
-    title: "Sakes alive only $205!",
+    title: "The #1 Cabinet Door Drying Rack",
     subtitle:
-      "Get the Würth 5” PSA Non-Vac Random Orbital Sander & 3 boxes of Abrasives for only $205!",
+      "Discover the ultimate solution for efficiently drying your cabinet doors with our premium selection of cabinet door drying racks.",
     colors: {
       text: "#000",
       background: "#C8C3C3",
       accent: "#CC0000",
     },
-    image: ad2,
+    image: block2,
   },
   {
     id: 3,
-    type: "sale",
-    title: "Waste Pull-outs",
+    type: "spotlight",
+    title: "40 Years of Cordless Innovation",
+    subtitle:"Makita leads the industry with best-in-class quality cordless products.",
     colors: { text: "#FFF", background: "#053868", accent: "#000" },
-    image: ad1,
+    image: block3,
   },
 ];
 
@@ -105,12 +108,12 @@ const HomePage = async () => {
                 </div>
               )}
 
-              <h3 className="whitespace-normal text-wrap font-title text-2xl font-medium leading-7 text-[var(--text-color)] md:text-[2.75rem] md:leading-[3rem]">
+              <h3 className="whitespace-normal text-wrap font-title text-2xl font-medium leading-7 text-[var(--text-color)] md:text-[2.25rem] md:leading-[2rem]">
                 <Balancer>{ad.title}</Balancer>
               </h3>
 
               {ad.type === "spotlight" && (
-                <div className="whitespace-normal text-wrap pr-7 text-xs font-medium text-[var(--text-color)] md:mt-2 md:text-base">
+                <div className="whitespace-normal text-wrap pr-7 text-xs font-medium text-[var(--text-color)] md:mt-2 md:text-sm">
                   {ad.subtitle}
                 </div>
               )}
