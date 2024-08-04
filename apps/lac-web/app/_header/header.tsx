@@ -1,6 +1,7 @@
 import { getCategoriesList } from "@/_lib/apis/server";
 import { cn } from "@/_lib/utils";
 import { Phone } from "@repo/web-ui/components/icons/phone";
+import { Text } from "@repo/web-ui/components/icons/text";
 import { WurthFullBlack } from "@repo/web-ui/components/logos/wurth-full-black";
 import { Button, buttonVariants } from "@repo/web-ui/components/ui/button";
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
@@ -14,7 +15,6 @@ import DesktopNavigationMenu from "./desktop-navigation-menu";
 import MobileNavigationMenu from "./mobile-navigation-menu";
 import OSRDetails from "./osr-details";
 import SearchBar from "./search-bar";
-import { Text } from '@repo/web-ui/components/icons/text';
 
 const Header = async () => {
   const categories = await getCategoriesList();

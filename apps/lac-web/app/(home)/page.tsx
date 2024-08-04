@@ -6,11 +6,14 @@ import { type CSSProperties, type ComponentProps } from "react";
 import Balancer from "react-wrap-balancer";
 import FeaturedBrand from "./_featured-brand";
 import FlashSale from "./_flash-sale";
-import block1 from "./block-1.jpg";
-import block2 from "./block-2.jpg";
-import block3 from "./block-3.jpg";
 import FeaturedCategories from "./featured-categories";
 import HeroBanners from "./hero-banners";
+import kessebohmer from "./kessebohmer.jpg";
+import kessebohmerLogo from "./kessebohmer.png";
+import makita from "./makita.jpg";
+import makitaLogo from "./makita.png";
+import paintline from "./paintline.jpg";
+import paintlineLogo from "./paintline.png";
 import wlacImage1 from "./wlac-image-1.jpg";
 import wlacImage2 from "./wlac-image-2.jpg";
 
@@ -18,6 +21,7 @@ type Colors = {
   text: string;
   background: string;
   accent: string;
+  bgLogo: string;
 };
 const ADS: (
   | {
@@ -26,6 +30,7 @@ const ADS: (
       title: string;
       colors: Colors;
       image: StaticImageData;
+      logo: StaticImageData;
     }
   | {
       id: number;
@@ -34,36 +39,53 @@ const ADS: (
       subtitle: string;
       colors: Colors;
       image: StaticImageData;
+      logo: StaticImageData;
     }
 )[] = [
   {
     id: 1,
     type: "spotlight",
     title: "LeMans Il Promotion!",
-    subtitle:"Maximize your blind corner cabinet storage with the accessibility of LeMans!",
-    colors: { text: "#FFF", background: "#053868", accent: "#000" },
-    image: block1,
+    subtitle:
+      "Maximize your blind corner cabinet storage with the accessibility of LeMans!",
+    colors: {
+      text: "#000",
+      background: "#0FFFFFF",
+      accent: "#CC0000",
+      bgLogo: "#CC0000",
+    },
+    image: kessebohmer,
+    logo: kessebohmerLogo,
   },
   {
     id: 2,
+    type: "spotlight",
+    title: "40 Years of Cordless Innovation",
+    subtitle:
+      "Makita leads the industry with best-in-class quality cordless products.",
+    colors: {
+      text: "#FFF",
+      background: "#008290",
+      accent: "#000",
+      bgLogo: "#CC0000",
+    },
+    image: makita,
+    logo: makitaLogo,
+  },
+  {
+    id: 3,
     type: "spotlight",
     title: "The #1 Cabinet Door Drying Rack",
     subtitle:
       "Discover the ultimate solution for efficiently drying your cabinet doors with our premium selection of cabinet door drying racks.",
     colors: {
       text: "#000",
-      background: "#C8C3C3",
+      background: "#E0DED6",
       accent: "#CC0000",
+      bgLogo: "#CC0000",
     },
-    image: block2,
-  },
-  {
-    id: 3,
-    type: "spotlight",
-    title: "40 Years of Cordless Innovation",
-    subtitle:"Makita leads the industry with best-in-class quality cordless products.",
-    colors: { text: "#FFF", background: "#053868", accent: "#000" },
-    image: block3,
+    image: paintline,
+    logo: paintlineLogo,
   },
 ];
 
@@ -92,7 +114,7 @@ const HomePage = async () => {
                 "--text-color": ad.colors.text,
               } as CSSProperties
             }
-            className="relative flex min-h-[18.75rem] w-[11.75rem] shrink-0 snap-start flex-col justify-between overflow-hidden rounded-lg bg-[var(--background-color)] md:relative md:h-[21.25rem] md:w-auto md:snap-align-none"
+            className="relative flex min-h-[11.75rem] w-[19.75rem] shrink-0 snap-start flex-col justify-between overflow-hidden rounded-lg bg-[var(--background-color)] md:relative md:h-[21.25rem] md:w-auto md:snap-align-none"
           >
             <div
               className={cn(
@@ -108,7 +130,17 @@ const HomePage = async () => {
                 </div>
               )}
 
-              <h3 className="whitespace-normal text-wrap font-title text-2xl font-medium leading-7 text-[var(--text-color)] md:text-[2.25rem] md:leading-[2rem]">
+              <div className="absolute left-0 top-0 w-full bg-white bg-opacity-50 p-1">
+                <Image
+                  src={ad.logo}
+                  alt="A picture of the sale"
+                  width={258}
+                  height={50}
+                  className="h-7 w-auto md:h-12"
+                />
+              </div>
+
+              <h3 className="mt-6 whitespace-normal text-wrap font-title text-2xl font-medium leading-7 text-[var(--text-color)] md:text-[2.25rem] md:leading-[2rem]">
                 <Balancer>{ad.title}</Balancer>
               </h3>
 
@@ -123,18 +155,18 @@ const HomePage = async () => {
               src={ad.image}
               alt="A picture of the sale"
               width={258}
-              height={ad.type === "spotlight" ? 225 : 258}
+              height={225}
               className={cn(
-                "absolute -right-3.5 bottom-3.5 self-end object-contain md:absolute md:bottom-0",
+                "absolute bottom-3.5 min-h-[11.75rem] w-[19.75rem] shrink-0 snap-start self-end rounded-lg object-contain md:absolute md:bottom-0 md:h-[21.25rem] md:w-auto md:snap-align-none",
                 ad.type === "spotlight"
-                  ? "max-h-[8rem] md:-right-12 md:bottom-6 md:max-h-[14.063rem]"
+                  ? "max-h-[8rem] md:bottom-[45px] md:max-h-[19.063rem]"
                   : "md:bottom-0",
               )}
             />
 
             <div
               style={{ "--accent-color": ad.colors.accent } as CSSProperties}
-              className="z-[1] flex flex-row items-center gap-2 bg-[var(--accent-color)] px-4 py-2 text-sm font-bold text-white md:py-4"
+              className="z-[1] flex flex-row items-center gap-2 bg-[var(--accent-color)] px-4 py-2 pt-2 text-sm font-bold text-white md:py-4"
             >
               <span>Shop Now</span>
 
