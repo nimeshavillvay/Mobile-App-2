@@ -114,7 +114,7 @@ const HomePage = async () => {
                 "--text-color": ad.colors.text,
               } as CSSProperties
             }
-            className="relative flex min-h-[11.75rem] w-[19.75rem] shrink-0 snap-start flex-col justify-between overflow-hidden rounded-lg bg-[var(--background-color)] md:w-[18.95rem] lg:h-[13.4rem] lg:w-[22.2rem] xl:h-[15rem] xl:w-[26.1rem] 2xl:w-[29.6rem] 3xl:relative 3xl:h-[21.25rem] 3xl:w-auto 3xl:snap-align-none"
+            className="relative flex min-h-[11.75rem] w-[19.75rem] shrink-0 snap-start flex-col justify-between overflow-hidden rounded-lg bg-[var(--background-color)] md:w-[18.95rem] lg:h-[13.4rem] lg:w-[24rem] xl:h-[15rem] xl:w-[26.1rem] 2xl:w-[29.6rem] 3xl:relative 3xl:h-[21.25rem] 3xl:w-auto 3xl:snap-align-none"
           >
             <div
               className={cn(
@@ -128,7 +128,7 @@ const HomePage = async () => {
                 </div>
               )}
 
-              <div className="absolute left-0 top-0 w-full bg-white bg-opacity-70 p-2 pl-4 3xl:pl-9">
+              <div className="absolute left-0 top-0 w-full bg-white bg-opacity-50 p-2 pl-4 3xl:pl-9">
                 <Image
                   src={ad.logo}
                   alt="A picture of the sale"
@@ -138,12 +138,12 @@ const HomePage = async () => {
                 />
               </div>
 
-              <h3 className="mt-8 whitespace-normal text-wrap font-title text-xl font-medium leading-7 text-[var(--text-color)] sm:mt-11 md:text-[1.2rem] md:leading-[1.3rem] lg:mt-11 xl:text-[1.75rem] xl:leading-[1.6rem] 3xl:text-[2.25rem] 3xl:leading-[2rem]">
+              <h3 className="mt-8 whitespace-normal text-wrap font-title text-xl font-medium leading-7 text-[var(--text-color)] sm:mt-11 md:text-[1.2rem] md:leading-[1.3rem] lg:mt-11 xl:text-[1.75rem] xl:leading-[1.6rem] 3xl:text-4xl 3xl:leading-[2rem]">
                 <Balancer>{ad.title}</Balancer>
               </h3>
 
               {ad.type === "spotlight" && (
-                <div className="mt-2 whitespace-normal text-wrap pr-7 text-xs font-medium text-[var(--text-color)] md:text-[0.6rem] xl:text-[0.7rem] 3xl:mt-2 3xl:text-sm">
+                <div className="mt-2 whitespace-normal text-wrap pr-7 text-[0.7rem] font-medium text-[var(--text-color)] 3xl:mt-2 3xl:text-sm">
                   {ad.subtitle}
                 </div>
               )}
@@ -164,7 +164,7 @@ const HomePage = async () => {
 
             <div
               style={{ "--accent-color": ad.colors.accent } as CSSProperties}
-              className="z-[1] flex flex-row items-center gap-2 bg-[var(--accent-color)] px-4 py-2 pt-2 text-sm font-bold text-white 3xl:py-4"
+              className="z-[1] flex flex-row items-center gap-2 bg-[var(--accent-color)] px-4 py-2 pl-4 pt-2 text-sm font-bold text-white 3xl:py-4 3xl:pl-9"
             >
               <span>Shop Now</span>
 
