@@ -104,7 +104,7 @@ const HomePage = async () => {
     <>
       <HeroBanners banners={heroBanner} />
 
-      <section className="container my-3 flex w-full snap-x scroll-pl-4 flex-row items-stretch gap-4 overflow-x-auto xl:my-6 xl:grid xl:snap-none xl:scroll-pl-0 xl:grid-cols-3 xl:gap-5">
+      <section className="container my-3 flex w-full snap-x scroll-pl-4 flex-row items-stretch gap-4 overflow-x-auto 3xl:my-6 3xl:grid 3xl:snap-none 3xl:scroll-pl-0 3xl:grid-cols-3 3xl:gap-5">
         {ADS.map((ad) => (
           <article
             key={ad.id}
@@ -114,16 +114,16 @@ const HomePage = async () => {
                 "--text-color": ad.colors.text,
               } as CSSProperties
             }
-            className="relative flex min-h-[11.75rem] w-[19.75rem] shrink-0 snap-start flex-col justify-between overflow-hidden rounded-lg bg-[var(--background-color)] md:w-[18.95rem] xl:relative xl:h-[21.25rem] xl:w-auto xl:snap-align-none"
+            className="relative flex min-h-[11.75rem] w-[19.75rem] shrink-0 snap-start flex-col justify-between overflow-hidden rounded-lg bg-[var(--background-color)] md:w-[18.95rem] lg:w-[22.2rem] xl:h-[15rem] xl:w-[26.1rem] 2xl:w-[29.6rem] 3xl:relative 3xl:h-[21.25rem] 3xl:w-auto 3xl:snap-align-none"
           >
             <div
               className={cn(
-                "shrink-1 z-[1] min-h-[8.75rem] flex-1 truncate px-4 pt-4 xl:pl-9 xl:pr-0 xl:pt-9",
-                ad.type === "spotlight" ? "max-w-[16.063rem]" : "xl:max-w-56",
+                "shrink-1 z-[1] min-h-[8.75rem] flex-1 truncate px-4 pt-4 3xl:pl-9 3xl:pr-0 3xl:pt-9",
+                ad.type === "spotlight" ? "max-w-[16.063rem]" : "3xl:max-w-56",
               )}
             >
               {ad.type === "sale" && (
-                <div className="font-title text-sm tracking-[-0.00438rem] text-[var(--text-color)] md:text-[1.1rem] xl:text-[1.25rem] xl:leading-7 xl:tracking-[-0.00625rem]">
+                <div className="font-title text-sm tracking-[-0.00438rem] text-[var(--text-color)] md:text-[1.1rem] 3xl:text-[1.25rem] 3xl:leading-7 3xl:tracking-[-0.00625rem]">
                   Super Sale!
                 </div>
               )}
@@ -134,16 +134,16 @@ const HomePage = async () => {
                   alt="A picture of the sale"
                   width={258}
                   height={50}
-                  className="h-7 w-auto xl:h-12"
+                  className="h-7 w-auto 3xl:h-12"
                 />
               </div>
 
-              <h3 className="mt-6 whitespace-normal text-wrap font-title text-xl font-medium leading-7 text-[var(--text-color)] md:text-[1.2rem] md:leading-[1.3rem] xl:text-[2.25rem] xl:leading-[2rem]">
+              <h3 className="mt-11 whitespace-normal text-wrap font-title text-xl font-medium leading-7 text-[var(--text-color)] md:text-[1.2rem] md:leading-[1.3rem] xl:text-[1.75rem] xl:leading-[1.6rem] 3xl:text-[2.25rem] 3xl:leading-[2rem]">
                 <Balancer>{ad.title}</Balancer>
               </h3>
 
               {ad.type === "spotlight" && (
-                <div className="whitespace-normal text-wrap pr-7 text-xs font-medium text-[var(--text-color)] md:text-[0.6rem] xl:mt-2 xl:text-sm">
+                <div className="mt-2 whitespace-normal text-wrap pr-7 text-xs font-medium text-[var(--text-color)] md:text-[0.6rem] xl:text-[0.7rem] 3xl:mt-2 3xl:text-sm">
                   {ad.subtitle}
                 </div>
               )}
@@ -155,16 +155,16 @@ const HomePage = async () => {
               width={258}
               height={225}
               className={cn(
-                "absolute bottom-[1.17rem] min-h-[11.75rem] w-[19.75rem] shrink-0 snap-start self-end rounded-lg object-contain xl:absolute xl:bottom-0 xl:h-[21.25rem] xl:w-auto xl:snap-align-none",
+                "33xl:h-[21.25rem] absolute bottom-[1.17rem] min-h-[11.75rem] w-[19.75rem] shrink-0 snap-start self-end rounded-lg object-contain lg:h-[19.45rem] 3xl:absolute 3xl:bottom-0 3xl:w-auto 3xl:snap-align-none",
                 ad.type === "spotlight"
-                  ? "max-h-[8rem] xl:bottom-[2.2rem] xl:max-h-[19.063rem]"
-                  : "xl:bottom-0",
+                  ? "max-h-[8rem] 3xl:bottom-[2.2rem] 3xl:max-h-[19.063rem]"
+                  : "3xl:bottom-0",
               )}
             />
 
             <div
               style={{ "--accent-color": ad.colors.accent } as CSSProperties}
-              className="z-[1] flex flex-row items-center gap-2 bg-[var(--accent-color)] px-4 py-2 pt-2 text-sm font-bold text-white xl:py-4"
+              className="z-[1] flex flex-row items-center gap-2 bg-[var(--accent-color)] px-4 py-2 pt-2 text-sm font-bold text-white 3xl:py-4"
             >
               <span>Shop Now</span>
 
