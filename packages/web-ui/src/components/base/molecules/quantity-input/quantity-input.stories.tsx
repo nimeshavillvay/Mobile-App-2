@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import QuantityInput from "./quantity-input";
 
 const meta: Meta<typeof QuantityInput> = {
-  title: "Molecules/Quantity Input",
+  title: "Base/Molecules/Quantity Input",
   component: QuantityInput,
   tags: ["autodocs"],
   argTypes: {

@@ -1,10 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { type EmblaOptionsType } from "embla-carousel";
-import { TooltipProvider } from "~/components/ui/tooltip";
-import { ChevronDown } from "../../../icons/chevron-down";
-import { ChevronLeft } from "../../../icons/chevron-left";
-import { ChevronRight } from "../../../icons/chevron-right";
-import { ChevronUp } from "../../../icons/chevron-up";
+import { ChevronDown } from "~/components/icons/chevron-down";
+import { ChevronLeft } from "~/components/icons/chevron-left";
+import { ChevronRight } from "~/components/icons/chevron-right";
+import { ChevronUp } from "~/components/icons/chevron-up";
 import {
   ProductCard,
   ProductCardActions,
@@ -15,12 +14,13 @@ import {
   ProductCardImage,
   ProductCardLabel,
   ProductCardPrice,
-} from "../../../product-card";
+} from "~/components/product-card";
+import { TooltipProvider } from "~/components/ui/tooltip";
 import { Carousel, CarouselContent, CarouselHeader } from "./carousel";
 import productImage from "./product-image.png";
 
 const meta: Meta<typeof Carousel> = {
-  title: "Base/Molecule/Carousel",
+  title: "Base/Molecules/Carousel",
   component: Carousel,
 };
 export default meta;
