@@ -1,9 +1,9 @@
 "use client";
 
+import WurthLacLogo from "@/_components/wurth-lac-logo";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Alert } from "@repo/web-ui/components/icons/alert";
 import { Plus } from "@repo/web-ui/components/icons/plus";
-import { WurthFullBlack } from "@repo/web-ui/components/logos/wurth-full-black";
 import { Button } from "@repo/web-ui/components/ui/button";
 import {
   Drawer,
@@ -218,7 +218,7 @@ const AddMoreItemsFormMobile = ({ token }: { readonly token: string }) => {
                     height={60}
                   />
                 ) : (
-                  <WurthFullBlack className="max-w-10" />
+                  <WurthLacLogo className="max-w-10" />
                 )}
 
                 <div className="min-w-16 text-xs">
