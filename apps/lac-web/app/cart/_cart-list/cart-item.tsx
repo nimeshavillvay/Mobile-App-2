@@ -1,4 +1,5 @@
 import NumberInputField from "@/_components/number-input-field";
+import WurthLacLogo from "@/_components/wurth-lac-logo";
 import useDeleteCartItemMutation from "@/_hooks/cart/use-delete-cart-item-mutation.hook";
 import useUpdateCartItemMutation from "@/_hooks/cart/use-update-cart-item-mutation.hook";
 import useDebouncedState from "@/_hooks/misc/use-debounced-state.hook";
@@ -29,7 +30,6 @@ import { Alert } from "@repo/web-ui/components/icons/alert";
 import { Minus } from "@repo/web-ui/components/icons/minus";
 import { Plus } from "@repo/web-ui/components/icons/plus";
 import { Trash } from "@repo/web-ui/components/icons/trash";
-import { WurthFullBlack } from "@repo/web-ui/components/logos/wurth-full-black";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -729,7 +729,7 @@ const CartItem = ({
                 className="size-[4.5rem] rounded border border-wurth-gray-250 object-contain shadow-sm md:size-[7.5rem]"
               />
             ) : (
-              <WurthFullBlack
+              <WurthLacLogo
                 width={120}
                 height={120}
                 className="border border-brand-gray-200 px-2"

@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable jsx-a11y/alt-text */
-import { WurthFullBlack } from "@repo/web-ui/components/logos/wurth-full-black";
+import WurthLacLogo from "@/_components/wurth-lac-logo";
 import { ImageResponse } from "next/og";
 import "server-only";
 
@@ -69,7 +69,7 @@ const OGImage = async ({
           <div tw="flex flex-row items-end justify-between">
             <div tw="text-2xl text-[#9FA1A6]">wurthlac.com</div>
 
-            <WurthFullBlack />
+            <WurthLacLogo />
           </div>
         </div>
 
