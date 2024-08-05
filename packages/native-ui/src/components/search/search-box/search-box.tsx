@@ -49,11 +49,12 @@ export const SearchBox = forwardRef<TextInput, SearchInputProps>(
             width="100%"
             returnKeyType="search"
             onSubmitEditing={onSubmit}
+            /* eslint-disable-next-line jsx-a11y/no-autofocus */
             autoFocus={true}
             {...delegated}
           />
         </XStack>
-        {cancelIcon && (
+        {!!cancelIcon && (
           <Feather
             testID="clear-icon"
             name="x"
