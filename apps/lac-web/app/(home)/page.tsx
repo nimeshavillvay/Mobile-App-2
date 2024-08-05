@@ -114,7 +114,7 @@ const HomePage = async () => {
                 "--text-color": ad.colors.text,
               } as CSSProperties
             }
-            className="relative flex min-h-[11.75rem] w-[19.75rem] shrink-0 snap-start flex-col justify-between overflow-hidden rounded-lg bg-[var(--background-color)] md:w-[18.95rem] lg:w-[22.2rem] xl:h-[15rem] xl:w-[26.1rem] 2xl:w-[29.6rem] 3xl:relative 3xl:h-[21.25rem] 3xl:w-auto 3xl:snap-align-none"
+            className="relative flex min-h-[11.75rem] w-[19.75rem] shrink-0 snap-start flex-col justify-between overflow-hidden rounded-lg bg-[var(--background-color)] md:w-[18.95rem] lg:h-[13.4rem] lg:w-[22.2rem] xl:h-[15rem] xl:w-[26.1rem] 2xl:w-[29.6rem] 3xl:relative 3xl:h-[21.25rem] 3xl:w-auto 3xl:snap-align-none"
           >
             <div
               className={cn(
@@ -128,7 +128,7 @@ const HomePage = async () => {
                 </div>
               )}
 
-              <div className="absolute left-0 top-0 w-full bg-white bg-opacity-50 p-1">
+              <div className="absolute left-0 top-0 w-full bg-white bg-opacity-70 p-2 pl-4 3xl:pl-9">
                 <Image
                   src={ad.logo}
                   alt="A picture of the sale"
@@ -138,7 +138,7 @@ const HomePage = async () => {
                 />
               </div>
 
-              <h3 className="mt-11 whitespace-normal text-wrap font-title text-xl font-medium leading-7 text-[var(--text-color)] md:text-[1.2rem] md:leading-[1.3rem] xl:text-[1.75rem] xl:leading-[1.6rem] 3xl:text-[2.25rem] 3xl:leading-[2rem]">
+              <h3 className="mt-8 whitespace-normal text-wrap font-title text-xl font-medium leading-7 text-[var(--text-color)] sm:mt-11 md:text-[1.2rem] md:leading-[1.3rem] lg:mt-11 xl:text-[1.75rem] xl:leading-[1.6rem] 3xl:text-[2.25rem] 3xl:leading-[2rem]">
                 <Balancer>{ad.title}</Balancer>
               </h3>
 
@@ -155,7 +155,7 @@ const HomePage = async () => {
               width={258}
               height={225}
               className={cn(
-                "33xl:h-[21.25rem] absolute bottom-[1.17rem] min-h-[11.75rem] w-[19.75rem] shrink-0 snap-start self-end rounded-lg object-contain lg:h-[19.45rem] 3xl:absolute 3xl:bottom-0 3xl:w-auto 3xl:snap-align-none",
+                "33xl:h-[21.25rem] absolute bottom-[1rem] min-h-[13.75rem] w-[19.75rem] shrink-0 snap-start self-end rounded-lg object-contain lg:h-[19.45rem] 3xl:absolute 3xl:bottom-0 3xl:w-auto 3xl:snap-align-none",
                 ad.type === "spotlight"
                   ? "max-h-[8rem] 3xl:bottom-[2.2rem] 3xl:max-h-[19.063rem]"
                   : "3xl:bottom-0",
