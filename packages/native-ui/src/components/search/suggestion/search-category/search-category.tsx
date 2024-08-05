@@ -7,7 +7,7 @@ import { Text, XStack } from "tamagui";
 
 export const SearchCategorySkeleton = () => {
   return (
-    <MotiView>
+    <MotiView testID="motiview-skeleton">
       <Skeleton height={40} width="100%" colorMode="light" />
     </MotiView>
   );
@@ -31,7 +31,7 @@ export const SearchCategory = ({
         size={20}
         color="#74767B"
       />
-      <Link testID="link" href={link}>
+      <Link testID="link" href={link} style={{ flex: 1 }} asChild>
         <Text testID="text" color="#CC0000" lineHeight={20}>
           {category}
         </Text>

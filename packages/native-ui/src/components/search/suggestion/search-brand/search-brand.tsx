@@ -7,7 +7,7 @@ import { Text, XStack } from "tamagui";
 
 export const SearchBrandSkeleton = () => {
   return (
-    <MotiView>
+    <MotiView testID="skeleton">
       <Skeleton height={40} width="20%" colorMode="light" />
     </MotiView>
   );
@@ -26,8 +26,9 @@ export const SearchBrand = ({
   ...style
 }: SearchBrandProps) => {
   return (
-    <Link href={link}>
+    <Link href={link} asChild>
       <XStack
+        testID="x-stack"
         flex={1}
         alignItems="center"
         gap={10}
