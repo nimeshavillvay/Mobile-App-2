@@ -110,6 +110,13 @@ const RootLayout = () => {
                 headerShown: false,
               }}
             />
+
+            <Stack.Screen
+              name="barcode-scanner"
+              options={{
+                headerShown: false,
+              }}
+            />
           </Stack>
         </SafeAreaProvider>
       </TamaguiProvider>

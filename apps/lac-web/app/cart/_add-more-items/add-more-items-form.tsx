@@ -388,7 +388,7 @@ const AddMoreItemsForm = ({ token }: { readonly token: string }) => {
         Add more items to your cart
       </div>
 
-      <div className="mb-5 mt-4 overflow-x-scroll rounded-lg border p-5 shadow-md md:overflow-hidden">
+      <div className="mb-5 mt-4 rounded-lg border p-5 shadow-md">
         {fields.map((field, index) => (
           <div key={field.id}>
             <NewItemRow
@@ -440,7 +440,7 @@ const AddMoreItemsForm = ({ token }: { readonly token: string }) => {
           isFileProcessingState={isFileProcessing}
         />
 
-        <div className="flex w-full min-w-[820px] items-center justify-end gap-2">
+        <div className="mt-4 flex w-full items-center justify-end gap-2">
           {fields.length > 0 && (
             <AlertDialog
               open={deleteConfirmation}
@@ -478,7 +478,9 @@ const AddMoreItemsForm = ({ token }: { readonly token: string }) => {
             variant="default"
             className=""
             disabled={
-              addMultipleToCartMutation.isPending || !isItemSelectionProcessed
+              addMultipleToCartMutation.isPending ||
+              !isItemSelectionProcessed ||
+              (!isFileProcessing && !isBulkUploadDone && !!file)
             }
           >
             <AddToCart className="stroke-white stroke-2" width={16} />

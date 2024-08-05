@@ -5,7 +5,7 @@ import { Text } from "tamagui";
 const UpdatesPage = () => {
   return (
     <ScreenLayout edges={["top", "right", "left"]}>
-      <ScreenHeader title="Home" />
+      <ScreenHeader title="Home" barcodeScannerPath="/barcode-scanner" />
       <Text>Updates Page</Text>
     </ScreenLayout>
   );

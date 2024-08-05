@@ -1,6 +1,7 @@
 "use client";
 
 import useSuspenseFilters from "@/_hooks/search/use-suspense-filters.hook";
+import type { FilterValues } from "@/_lib/types";
 import { cn, filterAndMapValues } from "@/_lib/utils";
 import DatePicker from "@/old/_components/date-picker";
 import {
@@ -41,6 +42,7 @@ import {
   SORTING_FILTERS_FOR_MOBILE,
   URL_DATE_FORMAT,
 } from "./constants";
+import FilterDetailsBoxForMobile from "./filter-details-box-for-mobile";
 
 const customDuration = DURATIONS.at(-1);
 
@@ -217,231 +219,289 @@ const SelectorsForMobileDialog = ({
     updateSearchParams(params);
   };
 
+  const formatDisplayFilter = (
+    selectedIds: Array<number>,
+    filter: FilterValues,
+  ) => {
+    const selectedFilterList = filter
+      .filter((item) => selectedIds.includes(item.id))
+      .map((item) => item.value);
+    return selectedFilterList.length < 3
+      ? selectedFilterList.join(", ")
+      : `${selectedFilterList[0]}, ${selectedFilterList[1]} (+ ${selectedFilterList.length - 2})`;
+  };
+
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bottom-0 top-auto max-w-[768px] translate-y-[0%] gap-0 md:bottom-auto md:top-[50%] md:translate-y-[-50%]">
-        <DialogHeader>
-          <DialogTitle className="text-left font-wurth font-extrabold md:text-center">
-            Sort & Filter
-          </DialogTitle>
+    <>
+      {typesFilter?.values?.length !== undefined &&
+        orderTypes?.length !== undefined &&
+        typesFilter?.values?.length > 0 &&
+        orderTypes?.length > 0 && (
+          <FilterDetailsBoxForMobile
+            key={`type-${typesFilter.id}`}
+            label="Order Type"
+            value={formatDisplayFilter(orderTypes, typesFilter.values)}
+          />
+        )}
 
-          <DialogDescription className="sr-only">
-            Filters for my orders
-          </DialogDescription>
-        </DialogHeader>
+      {poNoFilter?.values?.length !== undefined &&
+        poNos?.length !== undefined &&
+        poNoFilter?.values?.length > 0 &&
+        poNos?.length > 0 && (
+          <FilterDetailsBoxForMobile
+            key={`type-${poNoFilter.id}`}
+            label="PO No."
+            value={formatDisplayFilter(poNos, poNoFilter.values)}
+          />
+        )}
 
-        <div className="max-h-[80vh] overflow-y-scroll">
-          <Accordion
-            type="single"
-            collapsible
-            className="w-full"
-            defaultValue="duration-item"
-          >
-            {/* Duration selector */}
-            <AccordionItem value="duration-item">
-              <AccordionTrigger className="bg-gray-100 px-5 py-3 text-xl text-black hover:no-underline">
-                Duration
-              </AccordionTrigger>
+      {jobNameFilter?.values?.length !== undefined &&
+        jobNames?.length !== undefined &&
+        jobNameFilter?.values?.length > 0 &&
+        jobNames?.length > 0 && (
+          <FilterDetailsBoxForMobile
+            key={`type-${jobNameFilter.id}`}
+            label="Job Name"
+            value={formatDisplayFilter(jobNames, jobNameFilter.values)}
+          />
+        )}
 
-              <AccordionContent className="grid gap-y-5 px-5 py-3">
-                <div className="flex flex-row items-center justify-between">
-                  <DatePicker
-                    date={fromDate}
-                    onSelectDate={(date) => {
-                      setFromDate(date);
-                      setDuration(customDuration);
-                      resetFilters();
-                    }}
-                  />
+      {statusFilter?.values?.length !== undefined &&
+        orderStatuses?.length !== undefined &&
+        statusFilter?.values?.length > 0 &&
+        orderStatuses?.length > 0 && (
+          <FilterDetailsBoxForMobile
+            key={`type-${statusFilter.id}`}
+            label="Order Status"
+            value={formatDisplayFilter(orderStatuses, statusFilter.values)}
+          />
+        )}
 
-                  <div>to</div>
+      <Dialog open={open} onOpenChange={onOpenChange}>
+        <DialogContent className="bottom-0 top-auto max-w-[768px] translate-y-[0%] gap-0 md:bottom-auto md:top-[50%] md:translate-y-[-50%]">
+          <DialogHeader>
+            <DialogTitle className="text-left font-wurth font-extrabold md:text-center">
+              Sort & Filter
+            </DialogTitle>
 
-                  <DatePicker
-                    date={toDate}
-                    onSelectDate={(date) => {
-                      setToDate(date);
-                      setDuration(customDuration);
-                      resetFilters();
-                    }}
-                  />
-                </div>
+            <DialogDescription className="sr-only">
+              Filters for my orders
+            </DialogDescription>
+          </DialogHeader>
 
-                <div>
-                  <RadioGroup
-                    value={duration?.value}
-                    onValueChange={(value) => {
-                      handleDurationChange(value);
-                    }}
-                    className="gap-auto grid grid-cols-2 justify-between"
-                  >
-                    {DURATIONS.map((item) => (
-                      <div
-                        key={`mobile-${item.value}-${item.label}`}
-                        className={cn(
-                          "flex flex-row items-center space-x-2 rounded border p-2",
-                          duration?.value === item.value
-                            ? "border-brand-secondary bg-brand-secondary bg-opacity-20"
-                            : "bg-brand-gray-100",
-                        )}
-                      >
-                        <RadioGroupItem
-                          value={item.value}
-                          id={`duration-${item.value}`}
-                          className="min-h-4 min-w-4"
-                        />
+          <div className="max-h-[80vh] overflow-y-scroll">
+            <Accordion
+              type="single"
+              collapsible
+              className="w-full"
+              defaultValue="duration-item"
+            >
+              {/* Duration selector */}
+              <AccordionItem value="duration-item">
+                <AccordionTrigger className="bg-gray-100 px-5 py-3 text-xl text-black hover:no-underline">
+                  Duration
+                </AccordionTrigger>
 
-                        <Label
-                          htmlFor={`duration-${item.value}`}
+                <AccordionContent className="grid gap-y-5 px-5 py-3">
+                  <div className="flex flex-row items-center justify-between">
+                    <DatePicker
+                      date={fromDate}
+                      onSelectDate={(date) => {
+                        setFromDate(date);
+                        setDuration(customDuration);
+                        resetFilters();
+                      }}
+                    />
+
+                    <div>to</div>
+
+                    <DatePicker
+                      date={toDate}
+                      onSelectDate={(date) => {
+                        setToDate(date);
+                        setDuration(customDuration);
+                        resetFilters();
+                      }}
+                    />
+                  </div>
+
+                  <div>
+                    <RadioGroup
+                      value={duration?.value}
+                      onValueChange={(value) => {
+                        handleDurationChange(value);
+                      }}
+                      className="gap-auto grid grid-cols-2 justify-between"
+                    >
+                      {DURATIONS.map((item) => (
+                        <div
+                          key={`mobile-${item.value}-${item.label}`}
                           className={cn(
-                            "w-full",
+                            "flex flex-row items-center space-x-2 rounded border p-2",
                             duration?.value === item.value
-                              ? "text-brand-secondary"
-                              : "text-black",
+                              ? "border-brand-secondary bg-brand-secondary bg-opacity-20"
+                              : "bg-brand-gray-100",
                           )}
                         >
-                          {item.label}
-                        </Label>
-                      </div>
-                    ))}
-                  </RadioGroup>
-                </div>
-              </AccordionContent>
-            </AccordionItem>
+                          <RadioGroupItem
+                            value={item.value}
+                            id={`duration-${item.value}`}
+                            className="min-h-4 min-w-4"
+                          />
 
-            {/* Order Types selector */}
-            <AccordionItem value="type-item">
-              <AccordionTrigger className="bg-gray-100 px-5 py-3 text-xl text-black hover:no-underline">
-                Order Types
-              </AccordionTrigger>
+                          <Label
+                            htmlFor={`duration-${item.value}`}
+                            className={cn(
+                              "w-full",
+                              duration?.value === item.value
+                                ? "text-brand-secondary"
+                                : "text-black",
+                            )}
+                          >
+                            {item.label}
+                          </Label>
+                        </div>
+                      ))}
+                    </RadioGroup>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
 
-              <AccordionContent className="grid gap-y-5 px-5 py-3">
-                {typesFilter?.values.length &&
-                  typesFilter.values.map((item) => (
-                    <CheckboxWithLabel
-                      key={`mobile-type-${item.id}`}
-                      flag="type"
-                      checked={orderTypes.includes(item.id)}
-                      onCheckedChanged={(checked) =>
-                        handleOrderTypeCheckedChanged(item.id, checked)
-                      }
-                      {...item}
-                    />
-                  ))}
-              </AccordionContent>
-            </AccordionItem>
+              {/* Order Types selector */}
+              <AccordionItem value="type-item">
+                <AccordionTrigger className="bg-gray-100 px-5 py-3 text-xl text-black hover:no-underline">
+                  Order Types
+                </AccordionTrigger>
 
-            {/* PO No selector */}
-            <AccordionItem value="po-item">
-              <AccordionTrigger className="bg-gray-100 px-5 py-3 text-xl text-black hover:no-underline">
-                PO No
-              </AccordionTrigger>
-
-              <AccordionContent className="grid gap-y-5 px-5 py-3">
-                {poNoFilter?.values?.length &&
-                  poNoFilter.values.map((item) => (
-                    <CheckboxWithLabel
-                      key={`mobile-po-${item.id}`}
-                      flag="po"
-                      checked={poNos.includes(item.id)}
-                      onCheckedChanged={(checked) =>
-                        handlePoNoCheckedChanged(item.id, checked)
-                      }
-                      {...item}
-                    />
-                  ))}
-              </AccordionContent>
-            </AccordionItem>
-
-            {/* Job Name selector */}
-            <AccordionItem value="job-item">
-              <AccordionTrigger className="bg-gray-100 px-5 py-3 text-xl text-black hover:no-underline">
-                Job Name
-              </AccordionTrigger>
-
-              <AccordionContent className="grid gap-y-5 px-5 py-3">
-                {jobNameFilter?.values?.length &&
-                  jobNameFilter.values.map((item) => (
-                    <CheckboxWithLabel
-                      key={`mobile-job-${item.id}`}
-                      flag="job"
-                      checked={jobNames.includes(item.id)}
-                      onCheckedChanged={(checked) =>
-                        handleJobNameCheckedChanged(item.id, checked)
-                      }
-                      {...item}
-                    />
-                  ))}
-              </AccordionContent>
-            </AccordionItem>
-
-            {/* Order Status selector */}
-            <AccordionItem value="status-item">
-              <AccordionTrigger className="bg-gray-100 px-5 py-3 text-xl text-black hover:no-underline">
-                Order Status
-              </AccordionTrigger>
-
-              <AccordionContent className="grid gap-y-5 px-5 py-3">
-                {statusFilter?.values?.length &&
-                  statusFilter.values.map((item) => (
-                    <CheckboxWithLabel
-                      key={`mobile-status-${item.id}`}
-                      flag="status"
-                      checked={orderStatuses.includes(item.id)}
-                      onCheckedChanged={(checked) =>
-                        handleStatusesCheckedChanged(item.id, checked)
-                      }
-                      {...item}
-                    />
-                  ))}
-              </AccordionContent>
-            </AccordionItem>
-
-            {/* Sort direction selector */}
-            <AccordionItem value="sort-item">
-              <AccordionTrigger className="bg-gray-100 px-5 py-3 text-xl text-black hover:no-underline">
-                Sort
-              </AccordionTrigger>
-
-              <AccordionContent className="grid">
-                {SORTING_FILTERS_FOR_MOBILE.map((sort) => (
-                  <div key={`sort-direction-${sort.title}`}>
-                    <MobileSortFilterHeading title={sort.title} />
-                    {sort.options.map((option) => (
-                      <MobileSortFilterOption
-                        key={`${option.type}-${option.title}`}
-                        title={option.title}
-                        active={
-                          sortBy === option.type &&
-                          sortDirection === option.direction
+                <AccordionContent className="grid gap-y-5 px-5 py-3">
+                  {typesFilter?.values.length &&
+                    typesFilter.values.map((item) => (
+                      <CheckboxWithLabel
+                        key={`mobile-type-${item.id}`}
+                        flag="type"
+                        checked={orderTypes.includes(item.id)}
+                        onCheckedChanged={(checked) =>
+                          handleOrderTypeCheckedChanged(item.id, checked)
                         }
-                        onChecked={() => {
-                          setSortBy(option.type);
-                          setSortDirection(option.direction);
-                        }}
+                        {...item}
                       />
                     ))}
-                  </div>
-                ))}
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
-        </div>
+                </AccordionContent>
+              </AccordionItem>
 
-        <div className="grid grid-cols-2 gap-3 p-5">
-          <Button
-            variant="secondary"
-            className="h-12 border-brand-primary text-brand-primary"
-            onClick={() => handleResetFilters()}
-          >
-            Reset
-          </Button>
+              {/* PO No selector */}
+              <AccordionItem value="po-item">
+                <AccordionTrigger className="bg-gray-100 px-5 py-3 text-xl text-black hover:no-underline">
+                  PO No
+                </AccordionTrigger>
 
-          <Button className="h-12" onClick={() => handleApplyFilters()}>
-            Apply
-          </Button>
-        </div>
-      </DialogContent>
-    </Dialog>
+                <AccordionContent className="grid gap-y-5 px-5 py-3">
+                  {poNoFilter?.values?.length &&
+                    poNoFilter.values.map((item) => (
+                      <CheckboxWithLabel
+                        key={`mobile-po-${item.id}`}
+                        flag="po"
+                        checked={poNos.includes(item.id)}
+                        onCheckedChanged={(checked) =>
+                          handlePoNoCheckedChanged(item.id, checked)
+                        }
+                        {...item}
+                      />
+                    ))}
+                </AccordionContent>
+              </AccordionItem>
+
+              {/* Job Name selector */}
+              <AccordionItem value="job-item">
+                <AccordionTrigger className="bg-gray-100 px-5 py-3 text-xl text-black hover:no-underline">
+                  Job Name
+                </AccordionTrigger>
+
+                <AccordionContent className="grid gap-y-5 px-5 py-3">
+                  {jobNameFilter?.values?.length &&
+                    jobNameFilter.values.map((item) => (
+                      <CheckboxWithLabel
+                        key={`mobile-job-${item.id}`}
+                        flag="job"
+                        checked={jobNames.includes(item.id)}
+                        onCheckedChanged={(checked) =>
+                          handleJobNameCheckedChanged(item.id, checked)
+                        }
+                        {...item}
+                      />
+                    ))}
+                </AccordionContent>
+              </AccordionItem>
+
+              {/* Order Status selector */}
+              <AccordionItem value="status-item">
+                <AccordionTrigger className="bg-gray-100 px-5 py-3 text-xl text-black hover:no-underline">
+                  Order Status
+                </AccordionTrigger>
+
+                <AccordionContent className="grid gap-y-5 px-5 py-3">
+                  {statusFilter?.values?.length &&
+                    statusFilter.values.map((item) => (
+                      <CheckboxWithLabel
+                        key={`mobile-status-${item.id}`}
+                        flag="status"
+                        checked={orderStatuses.includes(item.id)}
+                        onCheckedChanged={(checked) =>
+                          handleStatusesCheckedChanged(item.id, checked)
+                        }
+                        {...item}
+                      />
+                    ))}
+                </AccordionContent>
+              </AccordionItem>
+
+              {/* Sort direction selector */}
+              <AccordionItem value="sort-item">
+                <AccordionTrigger className="bg-gray-100 px-5 py-3 text-xl text-black hover:no-underline">
+                  Sort
+                </AccordionTrigger>
+
+                <AccordionContent className="grid">
+                  {SORTING_FILTERS_FOR_MOBILE.map((sort) => (
+                    <div key={`sort-direction-${sort.title}`}>
+                      <MobileSortFilterHeading title={sort.title} />
+                      {sort.options.map((option) => (
+                        <MobileSortFilterOption
+                          key={`${option.type}-${option.title}`}
+                          title={option.title}
+                          active={
+                            sortBy === option.type &&
+                            sortDirection === option.direction
+                          }
+                          onChecked={() => {
+                            setSortBy(option.type);
+                            setSortDirection(option.direction);
+                          }}
+                        />
+                      ))}
+                    </div>
+                  ))}
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3 p-5">
+            <Button
+              variant="secondary"
+              className="h-12 border-brand-primary text-brand-primary"
+              onClick={() => handleResetFilters()}
+            >
+              Reset
+            </Button>
+
+            <Button className="h-12" onClick={() => handleApplyFilters()}>
+              Apply
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };
 

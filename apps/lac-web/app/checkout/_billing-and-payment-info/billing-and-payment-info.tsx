@@ -90,9 +90,11 @@ const BillingAndPaymentInfo = ({
     getPaymentId(
       {
         paymentToken: cartQuery.data.configuration.paymentToken,
-        paymentMethod: cartQuery.data.configuration.paymentMethod,
       },
-      { creditCards: creditCartsQuery.data, paymentMethods },
+      {
+        creditCards: creditCartsQuery.data,
+        paymentMethods: mappedPaymentMethods,
+      },
     ),
   );
 
@@ -128,6 +130,50 @@ const BillingAndPaymentInfo = ({
         paymentToken: "0000",
       });
     }
+  };
+
+  const deleteCreditCard = (cardId: number) => {
+    deleteCreditCardMutation.mutate(cardId, {
+      onSuccess: () => {
+        const isAvailableOtherPaymentMethods =
+          creditCartsQuery.data.filter((card) => card.id !== cardId).length ===
+            0 &&
+          mappedPaymentMethods.find(
+            (paymentMethod) => !paymentMethod.isCreditCard,
+          );
+        updateCartConfigMutation.mutate(
+          {
+            cardName: "",
+            cardType: "",
+            expireDate: "",
+            paymentMethod: isAvailableOtherPaymentMethods
+              ? mappedPaymentMethods.find(
+                  (paymentMethod) => !paymentMethod.isCreditCard,
+                )?.code
+              : mappedPaymentMethods.find(
+                  (paymentMethod) => paymentMethod.isCreditCard,
+                )?.code,
+            paymentToken: "",
+          },
+          {
+            onSuccess: () => {
+              const selectedPaymentId = getPaymentId(
+                {
+                  paymentToken: "",
+                },
+                {
+                  creditCards: creditCartsQuery.data.filter(
+                    (card) => card.id !== cardId,
+                  ),
+                  paymentMethods: mappedPaymentMethods,
+                },
+              );
+              setPaymentId(selectedPaymentId);
+            },
+          },
+        );
+      },
+    });
   };
 
   return (
@@ -186,7 +232,7 @@ const BillingAndPaymentInfo = ({
                       variant="ghost"
                       size="icon"
                       className="absolute right-3 top-3 size-4 p-0"
-                      onClick={() => deleteCreditCardMutation.mutate(card.id)}
+                      onClick={() => deleteCreditCard(card.id)}
                     >
                       <Close width={16} height={16} />
                       <span className="sr-only">Remove</span>
@@ -255,7 +301,7 @@ const BillingAndPaymentInfo = ({
                 name="addressTo"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Address to:</FormLabel>
+                    <FormLabel>Attention:</FormLabel>
                     <FormControl>
                       <Input
                         placeholder="Name"
@@ -276,10 +322,7 @@ const BillingAndPaymentInfo = ({
         </div>
       </div>
 
-      <OrderConfirmDialog
-        token={token}
-        otherPaymentMethods={otherPaymentMethods}
-      />
+      <OrderConfirmDialog token={token} paymentMethodSelected={!!paymentId} />
     </section>
   );
 };

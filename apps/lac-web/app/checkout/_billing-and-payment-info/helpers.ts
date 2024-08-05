@@ -14,10 +14,7 @@ export const isExpiredCreditCard = (date: string) => {
 };
 
 export const getPaymentId = (
-  {
-    paymentToken,
-    paymentMethod,
-  }: Pick<CartConfiguration, "paymentToken" | "paymentMethod">,
+  { paymentToken }: Pick<CartConfiguration, "paymentToken">,
   {
     creditCards,
     paymentMethods,
@@ -38,11 +35,8 @@ export const getPaymentId = (
   }
 
   // Search for the payment method
-  const selectedPaymentMethod = paymentMethods.find(
-    (paymentMethodItem) => paymentMethodItem.code === paymentMethod,
-  );
-  if (selectedPaymentMethod) {
-    return selectedPaymentMethod.code;
+  if (paymentMethods[0] !== undefined && !paymentMethods[0].isCreditCard) {
+    return paymentMethods[0].code;
   }
 
   return "";

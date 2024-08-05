@@ -10,11 +10,11 @@ import type { AddressCheckSuggestionsWithUuid } from "./types";
 const ShippingAddressCard = ({
   shippingAddress,
   soldTo,
-  isAdmin,
+  isAdminOrOsr,
 }: {
   readonly shippingAddress: Address;
   readonly soldTo: string;
-  readonly isAdmin: boolean;
+  readonly isAdminOrOsr: boolean;
 }) => {
   const [openShippingAddressDialog, setOpenShippingAddressDialog] =
     useState(false);
@@ -70,7 +70,7 @@ const ShippingAddressCard = ({
             <p className="p-1 font-bold text-brand-secondary">Default</p>
           )}
         </div>
-        {!isSameAsBilling && isAdmin && (
+        {!isSameAsBilling && isAdminOrOsr && (
           <div className="w-20 text-center">
             <Button
               variant="ghost"

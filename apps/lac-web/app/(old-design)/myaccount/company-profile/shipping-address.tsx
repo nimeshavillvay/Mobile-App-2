@@ -2,8 +2,8 @@
 
 import useSuspenseBillingAddress from "@/_hooks/address/use-suspense-billing-address.hook";
 import useSuspenseShippingAddressList from "@/_hooks/address/use-suspense-shipping-address-list.hook";
-import useSuspenseUsersList from "@/_hooks/user/use-suspense-users-list.hook";
-import type { Address, AddressFormData } from "@/_lib/types";
+import useSuspenseIsAdminOrOsr from "@/_hooks/user/use-suspense-is-admin-or-osr.hook";
+import type { Address, AddressFormData, Country } from "@/_lib/types";
 import Separator from "@/old/_components/separator";
 import Title from "@/old/_components/title";
 import { useState } from "react";
@@ -12,22 +12,29 @@ import AddressSuggestionDialog from "./address-suggestion-dialog";
 import ShippingAddressCard from "./shipping-address-card";
 import type { AddressCheckSuggestionsWithUuid } from "./types";
 
-const emptyShippingAddress: Address = {
-  xcAddressId: "",
-  countryName: "",
-  county: "",
-  locality: "",
-  organization: "",
-  phoneNumber: "",
-  region: "",
-  streetAddress: "",
-  postalCode: "",
-  zip4: "",
-  shipTo: "",
-  default: false,
-};
+const ShippingAddress = ({
+  token,
+  countries,
+}: {
+  readonly token: string;
+  readonly countries: Country[];
+}) => {
+  const emptyShippingAddress: Address = {
+    xcAddressId: "",
+    countryName: "",
+    county: "",
+    locality: "",
+    organization: "",
+    phoneNumber: "",
+    region: "",
+    streetAddress: "",
+    postalCode: "",
+    zip4: "",
+    shipTo: "",
+    default: false,
+    country: countries?.[0]?.code,
+  };
 
-const ShippingAddress = ({ token }: { readonly token: string }) => {
   const [openShippingAddressDialog, setOpenShippingAddressDialog] =
     useState(false);
 
@@ -46,10 +53,7 @@ const ShippingAddress = ({ token }: { readonly token: string }) => {
   const shippingAddressQuery = useSuspenseShippingAddressList(token);
   const shippingAddresses = shippingAddressQuery?.data;
 
-  const usersListQuery = useSuspenseUsersList(token);
-
-  const { permission } = usersListQuery.data.manageContact.yourProfile;
-  const isAdmin = permission.toLowerCase() === "admin";
+  const isAdminOrOsr = useSuspenseIsAdminOrOsr(token);
 
   return (
     <>
@@ -70,10 +74,10 @@ const ShippingAddress = ({ token }: { readonly token: string }) => {
             key={address.xcAddressId}
             shippingAddress={address}
             soldTo={billingAddress.soldTo ?? ""}
-            isAdmin={isAdmin}
+            isAdminOrOsr={isAdminOrOsr}
           />
         ))}
-        {isAdmin && (
+        {isAdminOrOsr && (
           <button
             className="flex cursor-pointer flex-row items-center justify-center space-y-3 border-gray-100 bg-transparent p-5 text-center font-bold shadow hover:shadow-lg md:space-y-5 md:p-6"
             onClick={() => setOpenShippingAddressDialog(true)}

@@ -305,7 +305,7 @@ const EditBillingAddressDialog = ({ token }: EditBillingAddressDialogProps) => {
                 name="county"
                 render={({ field }) => (
                   <FormItem className="col-span-3">
-                    <FormLabel>County</FormLabel>
+                    <FormLabel>County (Optional)</FormLabel>
                     <Select
                       onValueChange={field.onChange}
                       defaultValue={field.value}

@@ -1,7 +1,7 @@
 "use client";
 
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
-import { HeartOutline } from "@repo/web-ui/components/icons/heart-outline";
+import { BookmarkOutline } from "@repo/web-ui/components/icons/bookmark-outline";
 import { Button } from "@repo/web-ui/components/ui/button";
 import { useRouter } from "next/navigation";
 import { Suspense } from "react";
@@ -39,8 +39,8 @@ const FavoriteButton = ({ token, productId, display }: FavoriteButtonProps) => {
               router.push("/sign-in");
             }}
           >
-            <span className="text-[13px] leading-5">Add to favorite</span>
-            <HeartOutline className="size-4" />
+            <span className="text-[13px] leading-5">Add to List</span>
+            <BookmarkOutline className="size-4" />
           </Button>
         ))}
 
@@ -61,8 +61,8 @@ const FavoriteButton = ({ token, productId, display }: FavoriteButtonProps) => {
               router.push("/sign-in");
             }}
           >
-            <HeartOutline className="size-4" />
-            <span className="sr-only">Add to favorites</span>
+            <BookmarkOutline className="size-4" />
+            <span className="sr-only">Add to list</span>
           </Button>
         ))}
     </>
