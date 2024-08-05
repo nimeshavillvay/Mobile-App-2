@@ -29,8 +29,6 @@ type ShippingAddressSelectorProps = {
   readonly countries: Country[];
 };
 
-const CHECKOUT = "/checkout";
-
 const ShippingAddressSelector = ({
   token,
   children,
@@ -78,7 +76,7 @@ const ShippingAddressSelector = ({
             toast({
               title: "Changed selected address",
             });
-            if (pathname === CHECKOUT) {
+            if (pathname === "/checkout") {
               router.replace("/cart");
             }
           },
