@@ -7,10 +7,11 @@ import { Input, View, XStack } from "tamagui";
 type SearchInputProps = TextInputProps & {
   readonly onSubmit: () => void;
   readonly onClear: () => void;
+  readonly cancelIcon: boolean;
 };
 
 export const SearchBox = forwardRef<TextInput, SearchInputProps>(
-  ({ onSubmit, onClear, ...delegated }, ref) => {
+  ({ onSubmit, onClear, cancelIcon, ...delegated }, ref) => {
     return (
       <View
         testID="search-box-container"
@@ -48,16 +49,19 @@ export const SearchBox = forwardRef<TextInput, SearchInputProps>(
             width="100%"
             returnKeyType="search"
             onSubmitEditing={onSubmit}
+            autoFocus={true}
             {...delegated}
           />
         </XStack>
-        <Feather
-          testID="clear-icon"
-          name="x"
-          size={20}
-          style={{ marginLeft: "auto" }}
-          onPress={onClear}
-        />
+        {cancelIcon && (
+          <Feather
+            testID="clear-icon"
+            name="x"
+            size={20}
+            style={{ marginLeft: "auto" }}
+            onPress={onClear}
+          />
+        )}
       </View>
     );
   },

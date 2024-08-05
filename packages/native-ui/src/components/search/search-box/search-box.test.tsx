@@ -24,6 +24,7 @@ describe("SearchBox", () => {
         onClear={mockOnClear}
         onSubmit={mockSubmit}
         ref={mockRef}
+        cancelIcon={true}
       />,
     );
     expect(screen.getByTestId("search-box-container")).toBeOnTheScreen();
@@ -40,6 +41,7 @@ describe("SearchBox", () => {
         onClear={mockOnClear}
         onSubmit={mockSubmit}
         ref={mockRef}
+        cancelIcon={true}
       />,
     );
     const container = screen.getByTestId("search-box-container");
@@ -59,6 +61,7 @@ describe("SearchBox", () => {
         onClear={mockOnClear}
         onSubmit={mockSubmit}
         ref={mockRef}
+        cancelIcon={true}
       />,
     );
     const xstack = screen.getByTestId("search-box-xstack");
@@ -76,6 +79,7 @@ describe("SearchBox", () => {
         onClear={mockOnClear}
         onSubmit={mockSubmit}
         ref={mockRef}
+        cancelIcon={true}
       />,
     );
     const searchIcon = screen.getByTestId("search-icon");
@@ -91,6 +95,7 @@ describe("SearchBox", () => {
         onClear={mockOnClear}
         onSubmit={mockSubmit}
         ref={mockRef}
+        cancelIcon={true}
       />,
     );
     const input = screen.getByTestId("search-input");
@@ -105,6 +110,7 @@ describe("SearchBox", () => {
         onClear={mockOnClear}
         onSubmit={mockSubmit}
         ref={mockRef}
+        cancelIcon={true}
       />,
     );
     const clearIcon = screen.getByTestId("clear-icon");
@@ -120,6 +126,7 @@ describe("SearchBox", () => {
         onClear={mockOnClear}
         onSubmit={mockSubmit}
         ref={mockRef}
+        cancelIcon={true}
       />,
     );
     const input = screen.getByTestId("search-input");
@@ -134,6 +141,7 @@ describe("SearchBox", () => {
         onClear={mockOnClear}
         onSubmit={mockSubmit}
         ref={mockRef}
+        cancelIcon={true}
       />,
     );
     const clearIcon = screen.getByTestId("clear-icon");
@@ -149,6 +157,7 @@ describe("SearchBox", () => {
         onClear={mockOnClear}
         onSubmit={mockSubmit}
         ref={ref}
+        cancelIcon={true}
       />,
     );
     expect(ref.current).toBeTruthy();
