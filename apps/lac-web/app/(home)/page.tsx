@@ -114,18 +114,16 @@ const HomePage = async () => {
                 "--text-color": ad.colors.text,
               } as CSSProperties
             }
-            className="relative flex min-h-[11.75rem] w-[19.75rem] md:w-[18.95rem] shrink-0 snap-start flex-col justify-between overflow-hidden rounded-lg bg-[var(--background-color)] xl:relative xl:h-[21.25rem] xl:w-auto xl:snap-align-none"
+            className="relative flex min-h-[11.75rem] w-[19.75rem] shrink-0 snap-start flex-col justify-between overflow-hidden rounded-lg bg-[var(--background-color)] md:w-[18.95rem] xl:relative xl:h-[21.25rem] xl:w-auto xl:snap-align-none"
           >
             <div
               className={cn(
                 "shrink-1 z-[1] min-h-[8.75rem] flex-1 truncate px-4 pt-4 xl:pl-9 xl:pr-0 xl:pt-9",
-                ad.type === "spotlight"
-                  ? "max-w-[16.063rem]"
-                  : "xl:max-w-56",
+                ad.type === "spotlight" ? "max-w-[16.063rem]" : "xl:max-w-56",
               )}
             >
               {ad.type === "sale" && (
-                <div className="font-title text-sm md:text-[1.1rem] tracking-[-0.00438rem] text-[var(--text-color)] xl:text-[1.25rem] xl:leading-7 xl:tracking-[-0.00625rem]">
+                <div className="font-title text-sm tracking-[-0.00438rem] text-[var(--text-color)] md:text-[1.1rem] xl:text-[1.25rem] xl:leading-7 xl:tracking-[-0.00625rem]">
                   Super Sale!
                 </div>
               )}
@@ -145,7 +143,7 @@ const HomePage = async () => {
               </h3>
 
               {ad.type === "spotlight" && (
-                <div className="whitespace-normal text-wrap pr-7 text-xs font-medium text-[var(--text-color)] xl:mt-2 xl:text-sm md:text-[0.6rem]">
+                <div className="whitespace-normal text-wrap pr-7 text-xs font-medium text-[var(--text-color)] md:text-[0.6rem] xl:mt-2 xl:text-sm">
                   {ad.subtitle}
                 </div>
               )}
