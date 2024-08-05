@@ -1,6 +1,6 @@
+import WurthLacLogo from "@/_components/wurth-lac-logo";
 import type { Plant, ShippingMethod } from "@/_lib/types";
 import { formatNumberToPrice } from "@/_lib/utils";
-import { WurthLacFullBlack } from "@repo/web-ui/components/logos/wurth-lac-full-black";
 import Image from "next/image";
 import Link from "next/link";
 import MoreItemDetailsForMobile from "./more-item-details-for-mobile";
@@ -92,7 +92,7 @@ const OrderItemForMobile = ({
                   height={92}
                 />
               ) : (
-                <WurthLacFullBlack
+                <WurthLacLogo
                   width={92}
                   height={92}
                   className="border border-brand-gray-200 px-2"

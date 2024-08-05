@@ -1,6 +1,6 @@
 import { type ComponentProps } from "react";
 
-export const WurthLacFullBlack = (props: ComponentProps<"svg">) => {
+const WurthLacLogo = (props: ComponentProps<"svg">) => {
   return (
     <svg
       width="305.23"
@@ -51,3 +51,5 @@ export const WurthLacFullBlack = (props: ComponentProps<"svg">) => {
     </svg>
   );
 };
+
+export default WurthLacLogo;

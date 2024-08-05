@@ -1,8 +1,8 @@
+import WurthLacLogo from "@/_components/wurth-lac-logo";
 import { getCategoriesList } from "@/_lib/apis/server";
 import { cn } from "@/_lib/utils";
 import { Phone } from "@repo/web-ui/components/icons/phone";
 import { Text } from "@repo/web-ui/components/icons/text";
-import { WurthLacFullBlack } from "@repo/web-ui/components/logos/wurth-lac-full-black";
 import { Button, buttonVariants } from "@repo/web-ui/components/ui/button";
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import Link from "next/link";
@@ -72,7 +72,7 @@ const Header = async () => {
         <MobileNavigationMenu categories={categories} />
 
         <Link href="/" className="flex-shrink-0">
-          <WurthLacFullBlack className="h-[24px] w-[114px] md:h-[28px] md:w-[133px]" />
+          <WurthLacLogo className="h-[24px] w-[114px] md:h-[28px] md:w-[133px]" />
 
           <span className="sr-only">Home</span>
         </Link>
