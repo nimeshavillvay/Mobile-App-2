@@ -59,12 +59,8 @@ export const ScreenHeader = ({
               )}
 
               {!hideBarcodeScanner && (
-                <Link href={path}>
-                  <MaterialCommunityIcons
-                    name="barcode-scan"
-                    size={24}
-                    testID="barcode-scan-icon"
-                  />
+                <Link href={path} testID="barcode-scan-icon">
+                  <MaterialCommunityIcons name="barcode-scan" size={24} />
                 </Link>
               )}
             </View>
