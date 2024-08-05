@@ -157,9 +157,9 @@ const HomePage = async () => {
               width={258}
               height={225}
               className={cn(
-                "absolute bottom-3.5 min-h-[11.75rem] w-[19.75rem] shrink-0 snap-start self-end rounded-lg object-contain xl:absolute xl:bottom-0 xl:h-[21.25rem] xl:w-auto xl:snap-align-none",
+                "absolute bottom-[1.17rem] min-h-[11.75rem] w-[19.75rem] shrink-0 snap-start self-end rounded-lg object-contain xl:absolute xl:bottom-0 xl:h-[21.25rem] xl:w-auto xl:snap-align-none",
                 ad.type === "spotlight"
-                  ? "max-h-[8rem] xl:bottom-[45px] xl:max-h-[19.063rem]"
+                  ? "max-h-[8rem] xl:bottom-[2.2rem] xl:max-h-[19.063rem]"
                   : "xl:bottom-0",
               )}
             />
