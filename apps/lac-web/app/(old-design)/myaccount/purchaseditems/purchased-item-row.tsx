@@ -16,7 +16,7 @@ import { Input } from "@/old/_components/ui/input";
 import { Label } from "@/old/_components/ui/label";
 import { TableCell, TableRow } from "@/old/_components/ui/table";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { WurthFullBlack } from "@repo/web-ui/components/logos/wurth-full-black";
+import { WurthLacFullBlack } from "@repo/web-ui/components/logos/wurth-lac-full-black";
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import dayjs from "dayjs";
 import Image from "next/image";
@@ -145,7 +145,7 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
                 className="border border-brand-gray-200 object-contain"
               />
             ) : (
-              <WurthFullBlack
+              <WurthLacFullBlack
                 width={76}
                 height={76}
                 className="border border-brand-gray-200 px-2"

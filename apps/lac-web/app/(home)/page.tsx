@@ -1,5 +1,4 @@
 import { getBanners } from "@/_lib/apis/server";
-import { cn } from "@/_lib/utils";
 import { ArrowRight } from "@repo/web-ui/components/icons/arrow-right";
 import Image, { type StaticImageData } from "next/image";
 import { type CSSProperties, type ComponentProps } from "react";
@@ -23,28 +22,16 @@ type Colors = {
   accent: string;
   bgLogo: string;
 };
-const ADS: (
-  | {
-      id: number;
-      type: "sale";
-      title: string;
-      colors: Colors;
-      image: StaticImageData;
-      logo: StaticImageData;
-    }
-  | {
-      id: number;
-      type: "spotlight";
-      title: string;
-      subtitle: string;
-      colors: Colors;
-      image: StaticImageData;
-      logo: StaticImageData;
-    }
-)[] = [
+const ADS: {
+  id: number;
+  title: string;
+  subtitle: string;
+  colors: Colors;
+  image: StaticImageData;
+  logo: StaticImageData;
+}[] = [
   {
     id: 1,
-    type: "spotlight",
     title: "LeMans Il Promotion!",
     subtitle:
       "Maximize your blind corner cabinet storage with the accessibility of LeMans!",
@@ -59,7 +46,6 @@ const ADS: (
   },
   {
     id: 2,
-    type: "spotlight",
     title: "40 Years of Cordless Innovation",
     subtitle:
       "Makita leads the industry with best-in-class quality cordless products.",
@@ -74,7 +60,6 @@ const ADS: (
   },
   {
     id: 3,
-    type: "spotlight",
     title: "The #1 Cabinet Door Drying Rack",
     subtitle:
       "Discover the ultimate solution for efficiently drying your cabinet doors with our premium selection of cabinet door drying racks.",
@@ -114,24 +99,17 @@ const HomePage = async () => {
                 "--text-color": ad.colors.text,
               } as CSSProperties
             }
-            className="relative flex min-h-[11.75rem] w-[19.75rem] shrink-0 snap-start flex-col justify-between overflow-hidden rounded-lg bg-[var(--background-color)] md:w-[18.95rem] lg:h-[13.4rem] lg:w-[24rem] xl:h-[15rem] xl:w-[26.1rem] 2xl:w-[29.6rem] 3xl:relative 3xl:h-[21.25rem] 3xl:w-auto 3xl:snap-align-none"
+            className="relative flex min-h-[11.75rem] w-[19.75rem] shrink-0 snap-start flex-col justify-between overflow-hidden rounded-lg bg-[var(--background-color)] md:w-[22.95rem] lg:h-[13.4rem] lg:w-[24rem] xl:h-[14rem] xl:w-[26.1rem] 2xl:w-[29.6rem] 3xl:relative 3xl:h-[21.25rem] 3xl:w-auto 3xl:snap-align-none"
           >
             <div
-              className={cn(
-                "shrink-1 z-[1] min-h-[8.75rem] flex-1 truncate px-4 pt-4 3xl:pl-9 3xl:pr-0 3xl:pt-9",
-                ad.type === "spotlight" ? "max-w-[16.063rem]" : "3xl:max-w-56",
-              )}
+              className={
+                "shrink-1 z-[1] min-h-[8.75rem] max-w-[16.063rem] flex-1 truncate px-4 pt-4 3xl:pl-9 3xl:pr-0 3xl:pt-9"
+              }
             >
-              {ad.type === "sale" && (
-                <div className="font-title text-sm tracking-[-0.00438rem] text-[var(--text-color)] md:text-[1.1rem] 3xl:text-[1.25rem] 3xl:leading-7 3xl:tracking-[-0.00625rem]">
-                  Super Sale!
-                </div>
-              )}
-
               <div className="absolute left-0 top-0 w-full bg-white bg-opacity-50 p-2 pl-4 3xl:pl-9">
                 <Image
                   src={ad.logo}
-                  alt="A picture of the sale"
+                  alt="A picture of the brand logo"
                   width={258}
                   height={50}
                   className="h-7 w-auto 3xl:h-12"
@@ -142,11 +120,9 @@ const HomePage = async () => {
                 <Balancer>{ad.title}</Balancer>
               </h3>
 
-              {ad.type === "spotlight" && (
-                <div className="mt-2 whitespace-normal text-wrap pr-7 text-[0.7rem] font-medium text-[var(--text-color)] 3xl:mt-2 3xl:text-sm">
-                  {ad.subtitle}
-                </div>
-              )}
+              <div className="mt-2 whitespace-normal text-wrap pr-7 text-[0.7rem] font-medium text-[var(--text-color)] 3xl:mt-2 3xl:text-sm">
+                {ad.subtitle}
+              </div>
             </div>
 
             <Image
@@ -154,12 +130,9 @@ const HomePage = async () => {
               alt="A picture of the sale"
               width={258}
               height={225}
-              className={cn(
-                "33xl:h-[21.25rem] absolute bottom-[1rem] min-h-[13.75rem] w-[19.75rem] shrink-0 snap-start self-end rounded-lg object-contain lg:h-[19.45rem] 3xl:absolute 3xl:bottom-0 3xl:w-auto 3xl:snap-align-none",
-                ad.type === "spotlight"
-                  ? "max-h-[8rem] 3xl:bottom-[2.2rem] 3xl:max-h-[19.063rem]"
-                  : "3xl:bottom-0",
-              )}
+              className={
+                "absolute bottom-[1rem] max-h-[8rem] min-h-[13.75rem] w-[19.75rem] shrink-0 snap-start self-end rounded-lg object-contain lg:h-[19.45rem] 3xl:absolute 3xl:bottom-[2.2rem] 3xl:h-[21.25rem] 3xl:max-h-[19.063rem] 3xl:w-auto 3xl:snap-align-none"
+              }
             />
 
             <div

@@ -1,5 +1,5 @@
 import { Alert } from "@repo/web-ui/components/icons/alert";
-import { WurthFullBlack } from "@repo/web-ui/components/logos/wurth-full-black";
+import { WurthLacFullBlack } from "@repo/web-ui/components/logos/wurth-lac-full-black";
 import Image from "next/image";
 
 const ProductSearchResult = ({
@@ -56,7 +56,7 @@ const ProductSearchResult = ({
             height={40}
           />
         ) : (
-          <WurthFullBlack className="max-w-10" />
+          <WurthLacFullBlack className="max-w-10" />
         )}
 
         <div>

@@ -3,7 +3,7 @@
 import { cn } from "@/_lib/utils";
 import { Alert } from "@repo/web-ui/components/icons/alert";
 import { CheckCircle } from "@repo/web-ui/components/icons/check-circle";
-import { WurthFullBlack } from "@repo/web-ui/components/logos/wurth-full-black";
+import { WurthLacFullBlack } from "@repo/web-ui/components/logos/wurth-lac-full-black";
 import { Input } from "@repo/web-ui/components/ui/input";
 import { useCombobox } from "downshift";
 import Image from "next/image";
@@ -125,7 +125,7 @@ const SearchResultProductData = ({ item }: { readonly item: Product }) => {
           className="min-w-16"
         />
       ) : (
-        <WurthFullBlack className="max-w-16" />
+        <WurthLacFullBlack className="max-w-16" />
       )}
 
       <div>

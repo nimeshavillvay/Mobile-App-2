@@ -295,7 +295,7 @@ export const Showcase: Story = {
           <Switch />
         </IconContainer>
 
-        <IconContainer name="Text">
+        <IconContainer name="Switch">
           <Text />
         </IconContainer>
 

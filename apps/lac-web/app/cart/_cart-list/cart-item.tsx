@@ -29,7 +29,7 @@ import { Alert } from "@repo/web-ui/components/icons/alert";
 import { Minus } from "@repo/web-ui/components/icons/minus";
 import { Plus } from "@repo/web-ui/components/icons/plus";
 import { Trash } from "@repo/web-ui/components/icons/trash";
-import { WurthFullBlack } from "@repo/web-ui/components/logos/wurth-full-black";
+import { WurthLacFullBlack } from "@repo/web-ui/components/logos/wurth-lac-full-black";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -729,7 +729,7 @@ const CartItem = ({
                 className="size-[4.5rem] rounded border border-wurth-gray-250 object-contain shadow-sm md:size-[7.5rem]"
               />
             ) : (
-              <WurthFullBlack
+              <WurthLacFullBlack
                 width={120}
                 height={120}
                 className="border border-brand-gray-200 px-2"

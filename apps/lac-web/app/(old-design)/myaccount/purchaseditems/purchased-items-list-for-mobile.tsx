@@ -1,5 +1,5 @@
 import { Button } from "@/(old-design)/_components/ui/button";
-import { WurthFullBlack } from "@repo/web-ui/components/logos/wurth-full-black";
+import { WurthLacFullBlack } from "@repo/web-ui/components/logos/wurth-lac-full-black";
 import dayjs from "dayjs";
 import Image from "next/image";
 import Link from "next/link";
@@ -71,7 +71,7 @@ const PurchasedItemRowForMobile = ({
             className="size-[92px] border border-brand-gray-200 object-contain"
           />
         ) : (
-          <WurthFullBlack
+          <WurthLacFullBlack
             width={92}
             height={92}
             className="border border-brand-gray-200 px-2"

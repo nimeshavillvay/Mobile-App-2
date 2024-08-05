@@ -8,7 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/old/_components/ui/table";
-import { WurthFullBlack } from "@repo/web-ui/components/logos/wurth-full-black";
+import { WurthLacFullBlack } from "@repo/web-ui/components/logos/wurth-lac-full-black";
 import dayjs from "dayjs";
 import Image from "next/image";
 import Link from "next/link";
@@ -117,7 +117,7 @@ const OrderItem = ({
                   height={76}
                 />
               ) : (
-                <WurthFullBlack
+                <WurthLacFullBlack
                   width={76}
                   height={76}
                   className="border border-brand-gray-200 px-2"
