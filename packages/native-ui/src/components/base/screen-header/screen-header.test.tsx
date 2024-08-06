@@ -18,7 +18,6 @@ jest.mock(
 describe("ScreenHeader", () => {
   const mockBack = jest.fn();
   const mockUseRouter = expoRouter.useRouter as jest.Mock;
-  const mockUsePathname = expoRouter.usePathname as jest.Mock;
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -26,7 +25,6 @@ describe("ScreenHeader", () => {
       canGoBack: () => true,
       back: mockBack,
     });
-    mockUsePathname.mockReturnValue("/current-path");
   });
 
   it("renders the title correctly", () => {
@@ -54,7 +52,7 @@ describe("ScreenHeader", () => {
   });
 
   it('renders search and barcode scan icons when type is not "search"', () => {
-    render(<ScreenHeader title="Test" />);
+    render(<ScreenHeader title="Test" barcodeScannerPath="/test-path" />);
     expect(screen.getByTestId("search-icon")).toBeOnTheScreen();
     expect(screen.getByTestId("barcode-scan-icon")).toBeOnTheScreen();
   });
@@ -72,9 +70,9 @@ describe("ScreenHeader", () => {
   });
 
   it("sets correct href for barcode scan icon", () => {
-    render(<ScreenHeader title="Test" />);
+    render(<ScreenHeader title="Test" barcodeScannerPath="/test-path" />);
     expect(screen.getByTestId("barcode-scan-icon").parent.props.href).toBe(
-      "/current-path",
+      "/test-path",
     );
   });
 

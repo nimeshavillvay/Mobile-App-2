@@ -50,9 +50,10 @@ const config: ExpoConfig = {
   web: {
     favicon: "./assets/favicon.png",
   },
+  owner: "wurth-louis",
   extra: {
     eas: {
-      projectId: "2ace7afa-d22f-4849-99d6-1a92c08156c5",
+      projectId: "87690a65-51ba-4b7d-878a-8a68f5d7c285",
     },
   },
 };
