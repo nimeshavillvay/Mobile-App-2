@@ -7,3 +7,7 @@ dist
 .prettier
 .tamagui
 tsconfig.tsbuildinfo
+
+# Mobile
+*.apk
+*.ipa
