@@ -3,8 +3,8 @@
 import FullAddress from "@/_components/full-address";
 import useSuspenseShippingAddressList from "@/_hooks/address/use-suspense-shipping-address-list.hook";
 import useUpdateShippingAddressMutation from "@/_hooks/address/use-update-shipping-address-mutation.hook";
-import useSuspenseUsersList from "@/_hooks/user/use-suspense-users-list.hook";
-import type { Token } from "@/_lib/types";
+import useSuspenseIsAdminOrOsr from "@/_hooks/user/use-suspense-is-admin-or-osr.hook";
+import type { Country, Token } from "@/_lib/types";
 import { cn } from "@/_lib/utils";
 import { CheckCircle } from "@repo/web-ui/components/icons/check-circle";
 import { CheckCircleFilled } from "@repo/web-ui/components/icons/check-circle-filled";
@@ -18,20 +18,25 @@ import {
   DialogTrigger,
 } from "@repo/web-ui/components/ui/dialog";
 import { useToast } from "@repo/web-ui/components/ui/toast";
+import { useQueryClient } from "@tanstack/react-query";
 import { useState, type ReactNode } from "react";
 import AddShippingAddressDialog from "./add-shipping-address-dialog";
 
 type ShippingAddressSelectorProps = {
   readonly token: Token;
   readonly children: ReactNode;
+  readonly countries: Country[];
 };
 
 const ShippingAddressSelector = ({
   token,
   children,
+  countries,
 }: ShippingAddressSelectorProps) => {
   const shippingAddressListQuery = useSuspenseShippingAddressList(token);
   const { toast } = useToast();
+
+  const queryClient = useQueryClient();
 
   const defaultAddress = shippingAddressListQuery.data.find(
     (address) => address.default,
@@ -59,6 +64,9 @@ const ShippingAddressSelector = ({
         },
         {
           onSuccess: () => {
+            queryClient.invalidateQueries({
+              queryKey: ["cart"],
+            });
             shippingAddressListQuery.refetch();
             setOpen(false);
             toast({
@@ -70,10 +78,7 @@ const ShippingAddressSelector = ({
     }
   };
 
-  const usersListQuery = useSuspenseUsersList(token);
-
-  const { permission } = usersListQuery.data.manageContact.yourProfile;
-  const isAdmin = permission.toLowerCase() === "admin";
+  const isAdminOrOsr = useSuspenseIsAdminOrOsr(token);
 
   return (
     <>
@@ -122,7 +127,7 @@ const ShippingAddressSelector = ({
           </ul>
 
           <DialogFooter>
-            {isAdmin && (
+            {isAdminOrOsr && (
               <Button
                 variant="outline"
                 className="font-bold"
@@ -153,6 +158,7 @@ const ShippingAddressSelector = ({
           setOpen(true);
           setOpenNewAddressDialog(false);
         }}
+        countries={countries}
       />
     </>
   );

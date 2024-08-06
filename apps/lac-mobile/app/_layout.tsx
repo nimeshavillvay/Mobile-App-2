@@ -106,7 +106,14 @@ const RootLayout = () => {
             <Stack.Screen
               name="search"
               options={{
-                presentation: "modal",
+                presentation: "fullScreenModal",
+                headerShown: false,
+              }}
+            />
+
+            <Stack.Screen
+              name="barcode-scanner"
+              options={{
                 headerShown: false,
               }}
             />

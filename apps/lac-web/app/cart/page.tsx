@@ -1,5 +1,5 @@
 import OrderSummary from "@/_components/order-summary";
-import { getPlants, getShippingMethods } from "@/_lib/apis/server";
+import { getPlants } from "@/_lib/apis/server";
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import type { Metadata } from "next";
@@ -30,10 +30,7 @@ const CartPage = async () => {
   const cookiesStore = cookies();
   const sessionToken = cookiesStore.get(SESSION_TOKEN_COOKIE);
 
-  const [shippingMethods, plants] = await Promise.all([
-    getShippingMethods(),
-    getPlants(),
-  ]);
+  const plants = await getPlants();
 
   if (!sessionToken?.value) {
     return null;
@@ -51,7 +48,7 @@ const CartPage = async () => {
         <CartHeading token={sessionToken.value} />
       </Suspense>
 
-      <div className="flex flex-col md:container md:flex-row md:gap-12">
+      <div className="ml-2 flex flex-col md:container xl:flex-row xl:gap-12">
         <div className="flex-1">
           <Suspense
             fallback={
@@ -75,7 +72,7 @@ const CartPage = async () => {
           </Suspense>
         </div>
 
-        <aside className="flex shrink-0 flex-col gap-5 px-6 py-4 md:w-[19.75rem] md:px-0 md:py-0">
+        <aside className="flex shrink-0 flex-col gap-5 px-6 py-4 xl:w-[19.75rem] xl:px-0 xl:py-0">
           <Suspense
             fallback={<Skeleton className="h-[182px] rounded-lg shadow-md" />}
           >
@@ -85,10 +82,7 @@ const CartPage = async () => {
           <Suspense
             fallback={<Skeleton className="h-[158px] rounded-lg shadow-md" />}
           >
-            <ShippingMethod
-              token={sessionToken.value}
-              options={shippingMethods}
-            />
+            <ShippingMethod token={sessionToken.value} />
           </Suspense>
 
           <Suspense

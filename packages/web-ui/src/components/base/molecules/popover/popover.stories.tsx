@@ -5,7 +5,7 @@ import { Label } from "~/components/base/atoms/label";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 
 const meta: Meta<typeof Popover> = {
-  title: "Base/Molecule/Popover",
+  title: "Base/Molecules/Popover",
   component: Popover,
   parameters: {
     layout: "centered",

@@ -219,16 +219,18 @@ export type Plant = {
   name: string;
 };
 
+export type FilterValues = {
+  id: number;
+  value: string;
+  icon: string | null;
+  tooltip: string | null;
+  active: boolean;
+}[];
+
 export type Filters = {
   id: string;
   filter: string;
-  values: {
-    id: number;
-    value: string;
-    icon: string | null;
-    tooltip: string | null;
-    active: boolean;
-  }[];
+  values: FilterValues;
 };
 
 export type Address = {
@@ -255,6 +257,7 @@ export type Address = {
     route: string | null;
     routeName: string;
   };
+  country?: string;
 };
 
 export type AddressCheckSuggestions = {
@@ -467,4 +470,9 @@ export type UpdateUser = {
   password?: string;
   permission?: string;
   status?: string;
+};
+
+export type Country = {
+  code: string;
+  country: string;
 };

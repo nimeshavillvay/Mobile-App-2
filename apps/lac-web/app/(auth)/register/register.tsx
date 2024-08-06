@@ -1,7 +1,7 @@
 "use client";
 
 import { RecaptchaRefProvider } from "@/_context/recaptcha-ref";
-import type { PasswordPolicies } from "@/_lib/types";
+import type { Country, PasswordPolicies } from "@/_lib/types";
 import { cn } from "@/_lib/utils";
 import { CheckCircle } from "@repo/web-ui/components/icons/check-circle";
 import { CheckCircleFilled } from "@repo/web-ui/components/icons/check-circle-filled";
@@ -19,9 +19,14 @@ const IS_CURRENT_USER = ["Yes", "No"] as const;
 type RegisterProps = {
   readonly passwordPolicies: PasswordPolicies;
   readonly industries: Industry[];
+  readonly countries: Country[];
 };
 
-const Register = ({ passwordPolicies, industries }: RegisterProps) => {
+const Register = ({
+  passwordPolicies,
+  industries,
+  countries,
+}: RegisterProps) => {
   const [isCurrentUser, setIsCurrentUser] = useState<string>();
 
   const searchParams = useSearchParams();
@@ -42,7 +47,7 @@ const Register = ({ passwordPolicies, industries }: RegisterProps) => {
               href="/sign-in"
               className={cn(
                 buttonVariants({ variant: "outline" }),
-                "font-bold text-black",
+                "font-bold text-black shadow-md",
               )}
             >
               Change email
@@ -89,6 +94,7 @@ const Register = ({ passwordPolicies, industries }: RegisterProps) => {
             <NewUserFlow
               passwordPolicies={passwordPolicies}
               industries={industries}
+              countries={countries}
             />
           )}
         </div>

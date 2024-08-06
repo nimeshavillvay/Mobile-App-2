@@ -51,7 +51,7 @@ const FlashSale = () => {
   return (
     <section className="my-14 space-y-6 md:my-20 md:space-y-10">
       <header className="text-center">
-        <SubHeading>Flash Sale</SubHeading>
+        <SubHeading>Today&apos;s Specials</SubHeading>
 
         <p className="mt-2 text-base text-wurth-gray-800 md:mt-6 md:text-lg">
           Lorem ipsum dolor sit amet consectetur. Amet vitae tempus laoreet et

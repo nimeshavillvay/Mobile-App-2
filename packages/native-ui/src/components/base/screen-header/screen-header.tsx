@@ -1,7 +1,7 @@
 import AntDesign from "@expo/vector-icons/AntDesign";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import { Link, usePathname, useRouter } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { Button, Text, View } from "tamagui";
 
 export const ScreenHeader = ({
@@ -9,16 +9,15 @@ export const ScreenHeader = ({
   type,
   hideBackButton = false,
   hideSearchButton = false,
-  hideBarcodeScanner = false,
+  barcodeScannerPath,
 }: {
   readonly title: string;
   readonly type?: string;
   readonly hideBackButton?: boolean;
   readonly hideSearchButton?: boolean;
-  readonly hideBarcodeScanner?: boolean;
+  readonly barcodeScannerPath?: string;
 }) => {
   const router = useRouter();
-  const path = usePathname();
 
   return (
     <View
@@ -60,8 +59,8 @@ export const ScreenHeader = ({
                 </Link>
               )}
 
-              {!hideBarcodeScanner && (
-                <Link href={path}>
+              {!!barcodeScannerPath && (
+                <Link href={barcodeScannerPath}>
                   <MaterialCommunityIcons
                     name="barcode-scan"
                     size={24}

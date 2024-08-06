@@ -82,7 +82,7 @@ const BulkUpload = ({
   };
 
   return (
-    <div className="my-3 min-w-[820px] rounded bg-wurth-gray-50 p-4 text-sm">
+    <div className="my-3 w-full rounded bg-wurth-gray-50 p-4 text-sm">
       <div className="flex items-center justify-between">
         <div className="font-medium">
           Add items by uploading an Excel or a CSV file

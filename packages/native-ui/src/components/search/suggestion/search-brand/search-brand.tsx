@@ -1,10 +1,20 @@
 import { Image } from "expo-image";
 import { Link } from "expo-router";
-import type { ComponentProps } from "react";
+import { MotiView } from "moti";
+import { Skeleton } from "moti/skeleton";
+import { type ComponentProps } from "react";
 import { Text, XStack } from "tamagui";
 
+export const SearchBrandSkeleton = () => {
+  return (
+    <MotiView>
+      <Skeleton height={40} width="20%" colorMode="light" />
+    </MotiView>
+  );
+};
+
 type SearchBrandProps = {
-  readonly imageUrl: string;
+  readonly imageUrl?: string;
   readonly brandName: string;
   readonly link: string;
 } & ComponentProps<typeof XStack>;
