@@ -1,7 +1,8 @@
+import WurthLacLogo from "@/_components/wurth-lac-logo";
 import { getCategoriesList } from "@/_lib/apis/server";
 import { cn } from "@/_lib/utils";
 import { Phone } from "@repo/web-ui/components/icons/phone";
-import { WurthFullBlack } from "@repo/web-ui/components/logos/wurth-full-black";
+import { Text } from "@repo/web-ui/components/icons/text";
 import { Button, buttonVariants } from "@repo/web-ui/components/ui/button";
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import Link from "next/link";
@@ -38,20 +39,31 @@ const Header = async () => {
               className="group h-fit px-0 py-0 font-medium"
               asChild
             >
-              <a href="tel:800-444-0043">
+              <a href="tel:+18004224389">
                 <Phone
                   width={16}
                   height={16}
                   className="group-hover:stroke-red-800"
                 />
 
-                <span>(800) 444-0043</span>
+                <span>(800) 422-4389</span>
               </a>
             </Button>
+            <Button
+              variant="link"
+              className="group h-fit px-0 py-0 font-medium"
+              asChild
+            >
+              <a href="sms://+18004224389">
+                <Text
+                  width={16}
+                  height={16}
+                  className="group-hover:stroke-red-800"
+                />
 
-            <div className="font-normal text-wurth-gray-800">
-              Wurth Louis and Company
-            </div>
+                <span>(800) 422-4389</span>
+              </a>
+            </Button>
           </div>
         </div>
       </div>
@@ -60,7 +72,7 @@ const Header = async () => {
         <MobileNavigationMenu categories={categories} />
 
         <Link href="/" className="flex-shrink-0">
-          <WurthFullBlack className="h-[24px] w-[114px] md:h-[28px] md:w-[133px]" />
+          <WurthLacLogo className="h-[24px] w-[114px] md:h-[28px] md:w-[133px]" />
 
           <span className="sr-only">Home</span>
         </Link>

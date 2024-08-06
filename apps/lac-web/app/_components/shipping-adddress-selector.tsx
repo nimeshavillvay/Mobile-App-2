@@ -19,6 +19,7 @@ import {
 } from "@repo/web-ui/components/ui/dialog";
 import { useToast } from "@repo/web-ui/components/ui/toast";
 import { useQueryClient } from "@tanstack/react-query";
+import { usePathname, useRouter } from "next/navigation";
 import { useState, type ReactNode } from "react";
 import AddShippingAddressDialog from "./add-shipping-address-dialog";
 
@@ -47,6 +48,9 @@ const ShippingAddressSelector = ({
     defaultAddress?.xcAddressId ?? "",
   );
 
+  const pathname = usePathname();
+  const router = useRouter();
+
   const [openNewAddressDialog, setOpenNewAddressDialog] = useState(false);
 
   const updateShippingAddressMutation = useUpdateShippingAddressMutation();
@@ -72,6 +76,9 @@ const ShippingAddressSelector = ({
             toast({
               title: "Changed selected address",
             });
+            if (pathname === "/checkout") {
+              router.replace("/cart");
+            }
           },
         },
       );
