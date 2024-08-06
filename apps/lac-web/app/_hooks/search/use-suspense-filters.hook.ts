@@ -58,20 +58,7 @@ const useSuspenseFilters = (
         };
       } = {};
 
-      if (args.type === "Categories") {
-        for (const [key, values] of Object.entries(args.values)) {
-          if (values) {
-            for (const value of values) {
-              rfData[key] = {
-                ...rfData[key],
-                [value]: "Y",
-              };
-            }
-          }
-        }
-      }
-
-      if (args.type === "Laminates") {
+      if (args.type === "Categories" || args.type === "Laminates") {
         for (const [key, values] of Object.entries(args.values)) {
           if (values) {
             for (const value of values) {

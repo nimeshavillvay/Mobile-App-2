@@ -17,16 +17,10 @@ const ColorPicker = ({ token }: { readonly token: string }) => {
     <div>
       <p>Select colors</p>
       <ul className="my-2 flex flex-row flex-wrap gap-4">
-        <RadioGroup
-          // onValueChange={}
-          // defaultValue={field.value}
-          className="item-center flex flex-col gap-2 md:flex-row"
-          // disabled={registerNewUserMutation.isPending}
-        >
+        <RadioGroup className="item-center flex flex-col gap-2 md:flex-row">
           {pickerColors[0]?.values.map((color) => (
             <li key={color.id}>
               <RadioGroupItem value={color.id.toString()} />
-              {/* <input type="checkbox" id={color.id} name={color.id} /> */}
               <Label htmlFor={color.id.toString()} className="sr-only">
                 {color.tooltip}
               </Label>
