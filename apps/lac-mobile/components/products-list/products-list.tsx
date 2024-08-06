@@ -53,6 +53,7 @@ const ProductsList = ({
   return (
     <FlashList
       data={data}
+      extraData={priceCheckQuery.data}
       horizontal={false}
       numColumns={2}
       renderItem={({ item }) => {
