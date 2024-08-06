@@ -7,10 +7,12 @@ import useSuspenseInfiniteSearchResults from "@repo/shared-logic/apis/hooks/elas
 import { FlashList } from "@shopify/flash-list";
 import { useLocalSearchParams } from "expo-router";
 import { Stack } from "expo-router/stack";
+import { MotiView } from "moti";
+import { Skeleton } from "moti/skeleton";
 // eslint-disable-next-line no-restricted-imports
 import { Suspense, useDeferredValue, useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
-import { H1 } from "tamagui";
+import { H1, Text, XStack } from "tamagui";
 
 const FALLBACK_ARRAY = Array.from(Array(24).keys());
 
@@ -32,13 +34,26 @@ const SearchResultPage = () => {
 
         <Suspense
           fallback={
-            <FlashList
-              data={FALLBACK_ARRAY}
-              horizontal={false}
-              numColumns={2}
-              renderItem={() => <ProductCardSkeleton />}
-              estimatedItemSize={300}
-            />
+            <>
+              <XStack
+                height={58}
+                paddingHorizontal={16}
+                paddingVertical={7}
+                justifyContent="flex-end"
+              >
+                <MotiView>
+                  <Skeleton height={14} width={350} colorMode="light" />
+                </MotiView>
+              </XStack>
+
+              <FlashList
+                data={FALLBACK_ARRAY}
+                horizontal={false}
+                numColumns={2}
+                renderItem={() => <ProductCardSkeleton />}
+                estimatedItemSize={300}
+              />
+            </>
           }
         >
           <SearchResultsList query={searchQuery} />
@@ -87,17 +102,32 @@ const SearchResultsList = ({ query }: { readonly query: string }) => {
   const products = data.pages.flatMap((page) => page.results);
   const deferredProducts = useDeferredValue(products);
 
+  const numberOfProducts = data.pages[0]?.summary.total ?? 0;
+
   return (
-    <ProductsList
-      data={deferredProducts.map((product) => ({
-        productId: product.id,
-        title: product.productTitle,
-        sku: product.groupId,
-        image: product.itemImage,
-        uom: product.uom ?? "",
-      }))}
-      onEndReached={fetchNextPage}
-      onEndReachedThreshold={0.5}
-    />
+    <>
+      <XStack
+        height={58}
+        paddingHorizontal={16}
+        paddingVertical={7}
+        justifyContent="flex-end"
+      >
+        <Text color="#7E7E7E" fontSize={14} testID="total-search-results">
+          {numberOfProducts} {numberOfProducts === 1 ? "product" : "products"}
+        </Text>
+      </XStack>
+
+      <ProductsList
+        data={deferredProducts.map((product) => ({
+          productId: product.id,
+          title: product.productTitle,
+          sku: product.groupId,
+          image: product.itemImage,
+          uom: product.uom ?? "",
+        }))}
+        onEndReached={fetchNextPage}
+        onEndReachedThreshold={0.5}
+      />
+    </>
   );
 };

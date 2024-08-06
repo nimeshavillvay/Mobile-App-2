@@ -31,4 +31,23 @@ describe("Search Results", () => {
     });
     expect(screen.getByText('Search Results for "test"')).toBeOnTheScreen();
   });
+
+  it("shows the total number of search results", async () => {
+    renderRouter(
+      { "search-results": SearchResultsPage },
+      { initialUrl: "/search-results?query=test" },
+    );
+
+    expect(screen).toHavePathname("/search-results");
+    expect(screen).toHaveSearchParams({
+      query: "test",
+    });
+
+    await screen.findByTestId("total-search-results");
+
+    // Check the count
+    expect(screen.getByTestId("total-search-results")).toHaveTextContent(
+      "140 products",
+    );
+  });
 });
