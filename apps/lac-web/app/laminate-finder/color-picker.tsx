@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Label } from "@repo/web-ui/components/ui/label";
@@ -8,9 +7,11 @@ import {
 } from "@repo/web-ui/components/ui/radio-group";
 import useSuspenseLaminateFilters from "./use-suspense-laminate-filters.hook";
 
-const ColorPicker = ({token}:{readonly token: string;}) => {
-  const laminateFiltersQuery = useSuspenseLaminateFilters({token});
-  const pickerColors = laminateFiltersQuery.data.filter(filter => filter.is_colorpicker)
+const ColorPicker = ({ token }: { readonly token: string }) => {
+  const laminateFiltersQuery = useSuspenseLaminateFilters({ token });
+  const pickerColors = laminateFiltersQuery.data.filter(
+    (filter) => filter.is_colorpicker,
+  );
 
   return (
     <div>

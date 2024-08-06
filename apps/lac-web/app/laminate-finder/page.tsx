@@ -1,3 +1,4 @@
+import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -6,10 +7,9 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@repo/web-ui/components/ui/breadcrumb";
+import { cookies } from "next/headers";
 import ColorPicker from "./color-picker";
 import LaminatesList from "./laminates-list";
-import { cookies } from "next/headers";
-import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 
 const Page = () => {
   const cookieStore = cookies();

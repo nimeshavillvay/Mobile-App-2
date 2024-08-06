@@ -1,9 +1,9 @@
 "use client";
 
 import { type ComponentProps } from "react";
+import { LaminatesGridList } from "./laminates-grid-list";
 import useSuspenseLaminateFilters from "./use-suspense-laminate-filters.hook";
 import useSuspenseSearchLaminateList from "./use-suspense-search-laminate-list.hook";
-import { LaminatesGridList } from "./laminates-grid-list";
 
 type LaminateListGridProps = {
   readonly token: string;

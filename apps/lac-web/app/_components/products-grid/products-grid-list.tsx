@@ -51,7 +51,7 @@ export const ProductsGridList = ({
             />
           }
         >
-           <ProductCard
+          <ProductCard
             orientation={orientation}
             product={prop}
             token={token}
