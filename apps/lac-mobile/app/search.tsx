@@ -10,9 +10,15 @@ import { SearchBrandSkeleton } from "@repo/native-ui/components/search/suggestio
 import { SearchCategorySkeleton } from "@repo/native-ui/components/search/suggestion/search-category";
 import { SearchProductSkeleton } from "@repo/native-ui/components/search/suggestion/search-product";
 import useSuspenseMultiSearch from "@repo/shared-logic/apis/hooks/elasticsearch/use-suspense-multi-search.hook";
+import {
+  isBrandResults,
+  isCategoryResults,
+} from "@repo/shared-logic/lib/utils";
 import type {
-  brandResultSchema,
-  categoryResultSchema,
+  brandDataSchema,
+  BrandResultList,
+  categoryDataSchema,
+  CategoryResultList,
   productDataSchema,
 } from "@repo/shared-logic/zod-schema/multisearch";
 import { FlashList } from "@shopify/flash-list";
@@ -83,6 +89,30 @@ const Search = () => {
   );
 };
 
+const CategorySuggestions = ({
+  categoryData,
+}: {
+  readonly categoryData: z.infer<typeof categoryDataSchema>;
+}) => {
+  const categories = categoryData.results.splice(0, 5);
+
+  if (isCategoryResults(categories)) {
+    return <CategorySearch categories={categories} />;
+  }
+};
+
+const BrandSuggestions = ({
+  brandData,
+}: {
+  readonly brandData: z.infer<typeof brandDataSchema>;
+}) => {
+  const brands = brandData.results.splice(0, 5);
+
+  if (isBrandResults(brands)) {
+    return <BrandSearch brands={brands} />;
+  }
+};
+
 const SearchSuggestionsList = ({ query }: { readonly query: string }) => {
   const { data } = useSuspenseMultiSearch(
     {
@@ -105,13 +135,7 @@ const SearchSuggestionsList = ({ query }: { readonly query: string }) => {
             Categories for "{query}"
           </Text>
 
-          <CategorySearch
-            categories={
-              data.categories.results.slice(0, 5) as z.infer<
-                typeof categoryResultSchema
-              >[]
-            }
-          />
+          <CategorySuggestions categoryData={data.categories} />
         </YStack>
       )}
 
@@ -121,13 +145,7 @@ const SearchSuggestionsList = ({ query }: { readonly query: string }) => {
             Brands for "{query}"
           </Text>
 
-          <BrandSearch
-            brands={
-              data.brands.results.slice(0, 10) as z.infer<
-                typeof brandResultSchema
-              >[]
-            }
-          />
+          <BrandSuggestions brandData={data.brands} />
         </YStack>
       )}
     </YStack>
@@ -187,7 +205,7 @@ const ProductSearch = ({
 const CategorySearch = ({
   categories,
 }: {
-  readonly categories: z.infer<typeof categoryResultSchema>[];
+  readonly categories: CategoryResultList;
 }) => {
   return (
     <CategorySearchList
@@ -199,11 +217,7 @@ const CategorySearch = ({
   );
 };
 
-const BrandSearch = ({
-  brands,
-}: {
-  readonly brands: z.infer<typeof brandResultSchema>[];
-}) => {
+const BrandSearch = ({ brands }: { readonly brands: BrandResultList }) => {
   return (
     <BrandSearchList
       data={brands.map((brand) => ({

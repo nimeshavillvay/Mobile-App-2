@@ -1,5 +1,9 @@
 import { z } from "zod";
 
+export type CategoryResultList = z.infer<typeof categoryResultSchema>[];
+
+export type BrandResultList = z.infer<typeof brandResultSchema>[];
+
 const productResultSchema = z.object({
   brandName: z.string().optional(),
   id: z.number(),
