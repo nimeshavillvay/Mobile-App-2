@@ -12,7 +12,13 @@ const ProductsListFilters = ({ token }: ProductsListFiltersProps) => {
     token,
   });
 
-  return <ProductsGridFilters filters={categoryFiltersQuery.data} />;
+  return (
+    <ProductsGridFilters
+      filters={categoryFiltersQuery.data.filter(
+        (filter) => !filter.is_colorpicker,
+      )}
+    />
+  );
 };
 
 export default ProductsListFilters;
