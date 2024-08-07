@@ -4,6 +4,7 @@ import { ProductCard } from "@repo/native-ui/components/product-card";
 import usePriceCheck from "@repo/shared-logic/apis/hooks/product/use-price-check.hook";
 import { FlashList, type FlashListProps } from "@shopify/flash-list";
 import { type ComponentProps } from "react";
+import { H2, Text, View } from "tamagui";
 
 type ProductItem = Omit<
   ComponentProps<typeof ProductCard>,
@@ -19,6 +20,15 @@ type ProductsListProps = Omit<
 const ProductsList = ({
   data,
   onEndReachedThreshold = 0.8,
+  ListEmptyComponent = (
+    <View padding={16} gap={12}>
+      <H2 fontSize={20} lineHeight={20} fontWeight={400}>
+        No results
+      </H2>
+
+      <Text>Sorry, no results were found for your search term.</Text>
+    </View>
+  ),
   ...delegated
 }: ProductsListProps) => {
   const productsList =
@@ -70,6 +80,7 @@ const ProductsList = ({
           />
         );
       }}
+      ListEmptyComponent={ListEmptyComponent}
       estimatedItemSize={300}
       onEndReachedThreshold={onEndReachedThreshold}
       {...delegated}
