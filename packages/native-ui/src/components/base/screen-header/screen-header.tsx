@@ -1,6 +1,6 @@
 import AntDesign from "@expo/vector-icons/AntDesign";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import { ScanBarcode } from "@tamagui/lucide-icons";
 import { Link, useRouter } from "expo-router";
 import { Button, Text, View } from "tamagui";
 
@@ -60,11 +60,12 @@ export const ScreenHeader = ({
               )}
 
               {!!barcodeScannerPath && (
-                <Link href={barcodeScannerPath}>
-                  <MaterialCommunityIcons
-                    name="barcode-scan"
-                    size={24}
-                    testID="barcode-scan-icon"
+                <Link href={barcodeScannerPath} asChild>
+                  <Button
+                    icon={ScanBarcode}
+                    backgroundColor="$colorTransparent"
+                    size={50}
+                    padding={0}
                   />
                 </Link>
               )}
