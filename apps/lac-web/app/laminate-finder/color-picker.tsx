@@ -15,19 +15,21 @@ const ColorPicker = ({ token }: { readonly token: string }) => {
     (filter) => filter.is_colorpicker,
   );
   const { searchParams } = useFilterParams(laminateFiltersQuery.data);
-  const newUrlSearchParams = new URLSearchParams(searchParams);
+
   if (
     pickerColors[0]?.values === undefined ||
     pickerColors[0]?.values.length === 0
   ) {
-    return;
+    return null;
   }
   const colorPickerFilterId = pickerColors[0]?.id.toString();
 
   const changeColor = (colorId: string) => {
+    const newUrlSearchParams = new URLSearchParams(searchParams);
     newUrlSearchParams.delete(QUERY_KEYS.page);
     newUrlSearchParams.delete(colorPickerFilterId);
     newUrlSearchParams.append(colorPickerFilterId, colorId.toString());
+
     window.history.pushState(null, "", `?${newUrlSearchParams.toString()}`);
   };
 
@@ -37,7 +39,7 @@ const ColorPicker = ({ token }: { readonly token: string }) => {
       <ul className="my-2 flex flex-row flex-wrap gap-4">
         <RadioGroup
           onValueChange={changeColor}
-          value={searchParams.get(colorPickerFilterId) || ""}
+          value={searchParams.get(colorPickerFilterId) ?? ""}
           className="item-center flex flex-col gap-2 md:flex-row"
         >
           {pickerColors[0]?.values.map((color) => (
