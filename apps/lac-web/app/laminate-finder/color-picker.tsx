@@ -26,6 +26,7 @@ const ColorPicker = ({ token }: { readonly token: string }) => {
 
   const changeColor = (colorId: string) => {
     const newUrlSearchParams = new URLSearchParams(searchParams);
+
     newUrlSearchParams.delete(QUERY_KEYS.page);
     newUrlSearchParams.delete(colorPickerFilterId);
     newUrlSearchParams.append(colorPickerFilterId, colorId.toString());
