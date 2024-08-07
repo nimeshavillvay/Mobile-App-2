@@ -1,16 +1,7 @@
 import { z } from "zod";
 import { api } from "~/lib/api";
 import type { ApiConfig } from "~/lib/types";
-
-const featuredCategorySchema = z.object({
-  id: z.string(),
-  name: z.string(),
-  slug: z.string(),
-  shortcode: z.string(),
-  item_count: z.string(),
-  direct_item_count: z.string(),
-  img: z.union([z.string(), z.null()]),
-});
+import { featuredCategorySchema } from "~/lib/zod-schema/category";
 
 export const getFeaturedCategories = async ({ baseUrl, apiKey }: ApiConfig) => {
   const response = await api

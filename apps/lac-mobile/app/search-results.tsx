@@ -28,7 +28,7 @@ const SearchResultPage = () => {
         }}
       />
       <ScreenLayout>
-        <ScreenHeader title="" hideSearchButton hideBarcodeScanner />
+        <ScreenHeader title="" hideSearchButton />
 
         <H1 style={styles.heading}>Search Results for "{searchQuery}"</H1>
 

@@ -3,11 +3,12 @@ import { Link } from "expo-router";
 import { MotiView } from "moti";
 import { Skeleton } from "moti/skeleton";
 import type { ComponentProps } from "react";
+import { Pressable } from "react-native";
 import { Text, XStack } from "tamagui";
 
 export const SearchCategorySkeleton = () => {
   return (
-    <MotiView>
+    <MotiView testID="motiview-skeleton">
       <Skeleton height={40} width="100%" colorMode="light" />
     </MotiView>
   );
@@ -31,10 +32,12 @@ export const SearchCategory = ({
         size={20}
         color="#74767B"
       />
-      <Link testID="link" href={link}>
-        <Text testID="text" color="#CC0000" lineHeight={20}>
-          {category}
-        </Text>
+      <Link testID="link" href={link} style={{ flex: 1 }} asChild>
+        <Pressable style={{ flex: 1 }}>
+          <Text testID="text" color="#CC0000" lineHeight={20}>
+            {category}
+          </Text>
+        </Pressable>
       </Link>
     </XStack>
   );

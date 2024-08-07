@@ -27,6 +27,7 @@ const config: ExpoConfig = {
         cameraPermission: "Allow $(PRODUCT_NAME) to access your camera",
       },
     ],
+    ["expo-media-library"],
   ],
   scheme: "wurthlac",
   splash: {

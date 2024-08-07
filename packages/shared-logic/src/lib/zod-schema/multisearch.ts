@@ -1,5 +1,21 @@
 import { z } from "zod";
 
+export type CategoryResult = z.infer<typeof categoryResultSchema>;
+
+export type BrandResult = z.infer<typeof brandResultSchema>;
+
+export const isCategoryResults = (
+  categoryData: unknown,
+): categoryData is CategoryResult[] => {
+  return z.array(categoryResultSchema).safeParse(categoryData).success;
+};
+
+export const isBrandResults = (
+  brandData: unknown,
+): brandData is BrandResult[] => {
+  return z.array(brandResultSchema).safeParse(brandData).success;
+};
+
 const productResultSchema = z.object({
   brandName: z.string().optional(),
   id: z.number(),
@@ -31,7 +47,7 @@ const productResultSchema = z.object({
   on_sale: z.string().optional(),
 });
 
-const categoryResultSchema = z.object({
+export const categoryResultSchema = z.object({
   id: z.number(),
   categoryName: z.string(),
   categoryPath: z.string(),
@@ -41,7 +57,7 @@ const categoryResultSchema = z.object({
   subCategoryList: z.string().optional(),
 });
 
-const brandResultSchema = z.object({
+export const brandResultSchema = z.object({
   id: z.number(),
   brandName: z.string(),
   brandImage: z.string().optional(),
@@ -61,14 +77,14 @@ export const categoryDataSchema = z.object({
   summary: z.object({
     total: z.number(),
   }),
-  results: z.array(categoryResultSchema),
+  results: z.array(categoryResultSchema).or(z.array(z.string())),
 });
 
 export const brandDataSchema = z.object({
   summary: z.object({
     total: z.number(),
   }),
-  results: z.array(brandResultSchema),
+  results: z.array(brandResultSchema).or(z.array(z.string())),
 });
 
 export const multisearchResultSchema = z.object({

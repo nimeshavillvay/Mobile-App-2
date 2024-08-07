@@ -7,11 +7,13 @@ import { Button, Text, View } from "tamagui";
 export const ScreenHeader = ({
   title,
   type,
+  hideBackButton = false,
   hideSearchButton = false,
   barcodeScannerPath,
 }: {
   readonly title: string;
   readonly type?: string;
+  readonly hideBackButton?: boolean;
   readonly hideSearchButton?: boolean;
   readonly barcodeScannerPath?: string;
 }) => {
@@ -32,7 +34,7 @@ export const ScreenHeader = ({
       >
         {type !== "search" ? (
           <>
-            {router.canGoBack() && (
+            {router.canGoBack() && !hideBackButton && (
               <Button
                 onPress={() => router.back()}
                 backgroundColor="white"
