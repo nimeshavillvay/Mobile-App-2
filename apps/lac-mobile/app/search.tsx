@@ -10,10 +10,14 @@ import { SearchBrandSkeleton } from "@repo/native-ui/components/search/suggestio
 import { SearchCategorySkeleton } from "@repo/native-ui/components/search/suggestion/search-category";
 import { SearchProductSkeleton } from "@repo/native-ui/components/search/suggestion/search-product";
 import useSuspenseMultiSearch from "@repo/shared-logic/apis/hooks/elasticsearch/use-suspense-multi-search.hook";
-import type {
-  brandDataSchema,
-  categoryDataSchema,
-  productDataSchema,
+import {
+  isBrandResults,
+  isCategoryResults,
+  type brandDataSchema,
+  type BrandResult,
+  type categoryDataSchema,
+  type CategoryResult,
+  type productDataSchema,
 } from "@repo/shared-logic/zod-schema/multisearch";
 import { FlashList } from "@shopify/flash-list";
 import { router } from "expo-router";
@@ -69,6 +73,7 @@ const Search = () => {
               placeholder="What are you looking for?"
               onSubmit={handleSubmit}
               onClear={clearSearchTerm}
+              cancelIcon={searchQuery !== ""}
             />
           )}
         />
@@ -80,6 +85,34 @@ const Search = () => {
       </SearchModalLayout>
     </SafeAreaView>
   );
+};
+
+const CategorySuggestions = ({
+  categoryData,
+}: {
+  readonly categoryData: z.infer<typeof categoryDataSchema>;
+}) => {
+  const categories = categoryData.results.splice(0, 5);
+
+  if (!isCategoryResults(categories)) {
+    return null;
+  }
+
+  return <CategorySearch categories={categories} />;
+};
+
+const BrandSuggestions = ({
+  brandData,
+}: {
+  readonly brandData: z.infer<typeof brandDataSchema>;
+}) => {
+  const brands = brandData.results.splice(0, 5);
+
+  if (!isBrandResults(brands)) {
+    return null;
+  }
+
+  return <BrandSearch brands={brands} />;
 };
 
 const SearchSuggestionsList = ({ query }: { readonly query: string }) => {
@@ -104,7 +137,7 @@ const SearchSuggestionsList = ({ query }: { readonly query: string }) => {
             Categories for "{query}"
           </Text>
 
-          <CategorySearch categories={data.categories.results.slice(0, 5)} />
+          <CategorySuggestions categoryData={data.categories} />
         </YStack>
       )}
 
@@ -114,7 +147,7 @@ const SearchSuggestionsList = ({ query }: { readonly query: string }) => {
             Brands for "{query}"
           </Text>
 
-          <BrandSearch brands={data.brands.results.slice(0, 10)} />
+          <BrandSuggestions brandData={data.brands} />
         </YStack>
       )}
     </YStack>
@@ -174,7 +207,7 @@ const ProductSearch = ({
 const CategorySearch = ({
   categories,
 }: {
-  readonly categories: z.infer<typeof categoryDataSchema.shape.results>;
+  readonly categories: CategoryResult[];
 }) => {
   return (
     <CategorySearchList
@@ -186,11 +219,7 @@ const CategorySearch = ({
   );
 };
 
-const BrandSearch = ({
-  brands,
-}: {
-  readonly brands: z.infer<typeof brandDataSchema.shape.results>;
-}) => {
+const BrandSearch = ({ brands }: { readonly brands: BrandResult[] }) => {
   return (
     <BrandSearchList
       data={brands.map((brand) => ({
