@@ -21,7 +21,8 @@ import {
   SelectValue,
 } from "@repo/web-ui/components/ui/select";
 import Image from "next/image";
-import { useState } from "react";
+// eslint-disable-next-line no-restricted-imports
+import { useEffect, useState } from "react";
 import LaminateItems from "./laminate-items";
 
 const LaminateCard = ({
@@ -37,17 +38,6 @@ const LaminateCard = ({
     Number(product.variants[0]?.id),
   );
 
-  const getDefaultAttribute = (attributes: string[] | undefined) => {
-    if (
-      attributes === undefined ||
-      attributes.length < 1 ||
-      attributes.length > 1
-    ) {
-      return "";
-    } else if (attributes.length === 1) {
-      return attributes[0];
-    }
-  };
   const grades = laminateData?.groupFilters?.values_ALL?.GRADE;
   const finishes = laminateData?.groupFilters?.values_ALL?.FINISH;
 
@@ -55,18 +45,32 @@ const LaminateCard = ({
   const possibleProductIdsForFinishes =
     laminateData?.groupFilters?.values_FINISH;
 
-  const [selectedGrade, setSelectedGrade] = useState(
-    getDefaultAttribute(grades),
-  );
-  const [selectedFinish, setSelectedFinish] = useState(
-    getDefaultAttribute(finishes),
-  );
+  const [selectedGrade, setSelectedGrade] = useState("");
+  const [selectedFinish, setSelectedFinish] = useState("");
 
   const [productIds, setProductIds] = useState<string[]>([]);
+  const [open, setOpen] = useState(false);
 
   const priceCheckQuery = useSuspensePriceCheck(token, [
-    { productId: Number(groupId), qty: 1 },
+    { productId: Number(product.variants[0]?.id), qty: 1 },
   ]);
+
+  // todo: validate product empty
+  const groupPriceData = priceCheckQuery.data.productPrices[0];
+  const groupPrice = groupPriceData?.uomPrice ?? groupPriceData?.price ?? 0; // discounts are not considered
+  const groupUom = groupPriceData?.uomPriceUnit ?? groupPriceData?.priceUnit;
+
+  const singleGrade = grades !== undefined && grades?.length === 1;
+  const singleFinish = finishes !== undefined && finishes?.length === 1;
+
+  useEffect(() => {
+    if (!!selectedFinish && !!selectedGrade) {
+      setProductIds(
+        possibleProductIdsForGrades?.[selectedGrade]?.[selectedFinish]
+          ?.productids || [],
+      );
+    }
+  }, [selectedFinish, selectedGrade, possibleProductIdsForGrades]);
 
   const onGradeValueChange = (grade: string) => {
     setSelectedGrade(grade);
@@ -89,13 +93,14 @@ const LaminateCard = ({
     );
   };
 
-  // todo: validate product empty
-  const groupPriceData = priceCheckQuery.data.productPrices[0];
-  const groupPrice = groupPriceData?.uomPrice ?? groupPriceData?.price ?? 0; // discounts are not considered
-  const groupUom = groupPriceData?.uomPriceUnit ?? groupPriceData?.priceUnit;
+  const onOpenChange = (isOpen: boolean) => {
+    setOpen(isOpen);
+    setSelectedGrade(singleGrade ? grades[0] ?? "" : "");
+    setSelectedFinish(singleFinish ? finishes[0] ?? "" : "");
+  };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>
         <Button variant="ghost">
           <Image

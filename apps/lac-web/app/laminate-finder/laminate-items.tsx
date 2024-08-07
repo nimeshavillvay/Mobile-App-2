@@ -1,15 +1,15 @@
+import ProductCardSkeleton from "@/_components/product-card-skeleton";
 import useLaminateProductsInfo from "@/_hooks/laminate/use-suspense-laminate-info.hook";
-// import useSuspenseCheckAvailability from "@/_hooks/product/use-suspense-check-availability.hook";
 import { Button } from "@repo/web-ui/components/ui/button";
-import { Input } from "@repo/web-ui/components/ui/input";
 import {
   Table,
   TableBody,
-  TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "@repo/web-ui/components/ui/table";
+import { Suspense } from "react";
+import LaminateItemRow from "./laminate-item";
 
 const LaminateItems = ({
   productIds,
@@ -19,17 +19,6 @@ const LaminateItems = ({
   readonly token: string;
 }) => {
   const laminates = useLaminateProductsInfo(productIds);
-  console.log(">>>>> productIds", productIds);
-  console.log(">>>>> laminates", laminates);
-
-  //   const availabilityCheckForVariants =  laminates.data?.map(laminate => {
-
-  //   })
-  //   const {data: checkAvailabilityQuery} = useSuspenseCheckAvailability(token, {
-  //     productId:Number(product.variants[0]?.id),
-  //     qty: 1,
-  //   });
-  //   const addMultipleToCartMutation = useAddMultipleToCartMutation(token);
 
   return (
     <>
@@ -49,22 +38,19 @@ const LaminateItems = ({
         </TableHeader>
         <TableBody>
           {laminates.data?.map((laminate) => (
-            <TableRow key={laminate.productId}>
-              <TableCell className="w-40 text-nowrap">
-                {laminate.size}
-              </TableCell>
-              <TableCell className="text-nowrap">
-                Home Branch: <strong className="font-semibold">681</strong>
-                <br />
-                Alt Branch: <strong className="font-semibold">34</strong>
-                <br />
-              </TableCell>
-              {/* <TableCell className="text-center">23</TableCell> */}
-              <TableCell className="text-right">
-                <Input type="number" className="w-16" />
-              </TableCell>
-              <TableCell className="text-right font-medium">$250.00</TableCell>
-            </TableRow>
+            <Suspense
+              key={laminate.productId}
+              fallback={
+                <ProductCardSkeleton // todo: update to match laminate dialog item row
+                />
+              }
+            >
+              <LaminateItemRow
+                productId={laminate.productId}
+                size={laminate.size}
+                token={token}
+              />
+            </Suspense>
           ))}
         </TableBody>
       </Table>
