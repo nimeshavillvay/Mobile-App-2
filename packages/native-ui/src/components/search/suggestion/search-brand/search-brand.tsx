@@ -36,6 +36,7 @@ export const SearchBrand = ({
           gap={10}
           borderWidth={1}
           borderColor="#E5E7EB"
+          borderRadius={8}
           p={10}
           pressStyle={{ backgroundColor: "$blue3" }}
           {...style}

@@ -43,7 +43,7 @@ export const ScreenHeader = ({
                 <FontAwesome name="angle-left" size={28} />
               </Button>
             )}
-            <Text fontSize="$7" ml={12} mr="auto">
+            <Text flex={1} fontSize="$7" ml={12} mr="auto" numberOfLines={1}>
               {title}
             </Text>
             <View
