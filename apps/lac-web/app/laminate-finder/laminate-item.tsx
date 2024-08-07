@@ -15,7 +15,6 @@ const LaminateItemRow = ({
     productId: Number(productId),
     qty: 1,
   });
-  //   const addMultipleToCartMutation = useAddMultipleToCartMutation(token);
 
   return (
     <TableRow key={productId}>

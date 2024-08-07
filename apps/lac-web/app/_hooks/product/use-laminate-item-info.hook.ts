@@ -2,12 +2,6 @@ import { api } from "@/_lib/api";
 import { DEFAULT_REVALIDATE } from "@/_lib/constants";
 import { useQuery } from "@tanstack/react-query";
 
-// type DynamicGradeFinishValues<T> = {
-//   [key: string]: {
-//     [subKey: string]: T;
-//   };
-// };
-
 type GroupFilter = {
   group_filters?: {
     values_ALL?: {

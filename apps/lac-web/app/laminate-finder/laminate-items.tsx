@@ -27,11 +27,6 @@ const LaminateItems = ({
           <TableRow>
             <TableHead className="w-40">Size</TableHead>
             <TableHead>Stock/EA</TableHead>
-            {/* <TableHead className="text-center">
-                        Alt Branch
-                        <br />
-                        <span className="text-xs">(Stock)</span>
-                      </TableHead> */}
             <TableHead className="text-center">QTY</TableHead>
             <TableHead className="text-right font-medium">Amount</TableHead>
           </TableRow>
