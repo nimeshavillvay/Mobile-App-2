@@ -10,10 +10,7 @@ jest.mock("expo-router", () => ({
 }));
 jest.mock("@expo/vector-icons/AntDesign", () => "AntDesign");
 jest.mock("@expo/vector-icons/FontAwesome", () => "FontAwesome");
-jest.mock(
-  "@expo/vector-icons/MaterialCommunityIcons",
-  () => "MaterialCommunityIcons",
-);
+jest.mock("@tamagui/lucide-icons", () => "ScanBarcode");
 
 describe("ScreenHeader", () => {
   const mockBack = jest.fn();
@@ -71,7 +68,7 @@ describe("ScreenHeader", () => {
 
   it("sets correct href for barcode scan icon", () => {
     render(<ScreenHeader title="Test" barcodeScannerPath="/test-path" />);
-    expect(screen.getByTestId("barcode-scan-icon").parent.props.href).toBe(
+    expect(screen.getByTestId("barcode-scan-icon").props.href).toBe(
       "/test-path",
     );
   });

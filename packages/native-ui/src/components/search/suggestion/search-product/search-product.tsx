@@ -2,6 +2,7 @@ import { Image } from "expo-image";
 import { MotiView } from "moti";
 import { Skeleton } from "moti/skeleton";
 import type { ComponentProps } from "react";
+import { StyleSheet } from "react-native";
 import { Text, View, XStack, YStack } from "tamagui";
 
 export const SearchProductSkeleton = () => {
@@ -34,10 +35,10 @@ export const SearchProduct = ({
       py={5}
       {...style}
     >
-      <View borderColor="lightgray" borderWidth={1}>
+      <View borderColor="lightgray" borderWidth={1} borderRadius={4}>
         <Image
           testID="search-product-image"
-          style={{ height: 80, width: 80 }}
+          style={styles.image}
           source={{
             uri: imageUrl,
           }}
@@ -55,3 +56,11 @@ export const SearchProduct = ({
     </XStack>
   );
 };
+
+const styles = StyleSheet.create({
+  image: {
+    height: 80,
+    width: 80,
+    borderRadius: 4,
+  },
+});
