@@ -13,13 +13,11 @@ import useSuspenseMultiSearch from "@repo/shared-logic/apis/hooks/elasticsearch/
 import {
   isBrandResults,
   isCategoryResults,
-} from "@repo/shared-logic/lib/utils";
-import type {
-  brandDataSchema,
-  BrandResultList,
-  categoryDataSchema,
-  CategoryResultList,
-  productDataSchema,
+  type brandDataSchema,
+  type BrandResult,
+  type categoryDataSchema,
+  type CategoryResult,
+  type productDataSchema,
 } from "@repo/shared-logic/zod-schema/multisearch";
 import { FlashList } from "@shopify/flash-list";
 import { router } from "expo-router";
@@ -96,9 +94,11 @@ const CategorySuggestions = ({
 }) => {
   const categories = categoryData.results.splice(0, 5);
 
-  if (isCategoryResults(categories)) {
-    return <CategorySearch categories={categories} />;
+  if (!isCategoryResults(categories)) {
+    return null;
   }
+
+  return <CategorySearch categories={categories} />;
 };
 
 const BrandSuggestions = ({
@@ -108,9 +108,11 @@ const BrandSuggestions = ({
 }) => {
   const brands = brandData.results.splice(0, 5);
 
-  if (isBrandResults(brands)) {
-    return <BrandSearch brands={brands} />;
+  if (!isBrandResults(brands)) {
+    return null;
   }
+
+  return <BrandSearch brands={brands} />;
 };
 
 const SearchSuggestionsList = ({ query }: { readonly query: string }) => {
@@ -205,7 +207,7 @@ const ProductSearch = ({
 const CategorySearch = ({
   categories,
 }: {
-  readonly categories: CategoryResultList;
+  readonly categories: CategoryResult[];
 }) => {
   return (
     <CategorySearchList
@@ -217,7 +219,7 @@ const CategorySearch = ({
   );
 };
 
-const BrandSearch = ({ brands }: { readonly brands: BrandResultList }) => {
+const BrandSearch = ({ brands }: { readonly brands: BrandResult[] }) => {
   return (
     <BrandSearchList
       data={brands.map((brand) => ({

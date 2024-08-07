@@ -1,8 +1,20 @@
 import { z } from "zod";
 
-export type CategoryResultList = z.infer<typeof categoryResultSchema>[];
+export type CategoryResult = z.infer<typeof categoryResultSchema>;
 
-export type BrandResultList = z.infer<typeof brandResultSchema>[];
+export type BrandResult = z.infer<typeof brandResultSchema>;
+
+export const isCategoryResults = (
+  categoryData: unknown,
+): categoryData is CategoryResult[] => {
+  return z.array(categoryResultSchema).safeParse(categoryData).success;
+};
+
+export const isBrandResults = (
+  brandData: unknown,
+): brandData is BrandResult[] => {
+  return z.array(brandResultSchema).safeParse(brandData).success;
+};
 
 const productResultSchema = z.object({
   brandName: z.string().optional(),
