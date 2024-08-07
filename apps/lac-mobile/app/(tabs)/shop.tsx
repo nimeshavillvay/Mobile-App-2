@@ -15,7 +15,6 @@ import {
 import useSuspenseBanners from "@repo/shared-logic/apis/hooks/banners/use-suspense-banners.hook";
 import useSuspenseFeaturedCategories from "@repo/shared-logic/apis/hooks/category/use-suspense-featured-categories.hook";
 import * as FileSystem from "expo-file-system";
-import * as MediaLibrary from "expo-media-library";
 import * as Sharing from "expo-sharing";
 import { Suspense } from "react";
 import { Dimensions, Platform } from "react-native";
@@ -55,33 +54,34 @@ const Banners = () => {
   const imageHeight = imageWidth / 2;
 
   const downloadBannerFile = async (filePath: string, fileName: string) => {
-    if (Platform.OS === "android") {
-      const permissions = await MediaLibrary.requestPermissionsAsync();
-
-      if (!permissions.granted) {
-        return;
-      }
-    }
-
     const downloadedFile = await FileSystem.downloadAsync(
       filePath,
-      `${FileSystem.documentDirectory}/${fileName}`,
+      `${FileSystem.documentDirectory}${fileName}`,
     );
 
     if (Platform.OS === "ios") {
       await Sharing.shareAsync(downloadedFile.uri, { UTI: "public.item" });
     } else if (Platform.OS === "android") {
-      const permissions = await MediaLibrary.getPermissionsAsync();
+      // The code to save in Android is from
+      // https://www.youtube.com/watch?v=HkIKDqzI3sQ
+      const permissions =
+        await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
 
       if (permissions.granted) {
-        const asset = await MediaLibrary.createAssetAsync(downloadedFile.uri);
-        const album = await MediaLibrary.getAlbumAsync("Download");
+        const base64 = await FileSystem.readAsStringAsync(downloadedFile.uri, {
+          encoding: FileSystem.EncodingType.Base64,
+        });
+        const uri = await FileSystem.StorageAccessFramework.createFileAsync(
+          permissions.directoryUri,
+          fileName,
+          "application/pdf",
+        );
 
-        if (album == null) {
-          await MediaLibrary.createAlbumAsync("Download", asset, false);
-        } else {
-          await MediaLibrary.addAssetsToAlbumAsync([asset], album, false);
-        }
+        await FileSystem.writeAsStringAsync(uri, base64, {
+          encoding: FileSystem.EncodingType.Base64,
+        });
+      } else {
+        await Sharing.shareAsync(downloadedFile.uri, { UTI: "public.item" });
       }
     }
   };
