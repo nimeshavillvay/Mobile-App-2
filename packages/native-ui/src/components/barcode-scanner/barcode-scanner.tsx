@@ -20,9 +20,21 @@ import {
 } from "tamagui";
 
 const EnableTorchContext = createContext(false);
+const PermissionContext = createContext<
+  ReturnType<typeof useCameraPermissions> | undefined
+>(undefined);
 
 const useEnableTorchContext = () => {
   return useContext(EnableTorchContext);
+};
+const usePermissionContext = () => {
+  const value = useContext(PermissionContext);
+
+  if (!value) {
+    throw new Error("Component must be used within BarcodeScannerRoot");
+  }
+
+  return value;
 };
 
 export const BarcodeScannerRoot = ({
@@ -30,7 +42,13 @@ export const BarcodeScannerRoot = ({
 }: {
   readonly children?: ReactNode;
 }) => {
-  return children;
+  const value = useCameraPermissions();
+
+  return (
+    <PermissionContext.Provider value={value}>
+      {children}
+    </PermissionContext.Provider>
+  );
 };
 
 export const BarcodeScannerLoadingWrapper = ({
@@ -38,7 +56,7 @@ export const BarcodeScannerLoadingWrapper = ({
 }: {
   readonly children?: ReactNode;
 }) => {
-  const [permission] = useCameraPermissions();
+  const [permission] = usePermissionContext();
 
   if (permission) {
     return null;
@@ -48,14 +66,14 @@ export const BarcodeScannerLoadingWrapper = ({
 };
 
 export const BarcodeScannerNoPermission = () => {
-  const [permission, requestPermission] = useCameraPermissions();
+  const [permission, requestPermission] = usePermissionContext();
 
   if (permission?.granted) {
     return null;
   }
 
   return (
-    <YStack gap="$4">
+    <YStack gap="$4" flex={1} alignItems="center" justifyContent="center">
       <Text>We need your permission to show the camera</Text>
       <Button onPress={requestPermission}>Grant Permission</Button>
     </YStack>
@@ -69,7 +87,7 @@ export const BarcodeScannerCameraView = ({
   ...delegated
 }: Omit<CameraProps, "testID">) => {
   const id = useId();
-  const [permission] = useCameraPermissions();
+  const [permission] = usePermissionContext();
 
   if (!permission?.granted) {
     return null;
