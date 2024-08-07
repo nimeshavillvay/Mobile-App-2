@@ -60,7 +60,11 @@ export const ScreenHeader = ({
               )}
 
               {!!barcodeScannerPath && (
-                <Link href={barcodeScannerPath} asChild>
+                <Link
+                  href={barcodeScannerPath}
+                  testID="barcode-scan-icon"
+                  asChild
+                >
                   <Button
                     icon={ScanBarcode}
                     backgroundColor="$colorTransparent"
