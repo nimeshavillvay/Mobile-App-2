@@ -1,4 +1,5 @@
 import { cn } from "@/_lib/utils";
+import { GoogleTagManager } from "@next/third-parties/google";
 import { Toaster } from "@repo/web-ui/components/ui/toast";
 import { type Metadata } from "next";
 import localFont from "next/font/local";
@@ -52,6 +53,7 @@ const RootLayout = ({ children }: { readonly children: ReactNode }) => {
         bodyFont.variable,
       )}
     >
+      <GoogleTagManager gtmId="GTM-M2F8TKKP" />
       <body className="flex h-full flex-col justify-between font-body antialiased">
         <Providers>
           <NextTopLoader showSpinner={false} color="#cc0000" />
