@@ -1,3 +1,4 @@
+import { ProductsGridHeaderSkeleton } from "@/_components/products-grid";
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import {
   Breadcrumb,
@@ -8,6 +9,7 @@ import {
   BreadcrumbSeparator,
 } from "@repo/web-ui/components/ui/breadcrumb";
 import { cookies } from "next/headers";
+import { Suspense } from "react";
 import ColorPicker from "./color-picker";
 import LaminateSearch from "./laminate-search";
 import LaminatesList from "./laminates-list";
@@ -41,7 +43,12 @@ const Page = () => {
       <div className="mt-4 flex gap-10">
         <section className="grow">
           <ColorPicker token={tokenCookie.value} />
-          <LaminateSearch />
+
+          <Suspense fallback={<ProductsGridHeaderSkeleton />}>
+            {/* todo: update Suspense boundary */}
+            <LaminateSearch />
+          </Suspense>
+
           <LaminatesList />
         </section>
       </div>
