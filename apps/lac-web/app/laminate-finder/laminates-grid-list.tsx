@@ -45,13 +45,13 @@ export const LaminatesGridList = ({
         <Suspense
           key={info.groupId}
           fallback={
-            <ProductCardSkeleton
+            <ProductCardSkeleton // todo: update to match laminate card
               orientation={orientation}
               stretchWidth={orientation === "vertical"}
             />
           }
         >
-          <LaminateCard product={prop} token={token} />
+          <LaminateCard product={prop} token={token} groupId={info.groupId} />
         </Suspense>
       ))}
     </LaminatesGridListContainer>

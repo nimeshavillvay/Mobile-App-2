@@ -1,5 +1,5 @@
 import { useFilterParams } from "@/_components/products-grid";
-import useSuspenseLaminateSearch from "@/_hooks/search/use-suspense-laminate-search.hook";
+import useSuspenseLaminateSearch from "@/_hooks/laminate/use-suspense-laminate-search.hook";
 import type { Filters } from "@/_lib/types";
 
 const useSuspenseSearchLaminateList = (token: string, filters: Filters[]) => {

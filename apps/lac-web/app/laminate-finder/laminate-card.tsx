@@ -1,3 +1,5 @@
+import useLaminateFilter from "@/_hooks/product/use-laminate-item-info.hook";
+import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import type { Product } from "@/_lib/types";
 import {
   Accordion,
@@ -11,7 +13,6 @@ import {
   DialogContent,
   DialogTrigger,
 } from "@repo/web-ui/components/ui/dialog";
-import { Input } from "@repo/web-ui/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -19,25 +20,68 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@repo/web-ui/components/ui/select";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@repo/web-ui/components/ui/table";
 import Image from "next/image";
+import { useState } from "react";
+import LaminateItems from "./laminate-items";
 
 const LaminateCard = ({
+  groupId,
   product,
   token,
 }: {
+  readonly groupId: string;
   readonly product: Product;
   readonly token: string;
 }) => {
+  const { data: laminateData } = useLaminateFilter(
+    Number(product.variants[0]?.id),
+  );
+
+  const grades = laminateData?.groupFilters?.values_ALL?.GRADE;
+  const finishes = laminateData?.groupFilters?.values_ALL?.FINISH;
+
+  const possibleProductIdsForGrades = laminateData?.groupFilters?.values_GRADE;
+  const possibleProductIdsForFinishes =
+    laminateData?.groupFilters?.values_FINISH;
+
+  const [selectedGrade, setSelectedGrade] = useState("");
+  const [selectedFinish, setSelectedFinish] = useState("");
+
+  const [productIds, setProductIds] = useState<string[]>([]);
+  const [open, setOpen] = useState(false);
+
+  const priceCheckQuery = useSuspensePriceCheck(token, [
+    { productId: Number(product.variants[0]?.id), qty: 1 },
+  ]);
+
+  // todo: validate product empty
+  const groupPriceData = priceCheckQuery.data.productPrices[0];
+  const groupPrice = groupPriceData?.uomPrice ?? groupPriceData?.price ?? 0; // discounts are not considered
+  const groupUom = groupPriceData?.uomPriceUnit ?? groupPriceData?.priceUnit;
+
+  const onGradeValueChange = (grade: string) => {
+    setSelectedGrade(grade);
+    if (selectedFinish) {
+      setProductIds(
+        possibleProductIdsForFinishes?.[selectedFinish]?.[grade]?.productids ||
+          [],
+      );
+    }
+  };
+
+  const onFinishValueChange = (finish: string) => {
+    setSelectedFinish(finish);
+    if (selectedGrade) {
+      setProductIds(
+        possibleProductIdsForGrades?.[selectedGrade]?.[finish]?.productids ||
+          [],
+      );
+    }
+  };
+  // todo: set selected values for grade and finish if only one exists
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="ghost">
           <Image
@@ -54,18 +98,23 @@ const LaminateCard = ({
           <div className="flex w-full gap-4 lg:w-60 lg:flex-col">
             <div>
               <Image
-                src="https://wurthlac.com/api/pim//Brand%20Logos/Greenlam.png"
-                alt=""
+                src={product.groupImage}
+                alt={product.groupName}
                 width={44}
                 height={44}
               />
-              <h3 className="mt-2 text-xl font-bold">105 Feather Gray</h3>
-              <p className="mb-2">$0.663 / SqFoot</p>
+              <h3
+                className="mt-2 text-xl font-bold"
+                dangerouslySetInnerHTML={{ __html: product.groupName }}
+              />
+              <p className="mb-2">
+                {groupPrice}/ {groupUom}
+              </p>
             </div>
             <div>
               <Image
-                src="https://wurthlac.com/api/pim/Product-Assets/Images/300x300/105-FeatherGray.jpg"
-                alt=""
+                src={product.groupImage}
+                alt={product.groupName}
                 width={240}
                 height={240}
               />
@@ -86,82 +135,35 @@ const LaminateCard = ({
               to show items.
             </p>
             <div className="mb-4 flex gap-1">
-              <Select>
+              <Select onValueChange={onGradeValueChange} value={selectedGrade}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Select Grade" />
+                  <SelectValue placeholder="Grade" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="light">Light</SelectItem>
-                  <SelectItem value="dark">Dark</SelectItem>
-                  <SelectItem value="system">System</SelectItem>
+                  {grades?.map((grade) => (
+                    <SelectItem key={grade} value={grade}>
+                      {grade}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
-              <Select>
+              <Select
+                onValueChange={onFinishValueChange}
+                value={selectedFinish}
+              >
                 <SelectTrigger>
-                  <SelectValue placeholder="Select Finish" />
+                  <SelectValue placeholder="Finish" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="light">Light</SelectItem>
-                  <SelectItem value="dark">Dark</SelectItem>
-                  <SelectItem value="system">System</SelectItem>
+                  {finishes?.map((finish) => (
+                    <SelectItem key={finish} value={finish}>
+                      {finish}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-40">Size</TableHead>
-                  <TableHead>Stock/EA</TableHead>
-                  <TableHead className="text-center">QTY</TableHead>
-                  <TableHead className="text-right font-medium">
-                    Amount
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                <TableRow>
-                  <TableCell className="w-40 text-nowrap">
-                    96&quot; x 48&quot;
-                  </TableCell>
-                  <TableCell className="text-nowrap">
-                    Home Branch: <strong className="font-semibold">681</strong>
-                    <br />
-                    Alt Branch: <strong className="font-semibold">34</strong>
-                    <br />
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <Input type="number" className="w-16" />
-                  </TableCell>
-                  <TableCell className="text-right font-medium">
-                    $250.00
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell className="w-40 text-nowrap">
-                    96&quot; x 48&quot;
-                  </TableCell>
-                  <TableCell className="text-nowrap">
-                    Home Branch: <strong className="font-semibold">681</strong>
-                    <br />
-                    Alt Branch: <strong className="font-semibold">34</strong>
-                    <br />
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <Input type="number" className="w-16" />
-                  </TableCell>
-                  <TableCell className="text-right font-medium">
-                    $250.00
-                  </TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-            <div className="flex items-center gap-4 rounded bg-gray-50 p-4">
-              <div className="grow">
-                <span className="text-wurth-gray-500">Total:</span>{" "}
-                <strong className="text-lg">$456.00</strong>
-              </div>
-              <Button>Add to cart</Button>
-            </div>
+            <LaminateItems productIds={productIds} token={token} />
           </div>
         </div>
         <div className="mt-4 border-t pt-4">
