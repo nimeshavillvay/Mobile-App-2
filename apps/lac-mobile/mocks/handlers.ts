@@ -1,7 +1,11 @@
 import { API_BASE_URL, SEARCH_API_BASE_URL } from "@/lib/constants";
 import { http, HttpResponse } from "msw";
+import { categoryHttpHandlers } from "./handlers/category";
+import { searchHttpHandlers } from "./handlers/search";
 
 export const handlers = [
+  ...categoryHttpHandlers,
+  ...searchHttpHandlers,
   http.post(`${API_BASE_URL}/rest/pricecheck`, () => {
     return HttpResponse.json({
       error: null,

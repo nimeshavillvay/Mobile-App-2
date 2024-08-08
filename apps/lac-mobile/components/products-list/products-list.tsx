@@ -14,12 +14,17 @@ type ListProps = FlashListProps<ProductItem>;
 
 type ProductsListProps = Omit<
   ListProps,
-  "horizontal" | "numColumns" | "renderItem" | "estimatedItemSize"
+  | "horizontal"
+  | "numColumns"
+  | "renderItem"
+  | "estimatedItemSize"
+  | "keyExtractor"
 >;
 
 const ProductsList = ({
   data,
-  onEndReachedThreshold = 0.8,
+  onEndReachedThreshold = 0.5,
+  ItemSeparatorComponent = () => <View height={16} />,
   ListEmptyComponent = (
     <View padding={16} gap={12}>
       <H2 fontSize={20} lineHeight={20} fontWeight={400}>
@@ -64,23 +69,34 @@ const ProductsList = ({
     <FlashList
       data={data}
       extraData={priceCheckQuery.data}
+      keyExtractor={(item) => item.productId.toString()}
       horizontal={false}
       numColumns={2}
-      renderItem={({ item }) => {
+      renderItem={({ item, index }) => {
         const { price, listPrice } = getPrice(item.productId.toString());
 
+        const isOddIndex = index % 2 === 1;
+
         return (
-          <ProductCard
-            productId={item.productId}
-            image={item.image}
-            title={item.title}
-            sku={item.sku}
-            uom={item.uom}
-            price={price}
-            listPrice={listPrice}
-          />
+          <View
+            style={{
+              paddingRight: !isOddIndex ? 8 : 0,
+              paddingLeft: isOddIndex ? 8 : 0,
+            }}
+          >
+            <ProductCard
+              productId={item.productId}
+              image={item.image}
+              title={item.title}
+              sku={item.sku}
+              uom={item.uom}
+              price={price}
+              listPrice={listPrice}
+            />
+          </View>
         );
       }}
+      ItemSeparatorComponent={ItemSeparatorComponent}
       ListEmptyComponent={ListEmptyComponent}
       estimatedItemSize={300}
       onEndReachedThreshold={onEndReachedThreshold}
