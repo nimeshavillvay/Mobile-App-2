@@ -22,6 +22,12 @@
         "ENVIRONMENT": "qa"
       }
     },
+    "qa-ios-simulator": {
+      "extends": "qa",
+      "ios": {
+        "simulator": true
+      }
+    },
     "production": {
       "extends": "base",
       "distribution": "store",
