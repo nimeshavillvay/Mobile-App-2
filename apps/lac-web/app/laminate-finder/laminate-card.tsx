@@ -61,23 +61,22 @@ const LaminateCard = ({
 
   const onGradeValueChange = (grade: string) => {
     setSelectedGrade(grade);
-    if (selectedFinish === undefined || selectedFinish === "") {
-      return "";
+    if (selectedFinish) {
+      setProductIds(
+        possibleProductIdsForFinishes?.[selectedFinish]?.[grade]?.productids ||
+          [],
+      );
     }
-    setProductIds(
-      possibleProductIdsForFinishes?.[selectedFinish]?.[grade]?.productids ||
-        [],
-    );
   };
 
   const onFinishValueChange = (finish: string) => {
     setSelectedFinish(finish);
-    if (selectedGrade === undefined || selectedGrade === "") {
-      return "";
+    if (selectedGrade) {
+      setProductIds(
+        possibleProductIdsForGrades?.[selectedGrade]?.[finish]?.productids ||
+          [],
+      );
     }
-    setProductIds(
-      possibleProductIdsForGrades?.[selectedGrade]?.[finish]?.productids || [],
-    );
   };
   // todo: set selected values for grade and finish if only one exists
 
