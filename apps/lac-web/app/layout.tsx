@@ -53,7 +53,9 @@ const RootLayout = ({ children }: { readonly children: ReactNode }) => {
         bodyFont.variable,
       )}
     >
-      <GoogleTagManager gtmId="GTM-M2F8TKKP" />
+      {process.env.VERCEL_PROJECT_PRODUCTION_URL && (
+        <GoogleTagManager gtmId={process.env.VERCEL_PROJECT_PRODUCTION_URL} />
+      )}
       <body className="flex h-full flex-col justify-between font-body antialiased">
         <Providers>
           <NextTopLoader showSpinner={false} color="#cc0000" />
