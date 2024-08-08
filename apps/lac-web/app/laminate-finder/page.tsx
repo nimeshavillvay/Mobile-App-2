@@ -9,6 +9,7 @@ import {
 } from "@repo/web-ui/components/ui/breadcrumb";
 import { cookies } from "next/headers";
 import ColorPicker from "./color-picker";
+import LaminateSearch from "./laminate-search";
 import LaminatesList from "./laminates-list";
 
 const Page = () => {
@@ -40,6 +41,7 @@ const Page = () => {
       <div className="mt-4 flex gap-10">
         <section className="grow">
           <ColorPicker token={tokenCookie.value} />
+          <LaminateSearch />
           <LaminatesList />
         </section>
       </div>
