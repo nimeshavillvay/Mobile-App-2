@@ -1,6 +1,7 @@
 import { getBanners } from "@/_lib/apis/server";
 import { ArrowRight } from "@repo/web-ui/components/icons/arrow-right";
 import Image, { type StaticImageData } from "next/image";
+import Link from "next/link";
 import { type CSSProperties, type ComponentProps } from "react";
 import Balancer from "react-wrap-balancer";
 import FeaturedBrand from "./_featured-brand";
@@ -29,6 +30,7 @@ const ADS: {
   colors: Colors;
   image: StaticImageData;
   logo: StaticImageData;
+  link: string;
 }[] = [
   {
     id: 1,
@@ -43,6 +45,7 @@ const ADS: {
     },
     image: kessebohmer,
     logo: kessebohmerLogo,
+    link: "/search?query=lemans+II",
   },
   {
     id: 2,
@@ -57,6 +60,7 @@ const ADS: {
     },
     image: makita,
     logo: makitaLogo,
+    link: "/search?query=makita",
   },
   {
     id: 3,
@@ -71,6 +75,7 @@ const ADS: {
     },
     image: paintline,
     logo: paintlineLogo,
+    link: "/product/351979/PRO-DRYING-RACK-WALL-MNT-15-SHELF-PDRWM",
   },
 ];
 
@@ -135,14 +140,15 @@ const HomePage = async () => {
               }
             />
 
-            <div
+            <Link
+              href={ad.link}
               style={{ "--accent-color": ad.colors.accent } as CSSProperties}
               className="z-[1] flex flex-row items-center gap-2 bg-[var(--accent-color)] px-4 py-2 pl-4 pt-2 text-sm font-bold text-white 3xl:py-4 3xl:pl-9"
             >
               <span>Shop Now</span>
 
               <ArrowRight className="stroke-white" width={16} height={16} />
-            </div>
+            </Link>
           </article>
         ))}
       </section>

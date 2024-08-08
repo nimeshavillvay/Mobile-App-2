@@ -1,6 +1,7 @@
 import WurthLacLogo from "@/_components/wurth-lac-logo";
 import { getCategoriesList } from "@/_lib/apis/server";
 import { cn } from "@/_lib/utils";
+import { Email } from "@repo/web-ui/components/icons/email";
 import { Phone } from "@repo/web-ui/components/icons/phone";
 import { Text } from "@repo/web-ui/components/icons/text";
 import { Button, buttonVariants } from "@repo/web-ui/components/ui/button";
@@ -40,6 +41,11 @@ const Header = async () => {
               asChild
             >
               <a href="tel:+18004224389">
+                <Text
+                  width={16}
+                  height={16}
+                  className="group-hover:stroke-red-800"
+                />
                 <Phone
                   width={16}
                   height={16}
@@ -54,14 +60,14 @@ const Header = async () => {
               className="group h-fit px-0 py-0 font-medium"
               asChild
             >
-              <a href="sms://+18004224389">
-                <Text
+              <a href="mailto:southernsales@wurthlac.com">
+                <Email
                   width={16}
                   height={16}
-                  className="group-hover:stroke-red-800"
+                  className="group-hover:fill-red-800"
                 />
 
-                <span>(800) 422-4389</span>
+                <span>Need help?</span>
               </a>
             </Button>
           </div>
