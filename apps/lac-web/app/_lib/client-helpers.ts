@@ -1,6 +1,6 @@
+import type { QUERY_KEYS } from "@/_lib/constants";
 import { updateSearchParams } from "@/old/_utils/client-helpers";
 import "client-only";
-import type { QUERY_KEYS } from "../osr/dashboard/constants";
 
 export const changeSearchParams = (
   searchParams: URLSearchParams,

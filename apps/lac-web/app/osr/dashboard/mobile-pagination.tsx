@@ -1,6 +1,7 @@
 "use client";
 
 import { changeSearchParams } from "@/_lib/client-helpers";
+import { QUERY_KEYS } from "@/_lib/constants";
 import { cn } from "@/_lib/utils";
 import { Button } from "@repo/web-ui/components/ui/button";
 import {
@@ -13,7 +14,6 @@ import {
 import { useSearchParams } from "next/navigation";
 import { useState, type Dispatch, type SetStateAction } from "react";
 import { MdCheck } from "react-icons/md";
-import { QUERY_KEYS } from "./constants";
 
 export const INIT_PAGE_NUMBER = "1";
 export const INIT_PER_PAGE = "10";
