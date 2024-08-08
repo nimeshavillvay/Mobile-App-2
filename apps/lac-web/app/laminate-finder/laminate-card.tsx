@@ -21,8 +21,7 @@ import {
   SelectValue,
 } from "@repo/web-ui/components/ui/select";
 import Image from "next/image";
-// eslint-disable-next-line no-restricted-imports
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import LaminateItems from "./laminate-items";
 
 const LaminateCard = ({
@@ -60,18 +59,6 @@ const LaminateCard = ({
   const groupPrice = groupPriceData?.uomPrice ?? groupPriceData?.price ?? 0; // discounts are not considered
   const groupUom = groupPriceData?.uomPriceUnit ?? groupPriceData?.priceUnit;
 
-  const singleGrade = grades !== undefined && grades?.length === 1;
-  const singleFinish = finishes !== undefined && finishes?.length === 1;
-
-  useEffect(() => {
-    if (!!selectedFinish && !!selectedGrade) {
-      setProductIds(
-        possibleProductIdsForGrades?.[selectedGrade]?.[selectedFinish]
-          ?.productids || [],
-      );
-    }
-  }, [selectedFinish, selectedGrade, possibleProductIdsForGrades]);
-
   const onGradeValueChange = (grade: string) => {
     setSelectedGrade(grade);
     if (selectedFinish === undefined || selectedFinish === "") {
@@ -92,15 +79,10 @@ const LaminateCard = ({
       possibleProductIdsForGrades?.[selectedGrade]?.[finish]?.productids || [],
     );
   };
-
-  const onOpenChange = (isOpen: boolean) => {
-    setOpen(isOpen);
-    setSelectedGrade(singleGrade ? grades[0] ?? "" : "");
-    setSelectedFinish(singleFinish ? finishes[0] ?? "" : "");
-  };
+  // todo: set selected values for grade and finish if only one exists
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="ghost">
           <Image
