@@ -11,3 +11,4 @@ tsconfig.tsbuildinfo
 # Mobile
 *.apk
 *.ipa
+*.tar.gz
