@@ -4,7 +4,7 @@ import type { ApiConfig } from "~/lib/types";
 
 const useSuspenseCategoryList = (config: ApiConfig, level: string) => {
   return useSuspenseQuery({
-    queryKey: ["categorylist", level, config],
+    queryKey: ["category-list", level, config],
     queryFn: () => getCategoryList(config, level),
   });
 };
