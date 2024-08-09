@@ -38,18 +38,21 @@ const SubCategoryView = ({ categoryId, ...style }: SubCategoryViewProps) => {
     categoryId,
   );
 
+  if (!data) {
+    return null;
+  }
+
   return (
     <ScrollView>
       <YStack flex={1} marginHorizontal={20} {...style}>
-        {!!data &&
-          data.map((category) => (
-            <CategoryItem
-              key={category.id}
-              category={category.title}
-              categoryId={category.id.toString()}
-              link={`/browse-categories/${category.id}?title=${category.title}`}
-            />
-          ))}
+        {data.map((category) => (
+          <CategoryItem
+            key={category.id}
+            category={category.title}
+            categoryId={category.id.toString()}
+            link={`/browse-categories/${category.id}?title=${category.title}`}
+          />
+        ))}
       </YStack>
     </ScrollView>
   );
