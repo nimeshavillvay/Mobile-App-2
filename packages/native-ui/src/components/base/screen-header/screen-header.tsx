@@ -32,7 +32,7 @@ export const ScreenHeader = ({
         alignItems="center"
         testID="screen-header-inner-view"
       >
-        {type !== "search" ? (
+        {type !== "center-aligned" ? (
           <>
             {router.canGoBack() && !hideBackButton && (
               <Button
@@ -77,18 +77,34 @@ export const ScreenHeader = ({
           </>
         ) : (
           <>
-            <Button
-              pos="absolute"
-              top={5}
-              onPress={() => router.back()}
-              backgroundColor="white"
-              testID="back-button"
-            >
-              <FontAwesome name="angle-left" size={28} />
-            </Button>
+            {router.canGoBack() && (
+              <Button
+                pos="absolute"
+                top={3}
+                onPress={() => router.back()}
+                backgroundColor="white"
+                testID="back-button"
+                hitSlop={15}
+                paddingRight={0}
+                pressStyle={{
+                  backgroundColor: "$colorTransparent",
+                  borderWidth: 0,
+                }}
+              >
+                <FontAwesome name="angle-left" size={28} />
+              </Button>
+            )}
 
-            <Text fontSize="$7" ml="auto" mr="auto" alignSelf="center">
-              Search
+            <Text
+              paddingHorizontal={30}
+              fontSize="$7"
+              ml="auto"
+              mr="auto"
+              alignSelf="center"
+              numberOfLines={1}
+              zIndex={-1}
+            >
+              {title}
             </Text>
           </>
         )}

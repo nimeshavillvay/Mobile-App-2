@@ -33,3 +33,19 @@ export const productLandingCategorySchema = z.object({
 export type ProductLandingCategory = z.infer<
   typeof productLandingCategorySchema
 >;
+
+const baseCategory = z.object({
+  id: z.string(),
+  name: z.string(),
+  slug: z.string(),
+  shortcode: z.string(),
+  item_count: z.string(),
+  direct_item_count: z.string(),
+  img: z.string().or(z.null()),
+});
+
+export const categoryListSchema = baseCategory.extend({
+  subcategories: z.lazy(() => baseCategory.array()).optional(),
+});
+
+export type CategoryList = z.infer<typeof categoryListSchema>;

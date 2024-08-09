@@ -79,7 +79,7 @@ export const FeaturedCategoriesList = ({
     </Link>
   ),
   ViewAllComponent = () => (
-    <Link href="/category">
+    <Link href="/browse-categories">
       <View justifyContent="center" width={80} height={80}>
         <Circle
           size={CATEGORY_WIDTH}
