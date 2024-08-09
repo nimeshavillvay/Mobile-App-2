@@ -2,8 +2,11 @@ import useSessionTokenStorage from "@/hooks/auth/use-session-token-storage.hook"
 import { API_BASE_URL, API_KEY, SESSION_TOKEN_COOKIE } from "@/lib/constants";
 import CookieManager from "@react-native-cookies/cookies";
 import { getSession } from "@repo/shared-logic/apis/base/account/get-session";
+import * as Sentry from "@sentry/react-native";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { isRunningInExpoGo } from "expo";
 import { useFonts } from "expo-font";
+import { useNavigationContainerRef } from "expo-router";
 import { Stack } from "expo-router/stack";
 import * as SplashScreen from "expo-splash-screen";
 // eslint-disable-next-line no-restricted-imports
@@ -12,7 +15,22 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { TamaguiProvider } from "tamagui";
 import tamaguiConfig from "../tamagui.config";
 
+// Construct a new instrumentation instance. This is needed to communicate between the integration and React
+const routingInstrumentation = new Sentry.ReactNavigationInstrumentation();
+
 const DOMAIN = "https://wurthlac.com";
+
+Sentry.init({
+  dsn: "https://86baa557c3487f200ac62ad41ed5f791@o4507694849589248.ingest.us.sentry.io/4507694864400384",
+  debug: true, // If `true`, Sentry will try to print out useful debugging information if something goes wrong with sending the event. Set it to `false` in production
+  integrations: [
+    new Sentry.ReactNativeTracing({
+      // Pass instrumentation to be used as `routingInstrumentation`
+      routingInstrumentation,
+      enableNativeFramesTracking: !isRunningInExpoGo(),
+    }),
+  ],
+});
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -25,6 +43,15 @@ const queryClient = new QueryClient({
 SplashScreen.preventAutoHideAsync();
 
 const RootLayout = () => {
+  // Capture the NavigationContainer ref and register it with the instrumentation.
+  const ref = useNavigationContainerRef();
+
+  useEffect(() => {
+    if (ref) {
+      routingInstrumentation.registerNavigationContainer(ref);
+    }
+  }, [ref]);
+
   const token = useSessionTokenStorage((state) => state.token);
   const setToken = useSessionTokenStorage((state) => state.setToken);
 
@@ -124,4 +151,5 @@ const RootLayout = () => {
   );
 };
 
-export default RootLayout;
+// Wrap the Root Layout route component with `Sentry.wrap` to capture gesture info and profiling data.
+export default Sentry.wrap(RootLayout);

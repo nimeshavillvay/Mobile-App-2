@@ -27,6 +27,13 @@ const config: ExpoConfig = {
         cameraPermission: "Allow $(PRODUCT_NAME) to access your camera",
       },
     ],
+    [
+      "@sentry/react-native/expo",
+      {
+        organization: "villvay-py",
+        project: "react-native",
+      },
+    ],
   ],
   scheme: "wurthlac",
   splash: {
