@@ -48,15 +48,14 @@ describe("ScreenHeader", () => {
     expect(screen.queryByTestId("back-button")).toBeNull();
   });
 
-  it('renders search and barcode scan icons when type is not "search"', () => {
+  it('renders search and barcode scan icons when type is not "center-aligned"', () => {
     render(<ScreenHeader title="Test" barcodeScannerPath="/test-path" />);
     expect(screen.getByTestId("search-icon")).toBeOnTheScreen();
     expect(screen.getByTestId("barcode-scan-icon")).toBeOnTheScreen();
   });
 
-  it('does not render title, search and barcode scan icons when type is "search"', () => {
-    render(<ScreenHeader title="Test" type="search" />);
-    expect(screen.queryByText("Test")).toBeNull();
+  it('does not render search and barcode scan icons when type is "center-aligned"', () => {
+    render(<ScreenHeader title="Test" type="center-aligned" />);
     expect(screen.queryByTestId("search-icon")).toBeNull();
     expect(screen.queryByTestId("barcode-scan-icon")).toBeNull();
   });

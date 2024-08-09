@@ -58,7 +58,7 @@ const Search = () => {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
-      <ScreenHeader title="Search" type="search" />
+      <ScreenHeader title="Search" type="center-aligned" />
       <Form style={{ paddingHorizontal: 12 }}>
         <Controller
           control={form.control}
