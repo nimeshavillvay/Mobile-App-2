@@ -185,8 +185,8 @@ const AttributesList = ({
               {attribute.values.map((value) => (
                 <CategoryFilterCheckboxItem
                   key={value.id}
-                  value={isChecked(attribute.id, value.id.toString())}
-                  onValueChange={(checked) => {
+                  checked={isChecked(attribute.id, value.id.toString())}
+                  onCheckedChanged={(checked) => {
                     if (checked) {
                       toggleCheck(true, attribute.id, value.id.toString());
                     } else {
