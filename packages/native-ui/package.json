@@ -11,6 +11,7 @@
     "test": "jest"
   },
   "devDependencies": {
+    "@react-native-community/checkbox": "^0.5.17",
     "@react-native-masked-view/masked-view": "^0.3.1",
     "@repo/eslint-config": "workspace:*",
     "@repo/shared-logic": "workspace:*",
@@ -38,6 +39,7 @@
     "typescript": "~5.5.3"
   },
   "peerDependencies": {
+    "@react-native-community/checkbox": "^0.5.17",
     "@react-native-masked-view/masked-view": "^0.3.1",
     "@repo/shared-logic": "workspace:*",
     "@tamagui/lucide-icons": "1.102.1",

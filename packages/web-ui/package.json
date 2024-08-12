@@ -9,7 +9,7 @@
     "dev": "storybook dev -p 6006 --no-open",
     "lint": "eslint src/ --max-warnings 0",
     "build-storybook": "storybook build",
-    "test": "jest"
+    "test": "cross-env NODE_ENV=test jest"
   },
   "devDependencies": {
     "@hookform/resolvers": "^3.6.0",
@@ -55,6 +55,7 @@
     "chromatic": "^11.7.0",
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
+    "cross-env": "^7.0.3",
     "cva": "1.0.0-beta.1",
     "downshift": "^9.0.6",
     "embla-carousel-react": "^8.1.6",
