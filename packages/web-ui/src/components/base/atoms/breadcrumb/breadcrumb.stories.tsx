@@ -6,7 +6,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "~/components/ui/dropdown-menu"; // TODO once implemented in molecules import from that
+} from "~/components/base/molecules/dropdown-menu";
 import {
   Breadcrumb,
   BreadcrumbEllipsis,

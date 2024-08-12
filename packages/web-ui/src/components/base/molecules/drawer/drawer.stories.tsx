@@ -15,7 +15,7 @@ import {
 } from "./drawer";
 
 const meta: Meta<typeof Drawer> = {
-  title: "Base/Molecule/Drawer",
+  title: "Base/Molecules/Drawer",
   component: Drawer,
   parameters: {
     layout: "centered",

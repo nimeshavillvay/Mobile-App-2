@@ -1,12 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { Button } from "~/components/ui/button";
+import { Button } from "~/components/base/atoms/button";
 import type { ToastActionElement } from "./toast";
 import { ToastAction } from "./toast";
 import { Toaster } from "./toaster";
 import { useToast } from "./use-toast";
 
 const meta: Meta<typeof Toaster> = {
-  title: "Base/Molecule/Toast",
+  title: "Base/Molecules/Toast",
   component: Toaster,
   parameters: {
     layout: "centered",
