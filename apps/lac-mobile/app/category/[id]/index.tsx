@@ -6,11 +6,13 @@ import { ScreenLayout } from "@repo/native-ui/components/base/screen-layout";
 import { SubCategoriesList as SubCategoriesListPrimitive } from "@repo/native-ui/components/category/sub-categories-list";
 import useSuspenseProductLandingCategory from "@repo/shared-logic/apis/hooks/category/use-suspense-product-landing-category.hook";
 import useSuspenseInfiniteSearch from "@repo/shared-logic/apis/hooks/search/use-suspense-infinite-search.hook";
-import { useLocalSearchParams } from "expo-router";
+import { SlidersHorizontal } from "@tamagui/lucide-icons";
+import { Link, useGlobalSearchParams, useLocalSearchParams } from "expo-router";
 import { Stack } from "expo-router/stack";
 import { MotiView } from "moti";
 import { Skeleton } from "moti/skeleton";
 import { Suspense } from "react";
+import { StyleSheet } from "react-native";
 import { Button, H1, Text, View, XStack } from "tamagui";
 
 const CategoryPage = () => {
@@ -51,6 +53,34 @@ const CategoryPage = () => {
 };
 
 export default CategoryPage;
+
+const styles = StyleSheet.create({
+  filtersBtn: {
+    backgroundColor: "#ffffff",
+    paddingHorizontal: 13,
+    fontSize: 14,
+    borderRadius: 7,
+    borderWidth: 1,
+    borderColor: "#E2E2E2",
+  },
+  filtersCountContainer: {
+    position: "absolute",
+    right: 0,
+    top: 0,
+    width: 18,
+    height: 18,
+    backgroundColor: "#171717",
+    borderRadius: 9999,
+    alignItems: "center",
+    justifyContent: "center",
+    transform: [{ translateX: 9 }, { translateY: -9 }],
+  },
+  filtersCount: {
+    fontSize: 12,
+    lineHeight: 12,
+    color: "#FCFCFC",
+  },
+});
 
 const CategoryPageHeader = ({ id }: { readonly id: string }) => {
   const { data } = useSuspenseProductLandingCategory(
@@ -104,6 +134,26 @@ const SubCategoriesList = ({ id }: { readonly id: string }) => {
 
 const CategoryProductsList = ({ id }: { readonly id: string }) => {
   const token = useSessionTokenStorage((state) => state.token);
+  const globalSearchParams = useGlobalSearchParams();
+
+  const selectedValues: Record<string, string[]> = {};
+  let totalFiltersSelected = 0;
+  for (const attributeId in globalSearchParams) {
+    if (attributeId !== "id") {
+      const values = globalSearchParams[attributeId];
+
+      if (values) {
+        if (Array.isArray(values)) {
+          selectedValues[attributeId] = values;
+          totalFiltersSelected = totalFiltersSelected + values.length;
+        } else {
+          selectedValues[attributeId] = values.split(",");
+          totalFiltersSelected =
+            totalFiltersSelected + values.split(",").length;
+        }
+      }
+    }
+  }
 
   const { data } = useSuspenseProductLandingCategory(
     {
@@ -121,6 +171,7 @@ const CategoryProductsList = ({ id }: { readonly id: string }) => {
     {
       categoryId: id,
     },
+    selectedValues,
   );
 
   if (data.mainCategory.subCategories.length > 0) {
@@ -140,8 +191,16 @@ const CategoryProductsList = ({ id }: { readonly id: string }) => {
       testID="category-products-container"
     >
       <XStack alignItems="center" justifyContent="space-between">
-        {/* This button is a placeholder until the filters are implemented */}
-        <Button>Filters</Button>
+        <Link href={`/category/${id}/filters`} asChild>
+          <Button style={styles.filtersBtn} icon={SlidersHorizontal}>
+            Filters
+            {!!totalFiltersSelected && (
+              <View style={styles.filtersCountContainer}>
+                <Text style={styles.filtersCount}>{totalFiltersSelected}</Text>
+              </View>
+            )}
+          </Button>
+        </Link>
 
         <Text
           color="#7E7E7E"
