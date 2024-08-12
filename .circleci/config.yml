@@ -1,0 +1,84 @@
+version: 2.1
+
+jobs:
+  test:
+    docker:
+      - image: node:20
+    parallelism: 4
+
+    steps:
+      - checkout
+
+      # Restore pnpm cache
+      - restore_cache:
+          name: Restore pnpm Package Cache
+          keys:
+            - pnpm-packages-{{ checksum "pnpm-lock.yaml" }}
+            - pnpm-packages-
+
+      # Install pnpm locally
+      - run:
+          name: Install pnpm package manager
+          command: |
+            corepack enable
+            corepack prepare pnpm@9.4.0 --activate
+            pnpm config set store-dir .pnpm-store
+          environment:
+            TURBO_UI: "false"
+
+      # Install dependencies
+      - run:
+          name: Install dependencies
+          command: pnpm install
+          environment:
+            TURBO_UI: "false"
+
+      # Save pnpm cache
+      - save_cache:
+          name: Save pnpm package cache
+          key: pnpm-packages-{{ checksum "pnpm-lock.yaml" }}
+          paths:
+            - .pnpm-store
+
+      # Restore Prettier cache
+      - restore_cache:
+          name: Restore Prettier cache
+          keys:
+            - prettier-cache-{{ .Revision }}
+
+      # Run Prettier check
+      - run:
+          name: Run Prettier check
+          command: pnpm prettier:check
+
+      # Save Prettier cache
+      - save_cache:
+          name: Save Prettier cache
+          paths:
+            - .prettier/cache
+          key: prettier-cache-{{ .Revision }}
+
+      # Run unit tests for web-ui
+      - run:
+          name: Run unit tests for web-ui
+          command: |
+            WEB_UI_TEST_FILES=$(circleci tests glob "packages/web-ui/src/**/*.test.{js,ts,jsx,tsx}")
+            echo "$WEB_UI_TEST_FILES" | circleci tests run --command="xargs pnpm test --filter @repo/web-ui" --
+          environment:
+            TURBO_UI: "false"
+
+      # Run unit tests for wbs
+      - run:
+          name: Run unit tests for wbs
+          command: |
+            WBS_TEST_FILES=$(circleci tests glob "apps/wbs-web/app/**/*.test.{js,ts,jsx,tsx}")
+            echo "$WBS_TEST_FILES" | circleci tests run --command="xargs pnpm test --filter wbs-web" --
+          environment:
+            TURBO_UI: "false"
+            # Disabling the UI can make the logs cleaner and more readable, also improves performance
+
+workflows:
+  version: 2
+  test:
+    jobs:
+      - test

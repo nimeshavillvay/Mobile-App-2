@@ -1,0 +1,14 @@
+name: Nightly Webhook
+
+on:
+  schedule:
+    - cron: "0 0 * * *" # nightly build
+  workflow_dispatch: # Allows manual trigger from GitHub Actions UI
+
+jobs:
+  call-webhook:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call CircleCI Webhook Trigger
+        run: |
+          curl -X POST -H "content-type: application/json" 'https://internal.circleci.com/private/soc/e/ac759f72-43b9-4844-9717-09a4cfda8514?secret=sOim5PsbrNYiU8UBUiwyO0pSI2PkQ9WLNDQSKe-FovQ='
