@@ -1,4 +1,3 @@
-import CheckBox from "@react-native-community/checkbox";
 import { ChevronDown } from "@tamagui/lucide-icons";
 import { MotiView } from "moti";
 import { Skeleton } from "moti/skeleton";
@@ -13,6 +12,7 @@ import {
   Text,
   XStack,
 } from "tamagui";
+import { Checkbox, type CheckboxProps } from "~/components/checkbox";
 
 const styles = StyleSheet.create({
   attributesList: {
@@ -118,37 +118,24 @@ export const CategoryFiltersAccordionContent = ({
 };
 
 export const CategoryFilterCheckboxItem = ({
-  value,
-  onValueChange,
-  disabled,
+  checked,
+  onCheckedChanged,
   onPress,
+  disabled,
   children,
 }: {
-  readonly value?: ComponentProps<typeof CheckBox>["value"];
-  readonly onValueChange?: ComponentProps<typeof CheckBox>["onValueChange"];
-  readonly disabled?: ComponentProps<typeof CheckBox>["disabled"];
+  readonly checked?: CheckboxProps["checked"];
+  readonly onCheckedChanged?: CheckboxProps["onCheckedChanged"];
   readonly onPress?: ComponentProps<typeof Pressable>["onPress"];
-  readonly children: ReactNode;
+  readonly disabled?: boolean;
+  readonly children?: ReactNode;
 }) => {
   return (
     <XStack alignItems="center" gap={10}>
-      <CheckBox
-        value={value}
-        onValueChange={onValueChange}
+      <Checkbox
+        checked={checked}
+        onCheckedChanged={onCheckedChanged}
         disabled={disabled}
-        style={{
-          height: 20,
-          width: 20,
-        }}
-        boxType="square"
-        tintColor="#E2E2E2"
-        tintColors={{
-          true: "#E2E2E2",
-          false: "#E2E2E2",
-        }}
-        onTintColor="#E2E2E2"
-        onCheckColor="#171717"
-        animationDuration={0.15}
       />
 
       <Pressable disabled={disabled} onPress={onPress}>
