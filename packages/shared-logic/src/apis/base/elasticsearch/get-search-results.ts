@@ -41,7 +41,7 @@ const searchDataSchema = z.object({
     plp: z.boolean(),
     searchParams: z.string().optional(),
   }),
-  results: z.array(searchResultSchema),
+  results: z.array(searchResultSchema).or(searchResultSchema),
 });
 
 export const getSearchResults = async (
