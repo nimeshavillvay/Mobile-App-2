@@ -47,7 +47,7 @@ jobs:
       - name: Install dependencies
         run: pnpm install
       - name: Check formatting with Prettier
-        run: pnpm prettier:check
+        run: pnpm run prettier:check
   linting-and-testing:
     name: Linting and Testing
     runs-on: ubuntu-22.04
@@ -85,6 +85,6 @@ jobs:
       - name: Install dependencies
         run: pnpm install
       - name: Run ESLint
-        run: pnpm lint
+        run: pnpm run lint
       - name: Run Unit Tests
-        run: pnpm test
+        run: pnpm run test

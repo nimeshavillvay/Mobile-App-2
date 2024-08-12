@@ -14,7 +14,7 @@ import {
 } from "./sheet";
 
 const meta: Meta<typeof Sheet> = {
-  title: "Base/Molecule/Sheet",
+  title: "Base/Molecules/Sheet",
   component: Sheet,
   parameters: {
     layout: "centered",

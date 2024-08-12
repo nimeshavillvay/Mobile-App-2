@@ -22,7 +22,7 @@ import {
 
 // Meta configuration for both stories
 const meta: Meta<typeof DropdownMenu> = {
-  title: "Base/Molecule/Dropdown Menu",
+  title: "Base/Molecules/Dropdown Menu",
   component: DropdownMenu,
   parameters: {
     layout: "centered",

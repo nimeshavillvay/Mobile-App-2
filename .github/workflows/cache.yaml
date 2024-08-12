@@ -48,4 +48,4 @@ jobs:
       - name: Install dependencies
         run: pnpm install
       - name: Check formatting with Prettier
-        run: pnpm prettier:check
+        run: pnpm run prettier:check

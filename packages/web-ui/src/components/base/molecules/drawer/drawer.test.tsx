@@ -14,7 +14,6 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "./drawer";
-import "./mockMatchMedia"; // Implemented to overcome Mocking methods which are not implemented in JSDOM refer to https://jestjs.io/docs/manual-mocks
 
 // Mock ResizeObserver
 global.ResizeObserver = class {

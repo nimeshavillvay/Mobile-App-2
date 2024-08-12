@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { Label } from "~/components/ui/label";
+import { Label } from "~/components/base/atoms/label";
 import { Checkbox } from "./checkbox";
 
 const meta: Meta<typeof Checkbox> = {
