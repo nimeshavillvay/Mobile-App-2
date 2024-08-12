@@ -1,0 +1,50 @@
+name: "Changed_Components"
+
+on:
+  push:
+    branches: [develop]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  actions: write
+  contents: read
+
+jobs:
+  changed-files:
+    runs-on: ubuntu-22.04
+    name: changed-files
+    outputs:
+      all_changed_files: ${{ steps.changed-files.outputs.all_changed_files }}
+      any_changed: ${{ steps.changed-files.outputs.any_changed }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v44
+        with:
+          files: |
+            packages/web-ui/src/components/base/**
+            packages/web-ui/.storybook/**
+            apps/wbs-web/app/_components/**
+            apps/wbs-web/.storybook/**
+      - name: List all changed files
+        env:
+          ALL_CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
+          ANY_CHANGED: ${{ steps.changed-files.outputs.any_changed }}
+        run: |
+          for file in ${ALL_CHANGED_FILES}; do
+              echo "$file was changed"
+              echo Did any files change: ${ANY_CHANGED}
+          done
+
+  chromatic:
+    name: Run visual tests
+    needs: [changed-files]
+    if: ${{ needs.changed-files.outputs.any_changed == 'true' }}
+    uses: ./.github/workflows/chromatic.yaml
+    secrets: inherit
