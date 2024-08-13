@@ -121,7 +121,7 @@ const SearchResultsList = ({ query }: { readonly query: string }) => {
         data={deferredProducts.map((product) => ({
           productId: product.id,
           title: product.productTitle,
-          sku: product.groupId,
+          sku: product.materialNumber,
           image: product.itemImage,
           uom: product.uom ?? "",
         }))}
