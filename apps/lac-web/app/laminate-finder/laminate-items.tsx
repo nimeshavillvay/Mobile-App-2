@@ -4,6 +4,7 @@ import useAddMultipleToCartMutation from "@/cart/_add-more-items/use-add-multipl
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@repo/web-ui/components/ui/button";
 import { Form } from "@repo/web-ui/components/ui/form";
+import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import {
   Table,
   TableBody,
@@ -115,15 +116,17 @@ const LaminateItems = ({
 
         <div className="flex items-center gap-4 rounded bg-gray-50 p-4">
           <div className="grow">
-            <span className="text-wurth-gray-500">Total:</span>{" "}
-            {priceCheckRequest.length > 0 ? (
-              <LaminateCardTotalPrice
-                token={token}
-                priceCheckRequest={priceCheckRequest}
-              />
-            ) : (
-              <strong className="text-lg">$0.00</strong>
-            )}
+            <Suspense fallback={<Skeleton className="h-9 w-40" />}>
+              <span className="text-wurth-gray-500">Total:</span>{" "}
+              {priceCheckRequest.length > 0 ? (
+                <LaminateCardTotalPrice
+                  token={token}
+                  priceCheckRequest={priceCheckRequest}
+                />
+              ) : (
+                <strong className="text-lg">$0.00</strong>
+              )}
+            </Suspense>
           </div>
           <Button
             type="button"
