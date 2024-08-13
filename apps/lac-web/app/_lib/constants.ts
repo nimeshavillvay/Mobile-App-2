@@ -1,7 +1,7 @@
 export const BASE_URL = "https://wurthlac.com";
 export const SESSION_TOKEN_COOKIE = "xid_00924";
 export const TOKEN_EXPIRE_COOKIE = "xid_00924_expire";
-export const TOKEN_MAX_AGE = 7200;
+export const TOKEN_MAX_AGE = 172800; // 2 days
 
 export const PRIVATE_ROUTES = [
   "/osr",
