@@ -72,7 +72,7 @@ const LaminateCard = ({
         <div className="group relative cursor-pointer overflow-hidden rounded-lg bg-white shadow-md">
           <div className="aspect-square relative w-full">
             <Image
-              src={product.groupImage}
+              src={product.groupImage ?? product.variants[0]?.image}
               alt={product.groupName}
               width={300}
               height={300}

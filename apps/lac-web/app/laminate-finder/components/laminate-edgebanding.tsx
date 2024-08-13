@@ -22,7 +22,7 @@ import {
 } from "@repo/web-ui/components/ui/table";
 import Image from "next/image";
 import { Suspense, useDeferredValue } from "react";
-import { Form, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import {
   edgeBandingAddToCartFormSchema,
   type EdgeBandingAddToCartFormSchema,
@@ -96,113 +96,113 @@ const LaminateEdgeBanding = ({
   )[0]?.attribute_value;
 
   return (
-    <Form {...form}>
-      <form id={formId}>
-        <div className="mt-4 border-t pt-4">
-          <h4 className="pb-2 text-xl font-semibold">Matching Edgebanding</h4>
-          <Accordion type="single" collapsible>
-            <AccordionItem value="item-1">
-              <AccordionTrigger>
-                {laminateData?.edgebanding[0]?.productName}
-              </AccordionTrigger>
-              <AccordionContent>
-                <div className="mb-4 flex gap-4">
+    // <Form {...form}>
+    <form id={formId}>
+      <div className="mt-4 border-t pt-4">
+        <h4 className="pb-2 text-xl font-semibold">Matching Edgebanding</h4>
+        <Accordion type="single" collapsible>
+          <AccordionItem value="item-1">
+            <AccordionTrigger>
+              {laminateData?.edgebanding[0]?.productName}
+            </AccordionTrigger>
+            <AccordionContent>
+              <div className="mb-4 flex gap-4">
+                <Image
+                  src={product.groupImage}
+                  alt={product.groupName}
+                  width={132}
+                  height={132}
+                />
+                <div>
                   <Image
-                    src={product.groupImage}
-                    alt={product.groupName}
-                    width={132}
-                    height={132}
+                    src={laminateData?.brandImage ?? product.groupImage}
+                    alt={laminateData?.brandName ?? product.groupName}
+                    width={76}
+                    height={76}
                   />
-                  <div>
-                    <Image
-                      src={laminateData?.brandImage ?? product.groupImage}
-                      alt={laminateData?.brandName ?? product.groupName}
-                      width={76}
-                      height={76}
-                    />
-                    <div className="mt-2">
-                      {laminateBrand && (
-                        <div className="flex gap-4">
-                          <p className="w-24 text-gray-600">Brand:</p>
-                          <p className="font-semibold">{laminateBrand}</p>
-                        </div>
-                      )}
-                      {laminateProductType && (
-                        <div className="flex gap-4">
-                          <p className="w-24 text-gray-600">Product Type:</p>
-                          <p className="font-semibold">{laminateProductType}</p>
-                        </div>
-                      )}
-                      {laminateThickness && (
-                        <div className="flex gap-4">
-                          <p className="w-24 text-gray-600">Thickness:</p>
-                          <p className="font-semibold">{laminateThickness}</p>
-                        </div>
-                      )}
-                    </div>
+                  <div className="mt-2">
+                    {laminateBrand && (
+                      <div className="flex gap-4">
+                        <p className="w-24 text-gray-600">Brand:</p>
+                        <p className="font-semibold">{laminateBrand}</p>
+                      </div>
+                    )}
+                    {laminateProductType && (
+                      <div className="flex gap-4">
+                        <p className="w-24 text-gray-600">Product Type:</p>
+                        <p className="font-semibold">{laminateProductType}</p>
+                      </div>
+                    )}
+                    {laminateThickness && (
+                      <div className="flex gap-4">
+                        <p className="w-24 text-gray-600">Thickness:</p>
+                        <p className="font-semibold">{laminateThickness}</p>
+                      </div>
+                    )}
                   </div>
                 </div>
-                <div>
-                  <div className="w-full min-w-96">
-                    <Suspense fallback={<EdgeBandTableLoading />}>
-                      <Table>
-                        <TableHeader>
-                          <TableRow>
-                            <TableHead>Item # and MFR Part #</TableHead>
-                            <TableHead className="text-center lg:w-1/4">
-                              Price
-                            </TableHead>
-                            <TableHead className="text-center lg:w-1/6">
-                              QTY
-                            </TableHead>
-                            <TableHead className="text-right font-medium">
-                              Amount
-                            </TableHead>
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {laminateData?.edgebanding.map((item, index) => (
-                            <LaminateEdgeBandingRow
-                              key={index}
-                              product={item}
-                              token={token}
-                              groupId={groupId}
-                              quantityFieldIndex={index}
-                            />
-                          ))}
-                        </TableBody>
-                      </Table>
+              </div>
+              <div>
+                <div className="w-full min-w-96">
+                  <Suspense fallback={<EdgeBandTableLoading />}>
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Item # and MFR Part #</TableHead>
+                          <TableHead className="text-center lg:w-1/4">
+                            Price
+                          </TableHead>
+                          <TableHead className="text-center lg:w-1/6">
+                            QTY
+                          </TableHead>
+                          <TableHead className="text-right font-medium">
+                            Amount
+                          </TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {laminateData?.edgebanding.map((item, index) => (
+                          <LaminateEdgeBandingRow
+                            key={index}
+                            product={item}
+                            token={token}
+                            groupId={groupId}
+                            quantityFieldIndex={index}
+                          />
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </Suspense>
+                </div>
+                <div className="flex items-center gap-4 rounded bg-gray-50 p-4">
+                  <div className="grow">
+                    <Suspense fallback={<Skeleton className="h-9 w-40" />}>
+                      <span className="text-wurth-gray-500">Total:</span>{" "}
+                      {priceCheckRequest.length > 0 ? (
+                        <LaminateCardTotalPrice
+                          token={token}
+                          priceCheckRequest={priceCheckRequest}
+                        />
+                      ) : (
+                        <strong className="text-lg">$0.00</strong>
+                      )}
                     </Suspense>
                   </div>
-                  <div className="flex items-center gap-4 rounded bg-gray-50 p-4">
-                    <div className="grow">
-                      <Suspense fallback={<Skeleton className="h-9 w-40" />}>
-                        <span className="text-wurth-gray-500">Total:</span>{" "}
-                        {priceCheckRequest.length > 0 ? (
-                          <LaminateCardTotalPrice
-                            token={token}
-                            priceCheckRequest={priceCheckRequest}
-                          />
-                        ) : (
-                          <strong className="text-lg">$0.00</strong>
-                        )}
-                      </Suspense>
-                    </div>
-                    <Button
-                      type="button"
-                      onClick={handleAddAllItemsToCart}
-                      disabled={priceCheckRequest.length === 0}
-                    >
-                      Add to cart
-                    </Button>
-                  </div>
+                  <Button
+                    type="button"
+                    onClick={handleAddAllItemsToCart}
+                    disabled={priceCheckRequest.length === 0}
+                  >
+                    Add to cart
+                  </Button>
                 </div>
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
-        </div>
-      </form>
-    </Form>
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      </div>
+    </form>
+    // </Form>
   );
 };
 
