@@ -64,7 +64,10 @@ export const ProductCard = ({
 
         <Text verticalAlign="center">
           <Text style={[styles.price, isDiscounted && styles.saleText]}>$</Text>
-          <Text style={[styles.priceValue, isDiscounted && styles.saleText]}>
+          <Text
+            style={[styles.priceValue, isDiscounted && styles.saleText]}
+            testID={`price-${id}`}
+          >
             {price}
           </Text>
 
