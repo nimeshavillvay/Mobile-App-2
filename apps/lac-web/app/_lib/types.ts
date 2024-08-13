@@ -534,3 +534,42 @@ export type ProductItemInfo = {
 export type LaminateItemInfo = ProductItemInfo & {
   size: string;
 };
+
+export type EdgeBanding = {
+  productId: number;
+  slug: string;
+  isExcludedProduct: boolean;
+  productSku: string;
+  productName: string;
+  image: string;
+  isComparison: boolean;
+  isHazardous: boolean;
+  specialShipping: boolean;
+  productIdOnSap: string;
+  mfrPartNo: string;
+  productDescription: string;
+  productSubDescription: string;
+  brandCode: number;
+  unitOfMeasure: string;
+  boxQuantity: number;
+  minimumOrderQuantity: number;
+  quantityByIncrements: number;
+  weight: number;
+  prop65MessageOne: string;
+  prop65MessageTwo: string;
+  prop65MessageThree: string;
+  listPrice: number;
+  isSaleItem: boolean;
+  isNewItem: boolean;
+  fClassId: number;
+  class: string;
+  attributes: {
+    attribute_name: string;
+    attribute_value: null | string;
+  }[];
+  productStatus: string;
+  isDirectlyShippedFromVendor: boolean;
+  productSummary: string;
+  brand: string;
+  productCategory: string;
+};

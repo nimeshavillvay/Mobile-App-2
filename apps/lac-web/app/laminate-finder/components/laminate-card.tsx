@@ -3,32 +3,22 @@
 import useLaminateFilter from "@/_hooks/product/use-laminate-item-info.hook";
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import type { Product } from "@/_lib/types";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@repo/web-ui/components/ui/accordion";
-import { Button } from "@repo/web-ui/components/ui/button";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Dialog,
   DialogContent,
   DialogTrigger,
 } from "@repo/web-ui/components/ui/dialog";
-import { Input } from "@repo/web-ui/components/ui/input";
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@repo/web-ui/components/ui/table";
 import Image from "next/image";
 import { Suspense, useState } from "react";
+import { FormProvider, useForm } from "react-hook-form";
+import type { LaminateAddToCartFormSchema } from "../helpers";
+import { laminateAddToCartFormSchema } from "../helpers";
+import LaminateEdgeBanding from "./laminate-edgebanding";
 import LaminateGradeFinish from "./laminate-grade-finish";
 import LaminateGroup from "./laminate-group";
+import LaminatesDialogLoading from "./laminates-dialog-loading";
 
 const LaminateCard = ({
   product,
@@ -39,9 +29,15 @@ const LaminateCard = ({
   readonly product: Product;
   readonly token: string;
 }) => {
+  const form = useForm<LaminateAddToCartFormSchema>({
+    resolver: zodResolver(laminateAddToCartFormSchema),
+  });
+
   const { data: laminateData } = useLaminateFilter(
     Number(product.variants[0]?.id),
   );
+
+  const formId = `add-edgeband-to-cart-${groupId}`;
 
   const grades = laminateData?.groupFilters?.values_ALL?.GRADE;
   const finishes = laminateData?.groupFilters?.values_ALL?.FINISH;
@@ -128,110 +124,18 @@ const LaminateCard = ({
             </Suspense>
           </div>
         </div>
-        <div className="mt-4 border-t pt-4">
-          <h4 className="pb-2 text-xl font-semibold">Matching Edgebanding</h4>
-          <Accordion type="single" collapsible>
-            <AccordionItem value="item-1">
-              <AccordionTrigger>
-                3D Edgebanding, Color 3D700R Brushed Aluminum, 2mm Thick 15/16
-                inch(need to get from api)
-              </AccordionTrigger>
-              <AccordionContent>
-                <div className="mb-4 flex gap-4">
-                  <Image
-                    src={product.groupImage}
-                    alt={product.groupName}
-                    width={132}
-                    height={132}
-                  />
-                  <div>
-                    <Image
-                      src={product.groupImage}
-                      alt={product.groupName}
-                      width={76}
-                      height={76}
-                    />
-                    <div className="mt-2">
-                      <div className="flex gap-4">
-                        <p className="w-24 text-gray-600">Brand:</p>
-                        <p className="font-semibold">Dollken Woodtape</p>
-                      </div>
-                      <div className="flex gap-4">
-                        <p className="w-24 text-gray-600">Product Type:</p>
-                        <p className="font-semibold">Dollken Woodtape</p>
-                      </div>
-                      <div className="flex gap-4">
-                        <p className="w-24 text-gray-600">Thickness:</p>
-                        <p className="font-semibold">Dollken Woodtape</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div>
-                  <div className="w-full min-w-96">
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead>Item # and MFR Part #</TableHead>
-                          <TableHead className="text-center lg:w-1/4">
-                            Width &times; Height
-                          </TableHead>
-                          <TableHead className="text-right lg:w-1/4">
-                            Price
-                          </TableHead>
-                          <TableHead className="text-center lg:w-1/6">
-                            QTY
-                          </TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        <TableRow>
-                          <TableCell className="font-medium">
-                            INV001
-                            <br />
-                            INV001
-                          </TableCell>
-                          <TableCell className="text-center">
-                            Width &times; Height
-                          </TableCell>
-                          <TableCell className="text-right">
-                            <span className="text-lg font-semibold">
-                              $24.99 / EA
-                            </span>
-                            <p className="text-sm text-gray-500">
-                              $24.99/EA for 25-99 items,
-                              <br />
-                              24.99/EA for 25-99 items,
-                              <br />
-                              24.99/EA for 25-99 items,
-                            </p>
-                          </TableCell>
-                          <TableCell>
-                            <Input
-                              type="number"
-                              className="w-full text-center"
-                              placeholder="Quantity"
-                            />
-                            <p className="mt-2 text-center text-sm font-medium text-gray-500">
-                              EA
-                            </p>
-                          </TableCell>
-                        </TableRow>
-                      </TableBody>
-                    </Table>
-                  </div>
-                  <div className="flex items-center justify-end gap-4 rounded bg-gray-50 p-4">
-                    <div>
-                      <span className="text-wurth-gray-600">Total:</span>{" "}
-                      <strong className="text-lg">$456.00</strong>
-                    </div>
-                    <Button>Add to cart</Button>
-                  </div>
-                </div>
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
-        </div>
+        <FormProvider {...form}>
+          <form id={formId}>
+            <Suspense fallback={<LaminatesDialogLoading />}>
+              {/* todo: update */}
+              <LaminateEdgeBanding
+                product={product}
+                token={token}
+                groupId={groupId}
+              />
+            </Suspense>
+          </form>
+        </FormProvider>
       </DialogContent>
     </Dialog>
   );

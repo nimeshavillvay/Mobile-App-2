@@ -1,5 +1,8 @@
+"use client";
+
 import NumberInputField from "@/_components/number-input-field";
-import useSuspenseCheckAvailability from "@/_hooks/product/use-suspense-check-availability.hook";
+import type { EdgeBanding } from "@/_lib/types";
+
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import { TableCell, TableRow } from "@repo/web-ui/components/ui/table";
 import { Suspense } from "react";
@@ -7,52 +10,43 @@ import { Controller, useFormContext } from "react-hook-form";
 import type { LaminateAddToCartFormSchema } from "../helpers";
 import LaminateItemRowPrice from "./laminate-item-row-price";
 
-const LaminateItem = ({
-  productId,
+const LaminateEdgeBandingRow = ({
+  product,
   token,
-  size,
   quantityFieldIndex,
-  sku,
 }: {
-  readonly productId: number;
+  readonly groupId: string;
+  readonly product: EdgeBanding;
   readonly token: string;
-  readonly size: string;
   readonly quantityFieldIndex: number;
-  readonly formId: string;
-  readonly sku: string;
 }) => {
-  const { data: checkAvailabilityQuery } = useSuspenseCheckAvailability(token, {
-    productId: Number(productId),
-    qty: 1,
-  });
-
   const { control, watch, register, setValue } =
     useFormContext<LaminateAddToCartFormSchema>();
 
   const quantity = watch(`quantity.${quantityFieldIndex}`);
 
   register(`productId.${quantityFieldIndex}`);
-  setValue(`productId.${quantityFieldIndex}`, productId.toString());
+  setValue(`productId.${quantityFieldIndex}`, product.productId.toString());
 
   register(`sku.${quantityFieldIndex}`);
-  setValue(`sku.${quantityFieldIndex}`, sku);
+  setValue(`sku.${quantityFieldIndex}`, product.productSku);
 
   return (
-    <TableRow key={productId}>
-      <TableCell className="w-40 text-nowrap">{size}</TableCell>
-      <TableCell className="text-nowrap">
-        Home Branch:{" "}
-        <strong className="font-semibold">
-          {checkAvailabilityQuery.availableLocations[0]?.amount ?? 0}
-        </strong>
-        <br />
-        Alt Branch:{" "}
-        <strong className="font-semibold">
-          {checkAvailabilityQuery.availableLocations[1]?.amount ?? 0}
-        </strong>
-        <br />
+    <TableRow>
+      <TableCell className="font-medium">{product.mfrPartNo}</TableCell>
+      <TableCell className="text-center">
+        <span className="text-lg font-semibold">$24.99 / EA</span>
       </TableCell>
       <TableCell className="text-right">
+        <p className="text-sm text-gray-500">
+          $24.99/EA for 25-99 items,
+          <br />
+          24.99/EA for 25-99 items,
+          <br />
+          24.99/EA for 25-99 items,
+        </p>
+      </TableCell>
+      <TableCell>
         <Controller
           control={control}
           name={`quantity.${quantityFieldIndex}`}
@@ -71,16 +65,18 @@ const LaminateItem = ({
             />
           )}
         />
+        <p className="mt-2 text-center text-sm font-medium text-gray-500">EA</p>
       </TableCell>
+
       <TableCell className="text-right font-medium">
         {!!quantity && (
           <Suspense
-            key={productId}
+            key={product.productId}
             fallback={<Skeleton className="h-4 w-full rounded-lg shadow-md" />}
           >
             <LaminateItemRowPrice
               token={token}
-              productId={productId}
+              productId={product.productId}
               quantityFieldIndex={quantityFieldIndex}
             />
           </Suspense>
@@ -90,4 +86,4 @@ const LaminateItem = ({
   );
 };
 
-export default LaminateItem;
+export default LaminateEdgeBandingRow;
