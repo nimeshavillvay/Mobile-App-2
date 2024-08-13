@@ -10,6 +10,16 @@ export type LaminateAddToCartFormSchema = z.infer<
   typeof laminateAddToCartFormSchema
 >;
 
+export const edgeBandingAddToCartFormSchema = z.object({
+  bandQuantity: z.array(z.string()),
+  bandProductId: z.array(z.string()),
+  bandSku: z.array(z.string()),
+});
+
+export type EdgeBandingAddToCartFormSchema = z.infer<
+  typeof edgeBandingAddToCartFormSchema
+>;
+
 export const laminateSearchFormSchema = z.object({
   search: z.string(),
 });

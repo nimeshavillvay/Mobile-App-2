@@ -3,12 +3,14 @@
 import NumberInputField from "@/_components/number-input-field";
 import type { EdgeBanding } from "@/_lib/types";
 
+import useDebouncedState from "@/_hooks/misc/use-debounced-state.hook";
+import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import { TableCell, TableRow } from "@repo/web-ui/components/ui/table";
-import { Suspense } from "react";
+import { Suspense, useDeferredValue } from "react";
 import { Controller, useFormContext } from "react-hook-form";
-import type { LaminateAddToCartFormSchema } from "../helpers";
-import LaminateItemRowPrice from "./laminate-item-row-price";
+import type { EdgeBandingAddToCartFormSchema } from "../helpers";
+import EdgeBandRowPrice from "./edgeband-item-row-price";
 
 const LaminateEdgeBandingRow = ({
   product,
@@ -21,37 +23,52 @@ const LaminateEdgeBandingRow = ({
   readonly quantityFieldIndex: number;
 }) => {
   const { control, watch, register, setValue } =
-    useFormContext<LaminateAddToCartFormSchema>();
+    useFormContext<EdgeBandingAddToCartFormSchema>();
 
-  const quantity = watch(`quantity.${quantityFieldIndex}`);
+  register(`bandProductId.${quantityFieldIndex}`);
+  register(`bandSku.${quantityFieldIndex}`);
 
-  register(`productId.${quantityFieldIndex}`);
-  setValue(`productId.${quantityFieldIndex}`, product.productId.toString());
+  setValue(`bandProductId.${quantityFieldIndex}`, product.productId.toString());
+  setValue(`bandSku.${quantityFieldIndex}`, product.productSku);
+  const quantity = watch(`bandQuantity.${quantityFieldIndex}`);
 
-  register(`sku.${quantityFieldIndex}`);
-  setValue(`sku.${quantityFieldIndex}`, product.productSku);
+  const delayedQuantity = useDebouncedState(quantity);
+  const deferredQuantity = useDeferredValue(delayedQuantity);
+  console.log(">> quantity", quantity);
+  console.log(">> deferredQuantity", deferredQuantity);
+  const priceCheckQueryBreakdown = useSuspensePriceCheck(token, [
+    { productId: product.productId, qty: 1 },
+  ]);
+  const priceBreakdown =
+    priceCheckQueryBreakdown.data?.productPrices[0]?.priceBreakDowns;
+  const uom = priceCheckQueryBreakdown.data.productPrices[0]?.priceUnit;
 
   return (
     <TableRow>
-      <TableCell className="font-medium">{product.mfrPartNo}</TableCell>
+      <TableCell className="font-medium">{product.productSku}</TableCell>
       <TableCell className="text-center">
-        <span className="text-lg font-semibold">$24.99 / EA</span>
-      </TableCell>
-      <TableCell className="text-right">
-        <p className="text-sm text-gray-500">
-          $24.99/EA for 25-99 items,
-          <br />
-          24.99/EA for 25-99 items,
-          <br />
-          24.99/EA for 25-99 items,
-        </p>
+        <span className="text-lg font-semibold">
+          {priceCheckQueryBreakdown.data?.productPrices[0]?.price} / {uom}
+        </span>
+        {priceBreakdown !== undefined &&
+          priceBreakdown?.length > 0 &&
+          priceBreakdown.map((price, index) => (
+            <div className="text-sm text-gray-500" key={index}>
+              {price.price}/{uom} for{" "}
+              {index === 0
+                ? "1"
+                : (priceBreakdown[index - 1]?.quantity ?? 0) + 1}
+              -{price.quantity} items
+            </div>
+          ))}
       </TableCell>
       <TableCell>
         <Controller
           control={control}
-          name={`quantity.${quantityFieldIndex}`}
-          render={({ field: { onChange, onBlur, value, name, ref } }) => (
+          name={`bandQuantity.${quantityFieldIndex}`}
+          render={({ field: { onChange, onBlur, value = "", name, ref } }) => (
             <NumberInputField
+              // form={}
               onBlur={onBlur}
               onChange={onChange}
               value={value}
@@ -65,7 +82,9 @@ const LaminateEdgeBandingRow = ({
             />
           )}
         />
-        <p className="mt-2 text-center text-sm font-medium text-gray-500">EA</p>
+        <p className="mt-2 text-center text-sm font-medium text-gray-500">
+          {uom}
+        </p>
       </TableCell>
 
       <TableCell className="text-right font-medium">
@@ -74,7 +93,7 @@ const LaminateEdgeBandingRow = ({
             key={product.productId}
             fallback={<Skeleton className="h-4 w-full rounded-lg shadow-md" />}
           >
-            <LaminateItemRowPrice
+            <EdgeBandRowPrice
               token={token}
               productId={product.productId}
               quantityFieldIndex={quantityFieldIndex}

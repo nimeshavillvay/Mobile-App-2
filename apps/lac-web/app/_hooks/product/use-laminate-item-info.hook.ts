@@ -13,8 +13,9 @@ type GroupFilter = {
     values_GRADE?: Record<string, Record<string, { productids: string[] }>>;
     values_FINISH?: Record<string, Record<string, { productids: string[] }>>;
   };
+  brand_img: string;
+  brand_name: string;
   edgebanding: ProductItemInfo[];
-  //todo: add brand info
 };
 
 const useLaminateFilter = (productId: number) => {
@@ -30,6 +31,8 @@ const useLaminateFilter = (productId: number) => {
         .json<GroupFilter>();
       return {
         groupFilters: response.group_filters,
+        brandName: response.brand_name,
+        brandImage: response.brand_img,
         edgebanding: response.edgebanding.map((item) => ({
           productId: parseInt(item.productid, 10),
           slug: item.slug,

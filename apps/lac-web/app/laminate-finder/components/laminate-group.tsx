@@ -1,18 +1,19 @@
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import type { Product } from "@/_lib/types";
+import { formatNumberToPrice } from "@/_lib/utils";
 
 import Image from "next/image";
-import useSuspenseLaminateFilters from "../hooks/use-suspense-laminate-filters.hook";
-import useSuspenseSearchLaminateList from "../hooks/use-suspense-search-laminate-list.hook";
 
 const LaminateGroup = ({
   product,
   token,
-  groupId,
+  brandName,
+  brandImage,
 }: {
   readonly product: Product;
   readonly token: string;
-  readonly groupId: string;
+  readonly brandName: string;
+  readonly brandImage: string;
 }) => {
   const priceCheckQuery = useSuspensePriceCheck(token, [
     { productId: Number(product.variants[0]?.id), qty: 1 },
@@ -21,24 +22,13 @@ const LaminateGroup = ({
   const groupPrice = groupPriceData?.uomPrice ?? groupPriceData?.price ?? 0; // Note: discounts are not considered for laminates
 
   const groupUom = groupPriceData?.uomPriceUnit ?? groupPriceData?.priceUnit;
-  const categoryFiltersQuery = useSuspenseLaminateFilters({
-    token,
-  });
-  const { data } = useSuspenseSearchLaminateList(
-    token,
-    categoryFiltersQuery.data,
-  );
-  const laminateGroupInfo = data.groupList.filter(
-    (group) => group.groupId === groupId,
-  )[0];
-  // todo: get brand logo
 
   return (
     <div className="flex w-full gap-4 lg:w-60 lg:flex-col">
       <div>
         <Image
-          src={laminateGroupInfo?.groupImage ?? product.groupImage}
-          alt={product.groupName}
+          src={brandImage ?? product.groupImage}
+          alt={brandName ?? product.groupName}
           width={44}
           height={44}
         />
@@ -47,7 +37,7 @@ const LaminateGroup = ({
           dangerouslySetInnerHTML={{ __html: product.groupName }}
         />
         <p className="mb-2">
-          {groupPrice}/ {groupUom}
+          {formatNumberToPrice(groupPrice)}/ {groupUom}
         </p>
       </div>
       <div>

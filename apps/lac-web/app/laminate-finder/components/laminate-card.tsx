@@ -3,6 +3,7 @@
 import useLaminateFilter from "@/_hooks/product/use-laminate-item-info.hook";
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import type { Product } from "@/_lib/types";
+import { formatNumberToPrice } from "@/_lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Dialog,
@@ -13,12 +14,13 @@ import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import Image from "next/image";
 import { Suspense, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import type { LaminateAddToCartFormSchema } from "../helpers";
-import { laminateAddToCartFormSchema } from "../helpers";
+import {
+  edgeBandingAddToCartFormSchema,
+  type EdgeBandingAddToCartFormSchema,
+} from "../helpers";
 import LaminateEdgeBanding from "./laminate-edgebanding";
 import LaminateGradeFinish from "./laminate-grade-finish";
 import LaminateGroup from "./laminate-group";
-import LaminatesDialogLoading from "./laminates-dialog-loading";
 
 const LaminateCard = ({
   product,
@@ -29,15 +31,13 @@ const LaminateCard = ({
   readonly product: Product;
   readonly token: string;
 }) => {
-  const form = useForm<LaminateAddToCartFormSchema>({
-    resolver: zodResolver(laminateAddToCartFormSchema),
+  const form = useForm<EdgeBandingAddToCartFormSchema>({
+    resolver: zodResolver(edgeBandingAddToCartFormSchema),
   });
 
   const { data: laminateData } = useLaminateFilter(
     Number(product.variants[0]?.id),
   );
-
-  const formId = `add-edgeband-to-cart-${groupId}`;
 
   const grades = laminateData?.groupFilters?.values_ALL?.GRADE;
   const finishes = laminateData?.groupFilters?.values_ALL?.FINISH;
@@ -86,7 +86,7 @@ const LaminateCard = ({
               dangerouslySetInnerHTML={{ __html: product.groupName }}
             />
             <p className="text-xs font-medium">
-              {groupPrice.toFixed(2)} / {groupUom}
+              {formatNumberToPrice(groupPrice)} / {groupUom}
             </p>
           </div>
         </div>
@@ -103,7 +103,8 @@ const LaminateCard = ({
               <LaminateGroup
                 product={product}
                 token={token}
-                groupId={groupId}
+                brandImage={laminateData?.brandImage ?? ""}
+                brandName={laminateData?.brandName ?? ""}
               />
             </Suspense>
             <Suspense
@@ -124,18 +125,16 @@ const LaminateCard = ({
             </Suspense>
           </div>
         </div>
-        <FormProvider {...form}>
-          <form id={formId}>
-            <Suspense fallback={<LaminatesDialogLoading />}>
-              {/* todo: update */}
+        {laminateData?.edgebanding !== undefined &&
+          laminateData?.edgebanding.length > 0 && (
+            <FormProvider {...form}>
               <LaminateEdgeBanding
                 product={product}
                 token={token}
                 groupId={groupId}
               />
-            </Suspense>
-          </form>
-        </FormProvider>
+            </FormProvider>
+          )}
       </DialogContent>
     </Dialog>
   );
