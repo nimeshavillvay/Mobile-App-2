@@ -9,7 +9,6 @@ import { Button } from "@repo/web-ui/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
 } from "@repo/web-ui/components/ui/form";
@@ -46,9 +45,9 @@ const LaminateSearch = () => {
   };
 
   return (
-    <div className="col-span-1 flex flex-row items-center rounded border border-wurth-gray-250">
+    <div className="mx-auto mb-6 w-full max-w-2xl">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(laminateSearch)}>
+        <form onSubmit={form.handleSubmit(laminateSearch)} className="relative">
           <FormField
             control={form.control}
             name="search"
@@ -59,23 +58,19 @@ const LaminateSearch = () => {
                     placeholder="Search for laminates"
                     type="text"
                     {...field}
+                    className="border-wurth-gray-300 focus:border-wurth-blue-500 focus:ring-wurth-blue-200 border-1 h-12 rounded-full pr-12 text-lg focus:ring-1"
                   />
                 </FormControl>
-
-                <FormDescription className="sr-only">
-                  Search for laminates
-                </FormDescription>
               </FormItem>
             )}
           />
-
           <Button
             type="submit"
             variant="ghost"
             size="icon"
-            className="mx-0.5 rounded px-2 text-wurth-gray-500"
+            className="hover:text-wurth-blue-500 absolute right-2 top-1/2 -translate-y-1/2 transform text-wurth-gray-500"
           >
-            <MagnifyingGlass className="size-5" />
+            <MagnifyingGlass className="h-6 w-6" />
             <span className="sr-only">Laminate Search</span>
           </Button>
         </form>

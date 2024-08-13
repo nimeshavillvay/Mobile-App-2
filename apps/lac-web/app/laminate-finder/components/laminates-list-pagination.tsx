@@ -1,8 +1,8 @@
 "use client";
 
 import { ProductsGridPagination } from "@/_components/products-grid";
-import useSuspenseLaminateFilters from "./use-suspense-laminate-filters.hook";
-import useSuspenseSearchLaminateList from "./use-suspense-search-laminate-list.hook";
+import useSuspenseLaminateFilters from "../hooks/use-suspense-laminate-filters.hook";
+import useSuspenseSearchLaminateList from "../hooks/use-suspense-search-laminate-list.hook";
 
 type ProductsListPaginationProps = {
   readonly token: string;

@@ -8,12 +8,12 @@ import {
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import { cookies } from "next/headers";
 import { Suspense } from "react";
-import { LaminatesGridListSkeleton } from "./laminates-grid-list";
-import ProductsListDesktopFiltersHeader from "./laminates-list-desktop-filters-header";
+import LaminatesListDesktopFiltersHeader from "./laminates-list-desktop-filters-header";
 import ProductsListFilters from "./laminates-list-filters";
-import ProductsListGrid from "./laminates-list-grid";
 import ProductsListHeader from "./laminates-list-header";
 import ProductsListPagination from "./laminates-list-pagination";
+// import { LaminatesGridListSkeleton } from "./laminates-grid-list";
+import ProductsListGrid from "../laminates-list-grid";
 
 const LaminatesList = () => {
   const cookieStore = cookies();
@@ -30,17 +30,22 @@ const LaminatesList = () => {
       </Suspense>
 
       <Suspense>
-        <ProductsListDesktopFiltersHeader token={tokenCookie.value} />
+        <LaminatesListDesktopFiltersHeader token={tokenCookie.value} />
       </Suspense>
 
       <ProductsGridDesktopContainer>
-        <Suspense fallback={<ProductsGridFiltersSkeleton />}>
-          <ProductsListFilters token={tokenCookie.value} />
-        </Suspense>
+        <div className="w-full pr-4 md:w-1/5 lg:w-1/6">
+          <h2 className="mb-4 text-xl font-semibold">Filters</h2>
+          <Suspense fallback={<ProductsGridFiltersSkeleton />}>
+            <ProductsListFilters token={tokenCookie.value} />
+          </Suspense>
+        </div>
 
-        <Suspense fallback={<LaminatesGridListSkeleton type="desktop" />}>
+        <div className="flex-1">
           <ProductsListGrid type="desktop" token={tokenCookie.value} />
-        </Suspense>
+          {/* <Suspense fallback={<LaminatesGridListSkeleton type="desktop" />}>
+          </Suspense> */}
+        </div>
       </ProductsGridDesktopContainer>
 
       <Suspense fallback={<ProductsGridPaginationSkeleton />}>

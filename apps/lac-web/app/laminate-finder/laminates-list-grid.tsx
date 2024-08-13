@@ -1,9 +1,12 @@
 "use client";
 
-import { type ComponentProps } from "react";
-import { LaminatesGridList } from "./laminates-grid-list";
-import useSuspenseLaminateFilters from "./use-suspense-laminate-filters.hook";
-import useSuspenseSearchLaminateList from "./use-suspense-search-laminate-list.hook";
+import { Suspense, type ComponentProps } from "react";
+import {
+  LaminatesGridList,
+  LaminatesGridListSkeleton,
+} from "./components/laminates-grid-list";
+import useSuspenseLaminateFilters from "./hooks/use-suspense-laminate-filters.hook";
+import useSuspenseSearchLaminateList from "./hooks/use-suspense-search-laminate-list.hook";
 
 type LaminateListGridProps = {
   readonly token: string;
@@ -40,7 +43,11 @@ const LaminateListGrid = ({ token, type }: LaminateListGridProps) => {
       },
     }));
 
-  return <LaminatesGridList products={products} type={type} token={token} />;
+  return (
+    <Suspense fallback={<LaminatesGridListSkeleton />}>
+      <LaminatesGridList products={products} token={token} />
+    </Suspense>
+  );
 };
 
 export default LaminateListGrid;

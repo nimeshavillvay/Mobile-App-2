@@ -9,7 +9,7 @@ import {
   TableRow,
 } from "@repo/web-ui/components/ui/table";
 import { Suspense } from "react";
-import LaminateItemRow from "./laminate-item";
+import LaminateItemRow from "./components/laminate-item";
 
 const LaminateItems = ({
   productIds,

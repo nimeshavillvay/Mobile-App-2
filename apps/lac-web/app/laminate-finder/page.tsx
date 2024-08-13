@@ -10,9 +10,9 @@ import {
 } from "@repo/web-ui/components/ui/breadcrumb";
 import { cookies } from "next/headers";
 import { Suspense } from "react";
-import ColorPicker from "./color-picker";
-import LaminateSearch from "./laminate-search";
-import LaminatesList from "./laminates-list";
+import ColorPicker from "./components/color-picker";
+import LaminateSearch from "./components/laminate-search";
+import LaminatesList from "./components/laminates-list";
 
 const Page = () => {
   const cookieStore = cookies();
@@ -23,8 +23,8 @@ const Page = () => {
   }
 
   return (
-    <div className="md mx-width container mb-10">
-      <div className="py-3">
+    <div className="container mx-auto px-4 py-8">
+      <div className="mb-6">
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
@@ -37,21 +37,24 @@ const Page = () => {
           </BreadcrumbList>
         </Breadcrumb>
       </div>
-      <h1 className="line-clamp-3 text-balance font-title text-4xl font-medium tracking-tight text-wurth-gray-800 md:text-5xl md:leading-[3.5rem] md:tracking-[-0.036rem]">
+
+      <h1 className="mb-8 text-4xl font-bold text-wurth-gray-800">
         Laminate Finder
       </h1>
-      <div className="mt-4 flex gap-10">
-        <section className="grow">
-          <ColorPicker token={tokenCookie.value} />
 
-          <Suspense fallback={<ProductsGridHeaderSkeleton />}>
-            {/* todo: update Suspense boundary */}
-            <LaminateSearch />
-          </Suspense>
+      <Suspense
+        fallback={
+          <div className="mb-8 h-12 animate-pulse rounded bg-gray-200" />
+        }
+      >
+        <LaminateSearch />
+      </Suspense>
 
-          <LaminatesList />
-        </section>
+      <div className="mb-8">
+        <ColorPicker token={tokenCookie.value} />
       </div>
+
+      <LaminatesList />
     </div>
   );
 };
