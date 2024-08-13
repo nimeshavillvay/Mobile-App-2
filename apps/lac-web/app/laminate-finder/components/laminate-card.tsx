@@ -117,7 +117,7 @@ const LaminateCard = ({
           </div>
         </div>
       </DialogTrigger>
-      <DialogContent className="max-h-screen overflow-y-scroll sm:max-w-[52rem] lg:max-w-screen-lg">
+      <DialogContent className="max-h-screen overflow-y-auto sm:max-w-[52rem] lg:max-w-screen-lg">
         <div>
           <div className="flex flex-col gap-4 lg:flex-row">
             <div className="flex w-full gap-4 lg:w-60 lg:flex-col">
@@ -235,52 +235,58 @@ const LaminateCard = ({
                   </div>
                 </div>
                 <div>
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>
-                          Item # <br /> MFR Part #
-                        </TableHead>
-                        <TableHead className="text-center lg:w-1/5">
-                          Width &times; Height
-                        </TableHead>
-                        <TableHead className="text-right lg:w-1/5">
-                          Price
-                        </TableHead>
-                        <TableHead className="text-center lg:w-1/6">
-                          QTY
-                        </TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      <TableRow>
-                        <TableCell className="font-medium">
-                          INV001
-                          <br />
-                          INV001
-                        </TableCell>
-                        <TableCell className="text-center">Paid</TableCell>
-                        <TableCell className="text-right">
-                          <span className="text-lg font-semibold">
-                            $24.99 / EA
-                          </span>
-                          <p className="text-sm text-gray-500">
-                            $24.99/EA for 25-99 items,
+                  <div className="w-full min-w-96">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Item # and MFR Part #</TableHead>
+                          <TableHead className="text-center lg:w-1/4">
+                            Width &times; Height
+                          </TableHead>
+                          <TableHead className="text-right lg:w-1/4">
+                            Price
+                          </TableHead>
+                          <TableHead className="text-center lg:w-1/6">
+                            QTY
+                          </TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        <TableRow>
+                          <TableCell className="font-medium">
+                            INV001
                             <br />
-                            24.99/EA for 25-99 items,
-                            <br />
-                            24.99/EA for 25-99 items,
-                          </p>
-                        </TableCell>
-                        <TableCell>
-                          <Input type="number" className="w-full" />
-                          <p className="mt-2 text-right text-sm text-gray-500">
-                            EA
-                          </p>
-                        </TableCell>
-                      </TableRow>
-                    </TableBody>
-                  </Table>
+                            INV001
+                          </TableCell>
+                          <TableCell className="text-center">
+                            Width &times; Height
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <span className="text-lg font-semibold">
+                              $24.99 / EA
+                            </span>
+                            <p className="text-sm text-gray-500">
+                              $24.99/EA for 25-99 items,
+                              <br />
+                              24.99/EA for 25-99 items,
+                              <br />
+                              24.99/EA for 25-99 items,
+                            </p>
+                          </TableCell>
+                          <TableCell>
+                            <Input
+                              type="number"
+                              className="w-full text-center"
+                              placeholder="Quantity"
+                            />
+                            <p className="mt-2 text-center text-sm font-medium text-gray-500">
+                              EA
+                            </p>
+                          </TableCell>
+                        </TableRow>
+                      </TableBody>
+                    </Table>
+                  </div>
                   <div className="flex items-center justify-end gap-4 rounded bg-gray-50 p-4">
                     <div>
                       <span className="text-wurth-gray-600">Total:</span>{" "}
