@@ -62,23 +62,10 @@ export const ProductCard = ({
           </Text>
         )}
 
-        <XStack alignItems="flex-end">
-          <Text
-            style={StyleSheet.compose(
-              styles.price,
-              isDiscounted && styles.saleText,
-            )}
-          >
-            $
-            <Text
-              style={StyleSheet.compose(
-                styles.priceValue,
-                isDiscounted && styles.saleText,
-              )}
-              testID={`price-${id}`}
-            >
-              {price}
-            </Text>
+        <Text verticalAlign="center">
+          <Text style={[styles.price, isDiscounted && styles.saleText]}>$</Text>
+          <Text style={[styles.priceValue, isDiscounted && styles.saleText]}>
+            {price}
           </Text>
 
           {!!isDiscounted && (
@@ -90,7 +77,7 @@ export const ProductCard = ({
           <Text style={styles.uom} testID={`uom-${id}`}>
             /{uom}
           </Text>
-        </XStack>
+        </Text>
 
         <XStack
           position="absolute"
@@ -103,7 +90,7 @@ export const ProductCard = ({
         >
           <Button
             icon={<Bookmark size={16} />}
-            padding="$2"
+            size={28}
             circular
             backgroundColor="white"
             borderWidth={1}
