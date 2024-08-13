@@ -79,7 +79,6 @@ const ColorPicker = ({ token }: { readonly token: string }) => {
   );
 
   const colorPickerFilterId = colorPickerFilter?.id.toString() || "";
-
   const selectedColor = searchParams.get(colorPickerFilterId);
 
   const changeColor = (colorId: string) => {
