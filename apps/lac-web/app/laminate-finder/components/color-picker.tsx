@@ -6,10 +6,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Tooltip,
   TooltipContent,
-  TooltipProvider,
   TooltipTrigger,
 } from "@repo/web-ui/components/ui/tooltip";
-import React, { useCallback, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import type { LaminateSearchFormSchema } from "../helpers";
 import { laminateSearchFormSchema } from "../helpers";
@@ -22,16 +21,16 @@ type Color = {
   active: boolean;
 };
 
-const ColorOption = React.memo(
-  ({
-    color,
-    isSelected,
-    onSelect,
-  }: {
-    readonly color: Color;
-    readonly isSelected: boolean;
-    readonly onSelect: (id: string) => void;
-  }) => (
+const ColorOption = ({
+  color,
+  isSelected,
+  onSelect,
+}: {
+  readonly color: Color;
+  readonly isSelected: boolean;
+  readonly onSelect: (id: string) => void;
+}) => {
+  return (
     <li>
       <Tooltip>
         <TooltipTrigger asChild>
@@ -62,8 +61,8 @@ const ColorOption = React.memo(
         </TooltipContent>
       </Tooltip>
     </li>
-  ),
-);
+  );
+};
 
 ColorOption.displayName = "ColorOption";
 
@@ -81,31 +80,23 @@ const ColorPicker = ({ token }: { readonly token: string }) => {
 
   const colorPickerFilterId = colorPickerFilter?.id.toString() || "";
 
-  const [selectedColor, setSelectedColor] = useState(
-    searchParams.get(colorPickerFilterId) || "",
-  );
+  const selectedColor = searchParams.get(colorPickerFilterId);
 
-  const changeColor = useCallback(
-    (colorId: string) => {
-      setSelectedColor(colorId);
-      const newUrlSearchParams = new URLSearchParams(searchParams);
+  const changeColor = (colorId: string) => {
+    const newUrlSearchParams = new URLSearchParams(searchParams);
 
-      newUrlSearchParams.delete(QUERY_KEYS.page);
-      newUrlSearchParams.delete(QUERY_KEYS.searchText);
-      // todo: not clearing when even though searchText get deleted
-      laminateSearchForm.reset({ search: "" });
-      newUrlSearchParams.delete(colorPickerFilterId);
-      newUrlSearchParams.append(colorPickerFilterId, colorId.toString());
+    newUrlSearchParams.delete(QUERY_KEYS.page);
+    newUrlSearchParams.delete(QUERY_KEYS.searchText);
+    laminateSearchForm.reset({ search: "" });
+    newUrlSearchParams.delete(colorPickerFilterId);
+    newUrlSearchParams.append(colorPickerFilterId, colorId.toString());
 
-      window.history.pushState(null, "", `?${newUrlSearchParams.toString()}`);
-    },
-    [searchParams, colorPickerFilterId, laminateSearchForm],
-  );
+    window.history.pushState(null, "", `?${newUrlSearchParams.toString()}`);
+  };
 
   if (!colorPickerFilter || colorPickerFilter.values.length === 0) {
     return null;
   }
-  // todo: not clearing picked color selection get deleted
 
   return (
     <div className="rounded-lg bg-white p-6">
@@ -113,20 +104,18 @@ const ColorPicker = ({ token }: { readonly token: string }) => {
       <fieldset>
         <legend className="sr-only">Color options</legend>
         <ul className="m-0 grid list-none grid-cols-4 gap-4 p-0 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10">
-          <TooltipProvider>
-            {colorPickerFilter.values.map((color) => (
-              <ColorOption
-                key={color.id}
-                color={color}
-                isSelected={selectedColor === color.id.toString()}
-                onSelect={changeColor}
-              />
-            ))}
-          </TooltipProvider>
+          {colorPickerFilter.values.map((color) => (
+            <ColorOption
+              key={color.id}
+              color={color}
+              isSelected={selectedColor === color.id.toString()}
+              onSelect={changeColor}
+            />
+          ))}
         </ul>
       </fieldset>
     </div>
   );
 };
 
-export default React.memo(ColorPicker);
+export default ColorPicker;

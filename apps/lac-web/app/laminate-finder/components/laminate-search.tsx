@@ -29,8 +29,8 @@ const LaminateSearch = ({ token }: { readonly token: string }) => {
 
   const form = useForm<LaminateSearchFormSchema>({
     resolver: zodResolver(laminateSearchFormSchema),
-    defaultValues: {
-      search: newSearchParams.get(QUERY_KEYS.SEARCH_TEXT) || "",
+    values: {
+      search: newSearchParams.get(QUERY_KEYS.SEARCH_TEXT) ?? "",
     },
   });
 

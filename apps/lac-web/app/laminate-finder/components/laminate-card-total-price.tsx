@@ -11,7 +11,7 @@ const LaminateCardTotalPrice = ({
   priceCheckRequest,
 }: {
   readonly token: string;
-  priceCheckRequest: Product[];
+  readonly priceCheckRequest: Product[];
 }) => {
   const priceCheckQuery = useSuspensePriceCheck(token, priceCheckRequest);
   const extendedPriceSum = priceCheckQuery.data.productPrices.reduce(

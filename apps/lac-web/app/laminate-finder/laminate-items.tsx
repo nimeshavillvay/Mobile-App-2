@@ -1,4 +1,5 @@
 import useLaminateProductsInfo from "@/_hooks/laminate/use-suspense-laminate-info.hook";
+import useDebouncedState from "@/_hooks/misc/use-debounced-state.hook";
 import useAddMultipleToCartMutation from "@/cart/_add-more-items/use-add-multiple-to-cart-mutation.hook";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@repo/web-ui/components/ui/button";
@@ -10,7 +11,12 @@ import {
   TableHeader,
   TableRow,
 } from "@repo/web-ui/components/ui/table";
-import { Suspense, type Dispatch, type SetStateAction } from "react";
+import {
+  Suspense,
+  useDeferredValue,
+  type Dispatch,
+  type SetStateAction,
+} from "react";
 import { useForm } from "react-hook-form";
 import LaminateCardTotalPrice from "./components/laminate-card-total-price";
 import LaminateItem from "./components/laminate-item";
@@ -42,12 +48,15 @@ const LaminateItems = ({
   const quantities = form.getValues("quantity");
   const lineProductIds = form.getValues("productId");
 
+  const delayedQuantities = useDebouncedState(quantities);
+  const deferredQuantities = useDeferredValue(delayedQuantities);
+
   const priceCheckRequest =
     lineProductIds !== undefined
       ? lineProductIds
           .map((productId, index) => ({
             productId: Number(productId),
-            qty: Number(quantities[index]),
+            qty: Number(deferredQuantities[index]),
           }))
           .filter((item) => !isNaN(item.qty))
       : [];
