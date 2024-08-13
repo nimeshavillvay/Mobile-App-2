@@ -1,20 +1,41 @@
+import NumberInputField from "@/_components/number-input-field";
 import useSuspenseCheckAvailability from "@/_hooks/product/use-suspense-check-availability.hook";
-import { Input } from "@repo/web-ui/components/ui/input";
+import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import { TableCell, TableRow } from "@repo/web-ui/components/ui/table";
+import { Suspense } from "react";
+import { Controller, useFormContext } from "react-hook-form";
+import type { LaminateAddToCartFormSchema } from "../helpers";
+import LaminateItemRowPrice from "./laminate-item-row-price";
 
-const LaminateItemRow = ({
+const LaminateItem = ({
   productId,
   token,
   size,
+  quantityFieldIndex,
+  sku,
 }: {
   readonly productId: number;
   readonly token: string;
   readonly size: string;
+  readonly quantityFieldIndex: number;
+  readonly formId: string;
+  readonly sku: string;
 }) => {
   const { data: checkAvailabilityQuery } = useSuspenseCheckAvailability(token, {
     productId: Number(productId),
     qty: 1,
   });
+
+  const { control, watch, register, setValue } =
+    useFormContext<LaminateAddToCartFormSchema>();
+
+  const quantity = watch(`quantity.${quantityFieldIndex}`);
+
+  register(`productId.${quantityFieldIndex}`);
+  setValue(`productId.${quantityFieldIndex}`, productId.toString());
+
+  register(`sku.${quantityFieldIndex}`);
+  setValue(`sku.${quantityFieldIndex}`, sku);
 
   return (
     <TableRow key={productId}>
@@ -32,11 +53,41 @@ const LaminateItemRow = ({
         <br />
       </TableCell>
       <TableCell className="text-right">
-        <Input type="number" className="w-16" />
+        <Controller
+          control={control}
+          name={`quantity.${quantityFieldIndex}`}
+          render={({ field: { onChange, onBlur, value, name, ref } }) => (
+            <NumberInputField
+              onBlur={onBlur}
+              onChange={onChange}
+              value={value}
+              ref={ref}
+              name={name}
+              min={1}
+              step={1}
+              className="md:w-[6.125rem]"
+              removeDefaultStyles={true}
+              label="Quantity"
+            />
+          )}
+        />
       </TableCell>
-      <TableCell className="text-right font-medium">$250.00</TableCell>
+      {!!quantity && (
+        <TableCell className="text-right font-medium">
+          <Suspense
+            key={productId}
+            fallback={<Skeleton className="h-4 w-full rounded-lg shadow-md" />}
+          >
+            <LaminateItemRowPrice
+              token={token}
+              productId={productId}
+              quantityFieldIndex={quantityFieldIndex}
+            />
+          </Suspense>
+        </TableCell>
+      )}
     </TableRow>
   );
 };
 
-export default LaminateItemRow;
+export default LaminateItem;

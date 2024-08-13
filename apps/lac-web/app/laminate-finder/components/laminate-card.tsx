@@ -16,13 +16,7 @@ import {
   DialogTrigger,
 } from "@repo/web-ui/components/ui/dialog";
 import { Input } from "@repo/web-ui/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@repo/web-ui/components/ui/select";
+import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import {
   Table,
   TableBody,
@@ -32,12 +26,14 @@ import {
   TableRow,
 } from "@repo/web-ui/components/ui/table";
 import Image from "next/image";
-import { useState } from "react";
-import LaminateItems from "../laminate-items";
+import { Suspense, useState } from "react";
+import LaminateGradeFinish from "./laminate-grade-finish";
+import LaminateGroup from "./laminate-group";
 
 const LaminateCard = ({
   product,
   token,
+  groupId,
 }: {
   readonly groupId: string;
   readonly product: Product;
@@ -50,43 +46,29 @@ const LaminateCard = ({
   const grades = laminateData?.groupFilters?.values_ALL?.GRADE;
   const finishes = laminateData?.groupFilters?.values_ALL?.FINISH;
 
-  const possibleProductIdsForGrades = laminateData?.groupFilters?.values_GRADE;
   const possibleProductIdsForFinishes =
     laminateData?.groupFilters?.values_FINISH;
 
-  const [selectedGrade, setSelectedGrade] = useState("");
-  const [selectedFinish, setSelectedFinish] = useState("");
-
-  const [productIds, setProductIds] = useState<string[]>([]);
   const [open, setOpen] = useState(false);
 
   const priceCheckQuery = useSuspensePriceCheck(token, [
     { productId: Number(product.variants[0]?.id), qty: 1 },
   ]);
 
+  const singleGrade =
+    grades !== undefined && grades.length === 1 ? grades[0] : "";
+  const singleFinish =
+    finishes !== undefined && finishes.length === 1 ? finishes[0] : "";
+
+  const productIds =
+    singleGrade && singleFinish
+      ? possibleProductIdsForFinishes?.[singleFinish]?.[singleGrade]
+          ?.productids || []
+      : [];
+
   const groupPriceData = priceCheckQuery.data.productPrices[0];
   const groupPrice = groupPriceData?.uomPrice ?? groupPriceData?.price ?? 0;
   const groupUom = groupPriceData?.uomPriceUnit ?? groupPriceData?.priceUnit;
-
-  const onGradeValueChange = (grade: string) => {
-    setSelectedGrade(grade);
-    if (selectedFinish) {
-      setProductIds(
-        possibleProductIdsForFinishes?.[selectedFinish]?.[grade]?.productids ||
-          [],
-      );
-    }
-  };
-
-  const onFinishValueChange = (finish: string) => {
-    setSelectedFinish(finish);
-    if (selectedGrade) {
-      setProductIds(
-        possibleProductIdsForGrades?.[selectedGrade]?.[finish]?.productids ||
-          [],
-      );
-    }
-  };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -105,94 +87,45 @@ const LaminateCard = ({
             <h3
               className="mb-1 line-clamp-2 text-sm font-semibold"
               title={product.groupName}
-            >
-              {decodeHTMLEntities(product.groupName)}
-            </h3>
+              dangerouslySetInnerHTML={{ __html: product.groupName }}
+            />
             <p className="text-xs font-medium">
               {groupPrice.toFixed(2)} / {groupUom}
             </p>
-            <div className="mt-1">
-              <span className="text-xs">{grades?.length ?? 0} grades</span>
-            </div>
           </div>
         </div>
       </DialogTrigger>
       <DialogContent className="max-h-screen overflow-y-auto sm:max-w-[52rem] lg:max-w-screen-lg">
         <div>
           <div className="flex flex-col gap-4 lg:flex-row">
-            <div className="flex w-full gap-4 lg:w-60 lg:flex-col">
-              <div>
-                <Image
-                  src={product.groupImage}
-                  alt={product.groupName}
-                  width={44}
-                  height={44}
-                />
-                <h3
-                  className="mt-2 text-xl font-bold"
-                  dangerouslySetInnerHTML={{ __html: product.groupName }}
-                />
-                <p className="mb-2">
-                  {groupPrice}/ {groupUom}
-                </p>
-              </div>
-              <div>
-                <Image
-                  src={product.groupImage}
-                  alt={product.groupName}
-                  width={240}
-                  height={240}
-                />
-              </div>
-            </div>
-            <div className="grow">
-              <h4 className="text-lg font-semibold">Laminate details</h4>
-              <p className="mb-2 text-wurth-gray-800">
-                Please select a <strong>Grade</strong> and{" "}
-                <strong>Finish</strong> to show items.
-              </p>
-              <div className="mb-4 flex gap-1">
-                <Select
-                  onValueChange={onGradeValueChange}
-                  value={selectedGrade}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Grade" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {grades?.map((grade) => (
-                      <SelectItem key={grade} value={grade}>
-                        {grade}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <Select
-                  onValueChange={onFinishValueChange}
-                  value={selectedFinish}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Finish" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {finishes?.map((finish) => (
-                      <SelectItem key={finish} value={finish}>
-                        {finish}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <LaminateItems productIds={productIds} token={token} />
-            </div>
-          </div>
-          <div className="mt-2 text-sm text-wurth-gray-500">
-            <strong>Note:</strong>
-            <p className="mb-2">
-              Image color is for reference only. Actual colors may vary due to
-              monitor settings.
-            </p>
-            <p>To obtain a sample, please contact your local branch.</p>
+            <Suspense
+              key={`group-${product.variants[0]?.id}`}
+              fallback={
+                <Skeleton className="flex h-[39rem] w-full gap-4 lg:w-60 lg:flex-col" />
+              }
+            >
+              <LaminateGroup
+                product={product}
+                token={token}
+                groupId={groupId}
+              />
+            </Suspense>
+            <Suspense
+              key={`grade-finish-${product.variants[0]?.id}`}
+              fallback={
+                <Skeleton className="h-20 w-[20rem] rounded-lg shadow-md" />
+              }
+            >
+              <LaminateGradeFinish
+                product={product}
+                token={token}
+                groupId={groupId}
+                singleGrade={singleGrade ?? ""}
+                singleFinish={singleFinish ?? ""}
+                singleGradeFinishProductIds={productIds}
+                setOpen={setOpen}
+              />
+            </Suspense>
           </div>
         </div>
         <div className="mt-4 border-t pt-4">
@@ -303,11 +236,5 @@ const LaminateCard = ({
     </Dialog>
   );
 };
-
-function decodeHTMLEntities(text: string) {
-  const textArea = document.createElement("textarea");
-  textArea.innerHTML = text;
-  return textArea.value;
-}
 
 export default LaminateCard;

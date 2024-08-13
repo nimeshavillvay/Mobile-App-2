@@ -10,10 +10,9 @@ import useSuspenseSearchLaminateList from "./hooks/use-suspense-search-laminate-
 
 type LaminateListGridProps = {
   readonly token: string;
-  readonly type: ComponentProps<typeof LaminatesGridList>["type"];
 };
 
-const LaminateListGrid = ({ token, type }: LaminateListGridProps) => {
+const LaminateListGrid = ({ token }: LaminateListGridProps) => {
   const categoryFiltersQuery = useSuspenseLaminateFilters({
     token,
   });
@@ -43,10 +42,12 @@ const LaminateListGrid = ({ token, type }: LaminateListGridProps) => {
       },
     }));
 
-  return (
+  return data.pagination.totalCount > 0 ? (
     <Suspense fallback={<LaminatesGridListSkeleton />}>
       <LaminatesGridList products={products} token={token} />
     </Suspense>
+  ) : (
+    "No results found"
   );
 };
 

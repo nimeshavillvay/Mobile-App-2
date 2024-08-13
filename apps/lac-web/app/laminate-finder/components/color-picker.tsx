@@ -2,6 +2,7 @@
 
 import { useFilterParams } from "@/_components/products-grid";
 import { QUERY_KEYS } from "@/_components/products-grid/constants";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Tooltip,
   TooltipContent,
@@ -9,6 +10,9 @@ import {
   TooltipTrigger,
 } from "@repo/web-ui/components/ui/tooltip";
 import React, { useCallback, useMemo, useState } from "react";
+import { useForm } from "react-hook-form";
+import type { LaminateSearchFormSchema } from "../helpers";
+import { laminateSearchFormSchema } from "../helpers";
 import useSuspenseLaminateFilters from "../hooks/use-suspense-laminate-filters.hook";
 
 type Color = {
@@ -64,6 +68,9 @@ const ColorOption = React.memo(
 ColorOption.displayName = "ColorOption";
 
 const ColorPicker = ({ token }: { readonly token: string }) => {
+  const laminateSearchForm = useForm<LaminateSearchFormSchema>({
+    resolver: zodResolver(laminateSearchFormSchema),
+  });
   const laminateFiltersQuery = useSuspenseLaminateFilters({ token });
   const { searchParams } = useFilterParams(laminateFiltersQuery.data);
 
@@ -84,17 +91,21 @@ const ColorPicker = ({ token }: { readonly token: string }) => {
       const newUrlSearchParams = new URLSearchParams(searchParams);
 
       newUrlSearchParams.delete(QUERY_KEYS.page);
+      newUrlSearchParams.delete(QUERY_KEYS.searchText);
+      // todo: not clearing when even though searchText get deleted
+      laminateSearchForm.reset({ search: "" });
       newUrlSearchParams.delete(colorPickerFilterId);
-      newUrlSearchParams.append(colorPickerFilterId, colorId);
+      newUrlSearchParams.append(colorPickerFilterId, colorId.toString());
 
       window.history.pushState(null, "", `?${newUrlSearchParams.toString()}`);
     },
-    [searchParams, colorPickerFilterId],
+    [searchParams, colorPickerFilterId, laminateSearchForm],
   );
 
   if (!colorPickerFilter || colorPickerFilter.values.length === 0) {
     return null;
   }
+  // todo: not clearing picked color selection get deleted
 
   return (
     <div className="rounded-lg bg-white p-6">

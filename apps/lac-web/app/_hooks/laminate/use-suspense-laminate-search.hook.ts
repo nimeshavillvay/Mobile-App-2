@@ -12,6 +12,10 @@ type useSuspenseSearchArgs = {
    * The page number to fetch (starts from 1)
    */
   page: number;
+  /**
+   * Filter by search term on the laminates
+   */
+  searchText?: string;
 };
 
 type GroupsList = {
@@ -21,7 +25,7 @@ type GroupsList = {
 
 const useSuspenseLaminateSearch = (
   token: string,
-  { groupResults = false, page }: useSuspenseSearchArgs,
+  { groupResults = false, page, searchText }: useSuspenseSearchArgs,
   selectedFilters?: {
     [attributeId: string]: string[];
   },
@@ -33,6 +37,7 @@ const useSuspenseLaminateSearch = (
       {
         groupResults,
         page,
+        searchText,
       },
       selectedFilters,
       token,
@@ -45,6 +50,9 @@ const useSuspenseLaminateSearch = (
         group_result: groupResults ? "true" : "false",
       });
 
+      if (searchText) {
+        searchParams.append("substring", searchText);
+      }
       const body: {
         [attributeId: string]: {
           [valueId: string]: "Y";

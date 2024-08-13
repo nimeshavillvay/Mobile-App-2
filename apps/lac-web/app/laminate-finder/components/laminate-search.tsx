@@ -9,30 +9,44 @@ import { Button } from "@repo/web-ui/components/ui/button";
 import {
   Form,
   FormControl,
+  // FormDescription,
   FormField,
   FormItem,
 } from "@repo/web-ui/components/ui/form";
 import { Input } from "@repo/web-ui/components/ui/input";
 import { useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import type { z } from "zod";
+import {
+  laminateSearchFormSchema,
+  type LaminateSearchFormSchema,
+} from "../helpers";
+import useSuspenseLaminateFilters from "../hooks/use-suspense-laminate-filters.hook";
 
-const LaminateSearch = () => {
+const LaminateSearch = ({ token }: { readonly token: string }) => {
   const searchParams = useSearchParams();
+  const newSearchParams = new URLSearchParams(searchParams);
 
-  const formSchema = z.object({
-    search: z.string(),
-  });
-
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<LaminateSearchFormSchema>({
+    resolver: zodResolver(laminateSearchFormSchema),
     defaultValues: {
-      search: searchParams.get(QUERY_KEYS.SEARCH_TEXT) || "",
+      search: newSearchParams.get(QUERY_KEYS.SEARCH_TEXT) || "",
     },
   });
 
-  const laminateSearch = (values: z.infer<typeof formSchema>) => {
-    changeSearchParams(searchParams, [
+  const categoryFiltersQuery = useSuspenseLaminateFilters({
+    token,
+  });
+
+  const laminateSearch = (values: z.infer<typeof laminateSearchFormSchema>) => {
+    const isColorPickerAttribute = categoryFiltersQuery.data.filter(
+      (filter) => filter.is_colorpicker,
+    )[0];
+    const filterId = isColorPickerAttribute?.id ?? "";
+    newSearchParams.delete(filterId);
+    newSearchParams.delete(QUERY_KEYS.PAGE);
+
+    changeSearchParams(newSearchParams, [
       {
         key: QUERY_KEYS.SEARCH_TEXT,
         value: values.search,
@@ -43,7 +57,6 @@ const LaminateSearch = () => {
       },
     ]);
   };
-
   return (
     <div className="mx-auto mb-6 w-full max-w-2xl">
       <Form {...form}>

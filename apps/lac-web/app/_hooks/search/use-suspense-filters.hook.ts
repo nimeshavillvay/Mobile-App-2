@@ -1,4 +1,5 @@
 import { api } from "@/_lib/api";
+import { QUERY_KEYS } from "@/_lib/constants";
 import type { Filters } from "@/_lib/types";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
@@ -58,7 +59,7 @@ const useSuspenseFilters = (
         };
       } = {};
 
-      if (args.type === "Categories" || args.type === "Laminates") {
+      if (args.type === "Categories") {
         for (const [key, values] of Object.entries(args.values)) {
           if (values) {
             for (const value of values) {
@@ -66,6 +67,23 @@ const useSuspenseFilters = (
                 ...rfData[key],
                 [value]: "Y",
               };
+            }
+          }
+        }
+      }
+
+      if (args.type === "Laminates") {
+        for (const [key, values] of Object.entries(args.values)) {
+          if (values) {
+            for (const value of values) {
+              if (key === QUERY_KEYS.SEARCH_TEXT) {
+                searchParams.append("substring", value);
+              } else {
+                rfData[key] = {
+                  ...rfData[key],
+                  [value]: "Y",
+                };
+              }
             }
           }
         }

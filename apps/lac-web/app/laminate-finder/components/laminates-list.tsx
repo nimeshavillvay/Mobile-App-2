@@ -8,12 +8,11 @@ import {
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import { cookies } from "next/headers";
 import { Suspense } from "react";
+import ProductsListGrid from "../laminates-list-grid";
 import LaminatesListDesktopFiltersHeader from "./laminates-list-desktop-filters-header";
 import ProductsListFilters from "./laminates-list-filters";
 import ProductsListHeader from "./laminates-list-header";
 import ProductsListPagination from "./laminates-list-pagination";
-// import { LaminatesGridListSkeleton } from "./laminates-grid-list";
-import ProductsListGrid from "../laminates-list-grid";
 
 const LaminatesList = () => {
   const cookieStore = cookies();
@@ -42,9 +41,7 @@ const LaminatesList = () => {
         </div>
 
         <div className="flex-1">
-          <ProductsListGrid type="desktop" token={tokenCookie.value} />
-          {/* <Suspense fallback={<LaminatesGridListSkeleton type="desktop" />}>
-          </Suspense> */}
+          <ProductsListGrid token={tokenCookie.value} />
         </div>
       </ProductsGridDesktopContainer>
 

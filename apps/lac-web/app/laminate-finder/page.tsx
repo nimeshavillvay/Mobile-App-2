@@ -1,4 +1,3 @@
-import { ProductsGridHeaderSkeleton } from "@/_components/products-grid";
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import {
   Breadcrumb,
@@ -47,7 +46,7 @@ const Page = () => {
           <div className="mb-8 h-12 animate-pulse rounded bg-gray-200" />
         }
       >
-        <LaminateSearch />
+        <LaminateSearch token={tokenCookie.value} />
       </Suspense>
 
       <div className="mb-8">
