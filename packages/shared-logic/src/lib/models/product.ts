@@ -2,7 +2,7 @@ import type { ProductAvailability } from "./availability";
 import type { Brand } from "./brand";
 import type { Category } from "./category";
 import type { ProductPrice } from "./pricing";
-import type { MetadataValue } from "./shared";
+import type { Metadata, MetadataValue } from "./shared";
 
 /**
  * Product
@@ -19,6 +19,7 @@ export type Product = {
   title: string;
   updatedAt?: Date;
   variants?: Variant[];
+  metadata?: Metadata;
 };
 
 export type LiteProduct = Pick<
@@ -27,7 +28,8 @@ export type LiteProduct = Pick<
 > & {
   brandName: Product["brand"]["name"];
   categoryName: Product["categories"][0]["name"];
-  variants: LiteVariant[];
+  variants?: LiteVariant[];
+  metadata?: Product["metadata"];
 };
 
 //todo change to product option
@@ -56,6 +58,7 @@ export type Variant = {
   sku: string;
   title: string;
   upc?: string;
+  metadata?: Metadata;
 };
 
 export type LiteVariant = Pick<
@@ -65,4 +68,5 @@ export type LiteVariant = Pick<
   brandName: Variant["brand"]["name"];
   categoryName: Variant["category"]["name"];
   pricing: Variant["pricing"];
+  metadata?: Variant["metadata"];
 };

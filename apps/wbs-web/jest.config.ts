@@ -14,6 +14,8 @@ const customJestConfig: Config = {
   moduleNameMapper: {
     "^@/(.*)$": "<rootDir>/app/$1",
     "^~/(.*)$": "<rootDir>/../../packages/web-ui/src/$1",
+    "^@repo/web-ui/components/(.*)":
+      "<rootDir>../../packages/web-ui/src/components/$1/index.ts",
   },
 };
 

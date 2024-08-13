@@ -4,11 +4,12 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev-storybook": "storybook dev -p 6008 --no-open",
     "build": "next build",
     "build-storybook": "storybook build",
     "start": "next start",
     "lint": "next lint",
-    "test": "jest"
+    "test": "jest --coverage"
   },
   "dependencies": {
     "@repo/shared-logic": "workspace:*",

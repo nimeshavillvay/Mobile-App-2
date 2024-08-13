@@ -3,11 +3,11 @@ import type {
   LiteVariant,
 } from "@repo/shared-logic/models/product";
 import type { Meta, StoryObj } from "@storybook/react";
-import ProductCardItem from "./product-card-item";
+import ProductCardRoot from "./product-card";
 
-const meta: Meta<typeof ProductCardItem> = {
-  title: "Organisms/Product Card Item",
-  component: ProductCardItem,
+const meta: Meta<typeof ProductCardRoot> = {
+  title: "WBS/Product Card",
+  component: ProductCardRoot,
   tags: ["autodocs"],
   argTypes: {
     orientation: {
@@ -18,7 +18,7 @@ const meta: Meta<typeof ProductCardItem> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof ProductCardItem>;
+type Story = StoryObj<typeof ProductCardRoot>;
 
 const baseVariant: LiteVariant = {
   id: "variant1",
@@ -94,6 +94,52 @@ export const NoDiscount: Story = {
   },
 };
 
+export const OnSaleAndIsNew: Story = {
+  args: {
+    ...Default.args,
+    product: {
+      ...baseProduct,
+      metadata: {
+        onSale: true,
+        isNew: true,
+      },
+      variants: [
+        {
+          ...baseVariant,
+          pricing: {
+            price: 99.99,
+            listPrice: 99.99,
+            uomPriceUnit: "ea",
+          },
+        },
+      ],
+    },
+  },
+};
+
+export const HorizontalOnSaleAndIsNew: Story = {
+  args: {
+    ...Default.args,
+    orientation: "horizontal",
+    product: {
+      ...baseProduct,
+      metadata: {
+        onSale: true,
+        isNew: true,
+      },
+      variants: [
+        {
+          ...baseVariant,
+          pricing: {
+            price: 99.99,
+            listPrice: 99.99,
+            uomPriceUnit: "ea",
+          },
+        },
+      ],
+    },
+  },
+};
 export const SingleVariant: Story = {
   args: {
     ...Default.args,
