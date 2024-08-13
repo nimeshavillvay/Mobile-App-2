@@ -1,7 +1,12 @@
+import useSessionTokenStorage from "@/hooks/auth/use-session-token-storage.hook";
+import { API_BASE_URL, API_KEY } from "@/lib/constants";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import { Store } from "@tamagui/lucide-icons";
+import useSuspenseSimulationCheckout from "@repo/shared-logic/apis/hooks/cart/use-suspense-simulation-checkout.hook";
+import { ShoppingCart, Store } from "@tamagui/lucide-icons";
 import { Tabs, usePathname } from "expo-router";
+import { Suspense } from "react";
+import { Text, View } from "tamagui";
 
 const TabLayout = () => {
   const pathname = usePathname();
@@ -40,7 +45,9 @@ const TabLayout = () => {
         options={{
           title: "Cart",
           tabBarIcon: ({ color }) => (
-            <FontAwesome size={28} name="shopping-cart" color={color} />
+            <Suspense fallback={<CartIcon color={color} count={0} />}>
+              <Cart color={color} />
+            </Suspense>
           ),
         }}
       />
@@ -67,3 +74,46 @@ const TabLayout = () => {
 };
 
 export default TabLayout;
+
+const CartIcon = ({
+  color,
+  count,
+}: {
+  readonly color: string;
+  readonly count: number;
+}) => {
+  return (
+    <View width={28} height={28}>
+      <ShoppingCart size={28} color={color} />
+
+      <View
+        position="absolute"
+        top={0}
+        right={0}
+        backgroundColor={color}
+        width={18}
+        height={18}
+        borderRadius={9999}
+        alignItems="center"
+        justifyContent="center"
+        padding={0}
+      >
+        <Text fontSize={12} lineHeight={12} color="rgba(0,0,0,0.91)">
+          {count}
+        </Text>
+      </View>
+    </View>
+  );
+};
+
+const Cart = ({ color }: { readonly color: string }) => {
+  const token = useSessionTokenStorage((state) => state.token);
+
+  const { data } = useSuspenseSimulationCheckout({
+    baseUrl: API_BASE_URL,
+    apiKey: API_KEY,
+    token,
+  });
+
+  return <CartIcon color={color} count={data.cartItemsCount} />;
+};

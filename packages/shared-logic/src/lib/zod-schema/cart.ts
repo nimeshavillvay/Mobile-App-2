@@ -1,0 +1,33 @@
+import { z } from "zod";
+
+export const cartConfigurationSchema = z.object({
+  po_job: z.string().nullable(),
+  jobName: z.string().nullable(),
+  coupon: z.string().nullable(),
+  po: z.string().nullable(),
+  sold_to: z.null(),
+  ship_to: z.null(),
+  user_email: z.null(),
+  is_overridden: z.boolean().nullable(),
+  overridden_email: z.null(),
+  osr: z.null(),
+  "first-name": z.null(),
+  default_shipping: z.union([z.boolean(), z.string()]).optional(),
+  delivering_plant: z.null(),
+  avail_payment_options: z.string().optional(),
+  attnName: z.string().nullable(),
+  pickDate: z.string().nullable(),
+  driverNote: z.string().nullable(),
+  orderEmail: z.string().nullable(),
+  completeDelivery: z.boolean().nullable(),
+  paymentToken: z.string().nullable(),
+  cardName: z.string().nullable(),
+  cardType: z.string().nullable(),
+  expireDate: z.string().nullable(),
+  paymentMethod: z.string().nullable(),
+  isAPrimaryShippingAddress: z.boolean().nullable().optional(),
+  shippingAddressId: z.string().nullable(),
+  backorder_date: z.string().optional(),
+  backorder_quantity: z.string().optional(),
+});
+export type CartConfiguration = z.infer<typeof cartConfigurationSchema>;
