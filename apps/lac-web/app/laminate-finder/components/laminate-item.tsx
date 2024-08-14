@@ -14,14 +14,11 @@ const LaminateItem = ({
   token,
   size,
   quantityFieldIndex,
-  sku,
 }: {
   readonly productId: number;
   readonly token: string;
   readonly size: string;
   readonly quantityFieldIndex: number;
-  readonly formId: string;
-  readonly sku: string;
 }) => {
   const { data: checkAvailabilityQuery } = useSuspenseCheckAvailability(token, {
     productId: Number(productId),
@@ -31,16 +28,9 @@ const LaminateItem = ({
   const loginCheckResponse = useSuspenseCheckLogin(token);
   const isLoggedIn = loginCheckResponse.data.status_code === "OK";
 
-  const { control, watch, register, setValue } =
-    useFormContext<LaminateAddToCartFormSchema>();
+  const { control, watch } = useFormContext<LaminateAddToCartFormSchema>();
 
   const quantity = watch(`quantity.${quantityFieldIndex}`);
-
-  register(`productId.${quantityFieldIndex}`);
-  setValue(`productId.${quantityFieldIndex}`, productId.toString());
-
-  register(`sku.${quantityFieldIndex}`);
-  setValue(`sku.${quantityFieldIndex}`, sku);
 
   return (
     <>

@@ -47,17 +47,16 @@ const LaminateItems = ({
   const formId = `add-laminates-to-cart-${groupId}`;
 
   const quantities = form.getValues("quantity");
-  const lineProductIds = form.getValues("productId");
-
   const delayedQuantities = useDebouncedState(quantities);
   const deferredQuantities = useDeferredValue(delayedQuantities);
 
   const priceCheckRequest =
-    lineProductIds !== undefined
-      ? lineProductIds
-          .map((productId, index) => ({
-            productId: Number(productId),
+    laminates.data !== undefined && deferredQuantities !== undefined
+      ? laminates.data
+          .map((laminate, index) => ({
+            productId: Number(laminate.productId),
             qty: Number(deferredQuantities[index]),
+            sku: laminate.productSku,
           }))
           .filter((item) => item.qty != 0)
       : [];
@@ -65,13 +64,11 @@ const LaminateItems = ({
   const addMultipleToCartMutation = useAddMultipleToCartMutation(token);
 
   const handleAddAllItemsToCart = async () => {
-    const skus = form.getValues("sku");
-
-    const addToCartRequest = productIds
-      .map((productId, index) => ({
-        productId: Number(productId),
+    const addToCartRequest = priceCheckRequest
+      .map((laminate, index) => ({
+        productId: Number(laminate.productId),
         quantity: Number(quantities[index]),
-        sku: skus[index] ?? "",
+        sku: laminate.sku,
       }))
       .filter((item) => item.quantity !== undefined);
     addMultipleToCartMutation.mutateAsync(addToCartRequest, {
@@ -105,9 +102,7 @@ const LaminateItems = ({
                   size={laminate.size}
                   token={token}
                   quantityFieldIndex={index}
-                  formId={formId}
                   key={index}
-                  sku={laminate.productSku}
                 />
               ))}
             </TableBody>

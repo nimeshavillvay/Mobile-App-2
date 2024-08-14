@@ -8,7 +8,7 @@ import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import { TableCell, TableRow } from "@repo/web-ui/components/ui/table";
 import { Suspense } from "react";
 import { Controller, useFormContext } from "react-hook-form";
-import type { EdgeBandingAddToCartFormSchema } from "../helpers";
+import type { LaminateAddToCartFormSchema } from "../helpers";
 import EdgeBandRowPrice from "./edgeband-item-row-price";
 
 const LaminateEdgeBandingRow = ({
@@ -22,9 +22,9 @@ const LaminateEdgeBandingRow = ({
   readonly token: string;
   readonly quantityFieldIndex: number;
 }) => {
-  const { control, watch } = useFormContext<EdgeBandingAddToCartFormSchema>();
+  const { control, watch } = useFormContext<LaminateAddToCartFormSchema>();
 
-  const quantity = watch(`bandQuantity.${quantityFieldIndex}`);
+  const quantity = watch(`quantity.${quantityFieldIndex}`);
 
   const priceCheckQueryBreakdown = useSuspensePriceCheck(token, [
     { productId: product.productId, qty: 1 },
@@ -55,7 +55,7 @@ const LaminateEdgeBandingRow = ({
       <TableCell>
         <Controller
           control={control}
-          name={`bandQuantity.${quantityFieldIndex}`}
+          name={`quantity.${quantityFieldIndex}`}
           render={({ field: { onChange, onBlur, value = "", name, ref } }) => (
             <NumberInputField
               form={formId}

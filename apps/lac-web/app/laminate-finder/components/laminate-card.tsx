@@ -15,8 +15,8 @@ import Image from "next/image";
 import { Suspense, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import {
-  edgeBandingAddToCartFormSchema,
-  type EdgeBandingAddToCartFormSchema,
+  laminateAddToCartFormSchema,
+  type LaminateAddToCartFormSchema,
 } from "../helpers";
 import LaminateEdgeBanding from "./laminate-edgebanding";
 import LaminateGradeFinish from "./laminate-grade-finish";
@@ -31,8 +31,8 @@ const LaminateCard = ({
   readonly product: Product;
   readonly token: string;
 }) => {
-  const form = useForm<EdgeBandingAddToCartFormSchema>({
-    resolver: zodResolver(edgeBandingAddToCartFormSchema),
+  const form = useForm<LaminateAddToCartFormSchema>({
+    resolver: zodResolver(laminateAddToCartFormSchema),
   });
 
   const { data: laminateData } = useLaminateFilter(

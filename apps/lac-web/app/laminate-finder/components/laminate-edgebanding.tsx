@@ -21,11 +21,12 @@ import {
   TableRow,
 } from "@repo/web-ui/components/ui/table";
 import Image from "next/image";
-import { Dispatch, SetStateAction, Suspense, useDeferredValue } from "react";
+import type { Dispatch, SetStateAction } from "react";
+import { Suspense, useDeferredValue } from "react";
 import { useForm, useFormContext } from "react-hook-form";
 import {
-  edgeBandingAddToCartFormSchema,
-  type EdgeBandingAddToCartFormSchema,
+  laminateAddToCartFormSchema,
+  type LaminateAddToCartFormSchema,
 } from "../helpers";
 import EdgeBandTableLoading from "./edgband-table-loading";
 import LaminateCardTotalPrice from "./laminate-card-total-price";
@@ -46,16 +47,16 @@ const LaminateEdgeBanding = ({
     Number(product.variants[0]?.id),
   );
 
-  const form = useForm<EdgeBandingAddToCartFormSchema>({
-    resolver: zodResolver(edgeBandingAddToCartFormSchema),
-    defaultValues: { bandQuantity: laminateData?.edgebanding.map(() => "") },
+  const form = useForm<LaminateAddToCartFormSchema>({
+    resolver: zodResolver(laminateAddToCartFormSchema),
+    defaultValues: { quantity: laminateData?.edgebanding.map(() => "") },
   });
 
-  const { watch } = useFormContext<EdgeBandingAddToCartFormSchema>();
+  const { watch } = useFormContext<LaminateAddToCartFormSchema>();
 
   const formId = `add-edgeband-to-cart-${groupId}`;
 
-  const quantities = watch("bandQuantity");
+  const quantities = watch("quantity");
   const delayedQuantities = useDebouncedState(quantities);
   const deferredQuantities = useDeferredValue(delayedQuantities);
 
