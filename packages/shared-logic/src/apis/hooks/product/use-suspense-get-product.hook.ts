@@ -10,7 +10,6 @@ const useSuspenseGetProduct = (
   return useSuspenseQuery({
     queryKey: ["product-landing", productId, slug, config],
     queryFn: () => getProduct(config, productId, slug),
-    staleTime: 1,
   });
 };
 

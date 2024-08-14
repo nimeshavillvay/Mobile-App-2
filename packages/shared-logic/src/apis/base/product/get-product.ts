@@ -1,6 +1,6 @@
 import { api } from "~/lib/api";
 import type { ApiConfig } from "~/lib/types";
-import type { Product } from "~/lib/zod-schema/product";
+import { productSchema, type Product } from "~/lib/zod-schema/product";
 
 export const getProduct = async (
   { baseUrl, apiKey }: ApiConfig,
@@ -18,69 +18,67 @@ export const getProduct = async (
       },
       cache: "no-store",
     })
-    .json<Product>();
+    .json();
 
-  if (slug !== response.selected_item.slug) {
-    return null;
-  }
+  const product = await productSchema.parseAsync(response);
 
   return {
-    pageTitle: response.page_title,
-    groupId: response.group_id,
-    groupSummary: response.group_summary,
-    brand: response.brand_name,
-    brandLogo: response.brand_logo,
-    brandCode: response.brand_code,
-    groupThumbnail: response.group_thumbnail,
-    groupImage: response.group_img,
+    pageTitle: product.page_title,
+    groupId: product.group_id,
+    groupSummary: product.group_summary,
+    brand: product.brand_name,
+    brandLogo: product.brand_logo,
+    brandCode: product.brand_code,
+    groupThumbnail: product.group_thumbnail,
+    groupImage: product.group_img,
     selectedProduct: {
-      productId: response.selected_item.productid,
-      isExcludedProduct: response.selected_item.is_product_exclude,
-      productSku: response.selected_item.txt_wurth_lac_item,
-      productName: response.selected_item.item_name,
-      image: response.selected_item.img,
-      slug: response.selected_item.slug,
-      isComparison: !!response.selected_item.is_comparison,
+      productId: product.selected_item.productid,
+      isExcludedProduct: product.selected_item.is_product_exclude,
+      productSku: product.selected_item.txt_wurth_lac_item,
+      productName: product.selected_item.item_name,
+      image: product.selected_item.img,
+      slug: product.selected_item.slug,
+      isComparison: !!product.selected_item.is_comparison,
       isDirectlyShippedFromVendor:
-        response.selected_item.is_directly_shipped_from_vendor ?? false,
-      isHazardous: getBoolean(response.selected_item.txt_hazardous),
-      specialShipping: response.selected_item.txt_special_shipping,
-      productIdOnSap: response.selected_item.txt_sap,
-      mfrPartNo: response.selected_item.txt_mfn,
-      productSummary: response.selected_item.txt_description_name,
-      productDescription: response.selected_item.txt_sub_description,
-      unitOfMeasure: response.selected_item.txt_uom_label,
-      boxQuantity: !isNaN(parseInt(response.selected_item.txt_box_qt))
-        ? parseInt(response.selected_item.txt_box_qt)
+        product.selected_item.is_directly_shipped_from_vendor ?? false,
+      isHazardous: getBoolean(product.selected_item.txt_hazardous),
+      specialShipping: product.selected_item.txt_special_shipping,
+      productIdOnSap: product.selected_item.txt_sap,
+      mfrPartNo: product.selected_item.txt_mfn,
+      productSummary: product.selected_item.txt_description_name,
+      productDescription: product.selected_item.txt_sub_description,
+      unitOfMeasure: product.selected_item.txt_uom_label,
+      boxQuantity: !isNaN(parseInt(product.selected_item.txt_box_qt))
+        ? parseInt(product.selected_item.txt_box_qt)
         : 1,
       minimumOrderQuantity: !isNaN(
-        parseInt(response.selected_item.txt_min_order_amount),
+        parseInt(product.selected_item.txt_min_order_amount),
       )
-        ? parseInt(response.selected_item.txt_min_order_amount)
+        ? parseInt(product.selected_item.txt_min_order_amount)
         : 1,
       quantityByIncrements: !isNaN(
-        parseInt(response.selected_item.txt_order_qty_increments),
+        parseInt(product.selected_item.txt_order_qty_increments),
       )
-        ? parseInt(response.selected_item.txt_order_qty_increments)
+        ? parseInt(product.selected_item.txt_order_qty_increments)
         : 1,
-      weight: Number(response.selected_item.txt_weight_value),
-      prop65MessageOne: response.selected_item.txt_prop65_message_01,
-      prop65MessageTwo: response.selected_item.txt_prop65_message_02,
-      prop65MessageThree: response.selected_item.txt_prop65_message_03,
-      listPrice: Number(response.selected_item.list_price),
-      isSaleItem: getBoolean(response.selected_item.on_sale),
-      isNewItem: getBoolean(response.selected_item.is_new),
-      fClassId: Number(response.selected_item.fclassid),
-      productStatus: response.selected_item.txt_x_pant_Mat_status,
-      productThumbnail: response.selected_item.thumbnail_img,
-      class: response.selected_item.class,
-      attributes: response.selected_item.attributes?.map(
+      weight: Number(product.selected_item.txt_weight_value),
+      prop65MessageOne: product.selected_item.txt_prop65_message_01,
+      prop65MessageTwo: product.selected_item.txt_prop65_message_02,
+      prop65MessageThree: product.selected_item.txt_prop65_message_03,
+      listPrice: Number(product.selected_item.list_price),
+      isSaleItem: getBoolean(product.selected_item.on_sale),
+      isNewItem: getBoolean(product.selected_item.is_new),
+      fClassId: Number(product.selected_item.fclassid),
+      productStatus: product.selected_item.txt_x_pant_Mat_status,
+      productThumbnail: product.selected_item.thumbnail_img,
+      class: product.selected_item.class,
+      attributes: product.selected_item.attributes?.map(
         ({ attribute_name, attribute_value }) => ({
           name: attribute_name,
           value: attribute_value,
         }),
       ),
-      detailedImages: response.selected_item.detailed_images,
+      detailedImages: product.selected_item.detailed_images,
     },
   };
 };
