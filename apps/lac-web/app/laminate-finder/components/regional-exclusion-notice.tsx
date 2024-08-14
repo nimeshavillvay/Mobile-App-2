@@ -1,7 +1,7 @@
 "use client";
 
-import Warning from "@/_components/warning";
 import useSuspenseProductExcluded from "@/_hooks/product/use-suspense-product-excluded.hook";
+import { Alert, AlertDescription } from "@repo/web-ui/components/ui/alert";
 
 const RegionalExclusionNotice = ({
   token,
@@ -17,10 +17,11 @@ const RegionalExclusionNotice = ({
   }
 
   return (
-    <Warning
-      title="Not Available"
-      description="This item is not available in your territory."
-    />
+    <Alert variant="destructive">
+      <AlertDescription>
+        This item is not available in your territory.
+      </AlertDescription>
+    </Alert>
   );
 };
 

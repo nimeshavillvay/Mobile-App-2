@@ -10,6 +10,8 @@ import {
   DialogContent,
   DialogTrigger,
 } from "@repo/web-ui/components/ui/dialog";
+import { Alert, AlertDescription } from "@repo/web-ui/components/ui/alert";
+
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import Image from "next/image";
 import { Suspense, useState } from "react";
@@ -78,6 +80,13 @@ const LaminateCard = ({
               height={300}
               className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
             />
+          </div>
+          <div className="absolute left-0 right-0 top-0 px-2 pt-2">
+            <Alert variant="destructive">
+              <AlertDescription>
+                Not available in your territory.
+              </AlertDescription>
+            </Alert>
           </div>
           <div className="absolute bottom-0 left-0 right-0 translate-y-full transform bg-black bg-opacity-70 p-3 text-white transition-transform duration-300 group-hover:translate-y-0">
             <h3
