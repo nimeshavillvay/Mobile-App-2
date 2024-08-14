@@ -17,7 +17,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import {
   laminateAddToCartFormSchema,
   type LaminateAddToCartFormSchema,
-} from "../helpers";
+} from "./helpers";
 import LaminateEdgeBanding from "./laminate-edgebanding";
 import LaminateGradeFinish from "./laminate-grade-finish";
 import LaminateGroup from "./laminate-group";

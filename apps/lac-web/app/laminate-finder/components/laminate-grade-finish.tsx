@@ -11,9 +11,9 @@ import {
 import type { Dispatch, SetStateAction } from "react";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import type { LaminateAddToCartFormSchema } from "../helpers";
-import { laminateAddToCartFormSchema } from "../helpers";
 import LaminateItems from "../laminate-items";
+import type { LaminateAddToCartFormSchema } from "./helpers";
+import { laminateAddToCartFormSchema } from "./helpers";
 
 const LaminateGradeFinish = ({
   groupId,

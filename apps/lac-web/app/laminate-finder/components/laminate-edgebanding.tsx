@@ -24,11 +24,11 @@ import Image from "next/image";
 import type { Dispatch, SetStateAction } from "react";
 import { Suspense, useDeferredValue } from "react";
 import { useForm, useFormContext } from "react-hook-form";
+import EdgeBandTableLoading from "./edgband-table-loading";
 import {
   laminateAddToCartFormSchema,
   type LaminateAddToCartFormSchema,
-} from "../helpers";
-import EdgeBandTableLoading from "./edgband-table-loading";
+} from "./helpers";
 import LaminateCardTotalPrice from "./laminate-card-total-price";
 import LaminateEdgeBandingRow from "./laminate-edgebanding-row";
 

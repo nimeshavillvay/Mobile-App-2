@@ -2,6 +2,7 @@
 
 import { useFilterParams } from "@/_components/products-grid";
 import { QUERY_KEYS } from "@/_components/products-grid/constants";
+import useSuspenseLaminateFilters from "@/_hooks/laminate/use-suspense-laminate-filters.hook";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Tooltip,
@@ -10,9 +11,8 @@ import {
 } from "@repo/web-ui/components/ui/tooltip";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
-import type { LaminateSearchFormSchema } from "../helpers";
-import { laminateSearchFormSchema } from "../helpers";
-import useSuspenseLaminateFilters from "../hooks/use-suspense-laminate-filters.hook";
+import type { LaminateSearchFormSchema } from "./helpers";
+import { laminateSearchFormSchema } from "./helpers";
 
 type Color = {
   id: number;

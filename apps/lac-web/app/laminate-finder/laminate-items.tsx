@@ -19,13 +19,13 @@ import {
   type SetStateAction,
 } from "react";
 import { useForm } from "react-hook-form";
-import LaminateCardTotalPrice from "./components/laminate-card-total-price";
-import LaminateItem from "./components/laminate-item";
-import LaminatesDialogLoading from "./components/laminates-dialog-loading";
 import {
   laminateAddToCartFormSchema,
   type LaminateAddToCartFormSchema,
-} from "./helpers";
+} from "./components/helpers";
+import LaminateCardTotalPrice from "./components/laminate-card-total-price";
+import LaminateItem from "./components/laminate-item";
+import LaminatesDialogLoading from "./components/laminates-dialog-loading";
 
 const LaminateItems = ({
   groupId,

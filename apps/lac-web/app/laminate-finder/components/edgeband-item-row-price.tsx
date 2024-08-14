@@ -3,7 +3,7 @@ import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hoo
 import { formatNumberToPrice } from "@/_lib/utils";
 import { useDeferredValue } from "react";
 import { useFormContext } from "react-hook-form";
-import type { LaminateAddToCartFormSchema } from "../helpers";
+import type { LaminateAddToCartFormSchema } from "./helpers";
 
 const EdgeBandRowPrice = ({
   token,

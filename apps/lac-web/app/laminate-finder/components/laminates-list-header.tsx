@@ -1,8 +1,8 @@
 "use client";
 
 import { ProductsGridHeader } from "@/_components/products-grid";
-import useSuspenseLaminateFilters from "../hooks/use-suspense-laminate-filters.hook";
-import useSuspenseSearchLaminateList from "../hooks/use-suspense-search-laminate-list.hook";
+import useSuspenseLaminateFilters from "@/_hooks/laminate/use-suspense-laminate-filters.hook";
+import useSuspenseSearchLaminateList from "@/_hooks/laminate/use-suspense-search-laminate-list.hook";
 
 type LaminatesListHeaderProps = {
   readonly token: string;

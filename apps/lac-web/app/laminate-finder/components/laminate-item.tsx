@@ -5,7 +5,7 @@ import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import { TableCell, TableRow } from "@repo/web-ui/components/ui/table";
 import { Suspense } from "react";
 import { Controller, useFormContext } from "react-hook-form";
-import type { LaminateAddToCartFormSchema } from "../helpers";
+import type { LaminateAddToCartFormSchema } from "./helpers";
 import LaminateItemRowPrice from "./laminate-item-row-price";
 import RegionalExclusionNotice from "./regional-exclusion-notice";
 

@@ -1,5 +1,6 @@
 "use client";
 
+import useSuspenseLaminateFilters from "@/_hooks/laminate/use-suspense-laminate-filters.hook";
 import { changeSearchParams } from "@/_lib/client-helpers";
 import { QUERY_KEYS } from "@/_lib/constants";
 import { INIT_PAGE_NUMBER } from "@/osr/dashboard/constants";
@@ -19,8 +20,7 @@ import type { z } from "zod";
 import {
   laminateSearchFormSchema,
   type LaminateSearchFormSchema,
-} from "../helpers";
-import useSuspenseLaminateFilters from "../hooks/use-suspense-laminate-filters.hook";
+} from "./helpers";
 
 const LaminateSearch = ({ token }: { readonly token: string }) => {
   const searchParams = useSearchParams();
