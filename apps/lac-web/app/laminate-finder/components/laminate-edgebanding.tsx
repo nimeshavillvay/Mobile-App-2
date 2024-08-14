@@ -4,7 +4,6 @@ import useDebouncedState from "@/_hooks/misc/use-debounced-state.hook";
 import useLaminateFilter from "@/_hooks/product/use-laminate-item-info.hook";
 import type { Product } from "@/_lib/types";
 import useAddMultipleToCartMutation from "@/cart/_add-more-items/use-add-multiple-to-cart-mutation.hook";
-import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Accordion,
   AccordionContent,
@@ -23,12 +22,9 @@ import {
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Suspense, useDeferredValue } from "react";
-import { useForm, useFormContext } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 import EdgeBandTableLoading from "./edgband-table-loading";
-import {
-  laminateAddToCartFormSchema,
-  type LaminateAddToCartFormSchema,
-} from "./helpers";
+import { type LaminateAddToCartFormSchema } from "./helpers";
 import LaminateCardTotalPrice from "./laminate-card-total-price";
 import LaminateEdgeBandingRow from "./laminate-edgebanding-row";
 
@@ -45,11 +41,6 @@ const LaminateEdgeBanding = ({
   const { data: laminateData } = useLaminateFilter(
     Number(product.variants[0]?.id),
   );
-
-  const form = useForm<LaminateAddToCartFormSchema>({
-    resolver: zodResolver(laminateAddToCartFormSchema),
-    defaultValues: { quantity: laminateData?.edgebanding.map(() => "") },
-  });
 
   const { watch } = useFormContext<LaminateAddToCartFormSchema>();
 

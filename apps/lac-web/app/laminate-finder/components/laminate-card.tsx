@@ -30,8 +30,8 @@ const RegionalExcludedBanner = ({
   token,
   productId,
 }: {
-  token: string;
-  productId: number;
+  readonly token: string;
+  readonly productId: number;
 }) => {
   const productExcludedQuery = useSuspenseProductExcluded(token, productId);
   if (!productExcludedQuery.data.isExcluded) {
