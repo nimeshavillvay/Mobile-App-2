@@ -1,6 +1,5 @@
 "use client";
 
-import Warning from "@/_components/warning";
 import useSuspenseProductExcluded from "@/_hooks/product/use-suspense-product-excluded.hook";
 
 const RegionalExclusionNotice = ({
@@ -17,10 +16,10 @@ const RegionalExclusionNotice = ({
   }
 
   return (
-    <Warning
-      title="Not Available"
-      description="This item is not available in your territory."
-    />
+    <p className="mt-1 max-w-44 rounded bg-red-50 px-2 py-1 text-xs text-red-800">
+      This item is not available
+      <br /> in your territory.
+    </p>
   );
 };
 

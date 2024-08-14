@@ -33,66 +33,57 @@ const LaminateItem = ({
   const quantity = watch(`quantity.${quantityFieldIndex}`);
 
   return (
-    <>
-      <TableRow key={productId}>
-        <TableCell className="w-40 text-nowrap">{size}</TableCell>
-        <TableCell className="text-nowrap">
-          Home Branch:{" "}
-          <strong className="font-semibold">
-            {checkAvailabilityQuery.availableLocations[0]?.amount ?? 0}
-          </strong>
-          <br />
-          Alt Branch:{" "}
-          <strong className="font-semibold">
-            {checkAvailabilityQuery.availableLocations[1]?.amount ?? 0}
-          </strong>
-          <br />
-        </TableCell>
-        <TableCell className="text-right">
-          <Controller
-            control={control}
-            name={`quantity.${quantityFieldIndex}`}
-            render={({ field: { onChange, onBlur, value, name, ref } }) => (
-              <NumberInputField
-                onBlur={onBlur}
-                onChange={onChange}
-                value={value}
-                ref={ref}
-                name={name}
-                min={1}
-                step={1}
-                className="md:w-[6.125rem]"
-                removeDefaultStyles={true}
-                label="Quantity"
-              />
-            )}
-          />
-        </TableCell>
-        <TableCell className="text-right font-medium">
-          {!!quantity && (
-            <Suspense
-              key={productId}
-              fallback={
-                <Skeleton className="h-4 w-full rounded-lg shadow-md" />
-              }
-            >
-              <LaminateItemRowPrice
-                token={token}
-                productId={productId}
-                quantityFieldIndex={quantityFieldIndex}
-              />
-            </Suspense>
+    <TableRow key={productId}>
+      <TableCell className="w-40 text-nowrap">{size}</TableCell>
+      <TableCell className="text-nowrap">
+        Home Branch:{" "}
+        <strong className="font-semibold">
+          {checkAvailabilityQuery.availableLocations[0]?.amount ?? 0}
+        </strong>
+        <br />
+        Alt Branch:{" "}
+        <strong className="font-semibold">
+          {checkAvailabilityQuery.availableLocations[1]?.amount ?? 0}
+        </strong>
+        {isLoggedIn && (
+          <RegionalExclusionNotice token={token} productId={productId} />
+        )}
+      </TableCell>
+      <TableCell className="text-right">
+        <Controller
+          control={control}
+          name={`quantity.${quantityFieldIndex}`}
+          render={({ field: { onChange, onBlur, value, name, ref } }) => (
+            <NumberInputField
+              onBlur={onBlur}
+              onChange={onChange}
+              value={value}
+              ref={ref}
+              name={name}
+              min={1}
+              step={1}
+              className="md:w-[6.125rem]"
+              removeDefaultStyles={true}
+              label="Quantity"
+            />
           )}
-        </TableCell>
-      </TableRow>
-      {isLoggedIn && (
-        <TableRow>
-          <TableCell className="w-full">
-            <RegionalExclusionNotice token={token} productId={productId} />
-          </TableCell>
-        </TableRow>
-      )}
-    </>
+        />
+      </TableCell>
+      <TableCell className="text-right font-medium">
+        {!!quantity && (
+          <Suspense
+            key={productId}
+            fallback={<Skeleton className="h-4 w-full rounded-lg shadow-md" />}
+          >
+            <LaminateItemRowPrice
+              token={token}
+              productId={productId}
+              quantityFieldIndex={quantityFieldIndex}
+            />
+          </Suspense>
+        )}
+      </TableCell>
+    </TableRow>
   );
 };
 

@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from "@/_lib/utils";
 import { useFilterParams } from "@/_components/products-grid";
 import { QUERY_KEYS } from "@/_components/products-grid/constants";
 import useSuspenseLaminateFilters from "@/_hooks/laminate/use-suspense-laminate-filters.hook";
@@ -35,7 +36,12 @@ const ColorOption = ({
         <TooltipTrigger asChild>
           <label
             htmlFor={`color-${color.id}`}
-            className={`size-15 flex cursor-pointer items-center justify-center rounded-full transition-all duration-200 ease-in-out ${color.active ? "" : "cursor-not-allowed opacity-50"} `}
+            className={cn(
+              "size-15 flex cursor-pointer items-center justify-center rounded transition-all duration-200 ease-in-out",
+              {
+                "cursor-not-allowed opacity-50": !color.active,
+              },
+            )}
           >
             <input
               type="radio"
@@ -48,7 +54,13 @@ const ColorOption = ({
               className="sr-only"
             />
             <span
-              className={`size-14 rounded-full border-2 transition-all duration-200 ease-in-out ${isSelected ? "border-blue-500" : "border-transparent hover:border-blue-300"} `}
+              className={cn(
+                "size-14 rounded border-2 transition-all duration-200 ease-in-out",
+                {
+                  "border-blue-500": isSelected,
+                  "border-gray-100 hover:border-blue-300": !isSelected,
+                },
+              )}
               style={{ backgroundColor: color.value }}
               aria-hidden="true"
             />
