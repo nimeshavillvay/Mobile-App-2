@@ -2,15 +2,17 @@
 
 import useLaminateFilter from "@/_hooks/product/use-laminate-item-info.hook";
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
+import useSuspenseProductExcluded from "@/_hooks/product/use-suspense-product-excluded.hook";
+import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
 import type { Product } from "@/_lib/types";
 import { formatNumberToPrice } from "@/_lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Alert, AlertDescription } from "@repo/web-ui/components/ui/alert";
 import {
   Dialog,
   DialogContent,
   DialogTrigger,
 } from "@repo/web-ui/components/ui/dialog";
-import { Alert, AlertDescription } from "@repo/web-ui/components/ui/alert";
 
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import Image from "next/image";
@@ -24,6 +26,26 @@ import LaminateEdgeBanding from "./laminate-edgebanding";
 import LaminateGradeFinish from "./laminate-grade-finish";
 import LaminateGroup from "./laminate-group";
 
+const RegionalExcludedBanner = ({
+  token,
+  productId,
+}: {
+  token: string;
+  productId: number;
+}) => {
+  const productExcludedQuery = useSuspenseProductExcluded(token, productId);
+  if (!productExcludedQuery.data.isExcluded) {
+    return null;
+  }
+  return (
+    <div className="absolute left-0 right-0 top-0 px-2 pt-2">
+      <Alert variant="destructive">
+        <AlertDescription>Not available in your territory.</AlertDescription>
+      </Alert>
+    </div>
+  );
+};
+
 const LaminateCard = ({
   product,
   token,
@@ -33,6 +55,9 @@ const LaminateCard = ({
   readonly product: Product;
   readonly token: string;
 }) => {
+  const loginCheckResponse = useSuspenseCheckLogin(token);
+  const isLoggedIn = loginCheckResponse.data.status_code === "OK";
+
   const form = useForm<LaminateAddToCartFormSchema>({
     resolver: zodResolver(laminateAddToCartFormSchema),
   });
@@ -81,13 +106,14 @@ const LaminateCard = ({
               className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
             />
           </div>
-          <div className="absolute left-0 right-0 top-0 px-2 pt-2">
-            <Alert variant="destructive">
-              <AlertDescription>
-                Not available in your territory.
-              </AlertDescription>
-            </Alert>
-          </div>
+
+          {isLoggedIn && (
+            <RegionalExcludedBanner
+              token={token}
+              productId={Number(product.variants[0]?.id)}
+            />
+          )}
+
           <div className="absolute bottom-0 left-0 right-0 translate-y-full transform bg-black bg-opacity-70 p-3 text-white transition-transform duration-300 group-hover:translate-y-0">
             <h3
               className="mb-1 line-clamp-2 text-sm font-semibold"
