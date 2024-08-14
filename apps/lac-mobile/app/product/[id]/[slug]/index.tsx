@@ -1,49 +1,27 @@
-import { ProductAction } from "@/components/product";
+import { ProductAction, ProductDetailsSkeleton } from "@/components/product";
+import { API_BASE_URL, API_KEY } from "@/lib/constants";
 import {
   ProductCarousel,
   ProductCarouselItem,
   ProductCarouselPagination,
 } from "@repo/native-ui/components/product";
-import { Stack } from "expo-router";
-import { useState } from "react";
+import useSuspenseGetProduct from "@repo/shared-logic/apis/hooks/product/use-suspense-get-product.hook";
+import { Stack, useLocalSearchParams } from "expo-router";
+import { Suspense, useState } from "react";
 import { Dimensions } from "react-native";
 import ImageView from "react-native-image-viewing";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView, View } from "tamagui";
 
-//Placeholder data until API integration
-const imageData = [
-  {
-    img: "https://xcart.wurthlac.com/images/D/EN07125120TG2_1.png",
-    alt: "Elgi EN07-125-120T-G2 10 HP 208/230/460 Volt Three Phase Rotary Screw Air Compressor Compressor 120 Gallon Horizontal Tank Mount with Dryer- 125 psi",
-    url: "",
-    type: "IMAGE",
-  },
-  {
-    img: "https://xcart.wurthlac.com/images/D/EN07125120TG2_2.png",
-    alt: "Elgi EN07-125-120T-G2 10 HP 208/230/460 Volt Three Phase Rotary Screw Air Compressor Compressor 120 Gallon Horizontal Tank Mount with Dryer- 125 psi",
-    url: "",
-    type: "IMAGE",
-  },
-  {
-    img: "https://xcart.wurthlac.com/images/D/EN07125120TG2_3.png",
-    alt: "Elgi EN07-125-120T-G2 10 HP 208/230/460 Volt Three Phase Rotary Screw Air Compressor Compressor 120 Gallon Horizontal Tank Mount with Dryer- 125 psi",
-    url: "",
-    type: "IMAGE",
-  },
-  {
-    img: "https://xcart.wurthlac.com/images/PA/0_ec2ca.png",
-    alt: "Elgi Infrastructure",
-    url: "www.youtube.com/embed/KmmI8cUG6DI",
-    type: "VIDEO",
-  },
-];
-
 const Product = () => {
-  const [index, setIndex] = useState(0);
-  const [imageOverlayVisible, setImageOverlayVisible] = useState(false);
+  const localSearchParams = useLocalSearchParams<{
+    id: string;
+    slug: string;
+  }>();
 
-  const screenWidth = Dimensions.get("window").width;
+  if (!localSearchParams.id || !localSearchParams.slug) {
+    return null;
+  }
 
   return (
     <>
@@ -56,38 +34,87 @@ const Product = () => {
 
       <SafeAreaView style={{ flex: 1 }}>
         <ScrollView flex={1} backgroundColor="white">
-          <View flex={1}>
-            <ProductCarousel
-              width={screenWidth}
-              height={screenWidth}
-              data={imageData}
-              renderItem={({ item }) => (
-                <ProductCarouselItem
-                  image={item.img}
-                  alt={item.alt}
-                  width={screenWidth}
-                  height={screenWidth}
-                  type={item.type}
-                  url={item.url}
-                  onPress={() => setImageOverlayVisible(true)}
-                />
-              )}
-              onScrollEnd={(index) => {
-                setIndex(index);
-              }}
+          <Suspense fallback={<ProductDetailsSkeleton />}>
+            <ProductDetails
+              productId={localSearchParams.id}
+              slug={localSearchParams.slug}
             />
-            <ProductAction width={screenWidth} />
-            <ProductCarouselPagination data={imageData} index={index} />
-          </View>
-          <ImageView
-            images={[{ uri: imageData[index]?.img }]}
-            imageIndex={0}
-            visible={imageOverlayVisible}
-            onRequestClose={() => setImageOverlayVisible(false)}
-            presentationStyle="overFullScreen"
-          />
+          </Suspense>
         </ScrollView>
       </SafeAreaView>
+    </>
+  );
+};
+
+const ProductDetails = ({
+  productId,
+  slug,
+}: {
+  readonly productId: string;
+  readonly slug: string;
+}) => {
+  const [index, setIndex] = useState(0);
+  const [imageOverlayVisible, setImageOverlayVisible] = useState(false);
+
+  const { data } = useSuspenseGetProduct(
+    {
+      baseUrl: API_BASE_URL,
+      apiKey: API_KEY,
+    },
+    productId,
+    slug,
+  );
+
+  if (!data) {
+    return null;
+  }
+
+  const screenWidth = Dimensions.get("window").width;
+
+  let productImages = data.selectedProduct.detailedImages;
+  if (!productImages || productImages.length === 0) {
+    productImages = [
+      {
+        img: data.selectedProduct.image,
+        type: "IMAGE",
+        alt: "Product Image",
+        url: "",
+      },
+    ];
+  }
+
+  return (
+    <>
+      <View flex={1}>
+        <ProductCarousel
+          width={screenWidth}
+          height={screenWidth}
+          data={productImages}
+          renderItem={({ item }) => (
+            <ProductCarouselItem
+              image={item.img}
+              alt={item.alt}
+              width={screenWidth}
+              height={screenWidth}
+              type={item.type}
+              url={item.url}
+              onPress={() => setImageOverlayVisible(true)}
+            />
+          )}
+          onScrollEnd={(index) => {
+            setIndex(index);
+          }}
+        />
+        <ProductAction width={screenWidth} />
+        <ProductCarouselPagination data={productImages} index={index} />
+      </View>
+      <ImageView
+        images={[{ uri: productImages[index]?.img }]}
+        imageIndex={0}
+        visible={imageOverlayVisible}
+        onRequestClose={() => setImageOverlayVisible(false)}
+        presentationStyle="overFullScreen"
+      />
     </>
   );
 };
