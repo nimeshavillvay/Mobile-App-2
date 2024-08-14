@@ -15,12 +15,12 @@ export const ProductAction = ({ width }: { readonly width: number }) => {
       width={width - 40}
     >
       <Button
+        circular
         icon={X}
         padding={20}
         backgroundColor="white"
         height={40}
         width={40}
-        borderRadius={80}
         shadowColor="$gray12"
         shadowOpacity={0.8}
         shadowRadius={2}
@@ -34,12 +34,12 @@ export const ProductAction = ({ width }: { readonly width: number }) => {
       />
       <XStack gap={10}>
         <Button
+          circular
           icon={Bookmark}
           padding={20}
           backgroundColor="white"
           height={40}
           width={40}
-          borderRadius={80}
           shadowColor="$gray12"
           shadowOpacity={0.8}
           shadowRadius={2}
@@ -47,12 +47,12 @@ export const ProductAction = ({ width }: { readonly width: number }) => {
           elevation={10}
         />
         <Button
+          circular
           icon={Upload}
           padding={20}
           backgroundColor="white"
           height={40}
           width={40}
-          borderRadius={80}
           shadowColor="$gray12"
           shadowOpacity={0.8}
           shadowRadius={2}
