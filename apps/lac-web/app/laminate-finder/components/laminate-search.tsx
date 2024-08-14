@@ -24,12 +24,11 @@ import {
 
 const LaminateSearch = ({ token }: { readonly token: string }) => {
   const searchParams = useSearchParams();
-  const newSearchParams = new URLSearchParams(searchParams);
 
   const form = useForm<LaminateSearchFormSchema>({
     resolver: zodResolver(laminateSearchFormSchema),
     values: {
-      search: newSearchParams.get(QUERY_KEYS.SEARCH_TEXT) ?? "",
+      search: searchParams.get(QUERY_KEYS.SEARCH_TEXT) ?? "",
     },
   });
 
@@ -38,6 +37,7 @@ const LaminateSearch = ({ token }: { readonly token: string }) => {
   });
 
   const laminateSearch = (values: z.infer<typeof laminateSearchFormSchema>) => {
+    const newSearchParams = new URLSearchParams(searchParams);
     const isColorPickerAttribute = categoryFiltersQuery.data.filter(
       (filter) => filter.is_colorpicker,
     )[0];
@@ -56,6 +56,7 @@ const LaminateSearch = ({ token }: { readonly token: string }) => {
       },
     ]);
   };
+
   return (
     <div className="mx-auto mb-6 w-full max-w-2xl">
       <Form {...form}>

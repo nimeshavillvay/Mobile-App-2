@@ -120,7 +120,6 @@ const LaminateCard = ({
                 singleGrade={singleGrade ?? ""}
                 singleFinish={singleFinish ?? ""}
                 singleGradeFinishProductIds={productIds}
-                setOpen={setOpen}
               />
             </Suspense>
           </div>
@@ -132,7 +131,6 @@ const LaminateCard = ({
                 product={product}
                 token={token}
                 groupId={groupId}
-                setOpen={setOpen}
               />
             </FormProvider>
           )}

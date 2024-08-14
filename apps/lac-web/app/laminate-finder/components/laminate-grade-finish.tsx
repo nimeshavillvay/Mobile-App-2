@@ -8,7 +8,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@repo/web-ui/components/ui/select";
-import type { Dispatch, SetStateAction } from "react";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import LaminateItems from "../laminate-items";
@@ -22,7 +21,6 @@ const LaminateGradeFinish = ({
   singleGrade,
   singleFinish,
   singleGradeFinishProductIds,
-  setOpen,
 }: {
   readonly groupId: string;
   readonly product: Product;
@@ -30,7 +28,6 @@ const LaminateGradeFinish = ({
   readonly singleGrade: string;
   readonly singleFinish: string;
   readonly singleGradeFinishProductIds: string[];
-  readonly setOpen: Dispatch<SetStateAction<boolean>>;
 }) => {
   const { data: laminateData } = useLaminateFilter(
     Number(product.variants[0]?.id),
@@ -53,7 +50,7 @@ const LaminateGradeFinish = ({
       const possibleProductIdsForFinishes =
         laminateData?.groupFilters?.values_FINISH;
       setProductIds(
-        possibleProductIdsForFinishes?.[selectedFinish]?.[grade]?.productids ||
+        possibleProductIdsForFinishes?.[selectedFinish]?.[grade]?.productids ??
           [],
       );
     }
@@ -65,7 +62,7 @@ const LaminateGradeFinish = ({
       const possibleProductIdsForGrades =
         laminateData?.groupFilters?.values_GRADE;
       setProductIds(
-        possibleProductIdsForGrades?.[selectedGrade]?.[finish]?.productids ||
+        possibleProductIdsForGrades?.[selectedGrade]?.[finish]?.productids ??
           [],
       );
     }
@@ -117,7 +114,6 @@ const LaminateGradeFinish = ({
           productIds={productIds}
           token={token}
           groupId={groupId}
-          setOpen={setOpen}
         />
       </FormProvider>
     </div>

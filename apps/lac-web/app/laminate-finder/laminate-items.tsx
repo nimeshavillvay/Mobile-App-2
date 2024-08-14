@@ -12,12 +12,8 @@ import {
   TableHeader,
   TableRow,
 } from "@repo/web-ui/components/ui/table";
-import {
-  Suspense,
-  useDeferredValue,
-  type Dispatch,
-  type SetStateAction,
-} from "react";
+import { useRouter } from "next/navigation";
+import { Suspense, useDeferredValue } from "react";
 import { useForm } from "react-hook-form";
 import {
   laminateAddToCartFormSchema,
@@ -31,13 +27,13 @@ const LaminateItems = ({
   groupId,
   productIds,
   token,
-  setOpen,
 }: {
   readonly productIds: string[];
   readonly token: string;
   readonly groupId: string;
-  readonly setOpen: Dispatch<SetStateAction<boolean>>;
 }) => {
+  const router = useRouter();
+
   const form = useForm<LaminateAddToCartFormSchema>({
     resolver: zodResolver(laminateAddToCartFormSchema),
     defaultValues: { quantity: productIds.map(() => "") },
@@ -73,7 +69,7 @@ const LaminateItems = ({
       .filter((item) => item.quantity !== undefined);
     addMultipleToCartMutation.mutateAsync(addToCartRequest, {
       onSuccess: () => {
-        setOpen(false);
+        router.push("/cart");
       },
     });
   };

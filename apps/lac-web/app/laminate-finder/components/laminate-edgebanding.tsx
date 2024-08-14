@@ -21,7 +21,7 @@ import {
   TableRow,
 } from "@repo/web-ui/components/ui/table";
 import Image from "next/image";
-import type { Dispatch, SetStateAction } from "react";
+import { useRouter } from "next/navigation";
 import { Suspense, useDeferredValue } from "react";
 import { useForm, useFormContext } from "react-hook-form";
 import EdgeBandTableLoading from "./edgband-table-loading";
@@ -36,13 +36,12 @@ const LaminateEdgeBanding = ({
   product,
   token,
   groupId,
-  setOpen,
 }: {
   readonly groupId: string;
   readonly product: Product;
   readonly token: string;
-  readonly setOpen: Dispatch<SetStateAction<boolean>>;
 }) => {
+  const router = useRouter();
   const { data: laminateData } = useLaminateFilter(
     Number(product.variants[0]?.id),
   );
@@ -87,8 +86,7 @@ const LaminateEdgeBanding = ({
         : [];
     addMultipleToCartMutation.mutateAsync(addToCartRequest, {
       onSuccess: () => {
-        form.reset();
-        setOpen(false);
+        router.push("/cart");
       },
     });
   };

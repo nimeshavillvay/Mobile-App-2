@@ -1,7 +1,6 @@
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import type { Product } from "@/_lib/types";
 import { formatNumberToPrice } from "@/_lib/utils";
-
 import Image from "next/image";
 
 const LaminateGroup = ({

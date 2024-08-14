@@ -9,7 +9,6 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@repo/web-ui/components/ui/tooltip";
-import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import type { LaminateSearchFormSchema } from "./helpers";
 import { laminateSearchFormSchema } from "./helpers";
@@ -64,8 +63,6 @@ const ColorOption = ({
   );
 };
 
-ColorOption.displayName = "ColorOption";
-
 const ColorPicker = ({ token }: { readonly token: string }) => {
   const laminateSearchForm = useForm<LaminateSearchFormSchema>({
     resolver: zodResolver(laminateSearchFormSchema),
@@ -73,9 +70,8 @@ const ColorPicker = ({ token }: { readonly token: string }) => {
   const laminateFiltersQuery = useSuspenseLaminateFilters({ token });
   const { searchParams } = useFilterParams(laminateFiltersQuery.data);
 
-  const colorPickerFilter = useMemo(
-    () => laminateFiltersQuery.data.find((filter) => filter.is_colorpicker),
-    [laminateFiltersQuery.data],
+  const colorPickerFilter = laminateFiltersQuery.data.find(
+    (filter) => filter.is_colorpicker,
   );
 
   const colorPickerFilterId = colorPickerFilter?.id.toString() || "";
