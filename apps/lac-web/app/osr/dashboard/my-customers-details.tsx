@@ -1,5 +1,7 @@
 "use client";
 
+import { changeSearchParams } from "@/_lib/client-helpers";
+import { QUERY_KEYS } from "@/_lib/constants";
 import { cn, formatNumberToPrice } from "@/_lib/utils";
 import {
   Table,
@@ -13,11 +15,9 @@ import dayjs from "dayjs";
 import { ArrowDownNarrowWide, ArrowDownWideNarrow } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { Fragment, useState } from "react";
-import { changeSearchParams } from "./client-helpers";
 import {
   INIT_PAGE_NUMBER,
   PER_PAGE,
-  QUERY_KEYS,
   columnAccount,
   columnCartItemCount,
   columnCartLastUpdate,
