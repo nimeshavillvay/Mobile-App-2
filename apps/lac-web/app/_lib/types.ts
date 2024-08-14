@@ -64,8 +64,8 @@ export type FilterTitle = "PO #" | "Job Name" | "Status" | "Transaction Type";
 
 export type PurchasedProduct = {
   productTitle: string;
-  productSku: string;
-  productId: number;
+  productSku?: string;
+  productId?: number;
   totalItem: number;
   purchaseOrderDate: string;
   isFavorite: boolean;
