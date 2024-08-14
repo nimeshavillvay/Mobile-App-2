@@ -86,6 +86,7 @@ const ProductsList = ({
           >
             <ProductCard
               productId={item.productId}
+              slug={item.slug}
               image={item.image}
               title={item.title}
               sku={item.sku}
