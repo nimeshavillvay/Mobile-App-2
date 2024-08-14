@@ -132,6 +132,7 @@ const LaminateCard = ({
                 product={product}
                 token={token}
                 groupId={groupId}
+                setOpen={setOpen}
               />
             </FormProvider>
           )}

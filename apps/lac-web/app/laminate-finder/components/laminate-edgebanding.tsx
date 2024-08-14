@@ -21,8 +21,8 @@ import {
   TableRow,
 } from "@repo/web-ui/components/ui/table";
 import Image from "next/image";
-import { Suspense, useDeferredValue } from "react";
-import { useForm } from "react-hook-form";
+import { Dispatch, SetStateAction, Suspense, useDeferredValue } from "react";
+import { useForm, useFormContext } from "react-hook-form";
 import {
   edgeBandingAddToCartFormSchema,
   type EdgeBandingAddToCartFormSchema,
@@ -35,54 +35,59 @@ const LaminateEdgeBanding = ({
   product,
   token,
   groupId,
+  setOpen,
 }: {
   readonly groupId: string;
   readonly product: Product;
   readonly token: string;
+  readonly setOpen: Dispatch<SetStateAction<boolean>>;
 }) => {
   const { data: laminateData } = useLaminateFilter(
     Number(product.variants[0]?.id),
   );
-  console.log("laminateData", laminateData?.edgebanding);
+
   const form = useForm<EdgeBandingAddToCartFormSchema>({
     resolver: zodResolver(edgeBandingAddToCartFormSchema),
     defaultValues: { bandQuantity: laminateData?.edgebanding.map(() => "") },
   });
+
+  const { watch } = useFormContext<EdgeBandingAddToCartFormSchema>();
+
   const formId = `add-edgeband-to-cart-${groupId}`;
 
-  const quantities = form.getValues("bandQuantity");
+  const quantities = watch("bandQuantity");
   const delayedQuantities = useDebouncedState(quantities);
   const deferredQuantities = useDeferredValue(delayedQuantities);
 
-  const lineProductIds = form.getValues("bandProductId");
-
+  const edgeBand = laminateData?.edgebanding;
   const priceCheckRequest =
-    lineProductIds !== undefined
-      ? lineProductIds
-          .map((productId, index) => ({
-            productId: Number(productId),
+    edgeBand !== undefined && deferredQuantities !== undefined
+      ? edgeBand
+          .map((item, index) => ({
+            productId: Number(item.productId),
             qty: Number(deferredQuantities[index]),
+            sku: item.productSku,
           }))
-          .filter((item) => item.qty !== 0)
+          .filter((item) => !isNaN(item.qty))
       : [];
-  console.log("quantities ", quantities);
-  console.log("lineProductIds ", lineProductIds);
 
   const addMultipleToCartMutation = useAddMultipleToCartMutation(token);
 
   const handleAddAllItemsToCart = async () => {
-    const skus = form.getValues("bandSku");
-
-    const addToCartRequest = lineProductIds
-      .map((productId, index) => ({
-        productId: Number(productId),
-        quantity: Number(quantities[index]),
-        sku: skus[index] ?? "",
-      }))
-      .filter((item) => item.quantity !== undefined);
+    const addToCartRequest =
+      edgeBand !== undefined
+        ? edgeBand
+            .map((item, index) => ({
+              productId: Number(item.productId),
+              quantity: Number(deferredQuantities[index]),
+              sku: item.productSku,
+            }))
+            .filter((item) => item.quantity !== 0)
+        : [];
     addMultipleToCartMutation.mutateAsync(addToCartRequest, {
       onSuccess: () => {
-        // setOpen(false);
+        form.reset();
+        setOpen(false);
       },
     });
   };
@@ -96,7 +101,6 @@ const LaminateEdgeBanding = ({
   )[0]?.attribute_value;
 
   return (
-    // <Form {...form}>
     <form id={formId}>
       <div className="mt-4 border-t pt-4">
         <h4 className="pb-2 text-xl font-semibold">Matching Edgebanding</h4>
@@ -166,8 +170,8 @@ const LaminateEdgeBanding = ({
                             key={index}
                             product={item}
                             token={token}
-                            groupId={groupId}
                             quantityFieldIndex={index}
+                            formId={formId}
                           />
                         ))}
                       </TableBody>
@@ -202,7 +206,6 @@ const LaminateEdgeBanding = ({
         </Accordion>
       </div>
     </form>
-    // </Form>
   );
 };
 
