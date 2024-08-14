@@ -1,11 +1,10 @@
 import { api } from "~/lib/api";
 import type { ApiConfig } from "~/lib/types";
-import { productSchema, type Product } from "~/lib/zod-schema/product";
+import { productSchema } from "~/lib/zod-schema/product";
 
 export const getProduct = async (
   { baseUrl, apiKey }: ApiConfig,
   productId: string,
-  slug: string,
 ) => {
   const response = await api
     .get(`rest/landinginfo`, {
