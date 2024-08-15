@@ -1,7 +1,8 @@
-import "@testing-library/jest-dom"; // for additional matchers
+import "@testing-library/jest-dom";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { Minus, Plus } from "lucide-react";
-import { useState } from "react";
+import type React from "react";
+import { useEffect, useState } from "react";
 import { Bar, BarChart, ResponsiveContainer } from "recharts";
 import { Button } from "~/components/base/atoms/button";
 import {
@@ -16,13 +17,22 @@ import {
 } from "./drawer";
 
 // Mock ResizeObserver
-global.ResizeObserver = class {
+global.ResizeObserver = class ResizeObserver {
   observe() {}
   unobserve() {}
   disconnect() {}
 };
 
-// Sample data for the BarChart
+// Mock ResponsiveContainer for testing
+jest.mock("recharts", () => ({
+  ...jest.requireActual("recharts"),
+  ResponsiveContainer: ({
+    children,
+  }: {
+    readonly children: React.ReactNode;
+  }) => <div>{children}</div>,
+}));
+
 const data = [
   { goal: 400 },
   { goal: 300 },
@@ -39,8 +49,13 @@ const data = [
   { goal: 349 },
 ];
 
-const DrawerComponent = () => {
-  const [goal, setGoal] = useState(350);
+const DrawerComponent: React.FC = () => {
+  const [goal, setGoal] = useState<number>(350);
+  const [mounted, setMounted] = useState<boolean>(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const onClick = (adjustment: number) => {
     setGoal((prevGoal) => Math.max(200, Math.min(400, prevGoal + adjustment)));
@@ -91,21 +106,26 @@ const DrawerComponent = () => {
                 <span className="sr-only">Increase</span>
               </Button>
             </div>
-            <div className="mt-3 h-[120px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={data}>
-                  <Bar
-                    dataKey="goal"
-                    style={
-                      {
+            {mounted ? (
+              <div className="chart-container mt-3">
+                <ResponsiveContainer
+                  width="100%"
+                  height="100%"
+                  minWidth={100}
+                  minHeight={100}
+                >
+                  <BarChart data={data}>
+                    <Bar
+                      dataKey="goal"
+                      style={{
                         fill: "hsl(var(--foreground))",
                         opacity: 0.9,
-                      } as React.CSSProperties
-                    }
-                  />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
+                      }}
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            ) : null}
           </div>
           <DrawerFooter>
             <Button>Submit</Button>

@@ -120,6 +120,7 @@ const SearchResultsList = ({ query }: { readonly query: string }) => {
       <ProductsList
         data={deferredProducts.map((product) => ({
           productId: product.id,
+          slug: product.slug,
           title: product.productTitle,
           sku: product.materialNumber,
           image: product.itemImage,
