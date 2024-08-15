@@ -92,7 +92,7 @@ const PurchasedItemsList = ({ token }: { readonly token: string }) => {
 
     purchasedItemsList.data.products.forEach((product) => {
       const isExist = productIds.find((id) => id === product.productId);
-      if (!isExist) {
+      if (!isExist && !!product.productId) {
         productIds.push(product.productId);
       }
     });
@@ -124,46 +124,48 @@ const PurchasedItemsList = ({ token }: { readonly token: string }) => {
         (info) => info.productSku === item.productSku,
       );
 
-      const initialDetails: ItemInfo = {
-        productId: item.productId,
-        slug: "",
-        isExcludedProduct: false,
-        productSku: item.productSku,
-        productName: "",
-        image: "",
-        isComparison: false,
-        isHazardous: false,
-        specialShipping: false,
-        productIdOnSap: "",
-        mfrPartNo: "",
-        productDescription: "",
-        productTitle: item.productTitle,
-        brandCode: 0,
-        unitOfMeasure: "",
-        boxQuantity: 0,
-        minimumOrderQuantity: 0,
-        quantityByIncrements: 0,
-        weight: 0,
-        prop65MessageOne: "",
-        prop65MessageTwo: "",
-        prop65MessageThree: "",
-        listPrice: 0,
-        isSaleItem: false,
-        isNewItem: false,
-        fClassId: 0,
-        class: "",
-        attributes: [],
-        productStatus: "",
-        isDirectlyShippedFromVendor: false,
-        productSummary: "",
-        brand: "",
-        productCategory: "",
-      };
+      if (!!item.productId && !!item.productSku) {
+        const initialDetails: ItemInfo = {
+          productId: item.productId,
+          slug: "",
+          isExcludedProduct: false,
+          productSku: item.productSku,
+          productName: "",
+          image: "",
+          isComparison: false,
+          isHazardous: false,
+          specialShipping: false,
+          productIdOnSap: "",
+          mfrPartNo: "",
+          productDescription: "",
+          productTitle: item.productTitle,
+          brandCode: 0,
+          unitOfMeasure: "",
+          boxQuantity: 0,
+          minimumOrderQuantity: 0,
+          quantityByIncrements: 0,
+          weight: 0,
+          prop65MessageOne: "",
+          prop65MessageTwo: "",
+          prop65MessageThree: "",
+          listPrice: 0,
+          isSaleItem: false,
+          isNewItem: false,
+          fClassId: 0,
+          class: "",
+          attributes: [],
+          productStatus: "",
+          isDirectlyShippedFromVendor: false,
+          productSummary: "",
+          brand: "",
+          productCategory: "",
+        };
 
-      detailedPurchasedItems.push({
-        ...item,
-        ...(itemInfo ?? initialDetails),
-      });
+        detailedPurchasedItems.push({
+          ...item,
+          ...(itemInfo ?? initialDetails),
+        });
+      }
     });
   }
 
