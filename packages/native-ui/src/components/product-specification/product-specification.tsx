@@ -2,7 +2,7 @@ import type { ComponentProps } from "react";
 import { Text, XStack, YStack } from "tamagui";
 
 type ProductSpecificationType = {
-  readonly data: { attribute_name: string; attribute_value: string | null }[];
+  readonly data: { name: string; value: string | null }[];
 } & ComponentProps<typeof YStack>;
 
 export const ProductSpecification = ({
@@ -17,16 +17,16 @@ export const ProductSpecification = ({
 
       {data.map((item) => (
         <XStack
-          key={item.attribute_name}
+          key={item.name}
           borderBottomWidth={1}
           borderBottomColor="$gray6"
           paddingBottom={5}
         >
           <Text flex={1} fontSize="$5" paddingRight={20} numberOfLines={1}>
-            {item.attribute_name}
+            {item.name}
           </Text>
           <Text flex={1} fontSize="$5" paddingRight={20} numberOfLines={1}>
-            {item.attribute_value ?? ""}
+            {item.value ?? ""}
           </Text>
         </XStack>
       ))}
