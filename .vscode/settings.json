@@ -12,6 +12,7 @@
     "Pressable",
     "recaptcha",
     "sku",
+    "Swipeable",
     "tamagui",
     "tsup",
     "turborepo",

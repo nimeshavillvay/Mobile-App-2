@@ -18,11 +18,12 @@ const TabLayout = () => {
         tabBarActiveTintColor: "#e5484d",
         tabBarStyle: {
           backgroundColor: "rgba(0,0,0,0.91)",
-          display: pathname.endsWith("search") ? "none" : "flex",
+          display: pathname.startsWith("/cart") ? "none" : "flex",
         },
         headerShown: false,
       }}
       initialRouteName="index"
+      backBehavior="history"
     >
       <Tabs.Screen
         name="index"
