@@ -34,3 +34,12 @@ export const NOT_AVAILABLE = "notAvailable" as const;
 export const MAX_QUANTITY = 100000 as const;
 
 export const UI_DATE_FORMAT = "ddd, MMM. DD YYYY" as const;
+
+export const QUERY_KEYS = {
+  PAGE: "page",
+  PER_PAGE: "perPage",
+  SORT: "sort",
+  SORT_DIRECTION: "sortDirection",
+  SEARCH_TEXT: "searchText",
+  SELF_ONLY: "selfOnly",
+} as const;

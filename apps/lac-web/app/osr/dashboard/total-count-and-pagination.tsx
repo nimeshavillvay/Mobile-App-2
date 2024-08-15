@@ -1,11 +1,12 @@
 "use client";
 
+import { changeSearchParams } from "@/_lib/client-helpers";
+import { QUERY_KEYS } from "@/_lib/constants";
 import { ChevronDown } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { MdArrowBack, MdArrowForward } from "react-icons/md";
-import { changeSearchParams } from "./client-helpers";
-import { PER_PAGE, QUERY_KEYS } from "./constants";
+import { PER_PAGE } from "./constants";
 import MobilePagination from "./mobile-pagination";
 import Pagination from "./pagination";
 
