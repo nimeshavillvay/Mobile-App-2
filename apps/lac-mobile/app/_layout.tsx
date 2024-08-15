@@ -70,57 +70,57 @@ const RootLayout = () => {
     InterBold: require("@tamagui/font-inter/otf/Inter-Bold.otf"),
   });
 
-  // useEffect(() => {
-  //   // Get the session token
-  //   const getAndSetToken = async () => {
-  //     const cookies = await CookieManager.get(DOMAIN);
-  //     const tokenCookie = cookies[SESSION_TOKEN_COOKIE];
+  useEffect(() => {
+    // Get the session token
+    const getAndSetToken = async () => {
+      const cookies = await CookieManager.get(DOMAIN);
+      const tokenCookie = cookies[SESSION_TOKEN_COOKIE];
 
-  //     const sessionResponse = await getSession({
-  //       apiKey: API_KEY,
-  //       baseUrl: API_BASE_URL,
-  //       token: tokenCookie?.value,
-  //     });
+      const sessionResponse = await getSession({
+        apiKey: API_KEY,
+        baseUrl: API_BASE_URL,
+        token: tokenCookie?.value,
+      });
 
-  //     let tokenValue = "";
-  //     let expires = "";
+      let tokenValue = "";
+      let expires = "";
 
-  //     // Check for the session token cookie
-  //     for (const header of sessionResponse.headers.entries()) {
-  //       if (
-  //         header[0] === "set-cookie" &&
-  //         header[1].includes(`${SESSION_TOKEN_COOKIE}=`)
-  //       ) {
-  //         const keyValuePairs = header[1].split("; ");
+      // Check for the session token cookie
+      for (const header of sessionResponse.headers.entries()) {
+        if (
+          header[0] === "set-cookie" &&
+          header[1].includes(`${SESSION_TOKEN_COOKIE}=`)
+        ) {
+          const keyValuePairs = header[1].split("; ");
 
-  //         for (const pair of keyValuePairs) {
-  //           const [key, value] = pair.split("=");
+          for (const pair of keyValuePairs) {
+            const [key, value] = pair.split("=");
 
-  //           if (key && value) {
-  //             if (key === SESSION_TOKEN_COOKIE) {
-  //               tokenValue = value;
-  //             } else if (key === "expires") {
-  //               expires = value;
-  //             }
-  //           }
-  //         }
-  //       }
-  //     }
+            if (key && value) {
+              if (key === SESSION_TOKEN_COOKIE) {
+                tokenValue = value;
+              } else if (key === "expires") {
+                expires = value;
+              }
+            }
+          }
+        }
+      }
 
-  //     if (tokenValue && expires) {
-  //       CookieManager.set(DOMAIN, {
-  //         name: SESSION_TOKEN_COOKIE,
-  //         value: tokenValue,
-  //         expires,
-  //         path: "/",
-  //       });
+      if (tokenValue && expires) {
+        CookieManager.set(DOMAIN, {
+          name: SESSION_TOKEN_COOKIE,
+          value: tokenValue,
+          expires,
+          path: "/",
+        });
 
-  //       setToken(tokenValue);
-  //     }
-  //   };
+        setToken(tokenValue);
+      }
+    };
 
-  //   getAndSetToken();
-  // }, [setToken]);
+    getAndSetToken();
+  }, [setToken]);
 
   useEffect(() => {
     // Hide the splash screen after both the session token and fonts have loaded

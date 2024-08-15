@@ -6,9 +6,9 @@ import { cartSchema, type CartItemConfiguration } from "~/lib/zod-schema/cart";
 
 const getConfigAvailability = (option: CartItemConfiguration) => {
   const plantAvailable: {
-    plant: string | undefined;
+    plant: string | undefined | null;
     quantity: number | undefined;
-    shippingMethod: string | undefined;
+    shippingMethod: string | undefined | null;
   }[] = [];
 
   for (let i = 1; i < 6; i++) {

@@ -1,17 +1,23 @@
-import CartItem from "@/components/cart-item/cart-item";
+import CartItem from "@/components/cart/cart-item/cart-item";
 import useSessionTokenStorage from "@/hooks/auth/use-session-token-storage.hook";
 import { API_BASE_URL, API_KEY } from "@/lib/constants";
 import { ScreenLayout } from "@repo/native-ui/components/base/screen-layout";
+import { ConfirmationDialog } from "@repo/native-ui/components/confirmation-dialog";
+import useRemoveCartItemMutation from "@repo/shared-logic/apis/hooks/cart/use-remove-cart-item-mutation.hook";
 import useSuspenseCart from "@repo/shared-logic/apis/hooks/cart/use-suspense-cart.hook";
 import useSuspensePriceCheck from "@repo/shared-logic/apis/hooks/product/use-suspense-price-check.hook";
 import { FlashList } from "@shopify/flash-list";
 import { Package, X } from "@tamagui/lucide-icons";
 import { router } from "expo-router";
-import { Suspense } from "react";
-import { StyleSheet } from "react-native";
+import { MotiView } from "moti";
+import { Skeleton } from "moti/skeleton";
+import { Suspense, useState, type ComponentProps } from "react";
+import { Dimensions, StyleSheet } from "react-native";
 import { Button, H1, Text, View, VisuallyHidden } from "tamagui";
 
 const CartPage = () => {
+  const width = Dimensions.get("window").width;
+
   return (
     <ScreenLayout>
       <View style={styles.header}>
@@ -41,7 +47,13 @@ const CartPage = () => {
         </Button>
       </View>
 
-      <Suspense>
+      <Suspense
+        fallback={
+          <MotiView style={{ flex: 1 }}>
+            <Skeleton width={width} height="100%" colorMode="light" />
+          </MotiView>
+        }
+      >
         <CartItemList />
       </Suspense>
     </ScreenLayout>
@@ -62,10 +74,24 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 400,
   },
+  footerContainer: {
+    padding: 16,
+  },
+  clearCartButton: {
+    backgroundColor: "#ffffff",
+    borderRadius: 9,
+    borderWidth: 1,
+    borderColor: "#E2E2E2",
+    color: "#171717",
+    fontSize: 16,
+    lineHeight: 16,
+    fontWeight: 400,
+  },
 });
 
 const CartItemList = () => {
   const token = useSessionTokenStorage((state) => state.token);
+  const [openClearAllDialog, setOpenClearAllDialog] = useState(false);
 
   const cartQuery = useSuspenseCart({
     baseUrl: API_BASE_URL,
@@ -83,6 +109,27 @@ const CartItemList = () => {
       qty: item.quantity,
     })),
   );
+
+  const removeCartItemMutation = useRemoveCartItemMutation({
+    baseUrl: API_BASE_URL,
+    apiKey: API_KEY,
+    token,
+  });
+
+  const clearCart: ComponentProps<typeof ConfirmationDialog>["onConfirm"] = (
+    event,
+  ) => {
+    event.preventDefault();
+
+    removeCartItemMutation.mutate(
+      cartQuery.data.cartItems.map((item) => item.cartItemId),
+      {
+        onSuccess: () => {
+          setOpenClearAllDialog(false);
+        },
+      },
+    );
+  };
 
   return (
     <FlashList
@@ -112,6 +159,21 @@ const CartItemList = () => {
           isExcluded={item.itemInfo.isExcludedProduct}
         />
       )}
+      ListFooterComponent={
+        cartQuery.data.cartItems.length > 0 ? (
+          <View style={styles.footerContainer}>
+            <ConfirmationDialog
+              open={openClearAllDialog}
+              onOpenChange={setOpenClearAllDialog}
+              title="Clear Cart"
+              description="Are you sure you want to clear your cart?"
+              onConfirm={clearCart}
+            >
+              <Button style={styles.clearCartButton}>Clear Cart</Button>
+            </ConfirmationDialog>
+          </View>
+        ) : null
+      }
       estimatedItemSize={180}
     />
   );

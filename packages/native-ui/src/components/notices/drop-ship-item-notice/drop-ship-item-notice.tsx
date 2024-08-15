@@ -1,16 +1,17 @@
-import { AlertTriangle, X } from "@tamagui/lucide-icons";
+import { Truck, X } from "@tamagui/lucide-icons";
 import { StyleSheet } from "react-native";
 import { Button, Dialog, Unspaced } from "tamagui";
 
-const RegionallyExclusiveItemNotice = () => {
+export const DropShipItemNotice = () => {
   return (
     <Dialog modal>
       <Dialog.Trigger asChild>
         <Button
-          icon={<AlertTriangle size={20} />}
-          style={styles.exclusiveButton}
+          icon={<Truck size={20} />}
+          style={styles.dropShipButton}
+          testID="drop-ship-notice-button"
         >
-          Not Available
+          Drop Ship Item
         </Button>
       </Dialog.Trigger>
 
@@ -38,14 +39,12 @@ const RegionallyExclusiveItemNotice = () => {
           ]}
           enterStyle={{ x: 0, y: -20, opacity: 0, scale: 0.9 }}
           exitStyle={{ x: 0, y: 10, opacity: 0, scale: 0.95 }}
-          backgroundColor="#FEECEE"
-          borderColor="#AA2429"
         >
-          <Dialog.Title style={styles.dialogTitle}>Not Available</Dialog.Title>
+          <Dialog.Title style={styles.dialogTitle}>Drop Ship Item</Dialog.Title>
 
           <Dialog.Description style={styles.dialogDescription}>
-            This item is not available in certain regions. For better experience
-            please Sign in or register.
+            This item ships directly from the vendor. Additional freight charges
+            may apply.
           </Dialog.Description>
 
           <Unspaced>
@@ -56,8 +55,6 @@ const RegionallyExclusiveItemNotice = () => {
                 right="$3"
                 size="$2"
                 circular
-                color="#AA2429"
-                backgroundColor="$colorTransparent"
                 icon={X}
               />
             </Dialog.Close>
@@ -68,25 +65,23 @@ const RegionallyExclusiveItemNotice = () => {
   );
 };
 
-export default RegionallyExclusiveItemNotice;
-
 const styles = StyleSheet.create({
-  exclusiveButton: {
+  dropShipButton: {
+    backgroundColor: "white",
     borderRadius: 7,
     borderWidth: 1,
+    borderColor: "#E2E2E2",
+    color: "#171717",
     fontSize: 14,
-    backgroundColor: "#FEECEE",
-    color: "#AA2429",
-    borderColor: "#AA2429",
   },
   dialogTitle: {
-    color: "#AA2429",
+    color: "#171717",
     fontSize: 20,
     fontWeight: 700,
     lineHeight: 24,
   },
   dialogDescription: {
-    color: "#AA2429",
+    color: "#171717",
     fontSize: 13,
     lineHeight: 13,
     marginVertical: 24,
