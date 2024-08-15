@@ -1,7 +1,5 @@
 "use client";
 
-import { changeSearchParams } from "@/_lib/client-helpers";
-import { QUERY_KEYS } from "@/_lib/constants";
 import { MagnifyingGlass } from "@repo/web-ui/components/icons/magnifying-glass";
 import { Button } from "@repo/web-ui/components/ui/button";
 import {
@@ -20,8 +18,10 @@ import {
 } from "@repo/web-ui/components/ui/select";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useId, useState, type ComponentProps } from "react";
+import { changeSearchParams } from "./client-helpers";
 import {
   INIT_PAGE_NUMBER,
+  QUERY_KEYS,
   columnAccount,
   columnCartItemCount,
   columnCartLastUpdate,

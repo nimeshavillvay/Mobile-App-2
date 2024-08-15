@@ -91,10 +91,6 @@ const DesktopNavigationMenu = ({ categories }: DesktopNavigationMenuProps) => {
             <NavigationMenuItemLink asChild>
               <Link href="/catalogs-literature">Resources</Link>
             </NavigationMenuItemLink>
-
-            <NavigationMenuItemLink asChild>
-              <Link href="/laminate-finder">Laminate Finder</Link>
-            </NavigationMenuItemLink>
           </NavigationMenuList>
         </NavigationMenu>
       </div>
