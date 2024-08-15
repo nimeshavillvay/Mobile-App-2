@@ -154,7 +154,10 @@ const CartList = ({ token, plants }: CartListProps) => {
                 token={token}
                 product={{
                   id: item.itemInfo.productId,
-                  title: item.itemInfo.productName,
+                  title:
+                    item.itemInfo.metaTitle === ""
+                      ? item.itemInfo.productName
+                      : item.itemInfo.metaTitle,
                   sku: item.itemInfo.productSku,
                   manufacturerId: item.itemInfo.mfrPartNo,
                   quantity: item.quantity,

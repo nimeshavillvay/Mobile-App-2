@@ -107,7 +107,10 @@ const CartSummary = ({ token, plants }: CartSummaryProps) => {
                           <h4
                             className="line-clamp-3 text-sm font-medium text-wurth-gray-800"
                             dangerouslySetInnerHTML={{
-                              __html: itemInfo.productName,
+                              __html:
+                                itemInfo.metaTitle === ""
+                                  ? itemInfo.productName
+                                  : itemInfo.metaTitle,
                             }}
                           />
                         </Link>

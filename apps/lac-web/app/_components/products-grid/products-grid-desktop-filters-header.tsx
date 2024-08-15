@@ -32,8 +32,6 @@ export const ProductsGridDesktopFiltersHeader = ({
       newParams.delete(selectedValue.id);
     });
     newParams.delete(QUERY_KEYS.page);
-    newParams.delete(QUERY_KEYS.searchText);
-
     window.history.pushState(null, "", `?${newParams.toString()}`);
   };
 

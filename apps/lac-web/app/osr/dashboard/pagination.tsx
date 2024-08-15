@@ -1,6 +1,5 @@
 "use client";
 
-import { QUERY_KEYS } from "@/_lib/constants";
 import {
   Pagination as PaginationComponent,
   PaginationLink as PaginationComponentLink,
@@ -11,6 +10,7 @@ import {
   PaginationPrevious,
 } from "@repo/web-ui/components/ui/pagination";
 import { usePathname, useSearchParams } from "next/navigation";
+import { QUERY_KEYS } from "./constants";
 
 type PaginationProps = {
   readonly pageSize: number;
