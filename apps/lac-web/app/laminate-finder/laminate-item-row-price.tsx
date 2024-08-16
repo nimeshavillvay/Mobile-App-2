@@ -29,7 +29,7 @@ const LaminateItemRowPrice = ({
       ? formatNumberToPrice(priceData?.extendedPrice)
       : "";
 
-  return extendPrice;
+  return `$${extendPrice}`;
 };
 
 export default LaminateItemRowPrice;

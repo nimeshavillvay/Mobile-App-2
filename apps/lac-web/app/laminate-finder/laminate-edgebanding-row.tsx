@@ -41,13 +41,13 @@ const LaminateEdgeBandingRow = ({
       <TableCell className="font-medium">{product.productSku}</TableCell>
       <TableCell className="text-right">
         <span className="text-lg font-semibold">
-          {priceCheckQueryBreakdown.data?.productPrices[0]?.price} / {uom}
+          ${priceCheckQueryBreakdown.data?.productPrices[0]?.price} / {uom}
         </span>
         {priceBreakdown !== undefined &&
           priceBreakdown?.length > 0 &&
           priceBreakdown.map((price, index) => (
             <div className="text-sm text-gray-500" key={index}>
-              {price.price}/{uom} for{" "}
+              ${price.price}/{uom} for{" "}
               {index === 0
                 ? "1"
                 : (priceBreakdown[index - 1]?.quantity ?? 0) + 1}
