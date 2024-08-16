@@ -1,13 +1,12 @@
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import type { Product } from "@/_lib/types";
-import { formatNumberToPrice } from "@/_lib/utils";
+import { cn, formatNumberToPrice } from "@/_lib/utils";
 import { Button } from "@repo/web-ui/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogTrigger,
 } from "@repo/web-ui/components/ui/dialog";
-import { cn } from "@/_lib/utils";
 import { X } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
