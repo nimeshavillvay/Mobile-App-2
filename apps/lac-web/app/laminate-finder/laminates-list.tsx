@@ -34,7 +34,6 @@ const LaminatesList = () => {
 
       <ProductsGridDesktopContainer>
         <div className="w-full pr-4 md:w-1/5 lg:w-1/6">
-          <h2 className="mb-4 text-xl font-semibold">Filters</h2>
           <Suspense fallback={<ProductsGridFiltersSkeleton />}>
             <ProductsListFilters token={tokenCookie.value} />
           </Suspense>
