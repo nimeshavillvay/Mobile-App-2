@@ -1,12 +1,15 @@
 import NumberInputField from "@/_components/number-input-field";
 import useSuspenseCheckAvailability from "@/_hooks/product/use-suspense-check-availability.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
+import { NOT_AVAILABLE } from "@/_lib/constants";
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import { TableCell, TableRow } from "@repo/web-ui/components/ui/table";
 import { Suspense } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import type { LaminateAddToCartFormSchema } from "./helpers";
 import LaminateItemRowPrice from "./laminate-item-row-price";
+import NotAvailableOnlineNotice from "./not-available-online-notice";
+import NotAvailableOnlineNoticeLoggedOut from "./not-available-online-notice copy";
 import RegionalExclusionNotice from "./regional-exclusion-notice";
 
 const LaminateItem = ({
@@ -26,6 +29,10 @@ const LaminateItem = ({
     productId: Number(productId),
     qty: 1,
   });
+
+  const isNotAvailableOnline =
+    checkAvailabilityQuery.availableLocations.length === 0 &&
+    checkAvailabilityQuery.status === NOT_AVAILABLE;
 
   const loginCheckResponse = useSuspenseCheckLogin(token);
   const isLoggedIn = loginCheckResponse.data.status_code === "OK";
@@ -47,15 +54,13 @@ const LaminateItem = ({
         <strong className="font-semibold">
           {checkAvailabilityQuery.availableLocations[1]?.amount ?? 0}
         </strong>
-        {isLoggedIn && (
+        {!isNotAvailableOnline && isLoggedIn && (
           <RegionalExclusionNotice token={token} productId={productId} />
         )}
-        {!isLoggedIn && isExcludedProduct && (
-          <p className="mt-1 max-w-44 rounded bg-red-50 px-2 py-1 text-xs text-red-800">
-            This item is not available
-            <br /> in certain regions.
-          </p>
+        {!isNotAvailableOnline && !isLoggedIn && isExcludedProduct && (
+          <NotAvailableOnlineNoticeLoggedOut />
         )}
+        {isNotAvailableOnline && <NotAvailableOnlineNotice />}
       </TableCell>
       <TableCell className="text-right">
         <Controller
@@ -73,6 +78,7 @@ const LaminateItem = ({
               className="md:w-[6.125rem]"
               removeDefaultStyles={true}
               label="Quantity"
+              disabled={isNotAvailableOnline}
             />
           )}
         />
