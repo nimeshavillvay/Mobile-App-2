@@ -24,7 +24,7 @@ const Page = () => {
   return (
     <>
       {/* container my-14 space-y-3 md:my-20 md:space-y-6 */}
-      <div className="container mx-auto">
+      <div className="container mx-auto mt-3">
         <div className="mb-6">
           <Breadcrumb>
             <BreadcrumbList>
