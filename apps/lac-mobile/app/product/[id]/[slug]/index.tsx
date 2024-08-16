@@ -35,10 +35,7 @@ const Product = () => {
       <SafeAreaView style={{ flex: 1 }}>
         <ScrollView flex={1} backgroundColor="white">
           <Suspense fallback={<ProductDetailsSkeleton />}>
-            <ProductDetails
-              productId={localSearchParams.id}
-              slug={localSearchParams.slug}
-            />
+            <ProductDetails productId={localSearchParams.id} />
           </Suspense>
         </ScrollView>
       </SafeAreaView>
@@ -46,13 +43,7 @@ const Product = () => {
   );
 };
 
-const ProductDetails = ({
-  productId,
-  slug,
-}: {
-  readonly productId: string;
-  readonly slug: string;
-}) => {
+const ProductDetails = ({ productId }: { readonly productId: string }) => {
   const [index, setIndex] = useState(0);
   const [imageOverlayVisible, setImageOverlayVisible] = useState(false);
 
@@ -62,7 +53,6 @@ const ProductDetails = ({
       apiKey: API_KEY,
     },
     productId,
-    slug,
   );
 
   if (!data) {
