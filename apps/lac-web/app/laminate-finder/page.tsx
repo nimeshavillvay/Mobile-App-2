@@ -9,9 +9,9 @@ import {
 } from "@repo/web-ui/components/ui/breadcrumb";
 import { cookies } from "next/headers";
 import { Suspense } from "react";
-import ColorPicker from "./components/color-picker";
-import LaminateSearch from "./components/laminate-search";
-import LaminatesList from "./components/laminates-list";
+import ColorPicker from "./color-picker";
+import LaminateSearch from "./laminate-search";
+import LaminatesList from "./laminates-list";
 
 const Page = () => {
   const cookieStore = cookies();

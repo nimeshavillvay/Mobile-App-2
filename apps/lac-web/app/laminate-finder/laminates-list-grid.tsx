@@ -6,7 +6,7 @@ import { Suspense, type ComponentProps } from "react";
 import {
   LaminatesGridList,
   LaminatesGridListSkeleton,
-} from "./components/laminates-grid-list";
+} from "./laminates-grid-list";
 
 type LaminateListGridProps = {
   readonly token: string;

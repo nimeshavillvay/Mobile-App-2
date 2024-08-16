@@ -8,9 +8,9 @@ import {
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import { cookies } from "next/headers";
 import { Suspense } from "react";
-import ProductsListGrid from "../laminates-list-grid";
 import LaminatesListDesktopFiltersHeader from "./laminates-list-desktop-filters-header";
 import ProductsListFilters from "./laminates-list-filters";
+import ProductsListGrid from "./laminates-list-grid";
 import ProductsListHeader from "./laminates-list-header";
 import ProductsListPagination from "./laminates-list-pagination";
 
