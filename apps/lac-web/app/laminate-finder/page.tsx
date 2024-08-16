@@ -7,11 +7,16 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@repo/web-ui/components/ui/breadcrumb";
+import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { Suspense } from "react";
 import ColorPicker from "./color-picker";
 import LaminateSearch from "./laminate-search";
 import LaminatesList from "./laminates-list";
+
+export const metadata: Metadata = {
+  title: "Laminate Finder",
+};
 
 const Page = () => {
   const cookieStore = cookies();
