@@ -83,8 +83,13 @@ const LaminateCard = ({
           ?.productids || []
       : [];
 
+  const closeDialog = (isOpen: boolean) => {
+    setOpen(isOpen);
+    form.reset();
+  };
+
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={closeDialog}>
       <DialogTrigger asChild>
         <div className="group relative cursor-pointer overflow-hidden rounded-lg bg-white shadow-md">
           <div className="aspect-square relative w-full">

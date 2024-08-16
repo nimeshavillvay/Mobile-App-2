@@ -9,7 +9,7 @@ import { Controller, useFormContext } from "react-hook-form";
 import type { LaminateAddToCartFormSchema } from "./helpers";
 import LaminateItemRowPrice from "./laminate-item-row-price";
 import NotAvailableOnlineNotice from "./not-available-online-notice";
-import NotAvailableOnlineNoticeLoggedOut from "./not-available-online-notice copy";
+import NotAvailableOnlineNoticeLoggedOut from "./not-available-online-notice-loggedout";
 import RegionalExclusionNotice from "./regional-exclusion-notice";
 
 const LaminateItem = ({
