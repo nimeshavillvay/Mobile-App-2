@@ -14,11 +14,13 @@ const LaminateItem = ({
   token,
   size,
   quantityFieldIndex,
+  isExcludedProduct,
 }: {
   readonly productId: number;
   readonly token: string;
   readonly size: string;
   readonly quantityFieldIndex: number;
+  readonly isExcludedProduct: boolean;
 }) => {
   const { data: checkAvailabilityQuery } = useSuspenseCheckAvailability(token, {
     productId: Number(productId),
@@ -47,6 +49,12 @@ const LaminateItem = ({
         </strong>
         {isLoggedIn && (
           <RegionalExclusionNotice token={token} productId={productId} />
+        )}
+        {!isLoggedIn && isExcludedProduct && (
+          <p className="mt-1 max-w-44 rounded bg-red-50 px-2 py-1 text-xs text-red-800">
+            This item is not available
+            <br /> in certain regions.
+          </p>
         )}
       </TableCell>
       <TableCell className="text-right">

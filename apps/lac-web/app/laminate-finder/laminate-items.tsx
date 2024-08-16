@@ -98,6 +98,7 @@ const LaminateItems = ({
                   size={laminate.size}
                   token={token}
                   quantityFieldIndex={index}
+                  isExcludedProduct={laminate.isExcludedProduct}
                   key={index}
                 />
               ))}

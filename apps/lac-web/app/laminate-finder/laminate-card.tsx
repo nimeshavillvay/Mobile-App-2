@@ -104,6 +104,17 @@ const LaminateCard = ({
             />
           )}
 
+          {!isLoggedIn && product.variants[0]?.isExcludedProduct && (
+            // todo: need to get this on group level if possible
+            <div className="absolute left-0 right-0 top-0 px-2 pt-2">
+              <Alert variant="destructive">
+                <AlertDescription>
+                  This item is not available in certain regions.
+                </AlertDescription>
+              </Alert>
+            </div>
+          )}
+
           <div className="absolute bottom-0 left-0 right-0 translate-y-full transform bg-black bg-opacity-70 p-3 text-white transition-transform duration-300 group-hover:translate-y-0">
             <h3
               className="mb-1 line-clamp-2 text-sm font-semibold"
