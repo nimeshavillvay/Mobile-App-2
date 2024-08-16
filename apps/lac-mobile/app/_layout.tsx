@@ -3,7 +3,11 @@ import { API_BASE_URL, API_KEY, SESSION_TOKEN_COOKIE } from "@/lib/constants";
 import CookieManager from "@react-native-cookies/cookies";
 import { getSession } from "@repo/shared-logic/apis/base/account/get-session";
 import * as Sentry from "@sentry/react-native";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import {
+  MutationCache,
+  QueryClient,
+  QueryClientProvider,
+} from "@tanstack/react-query";
 import { isRunningInExpoGo } from "expo";
 import { useFonts } from "expo-font";
 import { useNavigationContainerRef } from "expo-router";
@@ -11,6 +15,7 @@ import { Stack } from "expo-router/stack";
 import * as SplashScreen from "expo-splash-screen";
 // eslint-disable-next-line no-restricted-imports
 import { useEffect } from "react";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { TamaguiProvider } from "tamagui";
 import tamaguiConfig from "../tamagui.config";
@@ -38,6 +43,11 @@ const queryClient = new QueryClient({
       staleTime: 30000, // 30 seconds
     },
   },
+  mutationCache: new MutationCache({
+    onSuccess: () => {
+      queryClient.invalidateQueries();
+    },
+  }),
 });
 
 SplashScreen.preventAutoHideAsync();
@@ -127,24 +137,26 @@ const RootLayout = () => {
     <QueryClientProvider client={queryClient}>
       <TamaguiProvider config={tamaguiConfig}>
         <SafeAreaProvider>
-          <Stack>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <GestureHandlerRootView style={{ flex: 1 }}>
+            <Stack>
+              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
 
-            <Stack.Screen
-              name="search"
-              options={{
-                presentation: "fullScreenModal",
-                headerShown: false,
-              }}
-            />
+              <Stack.Screen
+                name="search"
+                options={{
+                  presentation: "fullScreenModal",
+                  headerShown: false,
+                }}
+              />
 
-            <Stack.Screen
-              name="barcode-scanner"
-              options={{
-                headerShown: false,
-              }}
-            />
-          </Stack>
+              <Stack.Screen
+                name="barcode-scanner"
+                options={{
+                  headerShown: false,
+                }}
+              />
+            </Stack>
+          </GestureHandlerRootView>
         </SafeAreaProvider>
       </TamaguiProvider>
     </QueryClientProvider>

@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, render, screen } from "~/lib/test-utils";
+import { fireEvent, render, screen } from "~/lib/test-utils";
 import {
   CategoryFilterCheckboxItem,
   CategoryFiltersAccordion,
@@ -142,7 +142,5 @@ describe("Category Filters", () => {
 
     expect(screen.getAllByText(/^Value 1/)).toHaveLength(2);
     expect(screen.queryAllByText(/^Value 2/)).toHaveLength(0);
-
-    cleanup();
   });
 });

@@ -9,7 +9,16 @@ const useSuspensePriceCheck = (
 ) => {
   return useSuspenseQuery({
     queryKey: ["user", "price-check", products, config],
-    queryFn: () => priceCheck(config, products),
+    queryFn: async () => {
+      if (products.length > 0) {
+        return await priceCheck(config, products);
+      } else {
+        return {
+          error: null,
+          productPrices: [],
+        };
+      }
+    },
   });
 };
 
