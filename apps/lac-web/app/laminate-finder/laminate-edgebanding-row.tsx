@@ -8,6 +8,7 @@ import useSuspenseCheckAvailability from "@/_hooks/product/use-suspense-check-av
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
 import { NOT_AVAILABLE } from "@/_lib/constants";
+import { formatNumberToPrice } from "@/_lib/utils";
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import { TableCell, TableRow } from "@repo/web-ui/components/ui/table";
 import { Suspense, useDeferredValue } from "react";
@@ -75,13 +76,17 @@ const LaminateEdgeBandingRow = ({
       </TableCell>
       <TableCell className="text-right">
         <span className="text-lg font-semibold">
-          ${priceCheckQueryBreakdown.data?.productPrices[0]?.price} / {uom}
+          $
+          {formatNumberToPrice(
+            priceCheckQueryBreakdown.data?.productPrices[0]?.price,
+          )}{" "}
+          / {uom}
         </span>
         {priceBreakdown !== undefined &&
           priceBreakdown?.length > 0 &&
           priceBreakdown.map((price, index) => (
             <div className="text-sm text-gray-500" key={index}>
-              ${price.price}/{uom} for{" "}
+              ${formatNumberToPrice(price.price)}/{uom} for{" "}
               {index === 0
                 ? "1"
                 : (priceBreakdown[index - 1]?.quantity ?? 0) + 1}
