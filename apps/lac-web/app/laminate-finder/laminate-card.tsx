@@ -1,11 +1,9 @@
 "use client";
 
 import useLaminateFilter from "@/_hooks/product/use-laminate-item-info.hook";
-import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import useSuspenseProductExcluded from "@/_hooks/product/use-suspense-product-excluded.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
 import type { Product } from "@/_lib/types";
-import { formatNumberToPrice } from "@/_lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Alert, AlertDescription } from "@repo/web-ui/components/ui/alert";
 import {
@@ -74,10 +72,6 @@ const LaminateCard = ({
 
   const [open, setOpen] = useState(false);
 
-  const priceCheckQuery = useSuspensePriceCheck(token, [
-    { productId: Number(product.variants[0]?.id), qty: 1 },
-  ]);
-
   const singleGrade =
     grades !== undefined && grades.length === 1 ? grades[0] : "";
   const singleFinish =
@@ -88,10 +82,6 @@ const LaminateCard = ({
       ? possibleProductIdsForFinishes?.[singleFinish]?.[singleGrade]
           ?.productids || []
       : [];
-
-  const groupPriceData = priceCheckQuery.data.productPrices[0];
-  const groupPrice = groupPriceData?.uomPrice ?? groupPriceData?.price ?? 0;
-  const groupUom = groupPriceData?.uomPriceUnit ?? groupPriceData?.priceUnit;
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -120,9 +110,6 @@ const LaminateCard = ({
               title={product.groupName}
               dangerouslySetInnerHTML={{ __html: product.groupName }}
             />
-            <p className="text-xs font-medium">
-              {formatNumberToPrice(groupPrice)} / {groupUom}
-            </p>
           </div>
         </div>
       </DialogTrigger>
