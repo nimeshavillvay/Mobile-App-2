@@ -17,6 +17,10 @@ const ProductsListPagination = ({ token }: ProductsListPaginationProps) => {
     categoryFiltersQuery.data,
   );
 
+  if (searchQuery.data.pagination.totalCount === 0) {
+    return null;
+  }
+
   const totalPages = Math.ceil(searchQuery.data.pagination.totalCount / 20);
 
   return <ProductsGridPagination totalPages={totalPages} />;
