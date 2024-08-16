@@ -12,7 +12,7 @@ export const ExpandableView = ({
   maxHeight = 200,
   blurDistance = 50,
   children,
-  ...styles
+  ...delegated
 }: ExpandableViewProps) => {
   const [expand, setExpand] = useState(false);
   const [height, setHeight] = useState(maxHeight);
@@ -26,7 +26,7 @@ export const ExpandableView = ({
         }}
         maxHeight={!expand ? maxHeight : undefined}
         overflow="hidden"
-        {...styles}
+        {...delegated}
       >
         {children}
         {!expand && height >= maxHeight && (

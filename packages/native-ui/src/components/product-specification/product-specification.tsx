@@ -7,10 +7,10 @@ type ProductSpecificationType = {
 
 export const ProductSpecification = ({
   data,
-  ...styles
+  ...delegated
 }: ProductSpecificationType) => {
   return (
-    <YStack gap={5} {...styles}>
+    <YStack gap={5} {...delegated}>
       <Text fontSize="$6" fontWeight={900} paddingBottom={10}>
         Specifications
       </Text>
