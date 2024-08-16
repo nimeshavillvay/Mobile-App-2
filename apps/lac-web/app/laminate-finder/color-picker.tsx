@@ -106,7 +106,7 @@ const ColorPicker = ({ token }: { readonly token: string }) => {
   }
 
   return (
-    <div className="rounded-lg bg-white p-6">
+    <div>
       <h3 className="mb-4 text-lg font-medium text-gray-800">Select Color</h3>
       <fieldset>
         <legend className="sr-only">Color options</legend>

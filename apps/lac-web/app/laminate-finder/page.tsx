@@ -27,39 +27,38 @@ const Page = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mb-6">
-        <Breadcrumb>
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink href="/">Home</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage>Laminate Finder</BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
-      </div>
+    <>
+      {/* container my-14 space-y-3 md:my-20 md:space-y-6 */}
+      <div className="container mx-auto mt-3">
+        <div className="mb-6">
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink href="/">Home</BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage>Laminate Finder</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+        </div>
 
-      <h1 className="mb-8 text-4xl font-bold text-wurth-gray-800">
-        Laminate Finder
-      </h1>
+        <h1 className="mb-8 text-4xl font-bold text-wurth-gray-800">
+          Laminate Finder
+        </h1>
 
-      <Suspense
-        fallback={
-          <div className="mb-8 h-12 animate-pulse rounded bg-gray-200" />
-        }
-      >
-        <LaminateSearch token={tokenCookie.value} />
-      </Suspense>
-
-      <div className="mb-8">
+        <Suspense
+          fallback={
+            <div className="mb-8 h-12 animate-pulse rounded bg-gray-200" />
+          }
+        >
+          <LaminateSearch token={tokenCookie.value} />
+        </Suspense>
         <ColorPicker token={tokenCookie.value} />
       </div>
-
       <LaminatesList />
-    </div>
+    </>
   );
 };
 
