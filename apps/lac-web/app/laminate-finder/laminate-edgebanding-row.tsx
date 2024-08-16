@@ -3,13 +3,14 @@
 import NumberInputField from "@/_components/number-input-field";
 import type { EdgeBanding } from "@/_lib/types";
 
+import useDebouncedState from "@/_hooks/misc/use-debounced-state.hook";
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import { TableCell, TableRow } from "@repo/web-ui/components/ui/table";
-import { Suspense } from "react";
+import { Suspense, useDeferredValue } from "react";
 import { Controller, useFormContext } from "react-hook-form";
-import EdgeBandRowPrice from "./edgeband-item-row-price";
 import type { LaminateAddToCartFormSchema } from "./helpers";
+import LaminateItemRowPrice from "./laminate-item-row-price";
 
 const LaminateEdgeBandingRow = ({
   product,
@@ -25,9 +26,11 @@ const LaminateEdgeBandingRow = ({
   const { control, watch } = useFormContext<LaminateAddToCartFormSchema>();
 
   const quantity = watch(`quantity.${quantityFieldIndex}`);
+  const delayedQuantity = useDebouncedState(quantity);
+  const deferredQuantity = useDeferredValue(delayedQuantity);
 
   const priceCheckQueryBreakdown = useSuspensePriceCheck(token, [
-    { productId: product.productId, qty: 1 },
+    { productId: product.productId, qty: Number(deferredQuantity) },
   ]);
   const priceBreakdown =
     priceCheckQueryBreakdown.data?.productPrices[0]?.priceBreakDowns;
@@ -83,7 +86,7 @@ const LaminateEdgeBandingRow = ({
             key={product.productId}
             fallback={<Skeleton className="h-4 w-full rounded-lg shadow-md" />}
           >
-            <EdgeBandRowPrice
+            <LaminateItemRowPrice
               token={token}
               productId={product.productId}
               quantityFieldIndex={quantityFieldIndex}
