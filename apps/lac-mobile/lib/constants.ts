@@ -12,3 +12,7 @@ export const SEARCH_API_BASE_URL =
   process.env.NODE_ENV === "test" ? "https://test.wurthlac.com" : SEARCH_URL;
 
 export const SESSION_TOKEN_COOKIE = "xid_00924";
+
+export const DEFAULT_PLANT = "L010";
+
+export const UI_DATE_FORMAT = "ddd, MMM. DD YYYY";

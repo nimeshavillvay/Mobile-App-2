@@ -22,7 +22,12 @@ export const checkAvailabilitySchema = z.object({
           ),
         }),
       ),
-      type: z.enum(["shipAlternativeBranch", "backOrderAll"]),
+      type: z.enum([
+        "shipAlternativeBranch",
+        "backOrderAll",
+        "availableAll",
+        "takeOnHand",
+      ]),
       hash: z.string(),
     }),
   ),

@@ -54,6 +54,9 @@ importers:
       '@tanstack/react-query':
         specifier: 5.49.2
         version: 5.49.2(react@18.3.1)
+      dayjs:
+        specifier: 1.11.11
+        version: 1.11.11
       expo:
         specifier: 51.0.20
         version: 51.0.20(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7))
@@ -648,6 +651,9 @@ importers:
       '@total-typescript/ts-reset':
         specifier: 0.5.1
         version: 0.5.1
+      '@types/he':
+        specifier: ^1.2.3
+        version: 1.2.3
       '@types/node':
         specifier: ^20.14.9
         version: 20.14.9
@@ -663,6 +669,9 @@ importers:
       eslint:
         specifier: 8.57.0
         version: 8.57.0
+      he:
+        specifier: ^1.2.0
+        version: 1.2.0
       ky:
         specifier: ^1.4.0
         version: 1.4.0
@@ -4680,6 +4689,9 @@ packages:
 
   '@types/hast@3.0.4':
     resolution: {integrity: sha512-WPs+bbQw5aCj+x6laNGWLH3wviHtoCv/P3+otBhbOhJgG8qtpdAMlTCxLtsTWA7LH1Oh/bFCHsBn0TPS5m30EQ==}
+
+  '@types/he@1.2.3':
+    resolution: {integrity: sha512-q67/qwlxblDzEDvzHhVkwc1gzVWxaNxeyHUBF4xElrvjL11O+Ytze+1fGpBHlr/H9myiBUaUXNnNPmBHxxfAcA==}
 
   '@types/hoist-non-react-statics@3.3.5':
     resolution: {integrity: sha512-SbcrWzkKBw2cdwRTwQAswfpB9g9LJWfjtUeW/jvNwbhC8cpmmNYVePa+ncbUe0rGTQ7G3Ff6mYUN2VMfLVr+Sg==}
@@ -16566,6 +16578,8 @@ snapshots:
   '@types/hast@3.0.4':
     dependencies:
       '@types/unist': 3.0.2
+
+  '@types/he@1.2.3': {}
 
   '@types/hoist-non-react-statics@3.3.5':
     dependencies:

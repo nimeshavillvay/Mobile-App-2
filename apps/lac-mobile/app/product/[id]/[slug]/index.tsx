@@ -1,4 +1,12 @@
-import { ProductAction, ProductDetailsSkeleton } from "@/components/product";
+import {
+  PriceBreakdowns,
+  ProductAction,
+  ProductDetailsSkeleton,
+  ProductPrices,
+  SalesBadges,
+  StockStatus,
+} from "@/components/product";
+import useSessionTokenStorage from "@/hooks/auth/use-session-token-storage.hook";
 import { API_BASE_URL, API_KEY } from "@/lib/constants";
 import {
   ProductCarousel,
@@ -11,7 +19,7 @@ import { Suspense, useState } from "react";
 import { Dimensions } from "react-native";
 import ImageView from "react-native-image-viewing";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { ScrollView, View } from "tamagui";
+import { ScrollView, Text, View, YStack } from "tamagui";
 
 const Product = () => {
   const localSearchParams = useLocalSearchParams<{
@@ -33,7 +41,7 @@ const Product = () => {
       />
 
       <SafeAreaView style={{ flex: 1 }}>
-        <ScrollView flex={1} backgroundColor="white">
+        <ScrollView flex={1} backgroundColor="$gray3">
           <Suspense fallback={<ProductDetailsSkeleton />}>
             <ProductDetails productId={localSearchParams.id} />
           </Suspense>
@@ -46,6 +54,8 @@ const Product = () => {
 const ProductDetails = ({ productId }: { readonly productId: string }) => {
   const [index, setIndex] = useState(0);
   const [imageOverlayVisible, setImageOverlayVisible] = useState(false);
+
+  const token = useSessionTokenStorage((state) => state.token);
 
   const { data } = useSuspenseGetProduct(
     {
@@ -105,6 +115,34 @@ const ProductDetails = ({ productId }: { readonly productId: string }) => {
         onRequestClose={() => setImageOverlayVisible(false)}
         presentationStyle="overFullScreen"
       />
+      <YStack flex={1} marginHorizontal={20} marginTop={10} gap={10}>
+        <SalesBadges
+          token={token}
+          productId={data.selectedProduct.productId}
+          brandName={data.brand}
+          productListPrice={data.selectedProduct.listPrice}
+          isNewItem={data.selectedProduct.isNewItem}
+          onSale={data.selectedProduct.onSale}
+        />
+
+        <Text fontSize="$6">{data.selectedProduct.productName}</Text>
+
+        <ProductPrices
+          token={token}
+          productId={data.selectedProduct.productId}
+          productListPrice={data.selectedProduct.listPrice}
+          unitOfMeasure={data.selectedProduct.unitOfMeasure}
+          freightCharge={data.selectedProduct.specialShipping}
+        />
+
+        <StockStatus token={token} productId={data.selectedProduct.productId} />
+
+        <PriceBreakdowns
+          token={token}
+          productId={data.selectedProduct.productId}
+          unitOfMeasure={data.selectedProduct.unitOfMeasure}
+        />
+      </YStack>
     </>
   );
 };
