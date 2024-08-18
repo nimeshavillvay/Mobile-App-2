@@ -1,6 +1,7 @@
+import useCookies from "@/_hooks/storage/use-cookies.hook";
 import { api } from "@/_lib/api";
 import { checkAvailability } from "@/_lib/apis/shared";
-import { NOT_AVAILABLE } from "@/_lib/constants";
+import { NOT_AVAILABLE, SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import { useToast } from "@repo/web-ui/components/ui/toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
@@ -10,7 +11,8 @@ import {
 } from "../constants";
 import useCartStore from "../use-cart-store.hook";
 
-const useAddMultipleToCartMutation = (token: string) => {
+const useAddMultipleToCartMutation = () => {
+  const [cookies] = useCookies();
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const { setExcludedSkus, setDiscontinuedSkus } = useCartStore(
@@ -106,7 +108,7 @@ const useAddMultipleToCartMutation = (token: string) => {
         let uniqueProducts = Array.from(productMap.values());
         // Create availability promises only for unique products
         const availabilityPromises = uniqueProducts.map((product) => {
-          return checkAvailability(token, {
+          return checkAvailability(cookies[SESSION_TOKEN_COOKIE], {
             productId: product.productid,
             qty: product.quantity,
           }).then((availability) => ({ product, availability })); // Resolve each promise with both product and availability
@@ -178,7 +180,7 @@ const useAddMultipleToCartMutation = (token: string) => {
       const response = await api
         .post("rest/cart", {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${cookies[SESSION_TOKEN_COOKIE]}`,
           },
           json: {
             "configurable-items": productsToAddToCart,

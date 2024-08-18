@@ -3,7 +3,7 @@ import useSuspenseSearch from "@/_hooks/search/use-suspense-search.hook";
 import type { Filters } from "@/_lib/types";
 
 const useSuspenseSearchProductList = (
-  token: string,
+  token: string | undefined,
   categoryId: string,
   filters: Filters[],
 ) => {

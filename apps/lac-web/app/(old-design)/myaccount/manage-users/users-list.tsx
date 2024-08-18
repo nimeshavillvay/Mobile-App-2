@@ -58,16 +58,16 @@ const UsersList = ({
   const { permission } = usersListQuery.data.manageContact.yourProfile;
 
   const isOSRLoggedInAsCustomer =
-    checkLoginQuery.data.status_code == "OK" &&
-    checkLoginQuery.data.isLoggedInAsCustomer;
+    checkLoginQuery.data?.status_code == "OK" &&
+    checkLoginQuery.data?.isLoggedInAsCustomer;
 
   const isAdmin =
     permission.toLowerCase() === "admin" &&
     isOSRLoggedInAsCustomer === undefined;
 
   const isOsr =
-    checkLoginQuery.data.status_code === "OK" &&
-    !!checkLoginQuery.data.sales_rep_id;
+    checkLoginQuery.data?.status_code === "OK" &&
+    !!checkLoginQuery.data?.sales_rep_id;
 
   return (
     <>

@@ -28,7 +28,7 @@ const WillCallPlantDrawer = ({ token }: WillCallPlantProps) => {
   const { plantName, address, operationHours } = willCallPlantQuery.data;
   const checkLoginQuery = useSuspenseCheckLogin(token);
 
-  if (checkLoginQuery.data.change_password) {
+  if (checkLoginQuery.data?.change_password) {
     return (
       <>
         <Shop width={16} height={16} />
@@ -126,7 +126,7 @@ const WillCallPlantDrawer = ({ token }: WillCallPlantProps) => {
 const WillCallPlant = ({ token, ...delegated }: WillCallPlantProps) => {
   const checkLoginQuery = useSuspenseCheckLogin(token);
 
-  if (checkLoginQuery.data.status_code === "NOT_LOGGED_IN") {
+  if (checkLoginQuery.data?.status_code === "NOT_LOGGED_IN") {
     return (
       <div className="flex flex-row items-center gap-2 text-black">
         <Shop width={16} height={16} />

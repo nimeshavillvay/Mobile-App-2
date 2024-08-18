@@ -17,7 +17,7 @@ const RegionalExclusionNoticeWrapper = ({
 }) => {
   const checkLoginQuery = useSuspenseCheckLogin(token);
 
-  if (checkLoginQuery.data.status_code === "NOT_LOGGED_IN") {
+  if (checkLoginQuery.data?.status_code === "NOT_LOGGED_IN") {
     if (isExcludedInLoggedOutState) {
       return (
         <div className="flex flex-row gap-2 rounded-lg bg-red-50 p-4">

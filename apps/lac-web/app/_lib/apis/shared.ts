@@ -59,13 +59,13 @@ export const getItemInfo = async (productIdList: number[]) => {
 };
 
 export const checkAvailability = async (
-  token: Token,
+  token: Token | undefined,
   { productId, qty, plant }: AvailabilityParameters,
 ) => {
   const response = await api
     .post("rest/availability-check", {
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: token ? `Bearer ${token}` : undefined,
       },
       json: {
         productid: productId,

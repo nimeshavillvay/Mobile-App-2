@@ -26,7 +26,7 @@ const LaminateItem = ({
   });
 
   const loginCheckResponse = useSuspenseCheckLogin(token);
-  const isLoggedIn = loginCheckResponse.data.status_code === "OK";
+  const isLoggedIn = loginCheckResponse.data?.status_code === "OK";
 
   const { control, watch } = useFormContext<LaminateAddToCartFormSchema>();
 

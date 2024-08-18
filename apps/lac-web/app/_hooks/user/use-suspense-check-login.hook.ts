@@ -1,11 +1,11 @@
 import { api } from "@/_lib/api";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
-export const loginCheck = async (token: string) => {
+export const loginCheck = async (token?: string) => {
   return api
     .get("rest/auth/login-check", {
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: token ? `Bearer ${token}` : undefined,
       },
       cache: "no-store",
       throwHttpErrors: false,
@@ -31,10 +31,11 @@ export const loginCheck = async (token: string) => {
           change_password: false;
           status_code: "NOT_LOGGED_IN";
         }
+      | undefined
     >();
 };
 
-const useSuspenseCheckLogin = (token: string) => {
+const useSuspenseCheckLogin = (token?: string) => {
   return useSuspenseQuery({
     queryKey: ["user", "login-status", token],
     queryFn: () => loginCheck(token),

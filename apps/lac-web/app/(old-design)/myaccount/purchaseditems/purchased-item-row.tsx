@@ -70,7 +70,7 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
 
   const quantity = methods.watch("quantity");
 
-  const addToCartMutation = useAddToCartMutation(token, {
+  const addToCartMutation = useAddToCartMutation({
     productId: item.productId,
   });
 

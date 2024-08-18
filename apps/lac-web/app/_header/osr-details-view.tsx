@@ -13,17 +13,17 @@ const OSRDetailsView = ({ token }: { readonly token: string }) => {
 
   const loginCheckData = loginCheckResponse.data;
 
-  if (loginCheckData.status_code == "NOT_LOGGED_IN") {
+  if (loginCheckData?.status_code == "NOT_LOGGED_IN") {
     return null;
   }
 
   return (
-    loginCheckData.isLoggedInAsCustomer && (
+    loginCheckData?.isLoggedInAsCustomer && (
       <div className="grid grid-cols-2 items-center gap-4 break-words pr-6 text-xs xs:text-sm">
         <div>
           <span>Logged in as&nbsp;</span>
 
-          {loginCheckData.status_code === "OK" && (
+          {loginCheckData?.status_code === "OK" && (
             <span className="font-bold">
               {loginCheckData.user.company !== ""
                 ? loginCheckData.user.company

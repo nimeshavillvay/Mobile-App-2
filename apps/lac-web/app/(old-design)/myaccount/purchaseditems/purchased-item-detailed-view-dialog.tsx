@@ -75,7 +75,7 @@ const PurchasedItemDetailedViewDialog = ({
 
   const quantity = methods.watch("quantity");
 
-  const addToCartMutation = useAddToCartMutation(token, {
+  const addToCartMutation = useAddToCartMutation({
     productId: item.productId,
   });
 

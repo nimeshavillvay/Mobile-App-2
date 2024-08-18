@@ -21,7 +21,7 @@ type GroupsList = {
 };
 
 const useSuspenseSearch = (
-  token: string,
+  token: string | undefined,
   { categoryId, groupResults = false, page }: useSuspenseSearchArgs,
   selectedFilters?: {
     [attributeId: string]: string[];
@@ -70,7 +70,7 @@ const useSuspenseSearch = (
         .post("rest/search", {
           searchParams,
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: token ? `Bearer ${token}` : token,
           },
           cache: "no-store",
           json: {

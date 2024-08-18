@@ -69,7 +69,7 @@ const CartItemPrice = ({
   };
 
   if (
-    loginCheckData.status_code === "OK" &&
+    loginCheckData?.status_code === "OK" &&
     "sales_rep_id" in loginCheckData &&
     "user_id" in loginCheckData
   ) {

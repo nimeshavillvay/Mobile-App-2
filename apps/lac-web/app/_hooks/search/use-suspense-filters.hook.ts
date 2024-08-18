@@ -21,7 +21,7 @@ type Values = {
 };
 
 const useSuspenseFilters = (
-  token: string,
+  token: string | undefined,
   args:
     | {
         type: typeof ORDER_HISTORY;
@@ -115,7 +115,7 @@ const useSuspenseFilters = (
           {
             searchParams,
             headers: {
-              Authorization: `Bearer ${token}`,
+              Authorization: token ? `Bearer ${token}` : undefined,
             },
             json: {
               rf_data: rfData,
