@@ -1,3 +1,4 @@
+import WurthLacLogo from "@/_components/wurth-lac-logo";
 import { cn, formatNumberToPrice } from "@/_lib/utils";
 import AlertInline from "@/old/_components/alert-inline";
 import {
@@ -8,7 +9,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/old/_components/ui/table";
-import { WurthFullBlack } from "@repo/web-ui/components/logos/wurth-full-black";
 import dayjs from "dayjs";
 import Image from "next/image";
 import Link from "next/link";
@@ -105,9 +105,10 @@ const OrderItem = ({
           <div className="min-w-[76px]">
             <Link
               href={generateItemUrl({ productId, slug: slug ?? "" })}
-              className={
-                productId ? "pointer-events-auto" : "pointer-events-none"
-              }
+              className={cn(
+                productId ? "pointer-events-auto" : "pointer-events-none",
+                "btn-view-product",
+              )}
             >
               {image ? (
                 <Image
@@ -117,7 +118,7 @@ const OrderItem = ({
                   height={76}
                 />
               ) : (
-                <WurthFullBlack
+                <WurthLacLogo
                   width={76}
                   height={76}
                   className="border border-brand-gray-200 px-2"

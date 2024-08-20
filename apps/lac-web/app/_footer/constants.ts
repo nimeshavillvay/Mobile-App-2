@@ -10,23 +10,24 @@ import { YouTube } from "@repo/web-ui/components/icons/youtube";
 
 export const REASONS = [
   {
-    title: "Same-day Delivery",
-    description: "Order before Noon and enjoy Same-Day Delivery on your order!",
+    title: 'Buy "your way"',
+    description:
+      "Order by 24/7 by web, contact our sales reps or call by phone.",
     Icon: TruckWithClock,
   },
   {
-    title: "Lowest Price guarantee",
-    description: "Order before Noon and enjoy Same-Day Delivery on your order!",
+    title: "One stop shop",
+    description: "What you need, when you need it, all in one place.",
     Icon: Wallet,
   },
   {
-    title: "50+ Pick Up Locations",
-    description: "Order before Noon and enjoy Same-Day Delivery on your order!",
+    title: "Next day delivery",
+    description: "Orders are shipped next day.",
     Icon: PackageDelivery,
   },
   {
-    title: "Expert Support Team",
-    description: "Order before Noon and enjoy Same-Day Delivery on your order!",
+    title: "Expert support team",
+    description: "Advice and support from knowledgeable professionals.",
     Icon: Headset,
   },
 ] as const;

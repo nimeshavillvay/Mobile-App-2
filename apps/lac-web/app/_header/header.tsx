@@ -1,7 +1,9 @@
+import WurthLacLogo from "@/_components/wurth-lac-logo";
 import { getCategoriesList } from "@/_lib/apis/server";
 import { cn } from "@/_lib/utils";
+import { Email } from "@repo/web-ui/components/icons/email";
 import { Phone } from "@repo/web-ui/components/icons/phone";
-import { WurthFullBlack } from "@repo/web-ui/components/logos/wurth-full-black";
+import { Text } from "@repo/web-ui/components/icons/text";
 import { Button, buttonVariants } from "@repo/web-ui/components/ui/button";
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import Link from "next/link";
@@ -38,20 +40,36 @@ const Header = async () => {
               className="group h-fit px-0 py-0 font-medium"
               asChild
             >
-              <a href="tel:800-444-0043">
+              <a href="tel:+18004224389">
+                <Text
+                  width={16}
+                  height={16}
+                  className="group-hover:stroke-red-800"
+                />
                 <Phone
                   width={16}
                   height={16}
                   className="group-hover:stroke-red-800"
                 />
 
-                <span>(800) 444-0043</span>
+                <span>(800) 422-4389</span>
               </a>
             </Button>
+            <Button
+              variant="link"
+              className="group h-fit px-0 py-0 font-medium"
+              asChild
+            >
+              <a href="mailto:southernsales@wurthlac.com">
+                <Email
+                  width={16}
+                  height={16}
+                  className="group-hover:fill-red-800"
+                />
 
-            <div className="font-normal text-wurth-gray-800">
-              Wurth Louis and Company
-            </div>
+                <span>Need help?</span>
+              </a>
+            </Button>
           </div>
         </div>
       </div>
@@ -60,7 +78,7 @@ const Header = async () => {
         <MobileNavigationMenu categories={categories} />
 
         <Link href="/" className="flex-shrink-0">
-          <WurthFullBlack className="h-[24px] w-[114px] md:h-[28px] md:w-[133px]" />
+          <WurthLacLogo className="h-[24px] w-[114px] md:h-[28px] md:w-[133px]" />
 
           <span className="sr-only">Home</span>
         </Link>
@@ -82,7 +100,7 @@ const Header = async () => {
                 variant: "ghost",
                 size: "icon",
               }),
-              "size-6 md:hidden",
+              "btn-view-cart size-6 md:hidden",
             )}
           >
             <Suspense fallback={<Skeleton className="h-6 w-6" />}>
@@ -101,7 +119,7 @@ const Header = async () => {
             href="/cart"
             className={cn(
               buttonVariants({ variant: "ghost" }),
-              "hidden shrink-0 md:flex md:h-min md:flex-row md:items-center md:gap-2 md:p-0",
+              "btn-view-cart hidden shrink-0 md:flex md:h-min md:flex-row md:items-center md:gap-2 md:p-0",
             )}
           >
             <Suspense fallback={<Skeleton className="h-7 w-7" />}>

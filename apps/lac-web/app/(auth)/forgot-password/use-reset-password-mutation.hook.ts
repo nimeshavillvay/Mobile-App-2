@@ -20,11 +20,18 @@ const useResetPasswordMutation = () => {
           message: null;
           isSuccess: boolean;
         }>(),
-    onSuccess: () => {
-      toast({
-        title: "Check your inbox",
-        description: "An email to reset your password has been sent",
-      });
+    onSuccess: (response) => {
+      if (response.isSuccess) {
+        toast({
+          title: "Check your inbox",
+          description: "An email to reset your password has been sent",
+        });
+      } else {
+        toast({
+          title: "Failed to send email",
+          description: response.message,
+        });
+      }
     },
   });
 };

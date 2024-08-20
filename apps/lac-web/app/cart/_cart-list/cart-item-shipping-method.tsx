@@ -560,7 +560,7 @@ const CartItemShippingMethod = ({
                 value={selectedShippingMethod}
                 onValueChange={(method) => handleShipToMeMethod(method)}
               >
-                <SelectTrigger className="w-full">
+                <SelectTrigger className="avail-change-button w-full">
                   <SelectValue placeholder="Select a delivery method" />
                 </SelectTrigger>
 
@@ -802,7 +802,7 @@ const CartItemShippingMethod = ({
                   value={selectedBackorderShippingMethod}
                   onValueChange={(method) => handleBackorderMethod(method)}
                 >
-                  <SelectTrigger className="w-full">
+                  <SelectTrigger className="avail-change-button w-full">
                     <SelectValue placeholder="Select a delivery method" />
                   </SelectTrigger>
 
@@ -863,7 +863,7 @@ const CartItemShippingMethod = ({
                 setSelectedShippingOption(MAIN_OPTIONS.WILL_CALL);
               }}
             >
-              <SelectTrigger className="w-full">
+              <SelectTrigger className="avail-change-button w-full">
                 <SelectValue placeholder="Select a store" />
               </SelectTrigger>
 

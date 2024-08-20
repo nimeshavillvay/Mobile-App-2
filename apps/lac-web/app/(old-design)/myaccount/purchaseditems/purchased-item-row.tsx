@@ -1,5 +1,6 @@
 import ProductNotAvailable from "@/_components/product-not-available";
 import Warning from "@/_components/warning";
+import WurthLacLogo from "@/_components/wurth-lac-logo";
 import useAddToCartMutation from "@/_hooks/cart/use-add-to-cart-mutation.hook";
 import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
 import useItemInfo from "@/_hooks/product/use-item-info.hook";
@@ -16,7 +17,6 @@ import { Input } from "@/old/_components/ui/input";
 import { Label } from "@/old/_components/ui/label";
 import { TableCell, TableRow } from "@/old/_components/ui/table";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { WurthFullBlack } from "@repo/web-ui/components/logos/wurth-full-black";
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import dayjs from "dayjs";
 import Image from "next/image";
@@ -132,9 +132,10 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
         <TableCell className="min-w-[76px]">
           <Link
             href={generateItemUrl(item)}
-            className={
-              isItemError(item) ? "pointer-events-none" : "pointer-events-auto"
-            }
+            className={cn(
+              isItemError(item) ? "pointer-events-none" : "pointer-events-auto",
+              "btn-view-product",
+            )}
           >
             {item.image ? (
               <Image
@@ -145,7 +146,7 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
                 className="border border-brand-gray-200 object-contain"
               />
             ) : (
-              <WurthFullBlack
+              <WurthLacLogo
                 width={76}
                 height={76}
                 className="border border-brand-gray-200 px-2"
@@ -158,7 +159,7 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
           <Link
             href={generateItemUrl(item)}
             className={cn(
-              "text-sm text-brand-gray-500",
+              "btn-view-product text-sm text-brand-gray-500",
               isItemError(item) ? "pointer-events-none" : "pointer-events-auto",
             )}
           >

@@ -47,29 +47,28 @@ const SelectAddressDialog = ({
 
   const updateCartConfigMutation = useUpdateCartConfigMutation();
 
-  const handleConfirm = () => {
-    updateCartConfigMutation.mutate(
-      {
+  const handleConfirm = async () => {
+    try {
+      await updateCartConfigMutation.mutateAsync({
         shippingAddressId: addressId,
-      },
-      {
-        onSuccess: () => {
-          queryClient.invalidateQueries({
-            queryKey: ["cart"],
-          });
-          queryClient.invalidateQueries({
-            queryKey: ["my-account", "shipping-addresses"],
-          });
-          toast({
-            title: "Address selected",
-            description:
-              "Change in shipping address may affect cart item availability, please review and proceed to checkout",
-          });
-          setOpen(false);
-          router.replace("/cart");
-        },
-      },
-    );
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ["cart"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["my-account", "shipping-addresses"],
+      });
+      toast({
+        title: "Address selected",
+        description:
+          "Change in shipping address may affect cart item availability, please review and proceed to checkout",
+      });
+      setOpen(false);
+      router.replace("/cart");
+    } catch {
+      setOpen(false);
+    }
   };
 
   const isAdminOrOsr = useSuspenseIsAdminOrOsr(token);
