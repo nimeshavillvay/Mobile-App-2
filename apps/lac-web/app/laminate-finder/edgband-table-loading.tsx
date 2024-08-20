@@ -14,7 +14,7 @@ const EdgeBandTableLoading = () => {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Item # and MFR Part #</TableHead>
+            <TableHead>Item #/MFR Part #</TableHead>
             <TableHead className="text-center lg:w-1/4">Price</TableHead>
             <TableHead className="text-center lg:w-1/6">QTY</TableHead>
             <TableHead className="text-right font-medium">Amount</TableHead>
@@ -24,13 +24,13 @@ const EdgeBandTableLoading = () => {
         <TableBody>
           {Array.from({ length: 3 }).map((_, index) => (
             <TableRow key={`skeleton_${index}`}>
-              <TableCell className="w-40 text-nowrap">
+              <TableCell>
                 <Skeleton className="h-10 w-full" />
               </TableCell>
-              <TableCell className="text-nowrap">
+              <TableCell className="text-nowrap lg:w-1/4">
                 <Skeleton className="h-10 w-full" />
               </TableCell>
-              <TableCell className="text-right">
+              <TableCell className="text-right lg:w-1/6">
                 <Skeleton className="h-10 w-full" />
               </TableCell>
               <TableCell className="text-right font-medium">

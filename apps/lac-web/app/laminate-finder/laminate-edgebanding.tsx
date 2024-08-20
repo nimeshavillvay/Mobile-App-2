@@ -59,7 +59,7 @@ const LaminateEdgeBanding = ({
             qty: Number(deferredQuantities[index]),
             sku: item.productSku,
           }))
-          .filter((item) => !isNaN(item.qty))
+          .filter((item) => !isNaN(item.qty) && item.qty > 0)
       : [];
 
   const addMultipleToCartMutation = useAddMultipleToCartMutation();
@@ -142,7 +142,7 @@ const LaminateEdgeBanding = ({
                     <Table>
                       <TableHeader>
                         <TableRow>
-                          <TableHead>Item # and MFR Part #</TableHead>
+                          <TableHead>Item #/MFR Part #</TableHead>
                           <TableHead className="text-center lg:w-1/4">
                             Price
                           </TableHead>

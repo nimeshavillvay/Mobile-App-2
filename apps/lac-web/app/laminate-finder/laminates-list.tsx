@@ -8,9 +8,9 @@ import {
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import { cookies } from "next/headers";
 import { Suspense } from "react";
-import ProductsListGrid from "../laminates-list-grid";
 import LaminatesListDesktopFiltersHeader from "./laminates-list-desktop-filters-header";
 import ProductsListFilters from "./laminates-list-filters";
+import ProductsListGrid from "./laminates-list-grid";
 import ProductsListHeader from "./laminates-list-header";
 import ProductsListPagination from "./laminates-list-pagination";
 
@@ -34,7 +34,6 @@ const LaminatesList = () => {
 
       <ProductsGridDesktopContainer>
         <div className="w-full pr-4 md:w-1/5 lg:w-1/6">
-          <h2 className="mb-4 text-xl font-semibold">Filters</h2>
           <Suspense fallback={<ProductsGridFiltersSkeleton />}>
             <ProductsListFilters token={tokenCookie.value} />
           </Suspense>

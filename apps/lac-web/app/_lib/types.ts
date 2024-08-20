@@ -377,6 +377,7 @@ export type ProductVariant = {
   uom: string;
   onSale?: boolean;
   isNewItem?: boolean;
+  isExcludedProduct?: boolean;
 };
 
 export type Product = {

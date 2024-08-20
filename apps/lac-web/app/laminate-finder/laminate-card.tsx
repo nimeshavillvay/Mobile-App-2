@@ -1,11 +1,9 @@
 "use client";
 
 import useLaminateFilter from "@/_hooks/product/use-laminate-item-info.hook";
-import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import useSuspenseProductExcluded from "@/_hooks/product/use-suspense-product-excluded.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
 import type { Product } from "@/_lib/types";
-import { formatNumberToPrice } from "@/_lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Alert, AlertDescription } from "@repo/web-ui/components/ui/alert";
 import {
@@ -74,10 +72,6 @@ const LaminateCard = ({
 
   const [open, setOpen] = useState(false);
 
-  const priceCheckQuery = useSuspensePriceCheck(token, [
-    { productId: Number(product.variants[0]?.id), qty: 1 },
-  ]);
-
   const singleGrade =
     grades !== undefined && grades.length === 1 ? grades[0] : "";
   const singleFinish =
@@ -89,12 +83,13 @@ const LaminateCard = ({
           ?.productids || []
       : [];
 
-  const groupPriceData = priceCheckQuery.data.productPrices[0];
-  const groupPrice = groupPriceData?.uomPrice ?? groupPriceData?.price ?? 0;
-  const groupUom = groupPriceData?.uomPriceUnit ?? groupPriceData?.priceUnit;
+  const closeDialog = (isOpen: boolean) => {
+    setOpen(isOpen);
+    form.reset();
+  };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={closeDialog}>
       <DialogTrigger asChild>
         <div className="group relative cursor-pointer overflow-hidden rounded-lg bg-white shadow-md">
           <div className="aspect-square relative w-full">
@@ -114,15 +109,23 @@ const LaminateCard = ({
             />
           )}
 
+          {!isLoggedIn && product.variants[0]?.isExcludedProduct && (
+            // todo: need to get this on group level if possible
+            <div className="absolute left-0 right-0 top-0 px-2 pt-2">
+              <Alert variant="destructive">
+                <AlertDescription>
+                  This item is not available in certain regions.
+                </AlertDescription>
+              </Alert>
+            </div>
+          )}
+
           <div className="absolute bottom-0 left-0 right-0 translate-y-full transform bg-black bg-opacity-70 p-3 text-white transition-transform duration-300 group-hover:translate-y-0">
             <h3
               className="mb-1 line-clamp-2 text-sm font-semibold"
               title={product.groupName}
               dangerouslySetInnerHTML={{ __html: product.groupName }}
             />
-            <p className="text-xs font-medium">
-              {formatNumberToPrice(groupPrice)} / {groupUom}
-            </p>
           </div>
         </div>
       </DialogTrigger>

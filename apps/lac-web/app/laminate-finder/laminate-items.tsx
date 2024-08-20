@@ -18,10 +18,10 @@ import { useForm } from "react-hook-form";
 import {
   laminateAddToCartFormSchema,
   type LaminateAddToCartFormSchema,
-} from "./components/helpers";
-import LaminateCardTotalPrice from "./components/laminate-card-total-price";
-import LaminateItem from "./components/laminate-item";
-import LaminatesDialogLoading from "./components/laminates-dialog-loading";
+} from "./helpers";
+import LaminateCardTotalPrice from "./laminate-card-total-price";
+import LaminateItem from "./laminate-item";
+import LaminatesDialogLoading from "./laminates-dialog-loading";
 
 const LaminateItems = ({
   groupId,
@@ -98,6 +98,7 @@ const LaminateItems = ({
                   size={laminate.size}
                   token={token}
                   quantityFieldIndex={index}
+                  isExcludedProduct={laminate.isExcludedProduct}
                   key={index}
                 />
               ))}

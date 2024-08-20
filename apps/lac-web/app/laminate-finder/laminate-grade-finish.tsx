@@ -10,9 +10,9 @@ import {
 } from "@repo/web-ui/components/ui/select";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import LaminateItems from "../laminate-items";
 import type { LaminateAddToCartFormSchema } from "./helpers";
 import { laminateAddToCartFormSchema } from "./helpers";
+import LaminateItems from "./laminate-items";
 
 const LaminateGradeFinish = ({
   groupId,
