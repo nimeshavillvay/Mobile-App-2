@@ -5,15 +5,32 @@ import {
   UI_DATE_FORMAT,
 } from "@/lib/constants";
 import { formatNumberToPrice } from "@/lib/utils";
+import { Picker } from "@react-native-picker/picker";
 import useSuspenseCheckAvailability from "@repo/shared-logic/apis/hooks/product/use-suspense-check-availability.hook";
+import { useSuspenseGroupFilters } from "@repo/shared-logic/apis/hooks/product/use-suspense-group-filters.hook";
 import useSuspensePriceCheck from "@repo/shared-logic/apis/hooks/product/use-suspense-price-check.hook";
-import { Bookmark, Upload, X, Zap } from "@tamagui/lucide-icons";
+import { Bookmark, Minus, Plus, Upload, X, Zap } from "@tamagui/lucide-icons";
 import dayjs from "dayjs";
-import { router } from "expo-router";
+import { Link, router, useRouter } from "expo-router";
 import { MotiView } from "moti";
 import { Skeleton } from "moti/skeleton";
-import { Dimensions } from "react-native";
-import { Button, ScrollView, Text, View, XStack, YStack } from "tamagui";
+import { useState } from "react";
+import {
+  Dimensions,
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+} from "react-native";
+import { Button, Input, ScrollView, Text, View, XStack, YStack } from "tamagui";
+import { z } from "zod";
+
+const isNumber = (data: unknown): data is number => {
+  return z.number().safeParse(data).success;
+};
+
+const isString = (data: unknown): data is string => {
+  return z.string().safeParse(data).success;
+};
 
 export const ProductDetailsSkeleton = () => {
   const screenWidth = Dimensions.get("window").width;
@@ -413,5 +430,177 @@ export const StockStatus = ({
         </XStack>
       )}
     </XStack>
+  );
+};
+
+export const ProductVariations = ({
+  productId,
+}: {
+  readonly productId: number;
+}) => {
+  const router = useRouter();
+  const [selectedValues, setSelectedValues] = useState<Record<number, string>>(
+    {},
+  );
+
+  const { data } = useSuspenseGroupFilters(
+    {
+      baseUrl: API_BASE_URL,
+      apiKey: API_KEY,
+    },
+    productId,
+  );
+
+  const handleValueChange = (variantId: number, itemValue: string) => {
+    setSelectedValues((prev) => ({
+      ...prev,
+      [variantId]: itemValue,
+    }));
+  };
+
+  return (
+    <YStack gap={15}>
+      {data.map((variant) => (
+        <YStack key={variant.id} gap={10}>
+          <XStack>
+            <Text>{variant.name}: </Text>
+            <Text fontWeight={700}>
+              {variant.values.find((value) => value.selected)?.name}
+            </Text>
+          </XStack>
+
+          {variant.values.length > 5 ? (
+            <Picker
+              style={
+                Platform.OS === "ios"
+                  ? { marginTop: -25 }
+                  : {
+                      backgroundColor: "white",
+                    }
+              }
+              itemStyle={Platform.OS === "ios" && { fontSize: 14 }}
+              selectedValue={
+                selectedValues[variant.id] ||
+                variant.values.find((value) => value.selected)?.name
+              }
+              onValueChange={(itemValue) => {
+                const variantValue = variant.values.find(
+                  (value) => value.name === itemValue,
+                );
+
+                handleValueChange(variant.id, itemValue);
+
+                if (
+                  isNumber(variantValue?.productid) &&
+                  isString(variantValue?.slug)
+                ) {
+                  router.replace(
+                    `product/${variantValue.productid}/${variantValue.slug}`,
+                  );
+                }
+              }}
+            >
+              {variant.values.map((value) => (
+                <Picker.Item
+                  enabled={!!value.productid && !!value.slug}
+                  key={value.id}
+                  label={value.name}
+                  value={value.name}
+                  color={!value.productid || !value.slug ? "gray" : "black"}
+                />
+              ))}
+            </Picker>
+          ) : (
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+              <XStack gap={10}>
+                {variant.values.map((value) => (
+                  <Link
+                    key={value.id}
+                    href={`product/${value.productid}/${value.slug}`}
+                    replace
+                    disabled={!value.productid || !value.slug}
+                    asChild
+                  >
+                    <Pressable>
+                      <View
+                        padding={10}
+                        backgroundColor={
+                          value.productid && value.slug ? "white" : "$gray6"
+                        }
+                        borderRadius={10}
+                        borderColor={
+                          value.selected ? "$red10" : "$colorTransparent"
+                        }
+                        borderWidth={value.selected ? 2 : 0}
+                      >
+                        <Text>{value.name}</Text>
+                      </View>
+                    </Pressable>
+                  </Link>
+                ))}
+              </XStack>
+            </ScrollView>
+          )}
+        </YStack>
+      ))}
+    </YStack>
+  );
+};
+
+export const EnterQuantity = () => {
+  return (
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
+      <XStack
+        flex={1}
+        position="absolute"
+        bottom={0}
+        paddingHorizontal={20}
+        backgroundColor="white"
+        gap={5}
+        paddingVertical={20}
+      >
+        <XStack flex={1}>
+          <Button
+            icon={Minus}
+            padding={8}
+            borderTopRightRadius={0}
+            borderBottomRightRadius={0}
+          />
+          <Input
+            flex={1}
+            borderRadius={0}
+            keyboardType="numeric"
+            backgroundColor="$gray2"
+            borderWidth={0}
+            paddingHorizontal={3}
+            textAlign="center"
+          />
+          <View backgroundColor="$gray2" paddingVertical={10}>
+            <YStack
+              flex={1}
+              justifyContent="center"
+              borderLeftWidth={1}
+              paddingHorizontal={3}
+              borderLeftColor="$gray8"
+            >
+              <Text fontSize="$1" color="$gray9">
+                EACH
+              </Text>
+            </YStack>
+          </View>
+          <Button
+            icon={Plus}
+            padding={8}
+            borderTopLeftRadius={0}
+            borderBottomLeftRadius={0}
+          />
+        </XStack>
+        <Button flex={1} backgroundColor="$red11" color="white" fontSize="$6">
+          Add to Cart
+        </Button>
+      </XStack>
+    </KeyboardAvoidingView>
   );
 };

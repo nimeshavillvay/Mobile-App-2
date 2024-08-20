@@ -1,8 +1,10 @@
 import {
+  EnterQuantity,
   PriceBreakdowns,
   ProductAction,
   ProductDetailsSkeleton,
   ProductPrices,
+  ProductVariations,
   SalesBadges,
   StockStatus,
 } from "@/components/product";
@@ -16,7 +18,7 @@ import {
 import useSuspenseGetProduct from "@repo/shared-logic/apis/hooks/product/use-suspense-get-product.hook";
 import { Stack, useLocalSearchParams } from "expo-router";
 import { Suspense, useState } from "react";
-import { Dimensions } from "react-native";
+import { Dimensions, KeyboardAvoidingView, Platform } from "react-native";
 import ImageView from "react-native-image-viewing";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView, Text, View, YStack } from "tamagui";
@@ -41,11 +43,14 @@ const Product = () => {
       />
 
       <SafeAreaView style={{ flex: 1 }}>
-        <ScrollView flex={1} backgroundColor="$gray3">
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={{ flex: 1 }}
+        >
           <Suspense fallback={<ProductDetailsSkeleton />}>
             <ProductDetails productId={localSearchParams.id} />
           </Suspense>
-        </ScrollView>
+        </KeyboardAvoidingView>
       </SafeAreaView>
     </>
   );
@@ -85,64 +90,73 @@ const ProductDetails = ({ productId }: { readonly productId: string }) => {
 
   return (
     <>
-      <View flex={1}>
-        <ProductCarousel
-          width={screenWidth}
-          height={screenWidth}
-          data={productImages}
-          renderItem={({ item }) => (
-            <ProductCarouselItem
-              image={item.img}
-              alt={item.alt}
-              width={screenWidth}
-              height={screenWidth}
-              type={item.type}
-              url={item.url}
-              onPress={() => setImageOverlayVisible(true)}
-            />
-          )}
-          onScrollEnd={(index) => {
-            setIndex(index);
-          }}
+      <ScrollView>
+        <View flex={1}>
+          <ProductCarousel
+            width={screenWidth}
+            height={screenWidth}
+            data={productImages}
+            renderItem={({ item }) => (
+              <ProductCarouselItem
+                image={item.img}
+                alt={item.alt}
+                width={screenWidth}
+                height={screenWidth}
+                type={item.type}
+                url={item.url}
+                onPress={() => setImageOverlayVisible(true)}
+              />
+            )}
+            onScrollEnd={(index) => {
+              setIndex(index);
+            }}
+          />
+          <ProductAction width={screenWidth} />
+          <ProductCarouselPagination data={productImages} index={index} />
+        </View>
+        <ImageView
+          images={[{ uri: productImages[index]?.img }]}
+          imageIndex={0}
+          visible={imageOverlayVisible}
+          onRequestClose={() => setImageOverlayVisible(false)}
+          presentationStyle="overFullScreen"
         />
-        <ProductAction width={screenWidth} />
-        <ProductCarouselPagination data={productImages} index={index} />
-      </View>
-      <ImageView
-        images={[{ uri: productImages[index]?.img }]}
-        imageIndex={0}
-        visible={imageOverlayVisible}
-        onRequestClose={() => setImageOverlayVisible(false)}
-        presentationStyle="overFullScreen"
-      />
-      <YStack flex={1} marginHorizontal={20} marginTop={10} gap={10}>
-        <SalesBadges
-          token={token}
-          productId={data.selectedProduct.productId}
-          brandName={data.brand}
-          productListPrice={data.selectedProduct.listPrice}
-          isNewItem={data.selectedProduct.isNewItem}
-          onSale={data.selectedProduct.onSale}
-        />
-
-        <Text fontSize="$6">{data.selectedProduct.productName}</Text>
-
-        <ProductPrices
-          token={token}
-          productId={data.selectedProduct.productId}
-          productListPrice={data.selectedProduct.listPrice}
-          unitOfMeasure={data.selectedProduct.unitOfMeasure}
-          freightCharge={data.selectedProduct.specialShipping}
-        />
-
-        <StockStatus token={token} productId={data.selectedProduct.productId} />
-
-        <PriceBreakdowns
-          token={token}
-          productId={data.selectedProduct.productId}
-          unitOfMeasure={data.selectedProduct.unitOfMeasure}
-        />
-      </YStack>
+        <YStack
+          flex={1}
+          marginHorizontal={20}
+          marginTop={10}
+          gap={10}
+          paddingBottom={100}
+        >
+          <SalesBadges
+            token={token}
+            productId={data.selectedProduct.productId}
+            brandName={data.brand}
+            productListPrice={data.selectedProduct.listPrice}
+            isNewItem={data.selectedProduct.isNewItem}
+            onSale={data.selectedProduct.onSale}
+          />
+          <Text fontSize="$6">{data.selectedProduct.productName}</Text>
+          <ProductPrices
+            token={token}
+            productId={data.selectedProduct.productId}
+            productListPrice={data.selectedProduct.listPrice}
+            unitOfMeasure={data.selectedProduct.unitOfMeasure}
+            freightCharge={data.selectedProduct.specialShipping}
+          />
+          <StockStatus
+            token={token}
+            productId={data.selectedProduct.productId}
+          />
+          <PriceBreakdowns
+            token={token}
+            productId={data.selectedProduct.productId}
+            unitOfMeasure={data.selectedProduct.unitOfMeasure}
+          />
+          <ProductVariations productId={data.selectedProduct.productId} />
+        </YStack>
+      </ScrollView>
+      <EnterQuantity />
     </>
   );
 };
