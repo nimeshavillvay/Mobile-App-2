@@ -54,7 +54,7 @@ const LaminateCard = ({
   readonly token: string;
 }) => {
   const loginCheckResponse = useSuspenseCheckLogin(token);
-  const isLoggedIn = loginCheckResponse.data.status_code === "OK";
+  const isLoggedIn = loginCheckResponse.data?.status_code === "OK";
 
   const form = useForm<LaminateAddToCartFormSchema>({
     resolver: zodResolver(laminateAddToCartFormSchema),

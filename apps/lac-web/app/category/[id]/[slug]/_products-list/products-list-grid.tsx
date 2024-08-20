@@ -6,7 +6,7 @@ import useSuspenseCategoryFilters from "./use-suspense-category-filters.hook";
 import useSuspenseSearchProductList from "./use-suspense-search-product-list.hook";
 
 type ProductListGridProps = {
-  readonly token: string;
+  readonly token?: string;
   readonly categoryId: string;
   readonly type: ComponentProps<typeof ProductsGridList>["type"];
 };

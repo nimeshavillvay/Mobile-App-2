@@ -18,7 +18,7 @@ const FavoriteButton = ({ token, productId, display }: FavoriteButtonProps) => {
   const router = useRouter();
 
   const checkLoginQuery = useSuspenseCheckLogin(token);
-  const isLoggedInUser = checkLoginQuery.data.status_code === "OK";
+  const isLoggedInUser = checkLoginQuery.data?.status_code === "OK";
 
   return (
     <>

@@ -62,7 +62,7 @@ const LaminateEdgeBanding = ({
           .filter((item) => !isNaN(item.qty) && item.qty > 0)
       : [];
 
-  const addMultipleToCartMutation = useAddMultipleToCartMutation(token);
+  const addMultipleToCartMutation = useAddMultipleToCartMutation();
 
   const handleAddAllItemsToCart = async () => {
     const addToCartRequest =

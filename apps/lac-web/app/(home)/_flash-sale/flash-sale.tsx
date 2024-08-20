@@ -18,15 +18,11 @@ const FlashSaleList = async () => {
 
   const saleItems = await getSaleItems();
 
-  if (!sessionToken?.value) {
-    return null;
-  }
-
   return saleItems.map((product) => (
     <Suspense key={product.productId} fallback={<ProductCardSkeleton />}>
       <ProductCard
         orientation="vertical"
-        token={sessionToken.value}
+        token={sessionToken?.value}
         product={{
           groupName: product.productTitle,
           groupImage: product.productImage,

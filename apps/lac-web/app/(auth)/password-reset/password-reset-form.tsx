@@ -83,8 +83,8 @@ const PasswordResetForm = ({
 
   const onPasswordResetSubmit = (formData: PasswordResetSchema) => {
     if (
-      loginCheckResponse.data.change_password &&
-      loginCheckResponse.data.status_code === "OK"
+      loginCheckResponse?.data?.change_password &&
+      loginCheckResponse?.data?.status_code === "OK"
     ) {
       updateProfileMutation.mutate(
         {

@@ -186,9 +186,9 @@ const CartItem = ({
     quantity * (priceCheckData?.productPrices[0]?.price ?? 0),
   );
 
-  const updateCartConfigMutation = useUpdateCartItemMutation(token);
-  const deleteCartItemMutation = useDeleteCartItemMutation(token);
-  const checkAvailabilityMutation = useCheckAvailabilityMutation(token);
+  const updateCartConfigMutation = useUpdateCartItemMutation();
+  const deleteCartItemMutation = useDeleteCartItemMutation();
+  const checkAvailabilityMutation = useCheckAvailabilityMutation();
 
   const deferredWillCallPlant = useDeferredValue(selectedWillCallPlant);
 
@@ -439,8 +439,8 @@ const CartItem = ({
   };
 
   const isOSRLoggedInAsOSR =
-    checkLoginQuery.data.status_code === "OK" &&
-    checkLoginQuery.data.sales_rep_id;
+    checkLoginQuery.data?.status_code === "OK" &&
+    checkLoginQuery.data?.sales_rep_id;
 
   const handleSave = (config?: Partial<CartItemConfiguration>) => {
     const data = getValues();
@@ -524,7 +524,7 @@ const CartItem = ({
                 }),
                 will_call_avail: (willCallAnywhere[0]?.status === NOT_IN_STOCK
                   ? 0
-                  : willCallAnywhere[0]?.willCallQuantity ?? 0
+                  : (willCallAnywhere[0]?.willCallQuantity ?? 0)
                 ).toString(),
                 will_call_plant:
                   willCallAnywhere[0]?.willCallPlant ?? EMPTY_STRING,
@@ -914,7 +914,7 @@ const CartItem = ({
       </div>
 
       <div className="md:w-80">
-        {checkLoginQuery.data.status_code === "NOT_LOGGED_IN" &&
+        {checkLoginQuery.data?.status_code === "NOT_LOGGED_IN" &&
           (product.isExcludedProduct ? (
             <div className="flex flex-row gap-2 rounded-lg bg-red-50 p-4">
               <Alert
@@ -962,7 +962,7 @@ const CartItem = ({
             />
           ))}
 
-        {checkLoginQuery.data.status_code === "OK" && (
+        {checkLoginQuery.data?.status_code === "OK" && (
           <Suspense fallback={<Skeleton className="h-48 w-full" />}>
             <RegionalExclusionAndShippingMethods
               token={token}

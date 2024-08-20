@@ -27,7 +27,7 @@ import SaleBadges from "./sale-badges";
 type ProductProps = {
   readonly orientation?: ComponentProps<typeof ProductCardRoot>["orientation"];
   readonly product: Product;
-  readonly token: string;
+  readonly token?: string;
   readonly stretchWidth?: boolean;
 };
 
@@ -42,7 +42,7 @@ const ProductCard = ({
   const router = useRouter();
 
   const checkLoginQuery = useSuspenseCheckLogin(token);
-  const isLoggedInUser = checkLoginQuery.data.status_code === "OK";
+  const isLoggedInUser = checkLoginQuery.data?.status_code === "OK";
 
   const defaultVariant = product.variants[0];
   const selectedVariant = product.variants.find(

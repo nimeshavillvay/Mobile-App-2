@@ -5,7 +5,7 @@ import useSuspenseCategoryFilters from "./use-suspense-category-filters.hook";
 import useSuspenseSearchProductList from "./use-suspense-search-product-list.hook";
 
 type ProductsListHeaderProps = {
-  readonly token: string;
+  readonly token?: string;
   readonly categoryId: string;
 };
 

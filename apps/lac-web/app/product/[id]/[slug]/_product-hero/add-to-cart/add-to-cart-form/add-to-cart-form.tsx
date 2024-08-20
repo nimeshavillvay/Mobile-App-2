@@ -15,7 +15,7 @@ import useAddToCartForm from "../../use-add-to-cart-form.hook";
 import FormContent from "./form-content";
 
 type AddToCartFormProps = {
-  readonly token: string;
+  readonly token?: string;
   readonly productId: number;
   readonly minQty: number;
   readonly incQty: number;
@@ -51,7 +51,7 @@ const AddToCartForm = ({
     );
   };
 
-  const addToCartMutation = useAddToCartMutation(token, {
+  const addToCartMutation = useAddToCartMutation({
     productId,
   });
 
@@ -69,7 +69,7 @@ const AddToCartForm = ({
   const disableAddToCartButton =
     checkAvailabilityQuery.data.status === NOT_AVAILABLE;
 
-  if (checkLoginQuery.data.status_code === "OK") {
+  if (checkLoginQuery.data?.status_code === "OK") {
     // If the user has logged in, we should do an additional check to
     // see if the product is regional locked
     return (
@@ -161,7 +161,7 @@ const AddToCartFormLoggedIn = ({
     );
   };
 
-  const addToCartMutation = useAddToCartMutation(token, {
+  const addToCartMutation = useAddToCartMutation({
     productId,
   });
 

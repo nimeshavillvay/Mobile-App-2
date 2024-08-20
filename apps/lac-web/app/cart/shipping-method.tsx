@@ -56,7 +56,7 @@ const ShippingMethod = ({ token }: ShippingMethodProps) => {
 
   const checkLoginQuery = useSuspenseCheckLogin(token);
 
-  const isForCart = checkLoginQuery.data.status_code === "OK";
+  const isForCart = checkLoginQuery.data?.status_code === "OK";
 
   const shippingMethodsQuery = useSuspenseShippingMethods(token, isForCart);
 
@@ -74,7 +74,7 @@ const ShippingMethod = ({ token }: ShippingMethodProps) => {
   const [isShipToMeSelected, setIsShipToMeSelected] = useState(false);
   const [isWillCallSelected, setIsWillCallSelected] = useState(false);
 
-  const updateCartItemMutation = useUpdateCartItemMutation(token);
+  const updateCartItemMutation = useUpdateCartItemMutation();
 
   const clearConfigKeys = (
     config: CartItemConfiguration,
@@ -285,7 +285,7 @@ const ShippingMethod = ({ token }: ShippingMethodProps) => {
                 const shippingMethodValue =
                   selectedPlant.plant !== willCallPlant?.plantCode
                     ? DEFAULT_SHIPPING_METHOD
-                    : newValue ?? "";
+                    : (newValue ?? "");
 
                 // Set values for the selected plant
                 setConfigValues(

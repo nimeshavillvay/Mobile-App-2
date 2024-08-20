@@ -72,7 +72,7 @@ const LocationStocks = ({ token, productId }: LocationStocksProps) => {
           location={homeBranch?.name ?? ""}
         />
 
-        {checkLoginQuery.data.status_code === "OK" &&
+        {checkLoginQuery.data?.status_code === "OK" &&
           !isNotInStock &&
           otherLocations.length > 0 && (
             <CollapsibleTrigger
@@ -92,7 +92,7 @@ const LocationStocks = ({ token, productId }: LocationStocksProps) => {
           )}
       </div>
 
-      {checkLoginQuery.data.status_code === "OK" && (
+      {checkLoginQuery.data?.status_code === "OK" && (
         <CollapsibleContent>
           <table className="w-full border-separate rounded-lg border border-wurth-gray-150 [&_td]:p-3 [&_th]:p-3">
             <thead>

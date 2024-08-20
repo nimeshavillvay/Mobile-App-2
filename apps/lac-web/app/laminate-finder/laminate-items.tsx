@@ -57,7 +57,7 @@ const LaminateItems = ({
           .filter((item) => item.qty != 0)
       : [];
 
-  const addMultipleToCartMutation = useAddMultipleToCartMutation(token);
+  const addMultipleToCartMutation = useAddMultipleToCartMutation();
 
   const handleAddAllItemsToCart = async () => {
     const addToCartRequest = priceCheckRequest

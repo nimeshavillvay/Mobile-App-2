@@ -18,10 +18,6 @@ const FeaturedBrandList = async () => {
 
   const { groups } = await getFeaturedBrand();
 
-  if (!sessionToken?.value) {
-    return null;
-  }
-
   return groups.map((product) => (
     <Suspense key={product.groupId} fallback={<ProductCardSkeleton />}>
       <ProductCard
@@ -39,7 +35,7 @@ const FeaturedBrandList = async () => {
             isNewItem: item.isNewItem,
           })),
         }}
-        token={sessionToken.value}
+        token={sessionToken?.value}
       />
     </Suspense>
   ));

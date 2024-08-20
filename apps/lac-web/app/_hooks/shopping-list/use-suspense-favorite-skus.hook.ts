@@ -7,7 +7,10 @@ type FavoriteSku = {
   favoriteIds: string[];
 };
 
-const useSuspenseFavoriteSKUs = (token: string, productIds: string[]) => {
+const useSuspenseFavoriteSKUs = (
+  token: string | undefined,
+  productIds: string[],
+) => {
   const productIdsAsString = productIds.join("-");
 
   return useSuspenseQuery({
@@ -22,7 +25,7 @@ const useSuspenseFavoriteSKUs = (token: string, productIds: string[]) => {
       return api
         .post("rest/my-favourite/favourite-skus", {
           headers: {
-            authorization: `Bearer ${token}`,
+            authorization: token ? `Bearer ${token}` : undefined,
           },
           json: {
             products: productIds,
