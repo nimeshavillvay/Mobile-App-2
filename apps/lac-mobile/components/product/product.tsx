@@ -4,7 +4,7 @@ import {
   DEFAULT_PLANT,
   UI_DATE_FORMAT,
 } from "@/lib/constants";
-import { formatNumberToPrice } from "@/lib/utils";
+import { formatNumberToPrice, isNumber, isString } from "@/lib/utils";
 import { Picker } from "@react-native-picker/picker";
 import useSuspenseCheckAvailability from "@repo/shared-logic/apis/hooks/product/use-suspense-check-availability.hook";
 import { useSuspenseGroupFilters } from "@repo/shared-logic/apis/hooks/product/use-suspense-group-filters.hook";
@@ -22,15 +22,6 @@ import {
   Pressable,
 } from "react-native";
 import { Button, Input, ScrollView, Text, View, XStack, YStack } from "tamagui";
-import { z } from "zod";
-
-const isNumber = (data: unknown): data is number => {
-  return z.number().safeParse(data).success;
-};
-
-const isString = (data: unknown): data is string => {
-  return z.string().safeParse(data).success;
-};
 
 export const ProductDetailsSkeleton = () => {
   const screenWidth = Dimensions.get("window").width;
