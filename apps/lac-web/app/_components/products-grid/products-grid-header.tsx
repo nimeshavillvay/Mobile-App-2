@@ -1,5 +1,12 @@
 "use client";
 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@repo/web-ui/components/ui/select";
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import { useFilterParams } from "./use-filter-params.hook";
 
@@ -17,9 +24,20 @@ export const ProductsGridHeader = ({
       <div className="font-title text-lg font-medium tracking-normal md:text-3xl md:tracking-[-0.01406rem]">
         {totalCount} {totalCount === 1 ? "Result" : "Results"}
       </div>
-
-      <div className="text-sm font-normal md:text-base">
-        Page {pageNo} of {totalPages}
+      <div className="flex items-center gap-4">
+        <Select>
+          <SelectTrigger>
+            <SelectValue placeholder="Theme" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="light">Light</SelectItem>
+            <SelectItem value="dark">Dark</SelectItem>
+            <SelectItem value="system">System</SelectItem>
+          </SelectContent>
+        </Select>
+        <div className="text-nowrap text-sm font-normal md:text-base">
+          Page {pageNo} of {totalPages}
+        </div>
       </div>
     </div>
   );
