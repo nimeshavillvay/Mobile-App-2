@@ -142,14 +142,6 @@ const RootLayout = () => {
               <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
 
               <Stack.Screen
-                name="search"
-                options={{
-                  presentation: "fullScreenModal",
-                  headerShown: false,
-                }}
-              />
-
-              <Stack.Screen
                 name="barcode-scanner"
                 options={{
                   headerShown: false,

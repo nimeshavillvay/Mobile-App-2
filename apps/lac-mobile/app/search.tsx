@@ -20,7 +20,7 @@ import {
   type productDataSchema,
 } from "@repo/shared-logic/zod-schema/multisearch";
 import { FlashList } from "@shopify/flash-list";
-import { router } from "expo-router";
+import { router, Stack } from "expo-router";
 import { Suspense, useDeferredValue } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -57,33 +57,41 @@ const Search = () => {
   });
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
-      <ScreenHeader title="Search" type="center-aligned" />
-      <Form style={{ paddingHorizontal: 12 }}>
-        <Controller
-          control={form.control}
-          name="searchInput"
-          defaultValue=""
-          render={({ field: { onBlur, onChange, value } }) => (
-            <SearchBox
-              testID="search-input"
-              onBlur={onBlur}
-              onChangeText={onChange}
-              value={value}
-              placeholder="What are you looking for?"
-              onSubmit={handleSubmit}
-              onClear={clearSearchTerm}
-              cancelIcon={searchQuery !== ""}
-            />
-          )}
-        />
-      </Form>
-      <SearchModalLayout>
-        <Suspense fallback={<SearchResultsSkeleton />}>
-          <SearchSuggestionsList query={deferredSearchQuery} />
-        </Suspense>
-      </SearchModalLayout>
-    </SafeAreaView>
+    <>
+      <Stack.Screen
+        options={{
+          headerShown: false,
+        }}
+      />
+
+      <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
+        <ScreenHeader title="Search" type="center-aligned" />
+        <Form style={{ paddingHorizontal: 12 }}>
+          <Controller
+            control={form.control}
+            name="searchInput"
+            defaultValue=""
+            render={({ field: { onBlur, onChange, value } }) => (
+              <SearchBox
+                testID="search-input"
+                onBlur={onBlur}
+                onChangeText={onChange}
+                value={value}
+                placeholder="What are you looking for?"
+                onSubmit={handleSubmit}
+                onClear={clearSearchTerm}
+                cancelIcon={searchQuery !== ""}
+              />
+            )}
+          />
+        </Form>
+        <SearchModalLayout>
+          <Suspense fallback={<SearchResultsSkeleton />}>
+            <SearchSuggestionsList query={deferredSearchQuery} />
+          </Suspense>
+        </SearchModalLayout>
+      </SafeAreaView>
+    </>
   );
 };
 
@@ -199,6 +207,7 @@ const ProductSearch = ({
         imageUrl: product.itemImage,
         title: product.productTitle,
         itemNo: product.materialNumber,
+        link: `product/${product.id}/${product.slug}`,
       }))}
     />
   );
