@@ -33,7 +33,7 @@ const LaminatesList = () => {
       </Suspense>
 
       <ProductsGridDesktopContainer>
-        <div className="w-full pr-4 md:w-1/5 lg:w-1/6">
+        <div className="w-full min-w-[14.75rem] pr-4 md:w-1/5 lg:w-1/6">
           <Suspense fallback={<ProductsGridFiltersSkeleton />}>
             <ProductsListFilters token={tokenCookie.value} />
           </Suspense>
