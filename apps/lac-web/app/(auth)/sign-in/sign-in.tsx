@@ -224,7 +224,7 @@ const SignIn = () => {
                 buttonVariants({
                   variant: "link",
                 }),
-                "mx-auto inline-block h-fit p-0 px-4 py-2 text-center text-sm font-normal btn-register",
+                "btn-register mx-auto inline-block h-fit p-0 px-4 py-2 text-center text-sm font-normal",
               )}
             >
               Sign up
