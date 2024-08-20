@@ -8,6 +8,7 @@ import {
   ProductsGridPaginationSkeleton,
 } from "@/_components/products-grid";
 import { getBreadcrumbs } from "@/_lib/apis/server";
+import { cn } from "@/_lib/utils";
 import { ChevronLeft } from "@repo/web-ui/components/icons/chevron-left";
 import {
   Breadcrumb,
@@ -71,7 +72,9 @@ const CategoryPage = async ({ params: { id, slug } }: CategoryPageProps) => {
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink asChild>
-              <Link href="/">Home</Link>
+              <Link href="/" className="bread-crumb">
+                Home
+              </Link>
             </BreadcrumbLink>
           </BreadcrumbItem>
 
@@ -83,6 +86,10 @@ const CategoryPage = async ({ params: { id, slug } }: CategoryPageProps) => {
                 {index < breadcrumbs.length - 1 ? (
                   <BreadcrumbLink asChild>
                     <Link
+                      className={cn(
+                        index === 0 ? "root-category" : "btn-nav",
+                        "bread-crumb",
+                      )}
                       href={`/category/${breadcrumb.id}/${breadcrumb.slug}`}
                     >
                       {breadcrumb.categoryName}

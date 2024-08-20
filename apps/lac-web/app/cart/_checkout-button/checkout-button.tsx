@@ -49,7 +49,7 @@ const CheckoutButton = ({ token }: CheckoutButtonProps) => {
         type="submit"
         variant="secondary"
         size="lg"
-        className="h-fit w-full gap-2 rounded-lg px-5 py-4 text-lg font-normal shadow-md"
+        className="btn-checkout h-fit w-full gap-2 rounded-lg px-5 py-4 text-lg font-normal shadow-md"
         disabled={isButtonDisabled}
       >
         <Shield className="size-5 stroke-white" />

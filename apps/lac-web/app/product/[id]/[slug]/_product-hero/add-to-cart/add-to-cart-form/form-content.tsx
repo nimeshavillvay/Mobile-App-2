@@ -42,7 +42,7 @@ const FormContent = ({
             type="button"
             variant="subtle"
             size="icon"
-            className="ml-2 h-7 w-10 rounded-sm"
+            className="up-minus up-control ml-2 h-7 w-10 rounded-sm"
             {...decrementButtonProps}
           >
             <Minus className="size-4" />
@@ -55,7 +55,7 @@ const FormContent = ({
             type="button"
             variant="subtle"
             size="icon"
-            className="mr-2 h-7 w-10 rounded-sm"
+            className="up-plus up-control mr-2 h-7 w-10 rounded-sm"
             {...incrementButtonProps}
           >
             <Plus className="size-4" />

@@ -164,14 +164,14 @@ const ConfirmationDialog = ({ token }: ConfirmationDialogProps) => {
         <DialogFooter className="flex flex-row items-center gap-2">
           <Button
             variant="outline"
-            className="flex-1 border border-wurth-gray-400 font-bold shadow-md"
+            className="btn-continue-shopping flex-1 border border-wurth-gray-400 font-bold shadow-md"
             onClick={closeDialog}
           >
             Continue shopping
           </Button>
 
           <Button
-            className="flex-1 font-bold shadow-md"
+            className="btn-view-cart flex-1 font-bold shadow-md"
             onClick={closeDialog}
             asChild
           >

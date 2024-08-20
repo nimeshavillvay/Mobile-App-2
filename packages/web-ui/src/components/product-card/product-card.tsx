@@ -89,7 +89,10 @@ const ProductCardImage = ({
   const orientation = useOrientation();
 
   return (
-    <Link href={href} className="flex items-center justify-center">
+    <Link
+      href={href}
+      className="btn-view-product flex items-center justify-center"
+    >
       <Image
         src={src}
         alt={alt}
@@ -188,7 +191,11 @@ const ProductCardDetails = ({
       <Tooltip>
         <TooltipTrigger asChild>
           <h3 className="line-clamp-2 font-medium text-black">
-            <Link href={href} dangerouslySetInnerHTML={{ __html: title }} />
+            <Link
+              href={href}
+              dangerouslySetInnerHTML={{ __html: title }}
+              className="btn-view-product"
+            />
           </h3>
         </TooltipTrigger>
 

@@ -187,7 +187,7 @@ const CartList = ({ token, plants }: CartListProps) => {
               <AlertDialogTrigger asChild>
                 <Button
                   variant="subtle"
-                  className="flex-1 bg-red-50 font-bold text-wurth-red-650 hover:bg-red-100 md:flex-none"
+                  className="btn-clear-cart flex-1 bg-red-50 font-bold text-wurth-red-650 hover:bg-red-100 md:flex-none"
                   disabled={deleteCartItemMutation.isPending}
                 >
                   <Trash className="size-4 fill-wurth-red-650" />
