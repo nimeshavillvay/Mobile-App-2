@@ -35,6 +35,10 @@ export const MAX_QUANTITY = 100000 as const;
 
 export const UI_DATE_FORMAT = "ddd, MMM. DD YYYY" as const;
 
+export const INIT_PAGE_NUMBER = "1";
+
+export const INIT_PER_PAGE = "20";
+
 export const QUERY_KEYS = {
   PAGE: "page",
   PER_PAGE: "perPage",

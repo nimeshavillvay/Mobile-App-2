@@ -2,12 +2,12 @@ import {
   ProductsGrid,
   ProductsGridDesktopContainer,
   ProductsGridFiltersSkeleton,
-  ProductsGridHeaderSkeleton,
   ProductsGridPaginationSkeleton,
 } from "@/_components/products-grid";
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import { cookies } from "next/headers";
 import { Suspense } from "react";
+import { LaminatesGridHeaderSkeleton } from "./laminates-grid-header";
 import LaminatesListDesktopFiltersHeader from "./laminates-list-desktop-filters-header";
 import ProductsListFilters from "./laminates-list-filters";
 import ProductsListGrid from "./laminates-list-grid";
@@ -24,7 +24,7 @@ const LaminatesList = () => {
 
   return (
     <ProductsGrid>
-      <Suspense fallback={<ProductsGridHeaderSkeleton />}>
+      <Suspense fallback={<LaminatesGridHeaderSkeleton />}>
         <ProductsListHeader token={tokenCookie.value} />
       </Suspense>
 
