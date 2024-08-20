@@ -224,7 +224,7 @@ const SignIn = () => {
                 buttonVariants({
                   variant: "link",
                 }),
-                "mx-auto inline-block h-fit p-0 px-4 py-2 text-center text-sm font-normal",
+                "btn-register mx-auto inline-block h-fit p-0 px-4 py-2 text-center text-sm font-normal",
               )}
             >
               Sign up
@@ -292,7 +292,7 @@ const SignIn = () => {
           <div className="flex flex-col items-center gap-2">
             <Button
               type="submit"
-              className="w-full p-2.5 font-bold"
+              className="btn-submit-login w-full p-2.5 font-bold"
               disabled={signInMutation.isPending}
             >
               Sign in
@@ -304,7 +304,7 @@ const SignIn = () => {
                 buttonVariants({
                   variant: "link",
                 }),
-                "mx-auto inline-block h-fit p-0 text-center text-sm font-normal",
+                "btn-forgot-password mx-auto inline-block h-fit p-0 text-center text-sm font-normal",
               )}
             >
               Forgot password?

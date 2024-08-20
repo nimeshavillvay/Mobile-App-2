@@ -100,7 +100,7 @@ const Header = async () => {
                 variant: "ghost",
                 size: "icon",
               }),
-              "size-6 md:hidden",
+              "btn-view-cart size-6 md:hidden",
             )}
           >
             <Suspense fallback={<Skeleton className="h-6 w-6" />}>
@@ -119,7 +119,7 @@ const Header = async () => {
             href="/cart"
             className={cn(
               buttonVariants({ variant: "ghost" }),
-              "hidden shrink-0 md:flex md:h-min md:flex-row md:items-center md:gap-2 md:p-0",
+              "btn-view-cart hidden shrink-0 md:flex md:h-min md:flex-row md:items-center md:gap-2 md:p-0",
             )}
           >
             <Suspense fallback={<Skeleton className="h-7 w-7" />}>

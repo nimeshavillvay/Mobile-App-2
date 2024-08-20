@@ -61,6 +61,7 @@ const CartSummary = ({ token, plants }: CartSummaryProps) => {
               >
                 <Link
                   href={`/product/${item.itemInfo.productId}/${item.itemInfo.slug}`}
+                  className="btn-view-product"
                 >
                   <Image
                     src={item.itemInfo.image}
@@ -89,6 +90,7 @@ const CartSummary = ({ token, plants }: CartSummaryProps) => {
                   <div className="flex flex-row gap-3">
                     <Link
                       href={`/product/${itemInfo.productId}/${itemInfo.slug}`}
+                      className="btn-view-product"
                     >
                       <Image
                         src={itemInfo.image}
@@ -102,10 +104,10 @@ const CartSummary = ({ token, plants }: CartSummaryProps) => {
                       <div className="flex flex-row items-center text-sm text-wurth-gray-800">
                         <Link
                           href={`/product/${itemInfo.productId}/${itemInfo.slug}`}
-                          className="w-2/4 md:w-4/6"
+                          className="btn-view-product w-2/4 md:w-4/6"
                         >
                           <h4
-                            className="line-clamp-3 text-sm font-medium text-wurth-gray-800"
+                            className="btn-view-product line-clamp-3 text-sm font-medium text-wurth-gray-800"
                             dangerouslySetInnerHTML={{
                               __html: itemInfo.productName,
                             }}
