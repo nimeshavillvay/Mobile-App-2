@@ -45,7 +45,7 @@ const LaminateGroup = ({
           dangerouslySetInnerHTML={{ __html: product.groupName }}
         />
         <p className="mb-2">
-          {formatNumberToPrice(groupPrice)}/ {groupUom}
+          ${formatNumberToPrice(groupPrice)}/ {groupUom}
         </p>
       </div>
 
