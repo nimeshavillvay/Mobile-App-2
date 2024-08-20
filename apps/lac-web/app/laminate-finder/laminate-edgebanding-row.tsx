@@ -49,7 +49,7 @@ const LaminateEdgeBandingRow = ({
   });
 
   const loginCheckResponse = useSuspenseCheckLogin(token);
-  const isLoggedIn = loginCheckResponse.data.status_code === "OK";
+  const isLoggedIn = loginCheckResponse.data?.status_code === "OK";
 
   const priceBreakdown =
     priceCheckQueryBreakdown.data?.productPrices[0]?.priceBreakDowns;
