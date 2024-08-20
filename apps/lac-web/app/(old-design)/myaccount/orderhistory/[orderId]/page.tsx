@@ -53,12 +53,20 @@ const DetailedOrderPage = async ({
 }: DetailedOrderPageProps) => {
   const orderDetail = await getOrder(orderId);
 
+  const itemList = orderDetail.items
+    .map((item) => item.productId)
+    .filter((productId) => productId !== 0);
+
+  if (itemList.length === 0) {
+    return "No valid products found";
+  }
+
   const [paymentMethods, shippingMethods, plants, itemsInfo] =
     await Promise.all([
       getPaymentMethods(),
       getShippingMethods(),
       getPlants(),
-      getItemInfo(orderDetail.items.map((item) => item.productId)),
+      getItemInfo(itemList),
     ]);
 
   if (orderDetail?.items?.length) {
