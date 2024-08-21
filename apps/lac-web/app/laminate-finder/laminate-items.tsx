@@ -61,9 +61,9 @@ const LaminateItems = ({
 
   const handleAddAllItemsToCart = async () => {
     const addToCartRequest = priceCheckRequest
-      .map((laminate, index) => ({
+      .map((laminate) => ({
         productId: Number(laminate.productId),
-        quantity: Number(quantities[index]),
+        quantity: Number(laminate.qty),
         sku: laminate.sku,
       }))
       .filter((item) => item.quantity !== undefined);

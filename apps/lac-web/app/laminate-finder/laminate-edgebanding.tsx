@@ -66,12 +66,12 @@ const LaminateEdgeBanding = ({
 
   const handleAddAllItemsToCart = async () => {
     const addToCartRequest =
-      edgeBand !== undefined
-        ? edgeBand
-            .map((item, index) => ({
+      priceCheckRequest !== undefined
+        ? priceCheckRequest
+            .map((item) => ({
               productId: Number(item.productId),
-              quantity: Number(deferredQuantities[index]),
-              sku: item.productSku,
+              quantity: Number(item.qty),
+              sku: item.sku,
             }))
             .filter((item) => item.quantity !== 0)
         : [];
