@@ -55,7 +55,7 @@ const ColorOption = ({
                 "h-16 w-full rounded-xl ring-1 ring-offset-2 transition-all duration-200 ease-in-out",
                 {
                   "ring-2 ring-blue-600": isSelected,
-                  "ring-gray-950/[.12] hover:ring-gray-950/[.5]": !isSelected,
+                  "ring-gray-950/[0.12] hover:ring-gray-950/[0.5]": !isSelected,
                 },
               )}
               style={{ backgroundColor: color.value }}
