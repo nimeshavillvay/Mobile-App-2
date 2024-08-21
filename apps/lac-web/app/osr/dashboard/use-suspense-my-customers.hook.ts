@@ -118,7 +118,7 @@ const useSuspenseMyCustomers = (
         (customer: OldCustomer) => ({
           countryName: customer["country-name"],
           county: customer.county,
-          locality: customer.county,
+          locality: customer.locality,
           organization: customer.organization,
           permission: customer.permission,
           phoneNumber: customer["phone-number"],
