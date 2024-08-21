@@ -5,6 +5,7 @@ import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
 import useSuspenseUsersList from "@/_hooks/user/use-suspense-users-list.hook";
 import { cva } from "@/_lib/cva.config";
 import type { Country, ShippingMethod } from "@/_lib/types";
+import { cn } from "@/_lib/utils";
 import { ChevronRight } from "@repo/web-ui/components/icons/chevron-right";
 import { Button } from "@repo/web-ui/components/ui/button";
 import {
@@ -190,13 +191,18 @@ const UserMobileProfileNavigation = ({
 
           <li>
             <SheetClose asChild className={sectionLinkStyles()}>
-              <Link href="/myaccount/shopping-lists">My Shopping Lists</Link>
+              <Link
+                href="/myaccount/shopping-lists"
+                className="btn-view-favorites"
+              >
+                My Shopping Lists
+              </Link>
             </SheetClose>
           </li>
 
           <li>
             <SheetClose
-              className={sectionLinkStyles()}
+              className={cn("btn-sign-out", sectionLinkStyles())}
               onClick={() => {
                 if (isOsr) {
                   osrLogoutMutation.mutate();

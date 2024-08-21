@@ -95,7 +95,7 @@ const ProductDesktopCarousel = ({
             <Fragment key={mediaItem.src}>
               {mediaItem.type === "IMAGE" && (
                 <Dialog>
-                  <DialogTrigger className="min-w-0 shrink-0 grow-0 basis-full">
+                  <DialogTrigger className="btn-magnify-image min-w-0 shrink-0 grow-0 basis-full">
                     <Image
                       src={mediaItem.src}
                       alt={mediaItem.alt}

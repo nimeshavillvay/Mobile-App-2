@@ -719,7 +719,10 @@ const CartItem = ({
     <div className="flex flex-col gap-6 md:flex-row">
       <div className="flex flex-row items-start gap-3 md:flex-1">
         <div className="flex w-[4.5rem] shrink-0 flex-col gap-2 md:w-[7.5rem]">
-          <Link href={`/product/${product.id}/${product.slug}`}>
+          <Link
+            href={`/product/${product.id}/${product.slug}`}
+            className="btn-view-product"
+          >
             {product.image !== "" ? (
               <Image
                 src={product.image}
@@ -748,7 +751,7 @@ const CartItem = ({
 
             <Button
               variant="subtle"
-              className="w-full bg-red-50 hover:bg-red-100"
+              className="btn-delete-item w-full bg-red-50 hover:bg-red-100"
               onClick={() => setDeleteConfirmation(true)}
               disabled={deleteCartItemMutation.isPending}
             >
@@ -813,7 +816,7 @@ const CartItem = ({
                   type="button"
                   variant="subtle"
                   size="icon"
-                  className="h-7 w-7 rounded-sm"
+                  className="up-minus up-control h-7 w-7 rounded-sm"
                   onClick={reduceQuantity}
                   disabled={!quantity || Number(quantity) === product.minAmount}
                 >
@@ -860,7 +863,7 @@ const CartItem = ({
                   type="button"
                   variant="subtle"
                   size="icon"
-                  className="h-7 w-7 rounded-sm"
+                  className="up-plus up-control h-7 w-7 rounded-sm"
                   onClick={increaseQuantity}
                   disabled={
                     quantity?.toString().length > 5 ||
@@ -1012,7 +1015,7 @@ const CartItem = ({
         <div className="flex flex-col gap-2">
           <Button
             variant="ghost"
-            className="h-fit w-full justify-end px-0 py-0 text-wurth-red-650"
+            className="btn-delete-item h-fit w-full justify-end px-0 py-0 text-wurth-red-650"
             onClick={() => setDeleteConfirmation(true)}
             disabled={deleteCartItemMutation.isPending}
           >

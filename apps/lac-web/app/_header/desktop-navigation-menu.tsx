@@ -45,7 +45,7 @@ const DesktopNavigationMenu = ({ categories }: DesktopNavigationMenuProps) => {
                   )}
                 >
                   {categories.map((category) => (
-                    <li key={category.id}>
+                    <li key={category.id} className="root-category">
                       <NavigationLink
                         id={category.id}
                         slug={category.slug}
@@ -61,7 +61,7 @@ const DesktopNavigationMenu = ({ categories }: DesktopNavigationMenuProps) => {
                 {!!selectedCategory &&
                   !!selectedCategory.subCategory?.length && (
                     <ul className="p-4">
-                      <li>
+                      <li className="btn-nav">
                         <NavigationLink
                           id={selectedCategory.id}
                           slug={selectedCategory.slug}
@@ -71,7 +71,7 @@ const DesktopNavigationMenu = ({ categories }: DesktopNavigationMenuProps) => {
                       </li>
 
                       {selectedCategory.subCategory.map((subCategory) => (
-                        <li key={subCategory.id}>
+                        <li key={subCategory.id} className="btn-nav">
                           <NavigationLink
                             id={subCategory.id}
                             slug={subCategory.slug}
@@ -130,7 +130,7 @@ const NavigationLink = ({
       )}
       onMouseOver={onMouseOver}
     >
-      <Link href={`/category/${id}/${slug}`}>
+      <Link href={`/category/${id}/${slug}`} className="btn-display-grid">
         <span>{name}</span>
 
         {showArrow && <ChevronRight className="size-4" />}

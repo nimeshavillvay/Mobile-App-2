@@ -123,7 +123,7 @@ const VerificationDialog = ({ token }: VerificationDialogProps) => {
                     alt={`An image of ${itemInfo.productName}`}
                     width={180}
                     height={180}
-                    className="shrink-0 rounded object-contain"
+                    className="btn-view-product shrink-0 rounded object-contain"
                   />
                 </Link>
 
@@ -131,6 +131,7 @@ const VerificationDialog = ({ token }: VerificationDialogProps) => {
                   <div className="space-y-1">
                     <Link
                       href={`/product/${itemInfo.productId}/${itemInfo.slug}`}
+                      className="btn-view-product"
                       onClick={() => setOpen("closed")}
                     >
                       <h3
@@ -396,7 +397,7 @@ const AddToCart = ({
             type="button"
             variant="subtle"
             size="icon"
-            className="size-10 rounded-sm"
+            className="up-minus up-control size-10 rounded-sm"
             onClick={reduceQuantity}
             disabled={
               !quantity ||
@@ -435,7 +436,7 @@ const AddToCart = ({
             type="button"
             variant="subtle"
             size="icon"
-            className="size-10 rounded-sm"
+            className="up-plus up-control size-10 rounded-sm"
             onClick={increaseQuantity}
             disabled={
               quantity?.toString().length > 5 ||

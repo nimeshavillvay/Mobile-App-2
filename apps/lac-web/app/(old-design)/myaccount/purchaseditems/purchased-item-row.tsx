@@ -132,9 +132,10 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
         <TableCell className="min-w-[76px]">
           <Link
             href={generateItemUrl(item)}
-            className={
-              isItemError(item) ? "pointer-events-none" : "pointer-events-auto"
-            }
+            className={cn(
+              isItemError(item) ? "pointer-events-none" : "pointer-events-auto",
+              "btn-view-product",
+            )}
           >
             {item.image ? (
               <Image
@@ -158,7 +159,7 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
           <Link
             href={generateItemUrl(item)}
             className={cn(
-              "text-sm text-brand-gray-500",
+              "btn-view-product text-sm text-brand-gray-500",
               isItemError(item) ? "pointer-events-none" : "pointer-events-auto",
             )}
           >

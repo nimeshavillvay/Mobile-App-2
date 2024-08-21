@@ -410,7 +410,7 @@ const ShippingMethod = ({ token }: ShippingMethodProps) => {
               value={selectedDeliveryMethod}
               onValueChange={handleSelectValueChange}
             >
-              <SelectTrigger className="w-full">
+              <SelectTrigger className="avail-change-button w-full">
                 <SelectValue placeholder="Select a delivery method" />
               </SelectTrigger>
 
@@ -428,7 +428,7 @@ const ShippingMethod = ({ token }: ShippingMethodProps) => {
         <li className="flex flex-row items-center gap-3">
           <Checkbox
             id={willCallId}
-            className="rounded-full"
+            className="avail-change-button rounded-full"
             checked={selectedSection === WILL_CALL && isWillCallSelected}
             onCheckedChange={(checked) => {
               if (checked === true) {

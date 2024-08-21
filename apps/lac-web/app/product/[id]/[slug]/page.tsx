@@ -78,7 +78,9 @@ const ProductPage = async ({ params: { id, slug } }: ProductPageProps) => {
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink asChild>
-              <Link href="/">Home</Link>
+              <Link href="/" className="bread-crumb">
+                Home
+              </Link>
             </BreadcrumbLink>
           </BreadcrumbItem>
 
@@ -88,7 +90,10 @@ const ProductPage = async ({ params: { id, slug } }: ProductPageProps) => {
 
               <BreadcrumbItem>
                 <BreadcrumbLink asChild>
-                  <Link href={`/category/${breadcrumb.id}/${breadcrumb.slug}`}>
+                  <Link
+                    href={`/category/${breadcrumb.id}/${breadcrumb.slug}`}
+                    className="bread-crumb"
+                  >
                     {breadcrumb.categoryName}
                   </Link>
                 </BreadcrumbLink>

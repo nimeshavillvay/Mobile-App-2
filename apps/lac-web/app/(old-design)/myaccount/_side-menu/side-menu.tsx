@@ -88,7 +88,10 @@ const SideMenu = ({ token }: { readonly token: string }) => {
 
       <Link
         href="/myaccount/shopping-lists"
-        className={cn(menuItem({ status: "inactive" }), "w-full text-left")}
+        className={cn(
+          menuItem({ status: "inactive" }),
+          "btn-view-favorites w-full text-left",
+        )}
       >
         My Shopping Lists
       </Link>
@@ -107,7 +110,10 @@ const SideMenu = ({ token }: { readonly token: string }) => {
             logoutMutation.mutate();
           }
         }}
-        className={cn(menuItem({ status: "inactive" }), "w-full text-left")}
+        className={cn(
+          menuItem({ status: "inactive" }),
+          "btn-sign-out w-full text-left",
+        )}
       >
         Logout
       </button>
