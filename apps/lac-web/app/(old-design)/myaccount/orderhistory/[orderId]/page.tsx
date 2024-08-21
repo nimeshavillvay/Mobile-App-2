@@ -58,7 +58,7 @@ const DetailedOrderPage = async ({
     .filter((productId) => productId !== 0);
 
   if (itemList.length === 0) {
-    return "No valid products found";
+    return <h3>No valid products found</h3>;
   }
 
   const [paymentMethods, shippingMethods, plants, itemsInfo] =
