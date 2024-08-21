@@ -1,3 +1,4 @@
+import { QuantityInput } from "@/components/quantity";
 import {
   API_BASE_URL,
   API_KEY,
@@ -9,19 +10,20 @@ import { Picker } from "@react-native-picker/picker";
 import useSuspenseCheckAvailability from "@repo/shared-logic/apis/hooks/product/use-suspense-check-availability.hook";
 import { useSuspenseGroupFilters } from "@repo/shared-logic/apis/hooks/product/use-suspense-group-filters.hook";
 import useSuspensePriceCheck from "@repo/shared-logic/apis/hooks/product/use-suspense-price-check.hook";
-import { Bookmark, Minus, Plus, Upload, X, Zap } from "@tamagui/lucide-icons";
+import { Bookmark, Upload, X, Zap } from "@tamagui/lucide-icons";
 import dayjs from "dayjs";
 import { Link, router, useRouter } from "expo-router";
 import { MotiView } from "moti";
 import { Skeleton } from "moti/skeleton";
-import { useState } from "react";
+import React, { useState } from "react";
+import { type UseFormReturn } from "react-hook-form";
 import {
   Dimensions,
   KeyboardAvoidingView,
   Platform,
   Pressable,
 } from "react-native";
-import { Button, Input, ScrollView, Text, View, XStack, YStack } from "tamagui";
+import { Button, ScrollView, Text, View, XStack, YStack } from "tamagui";
 
 export const ProductDetailsSkeleton = () => {
   const screenWidth = Dimensions.get("window").width;
@@ -42,6 +44,16 @@ export const ProductDetailsSkeleton = () => {
         <Skeleton width="30%" height={30} colorMode="light" />
         <Skeleton width="100%" height={150} colorMode="light" />
       </MotiView>
+    </MotiView>
+  );
+};
+
+export const ProductPriceSkeleton = () => {
+  const screenWidth = Dimensions.get("window").width;
+  return (
+    <MotiView style={{ gap: 9 }}>
+      <Skeleton width={screenWidth * 0.4} height={30} colorMode="light" />
+      <Skeleton width={screenWidth * 0.7} height={20} colorMode="light" />
     </MotiView>
   );
 };
@@ -540,7 +552,13 @@ export const ProductVariations = ({
   );
 };
 
-export const EnterQuantity = () => {
+export const EnterQuantity = ({
+  form,
+}: {
+  readonly form: UseFormReturn<{
+    quantity: string;
+  }>;
+}) => {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -554,42 +572,7 @@ export const EnterQuantity = () => {
         gap={5}
         paddingVertical={20}
       >
-        <XStack flex={1}>
-          <Button
-            icon={Minus}
-            padding={8}
-            borderTopRightRadius={0}
-            borderBottomRightRadius={0}
-          />
-          <Input
-            flex={1}
-            borderRadius={0}
-            keyboardType="numeric"
-            backgroundColor="$gray2"
-            borderWidth={0}
-            paddingHorizontal={3}
-            textAlign="center"
-          />
-          <View backgroundColor="$gray2" paddingVertical={10}>
-            <YStack
-              flex={1}
-              justifyContent="center"
-              borderLeftWidth={1}
-              paddingHorizontal={3}
-              borderLeftColor="$gray8"
-            >
-              <Text fontSize="$1" color="$gray9">
-                EACH
-              </Text>
-            </YStack>
-          </View>
-          <Button
-            icon={Plus}
-            padding={8}
-            borderTopLeftRadius={0}
-            borderBottomLeftRadius={0}
-          />
-        </XStack>
+        <QuantityInput flex={1} form={form} />
         <Button flex={1} backgroundColor="$red11" color="white" fontSize="$6">
           Add to Cart
         </Button>
