@@ -86,11 +86,8 @@ const LaminateEdgeBandingRow = ({
           priceBreakdown?.length > 0 &&
           priceBreakdown.map((price, index) => (
             <div className="text-sm text-gray-500" key={index}>
-              ${formatNumberToPrice(price.price)}/{uom} for{" "}
-              {index === 0
-                ? "1"
-                : (priceBreakdown[index - 1]?.quantity ?? 0) + 1}
-              -{price.quantity} items
+              ${formatNumberToPrice(price.price)}/{uom} for {price.quantity}{" "}
+              items
             </div>
           ))}
       </TableCell>

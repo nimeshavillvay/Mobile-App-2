@@ -36,12 +36,9 @@ const ColorOption = ({
         <TooltipTrigger asChild>
           <label
             htmlFor={`color-${color.id}`}
-            className={cn(
-              "size-15 flex cursor-pointer items-center justify-center rounded transition-all duration-200 ease-in-out",
-              {
-                "cursor-not-allowed opacity-50": !color.active,
-              },
-            )}
+            className={cn("flex cursor-pointer items-center justify-center", {
+              "cursor-not-allowed opacity-50": !color.active,
+            })}
           >
             <input
               type="radio"
@@ -55,10 +52,10 @@ const ColorOption = ({
             />
             <span
               className={cn(
-                "size-14 rounded border-2 transition-all duration-200 ease-in-out",
+                "h-16 w-full rounded-xl ring-1 ring-offset-2 transition-all duration-200 ease-in-out",
                 {
-                  "border-blue-500": isSelected,
-                  "border-gray-100 hover:border-blue-300": !isSelected,
+                  "ring-2 ring-blue-600": isSelected,
+                  "ring-gray-950/[0.12] hover:ring-gray-950/[0.5]": !isSelected,
                 },
               )}
               style={{ backgroundColor: color.value }}
@@ -106,9 +103,11 @@ const ColorPicker = ({ token }: { readonly token: string }) => {
   }
 
   return (
-    <div>
-      <h3 className="mb-4 text-lg font-medium text-gray-800">Select Color</h3>
-      <fieldset>
+    <>
+      <h3 className="text-md mb-4 text-center font-medium text-gray-800">
+        Select Color
+      </h3>
+      <fieldset className="mx-auto max-w-screen-md">
         <legend className="sr-only">Color options</legend>
         <ul className="m-0 grid list-none grid-cols-4 gap-4 p-0 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10">
           {colorPickerFilter.values.map((color) => (
@@ -121,7 +120,7 @@ const ColorPicker = ({ token }: { readonly token: string }) => {
           ))}
         </ul>
       </fieldset>
-    </div>
+    </>
   );
 };
 
