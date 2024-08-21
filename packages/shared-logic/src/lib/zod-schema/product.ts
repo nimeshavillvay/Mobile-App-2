@@ -44,7 +44,7 @@ export const checkAvailabilitySchema = z.object({
       index: z.number().optional(),
       plant_1: z.string().optional(),
       quantity_1: z.number().optional(),
-      shippingMethods_1: z.array(z.string()).optional(),
+      shippingMethod: z.string(),
       type: z.string().optional(),
     }),
   ),

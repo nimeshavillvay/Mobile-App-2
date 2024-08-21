@@ -60,6 +60,17 @@ config.resolver.resolveRequest = (context, moduleName, platform) => {
         )}.ts`,
       ),
     };
+  } else if (moduleName.startsWith("@repo/shared-logic/constants")) {
+    return {
+      type: "sourceFile",
+      filePath: path.resolve(
+        workspaceRoot,
+        moduleName.replace(
+          "@repo/shared-logic/constants",
+          "packages/shared-logic/src/lib/constants.ts",
+        ),
+      ),
+    };
   }
 
   // Ensure you call the default resolver.

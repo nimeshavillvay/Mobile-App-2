@@ -16,3 +16,6 @@ export const SESSION_TOKEN_COOKIE = "xid_00924";
 export const DEFAULT_PLANT = "L010";
 
 export const UI_DATE_FORMAT = "ddd, MMM. DD YYYY";
+
+export const DEFAULT_SHIPPING_METHOD = "G";
+export const WILLCALL_SHIPPING_METHOD = "W";

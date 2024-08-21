@@ -11,6 +11,9 @@
     },
     "./zod-schema/*": {
       "import": "./src/lib/zod-schema/*.ts"
+    },
+    "./constants": {
+      "import": "./src/lib/constants.ts"
     }
   },
   "scripts": {
