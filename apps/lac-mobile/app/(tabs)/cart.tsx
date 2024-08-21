@@ -1,29 +1,18 @@
+import CartItem from "@/components/cart/cart-item/cart-item";
+import useSessionTokenStorage from "@/hooks/auth/use-session-token-storage.hook";
+import {
+  API_BASE_URL,
+  API_KEY,
+  DEFAULT_PLANT,
+  DEFAULT_SHIPPING_METHOD,
+  WILLCALL_SHIPPING_METHOD,
+} from "@/lib/constants";
+import { ScreenLayout } from "@repo/native-ui/components/base/screen-layout";
 import {
   AllDeliveryMethodsChanger,
   AllDeliveryMethodsChangerDialog,
   AllDeliveryMethodsChangerTrigger,
-} from "@/components/cart/all-delivery-methods-changer";
-import CartItem from "@/components/cart/cart-item/cart-item";
-import useSessionTokenStorage from "@/hooks/auth/use-session-token-storage.hook";
-import {
-  ALTERNATIVE_BRANCHES,
-  API_BASE_URL,
-  API_KEY,
-  AVAILABLE_ALL,
-  BACKORDER_DISABLED,
-  BACKORDER_ENABLED,
-  DEFAULT_PLANT,
-  DEFAULT_SHIPPING_METHOD,
-  DELIVERY_METHODS,
-  FALSE_STRING,
-  IN_STOCK,
-  LIMITED_STOCK,
-  NOT_AVAILABLE,
-  NOT_IN_STOCK,
-  TAKE_ON_HAND,
-  WILLCALL_SHIPPING_METHOD,
-} from "@/lib/constants";
-import { ScreenLayout } from "@repo/native-ui/components/base/screen-layout";
+} from "@repo/native-ui/components/cart/all-delivery-methods-changer";
 import { ConfirmationDialog } from "@repo/native-ui/components/confirmation-dialog";
 import { checkAvailability } from "@repo/shared-logic/apis/base/product/check-availability";
 import useSuspenseWillCallPlant from "@repo/shared-logic/apis/hooks/account/use-suspense-will-call-plant.hook";
@@ -32,6 +21,19 @@ import useSuspenseCart from "@repo/shared-logic/apis/hooks/cart/use-suspense-car
 import useSuspenseShippingMethods from "@repo/shared-logic/apis/hooks/cart/use-suspense-shipping-methods.hook";
 import useUpdateCartItemMutation from "@repo/shared-logic/apis/hooks/cart/use-update-cart-item-mutation.hook";
 import useSuspensePriceCheck from "@repo/shared-logic/apis/hooks/product/use-suspense-price-check.hook";
+import {
+  ALTERNATIVE_BRANCHES,
+  AVAILABLE_ALL,
+  BACKORDER_DISABLED,
+  BACKORDER_ENABLED,
+  DELIVERY_METHODS,
+  FALSE_STRING,
+  IN_STOCK,
+  LIMITED_STOCK,
+  NOT_AVAILABLE,
+  NOT_IN_STOCK,
+  TAKE_ON_HAND,
+} from "@repo/shared-logic/constants";
 import { type CartItemConfiguration } from "@repo/shared-logic/zod-schema/cart";
 import { FlashList } from "@shopify/flash-list";
 import { X } from "@tamagui/lucide-icons";
@@ -114,6 +116,7 @@ const CartItemList = () => {
     string | undefined
   >(undefined);
   const [openChangeAll, setOpenChangeAll] = useState(false);
+  const [disableSave, setDisableSave] = useState(false);
 
   const cartQuery = useSuspenseCart({
     baseUrl: API_BASE_URL,
@@ -190,6 +193,8 @@ const CartItemList = () => {
     deliveryMethod: string,
     shippingMethodValue?: string,
   ) => {
+    setDisableSave(true);
+
     // Handle global will call
     if (deliveryMethod === DELIVERY_METHODS.STORE_PICK_UP) {
       const cartItemsAvailability = await Promise.all(
@@ -460,6 +465,7 @@ const CartItemList = () => {
     }
 
     setOpenChangeAll(false);
+    setDisableSave(false);
   };
 
   return (
@@ -502,6 +508,8 @@ const CartItemList = () => {
             selectedShipToMeMethod={selectedShipToMeMethod}
             setSelectedShipToMeMethod={setSelectedShipToMeMethod}
             saveShippingMethod={saveShippingMethod}
+            disableSaveBtn={disableSave}
+            willCallPlant={willCallPlantQuery.data.plantName}
           />
         </AllDeliveryMethodsChanger>
       }

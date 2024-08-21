@@ -1,5 +1,5 @@
-import { DELIVERY_METHODS } from "@/lib/constants";
 import { RadioGroupItemWithLabel } from "@repo/native-ui/components/form/radio-group";
+import { DELIVERY_METHODS } from "@repo/shared-logic/constants";
 import { Check, ChevronDown, Package, X } from "@tamagui/lucide-icons";
 import { type ComponentProps, useState } from "react";
 import { StyleSheet } from "react-native";
@@ -78,6 +78,8 @@ export const AllDeliveryMethodsChangerDialog = ({
   selectedShipToMeMethod,
   setSelectedShipToMeMethod,
   saveShippingMethod,
+  disableSaveBtn = false,
+  willCallPlant,
 }: {
   readonly shippingMethods: { code: string; name: string }[];
   readonly selectedShipToMeMethod: string | undefined;
@@ -86,6 +88,8 @@ export const AllDeliveryMethodsChangerDialog = ({
     deliveryMethod: string,
     shippingMethod?: string,
   ) => Promise<void>;
+  readonly disableSaveBtn?: boolean;
+  readonly willCallPlant: string;
 }) => {
   const [deliveryType, setDeliveryType] = useState<string | undefined>(
     undefined,
@@ -202,7 +206,7 @@ export const AllDeliveryMethodsChangerDialog = ({
             <View>
               <RadioGroupItemWithLabel
                 value={DELIVERY_METHODS.STORE_PICK_UP}
-                label="Store pick up (Brea, CA)"
+                label={`Store pick up ${willCallPlant}`}
               />
             </View>
           </YStack>
@@ -215,8 +219,11 @@ export const AllDeliveryMethodsChangerDialog = ({
                 saveShippingMethod(deliveryType, selectedShipToMeMethod);
               }
             }}
-            style={[styles.saveButton, { opacity: disableSave ? 0.5 : 1 }]}
-            disabled={disableSave}
+            style={[
+              styles.saveButton,
+              { opacity: disableSave || disableSaveBtn ? 0.5 : 1 },
+            ]}
+            disabled={disableSave || disableSaveBtn}
           >
             Save
           </Button>
