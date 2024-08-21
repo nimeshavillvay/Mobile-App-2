@@ -48,7 +48,6 @@ export const LaminatesGridHeader = ({
                 value: value,
               },
             ]);
-            window.scrollTo(0, 0);
           }}
         >
           <SelectTrigger className="h-8 w-[70px] py-0">

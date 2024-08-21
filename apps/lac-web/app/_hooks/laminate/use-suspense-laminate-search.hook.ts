@@ -16,6 +16,10 @@ type useSuspenseSearchArgs = {
    * Filter by search term on the laminates
    */
   searchText?: string;
+  /**
+   * The number of items per page
+   */
+  perPage: number;
 };
 
 type GroupsList = {
@@ -25,7 +29,7 @@ type GroupsList = {
 
 const useSuspenseLaminateSearch = (
   token: string,
-  { groupResults = false, page, searchText }: useSuspenseSearchArgs,
+  { groupResults = false, page, searchText, perPage }: useSuspenseSearchArgs,
   selectedFilters?: {
     [attributeId: string]: string[];
   },
@@ -38,6 +42,7 @@ const useSuspenseLaminateSearch = (
         groupResults,
         page,
         searchText,
+        perPage,
       },
       selectedFilters,
       token,
@@ -46,7 +51,7 @@ const useSuspenseLaminateSearch = (
       const searchParams = new URLSearchParams({
         sort_direction: "asc",
         page: page.toString(),
-        perpage: "20",
+        perpage: perPage.toString(),
         group_result: groupResults ? "true" : "false",
       });
 
