@@ -42,7 +42,7 @@ export const ProductsGridDesktopFiltersHeader = ({
   }
 
   return (
-    <div className="hidden md:flex md:flex-row md:items-center md:gap-2">
+    <div className="hidden flex-wrap md:flex md:flex-row md:items-center md:gap-2">
       {mappedSelectedValues.map((selectedValue) => (
         <AttributePill
           key={selectedValue.id}
@@ -77,6 +77,7 @@ const AttributePill = ({
   readonly values: { name: string; id: string }[];
   readonly clear: (attributeId: string, valueId?: string) => void;
 }) => {
+  console.log("values", values);
   return (
     <div className="flex flex-row items-center gap-2 rounded-full border border-wurth-gray-250 bg-white px-4 py-2.5 shadow-sm">
       <span className="text-sm font-medium text-wurth-gray-800">{name}</span>
