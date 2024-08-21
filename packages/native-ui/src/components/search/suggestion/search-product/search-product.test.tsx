@@ -6,6 +6,7 @@ describe("SearchProduct", () => {
     imageUrl: "https://example.com/image.jpg",
     title: "Test Product",
     itemNo: "12345",
+    link: "/test-link",
   };
 
   it("renders correctly with all props", () => {

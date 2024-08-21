@@ -75,8 +75,8 @@ export const priceCheck = async (
         listPrice: list_price,
         couponCode: coupon,
         priceBreakDowns: price_breakdowns.map(({ qty_1, price_1 }) => ({
-          quantity: price_1,
-          price: qty_1,
+          quantity: qty_1,
+          price: price_1,
         })),
         uomPrice: uom_price,
         uomPriceUnit: uom_price_unit,

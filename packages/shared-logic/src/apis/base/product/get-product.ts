@@ -1,3 +1,4 @@
+import { decode } from "html-entities";
 import { api } from "~/lib/api";
 import type { ApiConfig } from "~/lib/types";
 import { productSchema } from "~/lib/zod-schema/product";
@@ -25,7 +26,7 @@ export const getProduct = async (
     pageTitle: product.page_title,
     groupId: product.group_id,
     groupSummary: product.group_summary,
-    brand: product.brand_name,
+    brand: decode(product.brand_name),
     brandLogo: product.brand_logo,
     brandCode: product.brand_code,
     groupThumbnail: product.group_thumbnail,
@@ -34,7 +35,7 @@ export const getProduct = async (
       productId: product.selected_item.productid,
       isExcludedProduct: product.selected_item.is_product_exclude,
       productSku: product.selected_item.txt_wurth_lac_item,
-      productName: product.selected_item.item_name,
+      productName: decode(product.selected_item.item_name),
       image: product.selected_item.img,
       slug: product.selected_item.slug,
       isComparison: !!product.selected_item.is_comparison,
@@ -67,6 +68,7 @@ export const getProduct = async (
       listPrice: Number(product.selected_item.list_price),
       isSaleItem: getBoolean(product.selected_item.on_sale),
       isNewItem: getBoolean(product.selected_item.is_new),
+      onSale: getBoolean(product.selected_item.on_sale),
       fClassId: Number(product.selected_item.fclassid),
       productStatus: product.selected_item.txt_x_pant_Mat_status,
       productThumbnail: product.selected_item.thumbnail_img,
