@@ -37,7 +37,9 @@ const LaminatesList = () => {
           <ProductsListFilters token={tokenCookie.value} />
         </Suspense>
 
-        <ProductsListGrid token={tokenCookie.value} />
+        <div className="flex-1">
+          <ProductsListGrid token={tokenCookie.value} />
+        </div>
       </ProductsGridDesktopContainer>
 
       <Suspense fallback={<ProductsGridPaginationSkeleton />}>
