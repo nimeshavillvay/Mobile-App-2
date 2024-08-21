@@ -225,7 +225,10 @@ const UserProfileDropdown = ({
             asChild
             className="flex flex-row items-center gap-2 text-black"
           >
-            <Link href="/myaccount/shopping-lists">
+            <Link
+              href="/myaccount/shopping-lists"
+              className="btn-view-favorites"
+            >
               <DropdownMenuShortcut className="ml-0">
                 <BookmarkOutline className="size-4 stroke-black stroke-2" />
               </DropdownMenuShortcut>
@@ -287,7 +290,7 @@ const UserProfileDropdown = ({
           )}
 
           <DropdownMenuItem
-            className="flex flex-row items-center gap-2 text-wurth-red-650"
+            className="btn-sign-out flex flex-row items-center gap-2 text-wurth-red-650"
             onClick={() => {
               if (isOSRUser) {
                 osrLogoutMutation.mutate();

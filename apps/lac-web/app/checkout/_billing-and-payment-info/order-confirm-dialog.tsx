@@ -48,7 +48,7 @@ const OrderConfirmDialog = ({
         <Button
           variant="secondary"
           size="lg"
-          className="h-fit rounded-lg px-20 py-4 text-lg font-normal shadow-md md:max-w-60 md:self-end"
+          className="btn-proceed-to-checkout h-fit rounded-lg px-20 py-4 text-lg font-normal shadow-md md:max-w-60 md:self-end"
           disabled={cartQuery.data.allRegionalExluded || !paymentMethodSelected}
         >
           Place your Order

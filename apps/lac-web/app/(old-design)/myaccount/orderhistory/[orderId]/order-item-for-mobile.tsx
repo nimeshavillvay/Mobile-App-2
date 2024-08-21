@@ -1,6 +1,6 @@
 import WurthLacLogo from "@/_components/wurth-lac-logo";
 import type { Plant, ShippingMethod } from "@/_lib/types";
-import { formatNumberToPrice } from "@/_lib/utils";
+import { cn, formatNumberToPrice } from "@/_lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import MoreItemDetailsForMobile from "./more-item-details-for-mobile";
@@ -80,9 +80,10 @@ const OrderItemForMobile = ({
           <div className="min-w-[92px]">
             <Link
               href={generateItemUrl({ productId, slug: slug ?? "" })}
-              className={
-                productId ? "pointer-events-auto" : "pointer-events-none"
-              }
+              className={cn(
+                productId ? "pointer-events-auto" : "pointer-events-none",
+                "btn-view-product",
+              )}
             >
               {image ? (
                 <Image

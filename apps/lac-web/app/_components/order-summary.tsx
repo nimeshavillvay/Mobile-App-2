@@ -247,6 +247,7 @@ const OrderSummary = ({ token, children }: OrderSummaryProps) => {
                         />
 
                         <Button
+                          className="btn-add-promo-code"
                           size="sm"
                           type="submit"
                           disabled={

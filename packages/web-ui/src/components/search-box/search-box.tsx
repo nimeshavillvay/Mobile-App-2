@@ -224,6 +224,7 @@ export const SearchBoxInput = ({
                     })}
                   >
                     <Link
+                      className="root-category"
                       href={`/category/${category.id}/${category.slug}`}
                       key={category.id}
                       onClick={() => {
@@ -261,7 +262,7 @@ export const SearchBoxInput = ({
                       })}
                     >
                       <Link
-                        className="flex items-start justify-start gap-4 px-3 py-2"
+                        className="btn-view-product flex items-start justify-start gap-4 px-3 py-2"
                         href={`/product/${product.id}/${product.slug}`}
                         key={product.id}
                         onClick={() => {
@@ -314,7 +315,10 @@ export const SearchBoxButton = ({
       type={type}
       variant="ghost"
       size="icon"
-      className={cn("mx-0.5 rounded-full px-2", className)}
+      className={cn(
+        "btnAction image-button btn-search mx-0.5 rounded-full px-2",
+        className,
+      )}
       {...delegated}
     >
       <MagnifyingGlass className="size-5" />

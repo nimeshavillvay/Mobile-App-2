@@ -105,9 +105,10 @@ const OrderItem = ({
           <div className="min-w-[76px]">
             <Link
               href={generateItemUrl({ productId, slug: slug ?? "" })}
-              className={
-                productId ? "pointer-events-auto" : "pointer-events-none"
-              }
+              className={cn(
+                productId ? "pointer-events-auto" : "pointer-events-none",
+                "btn-view-product",
+              )}
             >
               {image ? (
                 <Image
