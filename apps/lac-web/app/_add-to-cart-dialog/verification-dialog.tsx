@@ -360,7 +360,7 @@ const AddToCart = ({
     );
   };
 
-  const addToCartMutation = useAddToCartMutation(token, {
+  const addToCartMutation = useAddToCartMutation({
     productId,
   });
 
@@ -521,7 +521,7 @@ const LocationStocks = ({
           location={firstLocation?.name ?? ""}
         />
       </div>
-      {checkLoginQuery.data.status_code === "OK" &&
+      {checkLoginQuery.data?.status_code === "OK" &&
         !isNotInStock &&
         otherLocations.length > 0 && (
           <div className="items-center gap-2 rounded-lg bg-wurth-gray-50 p-2">

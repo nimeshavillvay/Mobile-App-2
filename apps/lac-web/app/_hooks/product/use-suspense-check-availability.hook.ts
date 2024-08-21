@@ -47,7 +47,7 @@ export type CheckAvailability = {
 };
 
 const useSuspenseCheckAvailability = (
-  token: Token,
+  token: Token | undefined,
   { productId, qty, plant }: AvailabilityParameters,
 ) => {
   return useSuspenseQuery({

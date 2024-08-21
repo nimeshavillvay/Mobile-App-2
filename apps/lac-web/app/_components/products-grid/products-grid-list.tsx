@@ -35,7 +35,7 @@ export const ProductsGridList = ({
     prop: ComponentProps<typeof ProductCard>["product"];
     info: { groupId: string };
   }[];
-  readonly token: string;
+  readonly token?: string;
 }) => {
   const orientation = type === "mobile" ? "horizontal" : "vertical";
 

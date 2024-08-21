@@ -44,8 +44,8 @@ const SideMenu = ({ token }: { readonly token: string }) => {
 
   const checkLoginQuery = useSuspenseCheckLogin(token);
   const isOsr =
-    checkLoginQuery.data.status_code === "OK" &&
-    !!checkLoginQuery.data.sales_rep_id;
+    checkLoginQuery.data?.status_code === "OK" &&
+    !!checkLoginQuery.data?.sales_rep_id;
 
   const osrLogoutMutation = useOSRLogoutMutation();
   const logoutMutation = useLogoutMutation();

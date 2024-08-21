@@ -28,10 +28,6 @@ const AddToCart = ({
   const cookiesStore = cookies();
   const sessionCookie = cookiesStore.get(SESSION_TOKEN_COOKIE);
 
-  if (!sessionCookie?.value) {
-    return null;
-  }
-
   return (
     <section className={cn("space-y-3", className)}>
       <LocationStocks productId={productId} />
@@ -58,7 +54,7 @@ const AddToCart = ({
           </div>
         </div>
 
-        <FavoriteButton productId={productId} token={sessionCookie.value} />
+        <FavoriteButton productId={productId} token={sessionCookie?.value} />
       </div>
 
       <Suspense>

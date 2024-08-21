@@ -36,7 +36,7 @@ const CheckoutButton = ({ token }: CheckoutButtonProps) => {
   const handleSubmit: ComponentProps<"form">["onSubmit"] = (event) => {
     event.preventDefault();
 
-    if (checkLoginQuery.data.status_code === "OK") {
+    if (checkLoginQuery.data?.status_code === "OK") {
       router.push("/checkout");
     } else {
       router.push("/sign-in");

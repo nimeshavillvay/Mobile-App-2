@@ -1,7 +1,8 @@
 export const BASE_URL = "https://wurthlac.com";
 export const SESSION_TOKEN_COOKIE = "xid_00924";
 export const TOKEN_EXPIRE_COOKIE = "xid_00924_expire";
-export const TOKEN_MAX_AGE = 172800; // 2 days
+export const TOKEN_MAX_AGE =
+  process.env.VERCEL_ENV === "production" ? 172800 : 7200;
 
 export const PRIVATE_ROUTES = [
   "/osr",
@@ -34,3 +35,16 @@ export const NOT_AVAILABLE = "notAvailable" as const;
 export const MAX_QUANTITY = 100000 as const;
 
 export const UI_DATE_FORMAT = "ddd, MMM. DD YYYY" as const;
+
+export const INIT_PAGE_NUMBER = "1";
+
+export const INIT_PER_PAGE = "20";
+
+export const QUERY_KEYS = {
+  PAGE: "page",
+  PER_PAGE: "perPage",
+  SORT: "sort",
+  SORT_DIRECTION: "sortDirection",
+  SEARCH_TEXT: "searchText",
+  SELF_ONLY: "selfOnly",
+} as const;

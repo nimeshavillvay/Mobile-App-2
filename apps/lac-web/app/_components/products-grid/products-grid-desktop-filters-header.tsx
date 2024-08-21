@@ -32,6 +32,8 @@ export const ProductsGridDesktopFiltersHeader = ({
       newParams.delete(selectedValue.id);
     });
     newParams.delete(QUERY_KEYS.page);
+    newParams.delete(QUERY_KEYS.searchText);
+
     window.history.pushState(null, "", `?${newParams.toString()}`);
   };
 
@@ -40,7 +42,7 @@ export const ProductsGridDesktopFiltersHeader = ({
   }
 
   return (
-    <div className="hidden md:flex md:flex-row md:items-center md:gap-2">
+    <div className="hidden flex-wrap md:flex md:flex-row md:items-center md:gap-2">
       {mappedSelectedValues.map((selectedValue) => (
         <AttributePill
           key={selectedValue.id}

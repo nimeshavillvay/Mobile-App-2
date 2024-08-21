@@ -51,7 +51,7 @@ const CartList = ({ token, plants }: CartListProps) => {
   const [deleteConfirmation, setDeleteConfirmation] = useState(false);
   const { data } = useSuspenseCart(token);
   const willCallPlantQuery = useSuspenseWillCallPlant(token);
-  const deleteCartItemMutation = useDeleteCartItemMutation(token);
+  const deleteCartItemMutation = useDeleteCartItemMutation();
   const updateCartConfigMutation = useUpdateCartConfigMutation();
 
   const handleClearCart = () => {
@@ -212,7 +212,7 @@ const CartList = ({ token, plants }: CartListProps) => {
           )}
 
           <div className="flex-1 md:hidden">
-            <DynamicAddMoreItemsSectionForMobile token={token} />
+            <DynamicAddMoreItemsSectionForMobile />
           </div>
         </div>
       </ul>

@@ -42,7 +42,7 @@ const UserMobileNavigation = ({
 }: UserMobileNavigationProps) => {
   const checkLoginQuery = useSuspenseCheckLogin(token);
 
-  if (checkLoginQuery.data.status_code === "NOT_LOGGED_IN") {
+  if (checkLoginQuery.data?.status_code === "NOT_LOGGED_IN") {
     return (
       <Sheet>
         <SheetTrigger
@@ -108,12 +108,12 @@ const UserMobileProfileNavigation = ({
 
   const checkLoginQuery = useSuspenseCheckLogin(token);
   const isOsr =
-    checkLoginQuery.data.status_code === "OK" &&
-    !!checkLoginQuery.data.sales_rep_id;
+    checkLoginQuery.data?.status_code === "OK" &&
+    !!checkLoginQuery.data?.sales_rep_id;
 
   const isOSRLoggedInAsCustomer =
-    checkLoginQuery.data.status_code == "OK" &&
-    checkLoginQuery.data.isLoggedInAsCustomer;
+    checkLoginQuery.data?.status_code == "OK" &&
+    checkLoginQuery.data?.isLoggedInAsCustomer;
 
   const osrLogoutMutation = useOSRLogoutMutation();
   const logoutMutation = useLogoutMutation();

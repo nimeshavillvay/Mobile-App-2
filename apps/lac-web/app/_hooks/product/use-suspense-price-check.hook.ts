@@ -37,14 +37,17 @@ type Product = {
 };
 
 // TODO: Need to remove usePriceCheck hook and replace it with useSuspensePriceCheck
-const useSuspensePriceCheck = (token: string, products: Product[]) => {
+const useSuspensePriceCheck = (
+  token: string | undefined,
+  products: Product[],
+) => {
   return useSuspenseQuery({
     queryKey: ["user", "price-check", token, products],
     queryFn: () =>
       api
         .post("rest/pricecheck", {
           headers: {
-            authorization: `Bearer ${token}`,
+            authorization: token ? `Bearer ${token}` : token,
           },
           json: {
             products: products.map((product) => ({

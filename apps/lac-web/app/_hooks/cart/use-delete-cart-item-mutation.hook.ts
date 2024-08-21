@@ -1,7 +1,10 @@
 import { api } from "@/_lib/api";
+import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import useCookies from "../storage/use-cookies.hook";
 
-const useDeleteCartItemMutation = (token: string) => {
+const useDeleteCartItemMutation = () => {
+  const [cookies] = useCookies();
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -9,7 +12,7 @@ const useDeleteCartItemMutation = (token: string) => {
       return await api
         .delete("rest/cart", {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${cookies[SESSION_TOKEN_COOKIE]}`,
           },
           json: { products },
         })

@@ -4,7 +4,7 @@ import { ProductsGridDesktopFiltersHeader } from "@/_components/products-grid";
 import useSuspenseCategoryFilters from "./use-suspense-category-filters.hook";
 
 type ProductsListDesktopFiltersHeaderProps = {
-  readonly token: string;
+  readonly token?: string;
   readonly categoryId: string;
 };
 
