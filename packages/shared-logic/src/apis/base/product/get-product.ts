@@ -1,4 +1,4 @@
-import { decode } from "he";
+import { decode } from "html-entities";
 import { api } from "~/lib/api";
 import type { ApiConfig } from "~/lib/types";
 import { productSchema } from "~/lib/zod-schema/product";

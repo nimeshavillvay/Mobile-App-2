@@ -157,21 +157,23 @@ export const SalesBadges = ({
         {brandName}
       </Button>
       {!!isNewItem && (
-        <Button backgroundColor="$red3" size="$2" color="$red10">
+        <Button backgroundColor="$red4" size="$2" color="$red10">
           New
         </Button>
       )}
       {discountPercent > 0 && !!onSale && !!isNewItem && (
-        <Button backgroundColor="$blue3" icon={Zap} color="$blue10" size="$2">
+        <Button backgroundColor="$blue4" icon={Zap} color="$blue10" size="$2">
           Flash Deal
         </Button>
       )}
       {discountPercent > 0 && (
-        <Button backgroundColor="$green3" color="$green10" size="$2">
-          <Text fontWeight={700} color="$green10">
-            ${discountPercent}%
-          </Text>
-          off
+        <Button
+          backgroundColor="$green4"
+          color="$green10"
+          size="$2"
+          fontWeight={700}
+        >
+          {`${discountPercent.toString()}% off`}
         </Button>
       )}
     </XStack>

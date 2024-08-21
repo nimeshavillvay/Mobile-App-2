@@ -111,9 +111,12 @@ const ProductDetails = ({ productId }: { readonly productId: string }) => {
               setIndex(index);
             }}
           />
+
           <ProductAction width={screenWidth} />
+
           <ProductCarouselPagination data={productImages} index={index} />
         </View>
+
         <ImageView
           images={[{ uri: productImages[index]?.img }]}
           imageIndex={0}
@@ -121,6 +124,7 @@ const ProductDetails = ({ productId }: { readonly productId: string }) => {
           onRequestClose={() => setImageOverlayVisible(false)}
           presentationStyle="overFullScreen"
         />
+
         <YStack
           flex={1}
           marginHorizontal={20}
@@ -136,7 +140,9 @@ const ProductDetails = ({ productId }: { readonly productId: string }) => {
             isNewItem={data.selectedProduct.isNewItem}
             onSale={data.selectedProduct.onSale}
           />
+
           <Text fontSize="$6">{data.selectedProduct.productName}</Text>
+
           <ProductPrices
             token={token}
             productId={data.selectedProduct.productId}
@@ -144,18 +150,22 @@ const ProductDetails = ({ productId }: { readonly productId: string }) => {
             unitOfMeasure={data.selectedProduct.unitOfMeasure}
             freightCharge={data.selectedProduct.specialShipping}
           />
+
           <StockStatus
             token={token}
             productId={data.selectedProduct.productId}
           />
+
           <PriceBreakdowns
             token={token}
             productId={data.selectedProduct.productId}
             unitOfMeasure={data.selectedProduct.unitOfMeasure}
           />
+
           <ProductVariations productId={data.selectedProduct.productId} />
         </YStack>
       </ScrollView>
+
       <EnterQuantity />
     </>
   );

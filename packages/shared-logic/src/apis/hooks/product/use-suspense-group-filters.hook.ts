@@ -7,7 +7,7 @@ export const useSuspenseGroupFilters = (
   productId: number,
 ) => {
   return useSuspenseQuery({
-    queryKey: ["group-filters", productId, config],
-    queryFn: async () => await getGroupFilters(config, productId),
+    queryKey: ["product", productId, "group-filters", config],
+    queryFn: () => getGroupFilters(config, productId),
   });
 };
