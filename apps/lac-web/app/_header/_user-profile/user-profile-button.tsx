@@ -46,13 +46,13 @@ const UserProfileButton = ({
   let isOSRUser = false;
   let customerDetails = "";
 
-  if ("sales_rep_id" in loginCheckData) {
+  if (loginCheckData && "sales_rep_id" in loginCheckData) {
     isOSRUser = true;
     customerDetails = loginCheckData.user.company || loginCheckData.user.billto;
   }
 
   if (type === "mobile") {
-    if (loginCheckData.change_password) {
+    if (loginCheckData?.change_password) {
       return null;
     }
 
@@ -65,7 +65,7 @@ const UserProfileButton = ({
     );
   } else {
     // Desktop
-    return checkLoginQuery.data.status_code === "NOT_LOGGED_IN" ? (
+    return checkLoginQuery.data?.status_code === "NOT_LOGGED_IN" ? (
       <Link
         href="/sign-in"
         className={buttonClasses({
@@ -81,8 +81,8 @@ const UserProfileButton = ({
         token={token}
         isOSRUser={isOSRUser}
         isOSRLoggedInAsCustomer={
-          loginCheckData.status_code == "OK" &&
-          loginCheckData.isLoggedInAsCustomer
+          loginCheckData?.status_code == "OK" &&
+          loginCheckData?.isLoggedInAsCustomer
         }
         customerDetails={customerDetails}
         shippingMethods={shippingMethods}
@@ -124,7 +124,7 @@ const UserProfileDropdown = ({
       ? userProfile.lastName
       : "User";
 
-  if (checkLoginQuery.data.change_password) {
+  if (checkLoginQuery.data?.change_password) {
     return (
       <span className="sr-only min-w-0 shrink md:not-sr-only md:min-w-0 md:shrink md:truncate md:text-base md:font-semibold">
         Hi, {userProfile.firstName !== "" ? userProfile.firstName : "User"}

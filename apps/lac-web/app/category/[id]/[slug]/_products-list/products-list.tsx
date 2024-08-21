@@ -25,26 +25,25 @@ const ProductsList = ({ categoryId }: ProductsListProps) => {
   const cookieStore = cookies();
   const tokenCookie = cookieStore.get(SESSION_TOKEN_COOKIE);
 
-  if (!tokenCookie) {
-    return null;
-  }
-
   return (
     <ProductsGrid>
       <Suspense fallback={<ProductsGridMobileFiltersHeaderSkeleton />}>
         <ProductsListMobileFilters
-          token={tokenCookie.value}
+          token={tokenCookie?.value}
           categoryId={categoryId}
         />
       </Suspense>
 
       <Suspense fallback={<ProductsGridHeaderSkeleton />}>
-        <ProductsListHeader token={tokenCookie.value} categoryId={categoryId} />
+        <ProductsListHeader
+          token={tokenCookie?.value}
+          categoryId={categoryId}
+        />
       </Suspense>
 
       <Suspense>
         <ProductsListDesktopFiltersHeader
-          token={tokenCookie.value}
+          token={tokenCookie?.value}
           categoryId={categoryId}
         />
       </Suspense>
@@ -52,7 +51,7 @@ const ProductsList = ({ categoryId }: ProductsListProps) => {
       <Suspense fallback={<ProductsGridListSkeleton type="mobile" />}>
         <ProductsListGrid
           type="mobile"
-          token={tokenCookie.value}
+          token={tokenCookie?.value}
           categoryId={categoryId}
         />
       </Suspense>
@@ -60,7 +59,7 @@ const ProductsList = ({ categoryId }: ProductsListProps) => {
       <ProductsGridDesktopContainer>
         <Suspense fallback={<ProductsGridFiltersSkeleton />}>
           <ProductsListFilters
-            token={tokenCookie.value}
+            token={tokenCookie?.value}
             categoryId={categoryId}
           />
         </Suspense>
@@ -68,7 +67,7 @@ const ProductsList = ({ categoryId }: ProductsListProps) => {
         <Suspense fallback={<ProductsGridListSkeleton type="desktop" />}>
           <ProductsListGrid
             type="desktop"
-            token={tokenCookie.value}
+            token={tokenCookie?.value}
             categoryId={categoryId}
           />
         </Suspense>
@@ -76,7 +75,7 @@ const ProductsList = ({ categoryId }: ProductsListProps) => {
 
       <Suspense fallback={<ProductsGridPaginationSkeleton />}>
         <ProductsListPagination
-          token={tokenCookie.value}
+          token={tokenCookie?.value}
           categoryId={categoryId}
         />
       </Suspense>

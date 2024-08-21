@@ -9,7 +9,7 @@ import { useState } from "react";
 
 type FavoriteButtonForLoggedInProps = {
   readonly productId: number;
-  readonly token: string;
+  readonly token?: string;
 };
 
 const FavoriteButtonForLoggedIn = ({

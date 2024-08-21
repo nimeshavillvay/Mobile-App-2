@@ -4,7 +4,7 @@ import { ProductsGridMobileFiltersHeader } from "@/_components/products-grid";
 import useSuspenseCategoryFilters from "./use-suspense-category-filters.hook";
 
 type ProductsListMobileFiltersProps = {
-  readonly token: string;
+  readonly token?: string;
   readonly categoryId: string;
 };
 

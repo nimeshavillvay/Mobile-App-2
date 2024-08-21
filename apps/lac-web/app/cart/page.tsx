@@ -67,7 +67,7 @@ const CartPage = async () => {
             <CartList token={sessionToken.value} plants={plants} />
 
             <div className="hidden md:block">
-              <DynamicAddMoreItemsSection token={sessionToken.value} />
+              <DynamicAddMoreItemsSection />
             </div>
           </Suspense>
         </div>

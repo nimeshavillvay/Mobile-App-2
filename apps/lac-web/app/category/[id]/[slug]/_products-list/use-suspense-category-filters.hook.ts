@@ -6,7 +6,7 @@ const useSuspenseCategoryFilters = ({
   token,
   categoryId,
 }: {
-  token: string;
+  token?: string;
   categoryId: string;
 }) => {
   const searchParams = useSearchParams();

@@ -43,7 +43,7 @@ type AddToShoppingListDialogProps = {
   readonly setOpenAddToShoppingListDialog: Dispatch<SetStateAction<boolean>>;
   readonly productId: number;
   readonly favoriteListIds: string[];
-  readonly token: string;
+  readonly token?: string;
 };
 
 const AddToShoppingListDialog = ({

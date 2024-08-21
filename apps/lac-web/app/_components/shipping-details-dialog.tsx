@@ -43,7 +43,7 @@ const ShippingDetailsDialog = ({
 
   if (
     checkLoginQuery?.data?.status_code === "NOT_LOGGED_IN" ||
-    checkLoginQuery.data.change_password
+    checkLoginQuery.data?.change_password
   ) {
     return null;
   }
@@ -87,7 +87,7 @@ const ShippingDetailsDialogButton = ({
       : "";
   };
 
-  if (checkLoginQuery.data.change_password) {
+  if (checkLoginQuery.data?.change_password) {
     return (
       <>
         <Truck width={16} height={16} />

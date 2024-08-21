@@ -1,7 +1,7 @@
 import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
 import { api } from "@/_lib/api";
 import { checkAvailability } from "@/_lib/apis/shared";
-import { NOT_AVAILABLE } from "@/_lib/constants";
+import { NOT_AVAILABLE, SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import { useToast } from "@repo/web-ui/components/ui/toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
@@ -9,13 +9,14 @@ import {
   BACKORDER_ENABLED,
   FALSE_STRING,
 } from "../../cart/constants";
+import useCookies from "../storage/use-cookies.hook";
 
-const useAddToCartMutation = (
-  token: string,
-  { productId }: { productId: number },
-) => {
+const useAddToCartMutation = ({ productId }: { productId: number }) => {
   const queryClient = useQueryClient();
   const { toast } = useToast();
+  const [cookies] = useCookies();
+
+  const token = cookies[SESSION_TOKEN_COOKIE];
 
   const { setOpen, setProductId } = useAddToCartDialog(
     (state) => state.actions,

@@ -7,7 +7,7 @@ import { useDeferredValue } from "react";
 import useAddToCartForm from "../use-add-to-cart-form.hook";
 
 type ProductPricesProps = {
-  readonly token: string;
+  readonly token?: string;
   readonly productId: number;
   readonly listPrice: number;
   readonly uom: string;

@@ -25,7 +25,7 @@ const ProductCardVariantSelectorForLoggedIn = ({
   readonly selectedId?: string;
   readonly setSelectedId: (value: string) => void;
   readonly addToCart: () => void;
-  readonly token: string;
+  readonly token?: string;
 }) => {
   const [showShoppingListsDialog, setShowShoppingListsDialog] = useState(false);
 

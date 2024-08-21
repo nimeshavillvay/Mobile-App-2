@@ -50,12 +50,14 @@ type UpdateProfileProps = {
   readonly user: UserProfile;
   readonly jobRoles: Role[];
   readonly passwordPolicies: PasswordPolicies;
+  readonly isOsrNotLoggedInAsCustomer: boolean;
 };
 
 const ProfileUpdateForm = ({
   user,
   jobRoles,
   passwordPolicies,
+  isOsrNotLoggedInAsCustomer,
 }: UpdateProfileProps) => {
   const refinedSchema = updateProfileSchema.superRefine(
     ({ password }, context) =>
@@ -161,144 +163,147 @@ const ProfileUpdateForm = ({
               />
             </div>
 
-            <div className="flex gap-4">
+            {!isOsrNotLoggedInAsCustomer && (
+              <div className="flex gap-4">
+                <FormField
+                  control={form.control}
+                  name="jobTitle"
+                  render={({ field }) => (
+                    <FormItem className="flex-1 space-y-0.5">
+                      <FormLabel className="font-bold">Job Title</FormLabel>
+
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger className="h-8 rounded-sm py-0 focus:ring-brand-gray-500">
+                            <SelectValue placeholder="Job Title" />
+                          </SelectTrigger>
+                        </FormControl>
+
+                        <SelectContent>
+                          {jobRoles.map((role) => (
+                            <SelectItem key={role?.code} value={role?.code}>
+                              {role?.description}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+
+                      <FormDescription className="sr-only">
+                        This is the job title of your profile
+                      </FormDescription>
+
+                      <FormMessage className="text-xs dark:text-brand-primary" />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="permission"
+                  render={({ field }) => (
+                    <FormItem className="mb-2 flex-1 space-y-0.5">
+                      <FormLabel className="font-bold">Permission*</FormLabel>
+
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                        disabled={true}
+                      >
+                        <FormControl>
+                          <SelectTrigger className="h-8 rounded-sm py-0 focus:ring-brand-gray-500">
+                            <SelectValue placeholder="Permission" />
+                          </SelectTrigger>
+                        </FormControl>
+
+                        <SelectContent>
+                          {USER_PERMISSIONS.map((permission) => (
+                            <SelectItem
+                              value={permission?.value}
+                              key={permission?.value}
+                            >
+                              {permission?.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+
+                      <FormDescription className="sr-only">
+                        This is the permission of your profile
+                      </FormDescription>
+
+                      <FormMessage className="text-xs dark:text-brand-primary" />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            )}
+          </div>
+
+          <div className="col-span-1 flex flex-col">
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem className="flex-1 space-y-0.5">
+                  <FormLabel className="font-bold">Email*</FormLabel>
+
+                  <FormControl>
+                    <Input
+                      placeholder="Email"
+                      type="email"
+                      className="text-[15px] placeholder:text-brand-gray-400"
+                      {...field}
+                    />
+                  </FormControl>
+
+                  <FormDescription className="sr-only">
+                    This is the email address of your profile
+                  </FormDescription>
+
+                  <FormMessage className="text-xs dark:text-brand-primary" />
+                </FormItem>
+              )}
+            />
+
+            {!isOsrNotLoggedInAsCustomer && (
               <FormField
                 control={form.control}
-                name="jobTitle"
+                name="status"
                 render={({ field }) => (
                   <FormItem className="flex-1 space-y-0.5">
-                    <FormLabel className="font-bold">Job Title</FormLabel>
+                    <FormLabel className="font-bold">Status</FormLabel>
 
                     <Select
                       onValueChange={field.onChange}
                       defaultValue={field.value}
+                      disabled={true}
                     >
                       <FormControl>
                         <SelectTrigger className="h-8 rounded-sm py-0 focus:ring-brand-gray-500">
-                          <SelectValue placeholder="Job Title" />
+                          <SelectValue placeholder="Status" />
                         </SelectTrigger>
                       </FormControl>
 
                       <SelectContent>
-                        {jobRoles.map((role) => (
-                          <SelectItem key={role?.code} value={role?.code}>
-                            {role?.description}
+                        {USER_STATUSES.map((status) => (
+                          <SelectItem value={status?.value} key={status?.value}>
+                            {status?.label}
                           </SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
 
                     <FormDescription className="sr-only">
-                      This is the job title of your profile
+                      This is the status of your profile
                     </FormDescription>
 
                     <FormMessage className="text-xs dark:text-brand-primary" />
                   </FormItem>
                 )}
               />
-
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem className="flex-1 space-y-0.5">
-                    <FormLabel className="font-bold">Email*</FormLabel>
-
-                    <FormControl>
-                      <Input
-                        placeholder="Email"
-                        type="email"
-                        className="text-[15px] placeholder:text-brand-gray-400"
-                        {...field}
-                      />
-                    </FormControl>
-
-                    <FormDescription className="sr-only">
-                      This is the email address of your profile
-                    </FormDescription>
-
-                    <FormMessage className="text-xs dark:text-brand-primary" />
-                  </FormItem>
-                )}
-              />
-            </div>
-          </div>
-
-          <div className="col-span-1 flex flex-col">
-            <FormField
-              control={form.control}
-              name="permission"
-              render={({ field }) => (
-                <FormItem className="mb-2 flex-1 space-y-0.5">
-                  <FormLabel className="font-bold">Permission*</FormLabel>
-
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                    disabled={true}
-                  >
-                    <FormControl>
-                      <SelectTrigger className="h-8 rounded-sm py-0 focus:ring-brand-gray-500">
-                        <SelectValue placeholder="Permission" />
-                      </SelectTrigger>
-                    </FormControl>
-
-                    <SelectContent>
-                      {USER_PERMISSIONS.map((permission) => (
-                        <SelectItem
-                          value={permission?.value}
-                          key={permission?.value}
-                        >
-                          {permission?.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-
-                  <FormDescription className="sr-only">
-                    This is the permission of your profile
-                  </FormDescription>
-
-                  <FormMessage className="text-xs dark:text-brand-primary" />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="status"
-              render={({ field }) => (
-                <FormItem className="flex-1 space-y-0.5">
-                  <FormLabel className="font-bold">Status</FormLabel>
-
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                    disabled={true}
-                  >
-                    <FormControl>
-                      <SelectTrigger className="h-8 rounded-sm py-0 focus:ring-brand-gray-500">
-                        <SelectValue placeholder="Status" />
-                      </SelectTrigger>
-                    </FormControl>
-
-                    <SelectContent>
-                      {USER_STATUSES.map((status) => (
-                        <SelectItem value={status?.value} key={status?.value}>
-                          {status?.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-
-                  <FormDescription className="sr-only">
-                    This is the status of your profile
-                  </FormDescription>
-
-                  <FormMessage className="text-xs dark:text-brand-primary" />
-                </FormItem>
-              )}
-            />
+            )}
           </div>
 
           <div className="col-span-2 flex gap-4">

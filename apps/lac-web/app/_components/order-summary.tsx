@@ -137,7 +137,7 @@ const OrderSummary = ({ token, children }: OrderSummaryProps) => {
             </tr>
           )}
 
-          {checkLoginQuery.data.status_code === "OK" && (
+          {checkLoginQuery.data?.status_code === "OK" && (
             <>
               {shippingCost > 0 && (
                 <tr>

@@ -11,11 +11,7 @@ const ProductPricesWrapper = (
   const cookiesStore = cookies();
   const sessionCookie = cookiesStore.get(SESSION_TOKEN_COOKIE);
 
-  if (!sessionCookie?.value) {
-    return null;
-  }
-
-  return <ProductPrices token={sessionCookie.value} {...props} />;
+  return <ProductPrices token={sessionCookie?.value} {...props} />;
 };
 
 const ProductPricesRoot = ({

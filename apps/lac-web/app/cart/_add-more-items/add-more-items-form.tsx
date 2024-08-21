@@ -52,7 +52,7 @@ const formSchema = z.object({
 });
 type FormSchema = z.infer<typeof formSchema>;
 
-const AddMoreItemsForm = ({ token }: { readonly token: string }) => {
+const AddMoreItemsForm = () => {
   const [searchInput, setSearchInput] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -76,7 +76,7 @@ const AddMoreItemsForm = ({ token }: { readonly token: string }) => {
     number[]
   >([]);
 
-  const addMultipleToCartMutation = useAddMultipleToCartMutation(token);
+  const addMultipleToCartMutation = useAddMultipleToCartMutation();
   const debouncedSearchInput = useDebouncedState(searchInput);
 
   const id = useId();

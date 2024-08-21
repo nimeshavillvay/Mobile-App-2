@@ -28,8 +28,8 @@ const PasswordReset = async ({ searchParams }: PasswordResetProps) => {
 
   if (
     userId &&
-    loginCheckResponse.change_password &&
-    loginCheckResponse.status_code === "OK"
+    loginCheckResponse?.change_password &&
+    loginCheckResponse?.status_code === "OK"
   ) {
     return (
       <PasswordResetForm

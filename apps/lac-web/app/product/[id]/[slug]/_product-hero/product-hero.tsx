@@ -4,8 +4,10 @@ import {
   CarouselDots,
   CarouselItem,
 } from "@repo/web-ui/components/ui/carousel";
+import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import Image from "next/image";
 import Link from "next/link";
+import { Suspense } from "react";
 import Balancer from "react-wrap-balancer";
 import "server-only";
 import { getProduct } from "../apis";
@@ -103,13 +105,15 @@ const ProductHero = async ({ id, slug }: ProductHeroProps) => {
 
           <ProductVariants id={id} />
 
-          <AddToCart
-            productId={parseInt(id)}
-            minQty={product.selectedProduct.minimumOrderQuantity}
-            incQty={product.selectedProduct.quantityByIncrements}
-            uom={product.selectedProduct.unitOfMeasure}
-            isExcludedProduct={product.selectedProduct.isExcludedProduct}
-          />
+          <Suspense fallback={<Skeleton className="h-[9.5rem]" />}>
+            <AddToCart
+              productId={parseInt(id)}
+              minQty={product.selectedProduct.minimumOrderQuantity}
+              incQty={product.selectedProduct.quantityByIncrements}
+              uom={product.selectedProduct.unitOfMeasure}
+              isExcludedProduct={product.selectedProduct.isExcludedProduct}
+            />
+          </Suspense>
 
           {product.selectedProduct.isHazardous && <HazardousMaterialNotice />}
 
@@ -183,14 +187,20 @@ const ProductHero = async ({ id, slug }: ProductHeroProps) => {
 
         <ProductVariants id={id} className="container my-6 md:hidden" />
 
-        <AddToCart
-          productId={parseInt(id)}
-          minQty={product.selectedProduct.minimumOrderQuantity}
-          incQty={product.selectedProduct.quantityByIncrements}
-          uom={product.selectedProduct.unitOfMeasure}
-          className="container my-6 md:hidden"
-          isExcludedProduct={product.selectedProduct.isExcludedProduct}
-        />
+        <Suspense
+          fallback={
+            <Skeleton className="container my-6 h-[10.25rem] md:hidden" />
+          }
+        >
+          <AddToCart
+            productId={parseInt(id)}
+            minQty={product.selectedProduct.minimumOrderQuantity}
+            incQty={product.selectedProduct.quantityByIncrements}
+            uom={product.selectedProduct.unitOfMeasure}
+            className="container my-6 md:hidden"
+            isExcludedProduct={product.selectedProduct.isExcludedProduct}
+          />
+        </Suspense>
 
         {product.selectedProduct.isHazardous && (
           <HazardousMaterialNotice className="container my-6 md:hidden" />

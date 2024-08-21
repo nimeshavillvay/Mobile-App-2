@@ -10,11 +10,7 @@ const AddToCartFormWrapper = (
   const cookiesStore = cookies();
   const sessionToken = cookiesStore.get(SESSION_TOKEN_COOKIE);
 
-  if (!sessionToken?.value) {
-    return null;
-  }
-
-  return <AddToCartForm token={sessionToken.value} {...props} />;
+  return <AddToCartForm token={sessionToken?.value} {...props} />;
 };
 
 const AddToCartFormRoot = (

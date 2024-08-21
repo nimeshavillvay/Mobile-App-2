@@ -9,7 +9,7 @@ import FavoriteButtonForLoggedIn from "./favorite-button-for-logged-in";
 import FavoriteButtonSkeleton from "./favorite-button-skeleton";
 
 type FavoriteButtonProps = {
-  readonly token: string;
+  readonly token?: string;
   readonly productId: number;
 };
 
@@ -17,7 +17,7 @@ const FavoriteButton = ({ token, productId }: FavoriteButtonProps) => {
   const router = useRouter();
 
   const checkLoginQuery = useSuspenseCheckLogin(token);
-  const isLoggedInUser = checkLoginQuery.data.status_code === "OK";
+  const isLoggedInUser = checkLoginQuery.data?.status_code === "OK";
 
   return isLoggedInUser ? (
     <Suspense fallback={<FavoriteButtonSkeleton />}>

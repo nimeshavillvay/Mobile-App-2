@@ -43,7 +43,7 @@ const formSchema = z.object({
 });
 type FormSchema = z.infer<typeof formSchema>;
 
-const AddMoreItemsFormMobile = ({ token }: { readonly token: string }) => {
+const AddMoreItemsFormMobile = () => {
   const [product, setProduct] = useState<{
     productid: string;
     sku: string;
@@ -76,7 +76,7 @@ const AddMoreItemsFormMobile = ({ token }: { readonly token: string }) => {
   const [open, setOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const addMultipleToCartMutation = useAddMultipleToCartMutation(token);
+  const addMultipleToCartMutation = useAddMultipleToCartMutation();
 
   const { handleSubmit, register, reset } = useForm<FormSchema>({
     defaultValues: {
