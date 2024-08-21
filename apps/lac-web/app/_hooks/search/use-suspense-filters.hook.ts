@@ -76,13 +76,15 @@ const useSuspenseFilters = (
         for (const [key, values] of Object.entries(args.values)) {
           if (values) {
             for (const value of values) {
-              if (key === QUERY_KEYS.SEARCH_TEXT) {
-                searchParams.append("substring", value);
-              } else {
-                rfData[key] = {
-                  ...rfData[key],
-                  [value]: "Y",
-                };
+              if (key !== QUERY_KEYS.PER_PAGE) {
+                if (key === QUERY_KEYS.SEARCH_TEXT) {
+                  searchParams.append("substring", value);
+                } else {
+                  rfData[key] = {
+                    ...rfData[key],
+                    [value]: "Y",
+                  };
+                }
               }
             }
           }
