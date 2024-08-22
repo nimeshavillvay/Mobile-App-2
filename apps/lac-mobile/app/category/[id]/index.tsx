@@ -12,8 +12,8 @@ import { Stack } from "expo-router/stack";
 import { MotiView } from "moti";
 import { Skeleton } from "moti/skeleton";
 import { Suspense } from "react";
-import { StyleSheet } from "react-native";
-import { Button, H1, Text, View, XStack } from "tamagui";
+import { StyleSheet, View } from "react-native";
+import { Button, H1, Text, XStack } from "tamagui";
 
 const CategoryPage = () => {
   const localSearchParams = useLocalSearchParams();

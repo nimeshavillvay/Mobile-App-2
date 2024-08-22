@@ -41,8 +41,8 @@ import { router } from "expo-router";
 import { MotiView } from "moti";
 import { Skeleton } from "moti/skeleton";
 import { Suspense, useState, type ComponentProps } from "react";
-import { Dimensions, StyleSheet } from "react-native";
-import { Button, H1, Text, View, VisuallyHidden } from "tamagui";
+import { Dimensions, StyleSheet, View } from "react-native";
+import { Button, H1, Text, VisuallyHidden } from "tamagui";
 
 type ConfigKey = keyof CartItemConfiguration;
 
