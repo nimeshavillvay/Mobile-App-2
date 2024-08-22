@@ -2,6 +2,7 @@ import useCookies from "@/_hooks/storage/use-cookies.hook";
 import { api } from "@/_lib/api";
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import { isErrorResponse } from "@/_lib/utils";
+import { sendGTMEvent } from "@next/third-parties/google";
 import { useToast } from "@repo/web-ui/components/ui/toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
@@ -62,6 +63,14 @@ const useRegisterNewUserMutation = () => {
       shippingAddress: Address;
       skipAddressCheck?: boolean;
     }) => {
+      sendGTMEvent({
+        event: "sign_up",
+        method: "register_page",
+        userid: "",
+        account_type: "R",
+        account_industry: "Homeowner",
+        account_sales_category: "Z0",
+      });
       const response = await api
         .post("rest/register/new", {
           headers: {
