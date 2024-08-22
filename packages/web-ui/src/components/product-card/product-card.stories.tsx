@@ -31,6 +31,10 @@ const addToCart = () => {
   console.log("Added to cart");
 };
 
+const onClickShoppingCart = () => {
+  console.log("Added to shopping list");
+};
+
 export const WithDiscount: Story = {
   render: () => {
     return (
@@ -56,9 +60,18 @@ export const WithDiscount: Story = {
               href="/product/771770/PROMD3-MB"
             />
 
-            <ProductCardPrice price={39} uom="pair" actualPrice={49} />
+            <ProductCardPrice
+              price={39}
+              uom="pair"
+              actualPrice={49}
+              isLaminateItem
+            />
 
-            <ProductCardActions addToCart={addToCart} />
+            <ProductCardActions
+              addToCart={addToCart}
+              isFavorite
+              onClickShoppingList={onClickShoppingCart}
+            />
           </ProductCardContent>
         </ProductCard>
       </TooltipProvider>
@@ -89,9 +102,13 @@ export const WithoutDiscount: Story = {
               href="/product/771770/PROMD3-MB"
             />
 
-            <ProductCardPrice price={39} uom="pair" />
+            <ProductCardPrice price={39} uom="pair" isLaminateItem />
 
-            <ProductCardActions addToCart={addToCart} />
+            <ProductCardActions
+              addToCart={addToCart}
+              onClickShoppingList={onClickShoppingCart}
+              isFavorite={false}
+            />
           </ProductCardContent>
         </ProductCard>
       </TooltipProvider>
@@ -124,9 +141,18 @@ export const Horizontal: Story = {
               href="/product/771770/PROMD3-MB"
             />
 
-            <ProductCardPrice price={39} uom="pair" actualPrice={49} />
+            <ProductCardPrice
+              price={39}
+              uom="pair"
+              actualPrice={49}
+              isLaminateItem={false}
+            />
 
-            <ProductCardActions addToCart={addToCart} />
+            <ProductCardActions
+              addToCart={addToCart}
+              onClickShoppingList={onClickShoppingCart}
+              isFavorite={false}
+            />
           </ProductCardContent>
         </ProductCard>
       </TooltipProvider>

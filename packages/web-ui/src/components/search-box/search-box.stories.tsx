@@ -40,6 +40,7 @@ const items = {
         img: "https://cdn.pixabay.com/photo/2014/09/12/18/20/can-443123_960_720.png%201x,%20https://cdn.pixabay.com/photo/2014/09/12/18/20/can-443123_1280.png",
         code: "12453",
         title: "9OZ ADH - ICE WHITE",
+        slug: "90z-adh-ice-white",
       },
       {
         id: "se902",
@@ -47,6 +48,7 @@ const items = {
         img: "https://cdn.pixabay.com/photo/2014/09/12/18/20/can-443123_960_720.png%201x,%20https://cdn.pixabay.com/photo/2014/09/12/18/20/can-443123_1280.png",
         code: "12453",
         title: "19OZ ADH - ICE WHITE",
+        slug: "90z-adh-ice-white",
       },
       {
         id: "se903",
@@ -54,6 +56,7 @@ const items = {
         img: "https://cdn.pixabay.com/photo/2014/09/12/18/20/can-443123_960_720.png%201x,%20https://cdn.pixabay.com/photo/2014/09/12/18/20/can-443123_1280.png",
         code: "12453",
         title: "29OZ ADH - ICE WHITE ",
+        slug: "90z-adh-ice-white",
       },
       {
         id: "se904",
@@ -61,6 +64,7 @@ const items = {
         img: "https://cdn.pixabay.com/photo/2014/09/12/18/20/can-443123_960_720.png%201x,%20https://cdn.pixabay.com/photo/2014/09/12/18/20/can-443123_1280.png",
         code: "12453",
         title: "9OZ ADH - ICE WHITE",
+        slug: "90z-adh-ice-white",
       },
       {
         id: "se905",
@@ -68,6 +72,7 @@ const items = {
         img: "https://cdn.pixabay.com/photo/2014/09/12/18/20/can-443123_960_720.png%201x,%20https://cdn.pixabay.com/photo/2014/09/12/18/20/can-443123_1280.png",
         code: "12453",
         title: "19OZ ADH - ICE WHITE",
+        slug: "90z-adh-ice-white",
       },
       {
         id: "se906",
@@ -75,6 +80,7 @@ const items = {
         img: "https://cdn.pixabay.com/photo/2014/09/12/18/20/can-443123_960_720.png%201x,%20https://cdn.pixabay.com/photo/2014/09/12/18/20/can-443123_1280.png",
         code: "12453",
         title: "29OZ ADH - ICE WHITE",
+        slug: "90z-adh-ice-white",
       },
       {
         id: "se907",
@@ -82,6 +88,7 @@ const items = {
         img: "https://cdn.pixabay.com/photo/2014/09/12/18/20/can-443123_960_720.png%201x,%20https://cdn.pixabay.com/photo/2014/09/12/18/20/can-443123_1280.png",
         code: "12453",
         title: "9OZ ADH - ICE WHITE",
+        slug: "90z-adh-ice-white",
       },
     ],
   },
@@ -100,6 +107,7 @@ const items = {
         img: "https://cdn.pixabay.com/photo/2014/09/12/18/20/can-443123_960_720.png%201x,%20https://cdn.pixabay.com/photo/2014/09/12/18/20/can-443123_1280.png",
         code: "12453",
         title: "Formica Adhesive",
+        slug: "formica-adhesive",
       },
       {
         id: "638884",
@@ -107,6 +115,7 @@ const items = {
         img: "https://cdn.pixabay.com/photo/2014/09/12/18/20/can-443123_960_720.png%201x,%20https://cdn.pixabay.com/photo/2014/09/12/18/20/can-443123_1280.png",
         code: "12453",
         title: "Choice Brands Adhesives",
+        slug: "choice-brands-adhesives",
       },
       {
         id: "638885",
@@ -114,6 +123,7 @@ const items = {
         img: "https://cdn.pixabay.com/photo/2014/09/12/18/20/can-443123_960_720.png%201x,%20https://cdn.pixabay.com/photo/2014/09/12/18/20/can-443123_1280.png",
         code: "12453",
         title: "Integra Adhesives",
+        slug: "integra-adhesive",
       },
     ],
   },
@@ -132,6 +142,7 @@ const items = {
         img: "https://cdn.pixabay.com/photo/2014/09/12/18/20/can-443123_960_720.png%201x,%20https://cdn.pixabay.com/photo/2014/09/12/18/20/can-443123_1280.png",
         code: "12453",
         title: "Adhesives, Caulking & Sealants / Adhesives ",
+        slug: "adhesives-caulking-&-sealants-/-adhesives",
       },
       {
         id: "6388875",
@@ -139,6 +150,7 @@ const items = {
         img: "https://cdn.pixabay.com/photo/2014/09/12/18/20/can-443123_960_720.png%201x,%20https://cdn.pixabay.com/photo/2014/09/12/18/20/can-443123_1280.png",
         code: "12453",
         title: "Adhesives, Caulking & Sealants / Adhesive Hoses",
+        slug: "adhesives-caulking-&-sealants-/-adhesives-hoses",
       },
       {
         id: "6388876",
@@ -146,6 +158,7 @@ const items = {
         img: "https://cdn.pixabay.com/photo/2014/09/12/18/20/can-443123_960_720.png%201x,%20https://cdn.pixabay.com/photo/2014/09/12/18/20/can-443123_1280.png",
         code: "12453",
         title: "Adhesives, Caulking & Sealants / Adhesive Guns",
+        slug: "adhesives-caulking-&-sealants-/-adhesives-guns",
       },
     ],
   },
@@ -153,6 +166,10 @@ const items = {
 
 export default meta;
 type Story = StoryObj<typeof SearchBox>;
+
+const onEnterPressed = () => {
+  console.log("Enter was pressed");
+};
 
 export const Default: Story = {
   render: () => {
@@ -171,10 +188,13 @@ export const Default: Story = {
         category.title.toLowerCase().includes(lowerCasedValue),
       );
       return {
-        products: { meta: items.products.summary, results: filteredProducts },
-        brands: { meta: items.brands.summary, results: filteredBrands },
+        products: {
+          summary: items.products.summary,
+          results: filteredProducts,
+        },
+        brands: { summary: items.brands.summary, results: filteredBrands },
         categories: {
-          meta: items.categories.summary,
+          summary: items.categories.summary,
           results: filteredCategories,
         },
       };
@@ -187,6 +207,7 @@ export const Default: Story = {
           value={value}
           setValue={setValue}
           placeholder="What are you looking for?"
+          onEnterPressed={onEnterPressed}
         />
         {!!value && <SearchClearButton />}
         <SearchBoxButton />
