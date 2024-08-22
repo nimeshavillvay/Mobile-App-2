@@ -15,7 +15,7 @@ import dayjs from "dayjs";
 import { Link, router, useRouter } from "expo-router";
 import { MotiView } from "moti";
 import { Skeleton } from "moti/skeleton";
-import React, { useState } from "react";
+import { useState } from "react";
 import { type UseFormReturn } from "react-hook-form";
 import {
   Dimensions,
@@ -27,6 +27,7 @@ import { Button, ScrollView, Text, View, XStack, YStack } from "tamagui";
 
 export const ProductDetailsSkeleton = () => {
   const screenWidth = Dimensions.get("window").width;
+
   return (
     <MotiView style={{ flex: 1, gap: 20, marginHorizontal: 20 }}>
       <Skeleton
@@ -50,6 +51,7 @@ export const ProductDetailsSkeleton = () => {
 
 export const ProductPriceSkeleton = () => {
   const screenWidth = Dimensions.get("window").width;
+
   return (
     <MotiView style={{ gap: 9 }}>
       <Skeleton width={screenWidth * 0.4} height={30} colorMode="light" />
@@ -556,27 +558,39 @@ export const EnterQuantity = ({
   form,
 }: {
   readonly form: UseFormReturn<{
-    quantity: string;
+    quantity: number;
+  }>;
+}) => {
+  return Platform.OS === "ios" ? (
+    <KeyboardAvoidingView behavior="padding">
+      <EnterQuantityBase form={form} />
+    </KeyboardAvoidingView>
+  ) : (
+    <EnterQuantityBase form={form} />
+  );
+};
+
+const EnterQuantityBase = ({
+  form,
+}: {
+  readonly form: UseFormReturn<{
+    quantity: number;
   }>;
 }) => {
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    <XStack
+      flex={1}
+      position="absolute"
+      bottom={0}
+      paddingHorizontal={20}
+      backgroundColor="white"
+      gap={5}
+      paddingVertical={20}
     >
-      <XStack
-        flex={1}
-        position="absolute"
-        bottom={0}
-        paddingHorizontal={20}
-        backgroundColor="white"
-        gap={5}
-        paddingVertical={20}
-      >
-        <QuantityInput flex={1} form={form} />
-        <Button flex={1} backgroundColor="$red11" color="white" fontSize="$6">
-          Add to Cart
-        </Button>
-      </XStack>
-    </KeyboardAvoidingView>
+      <QuantityInput flex={1} form={form} />
+      <Button flex={1} backgroundColor="$red11" color="white" fontSize="$6">
+        Add to Cart
+      </Button>
+    </XStack>
   );
 };

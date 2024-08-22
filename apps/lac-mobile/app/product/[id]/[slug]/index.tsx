@@ -27,6 +27,10 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView, Text, View, YStack } from "tamagui";
 import { z } from "zod";
 
+const quantitySchema = z.object({
+  quantity: z.number(),
+});
+
 const Product = () => {
   const localSearchParams = useLocalSearchParams<{
     id: string;
@@ -66,10 +70,10 @@ const ProductDetails = ({ productId }: { readonly productId: string }) => {
 
   const token = useSessionTokenStorage((state) => state.token);
 
-  const form = useForm<{ quantity: string }>({
+  const form = useForm<z.infer<typeof quantitySchema>>({
     resolver: zodResolver(z.object({ quantity: z.string() })),
     values: {
-      quantity: "1",
+      quantity: 1,
     },
   });
 
@@ -164,13 +168,13 @@ const ProductDetails = ({ productId }: { readonly productId: string }) => {
               productListPrice={data.selectedProduct.listPrice}
               unitOfMeasure={data.selectedProduct.unitOfMeasure}
               freightCharge={data.selectedProduct.specialShipping}
-              quantity={Number(deferredQuantity)}
+              quantity={deferredQuantity}
             />
 
             <StockStatus
               token={token}
               productId={data.selectedProduct.productId}
-              quantity={Number(deferredQuantity)}
+              quantity={deferredQuantity}
             />
           </Suspense>
 

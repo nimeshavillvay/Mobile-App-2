@@ -1,6 +1,6 @@
 import { NumericInput } from "@repo/native-ui/components/input/numeric-input";
 import { Minus, Plus } from "@tamagui/lucide-icons";
-import { type ComponentProps, useRef, useState } from "react";
+import { type ComponentProps } from "react";
 import { Controller, useController, type UseFormReturn } from "react-hook-form";
 import { Button, Form, Text, View, XStack, YStack } from "tamagui";
 
@@ -8,7 +8,7 @@ type QuantityInputProps = {
   readonly minimumValue?: number;
   readonly incrementBy?: number;
   readonly form: UseFormReturn<{
-    quantity: string;
+    quantity: number;
   }>;
 } & ComponentProps<typeof XStack>;
 
@@ -18,43 +18,38 @@ export const QuantityInput = ({
   form,
   ...style
 }: QuantityInputProps) => {
-  const inputRef = useRef(null);
-  const [inputValue, setInputValue] = useState(minimumValue);
-
   const {
-    field: { onChange },
+    field: { value, onChange },
   } = useController({
     control: form.control,
     name: "quantity",
   });
 
-  const handleChange = (value: string) => {
-    if (value === "") {
-      setInputValue(minimumValue);
+  const handleChange = (inputValue: string) => {
+    if (!inputValue) {
+      onChange(minimumValue);
       return;
     }
 
-    if (isNaN(Number(value))) {
+    if (isNaN(Number(inputValue))) {
       return;
     }
 
-    if (Number(value) < minimumValue) {
-      setInputValue(minimumValue);
+    if (Number(inputValue) < minimumValue) {
+      onChange(minimumValue);
+      return;
     }
 
-    setInputValue(Number(value));
-    value = inputValue.toString();
-  };
-
-  const handleIncrement = () => {
-    setInputValue((current) => current + 1);
     onChange(inputValue);
   };
 
+  const handleIncrement = () => {
+    onChange(Number(value) + incrementBy);
+  };
+
   const handleDecrement = () => {
-    if (inputValue - incrementBy >= minimumValue) {
-      setInputValue((current) => current - 1);
-      onChange(inputValue);
+    if (value - incrementBy >= minimumValue) {
+      onChange(Number(value) - incrementBy);
     }
   };
 
@@ -71,14 +66,13 @@ export const QuantityInput = ({
         <Controller
           control={form.control}
           name="quantity"
-          render={({ field: { onChange } }) => (
+          render={({ field: { value } }) => (
             <NumericInput
-              ref={inputRef}
               onChangeText={(val) => {
                 handleChange(val);
-                onChange(val);
               }}
-              value={inputValue.toString()}
+              defaultValue={minimumValue.toString()}
+              value={value.toString()}
               flex={1}
               borderRadius={0}
               backgroundColor="$gray2"
