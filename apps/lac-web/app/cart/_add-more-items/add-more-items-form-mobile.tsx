@@ -1,6 +1,7 @@
 "use client";
 
 import WurthLacLogo from "@/_components/wurth-lac-logo";
+import { AddToCartGTMDtaLayerPush } from "@/_lib/gtm-data-layer";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Alert } from "@repo/web-ui/components/icons/alert";
 import { Plus } from "@repo/web-ui/components/icons/plus";
@@ -163,6 +164,10 @@ const AddMoreItemsFormMobile = () => {
           setOpen(false);
           setErrorMessage(null); // Clear error after successfully adding to cart
           reset();
+          AddToCartGTMDtaLayerPush(
+            parseInt(product.productid),
+            values.quantity ?? 0,
+          );
         },
       },
     );

@@ -13,6 +13,7 @@ import useSuspenseCheckAvailability from "@/_hooks/product/use-suspense-check-av
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
 import { MAX_QUANTITY, NOT_AVAILABLE } from "@/_lib/constants";
+import { AddToCartGTMDtaLayerPush } from "@/_lib/gtm-data-layer";
 import {
   calculateIncreaseQuantity,
   calculateReduceQuantity,
@@ -344,6 +345,8 @@ const AddToCart = ({
   const { setQuantity } = useAddToCartDialog((state) => state.actions);
 
   const quantity = watch("quantity");
+  const delayedQuantity = useDebouncedState(quantity);
+  const deferredQuantity = useDeferredValue(delayedQuantity);
 
   const reduceQuantity = () => {
     // Use `Number(quantity)` because `quantity` is a string at runtime
@@ -367,6 +370,7 @@ const AddToCart = ({
   const onSubmit = handleSubmit((data) => {
     // Update the quantity in add to cart dialog
     setQuantity(data.quantity);
+    AddToCartGTMDtaLayerPush(productId, Number(deferredQuantity));
 
     addToCartMutation.mutate({
       quantity: data.quantity,

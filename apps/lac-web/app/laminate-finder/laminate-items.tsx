@@ -1,5 +1,6 @@
 import useLaminateProductsInfo from "@/_hooks/laminate/use-suspense-laminate-info.hook";
 import useDebouncedState from "@/_hooks/misc/use-debounced-state.hook";
+import { AddMultipleToCartGTMDtaLayerPush } from "@/_lib/gtm-data-layer";
 import useAddMultipleToCartMutation from "@/cart/_add-more-items/use-add-multiple-to-cart-mutation.hook";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@repo/web-ui/components/ui/button";
@@ -69,6 +70,7 @@ const LaminateItems = ({
       .filter((item) => item.quantity !== undefined);
     addMultipleToCartMutation.mutateAsync(addToCartRequest, {
       onSuccess: () => {
+        AddMultipleToCartGTMDtaLayerPush(addToCartRequest);
         router.push("/cart");
       },
     });

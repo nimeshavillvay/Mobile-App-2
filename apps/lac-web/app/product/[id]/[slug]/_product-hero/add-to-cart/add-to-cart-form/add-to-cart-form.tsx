@@ -6,6 +6,7 @@ import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
 import useSuspenseCheckAvailability from "@/_hooks/product/use-suspense-check-availability.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
 import { MAX_QUANTITY, NOT_AVAILABLE } from "@/_lib/constants";
+import { AddToCartGTMDtaLayerPush } from "@/_lib/gtm-data-layer";
 import {
   calculateIncreaseQuantity,
   calculateReduceQuantity,
@@ -60,6 +61,7 @@ const AddToCartForm = ({
     setQuantity(quantity);
 
     addToCartMutation.mutate(values);
+    AddToCartGTMDtaLayerPush(productId, quantity);
   });
 
   const checkAvailabilityQuery = useSuspenseCheckAvailability(token, {
@@ -170,6 +172,7 @@ const AddToCartFormLoggedIn = ({
     setQuantity(quantity);
 
     addToCartMutation.mutate(values);
+    AddToCartGTMDtaLayerPush(productId, quantity);
   });
 
   const checkAvailabilityQuery = useSuspenseCheckAvailability(token, {

@@ -5,6 +5,7 @@ import useAddToCartMutation from "@/_hooks/cart/use-add-to-cart-mutation.hook";
 import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
 import useItemInfo from "@/_hooks/product/use-item-info.hook";
 import useSuspenseProductExcluded from "@/_hooks/product/use-suspense-product-excluded.hook";
+import { AddToCartGTMDtaLayerPush } from "@/_lib/gtm-data-layer";
 import { cn } from "@/_lib/utils";
 import ErrorBoundary from "@/old/_components/error-boundary";
 import { Button } from "@/old/_components/ui/button";
@@ -77,13 +78,14 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
   const [isNotAvailableProduct, setIsNotAvailableProduct] = useState(false);
 
   const onSubmit = methods.handleSubmit((data) => {
-    if (data.quantity) {
+    const quantity = data.quantity;
+    if (quantity) {
       // Update the quantity in add to cart dialog
-      setQuantity(data.quantity);
+      setQuantity(quantity);
 
       addToCartMutation.mutate(
         {
-          quantity: data.quantity,
+          quantity: quantity,
         },
         {
           onSuccess: (data) => {
@@ -92,6 +94,8 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
             }
             // Reset the form after submission
             methods.reset();
+
+            AddToCartGTMDtaLayerPush(item.productId, quantity);
           },
         },
       );
