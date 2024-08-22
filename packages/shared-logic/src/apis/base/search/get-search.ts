@@ -10,11 +10,11 @@ const searchResultSchema = z.object({
       type: z.string(),
       item_group_name: z.string(),
       slug: z.string(),
-      brandName: z.string(),
-      brandid: z.string(),
+      brandName: z.union([z.string(), z.boolean()]),
+      brandid: z.string().nullable(),
       group_img: z.string(),
       compliance_flags: z.string(),
-      fclassid: z.string(),
+      fclassid: z.string().nullable(),
       txt_meta_title: z.string().optional(),
       itemSkuList: z.array(
         z.object({
@@ -32,7 +32,7 @@ const searchResultSchema = z.object({
           txt_mfn: z.string(),
           txt_description_name: z.string().nullable(),
           txt_sub_description: z.string().nullable(),
-          sel_assigned_brand: z.string(),
+          sel_assigned_brand: z.string().nullable(),
           txt_uom_label: z.string(),
           txt_box_qt: z.string(),
           txt_min_order_amount: z.string(),
