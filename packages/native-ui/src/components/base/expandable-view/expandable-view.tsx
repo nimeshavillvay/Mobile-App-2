@@ -1,16 +1,19 @@
 import { LinearGradient } from "expo-linear-gradient";
 import { type ComponentProps, type ReactNode, useState } from "react";
 import { Button, View, YStack } from "tamagui";
+import { convertToRGBA } from "~/lib/utils";
 
 type ExpandableViewProps = {
   readonly maxHeight?: number;
   readonly blurDistance?: number;
+  readonly blurColor?: string;
   readonly children: ReactNode;
 } & ComponentProps<typeof View>;
 
 export const ExpandableView = ({
   maxHeight = 200,
   blurDistance = 50,
+  blurColor = "rgb(255,255,255)",
   children,
   ...delegated
 }: ExpandableViewProps) => {
@@ -37,7 +40,10 @@ export const ExpandableView = ({
             width="100%"
           >
             <LinearGradient
-              colors={["rgba(255,255,255,0)", "rgba(255,255,255,1)"]}
+              colors={[
+                convertToRGBA(blurColor, 0),
+                convertToRGBA(blurColor, 1),
+              ]}
               style={{ height: "100%", width: "100%" }}
               start={{ x: 0, y: -1 }}
               end={{ x: 0, y: 1 }}
@@ -45,7 +51,7 @@ export const ExpandableView = ({
           </View>
         )}
       </View>
-      <View backgroundColor="white" height={20} />
+      <View backgroundColor={blurColor} height={20} />
 
       {height >= maxHeight && (
         <Button
