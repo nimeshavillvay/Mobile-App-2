@@ -4,12 +4,14 @@ import {
   ProductAction,
   ProductDetailsSkeleton,
   ProductPrices,
+  ProductPriceSkeleton,
   ProductVariations,
   SalesBadges,
   StockStatus,
 } from "@/components/product";
 import useSessionTokenStorage from "@/hooks/auth/use-session-token-storage.hook";
 import { API_BASE_URL, API_KEY } from "@/lib/constants";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   ProductCarousel,
   ProductCarouselItem,
@@ -17,11 +19,17 @@ import {
 } from "@repo/native-ui/components/product";
 import useSuspenseGetProduct from "@repo/shared-logic/apis/hooks/product/use-suspense-get-product.hook";
 import { Stack, useLocalSearchParams } from "expo-router";
-import { Suspense, useState } from "react";
+import { Suspense, useDeferredValue, useState } from "react";
+import { useForm } from "react-hook-form";
 import { Dimensions, KeyboardAvoidingView, Platform } from "react-native";
 import ImageView from "react-native-image-viewing";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView, Text, View, YStack } from "tamagui";
+import { z } from "zod";
+
+const quantitySchema = z.object({
+  quantity: z.number(),
+});
 
 const Product = () => {
   const localSearchParams = useLocalSearchParams<{
@@ -61,6 +69,16 @@ const ProductDetails = ({ productId }: { readonly productId: string }) => {
   const [imageOverlayVisible, setImageOverlayVisible] = useState(false);
 
   const token = useSessionTokenStorage((state) => state.token);
+
+  const form = useForm<z.infer<typeof quantitySchema>>({
+    resolver: zodResolver(z.object({ quantity: z.string() })),
+    values: {
+      quantity: 1,
+    },
+  });
+
+  const quantity = form.watch("quantity");
+  const deferredQuantity = useDeferredValue(quantity);
 
   const { data } = useSuspenseGetProduct(
     {
@@ -143,18 +161,22 @@ const ProductDetails = ({ productId }: { readonly productId: string }) => {
 
           <Text fontSize="$6">{data.selectedProduct.productName}</Text>
 
-          <ProductPrices
-            token={token}
-            productId={data.selectedProduct.productId}
-            productListPrice={data.selectedProduct.listPrice}
-            unitOfMeasure={data.selectedProduct.unitOfMeasure}
-            freightCharge={data.selectedProduct.specialShipping}
-          />
+          <Suspense fallback={<ProductPriceSkeleton />}>
+            <ProductPrices
+              token={token}
+              productId={data.selectedProduct.productId}
+              productListPrice={data.selectedProduct.listPrice}
+              unitOfMeasure={data.selectedProduct.unitOfMeasure}
+              freightCharge={data.selectedProduct.specialShipping}
+              quantity={deferredQuantity}
+            />
 
-          <StockStatus
-            token={token}
-            productId={data.selectedProduct.productId}
-          />
+            <StockStatus
+              token={token}
+              productId={data.selectedProduct.productId}
+              quantity={deferredQuantity}
+            />
+          </Suspense>
 
           <PriceBreakdowns
             token={token}
@@ -166,7 +188,7 @@ const ProductDetails = ({ productId }: { readonly productId: string }) => {
         </YStack>
       </ScrollView>
 
-      <EnterQuantity />
+      <EnterQuantity form={form} />
     </>
   );
 };
