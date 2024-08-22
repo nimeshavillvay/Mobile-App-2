@@ -71,6 +71,7 @@ const useRegisterNewUserMutation = () => {
         account_industry: "Homeowner",
         account_sales_category: "Z0",
       });
+
       const response = await api
         .post("rest/register/new", {
           headers: {
