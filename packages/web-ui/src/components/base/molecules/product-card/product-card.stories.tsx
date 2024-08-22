@@ -47,14 +47,7 @@ export const Default: Story = {
       <ProductCardContent>
         <ProductCardDetails title="Product Title" sku="SKU12345" href="#" />
         <ProductCardPrice price={100} uom="each" />
-        <ProductCardActions
-          addToCart={() => alert("Added to cart")}
-          isFavorite={false}
-          showCompare={true}
-          isCompared={false}
-          onClickShoppingList={() => alert("Added to shopping list")}
-          compare={() => alert("Added to compare list")}
-        />
+        <ProductCardActions />
       </ProductCardContent>
     </ProductCard>
   ),
@@ -82,14 +75,7 @@ export const Horizontal: Story = {
 
           <ProductCardPrice price={39} uom="pair" actualPrice={49} />
 
-          <ProductCardActions
-            addToCart={() => alert("Added to cart")}
-            isFavorite={false}
-            showCompare={true}
-            isCompared={false}
-            onClickShoppingList={() => alert("Added to shopping list")}
-            compare={() => alert("Added to compare list")}
-          />
+          <ProductCardActions />
         </ProductCardContent>
       </ProductCard>
     );
@@ -115,14 +101,7 @@ export const WithSaleBadge: Story = {
       <ProductCardContent>
         <ProductCardDetails title="Product Title" sku="SKU12345" href="#" />
         <ProductCardPrice price={80} actualPrice={100} uom="each" />
-        <ProductCardActions
-          addToCart={() => alert("Added to cart")}
-          isFavorite={false}
-          showCompare={true}
-          isCompared={false}
-          onClickShoppingList={() => alert("Added to shopping list")}
-          compare={() => alert("Added to compare list")}
-        />
+        <ProductCardActions />
       </ProductCardContent>
     </ProductCard>
   ),
