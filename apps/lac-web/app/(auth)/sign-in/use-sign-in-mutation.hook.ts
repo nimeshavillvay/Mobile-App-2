@@ -2,6 +2,7 @@ import { revalidateSiteLayout } from "@/_actions/revalidate";
 import useCookies from "@/_hooks/storage/use-cookies.hook";
 import { api } from "@/_lib/api";
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
+import { sendGTMEvent } from "@next/third-parties/google";
 import { useToast } from "@repo/web-ui/components/ui/toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { usePathname, useRouter } from "next/navigation";
@@ -65,6 +66,15 @@ const useSignInMutation = () => {
       return transformData;
     },
     onSuccess: async (data) => {
+      sendGTMEvent({
+        event: "login",
+        method: "login_popup",
+        userid: data.userId,
+        account_type: "C",
+        account_industry: "WP",
+        account_sales_category: "Z0",
+      });
+
       toast({
         title: "Sign in successful",
       });
