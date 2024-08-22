@@ -2,8 +2,8 @@ import type { FlashListProps } from "@shopify/flash-list";
 import { FlashList } from "@shopify/flash-list";
 import { Image } from "expo-image";
 import { Link } from "expo-router";
-import { Pressable, StyleSheet } from "react-native";
-import { Text, View } from "tamagui";
+import { Pressable, StyleSheet, View } from "react-native";
+import { Text } from "tamagui";
 
 type SubCategory = {
   readonly id: string;
