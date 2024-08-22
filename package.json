@@ -9,6 +9,7 @@
     "start": "dotenv -c -- turbo start",
     "lint": "dotenv -c -- turbo lint",
     "test": "dotenv -c -- turbo test",
+    "types": "dotenv -c -- turbo types",
     "prettier:format": "prettier --write \"**/*.{js,jsx,ts,tsx,md,json,yaml}\" --cache --cache-location=.prettier/cache",
     "prettier:check": "prettier --check \"**/*.{js,jsx,ts,tsx,md,json,yaml}\" --cache --cache-location=.prettier/cache"
   },

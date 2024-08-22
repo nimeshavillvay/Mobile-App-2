@@ -24,8 +24,10 @@
     "baseUrl": ".",
     "paths": {
       "~/*": ["./src/*"]
-    }
+    },
+
+    "rootDir": "."
   },
-  "include": ["**/*.ts", "**/*.tsx", "jest.config.ts", "jest.setup.ts"],
+  "include": ["src/**/*.ts", "src/**/*.tsx", "jest.config.ts", "jest.setup.ts"],
   "exclude": ["node_modules"]
 }

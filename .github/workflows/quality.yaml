@@ -49,7 +49,7 @@ jobs:
       - name: Check formatting with Prettier
         run: pnpm run prettier:check
   linting-and-testing:
-    name: Linting and Testing
+    name: Types, Linting, and Testing
     runs-on: ubuntu-22.04
     strategy:
       matrix:
@@ -84,6 +84,8 @@ jobs:
             ${{ runner.os }}-pnpm-store-
       - name: Install dependencies
         run: pnpm install
+      - name: Run TypeScript Type Checker
+        run: pnpm run types
       - name: Run ESLint
         run: pnpm run lint
       - name: Run Unit Tests
