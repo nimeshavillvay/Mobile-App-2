@@ -15,6 +15,7 @@ import {
   calculateReduceQuantity,
 } from "@/_lib/utils";
 import { sendGTMEvent } from "@next/third-parties/google";
+import { useEffect } from "react";
 import { Controller } from "react-hook-form";
 import useAddToCartForm from "../../use-add-to-cart-form.hook";
 import FormContent from "./form-content";
@@ -46,37 +47,39 @@ const AddToCartForm = ({
   const gtmItemUserQuery = useGtmUser();
   const gtmUser = gtmItemUserQuery.data;
 
-  sendGTMEvent({
-    event: "view_item",
-    viewItemData: {
-      currency: "USD",
-      value: gtmItemInfo?.price,
-      items: [
-        {
-          item_id: gtmItemInfo?.item_id,
-          item_sku: gtmItemInfo?.item_sku,
-          item_name: gtmItemInfo?.item_name,
-          item_brand: gtmItemInfo?.item_brand,
-          price: gtmItemInfo?.price,
-          quantity: 1,
-          item_categoryid: gtmItemInfo?.item_categoryid,
-          item_primarycategory: gtmItemInfo?.item_primarycategory,
-          item_category: gtmItemInfo?.item_category_path[0] ?? "",
-          item_category1: gtmItemInfo?.item_category_path[1] ?? "",
-          item_category2: gtmItemInfo?.item_category_path[2] ?? "",
-          item_category3: gtmItemInfo?.item_category_path[3] ?? "",
-        },
-      ],
-      page_type: getGTMPageType(
-        pathnameHistory[pathnameHistory.length - 1] ?? "",
-      ),
-    },
-    data: {
-      userid: gtmUser?.userid,
-      account_type: gtmUser?.account_type,
-      account_industry: gtmUser?.account_industry,
-      account_sales_category: gtmUser?.account_sales_category,
-    },
+  useEffect(() => {
+    sendGTMEvent({
+      event: "view_item",
+      viewItemData: {
+        currency: "USD",
+        value: gtmItemInfo?.price,
+        items: [
+          {
+            item_id: gtmItemInfo?.item_id,
+            item_sku: gtmItemInfo?.item_sku,
+            item_name: gtmItemInfo?.item_name,
+            item_brand: gtmItemInfo?.item_brand,
+            price: gtmItemInfo?.price,
+            quantity: 1,
+            item_categoryid: gtmItemInfo?.item_categoryid,
+            item_primarycategory: gtmItemInfo?.item_primarycategory,
+            item_category: gtmItemInfo?.item_category_path[0] ?? "",
+            item_category1: gtmItemInfo?.item_category_path[1] ?? "",
+            item_category2: gtmItemInfo?.item_category_path[2] ?? "",
+            item_category3: gtmItemInfo?.item_category_path[3] ?? "",
+          },
+        ],
+        page_type: getGTMPageType(
+          pathnameHistory[pathnameHistory.length - 1] ?? "",
+        ),
+      },
+      data: {
+        userid: gtmUser?.userid,
+        account_type: gtmUser?.account_type,
+        account_industry: gtmUser?.account_industry,
+        account_sales_category: gtmUser?.account_sales_category,
+      },
+    });
   });
 
   const checkLoginQuery = useSuspenseCheckLogin(token);
@@ -202,38 +205,41 @@ const AddToCartFormLoggedIn = ({
   const gtmItemUserQuery = useGtmUser();
   const gtmUser = gtmItemUserQuery.data;
 
-  sendGTMEvent({
-    event: "view_item",
-    viewItemData: {
-      currency: "USD",
-      value: gtmItemInfo?.price,
-      items: [
-        {
-          item_id: gtmItemInfo?.item_id,
-          item_sku: gtmItemInfo?.item_sku,
-          item_name: gtmItemInfo?.item_name,
-          item_brand: gtmItemInfo?.item_brand,
-          price: gtmItemInfo?.price,
-          quantity: 1,
-          item_categoryid: gtmItemInfo?.item_categoryid,
-          item_primarycategory: gtmItemInfo?.item_primarycategory,
-          item_category: gtmItemInfo?.item_category_path[0] ?? "",
-          item_category1: gtmItemInfo?.item_category_path[1] ?? "",
-          item_category2: gtmItemInfo?.item_category_path[2] ?? "",
-          item_category3: gtmItemInfo?.item_category_path[3] ?? "",
-        },
-      ],
-      page_type: getGTMPageType(
-        pathnameHistory[pathnameHistory.length - 1] ?? "",
-      ),
-    },
-    data: {
-      userid: gtmUser?.userid,
-      account_type: gtmUser?.account_type,
-      account_industry: gtmUser?.account_industry,
-      account_sales_category: gtmUser?.account_sales_category,
-    },
+  useEffect(() => {
+    sendGTMEvent({
+      event: "view_item",
+      viewItemData: {
+        currency: "USD",
+        value: gtmItemInfo?.price,
+        items: [
+          {
+            item_id: gtmItemInfo?.item_id,
+            item_sku: gtmItemInfo?.item_sku,
+            item_name: gtmItemInfo?.item_name,
+            item_brand: gtmItemInfo?.item_brand,
+            price: gtmItemInfo?.price,
+            quantity: 1,
+            item_categoryid: gtmItemInfo?.item_categoryid,
+            item_primarycategory: gtmItemInfo?.item_primarycategory,
+            item_category: gtmItemInfo?.item_category_path[0] ?? "",
+            item_category1: gtmItemInfo?.item_category_path[1] ?? "",
+            item_category2: gtmItemInfo?.item_category_path[2] ?? "",
+            item_category3: gtmItemInfo?.item_category_path[3] ?? "",
+          },
+        ],
+        page_type: getGTMPageType(
+          pathnameHistory[pathnameHistory.length - 1] ?? "",
+        ),
+      },
+      data: {
+        userid: gtmUser?.userid,
+        account_type: gtmUser?.account_type,
+        account_industry: gtmUser?.account_industry,
+        account_sales_category: gtmUser?.account_sales_category,
+      },
+    });
   });
+
   // TODO Try to remove the duplicated code
   const { watch, setValue, handleSubmit, control } = useAddToCartForm();
   const quantity = watch("quantity");
