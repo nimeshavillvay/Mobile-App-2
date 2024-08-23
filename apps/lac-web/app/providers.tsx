@@ -1,10 +1,13 @@
 "use client";
 
+import usePathnameHistoryState from "@/_hooks/misc/use-pathname-history-state.hook";
 import { TooltipProvider } from "@repo/web-ui/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { ReactQueryStreamedHydration } from "@tanstack/react-query-next-experimental";
-import { type ReactNode } from "react";
+import { usePathname } from "next/navigation";
+// eslint-disable-next-line no-restricted-imports
+import { useEffect, type ReactNode } from "react";
 import { CookiesProvider } from "react-cookie";
 import { Provider as WrapBalancer } from "react-wrap-balancer";
 
@@ -48,6 +51,13 @@ const Providers = ({ children }: ProvidersProps) => {
   //       suspend because React will throw away the client on the initial
   //       render if it suspends and there is no boundary
   const queryClient = getQueryClient();
+
+  const pathname = usePathname();
+  const { pushPathname } = usePathnameHistoryState((state) => state.actions);
+
+  useEffect(() => {
+    pushPathname(pathname);
+  }, [pathname, pushPathname]);
 
   return (
     <CookiesProvider>
