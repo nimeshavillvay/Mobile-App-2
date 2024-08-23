@@ -24,7 +24,7 @@
     }
   },
   "include": [
-    "src",
+    "src/**/*.ts",
     "next-env.d.ts",
     "reset.d.ts",
     "global-error-registration.d.ts"
