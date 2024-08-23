@@ -1,7 +1,7 @@
 import { api } from "~/lib/api";
 import { SPECIAL_SHIPPING_FLAG } from "~/lib/constants";
+import { getBoolean } from "~/lib/helpers";
 import type { AuthenticatedApiConfig } from "~/lib/types";
-import { getBoolean } from "~/lib/utils";
 import { cartSchema, type CartItemConfiguration } from "~/lib/zod-schema/cart";
 
 const getConfigAvailability = (option: CartItemConfiguration) => {

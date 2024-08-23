@@ -1,24 +1,7 @@
 import { cleanup, renderRouter, screen } from "@/lib/test-utils-router";
-import { server } from "@/mocks/server";
 import CategoryPage from "../../app/category/[id]";
 
 describe("Search Results", () => {
-  // establish API mocking before all tests
-  beforeAll(() => {
-    server.listen({
-      onUnhandledRequest: "error",
-    });
-  });
-  // reset any request handlers that are declared as a part of our tests
-  // (i.e. for testing one-time error scenarios)
-  afterEach(() => {
-    server.resetHandlers();
-  });
-  // clean up once the tests are done
-  afterAll(() => {
-    server.close();
-  });
-
   afterEach(() => {
     cleanup();
   });
