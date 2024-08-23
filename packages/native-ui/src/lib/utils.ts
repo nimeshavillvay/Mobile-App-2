@@ -1,3 +1,4 @@
+
 export const convertToRGBA = (color: string, alpha: number = 1): string => {
   const hexToRGB = (hex: string): number[] => {
     const r = parseInt(hex.slice(1, 3), 16);
@@ -26,4 +27,18 @@ export const convertToRGBA = (color: string, alpha: number = 1): string => {
   }
 
   return `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${alpha})`;
+}
+
+/**
+ * Format a number to price
+ */
+export const formatNumberToPrice = (value?: number) => {
+  if (!value && value !== 0) {
+    return "";
+  }
+
+  return value.toLocaleString(undefined, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
 };
