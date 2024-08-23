@@ -15,6 +15,7 @@ import {
   calculateReduceQuantity,
 } from "@/_lib/utils";
 import { sendGTMEvent } from "@next/third-parties/google";
+// eslint-disable-next-line no-restricted-imports
 import { useEffect } from "react";
 import { Controller } from "react-hook-form";
 import useAddToCartForm from "../../use-add-to-cart-form.hook";
@@ -42,12 +43,12 @@ const AddToCartForm = ({
   const gtmItemInfoQuery = useGtmProducts(
     productId ? [{ productid: productId, cartid: 0 }] : [],
   );
-  const gtmItemInfo = gtmItemInfoQuery.data?.[0];
 
   const gtmItemUserQuery = useGtmUser();
-  const gtmUser = gtmItemUserQuery.data;
 
   useEffect(() => {
+    const gtmItemInfo = gtmItemInfoQuery.data?.[0];
+    const gtmUser = gtmItemUserQuery.data;
     sendGTMEvent({
       event: "view_item",
       viewItemData: {
@@ -80,7 +81,7 @@ const AddToCartForm = ({
         account_sales_category: gtmUser?.account_sales_category,
       },
     });
-  });
+  }, [gtmItemInfoQuery.data, gtmItemUserQuery.data, pathnameHistory]);
 
   const checkLoginQuery = useSuspenseCheckLogin(token);
 
@@ -200,12 +201,12 @@ const AddToCartFormLoggedIn = ({
   const gtmItemInfoQuery = useGtmProducts(
     productId ? [{ productid: productId, cartid: 0 }] : [],
   );
-  const gtmItemInfo = gtmItemInfoQuery.data?.[0];
 
   const gtmItemUserQuery = useGtmUser();
-  const gtmUser = gtmItemUserQuery.data;
 
   useEffect(() => {
+    const gtmItemInfo = gtmItemInfoQuery.data?.[0];
+    const gtmUser = gtmItemUserQuery.data;
     sendGTMEvent({
       event: "view_item",
       viewItemData: {
@@ -238,7 +239,7 @@ const AddToCartFormLoggedIn = ({
         account_sales_category: gtmUser?.account_sales_category,
       },
     });
-  });
+  }, [gtmItemInfoQuery.data, gtmItemUserQuery.data, pathnameHistory]);
 
   // TODO Try to remove the duplicated code
   const { watch, setValue, handleSubmit, control } = useAddToCartForm();
