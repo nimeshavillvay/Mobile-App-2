@@ -1,6 +1,7 @@
 "use client";
 
 import usePathnameHistoryState from "@/_hooks/misc/use-pathname-history-state.hook";
+import { sendGTMEvent } from "@next/third-parties/google";
 import { TooltipProvider } from "@repo/web-ui/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
@@ -10,6 +11,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, type ReactNode } from "react";
 import { CookiesProvider } from "react-cookie";
 import { Provider as WrapBalancer } from "react-wrap-balancer";
+import { getGTMPageType } from "./_lib/gtm-utils";
 
 const makeQueryClient = () => {
   return new QueryClient({
@@ -58,6 +60,15 @@ const Providers = ({ children }: ProvidersProps) => {
   useEffect(() => {
     pushPathname(pathname);
   }, [pathname, pushPathname]);
+
+  useEffect(() => {
+    sendGTMEvent({
+      event: "view_page",
+      viewPageData: {
+        page_type: getGTMPageType(pathname),
+      },
+    });
+  }, [pathname]);
 
   return (
     <CookiesProvider>
