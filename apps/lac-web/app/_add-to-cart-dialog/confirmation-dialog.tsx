@@ -105,6 +105,7 @@ const ConfirmationDialog = ({ token }: ConfirmationDialogProps) => {
 
   const goToCart = () => {
     closeDialog();
+
     sendGTMEvent({
       event: "view_cart",
       viewCartData: {

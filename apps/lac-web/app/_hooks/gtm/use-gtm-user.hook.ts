@@ -1,18 +1,20 @@
 import useCookies from "@/_hooks/storage/use-cookies.hook";
 import { api } from "@/_lib/api";
-import { DEFAULT_REVALIDATE, SESSION_TOKEN_COOKIE } from "@/_lib/constants";
+import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import { useQuery } from "@tanstack/react-query";
+import { z } from "zod";
 
-type GTMUser = {
-  userid: string;
-  account_type: string;
-  account_industry: string;
-  account_sales_category: string;
-};
+const userListSchema = z.object({
+  userid: z.string(),
+  account_type: z.number(),
+  account_industry: z.string(),
+  account_sales_category: z.string(),
+});
 
 const useGtmUser = () => {
   const [cookies] = useCookies();
   const token = cookies[SESSION_TOKEN_COOKIE];
+
   return useQuery({
     queryKey: ["gtm", "user", token],
     queryFn: async () => {
@@ -21,12 +23,10 @@ const useGtmUser = () => {
           headers: {
             authorization: `Bearer ${token}`,
           },
-          next: {
-            revalidate: DEFAULT_REVALIDATE, // todo: update if necessary
-          },
         })
-        .json<GTMUser>();
-      return response;
+        .json();
+
+      return userListSchema.parse(response);
     },
   });
 };

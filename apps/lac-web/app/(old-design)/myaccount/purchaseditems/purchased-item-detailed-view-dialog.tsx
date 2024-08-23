@@ -1,13 +1,13 @@
 import Warning from "@/_components/warning";
 import WurthLacLogo from "@/_components/wurth-lac-logo";
 import useAddToCartMutation from "@/_hooks/cart/use-add-to-cart-mutation.hook";
+import useCurrentPageStore from "@/_hooks/gtm/use-current-page-store.hook";
 import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
 import useSuspenseCheckAvailability from "@/_hooks/product/use-suspense-check-availability.hook";
 import useSuspenseProductExcluded from "@/_hooks/product/use-suspense-product-excluded.hook";
 import { NOT_AVAILABLE } from "@/_lib/constants";
 import { getGTMPageType } from "@/_lib/gtm-utils";
 import { cn } from "@/_lib/utils";
-import useCurrentPageStore from "@/cart/use-current-page-store.hook";
 import ErrorBoundary from "@/old/_components/error-boundary";
 import AddToCartIcon from "@/old/_components/icons/add-to-cart";
 import Separator from "@/old/_components/separator";

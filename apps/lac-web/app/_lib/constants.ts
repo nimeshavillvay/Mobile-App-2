@@ -58,4 +58,4 @@ export const GTM_PAGE_TYPES = {
   LOGIN: "login_page",
 } as const;
 
-export const GTM_PAGE_TYPE_OTHER = "other" as const;
+export const GTM_PAGE_TYPE_OTHER = "other";

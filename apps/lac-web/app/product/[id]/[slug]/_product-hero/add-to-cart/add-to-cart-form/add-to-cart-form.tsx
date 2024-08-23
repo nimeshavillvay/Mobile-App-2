@@ -2,6 +2,7 @@
 
 import NumberInputField from "@/_components/number-input-field";
 import useAddToCartMutation from "@/_hooks/cart/use-add-to-cart-mutation.hook";
+import useCurrentPageStore from "@/_hooks/gtm/use-current-page-store.hook";
 import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
 import useSuspenseCheckAvailability from "@/_hooks/product/use-suspense-check-availability.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
@@ -11,7 +12,6 @@ import {
   calculateIncreaseQuantity,
   calculateReduceQuantity,
 } from "@/_lib/utils";
-import useCurrentPageStore from "@/cart/use-current-page-store.hook";
 import { usePathname } from "next/navigation";
 import { Controller } from "react-hook-form";
 import useAddToCartForm from "../../use-add-to-cart-form.hook";

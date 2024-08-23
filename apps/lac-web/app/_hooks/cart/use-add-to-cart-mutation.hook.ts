@@ -1,9 +1,9 @@
+import useCurrentPageStore from "@/_hooks/gtm/use-current-page-store.hook";
 import useGtmProducts from "@/_hooks/gtm/use-gtm-item-info.hook";
 import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
 import { api } from "@/_lib/api";
 import { checkAvailability } from "@/_lib/apis/shared";
 import { NOT_AVAILABLE, SESSION_TOKEN_COOKIE } from "@/_lib/constants";
-import useCurrentPageStore from "@/cart/use-current-page-store.hook";
 import { sendGTMEvent } from "@next/third-parties/google";
 import { useToast } from "@repo/web-ui/components/ui/toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -169,6 +169,7 @@ const useAddToCartMutation = ({ productId }: { productId: number }) => {
       } else {
         // Open the dialog
         setOpen("confirmation");
+
         sendGTMEvent({
           event: "add_to_cart",
           addToCartData: {

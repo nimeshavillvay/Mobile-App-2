@@ -6,6 +6,7 @@ import ProductNotAvailable from "@/_components/product-not-available";
 import QuantityWarning from "@/_components/quantity-warning";
 import useSuspenseWillCallPlant from "@/_hooks/address/use-suspense-will-call-plant.hook";
 import useAddToCartMutation from "@/_hooks/cart/use-add-to-cart-mutation.hook";
+import useCurrentPageStore from "@/_hooks/gtm/use-current-page-store.hook";
 import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
 import useDebouncedState from "@/_hooks/misc/use-debounced-state.hook";
 import useItemInfo from "@/_hooks/product/use-item-info.hook";
@@ -21,7 +22,6 @@ import {
   formatNumberToPrice,
 } from "@/_lib/utils";
 import { NUMBER_TYPE } from "@/_lib/zod-helper";
-import useCurrentPageStore from "@/cart/use-current-page-store.hook";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AddToCart as AddToCartIcon } from "@repo/web-ui/components/icons/add-to-cart";
 import { ChevronRight } from "@repo/web-ui/components/icons/chevron-right";

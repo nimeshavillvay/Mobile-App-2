@@ -1,23 +1,26 @@
 import useCookies from "@/_hooks/storage/use-cookies.hook";
 import { api } from "@/_lib/api";
-import { DEFAULT_REVALIDATE, SESSION_TOKEN_COOKIE } from "@/_lib/constants";
+import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import { useQuery } from "@tanstack/react-query";
+import { z } from "zod";
 
-type GTMProduct = {
-  productid: string;
-  cartid: number;
-  item_id: string;
-  item_sku: string;
-  item_name: string;
-  price: string;
-  item_brand: string;
-  item_variant: string;
-  item_categoryid: string;
-  coupon: string;
-  coupon_discount: string;
-  item_primarycategory: string;
-  item_category_path: string[];
-}[];
+const productListSchema = z.array(
+  z.object({
+    productid: z.string(),
+    cartid: z.number(),
+    item_id: z.string(),
+    item_sku: z.string(),
+    item_name: z.string(),
+    price: z.string(),
+    item_brand: z.string(),
+    item_variant: z.string(),
+    item_categoryid: z.string(),
+    coupon: z.string(),
+    coupon_discount: z.string(),
+    item_primarycategory: z.string(),
+    item_category_path: z.array(z.string()),
+  }),
+);
 
 type Product = {
   productid: number;
@@ -39,14 +42,11 @@ const useGtmProducts = (productIdList: Product) => {
           json: {
             products: productIdList,
           },
-          next: {
-            revalidate: DEFAULT_REVALIDATE,
-          },
         })
-        .json<GTMProduct>();
-      return response;
+        .json();
+
+      return productListSchema.parse(response);
     },
-    // enabled: productIdList.length > 0,
   });
 };
 
