@@ -1,18 +1,18 @@
 import CartItem from "@/components/cart/cart-item/cart-item";
-import useSessionTokenStorage from "@/hooks/auth/use-session-token-storage.hook";
+import useAuthenticatedApiConfig from "@/hooks/config/use-authenticated-api-config.hook";
 import {
-  API_BASE_URL,
-  API_KEY,
   DEFAULT_PLANT,
   DEFAULT_SHIPPING_METHOD,
   WILLCALL_SHIPPING_METHOD,
 } from "@/lib/constants";
+import { formatNumberToPrice } from "@/lib/utils";
 import { ScreenLayout } from "@repo/native-ui/components/base/screen-layout";
 import {
   AllDeliveryMethodsChanger,
   AllDeliveryMethodsChangerDialog,
   AllDeliveryMethodsChangerTrigger,
 } from "@repo/native-ui/components/cart/all-delivery-methods-changer";
+import { OrderSummary } from "@repo/native-ui/components/cart/order-summary";
 import { ConfirmationDialog } from "@repo/native-ui/components/confirmation-dialog";
 import { checkAvailability } from "@repo/shared-logic/apis/base/product/check-availability";
 import useSuspenseWillCallPlant from "@repo/shared-logic/apis/hooks/account/use-suspense-will-call-plant.hook";
@@ -42,7 +42,8 @@ import { MotiView } from "moti";
 import { Skeleton } from "moti/skeleton";
 import { Suspense, useState, type ComponentProps } from "react";
 import { Dimensions, StyleSheet, View } from "react-native";
-import { Button, H1, Text, VisuallyHidden } from "tamagui";
+import { Accordion, Button, H1, H4, H5, Text, VisuallyHidden } from "tamagui";
+import useSuspenseSimulationCheckout from "~/apis/hooks/cart/use-suspense-simulation-checkout.hook";
 
 type ConfigKey = keyof CartItemConfiguration;
 
@@ -76,6 +77,10 @@ const CartPage = () => {
       >
         <CartItemList />
       </Suspense>
+
+      <Suspense>
+        <CartFooter />
+      </Suspense>
     </ScreenLayout>
   );
 };
@@ -107,10 +112,29 @@ const styles = StyleSheet.create({
     lineHeight: 16,
     fontWeight: 400,
   },
+  orderSummaryRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderColor: "rgba(0, 0, 0, 0.07)",
+  },
+  orderSummaryLabel: {
+    color: "rgba(0, 0, 0, 0.91)",
+    fontSize: 18,
+    fontWeight: 400,
+  },
+  footerBtn: {
+    flex: 1,
+    borderRadius: 9,
+    fontSize: 16,
+    paddingHorizontal: 0,
+  },
 });
 
 const CartItemList = () => {
-  const token = useSessionTokenStorage((state) => state.token);
   const [openClearAllDialog, setOpenClearAllDialog] = useState(false);
   const [selectedShipToMeMethod, setSelectedShipToMeMethod] = useState<
     string | undefined
@@ -118,44 +142,28 @@ const CartItemList = () => {
   const [openChangeAll, setOpenChangeAll] = useState(false);
   const [disableSave, setDisableSave] = useState(false);
 
-  const cartQuery = useSuspenseCart({
-    baseUrl: API_BASE_URL,
-    apiKey: API_KEY,
-    token,
-  });
+  const authenticatedApiConfig = useAuthenticatedApiConfig();
+
+  const cartQuery = useSuspenseCart(authenticatedApiConfig);
   const priceCheckQuery = useSuspensePriceCheck(
-    {
-      baseUrl: API_BASE_URL,
-      apiKey: API_KEY,
-      token,
-    },
+    authenticatedApiConfig,
     cartQuery.data.cartItems.map((item) => ({
       productId: item.itemInfo.productId,
       qty: item.quantity,
     })),
   );
 
-  const willCallPlantQuery = useSuspenseWillCallPlant({
-    baseUrl: API_BASE_URL,
-    apiKey: API_KEY,
-    token,
-  });
-  const shippingMethodsQuery = useSuspenseShippingMethods({
-    baseUrl: API_BASE_URL,
-    apiKey: API_KEY,
-    token,
-  });
+  const willCallPlantQuery = useSuspenseWillCallPlant(authenticatedApiConfig);
+  const shippingMethodsQuery = useSuspenseShippingMethods(
+    authenticatedApiConfig,
+  );
 
-  const removeCartItemMutation = useRemoveCartItemMutation({
-    baseUrl: API_BASE_URL,
-    apiKey: API_KEY,
-    token,
-  });
-  const updateCartItemMutation = useUpdateCartItemMutation({
-    baseUrl: API_BASE_URL,
-    apiKey: API_KEY,
-    token,
-  });
+  const removeCartItemMutation = useRemoveCartItemMutation(
+    authenticatedApiConfig,
+  );
+  const updateCartItemMutation = useUpdateCartItemMutation(
+    authenticatedApiConfig,
+  );
 
   const clearCart: ComponentProps<typeof ConfirmationDialog>["onConfirm"] = (
     event,
@@ -199,14 +207,11 @@ const CartItemList = () => {
     if (deliveryMethod === DELIVERY_METHODS.STORE_PICK_UP) {
       const cartItemsAvailability = await Promise.all(
         cartQuery.data.cartItems.map(async (item) => {
-          return await checkAvailability(
-            { baseUrl: API_BASE_URL, apiKey: API_KEY, token },
-            {
-              productId: item.itemInfo.productId,
-              quantity: item.quantity,
-              plant: willCallPlantQuery.data.plantCode ?? DEFAULT_PLANT,
-            },
-          );
+          return await checkAvailability(authenticatedApiConfig, {
+            productId: item.itemInfo.productId,
+            quantity: item.quantity,
+            plant: willCallPlantQuery.data.plantCode ?? DEFAULT_PLANT,
+          });
         }),
       );
 
@@ -320,14 +325,11 @@ const CartItemList = () => {
       // Get the available shipping methods for each item in the cart
       const itemShippingMethods = await Promise.all(
         cartQuery.data.cartItems.map(async (item) => {
-          const availability = await checkAvailability(
-            { baseUrl: API_BASE_URL, apiKey: API_KEY, token },
-            {
-              productId: item.itemInfo.productId,
-              quantity: item.quantity,
-              plant: item.configuration?.plant_1,
-            },
-          );
+          const availability = await checkAvailability(authenticatedApiConfig, {
+            productId: item.itemInfo.productId,
+            quantity: item.quantity,
+            plant: item.configuration?.plant_1,
+          });
 
           const allAvailableOption = availability.options.find(
             (option) => option.type === AVAILABLE_ALL,
@@ -530,5 +532,83 @@ const CartItemList = () => {
       }
       estimatedItemSize={180}
     />
+  );
+};
+
+const CartFooter = () => {
+  const authenticatedApiConfig = useAuthenticatedApiConfig();
+
+  const simulationCheckoutQuery = useSuspenseSimulationCheckout(
+    authenticatedApiConfig,
+  );
+
+  return (
+    <View
+      style={{
+        elevation: 1,
+        backgroundColor: "#FFFFFF",
+        shadowOffset: { height: -1, width: 0 },
+        shadowRadius: 2,
+        shadowColor: "#000000",
+        shadowOpacity: 0.2,
+        borderTopLeftRadius: 8,
+        borderTopRightRadius: 8,
+        overflow: "hidden",
+      }}
+    >
+      <View
+        style={[
+          styles.orderSummaryRow,
+          { paddingHorizontal: 0, paddingVertical: 0 },
+        ]}
+      >
+        <OrderSummary
+          itemsCount={simulationCheckoutQuery.data.cartItemsCount}
+          net={simulationCheckoutQuery.data.net}
+          savings={simulationCheckoutQuery.data.discount}
+          shipping={simulationCheckoutQuery.data.shippingcost}
+          tax={simulationCheckoutQuery.data.tax}
+        />
+      </View>
+
+      <View style={styles.orderSummaryRow}>
+        <H4 style={styles.orderSummaryLabel}>Estimated total</H4>
+
+        <Text
+          style={{
+            color: "rgba(0, 0, 0, 0.91)",
+            fontSize: 24,
+            fontWeight: 700,
+          }}
+        >
+          ${formatNumberToPrice(simulationCheckoutQuery.data.total)}
+        </Text>
+      </View>
+
+      <View style={[styles.orderSummaryRow, { borderBottomWidth: 0, gap: 10 }]}>
+        <Button
+          style={[
+            styles.footerBtn,
+            {
+              backgroundColor: "#FFFFFF",
+              color: "#171717",
+              borderWidth: 1,
+              borderColor: "#E2E2E2",
+            },
+          ]}
+        >
+          Quick Order
+        </Button>
+
+        <Button
+          style={[
+            styles.footerBtn,
+            { backgroundColor: "#282828", color: "#EDEDED" },
+          ]}
+        >
+          Proceed to Checkout
+        </Button>
+      </View>
+    </View>
   );
 };
