@@ -1,3 +1,6 @@
+import usePathnameHistoryState from "@/_hooks/misc/use-pathname-history-state.hook";
+import { getGTMPageType } from "@/_lib/gtm-utils";
+import { sendGTMEvent } from "@next/third-parties/google";
 import type { Metadata } from "next";
 import Image from "next/image";
 import { MainTitle } from "../_components/main-title";
@@ -8,6 +11,19 @@ export const metadata: Metadata = {
 };
 
 const GovernmentPage = () => {
+  const pathnameHistory = usePathnameHistoryState(
+    (state) => state.pathnameHistory,
+  );
+
+  sendGTMEvent({
+    event: "view_page",
+    viewPageData: {
+      page_type: getGTMPageType(
+        pathnameHistory[pathnameHistory.length - 1] ?? "",
+      ),
+    },
+  });
+
   return (
     <section className="container mt-8 text-gray-600 [&>p]:mb-4">
       <MainTitle>

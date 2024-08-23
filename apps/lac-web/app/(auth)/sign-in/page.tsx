@@ -1,3 +1,6 @@
+import usePathnameHistoryState from "@/_hooks/misc/use-pathname-history-state.hook";
+import { getGTMPageType } from "@/_lib/gtm-utils";
+import { sendGTMEvent } from "@next/third-parties/google";
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import type { Metadata } from "next";
 import { Suspense } from "react";
@@ -8,6 +11,19 @@ export const metadata: Metadata = {
 };
 
 const SignInPage = () => {
+  const pathnameHistory = usePathnameHistoryState(
+    (state) => state.pathnameHistory,
+  );
+
+  sendGTMEvent({
+    event: "view_page",
+    viewPageData: {
+      page_type: getGTMPageType(
+        pathnameHistory[pathnameHistory.length - 1] ?? "",
+      ),
+    },
+  });
+
   return (
     <Suspense
       fallback={

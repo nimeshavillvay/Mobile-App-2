@@ -1,6 +1,9 @@
+import usePathnameHistoryState from "@/_hooks/misc/use-pathname-history-state.hook";
 import { getPlants, getShippingMethods } from "@/_lib/apis/server";
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
+import { getGTMPageType } from "@/_lib/gtm-utils";
 import Separator from "@/old/_components/separator";
+import { sendGTMEvent } from "@next/third-parties/google";
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
@@ -34,6 +37,19 @@ export const generateMetadata = async ({
 const OrderTrackingLogPage = async ({
   params: { orderId },
 }: OrderTrackingLogPageProps) => {
+  const pathnameHistory = usePathnameHistoryState(
+    (state) => state.pathnameHistory,
+  );
+
+  sendGTMEvent({
+    event: "view_page",
+    viewPageData: {
+      page_type: getGTMPageType(
+        pathnameHistory[pathnameHistory.length - 1] ?? "",
+      ),
+    },
+  });
+
   const sessionTokenCookie = cookies().get(SESSION_TOKEN_COOKIE);
 
   if (!sessionTokenCookie?.value) {

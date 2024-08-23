@@ -1,3 +1,6 @@
+import usePathnameHistoryState from "@/_hooks/misc/use-pathname-history-state.hook";
+import { getGTMPageType } from "@/_lib/gtm-utils";
+import { sendGTMEvent } from "@next/third-parties/google";
 import type { Metadata } from "next";
 import { MainTitle } from "../_components/main-title";
 import {
@@ -12,6 +15,19 @@ export const metadata: Metadata = {
 };
 
 const FAQPage = () => {
+  const pathnameHistory = usePathnameHistoryState(
+    (state) => state.pathnameHistory,
+  );
+
+  sendGTMEvent({
+    event: "view_page",
+    viewPageData: {
+      page_type: getGTMPageType(
+        pathnameHistory[pathnameHistory.length - 1] ?? "",
+      ),
+    },
+  });
+
   return (
     <div className="container flex flex-col">
       <MainTitle className="mt-8">Frequently Asked Questions (FAQs)</MainTitle>

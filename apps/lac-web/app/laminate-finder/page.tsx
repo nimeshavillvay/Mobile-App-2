@@ -1,4 +1,7 @@
+import usePathnameHistoryState from "@/_hooks/misc/use-pathname-history-state.hook";
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
+import { getGTMPageType } from "@/_lib/gtm-utils";
+import { sendGTMEvent } from "@next/third-parties/google";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -19,6 +22,19 @@ export const metadata: Metadata = {
 };
 
 const Page = () => {
+  const pathnameHistory = usePathnameHistoryState(
+    (state) => state.pathnameHistory,
+  );
+
+  sendGTMEvent({
+    event: "view_page",
+    viewPageData: {
+      page_type: getGTMPageType(
+        pathnameHistory[pathnameHistory.length - 1] ?? "",
+      ),
+    },
+  });
+
   const cookieStore = cookies();
   const tokenCookie = cookieStore.get(SESSION_TOKEN_COOKIE);
 

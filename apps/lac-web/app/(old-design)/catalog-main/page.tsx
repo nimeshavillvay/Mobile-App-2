@@ -1,3 +1,6 @@
+import usePathnameHistoryState from "@/_hooks/misc/use-pathname-history-state.hook";
+import { getGTMPageType } from "@/_lib/gtm-utils";
+import { sendGTMEvent } from "@next/third-parties/google";
 import type { Metadata } from "next";
 import { MainTitle } from "../_components/main-title";
 import { SubTitle } from "../_components/sub-title";
@@ -18,6 +21,19 @@ const CatalogSection = ({
   readonly pdf: string;
   readonly children: React.ReactNode;
 }) => {
+  const pathnameHistory = usePathnameHistoryState(
+    (state) => state.pathnameHistory,
+  );
+
+  sendGTMEvent({
+    event: "view_page",
+    viewPageData: {
+      page_type: getGTMPageType(
+        pathnameHistory[pathnameHistory.length - 1] ?? "",
+      ),
+    },
+  });
+
   return (
     <div className="flex gap-4">
       <div className="w-20 cursor-default self-center bg-red-600 px-8 py-5 text-center font-wurth text-3xl font-bold uppercase text-white sm:w-28 sm:text-6xl">

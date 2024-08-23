@@ -1,6 +1,9 @@
+import usePathnameHistoryState from "@/_hooks/misc/use-pathname-history-state.hook";
 import { loginCheck } from "@/_hooks/user/use-suspense-check-login.hook";
 import { getPasswordPolicies } from "@/_lib/apis/server";
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
+import { getGTMPageType } from "@/_lib/gtm-utils";
+import { sendGTMEvent } from "@next/third-parties/google";
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -16,6 +19,19 @@ type PasswordResetProps = {
 };
 
 const PasswordReset = async ({ searchParams }: PasswordResetProps) => {
+  const pathnameHistory = usePathnameHistoryState(
+    (state) => state.pathnameHistory,
+  );
+
+  sendGTMEvent({
+    event: "view_page",
+    viewPageData: {
+      page_type: getGTMPageType(
+        pathnameHistory[pathnameHistory.length - 1] ?? "",
+      ),
+    },
+  });
+
   const userKey = searchParams.password_reset_key?.toString();
   const userId = searchParams.user?.toString();
   const cookiesStore = cookies();

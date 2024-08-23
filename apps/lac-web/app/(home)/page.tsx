@@ -1,4 +1,7 @@
+import usePathnameHistoryState from "@/_hooks/misc/use-pathname-history-state.hook";
 import { getBanners } from "@/_lib/apis/server";
+import { getGTMPageType } from "@/_lib/gtm-utils";
+import { sendGTMEvent } from "@next/third-parties/google";
 import { ArrowRight } from "@repo/web-ui/components/icons/arrow-right";
 import { Download } from "@repo/web-ui/components/icons/download";
 import Image, { type StaticImageData } from "next/image";
@@ -66,6 +69,19 @@ const ADS: {
 ];
 
 const HomePage = async () => {
+  const pathnameHistory = usePathnameHistoryState(
+    (state) => state.pathnameHistory,
+  );
+
+  sendGTMEvent({
+    event: "view_page",
+    viewPageData: {
+      page_type: getGTMPageType(
+        pathnameHistory[pathnameHistory.length - 1] ?? "",
+      ),
+    },
+  });
+
   const banners = await getBanners("0");
 
   const heroBanner: ComponentProps<typeof HeroBanners>["banners"] =

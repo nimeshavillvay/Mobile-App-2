@@ -1,7 +1,10 @@
 import ProductCardSkeleton from "@/_components/product-card-skeleton";
+import usePathnameHistoryState from "@/_hooks/misc/use-pathname-history-state.hook";
 import { api } from "@/_lib/api";
 import { getBreadcrumbs } from "@/_lib/apis/server";
 import { DEFAULT_REVALIDATE } from "@/_lib/constants";
+import { getGTMPageType } from "@/_lib/gtm-utils";
+import { sendGTMEvent } from "@next/third-parties/google";
 import { ChevronLeft } from "@repo/web-ui/components/icons/chevron-left";
 import {
   Breadcrumb,
@@ -33,6 +36,19 @@ export const generateMetadata = async ({
 };
 
 const ProductPage = async ({ params: { id, slug } }: ProductPageProps) => {
+  const pathnameHistory = usePathnameHistoryState(
+    (state) => state.pathnameHistory,
+  );
+
+  sendGTMEvent({
+    event: "view_page",
+    viewPageData: {
+      page_type: getGTMPageType(
+        pathnameHistory[pathnameHistory.length - 1] ?? "",
+      ),
+    },
+  });
+
   // Just to check if the product exists
   await getProduct(id, slug);
 
