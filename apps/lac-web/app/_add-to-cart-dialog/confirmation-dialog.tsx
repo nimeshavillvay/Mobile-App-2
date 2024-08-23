@@ -109,7 +109,7 @@ const ConfirmationDialog = ({ token }: ConfirmationDialogProps) => {
       event: "view_cart",
       viewCartData: {
         currency: "USD",
-        value: "27.27",
+        value: gtmItemInfo?.price,
         items: [
           {
             item_id: gtmItemInfo?.item_id,
