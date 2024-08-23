@@ -6,9 +6,9 @@ import ProductNotAvailable from "@/_components/product-not-available";
 import QuantityWarning from "@/_components/quantity-warning";
 import useSuspenseWillCallPlant from "@/_hooks/address/use-suspense-will-call-plant.hook";
 import useAddToCartMutation from "@/_hooks/cart/use-add-to-cart-mutation.hook";
-import useCurrentPageStore from "@/_hooks/gtm/use-current-page-store.hook";
 import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
 import useDebouncedState from "@/_hooks/misc/use-debounced-state.hook";
+import usePathnameHistoryState from "@/_hooks/misc/use-pathname-history-state.hook";
 import useItemInfo from "@/_hooks/product/use-item-info.hook";
 import useSuspenseCheckAvailability from "@/_hooks/product/use-suspense-check-availability.hook";
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
@@ -345,7 +345,7 @@ const AddToCart = ({
   const { watch, setValue, handleSubmit, control } =
     useFormContext<VerificationDialogSchema>();
   const { setQuantity } = useAddToCartDialog((state) => state.actions);
-  const { setPageType } = useCurrentPageStore((state) => state.actions);
+  const { pushPathname } = usePathnameHistoryState((state) => state.actions);
 
   const pathname = usePathname();
 
@@ -373,7 +373,7 @@ const AddToCart = ({
   const onSubmit = handleSubmit((data) => {
     // Update the quantity in add to cart dialog
     setQuantity(data.quantity);
-    setPageType(getGTMPageType(pathname));
+    pushPathname(getGTMPageType(pathname));
 
     addToCartMutation.mutate({
       quantity: data.quantity,

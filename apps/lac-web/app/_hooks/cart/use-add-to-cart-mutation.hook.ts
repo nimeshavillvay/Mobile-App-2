@@ -1,4 +1,3 @@
-import useCurrentPageStore from "@/_hooks/gtm/use-current-page-store.hook";
 import useGtmProducts from "@/_hooks/gtm/use-gtm-item-info.hook";
 import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
 import { api } from "@/_lib/api";
@@ -13,6 +12,7 @@ import {
   BACKORDER_ENABLED,
   FALSE_STRING,
 } from "../../cart/constants";
+import usePathnameHistoryState from "../misc/use-pathname-history-state.hook";
 import useCookies from "../storage/use-cookies.hook";
 
 const useAddToCartMutation = ({ productId }: { productId: number }) => {
@@ -26,7 +26,9 @@ const useAddToCartMutation = ({ productId }: { productId: number }) => {
     (state) => state.actions,
   );
 
-  const pageType = useCurrentPageStore((state) => state.pageType);
+  const pathnameHistory = usePathnameHistoryState(
+    (state) => state.pathnameHistory,
+  );
 
   const [quantity, setQuantity] = useState(0);
 
@@ -190,7 +192,7 @@ const useAddToCartMutation = ({ productId }: { productId: number }) => {
                 item_category1: gtmItemInfo?.item_category_path[1],
               },
             ],
-            page_type: pageType,
+            page_type: pathnameHistory[pathnameHistory.length - 1],
           },
         });
       }

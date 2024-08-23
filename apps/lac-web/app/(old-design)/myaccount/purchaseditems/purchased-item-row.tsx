@@ -2,8 +2,8 @@ import ProductNotAvailable from "@/_components/product-not-available";
 import Warning from "@/_components/warning";
 import WurthLacLogo from "@/_components/wurth-lac-logo";
 import useAddToCartMutation from "@/_hooks/cart/use-add-to-cart-mutation.hook";
-import useCurrentPageStore from "@/_hooks/gtm/use-current-page-store.hook";
 import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
+import usePathnameHistoryState from "@/_hooks/misc/use-pathname-history-state.hook";
 import useItemInfo from "@/_hooks/product/use-item-info.hook";
 import useSuspenseProductExcluded from "@/_hooks/product/use-suspense-product-excluded.hook";
 import { getGTMPageType } from "@/_lib/gtm-utils";
@@ -70,7 +70,7 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
     values: { quantity: null },
     resolver: zodResolver(schema),
   });
-  const { setPageType } = useCurrentPageStore((state) => state.actions);
+  const { pushPathname } = usePathnameHistoryState((state) => state.actions);
   const pathname = usePathname();
 
   const quantity = methods.watch("quantity");
@@ -86,7 +86,7 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
     if (quantity) {
       // Update the quantity in add to cart dialog
       setQuantity(quantity);
-      setPageType(getGTMPageType(pathname));
+      pushPathname(getGTMPageType(pathname));
 
       addToCartMutation.mutate(
         {

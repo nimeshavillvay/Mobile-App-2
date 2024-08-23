@@ -2,8 +2,8 @@
 
 import NumberInputField from "@/_components/number-input-field";
 import useAddToCartMutation from "@/_hooks/cart/use-add-to-cart-mutation.hook";
-import useCurrentPageStore from "@/_hooks/gtm/use-current-page-store.hook";
 import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
+import usePathnameHistoryState from "@/_hooks/misc/use-pathname-history-state.hook";
 import useSuspenseCheckAvailability from "@/_hooks/product/use-suspense-check-availability.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
 import { MAX_QUANTITY, NOT_AVAILABLE } from "@/_lib/constants";
@@ -34,7 +34,7 @@ const AddToCartForm = ({
 }: AddToCartFormProps) => {
   const checkLoginQuery = useSuspenseCheckLogin(token);
 
-  const { setPageType } = useCurrentPageStore((state) => state.actions);
+  const { pushPathname } = usePathnameHistoryState((state) => state.actions);
   const pathname = usePathname();
 
   const { watch, setValue, handleSubmit, control } = useAddToCartForm();
@@ -64,7 +64,7 @@ const AddToCartForm = ({
   const onSubmit = handleSubmit((values) => {
     // Update the quantity in add to cart dialog
     setQuantity(quantity);
-    setPageType(getGTMPageType(pathname));
+    pushPathname(getGTMPageType(pathname));
 
     addToCartMutation.mutate(values);
   });
@@ -168,7 +168,7 @@ const AddToCartFormLoggedIn = ({
     );
   };
 
-  const { setPageType } = useCurrentPageStore((state) => state.actions);
+  const { pushPathname } = usePathnameHistoryState((state) => state.actions);
   const pathname = usePathname();
 
   const addToCartMutation = useAddToCartMutation({
@@ -178,7 +178,7 @@ const AddToCartFormLoggedIn = ({
   const onSubmit = handleSubmit((values) => {
     // Update the quantity in add to cart dialog
     setQuantity(quantity);
-    setPageType(getGTMPageType(pathname));
+    pushPathname(getGTMPageType(pathname));
 
     addToCartMutation.mutate(values);
   });
