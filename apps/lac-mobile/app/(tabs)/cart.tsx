@@ -19,6 +19,7 @@ import useSuspenseWillCallPlant from "@repo/shared-logic/apis/hooks/account/use-
 import useRemoveCartItemMutation from "@repo/shared-logic/apis/hooks/cart/use-remove-cart-item-mutation.hook";
 import useSuspenseCart from "@repo/shared-logic/apis/hooks/cart/use-suspense-cart.hook";
 import useSuspenseShippingMethods from "@repo/shared-logic/apis/hooks/cart/use-suspense-shipping-methods.hook";
+import useSuspenseSimulationCheckout from "@repo/shared-logic/apis/hooks/cart/use-suspense-simulation-checkout.hook";
 import useUpdateCartItemMutation from "@repo/shared-logic/apis/hooks/cart/use-update-cart-item-mutation.hook";
 import useSuspensePriceCheck from "@repo/shared-logic/apis/hooks/product/use-suspense-price-check.hook";
 import {
@@ -42,8 +43,7 @@ import { MotiView } from "moti";
 import { Skeleton } from "moti/skeleton";
 import { Suspense, useState, type ComponentProps } from "react";
 import { Dimensions, StyleSheet, View } from "react-native";
-import { Accordion, Button, H1, H4, H5, Text, VisuallyHidden } from "tamagui";
-import useSuspenseSimulationCheckout from "~/apis/hooks/cart/use-suspense-simulation-checkout.hook";
+import { Button, H1, H4, Text, VisuallyHidden } from "tamagui";
 
 type ConfigKey = keyof CartItemConfiguration;
 

@@ -1,7 +1,7 @@
 import { ChevronUp } from "@tamagui/lucide-icons";
 import { useState } from "react";
 import { Dimensions, StyleSheet, View } from "react-native";
-import { Accordion, Button, H5, Square, Text } from "tamagui";
+import { Accordion, H5, Square, Text } from "tamagui";
 import { formatNumberToPrice } from "~/lib/utils";
 
 const styles = StyleSheet.create({
@@ -43,11 +43,11 @@ export const OrderSummary = ({
   shipping,
   tax,
 }: {
-  itemsCount: number;
-  net: number;
-  savings: number;
-  shipping: number;
-  tax: number;
+  readonly itemsCount: number;
+  readonly net: number;
+  readonly savings: number;
+  readonly shipping: number;
+  readonly tax: number;
 }) => {
   const [value, setValue] = useState("");
 
