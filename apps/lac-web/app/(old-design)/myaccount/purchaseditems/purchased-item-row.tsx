@@ -3,10 +3,8 @@ import Warning from "@/_components/warning";
 import WurthLacLogo from "@/_components/wurth-lac-logo";
 import useAddToCartMutation from "@/_hooks/cart/use-add-to-cart-mutation.hook";
 import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
-import usePathnameHistoryState from "@/_hooks/misc/use-pathname-history-state.hook";
 import useItemInfo from "@/_hooks/product/use-item-info.hook";
 import useSuspenseProductExcluded from "@/_hooks/product/use-suspense-product-excluded.hook";
-import { getGTMPageType } from "@/_lib/gtm-utils";
 import { cn } from "@/_lib/utils";
 import ErrorBoundary from "@/old/_components/error-boundary";
 import { Button } from "@/old/_components/ui/button";
@@ -23,7 +21,6 @@ import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import dayjs from "dayjs";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { Suspense, useId, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { MdKeyboardArrowDown } from "react-icons/md";
@@ -70,8 +67,6 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
     values: { quantity: null },
     resolver: zodResolver(schema),
   });
-  const { pushPathname } = usePathnameHistoryState((state) => state.actions);
-  const pathname = usePathname();
 
   const quantity = methods.watch("quantity");
 
@@ -86,7 +81,6 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
     if (quantity) {
       // Update the quantity in add to cart dialog
       setQuantity(quantity);
-      pushPathname(getGTMPageType(pathname));
 
       addToCartMutation.mutate(
         {

@@ -33,21 +33,23 @@ const useGtmProducts = (productIdList: Product) => {
 
   return useQuery({
     queryKey: ["gtm", "products", productIdList, token],
-    queryFn: async () => {
-      const response = await api
-        .post("rest/gtm/products", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          json: {
-            products: productIdList,
-          },
-        })
-        .json();
-
-      return productListSchema.parse(response);
-    },
+    queryFn: async () => getGtmProducts(productIdList, token),
   });
+};
+
+export const getGtmProducts = async (productIdList: Product, token: string) => {
+  const response = await api
+    .post("rest/gtm/products", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      json: {
+        products: productIdList,
+      },
+    })
+    .json();
+
+  return productListSchema.parse(response);
 };
 
 export default useGtmProducts;

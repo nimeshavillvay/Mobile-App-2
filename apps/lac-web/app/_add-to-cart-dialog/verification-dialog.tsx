@@ -8,13 +8,11 @@ import useSuspenseWillCallPlant from "@/_hooks/address/use-suspense-will-call-pl
 import useAddToCartMutation from "@/_hooks/cart/use-add-to-cart-mutation.hook";
 import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
 import useDebouncedState from "@/_hooks/misc/use-debounced-state.hook";
-import usePathnameHistoryState from "@/_hooks/misc/use-pathname-history-state.hook";
 import useItemInfo from "@/_hooks/product/use-item-info.hook";
 import useSuspenseCheckAvailability from "@/_hooks/product/use-suspense-check-availability.hook";
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
 import { MAX_QUANTITY, NOT_AVAILABLE } from "@/_lib/constants";
-import { getGTMPageType } from "@/_lib/gtm-utils";
 import {
   calculateIncreaseQuantity,
   calculateReduceQuantity,
@@ -45,7 +43,6 @@ import { Label } from "@repo/web-ui/components/ui/label";
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { Suspense, useDeferredValue, useId } from "react";
 import {
   Controller,
@@ -345,9 +342,6 @@ const AddToCart = ({
   const { watch, setValue, handleSubmit, control } =
     useFormContext<VerificationDialogSchema>();
   const { setQuantity } = useAddToCartDialog((state) => state.actions);
-  const { pushPathname } = usePathnameHistoryState((state) => state.actions);
-
-  const pathname = usePathname();
 
   const quantity = watch("quantity");
 
@@ -373,7 +367,6 @@ const AddToCart = ({
   const onSubmit = handleSubmit((data) => {
     // Update the quantity in add to cart dialog
     setQuantity(data.quantity);
-    pushPathname(getGTMPageType(pathname));
 
     addToCartMutation.mutate({
       quantity: data.quantity,

@@ -3,6 +3,7 @@ import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
 import { api } from "@/_lib/api";
 import { checkAvailability } from "@/_lib/apis/shared";
 import { NOT_AVAILABLE, SESSION_TOKEN_COOKIE } from "@/_lib/constants";
+import { getGTMPageType } from "@/_lib/gtm-utils";
 import { sendGTMEvent } from "@next/third-parties/google";
 import { useToast } from "@repo/web-ui/components/ui/toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -192,7 +193,9 @@ const useAddToCartMutation = ({ productId }: { productId: number }) => {
                 item_category1: gtmItemInfo?.item_category_path[1],
               },
             ],
-            page_type: pathnameHistory[pathnameHistory.length - 1],
+            page_type: getGTMPageType(
+              pathnameHistory[pathnameHistory.length - 1] ?? "",
+            ),
           },
         });
       }

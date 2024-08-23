@@ -2,11 +2,9 @@ import Warning from "@/_components/warning";
 import WurthLacLogo from "@/_components/wurth-lac-logo";
 import useAddToCartMutation from "@/_hooks/cart/use-add-to-cart-mutation.hook";
 import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
-import usePathnameHistoryState from "@/_hooks/misc/use-pathname-history-state.hook";
 import useSuspenseCheckAvailability from "@/_hooks/product/use-suspense-check-availability.hook";
 import useSuspenseProductExcluded from "@/_hooks/product/use-suspense-product-excluded.hook";
 import { NOT_AVAILABLE } from "@/_lib/constants";
-import { getGTMPageType } from "@/_lib/gtm-utils";
 import { cn } from "@/_lib/utils";
 import ErrorBoundary from "@/old/_components/error-boundary";
 import AddToCartIcon from "@/old/_components/icons/add-to-cart";
@@ -25,7 +23,7 @@ import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import dayjs from "dayjs";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import {
   Suspense,
   useId,
@@ -69,8 +67,6 @@ const PurchasedItemDetailedViewDialog = ({
   const router = useRouter();
 
   const { setQuantity } = useAddToCartDialog((state) => state.actions);
-  const { pushPathname } = usePathnameHistoryState((state) => state.actions);
-  const pathname = usePathname();
 
   const methods = useForm<Schema>({
     values: { quantity: null },
@@ -88,7 +84,6 @@ const PurchasedItemDetailedViewDialog = ({
     if (quantity) {
       // Update the quantity in add to cart dialog
       setQuantity(quantity);
-      pushPathname(getGTMPageType(pathname));
 
       addToCartMutation.mutate(
         {
