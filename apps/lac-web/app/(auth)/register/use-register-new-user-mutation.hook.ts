@@ -1,3 +1,4 @@
+import useGtmUser from "@/_hooks/gtm/use-gtm-user.hook";
 import useCookies from "@/_hooks/storage/use-cookies.hook";
 import { api } from "@/_lib/api";
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
@@ -25,6 +26,9 @@ const useRegisterNewUserMutation = () => {
   const queryClient = useQueryClient();
   const [cookies] = useCookies();
   const { toast } = useToast();
+
+  const gtmItemUserQuery = useGtmUser();
+  const gtmUser = gtmItemUserQuery.data;
 
   const showGenericErrorMessage = () => {
     toast({
@@ -63,15 +67,6 @@ const useRegisterNewUserMutation = () => {
       shippingAddress: Address;
       skipAddressCheck?: boolean;
     }) => {
-      sendGTMEvent({
-        event: "sign_up",
-        method: "register_page",
-        userid: "",
-        account_type: "R",
-        account_industry: "Homeowner",
-        account_sales_category: "Z0",
-      });
-
       const response = await api
         .post("rest/register/new", {
           headers: {
@@ -144,6 +139,16 @@ const useRegisterNewUserMutation = () => {
         // Revalidate the queries only after the user has successfully registered
         queryClient.invalidateQueries();
       }
+    },
+    onSettled: () => {
+      sendGTMEvent({
+        event: "login",
+        method: "login_popup",
+        userid: gtmUser?.userid,
+        account_type: gtmUser?.account_type,
+        account_industry: gtmUser?.account_industry,
+        account_sales_category: gtmUser?.account_sales_category,
+      });
     },
   });
 };

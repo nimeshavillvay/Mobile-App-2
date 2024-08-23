@@ -77,13 +77,14 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
   const [isNotAvailableProduct, setIsNotAvailableProduct] = useState(false);
 
   const onSubmit = methods.handleSubmit((data) => {
-    if (data.quantity) {
+    const quantity = data.quantity;
+    if (quantity) {
       // Update the quantity in add to cart dialog
-      setQuantity(data.quantity);
+      setQuantity(quantity);
 
       addToCartMutation.mutate(
         {
-          quantity: data.quantity,
+          quantity: quantity,
         },
         {
           onSuccess: (data) => {

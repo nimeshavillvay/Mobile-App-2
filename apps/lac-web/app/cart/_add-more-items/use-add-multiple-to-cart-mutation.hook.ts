@@ -1,9 +1,14 @@
+import useSuspenseCart from "@/_hooks/cart/use-suspense-cart.hook";
+import useGtmProducts from "@/_hooks/gtm/use-gtm-item-info.hook";
+import usePathnameHistoryState from "@/_hooks/misc/use-pathname-history-state.hook";
 import useCookies from "@/_hooks/storage/use-cookies.hook";
 import { api } from "@/_lib/api";
 import { checkAvailability } from "@/_lib/apis/shared";
 import { NOT_AVAILABLE, SESSION_TOKEN_COOKIE } from "@/_lib/constants";
+import { sendGTMEvent } from "@next/third-parties/google";
 import { useToast } from "@repo/web-ui/components/ui/toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { getGTMPageType } from "../../_lib/gtm-utils";
 import {
   BACKORDER_DISABLED,
   BACKORDER_ENABLED,
@@ -20,6 +25,26 @@ const useAddMultipleToCartMutation = () => {
   );
   const excludedSkus = useCartStore((state) => state.excludedSkus);
   const discontinuedSkus = useCartStore((state) => state.discontinuedSkus);
+
+  const pathnameHistory = usePathnameHistoryState(
+    (state) => state.pathnameHistory,
+  );
+
+  const cartQuery = useSuspenseCart(cookies[SESSION_TOKEN_COOKIE]);
+
+  const gtmProducts = cartQuery.data.cartItems.map((item) => {
+    return {
+      productid: item.itemInfo.productId,
+      cartid: item.cartItemId,
+      quantity: item.quantity,
+    };
+  });
+
+  const gtmItemInfoQuery = useGtmProducts(
+    gtmProducts.length > 0 ? gtmProducts : [],
+  );
+
+  const gtmItemsInfo = gtmItemInfoQuery.data;
 
   return useMutation({
     mutationFn: async (
@@ -202,6 +227,36 @@ const useAddMultipleToCartMutation = () => {
       }));
     },
     onSettled: () => {
+      gtmItemsInfo?.map((gtmItemInfo) => {
+        sendGTMEvent({
+          event: "add_to_cart",
+          addToCartData: {
+            currency: "USD",
+            value: gtmItemInfo?.price,
+            items: [
+              {
+                item_id: gtmItemInfo?.item_id,
+                item_sku: gtmItemInfo?.item_sku,
+                item_name: gtmItemInfo?.item_name,
+                item_brand: gtmItemInfo?.item_brand,
+                price: gtmItemInfo?.price,
+                quantity: gtmProducts.find(
+                  (item) => item.productid === Number(gtmItemInfo?.productid),
+                )?.quantity,
+                item_variant: gtmItemInfo?.item_variant,
+                item_categoryid: gtmItemInfo?.item_categoryid,
+                item_primarycategory: gtmItemInfo?.item_primarycategory,
+                item_category: gtmItemInfo?.item_category_path[0],
+                item_category1: gtmItemInfo?.item_category_path[1],
+              },
+            ],
+            page_type: getGTMPageType(
+              pathnameHistory[pathnameHistory.length - 1] ?? "",
+            ),
+          },
+        });
+      });
+
       queryClient.invalidateQueries({
         queryKey: ["cart"],
       });

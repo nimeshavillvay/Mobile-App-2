@@ -48,3 +48,14 @@ export const QUERY_KEYS = {
   SEARCH_TEXT: "searchText",
   SELF_ONLY: "selfOnly",
 } as const;
+
+export const GTM_PAGE_TYPES = {
+  CATEGORY: "category",
+  SEARCH: "search",
+  PRODUCT: "product",
+  HOME: "homepage",
+  CONTENT: "content",
+  LOGIN: "login_page",
+} as const;
+
+export const GTM_PAGE_TYPE_OTHER = "other";
