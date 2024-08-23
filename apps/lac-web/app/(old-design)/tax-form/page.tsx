@@ -1,8 +1,5 @@
-import usePathnameHistoryState from "@/_hooks/misc/use-pathname-history-state.hook";
-import { getGTMPageType } from "@/_lib/gtm-utils";
 import Separator from "@/old/_components/separator";
 import Title from "@/old/_components/title";
-import { sendGTMEvent } from "@next/third-parties/google";
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import type { Metadata } from "next";
 import dynamic from "next/dynamic";
@@ -21,19 +18,6 @@ export const metadata: Metadata = {
 };
 
 const SalesTaxAndExemptionPage = async () => {
-  const pathnameHistory = usePathnameHistoryState(
-    (state) => state.pathnameHistory,
-  );
-
-  sendGTMEvent({
-    event: "view_page",
-    viewPageData: {
-      page_type: getGTMPageType(
-        pathnameHistory[pathnameHistory.length - 1] ?? "",
-      ),
-    },
-  });
-
   const taxFormDetails = await getTaxFormDetails();
 
   return (

@@ -7,11 +7,8 @@ import {
   ProductsGridMobileFiltersHeaderSkeleton,
   ProductsGridPaginationSkeleton,
 } from "@/_components/products-grid";
-import usePathnameHistoryState from "@/_hooks/misc/use-pathname-history-state.hook";
 import { getBreadcrumbs } from "@/_lib/apis/server";
-import { getGTMPageType } from "@/_lib/gtm-utils";
 import { cn } from "@/_lib/utils";
-import { sendGTMEvent } from "@next/third-parties/google";
 import { ChevronLeft } from "@repo/web-ui/components/icons/chevron-left";
 import {
   Breadcrumb,
@@ -43,19 +40,6 @@ export const generateMetadata = async ({
 };
 
 const CategoryPage = async ({ params: { id, slug } }: CategoryPageProps) => {
-  const pathnameHistory = usePathnameHistoryState(
-    (state) => state.pathnameHistory,
-  );
-
-  sendGTMEvent({
-    event: "view_page",
-    viewPageData: {
-      page_type: getGTMPageType(
-        pathnameHistory[pathnameHistory.length - 1] ?? "",
-      ),
-    },
-  });
-
   const category = await getCategory(id, slug);
   const breadcrumbs = await getBreadcrumbs(id, "category");
 

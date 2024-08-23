@@ -1,4 +1,3 @@
-import usePathnameHistoryState from "@/_hooks/misc/use-pathname-history-state.hook";
 import {
   getOrderDetails,
   getPaymentMethods,
@@ -7,12 +6,10 @@ import {
 } from "@/_lib/apis/server";
 import { getItemInfo } from "@/_lib/apis/shared";
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
-import { getGTMPageType } from "@/_lib/gtm-utils";
 import { formatNumberToPrice } from "@/_lib/utils";
 import AlertInline from "@/old/_components/alert-inline";
 import Separator from "@/old/_components/separator";
 import { Badge } from "@/old/_components/ui/badge";
-import { sendGTMEvent } from "@next/third-parties/google";
 import dayjs from "dayjs";
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
@@ -54,19 +51,6 @@ export const generateMetadata = async ({
 const DetailedOrderPage = async ({
   params: { orderId },
 }: DetailedOrderPageProps) => {
-  const pathnameHistory = usePathnameHistoryState(
-    (state) => state.pathnameHistory,
-  );
-
-  sendGTMEvent({
-    event: "view_page",
-    viewPageData: {
-      page_type: getGTMPageType(
-        pathnameHistory[pathnameHistory.length - 1] ?? "",
-      ),
-    },
-  });
-
   const orderDetail = await getOrder(orderId);
 
   const itemList = orderDetail.items

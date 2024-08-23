@@ -1,9 +1,6 @@
 import { MainTitle } from "@/(old-design)/_components/main-title";
 import { SubTitle } from "@/(old-design)/_components/sub-title";
-import usePathnameHistoryState from "@/_hooks/misc/use-pathname-history-state.hook";
-import { getGTMPageType } from "@/_lib/gtm-utils";
 import VisuallyHidden from "@/old/_components/visually-hidden";
-import { sendGTMEvent } from "@next/third-parties/google";
 import type { Metadata } from "next";
 import Image from "next/image";
 import { IoArrowForwardSharp } from "react-icons/io5";
@@ -14,19 +11,6 @@ export const metadata: Metadata = {
 };
 
 const CompliancePage = () => {
-  const pathnameHistory = usePathnameHistoryState(
-    (state) => state.pathnameHistory,
-  );
-
-  sendGTMEvent({
-    event: "view_page",
-    viewPageData: {
-      page_type: getGTMPageType(
-        pathnameHistory[pathnameHistory.length - 1] ?? "",
-      ),
-    },
-  });
-
   return (
     <div className="container">
       {/* Section banner */}

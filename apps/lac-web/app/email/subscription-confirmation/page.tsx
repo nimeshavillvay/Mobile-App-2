@@ -1,6 +1,3 @@
-import usePathnameHistoryState from "@/_hooks/misc/use-pathname-history-state.hook";
-import { getGTMPageType } from "@/_lib/gtm-utils";
-import { sendGTMEvent } from "@next/third-parties/google";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -8,19 +5,6 @@ export const metadata: Metadata = {
 };
 
 const SubscriptionConfirmationPage = () => {
-  const pathnameHistory = usePathnameHistoryState(
-    (state) => state.pathnameHistory,
-  );
-
-  sendGTMEvent({
-    event: "view_page",
-    viewPageData: {
-      page_type: getGTMPageType(
-        pathnameHistory[pathnameHistory.length - 1] ?? "",
-      ),
-    },
-  });
-
   return (
     <div className="container flex flex-row justify-center">
       <div className="my-20 space-y-2 text-base text-wurth-gray-500">

@@ -1,8 +1,5 @@
 import { MainTitle } from "@/(old-design)/_components/main-title";
-import usePathnameHistoryState from "@/_hooks/misc/use-pathname-history-state.hook";
-import { getGTMPageType } from "@/_lib/gtm-utils";
 import VisuallyHidden from "@/old/_components/visually-hidden";
-import { sendGTMEvent } from "@next/third-parties/google";
 import type { Metadata } from "next";
 import Image from "next/image";
 import careersBanner from "./careers-banner.jpg";
@@ -12,19 +9,6 @@ export const metadata: Metadata = {
 };
 
 const CareersPage = () => {
-  const pathnameHistory = usePathnameHistoryState(
-    (state) => state.pathnameHistory,
-  );
-
-  sendGTMEvent({
-    event: "view_page",
-    viewPageData: {
-      page_type: getGTMPageType(
-        pathnameHistory[pathnameHistory.length - 1] ?? "",
-      ),
-    },
-  });
-
   return (
     <div className="container">
       {/* Section banner */}

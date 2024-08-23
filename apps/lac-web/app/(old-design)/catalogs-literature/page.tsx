@@ -5,9 +5,6 @@ import { MainTitle } from "../_components/main-title";
 import pdfCatalogThumb from "./PDF_Catalog_Thumb.jpg";
 import catalogCover from "./WLAC_Catalog_Cover.png";
 
-import usePathnameHistoryState from "@/_hooks/misc/use-pathname-history-state.hook";
-import { getGTMPageType } from "@/_lib/gtm-utils";
-import { sendGTMEvent } from "@next/third-parties/google";
 import { FileDownload } from "@repo/web-ui/components/icons/file-download";
 import type { ReactNode } from "react";
 import { SubTitle } from "../_components/sub-title";
@@ -28,19 +25,6 @@ const Catalog = ({
   readonly imageSrc: StaticImageData;
   readonly alt: string;
 }) => {
-  const pathnameHistory = usePathnameHistoryState(
-    (state) => state.pathnameHistory,
-  );
-
-  sendGTMEvent({
-    event: "view_page",
-    viewPageData: {
-      page_type: getGTMPageType(
-        pathnameHistory[pathnameHistory.length - 1] ?? "",
-      ),
-    },
-  });
-
   return (
     <a
       href={url}

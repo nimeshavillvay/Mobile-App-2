@@ -1,9 +1,6 @@
 import OrderSummary from "@/_components/order-summary";
-import usePathnameHistoryState from "@/_hooks/misc/use-pathname-history-state.hook";
 import { getPlants } from "@/_lib/apis/server";
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
-import { getGTMPageType } from "@/_lib/gtm-utils";
-import { sendGTMEvent } from "@next/third-parties/google";
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import type { Metadata } from "next";
 import dynamic from "next/dynamic";
@@ -30,19 +27,6 @@ export const metadata: Metadata = {
 };
 
 const CartPage = async () => {
-  const pathnameHistory = usePathnameHistoryState(
-    (state) => state.pathnameHistory,
-  );
-
-  sendGTMEvent({
-    event: "view_page",
-    viewPageData: {
-      page_type: getGTMPageType(
-        pathnameHistory[pathnameHistory.length - 1] ?? "",
-      ),
-    },
-  });
-
   const cookiesStore = cookies();
   const sessionToken = cookiesStore.get(SESSION_TOKEN_COOKIE);
 

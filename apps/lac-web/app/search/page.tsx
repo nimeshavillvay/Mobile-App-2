@@ -4,9 +4,6 @@ import {
   ProductsGridHeaderSkeleton,
   ProductsGridListSkeleton,
 } from "@/_components/products-grid";
-import usePathnameHistoryState from "@/_hooks/misc/use-pathname-history-state.hook";
-import { getGTMPageType } from "@/_lib/gtm-utils";
-import { sendGTMEvent } from "@next/third-parties/google";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -35,19 +32,6 @@ const SearchPage = async ({
 }: {
   readonly searchParams: { [key: string]: string | string[] | undefined };
 }) => {
-  const pathnameHistory = usePathnameHistoryState(
-    (state) => state.pathnameHistory,
-  );
-
-  sendGTMEvent({
-    event: "view_page",
-    viewPageData: {
-      page_type: getGTMPageType(
-        pathnameHistory[pathnameHistory.length - 1] ?? "",
-      ),
-    },
-  });
-
   const query = searchParams.query?.toString() ?? "";
   const pageNo = searchParams.page?.toString() ?? "1";
   const searchResults = await getSearchResults({

@@ -12,21 +12,7 @@ export const getGTMPageType = (pathName: string) => {
     case "product": {
       return GTM_PAGE_TYPES.PRODUCT;
     }
-    case "catalogs-literature":
-    case "tax-form":
-    case "about-us":
-    case "careers":
-    case "compliance":
-    case "branch-main":
-    case "branch-finder":
-    case "faqs":
-    case "government":
-    case "privacy-policy":
-    case "right-request":
-    case "subscribe-thank-you":
-    case "supply-chain":
-    case "Terms-and-Conditions-for-WLACs-Purchase-of-Products-from-Suppliers":
-    case "terms-of-sale": {
+    case "catalogs-literature": {
       return GTM_PAGE_TYPES.CONTENT;
     }
     case "sign-in": {

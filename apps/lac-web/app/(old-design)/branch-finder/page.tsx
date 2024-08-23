@@ -1,6 +1,3 @@
-import usePathnameHistoryState from "@/_hooks/misc/use-pathname-history-state.hook";
-import { getGTMPageType } from "@/_lib/gtm-utils";
-import { sendGTMEvent } from "@next/third-parties/google";
 import type { Metadata } from "next";
 import { MainTitle } from "../_components/main-title";
 import type { BranchType } from "./branch-data";
@@ -11,19 +8,6 @@ export const metadata: Metadata = {
 };
 
 const Branch = ({ branchData }: { readonly branchData: BranchType }) => {
-  const pathnameHistory = usePathnameHistoryState(
-    (state) => state.pathnameHistory,
-  );
-
-  sendGTMEvent({
-    event: "view_page",
-    viewPageData: {
-      page_type: getGTMPageType(
-        pathnameHistory[pathnameHistory.length - 1] ?? "",
-      ),
-    },
-  });
-
   return (
     <div className="border border-gray-300 bg-gray-200 p-6 shadow-gray-300 hover:bg-gray-300 hover:shadow-xl">
       <h3 className="mb-4 text-xl font-semibold">{branchData.branchName}</h3>
