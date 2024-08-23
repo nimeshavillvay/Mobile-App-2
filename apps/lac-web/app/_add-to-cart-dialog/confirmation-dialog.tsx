@@ -7,6 +7,7 @@ import useItemInfo from "@/_hooks/product/use-item-info.hook";
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import { formatNumberToPrice } from "@/_lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { sendGTMEvent } from "@next/third-parties/google";
 import { CheckCircle } from "@repo/web-ui/components/icons/check-circle";
 import { Button } from "@repo/web-ui/components/ui/button";
 import {
@@ -92,6 +93,38 @@ const ConfirmationDialog = ({ token }: ConfirmationDialogProps) => {
     setOpen("closed");
   };
 
+  const goToCart = () => {
+    closeDialog();
+    sendGTMEvent({
+      event: "view_cart",
+      viewCartData: {
+        currency: "USD",
+        value: "27.27",
+        items: [
+          {
+            item_id: productId,
+            item_sku: itemInfo?.productSku,
+            item_name: itemInfo?.productName,
+            item_brand: itemInfo?.brand,
+            price: "27.27",
+            quantity: quantity,
+            item_categoryid: itemInfo?.productCategory,
+            item_primarycategory: itemInfo?.productCategory,
+            item_category: itemInfo?.productCategory,
+            item_category1: itemInfo?.productCategory,
+            item_category2: itemInfo?.productCategory,
+          },
+        ],
+      },
+      data: {
+        userid: "1534470",
+        account_type: "R",
+        account_industry: "HO",
+        account_sales_category: "Z0",
+      },
+    });
+  };
+
   return (
     <Dialog open={open === "confirmation"} onOpenChange={onOpenChange}>
       <DialogContent className="flex max-w-[31.75rem] flex-col gap-4">
@@ -172,7 +205,7 @@ const ConfirmationDialog = ({ token }: ConfirmationDialogProps) => {
 
           <Button
             className="btn-view-cart flex-1 font-bold shadow-md"
-            onClick={closeDialog}
+            onClick={goToCart}
             asChild
           >
             <Link href="/cart">Go to Cart</Link>

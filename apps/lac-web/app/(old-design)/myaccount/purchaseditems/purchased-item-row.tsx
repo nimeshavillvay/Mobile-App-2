@@ -5,8 +5,9 @@ import useAddToCartMutation from "@/_hooks/cart/use-add-to-cart-mutation.hook";
 import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
 import useItemInfo from "@/_hooks/product/use-item-info.hook";
 import useSuspenseProductExcluded from "@/_hooks/product/use-suspense-product-excluded.hook";
-import { AddToCartGTMDtaLayerPush } from "@/_lib/gtm-data-layer";
+import { getGTMPageType } from "@/_lib/gtm-utils";
 import { cn } from "@/_lib/utils";
+import useCurrentPageStore from "@/cart/use-current-page-store.hook";
 import ErrorBoundary from "@/old/_components/error-boundary";
 import { Button } from "@/old/_components/ui/button";
 import {
@@ -22,6 +23,7 @@ import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import dayjs from "dayjs";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Suspense, useId, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { MdKeyboardArrowDown } from "react-icons/md";
@@ -68,6 +70,8 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
     values: { quantity: null },
     resolver: zodResolver(schema),
   });
+  const { setPageType } = useCurrentPageStore((state) => state.actions);
+  const pathname = usePathname();
 
   const quantity = methods.watch("quantity");
 
@@ -82,6 +86,7 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
     if (quantity) {
       // Update the quantity in add to cart dialog
       setQuantity(quantity);
+      setPageType(getGTMPageType(pathname));
 
       addToCartMutation.mutate(
         {
@@ -94,8 +99,6 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
             }
             // Reset the form after submission
             methods.reset();
-
-            AddToCartGTMDtaLayerPush(item.productId, quantity);
           },
         },
       );

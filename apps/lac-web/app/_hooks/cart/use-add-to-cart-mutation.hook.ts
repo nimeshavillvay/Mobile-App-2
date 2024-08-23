@@ -1,9 +1,13 @@
+import useGtmProducts from "@/_hooks/gtm/use-gtm-item-info.hook";
 import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
 import { api } from "@/_lib/api";
 import { checkAvailability } from "@/_lib/apis/shared";
 import { NOT_AVAILABLE, SESSION_TOKEN_COOKIE } from "@/_lib/constants";
+import useCurrentPageStore from "@/cart/use-current-page-store.hook";
+import { sendGTMEvent } from "@next/third-parties/google";
 import { useToast } from "@repo/web-ui/components/ui/toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
 import {
   BACKORDER_DISABLED,
   BACKORDER_ENABLED,
@@ -22,6 +26,15 @@ const useAddToCartMutation = ({ productId }: { productId: number }) => {
     (state) => state.actions,
   );
 
+  const pageType = useCurrentPageStore((state) => state.pageType);
+
+  const [quantity, setQuantity] = useState(0);
+
+  const gtmItemInfoQuery = useGtmProducts(
+    productId ? [{ productid: productId, cartid: 0 }] : [],
+  );
+  const gtmItemInfo = gtmItemInfoQuery.data?.[0];
+
   return useMutation({
     mutationFn: async ({
       quantity,
@@ -30,6 +43,7 @@ const useAddToCartMutation = ({ productId }: { productId: number }) => {
       quantity: number;
       poOrJobName?: string;
     }) => {
+      setQuantity(quantity);
       const configuration: { [key: string]: string } = {
         poOrJobName,
         will_call_avail: "",
@@ -155,6 +169,29 @@ const useAddToCartMutation = ({ productId }: { productId: number }) => {
       } else {
         // Open the dialog
         setOpen("confirmation");
+        sendGTMEvent({
+          event: "add_to_cart",
+          addToCartData: {
+            currency: "USD",
+            value: gtmItemInfo?.price,
+            items: [
+              {
+                item_id: gtmItemInfo?.item_id,
+                item_sku: gtmItemInfo?.item_sku,
+                item_name: gtmItemInfo?.item_name,
+                item_brand: gtmItemInfo?.item_brand,
+                price: gtmItemInfo?.price,
+                quantity: quantity,
+                item_variant: gtmItemInfo?.item_variant,
+                item_categoryid: gtmItemInfo?.item_categoryid,
+                item_primarycategory: gtmItemInfo?.item_primarycategory,
+                item_category: gtmItemInfo?.item_category_path[0],
+                item_category1: gtmItemInfo?.item_category_path[1],
+              },
+            ],
+            page_type: pageType,
+          },
+        });
       }
     },
   });

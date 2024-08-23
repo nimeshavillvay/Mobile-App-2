@@ -5,8 +5,9 @@ import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
 import useSuspenseCheckAvailability from "@/_hooks/product/use-suspense-check-availability.hook";
 import useSuspenseProductExcluded from "@/_hooks/product/use-suspense-product-excluded.hook";
 import { NOT_AVAILABLE } from "@/_lib/constants";
-import { AddToCartGTMDtaLayerPush } from "@/_lib/gtm-data-layer";
+import { getGTMPageType } from "@/_lib/gtm-utils";
 import { cn } from "@/_lib/utils";
+import useCurrentPageStore from "@/cart/use-current-page-store.hook";
 import ErrorBoundary from "@/old/_components/error-boundary";
 import AddToCartIcon from "@/old/_components/icons/add-to-cart";
 import Separator from "@/old/_components/separator";
@@ -24,7 +25,7 @@ import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import dayjs from "dayjs";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   Suspense,
   useId,
@@ -68,6 +69,8 @@ const PurchasedItemDetailedViewDialog = ({
   const router = useRouter();
 
   const { setQuantity } = useAddToCartDialog((state) => state.actions);
+  const { setPageType } = useCurrentPageStore((state) => state.actions);
+  const pathname = usePathname();
 
   const methods = useForm<Schema>({
     values: { quantity: null },
@@ -85,6 +88,7 @@ const PurchasedItemDetailedViewDialog = ({
     if (quantity) {
       // Update the quantity in add to cart dialog
       setQuantity(quantity);
+      setPageType(getGTMPageType(pathname));
 
       addToCartMutation.mutate(
         {
@@ -94,7 +98,6 @@ const PurchasedItemDetailedViewDialog = ({
           onSuccess: () => {
             // Reset the form after submission
             methods.reset();
-            AddToCartGTMDtaLayerPush(item.productId, quantity);
           },
         },
       );

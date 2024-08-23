@@ -13,7 +13,7 @@ import useSuspenseCheckAvailability from "@/_hooks/product/use-suspense-check-av
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
 import { MAX_QUANTITY, NOT_AVAILABLE } from "@/_lib/constants";
-import { AddToCartGTMDtaLayerPush } from "@/_lib/gtm-data-layer";
+import { getGTMPageType } from "@/_lib/gtm-utils";
 import {
   calculateIncreaseQuantity,
   calculateReduceQuantity,
@@ -21,6 +21,7 @@ import {
   formatNumberToPrice,
 } from "@/_lib/utils";
 import { NUMBER_TYPE } from "@/_lib/zod-helper";
+import useCurrentPageStore from "@/cart/use-current-page-store.hook";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AddToCart as AddToCartIcon } from "@repo/web-ui/components/icons/add-to-cart";
 import { ChevronRight } from "@repo/web-ui/components/icons/chevron-right";
@@ -44,6 +45,7 @@ import { Label } from "@repo/web-ui/components/ui/label";
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Suspense, useDeferredValue, useId } from "react";
 import {
   Controller,
@@ -343,10 +345,11 @@ const AddToCart = ({
   const { watch, setValue, handleSubmit, control } =
     useFormContext<VerificationDialogSchema>();
   const { setQuantity } = useAddToCartDialog((state) => state.actions);
+  const { setPageType } = useCurrentPageStore((state) => state.actions);
+
+  const pathname = usePathname();
 
   const quantity = watch("quantity");
-  const delayedQuantity = useDebouncedState(quantity);
-  const deferredQuantity = useDeferredValue(delayedQuantity);
 
   const reduceQuantity = () => {
     // Use `Number(quantity)` because `quantity` is a string at runtime
@@ -370,7 +373,7 @@ const AddToCart = ({
   const onSubmit = handleSubmit((data) => {
     // Update the quantity in add to cart dialog
     setQuantity(data.quantity);
-    AddToCartGTMDtaLayerPush(productId, Number(deferredQuantity));
+    setPageType(getGTMPageType(pathname));
 
     addToCartMutation.mutate({
       quantity: data.quantity,

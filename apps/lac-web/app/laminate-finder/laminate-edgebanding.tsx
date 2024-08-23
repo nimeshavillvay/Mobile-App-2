@@ -2,7 +2,6 @@
 
 import useDebouncedState from "@/_hooks/misc/use-debounced-state.hook";
 import useLaminateFilter from "@/_hooks/product/use-laminate-item-info.hook";
-import { AddMultipleToCartGTMDtaLayerPush } from "@/_lib/gtm-data-layer";
 import type { Product } from "@/_lib/types";
 import useAddMultipleToCartMutation from "@/cart/_add-more-items/use-add-multiple-to-cart-mutation.hook";
 import {
@@ -78,7 +77,6 @@ const LaminateEdgeBanding = ({
         : [];
     addMultipleToCartMutation.mutateAsync(addToCartRequest, {
       onSuccess: () => {
-        AddMultipleToCartGTMDtaLayerPush(addToCartRequest);
         router.push("/cart");
       },
     });

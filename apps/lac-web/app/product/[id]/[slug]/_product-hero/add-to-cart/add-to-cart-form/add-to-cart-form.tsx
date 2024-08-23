@@ -6,11 +6,13 @@ import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
 import useSuspenseCheckAvailability from "@/_hooks/product/use-suspense-check-availability.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
 import { MAX_QUANTITY, NOT_AVAILABLE } from "@/_lib/constants";
-import { AddToCartGTMDtaLayerPush } from "@/_lib/gtm-data-layer";
+import { getGTMPageType } from "@/_lib/gtm-utils";
 import {
   calculateIncreaseQuantity,
   calculateReduceQuantity,
 } from "@/_lib/utils";
+import useCurrentPageStore from "@/cart/use-current-page-store.hook";
+import { usePathname } from "next/navigation";
 import { Controller } from "react-hook-form";
 import useAddToCartForm from "../../use-add-to-cart-form.hook";
 import FormContent from "./form-content";
@@ -31,6 +33,9 @@ const AddToCartForm = ({
   uom,
 }: AddToCartFormProps) => {
   const checkLoginQuery = useSuspenseCheckLogin(token);
+
+  const { setPageType } = useCurrentPageStore((state) => state.actions);
+  const pathname = usePathname();
 
   const { watch, setValue, handleSubmit, control } = useAddToCartForm();
   const quantity = watch("quantity");
@@ -59,9 +64,9 @@ const AddToCartForm = ({
   const onSubmit = handleSubmit((values) => {
     // Update the quantity in add to cart dialog
     setQuantity(quantity);
+    setPageType(getGTMPageType(pathname));
 
     addToCartMutation.mutate(values);
-    AddToCartGTMDtaLayerPush(productId, quantity);
   });
 
   const checkAvailabilityQuery = useSuspenseCheckAvailability(token, {
@@ -163,6 +168,9 @@ const AddToCartFormLoggedIn = ({
     );
   };
 
+  const { setPageType } = useCurrentPageStore((state) => state.actions);
+  const pathname = usePathname();
+
   const addToCartMutation = useAddToCartMutation({
     productId,
   });
@@ -170,9 +178,9 @@ const AddToCartFormLoggedIn = ({
   const onSubmit = handleSubmit((values) => {
     // Update the quantity in add to cart dialog
     setQuantity(quantity);
+    setPageType(getGTMPageType(pathname));
 
     addToCartMutation.mutate(values);
-    AddToCartGTMDtaLayerPush(productId, quantity);
   });
 
   const checkAvailabilityQuery = useSuspenseCheckAvailability(token, {

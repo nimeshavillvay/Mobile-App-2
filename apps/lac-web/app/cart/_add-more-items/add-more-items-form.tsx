@@ -1,7 +1,6 @@
 "use client";
 
 import useDebouncedState from "@/_hooks/misc/use-debounced-state.hook";
-import { AddMultipleToCartGTMDtaLayerPush } from "@/_lib/gtm-data-layer";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AddToCart } from "@repo/web-ui/components/icons/add-to-cart";
 import {
@@ -331,7 +330,6 @@ const AddMoreItemsForm = () => {
     addMultipleToCartMutation.mutateAsync(cartItemDetails, {
       onSuccess: () => {
         resetForm();
-        AddMultipleToCartGTMDtaLayerPush(cartItemDetails);
       },
     });
   };
