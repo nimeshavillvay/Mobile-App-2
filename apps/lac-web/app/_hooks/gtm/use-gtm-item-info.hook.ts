@@ -36,7 +36,6 @@ const useGtmProducts = (productIdList: Product) => {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-          // cache: "no-store",
           json: {
             products: productIdList,
           },

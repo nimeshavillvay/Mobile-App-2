@@ -1,4 +1,5 @@
 import { revalidateSiteLayout } from "@/_actions/revalidate";
+import useGtmUser from "@/_hooks/gtm/use-gtm-user.hook";
 import useCookies from "@/_hooks/storage/use-cookies.hook";
 import { api } from "@/_lib/api";
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
@@ -14,6 +15,9 @@ const useSignInMutation = () => {
   const router = useRouter();
   const pathname = usePathname();
 
+  const gtmItemUserQuery = useGtmUser();
+  const gtmUser = gtmItemUserQuery.data;
+  console.log(">> gtmUser", gtmUser);
   return useMutation({
     mutationFn: async ({
       email,
@@ -66,15 +70,6 @@ const useSignInMutation = () => {
       return transformData;
     },
     onSuccess: async (data) => {
-      sendGTMEvent({
-        event: "login",
-        method: "login_popup",
-        userid: data.userId,
-        account_type: "C",
-        account_industry: "WP",
-        account_sales_category: "Z0",
-      });
-
       toast({
         title: "Sign in successful",
       });
@@ -91,6 +86,16 @@ const useSignInMutation = () => {
       }
 
       await revalidateSiteLayout("/");
+    },
+    onSettled: () => {
+      sendGTMEvent({
+        event: "login",
+        method: "login_popup",
+        userid: gtmUser?.userid,
+        account_type: gtmUser?.account_type,
+        account_industry: gtmUser?.account_industry,
+        account_sales_category: gtmUser?.account_sales_category,
+      });
     },
   });
 };
