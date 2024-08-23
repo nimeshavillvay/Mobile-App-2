@@ -3,12 +3,12 @@ import { cva, type VariantProps } from "~/lib/cva.config";
 import { cn } from "~/lib/utils";
 
 const alertVariants = cva({
-  base: "relative flex w-full flex-row items-center gap-2 rounded px-3 py-2.5 text-sm",
+  base: "[&>svg]:text-bg-slate-950 relative w-full rounded-lg border p-4 [&>svg+div]:translate-y-[-3px] [&>svg]:absolute [&>svg]:left-4 [&>svg]:top-4 [&>svg~*]:pl-7",
   variants: {
     variant: {
-      default:
-        "bg-wurth-gray-50 text-wurth-gray-800 [&>svg]:stroke-wurth-gray-800",
-      destructive: "bg-red-50 text-wurth-red-650 [&>svg]:stroke-wurth-red-650",
+      default: "text-bg-slate-950 bg-white",
+      destructive:
+        "border-red-600/50 text-red-600 dark:border-red-600 [&>svg]:text-red-600",
     },
   },
   defaultVariants: {
@@ -29,19 +29,16 @@ const Alert = forwardRef<
 ));
 Alert.displayName = "Alert";
 
-const AlertContent = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
-  ({ className, ...props }, ref) => (
-    <div ref={ref} className={cn("space-y-1", className)} {...props} />
-  ),
-);
-AlertContent.displayName = "AlertContent";
-
 const AlertTitle = forwardRef<
   HTMLParagraphElement,
   HTMLAttributes<HTMLHeadingElement>
 >(({ className, ...props }, ref) => (
   // eslint-disable-next-line jsx-a11y/heading-has-content
-  <h5 ref={ref} className={cn("text-sm font-medium", className)} {...props} />
+  <h5
+    ref={ref}
+    className={cn("mb-1 font-medium leading-none tracking-tight", className)}
+    {...props}
+  />
 ));
 AlertTitle.displayName = "AlertTitle";
 
@@ -49,8 +46,12 @@ const AlertDescription = forwardRef<
   HTMLParagraphElement,
   HTMLAttributes<HTMLParagraphElement>
 >(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn("text-xs", className)} {...props} />
+  <div
+    ref={ref}
+    className={cn("text-sm [&_p]:leading-relaxed", className)}
+    {...props}
+  />
 ));
 AlertDescription.displayName = "AlertDescription";
 
-export { Alert, AlertContent, AlertDescription, AlertTitle };
+export { Alert, AlertDescription, AlertTitle };

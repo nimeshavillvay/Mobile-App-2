@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  transpilePackages: ["@repo/web-ui", "@repo/shared-logic"],
+  transpilePackages: ["@repo/web-ui", "@repo/shared-logic", "ky"],
   images: {
     unoptimized: process.env.VERCEL_ENV !== "production", // Optimize images only in the production environment in Vercel
     formats: ["image/avif", "image/webp"],

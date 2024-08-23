@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { Alert as AlertIcon } from "~/components/icons/alert";
+import { TriangleAlert } from "lucide-react";
 import { Zap } from "~/components/icons/zap";
-import { Alert, AlertContent, AlertDescription, AlertTitle } from "./alert";
+import { Alert, AlertDescription, AlertTitle } from "./alert";
 
 const meta: Meta<typeof Alert> = {
   title: "Base/Molecules/Alert",
@@ -22,13 +22,10 @@ export const DefaultAlert: Story = {
     return (
       <Alert>
         <Zap className="size-4" />
-
-        <AlertContent>
-          <AlertTitle>Heads up!</AlertTitle>
-          <AlertDescription>
-            You can add components to your app using the cli.
-          </AlertDescription>
-        </AlertContent>
+        <AlertTitle>Heads up!</AlertTitle>
+        <AlertDescription>
+          You can add components to your app using the cli.
+        </AlertDescription>
       </Alert>
     );
   },
@@ -38,14 +35,11 @@ export const Destructive: Story = {
   render: () => {
     return (
       <Alert variant="destructive">
-        <AlertIcon className="size-4" />
-
-        <AlertContent>
-          <AlertTitle>Error</AlertTitle>
-          <AlertDescription>
-            Your session has expired. Please log in again.
-          </AlertDescription>
-        </AlertContent>
+        <TriangleAlert size={16} />
+        <AlertTitle>Error</AlertTitle>
+        <AlertDescription>
+          Your session has expired. Please log in again.
+        </AlertDescription>
       </Alert>
     );
   },
@@ -56,10 +50,7 @@ export const DefaultWithoutDescription: Story = {
     return (
       <Alert>
         <Zap className="size-4" />
-
-        <AlertContent>
-          <AlertTitle>Heads up!</AlertTitle>
-        </AlertContent>
+        <AlertTitle>Heads up!</AlertTitle>
       </Alert>
     );
   },
@@ -69,11 +60,8 @@ export const DestructiveWithoutDescription: Story = {
   render: () => {
     return (
       <Alert variant="destructive">
-        <AlertIcon className="size-4" />
-
-        <AlertContent>
-          <AlertTitle>Error</AlertTitle>
-        </AlertContent>
+        <TriangleAlert size={16} />
+        <AlertTitle>Error</AlertTitle>
       </Alert>
     );
   },

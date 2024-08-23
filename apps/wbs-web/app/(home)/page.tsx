@@ -1,5 +1,5 @@
-import { AddToCartButton } from "@/_components/product-card/buttons";
-import ProductCard from "@/_components/product-card/product-card";
+import { AddToCartButton } from "@/_components/molecules/product-card/buttons";
+import ProductCard from "@/_components/molecules/product-card/product-card";
 import type {
   LiteProduct,
   LiteVariant,
@@ -60,7 +60,7 @@ const HomePage = () => {
         showAddToCart={false}
       />
 
-      <AddToCartButton label="Add To Cart" />
+      <AddToCartButton label="Add To Cart Button" />
     </div>
   );
 };

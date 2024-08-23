@@ -11,6 +11,9 @@ const customJestConfig: Config = {
   setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
   coverageProvider: "v8",
   testEnvironment: "jsdom",
+  testEnvironmentOptions: {
+    customExportConditions: [""],
+  },
   moduleNameMapper: {
     "^@/(.*)$": "<rootDir>/app/$1",
     "^~/(.*)$": "<rootDir>/../../packages/web-ui/src/$1",
