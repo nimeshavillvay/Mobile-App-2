@@ -2,6 +2,8 @@
 
 import useSuspenseCart from "@/_hooks/cart/use-suspense-cart.hook";
 import useUpdateCartItemMutation from "@/_hooks/cart/use-update-cart-item-mutation.hook";
+import useGtmProducts from "@/_hooks/gtm/use-gtm-item-info.hook";
+import useGtmUser from "@/_hooks/gtm/use-gtm-user.hook";
 import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
 import useItemInfo from "@/_hooks/product/use-item-info.hook";
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
@@ -55,6 +57,14 @@ const ConfirmationDialog = ({ token }: ConfirmationDialogProps) => {
   const itemInfoQuery = useItemInfo(productId ? [productId] : []);
   const itemInfo = itemInfoQuery.data?.[0];
 
+  const gtmItemInfoQuery = useGtmProducts(
+    productId ? [{ productid: productId, cartid: 0 }] : [],
+  );
+  const gtmItemInfo = gtmItemInfoQuery.data?.[0];
+
+  const gtmItemUserQuery = useGtmUser();
+  const gtmUser = gtmItemUserQuery.data;
+
   const cartQuery = useSuspenseCart(token);
 
   const itemInCart = cartQuery.data.cartItems.find(
@@ -102,25 +112,25 @@ const ConfirmationDialog = ({ token }: ConfirmationDialogProps) => {
         value: "27.27",
         items: [
           {
-            item_id: productId,
-            item_sku: itemInfo?.productSku,
-            item_name: itemInfo?.productName,
-            item_brand: itemInfo?.brand,
-            price: "27.27",
+            item_id: gtmItemInfo?.item_id,
+            item_sku: gtmItemInfo?.item_sku,
+            item_name: gtmItemInfo?.item_name,
+            item_brand: gtmItemInfo?.item_brand,
+            price: gtmItemInfo?.price,
             quantity: quantity,
-            item_categoryid: itemInfo?.productCategory,
-            item_primarycategory: itemInfo?.productCategory,
-            item_category: itemInfo?.productCategory,
-            item_category1: itemInfo?.productCategory,
-            item_category2: itemInfo?.productCategory,
+            item_categoryid: gtmItemInfo?.item_categoryid,
+            item_primarycategory: gtmItemInfo?.item_primarycategory,
+            item_category: gtmItemInfo?.item_category_path[0] ?? "",
+            item_category1: gtmItemInfo?.item_category_path[1] ?? "",
+            item_category2: gtmItemInfo?.item_category_path[2] ?? "",
           },
         ],
       },
       data: {
-        userid: "1534470",
-        account_type: "R",
-        account_industry: "HO",
-        account_sales_category: "Z0",
+        userid: gtmUser?.userid,
+        account_type: gtmUser?.account_type,
+        account_industry: gtmUser?.account_industry,
+        account_sales_category: gtmUser?.account_sales_category,
       },
     });
   };

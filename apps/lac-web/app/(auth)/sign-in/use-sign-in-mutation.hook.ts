@@ -17,7 +17,7 @@ const useSignInMutation = () => {
 
   const gtmItemUserQuery = useGtmUser();
   const gtmUser = gtmItemUserQuery.data;
-  console.log(">> gtmUser", gtmUser);
+
   return useMutation({
     mutationFn: async ({
       email,
