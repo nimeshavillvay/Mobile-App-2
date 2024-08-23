@@ -75,8 +75,8 @@ export const getProduct = async (
       class: product.selected_item.class,
       attributes: product.selected_item.attributes?.map(
         ({ attribute_name, attribute_value }) => ({
-          name: attribute_name,
-          value: attribute_value,
+          name: decode(attribute_name),
+          value: decode(attribute_value),
         }),
       ),
       detailedImages: product.selected_item.detailed_images,

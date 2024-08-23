@@ -12,17 +12,20 @@ import {
 import useSessionTokenStorage from "@/hooks/auth/use-session-token-storage.hook";
 import { API_BASE_URL, API_KEY } from "@/lib/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { ExpandableView } from "@repo/native-ui/components/base/expandable-view";
 import {
   ProductCarousel,
   ProductCarouselItem,
   ProductCarouselPagination,
 } from "@repo/native-ui/components/product";
+import { ProductSpecification } from "@repo/native-ui/components/product-specification";
 import useSuspenseGetProduct from "@repo/shared-logic/apis/hooks/product/use-suspense-get-product.hook";
 import { Stack, useLocalSearchParams } from "expo-router";
 import { Suspense, useDeferredValue, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Dimensions, KeyboardAvoidingView, Platform } from "react-native";
 import ImageView from "react-native-image-viewing";
+import RenderHtml from "react-native-render-html";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView, Text, View, YStack } from "tamagui";
 import { z } from "zod";
@@ -185,6 +188,25 @@ const ProductDetails = ({ productId }: { readonly productId: string }) => {
           />
 
           <ProductVariations productId={data.selectedProduct.productId} />
+
+          <ExpandableView blurColor="rgb(242,242,242)" marginTop={20} gap={10}>
+            <Text fontSize="$6" fontWeight={900}>
+              Product Details
+            </Text>
+
+            <RenderHtml
+              source={{ html: `${data.selectedProduct.productSummary}` }}
+              emSize={16}
+              baseStyle={{ fontSize: 15 }}
+              contentWidth={screenWidth - 40}
+            />
+          </ExpandableView>
+
+          {!!data.selectedProduct.attributes && (
+            <ExpandableView blurColor="rgb(242,242,242)" marginTop={20}>
+              <ProductSpecification data={data.selectedProduct.attributes} />
+            </ExpandableView>
+          )}
         </YStack>
       </ScrollView>
 
