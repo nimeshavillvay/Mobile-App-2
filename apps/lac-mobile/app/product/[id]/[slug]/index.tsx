@@ -135,7 +135,10 @@ const ProductDetails = ({ productId }: { readonly productId: string }) => {
             }}
           />
 
-          <ProductAction width={screenWidth} />
+          <ProductAction
+            width={screenWidth}
+            url={`https://www.youtube.com/watch?v=dQw4w9WgXcQ`}
+          />
 
           <ProductCarouselPagination data={productImages} index={index} />
         </View>

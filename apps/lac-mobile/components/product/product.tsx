@@ -24,6 +24,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   Pressable,
+  Share,
 } from "react-native";
 import { Button, ScrollView, Text, View, XStack, YStack } from "tamagui";
 
@@ -62,7 +63,13 @@ export const ProductPriceSkeleton = () => {
   );
 };
 
-export const ProductAction = ({ width }: { readonly width: number }) => {
+export const ProductAction = ({
+  width,
+  url,
+}: {
+  readonly width: number;
+  readonly url: string;
+}) => {
   return (
     <View
       flex={1}
@@ -118,6 +125,12 @@ export const ProductAction = ({ width }: { readonly width: number }) => {
           shadowRadius={2}
           shadowOffset={{ height: 3, width: 3 }}
           elevation={10}
+          onPress={async () => {
+            await Share.share({
+              message: url,
+              url: url,
+            });
+          }}
         />
       </XStack>
     </View>
