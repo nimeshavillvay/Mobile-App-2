@@ -6,6 +6,7 @@ import {
   WILLCALL_SHIPPING_METHOD,
 } from "@/lib/constants";
 import { formatNumberToPrice } from "@/lib/utils";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { ScreenLayout } from "@repo/native-ui/components/base/screen-layout";
 import {
   AllDeliveryMethodsChanger,
@@ -13,6 +14,11 @@ import {
   AllDeliveryMethodsChangerTrigger,
 } from "@repo/native-ui/components/cart/all-delivery-methods-changer";
 import { OrderSummary } from "@repo/native-ui/components/cart/order-summary";
+import {
+  PromoCodeDialog,
+  PromoCodeDialogContent,
+  PromoCodeDialogTrigger,
+} from "@repo/native-ui/components/cart/promo-code-dialog";
 import { ConfirmationDialog } from "@repo/native-ui/components/confirmation-dialog";
 import { checkAvailability } from "@repo/shared-logic/apis/base/product/check-availability";
 import useSuspenseWillCallPlant from "@repo/shared-logic/apis/hooks/account/use-suspense-will-call-plant.hook";
@@ -20,6 +26,7 @@ import useRemoveCartItemMutation from "@repo/shared-logic/apis/hooks/cart/use-re
 import useSuspenseCart from "@repo/shared-logic/apis/hooks/cart/use-suspense-cart.hook";
 import useSuspenseShippingMethods from "@repo/shared-logic/apis/hooks/cart/use-suspense-shipping-methods.hook";
 import useSuspenseSimulationCheckout from "@repo/shared-logic/apis/hooks/cart/use-suspense-simulation-checkout.hook";
+import useUpdateCartConfigurationMutation from "@repo/shared-logic/apis/hooks/cart/use-update-cart-configuration-mutation.hook";
 import useUpdateCartItemMutation from "@repo/shared-logic/apis/hooks/cart/use-update-cart-item-mutation.hook";
 import useSuspensePriceCheck from "@repo/shared-logic/apis/hooks/product/use-suspense-price-check.hook";
 import {
@@ -42,8 +49,10 @@ import { router } from "expo-router";
 import { MotiView } from "moti";
 import { Skeleton } from "moti/skeleton";
 import { Suspense, useState, type ComponentProps } from "react";
+import { useForm } from "react-hook-form";
 import { Dimensions, StyleSheet, View } from "react-native";
 import { Button, H1, H4, Text, VisuallyHidden } from "tamagui";
+import { z } from "zod";
 
 type ConfigKey = keyof CartItemConfiguration;
 
@@ -133,6 +142,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 0,
   },
 });
+
+const promoCodeFormSchema = z.object({
+  promoCode: z.string(),
+});
+type PromoCodeSchema = z.infer<typeof promoCodeFormSchema>;
 
 const CartItemList = () => {
   const [openClearAllDialog, setOpenClearAllDialog] = useState(false);
@@ -536,11 +550,48 @@ const CartItemList = () => {
 };
 
 const CartFooter = () => {
+  const [promoCodeDialogOpen, setPromoCodeDialogOpen] = useState(false);
+
   const authenticatedApiConfig = useAuthenticatedApiConfig();
 
+  const cartQuery = useSuspenseCart(authenticatedApiConfig);
   const simulationCheckoutQuery = useSuspenseSimulationCheckout(
     authenticatedApiConfig,
   );
+
+  const promoCodeForm = useForm<PromoCodeSchema>({
+    resolver: zodResolver(promoCodeFormSchema),
+    values: {
+      promoCode: cartQuery.data.configuration.coupon ?? "",
+    },
+  });
+
+  const updateCartConfigurationMutation = useUpdateCartConfigurationMutation(
+    authenticatedApiConfig,
+  );
+
+  const submitPromoCode = promoCodeForm.handleSubmit(async (values) => {
+    await updateCartConfigurationMutation.mutateAsync(
+      {
+        coupon: values.promoCode,
+      },
+      {
+        onError: () => {
+          promoCodeForm.setError("promoCode", {
+            message: "Invalid Promo Code",
+          });
+        },
+        onSuccess: () => {
+          setPromoCodeDialogOpen(false);
+        },
+      },
+    );
+  });
+  const clearPromoCode = async () => {
+    await updateCartConfigurationMutation.mutateAsync({
+      coupon: "",
+    });
+  };
 
   return (
     <View
@@ -569,6 +620,28 @@ const CartFooter = () => {
           shipping={simulationCheckoutQuery.data.shippingcost}
           tax={simulationCheckoutQuery.data.tax}
         />
+      </View>
+
+      <View style={styles.orderSummaryRow}>
+        <H4 style={styles.orderSummaryLabel}>Promo Code</H4>
+
+        <PromoCodeDialog
+          open={promoCodeDialogOpen}
+          onOpenChange={setPromoCodeDialogOpen}
+        >
+          <PromoCodeDialogTrigger
+            promoCode={cartQuery.data.configuration.coupon}
+            savings={simulationCheckoutQuery.data.discount}
+            clearPromoCode={clearPromoCode}
+          />
+
+          <PromoCodeDialogContent
+            form={promoCodeForm}
+            submitPromoCode={submitPromoCode}
+            disabled={updateCartConfigurationMutation.isPending}
+            promoCodeError={promoCodeForm.formState.errors.promoCode?.message}
+          />
+        </PromoCodeDialog>
       </View>
 
       <View style={styles.orderSummaryRow}>

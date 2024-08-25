@@ -6,8 +6,8 @@ import { Link } from "expo-router";
 import { MotiView } from "moti";
 import { Skeleton } from "moti/skeleton";
 import { type ComponentProps } from "react";
-import { Dimensions, StyleSheet } from "react-native";
-import { Circle, H2, Text, View } from "tamagui";
+import { Dimensions, StyleSheet, View } from "react-native";
+import { Circle, H2, Text } from "tamagui";
 
 const CATEGORY_WIDTH = 80;
 
@@ -32,7 +32,7 @@ export const FeaturedCategoriesSkeleton = () => {
 export const FeaturedCategoriesContainer = (
   props: ComponentProps<typeof View>,
 ) => {
-  return <View flex={2} padding={16} {...props} />;
+  return <View style={{ flex: 2, padding: 16 }} {...props} />;
 };
 
 export const FeaturedCategoriesHeader = ({
@@ -59,7 +59,7 @@ export const FeaturedCategoriesList = ({
   keyExtractor = (item) => item.id,
   renderItem = ({ item }) => (
     <Link href={`/category/${item.id}`} testID="featured-category">
-      <View gap={16} alignItems="center" alignSelf="stretch">
+      <View style={{ gap: 16, alignItems: "center", alignSelf: "stretch" }}>
         <Image
           source={item.img}
           style={styles.featuredCategoryImage}
@@ -80,7 +80,7 @@ export const FeaturedCategoriesList = ({
   ),
   ViewAllComponent = () => (
     <Link href="/browse-categories">
-      <View justifyContent="center" width={80} height={80}>
+      <View style={{ justifyContent: "center", width: 80, height: 80 }}>
         <Circle
           size={CATEGORY_WIDTH}
           backgroundColor="black"
@@ -98,7 +98,7 @@ export const FeaturedCategoriesList = ({
   ),
   numColumns = 4,
   estimatedItemSize = 154,
-  ItemSeparatorComponent = () => <View height="$6" />,
+  ItemSeparatorComponent = () => <View style={{ height: 64 }} />,
   scrollEnabled = false,
   ...delegated
 }: Omit<FlashListProps<FeaturedCategory>, OptionalKeys> &
