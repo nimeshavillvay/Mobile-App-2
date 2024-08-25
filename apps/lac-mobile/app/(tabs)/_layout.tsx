@@ -39,6 +39,7 @@ const TabLayout = () => {
         options={{
           title: "Shop",
           tabBarIcon: ({ color }) => <Store size={28} color={color} />,
+          href: "/(tabs)/shop",
         }}
       />
       <Tabs.Screen

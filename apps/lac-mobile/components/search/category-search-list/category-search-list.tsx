@@ -17,6 +17,7 @@ const CategorySearchList = ({ ...delegated }: SearchCategoryProps) => {
   return (
     <FlashList
       horizontal={false}
+      keyExtractor={(item) => item.category}
       ItemSeparatorComponent={() => {
         return <View marginVertical={5} />;
       }}

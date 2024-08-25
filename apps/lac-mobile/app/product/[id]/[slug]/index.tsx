@@ -6,6 +6,7 @@ import {
   ProductPrices,
   ProductPriceSkeleton,
   ProductVariations,
+  RelatedProducts,
   SalesBadges,
   StockStatus,
 } from "@/components/product";
@@ -21,6 +22,7 @@ import {
 import { ProductSpecification } from "@repo/native-ui/components/product-specification";
 import useSuspenseGetProduct from "@repo/shared-logic/apis/hooks/product/use-suspense-get-product.hook";
 import { Stack, useLocalSearchParams } from "expo-router";
+import { decode } from "html-entities";
 import { Suspense, useDeferredValue, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Dimensions, KeyboardAvoidingView, Platform } from "react-native";
@@ -195,18 +197,26 @@ const ProductDetails = ({ productId }: { readonly productId: string }) => {
             </Text>
 
             <RenderHtml
-              source={{ html: `${data.selectedProduct.productSummary}` }}
+              source={{
+                html: `${decode(data.selectedProduct.productSummary)}`,
+              }}
               emSize={16}
               baseStyle={{ fontSize: 15 }}
               contentWidth={screenWidth - 40}
             />
           </ExpandableView>
 
-          {!!data.selectedProduct.attributes && (
-            <ExpandableView blurColor="rgb(242,242,242)" marginTop={20}>
-              <ProductSpecification data={data.selectedProduct.attributes} />
-            </ExpandableView>
-          )}
+          {!!data.selectedProduct.attributes &&
+            data.selectedProduct.attributes.length > 0 && (
+              <ExpandableView blurColor="rgb(242,242,242)" marginTop={20}>
+                <ProductSpecification data={data.selectedProduct.attributes} />
+              </ExpandableView>
+            )}
+
+          <RelatedProducts
+            productId={data.selectedProduct.productId.toString()}
+            marginTop={20}
+          />
         </YStack>
       </ScrollView>
 

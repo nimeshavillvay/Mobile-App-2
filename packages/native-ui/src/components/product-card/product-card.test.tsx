@@ -6,6 +6,7 @@ const title =
 const sku = "NC8053-346A-4G";
 const uom = "pair";
 const image = "https://picsum.photos/seed/696/3000/2000";
+const link = "product/1/test";
 
 describe("Product Card", () => {
   test("displays the product title, SKU, Unit Of Measurement, and Image", async () => {
@@ -22,6 +23,7 @@ describe("Product Card", () => {
         price={price}
         listPrice={price}
         uom={uom}
+        link={link}
       />,
     );
 
@@ -63,6 +65,7 @@ describe("Product Card", () => {
         price={price}
         listPrice={price}
         uom={uom}
+        link={link}
       />,
     );
 
@@ -89,6 +92,7 @@ describe("Product Card", () => {
         price={price}
         listPrice={price}
         uom={uom}
+        link={link}
       />,
     );
 
@@ -112,6 +116,7 @@ describe("Product Card", () => {
         price={price}
         listPrice={price}
         uom={uom}
+        link={link}
       />,
     );
 
@@ -145,6 +150,7 @@ describe("Product Card", () => {
         price={price}
         listPrice={listPrice}
         uom={uom}
+        link={link}
       />,
     );
 
@@ -183,6 +189,7 @@ describe("Product Card", () => {
         price={price}
         listPrice={price}
         uom={uom}
+        link={link}
       />,
     );
 
