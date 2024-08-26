@@ -22,7 +22,11 @@ import { Dimensions, Platform } from "react-native";
 const ShopPage = () => {
   return (
     <ScreenLayout edges={["top", "right", "left"]}>
-      <ScreenHeader title="Explore Products" hideBackButton />
+      <ScreenHeader
+        title="Explore Products"
+        hideBackButton
+        barcodeScannerPath="/barcode-scanner"
+      />
 
       <Suspense fallback={<BannersCarouselSkeleton />}>
         <Banners />
@@ -89,7 +93,7 @@ const Banners = () => {
   return (
     <BannersCarousel
       width={width}
-      height={width / 2}
+      height={width / 2.5}
       data={topBanners}
       renderItem={({ item }) => (
         <BannersCarouselItem
