@@ -147,7 +147,7 @@ const ProductCard = ({
   const gtmItemUserQuery = useGtmUser();
   const gtmUser = gtmItemUserQuery.data;
 
-  const sendToGTMProductView = () => {
+  const productTitleOrImageOnClick = () => {
     if (gtmItemInfo && gtmUser) {
       sendGTMEvent({
         event: "select_item",
@@ -216,6 +216,7 @@ const ProductCard = ({
           alt="A placeholder product"
           href={href}
           title={title}
+          productTitleOrImageOnClick={productTitleOrImageOnClick}
         />
       </ProductCardHero>
 
@@ -234,7 +235,7 @@ const ProductCard = ({
           title={title}
           sku={sku}
           href={href}
-          sendToGTMProductView={sendToGTMProductView}
+          productTitleOrImageOnClick={productTitleOrImageOnClick}
         />
 
         <div className="flex flex-col gap-2">

@@ -37,13 +37,7 @@ const useGtmProducts = (productIdList: Product) => {
   });
 };
 
-export const getGtmProducts = async (
-  productIdList: Product,
-  token: string | undefined,
-) => {
-  if (token === undefined) {
-    return null;
-  }
+export const getGtmProducts = async (productIdList: Product, token: string) => {
   const response = await api
     .post("rest/gtm/products", {
       headers: {

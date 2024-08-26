@@ -21,10 +21,7 @@ const useGtmUser = () => {
   });
 };
 
-export const getGtmUser = async (token: string | undefined) => {
-  if (token === undefined) {
-    return null;
-  }
+export const getGtmUser = async (token: string) => {
   const response = await api
     .get("rest/gtm/user", {
       headers: {
@@ -32,6 +29,7 @@ export const getGtmUser = async (token: string | undefined) => {
       },
     })
     .json();
+
   return userListSchema.parse(response);
 };
 

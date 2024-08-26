@@ -50,7 +50,7 @@ const CartSummary = ({ token, plants }: CartSummaryProps) => {
   const gtmUser = gtmItemUserQuery.data;
 
   const sendToGTMCartClicked = () => {
-    gtmItemsInfo?.map((gtmItemInfo) => {
+    gtmItemsInfo?.forEach((gtmItemInfo) => {
       sendGTMEvent({
         event: "view_cart",
         viewCartData: {
@@ -84,7 +84,7 @@ const CartSummary = ({ token, plants }: CartSummaryProps) => {
     });
   };
   const sendToGTMProductView = () => {
-    gtmItemsInfo?.map((gtmItemInfo) => {
+    gtmItemsInfo?.forEach((gtmItemInfo) => {
       sendGTMEvent({
         event: "select_item",
         item_list_name: GTM_ITEM_PAGE_TYPES.CHECKOUT,

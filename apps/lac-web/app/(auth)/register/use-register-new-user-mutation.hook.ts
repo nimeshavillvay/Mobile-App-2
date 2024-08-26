@@ -138,7 +138,12 @@ const useRegisterNewUserMutation = () => {
       }
     },
     onSettled: async () => {
-      const gtmUser = await getGtmUser(cookies[SESSION_TOKEN_COOKIE]);
+      const token = cookies[SESSION_TOKEN_COOKIE];
+      if (!token) {
+        return null;
+      }
+      const gtmUser = await getGtmUser(token);
+
       if (gtmUser) {
         sendGTMEvent({
           event: "sign_up",
