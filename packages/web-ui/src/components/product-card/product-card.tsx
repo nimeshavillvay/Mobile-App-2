@@ -181,10 +181,12 @@ const ProductCardDetails = ({
   title,
   sku,
   href,
+  sendToGTMProductView,
 }: {
   readonly title: string;
   readonly sku: string;
   readonly href: LinkProps["href"];
+  readonly sendToGTMProductView: () => void;
 }) => {
   return (
     <div className="space-y-1 text-sm">
@@ -195,6 +197,7 @@ const ProductCardDetails = ({
               href={href}
               dangerouslySetInnerHTML={{ __html: title }}
               className="btn-view-product"
+              onClick={sendToGTMProductView}
             />
           </h3>
         </TooltipTrigger>

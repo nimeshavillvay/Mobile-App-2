@@ -2,16 +2,21 @@ import NumberInputField from "@/_components/number-input-field";
 import WurthLacLogo from "@/_components/wurth-lac-logo";
 import useDeleteCartItemMutation from "@/_hooks/cart/use-delete-cart-item-mutation.hook";
 import useUpdateCartItemMutation from "@/_hooks/cart/use-update-cart-item-mutation.hook";
+import useGtmProducts from "@/_hooks/gtm/use-gtm-item-info.hook";
+import useGtmUser from "@/_hooks/gtm/use-gtm-user.hook";
 import useDebouncedState from "@/_hooks/misc/use-debounced-state.hook";
+import usePathnameHistoryState from "@/_hooks/misc/use-pathname-history-state.hook";
 import useSuspenseCheckAvailability from "@/_hooks/product/use-suspense-check-availability.hook";
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
 import {
   DEFAULT_PLANT,
+  GTM_ITEM_PAGE_TYPES,
   MAX_QUANTITY,
   NOT_AVAILABLE,
   NOT_IN_STOCK,
 } from "@/_lib/constants";
+import { getGTMPageType } from "@/_lib/gtm-utils";
 import type {
   CartConfiguration,
   CartItemConfiguration,
@@ -26,6 +31,7 @@ import {
 } from "@/_lib/utils";
 import { NUMBER_TYPE } from "@/_lib/zod-helper";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { sendGTMEvent } from "@next/third-parties/google";
 import { Alert } from "@repo/web-ui/components/icons/alert";
 import { Minus } from "@repo/web-ui/components/icons/minus";
 import { Plus } from "@repo/web-ui/components/icons/plus";
@@ -715,11 +721,61 @@ const CartItem = ({
     );
   };
 
+  const pathnameHistory = usePathnameHistoryState(
+    (state) => state.pathnameHistory,
+  );
+
+  const gtmItemInfoQuery = useGtmProducts(
+    product.id ? [{ productid: product.id, cartid: 0 }] : [],
+  );
+  const gtmItemInfo = gtmItemInfoQuery.data?.[0];
+
+  const gtmItemUserQuery = useGtmUser();
+  const gtmUser = gtmItemUserQuery.data;
+
+  const sendToGTM = () => {
+    if (gtmItemInfo && gtmUser) {
+      sendGTMEvent({
+        event: "select_item",
+        item_list_name: GTM_ITEM_PAGE_TYPES.CART_PAGE,
+        selectItemData: {
+          currency: "USD",
+          value: gtmItemInfo?.price,
+          items: [
+            {
+              item_id: gtmItemInfo?.item_id,
+              item_sku: gtmItemInfo?.item_sku,
+              item_name: gtmItemInfo?.item_name,
+              item_brand: gtmItemInfo?.item_brand,
+              price: gtmItemInfo?.price,
+              quantity: 1,
+              item_categoryid: gtmItemInfo?.item_categoryid,
+              item_primarycategory: gtmItemInfo?.item_primarycategory,
+              item_category: gtmItemInfo?.item_category_path[0] ?? "",
+              item_category1: gtmItemInfo?.item_category_path[1] ?? "",
+              item_category2: gtmItemInfo?.item_category_path[2] ?? "",
+            },
+          ],
+        },
+        data: {
+          userid: gtmUser?.userid,
+          account_type: gtmUser?.account_type,
+          account_industry: gtmUser?.account_industry,
+          account_sales_category: gtmUser?.account_sales_category,
+        },
+        page_type: getGTMPageType(
+          pathnameHistory[pathnameHistory.length - 1] ?? "",
+        ),
+      });
+    }
+  };
+
   return (
     <div className="flex flex-col gap-6 md:flex-row">
       <div className="flex flex-row items-start gap-3 md:flex-1">
         <div className="flex w-[4.5rem] shrink-0 flex-col gap-2 md:w-[7.5rem]">
           <Link
+            onClick={sendToGTM}
             href={`/product/${product.id}/${product.slug}`}
             className="btn-view-product"
           >
