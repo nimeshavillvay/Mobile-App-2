@@ -2,8 +2,11 @@
 
 import useSuspenseCart from "@/_hooks/cart/use-suspense-cart.hook";
 import useUpdateCartConfigMutation from "@/_hooks/cart/use-update-cart-config-mutation.hook";
+import useGtmProducts from "@/_hooks/gtm/use-gtm-item-info.hook";
+import useGtmUser from "@/_hooks/gtm/use-gtm-user.hook";
 import type { PaymentMethod } from "@/_lib/types";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { sendGTMEvent } from "@next/third-parties/google";
 import { Close } from "@repo/web-ui/components/icons/close";
 import { Mastercard } from "@repo/web-ui/components/logos/mastercard";
 import { Visa } from "@repo/web-ui/components/logos/visa";
@@ -98,13 +101,68 @@ const BillingAndPaymentInfo = ({
     ),
   );
 
-  const selectPayment = (id: string) => {
-    setPaymentId(id);
+  const gtmProducts = cartQuery.data.cartItems.map((item) => {
+    return {
+      productid: item.itemInfo.productId,
+      cartid: item.cartItemId,
+      quantity: item.quantity,
+    };
+  });
 
+  const gtmItemInfoQuery = useGtmProducts(
+    gtmProducts.length > 0 ? gtmProducts : [],
+  );
+  const gtmItemsInfo = gtmItemInfoQuery.data;
+
+  const gtmItemUserQuery = useGtmUser();
+  const gtmUser = gtmItemUserQuery.data;
+
+  const selectPayment = (id: string) => {
     // If a credit card is selected
     const selectedCreditCard = creditCartsQuery.data.find(
       (card) => card.id.toString() === id,
     );
+
+    // If a normal payment method is selected
+    const selectedPaymentMethod = paymentMethods.find(
+      (paymentMethod) => paymentMethod.code === id,
+    );
+
+    const previousSelectedPaymentMethod = paymentMethods.find(
+      (paymentMethod) => paymentMethod.code === paymentId,
+    );
+
+    if (!selectedCreditCard || previousSelectedPaymentMethod) {
+      gtmItemsInfo?.forEach((gtmItemInfo) => {
+        sendGTMEvent({
+          event: "add_payment_info",
+          addPaymentInfoData: {
+            currency: "USD",
+            value: gtmItemInfo?.price,
+            payment_type: selectedPaymentMethod?.name ?? "Credit Card Only",
+            items: [
+              {
+                item_id: gtmItemInfo?.item_id,
+                item_sku: gtmItemInfo?.item_sku,
+                item_name: gtmItemInfo?.item_name,
+                item_brand: gtmItemInfo?.item_brand,
+                price: gtmItemInfo?.price,
+                quantity: 1,
+              },
+            ],
+          },
+          data: {
+            userid: gtmUser?.userid,
+            account_type: gtmUser?.account_type,
+            account_industry: gtmUser?.account_industry,
+            account_sales_category: gtmUser?.account_sales_category,
+          },
+        });
+      });
+    }
+
+    setPaymentId(id);
+
     if (selectedCreditCard) {
       return updateCartConfigMutation.mutate({
         cardName: selectedCreditCard.name,
@@ -117,10 +175,6 @@ const BillingAndPaymentInfo = ({
       });
     }
 
-    // If a normal payment method is selected
-    const selectedPaymentMethod = paymentMethods.find(
-      (paymentMethod) => paymentMethod.code === id,
-    );
     if (selectedPaymentMethod) {
       return updateCartConfigMutation.mutate({
         cardName: "",

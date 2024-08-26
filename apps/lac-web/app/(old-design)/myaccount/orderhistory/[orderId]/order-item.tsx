@@ -1,4 +1,3 @@
-import WurthLacLogo from "@/_components/wurth-lac-logo";
 import { cn, formatNumberToPrice } from "@/_lib/utils";
 import AlertInline from "@/old/_components/alert-inline";
 import {
@@ -10,11 +9,10 @@ import {
   TableRow,
 } from "@/old/_components/ui/table";
 import dayjs from "dayjs";
-import Image from "next/image";
-import Link from "next/link";
 import { Fragment } from "react";
 import { UI_DATE_FORMAT } from "../constants";
 import BuyAgainButton from "./buy-again-button";
+import OrderItemImageTitle from "./order-item-image-title";
 
 type OrderItemProps = {
   readonly index: number;
@@ -80,19 +78,6 @@ const OrderItem = ({
     price,
   } = orderItem;
 
-  const generateItemUrl = ({
-    productId,
-    slug,
-  }: {
-    productId: number;
-    slug: string;
-  }) => {
-    if (slug !== "") {
-      return `/product/${productId}/${slug}`;
-    }
-    return "#";
-  };
-
   return (
     <div
       className={cn(
@@ -103,28 +88,13 @@ const OrderItem = ({
       <div className="flex flex-row">
         <div className="flex flex-1 flex-row gap-4">
           <div className="min-w-[76px]">
-            <Link
-              href={generateItemUrl({ productId, slug: slug ?? "" })}
-              className={cn(
-                productId ? "pointer-events-auto" : "pointer-events-none",
-                "btn-view-product",
-              )}
-            >
-              {image ? (
-                <Image
-                  src={image}
-                  alt={productName ?? itemDescription}
-                  width={76}
-                  height={76}
-                />
-              ) : (
-                <WurthLacLogo
-                  width={76}
-                  height={76}
-                  className="border border-brand-gray-200 px-2"
-                />
-              )}
-            </Link>
+            <OrderItemImageTitle
+              productId={productId}
+              itemDescription={itemDescription}
+              productName={productName}
+              image={image}
+              slug={slug}
+            />
           </div>
           <div className="flex flex-col">
             <div>Item#: {sku ?? "N/A"}</div>

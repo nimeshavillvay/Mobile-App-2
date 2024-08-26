@@ -4,7 +4,12 @@ import useSuspenseWillCallPlant from "@/_hooks/address/use-suspense-will-call-pl
 import useDeleteCartItemMutation from "@/_hooks/cart/use-delete-cart-item-mutation.hook";
 import useSuspenseCart from "@/_hooks/cart/use-suspense-cart.hook";
 import useUpdateCartConfigMutation from "@/_hooks/cart/use-update-cart-config-mutation.hook";
+import useGtmProducts from "@/_hooks/gtm/use-gtm-item-info.hook";
+import useGtmUser from "@/_hooks/gtm/use-gtm-user.hook";
+import usePathnameHistoryState from "@/_hooks/misc/use-pathname-history-state.hook";
+import { getGTMPageType } from "@/_lib/gtm-utils";
 import type { Plant } from "@/_lib/types";
+import { sendGTMEvent } from "@next/third-parties/google";
 import { Alert as AlertIcon } from "@repo/web-ui/components/icons/alert";
 import { Close } from "@repo/web-ui/components/icons/close";
 import { Trash } from "@repo/web-ui/components/icons/trash";
@@ -54,6 +59,27 @@ const CartList = ({ token, plants }: CartListProps) => {
   const deleteCartItemMutation = useDeleteCartItemMutation();
   const updateCartConfigMutation = useUpdateCartConfigMutation();
 
+  const pathnameHistory = usePathnameHistoryState(
+    (state) => state.pathnameHistory,
+  );
+
+  const gtmProducts = data.cartItems.map((item) => {
+    return {
+      productid: item.itemInfo.productId,
+      cartid: item.cartItemId,
+      quantity: item.quantity,
+    };
+  });
+
+  const gtmItemInfoQuery = useGtmProducts(
+    gtmProducts.length > 0 ? gtmProducts : [],
+  );
+
+  const gtmItemsInfo = gtmItemInfoQuery.data;
+
+  const gtmItemUserQuery = useGtmUser();
+  const gtmUser = gtmItemUserQuery.data;
+
   const handleClearCart = () => {
     if (data.cartItems.length > 0) {
       const cartItemIds = data.cartItems.map((item) => ({
@@ -68,6 +94,36 @@ const CartList = ({ token, plants }: CartListProps) => {
           {
             onSettled: () => {
               setDeleteConfirmation(false);
+
+              if (gtmItemsInfo !== undefined) {
+                gtmItemsInfo.forEach((gtmItemInfo) => {
+                  sendGTMEvent({
+                    event: "remove_from_cart",
+                    removeFromCartData: {
+                      currency: "USD",
+                      value: gtmItemInfo?.price,
+                      items: [
+                        {
+                          item_id: gtmItemInfo?.item_id,
+                          item_sku: gtmItemInfo?.item_sku,
+                          item_name: gtmItemInfo?.item_name,
+                          price: gtmItemInfo?.price,
+                          quantity: 1,
+                        },
+                      ],
+                    },
+                    data: {
+                      userid: gtmUser?.userid,
+                      account_type: gtmUser?.account_type,
+                      account_industry: gtmUser?.account_industry,
+                      account_sales_category: gtmUser?.account_sales_category,
+                    },
+                    page_type: getGTMPageType(
+                      pathnameHistory[pathnameHistory.length - 1] ?? "",
+                    ),
+                  });
+                });
+              }
             },
           },
         );

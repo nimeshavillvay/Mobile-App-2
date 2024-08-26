@@ -4,6 +4,9 @@ import useSuspenseCart from "@/_hooks/cart/use-suspense-cart.hook";
 import useSuspenseSimulationCheckout from "@/_hooks/cart/use-suspense-simulation-checkout.hook";
 import useGtmProducts from "@/_hooks/gtm/use-gtm-item-info.hook";
 import useGtmUser from "@/_hooks/gtm/use-gtm-user.hook";
+import usePathnameHistoryState from "@/_hooks/misc/use-pathname-history-state.hook";
+import { GTM_ITEM_PAGE_TYPES } from "@/_lib/constants";
+import { getGTMPageType } from "@/_lib/gtm-utils";
 import type { Plant } from "@/_lib/types";
 import { cn, formatNumberToPrice } from "@/_lib/utils";
 import { sendGTMEvent } from "@next/third-parties/google";
@@ -12,7 +15,8 @@ import { Button, buttonVariants } from "@repo/web-ui/components/ui/button";
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import Image from "next/image";
 import Link from "next/link";
-import { Suspense, useState } from "react";
+// eslint-disable-next-line no-restricted-imports
+import { Suspense, useEffect, useState } from "react";
 import RegionalExclusionAndShippingMethods from "./regional-exclusion-and-shipping-methods";
 
 type CartSummaryProps = {
@@ -33,6 +37,11 @@ const CartSummary = ({ token, plants }: CartSummaryProps) => {
       quantity: item.quantity,
     };
   });
+
+  const pathnameHistory = usePathnameHistoryState(
+    (state) => state.pathnameHistory,
+  );
+
   const gtmItemInfoQuery = useGtmProducts(
     gtmProducts.length > 0 ? gtmProducts : [],
   );
@@ -41,8 +50,8 @@ const CartSummary = ({ token, plants }: CartSummaryProps) => {
   const gtmItemUserQuery = useGtmUser();
   const gtmUser = gtmItemUserQuery.data;
 
-  const sendToGTM = () => {
-    gtmItemsInfo?.map((gtmItemInfo) => {
+  const sendToGTMCartClicked = () => {
+    gtmItemsInfo?.forEach((gtmItemInfo) => {
       sendGTMEvent({
         event: "view_cart",
         viewCartData: {
@@ -75,6 +84,93 @@ const CartSummary = ({ token, plants }: CartSummaryProps) => {
       });
     });
   };
+  const sendToGTMProductView = (productId: number) => {
+    const gtmItemInfo = gtmItemsInfo?.filter(
+      (item) => Number(item.productid) === productId,
+    )[0];
+    if (gtmItemInfo) {
+      sendGTMEvent({
+        event: "select_item",
+        item_list_name: GTM_ITEM_PAGE_TYPES.CHECKOUT,
+        selectItemData: {
+          currency: "USD",
+          value: gtmItemInfo?.price,
+          items: [
+            {
+              item_id: gtmItemInfo?.item_id,
+              item_sku: gtmItemInfo?.item_sku,
+              item_name: gtmItemInfo?.item_name,
+              item_brand: gtmItemInfo?.item_brand,
+              price: gtmItemInfo?.price,
+              quantity: gtmProducts.find(
+                (item) => item.productid === Number(gtmItemInfo?.productid),
+              )?.quantity,
+              item_categoryid: gtmItemInfo?.item_categoryid,
+              item_primarycategory: gtmItemInfo?.item_primarycategory,
+              item_category: gtmItemInfo?.item_category_path[0] ?? "",
+              item_category1: gtmItemInfo?.item_category_path[1] ?? "",
+              item_category2: gtmItemInfo?.item_category_path[2] ?? "",
+            },
+          ],
+        },
+        data: {
+          userid: gtmUser?.userid,
+          account_type: gtmUser?.account_type,
+          account_industry: gtmUser?.account_industry,
+          account_sales_category: gtmUser?.account_sales_category,
+        },
+        page_type: getGTMPageType(
+          pathnameHistory[pathnameHistory.length - 1] ?? "",
+        ),
+      });
+    }
+  };
+
+  useEffect(() => {
+    const gtmItemsInfo = gtmItemInfoQuery.data;
+    const gtmUser = gtmItemUserQuery.data;
+    if (gtmItemsInfo !== undefined && gtmUser !== undefined) {
+      gtmItemsInfo?.forEach((gtmItemInfo) => {
+        sendGTMEvent({
+          event: "begin_checkout",
+          beginCheckoutData: {
+            currency: "USD",
+            value: simulationCheckoutQuery.data.net,
+            items: [
+              {
+                item_id: gtmItemInfo?.item_id,
+                item_sku: gtmItemInfo?.item_sku,
+                item_name: gtmItemInfo?.item_name,
+                item_brand: gtmItemInfo?.item_brand,
+                price: gtmItemInfo?.price,
+                quantity: gtmProducts.find(
+                  (item) => item.productid === Number(gtmItemInfo?.productid),
+                )?.quantity,
+                item_categoryid: gtmItemInfo?.item_categoryid,
+                item_primarycategory: gtmItemInfo?.item_primarycategory,
+                item_category: gtmItemInfo?.item_category_path[0] ?? "",
+                item_category1: gtmItemInfo?.item_category_path[1] ?? "",
+                item_category2: gtmItemInfo?.item_category_path[2] ?? "",
+                item_category3: gtmItemInfo?.item_category_path[3] ?? "",
+              },
+            ],
+          },
+          data: {
+            userid: gtmUser?.userid,
+            account_type: gtmUser?.account_type,
+            account_industry: gtmUser?.account_industry,
+            account_sales_category: gtmUser?.account_sales_category,
+          },
+        });
+      });
+    }
+  }, [
+    gtmItemInfoQuery.data,
+    gtmItemUserQuery.data,
+    pathnameHistory,
+    simulationCheckoutQuery.data.net,
+    gtmProducts,
+  ]);
 
   return (
     <section className="flex max-w-full flex-col gap-6 rounded-lg border border-wurth-gray-250 p-5 shadow-lg md:p-6">
@@ -93,7 +189,7 @@ const CartSummary = ({ token, plants }: CartSummaryProps) => {
         <Link
           href="/cart"
           replace
-          onClick={sendToGTM}
+          onClick={sendToGTMCartClicked}
           className={cn(
             buttonVariants({
               variant: "outline",
@@ -115,6 +211,7 @@ const CartSummary = ({ token, plants }: CartSummaryProps) => {
               >
                 <Link
                   href={`/product/${item.itemInfo.productId}/${item.itemInfo.slug}`}
+                  onClick={() => sendToGTMProductView(item.itemInfo.productId)}
                   className="btn-view-product"
                 >
                   <Image
@@ -144,6 +241,7 @@ const CartSummary = ({ token, plants }: CartSummaryProps) => {
                   <div className="flex flex-row gap-3">
                     <Link
                       href={`/product/${itemInfo.productId}/${itemInfo.slug}`}
+                      onClick={() => sendToGTMProductView(itemInfo.productId)}
                       className="btn-view-product"
                     >
                       <Image
@@ -158,10 +256,13 @@ const CartSummary = ({ token, plants }: CartSummaryProps) => {
                       <div className="flex flex-row items-center text-sm text-wurth-gray-800">
                         <Link
                           href={`/product/${itemInfo.productId}/${itemInfo.slug}`}
+                          onClick={() =>
+                            sendToGTMProductView(itemInfo.productId)
+                          }
                           className="btn-view-product w-2/4 md:w-4/6"
                         >
                           <h4
-                            className="btn-view-product line-clamp-3 text-sm font-medium text-wurth-gray-800"
+                            className="line-clamp-3 text-sm font-medium text-wurth-gray-800"
                             dangerouslySetInnerHTML={{
                               __html: itemInfo.productName,
                             }}

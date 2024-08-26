@@ -1,9 +1,7 @@
-import WurthLacLogo from "@/_components/wurth-lac-logo";
 import type { Plant, ShippingMethod } from "@/_lib/types";
-import { cn, formatNumberToPrice } from "@/_lib/utils";
-import Image from "next/image";
-import Link from "next/link";
+import { formatNumberToPrice } from "@/_lib/utils";
 import MoreItemDetailsForMobile from "./more-item-details-for-mobile";
+import OrderItemImageTitle from "./order-item-image-title";
 
 type OrderItemForMobileProps = {
   readonly orderItem: {
@@ -60,46 +58,18 @@ const OrderItemForMobile = ({
     price,
   } = orderItem;
 
-  const generateItemUrl = ({
-    productId,
-    slug,
-  }: {
-    productId: number;
-    slug: string;
-  }) => {
-    if (slug !== "") {
-      return `/product/${productId}/${slug}`;
-    }
-    return "#";
-  };
-
   return (
     <div className="border-t px-4 py-6 text-brand-gray-500">
       <div className="flex flex-col space-y-6">
         <div className="flex flex-row gap-2">
           <div className="min-w-[92px]">
-            <Link
-              href={generateItemUrl({ productId, slug: slug ?? "" })}
-              className={cn(
-                productId ? "pointer-events-auto" : "pointer-events-none",
-                "btn-view-product",
-              )}
-            >
-              {image ? (
-                <Image
-                  src={image}
-                  alt={productName ?? itemDescription}
-                  width={92}
-                  height={92}
-                />
-              ) : (
-                <WurthLacLogo
-                  width={92}
-                  height={92}
-                  className="border border-brand-gray-200 px-2"
-                />
-              )}
-            </Link>
+            <OrderItemImageTitle
+              productId={productId}
+              itemDescription={itemDescription}
+              productName={productName}
+              image={image}
+              slug={slug}
+            />
           </div>
 
           <div className="flex flex-col space-y-0.5">

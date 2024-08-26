@@ -78,6 +78,7 @@ const ProductCardImage = ({
   className,
   href,
   title,
+  productTitleOrImageOnClick,
   ...delegated
 }: ImageProps &
   Pick<LinkProps, "href"> & {
@@ -85,12 +86,14 @@ const ProductCardImage = ({
      * Title to show for screen readers
      */
     readonly title: string;
+    readonly productTitleOrImageOnClick: () => void;
   }) => {
   const orientation = useOrientation();
 
   return (
     <Link
       href={href}
+      onClick={productTitleOrImageOnClick}
       className="btn-view-product flex items-center justify-center"
     >
       <Image
@@ -181,10 +184,12 @@ const ProductCardDetails = ({
   title,
   sku,
   href,
+  productTitleOrImageOnClick,
 }: {
   readonly title: string;
   readonly sku: string;
   readonly href: LinkProps["href"];
+  readonly productTitleOrImageOnClick: () => void;
 }) => {
   return (
     <div className="space-y-1 text-sm">
@@ -195,6 +200,7 @@ const ProductCardDetails = ({
               href={href}
               dangerouslySetInnerHTML={{ __html: title }}
               className="btn-view-product"
+              onClick={productTitleOrImageOnClick}
             />
           </h3>
         </TooltipTrigger>
