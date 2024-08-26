@@ -92,6 +92,7 @@ const ProductsList = ({
               uom={item.uom}
               price={price}
               listPrice={listPrice}
+              link={item.link}
             />
           </View>
         );

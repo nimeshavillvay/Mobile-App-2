@@ -17,6 +17,7 @@ const BrandSearchList = ({ ...delegated }: SearchBrandProps) => {
   return (
     <FlashList
       horizontal={true}
+      keyExtractor={(item) => item.brandName}
       ItemSeparatorComponent={() => {
         return <View px={5} />;
       }}

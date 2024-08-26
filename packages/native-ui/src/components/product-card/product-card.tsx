@@ -1,9 +1,10 @@
 import { Bookmark } from "@tamagui/lucide-icons";
 import { Image, type ImageProps } from "expo-image";
+import { Link } from "expo-router";
 import { MotiView } from "moti";
 import { Skeleton } from "moti/skeleton";
 import { useId } from "react";
-import { StyleSheet } from "react-native";
+import { Pressable, StyleSheet } from "react-native";
 import { Button, Card, H2, Text, XStack, YStack } from "tamagui";
 
 type ProductCardProps = Readonly<{
@@ -14,6 +15,7 @@ type ProductCardProps = Readonly<{
   price: number;
   listPrice: number;
   uom: string;
+  link: string;
 }>;
 
 export const ProductCardSkeleton = () => {
@@ -33,6 +35,7 @@ export const ProductCard = ({
   price,
   listPrice,
   uom,
+  link,
 }: ProductCardProps) => {
   const id = useId();
   const isDiscounted = price < listPrice;
@@ -43,44 +46,53 @@ export const ProductCard = ({
   return (
     <Card backgroundColor="$colorTransparent" flex={1} padding={12}>
       <YStack gap="$2" alignItems="flex-start" justifyContent="center">
-        <Image
-          style={styles.image}
-          source={image}
-          contentFit="contain"
-          testID={`product-image-${id}`}
-        />
+        <Link href={link} asChild>
+          <Pressable style={{ flex: 1 }}>
+            <Image
+              style={styles.image}
+              source={image}
+              contentFit="contain"
+              testID={`product-image-${id}`}
+            />
 
-        {!!title && (
-          <H2 numberOfLines={2} style={styles.title}>
-            {title}
-          </H2>
-        )}
+            {!!title && (
+              <H2 numberOfLines={2} style={styles.title}>
+                {title}
+              </H2>
+            )}
 
-        {!!sku && (
-          <Text style={styles.sku} testID={`sku-${id}`}>
-            {sku}
-          </Text>
-        )}
+            {!!sku && (
+              <Text style={styles.sku} testID={`sku-${id}`}>
+                {sku}
+              </Text>
+            )}
 
-        <Text verticalAlign="center">
-          <Text style={[styles.price, isDiscounted && styles.saleText]}>$</Text>
-          <Text
-            style={[styles.priceValue, isDiscounted && styles.saleText]}
-            testID={`price-${id}`}
-          >
-            {price}
-          </Text>
+            <Text verticalAlign="center">
+              <Text style={[styles.price, isDiscounted && styles.saleText]}>
+                $
+              </Text>
+              <Text
+                style={[styles.priceValue, isDiscounted && styles.saleText]}
+                testID={`price-${id}`}
+              >
+                {price}
+              </Text>
 
-          {!!isDiscounted && (
-            <Text style={styles.previousPrice} testID={`previous-price-${id}`}>
-              ${listPrice}
+              {!!isDiscounted && (
+                <Text
+                  style={styles.previousPrice}
+                  testID={`previous-price-${id}`}
+                >
+                  ${listPrice}
+                </Text>
+              )}
+
+              <Text style={styles.uom} testID={`uom-${id}`}>
+                /{uom}
+              </Text>
             </Text>
-          )}
-
-          <Text style={styles.uom} testID={`uom-${id}`}>
-            /{uom}
-          </Text>
-        </Text>
+          </Pressable>
+        </Link>
 
         <XStack
           position="absolute"
