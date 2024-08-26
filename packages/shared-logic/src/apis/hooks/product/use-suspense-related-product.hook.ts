@@ -7,7 +7,6 @@ const useSuspenseRelatedProduct = (config: ApiConfig, productId: string) => {
   return useSuspenseQuery({
     queryKey: ["related-product", productId, config],
     queryFn: () => getRelatedProduct(config, productId),
-    staleTime: 1,
   });
 };
 
