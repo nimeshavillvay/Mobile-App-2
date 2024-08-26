@@ -12,7 +12,8 @@ export const ScreenHeader = ({
   barcodeScannerPath,
 }: {
   readonly title: string;
-  readonly type?: string;
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  readonly type?: "center-aligned" | (string & {});
   readonly hideBackButton?: boolean;
   readonly hideSearchButton?: boolean;
   readonly barcodeScannerPath?: string;
