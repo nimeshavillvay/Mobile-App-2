@@ -1,5 +1,6 @@
 import useSuspenseCart from "@/_hooks/cart/use-suspense-cart.hook";
 import useGtmProducts from "@/_hooks/gtm/use-gtm-item-info.hook";
+import useGtmUser from "@/_hooks/gtm/use-gtm-user.hook";
 import usePathnameHistoryState from "@/_hooks/misc/use-pathname-history-state.hook";
 import useCookies from "@/_hooks/storage/use-cookies.hook";
 import { api } from "@/_lib/api";
@@ -45,6 +46,9 @@ const useAddMultipleToCartMutation = () => {
   );
 
   const gtmItemsInfo = gtmItemInfoQuery.data;
+
+  const gtmItemUserQuery = useGtmUser();
+  const gtmUser = gtmItemUserQuery.data;
 
   return useMutation({
     mutationFn: async (
@@ -250,6 +254,12 @@ const useAddMultipleToCartMutation = () => {
                 item_category1: gtmItemInfo?.item_category_path[1],
               },
             ],
+            data: {
+              userid: gtmUser?.userid,
+              account_type: gtmUser?.account_type,
+              account_industry: gtmUser?.account_industry,
+              account_sales_category: gtmUser?.account_sales_category,
+            },
             page_type: getGTMPageType(
               pathnameHistory[pathnameHistory.length - 1] ?? "",
             ),
