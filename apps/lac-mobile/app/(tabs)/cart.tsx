@@ -45,7 +45,7 @@ import {
 import { type CartItemConfiguration } from "@repo/shared-logic/zod-schema/cart";
 import { FlashList } from "@shopify/flash-list";
 import { X } from "@tamagui/lucide-icons";
-import { router } from "expo-router";
+import { Link, router } from "expo-router";
 import { MotiView } from "moti";
 import { Skeleton } from "moti/skeleton";
 import { Suspense, useState, type ComponentProps } from "react";
@@ -659,19 +659,21 @@ const CartFooter = () => {
       </View>
 
       <View style={[styles.orderSummaryRow, { borderBottomWidth: 0, gap: 10 }]}>
-        <Button
-          style={[
-            styles.footerBtn,
-            {
-              backgroundColor: "#FFFFFF",
-              color: "#171717",
-              borderWidth: 1,
-              borderColor: "#E2E2E2",
-            },
-          ]}
-        >
-          Quick Order
-        </Button>
+        <Link href="/quick-order" asChild>
+          <Button
+            style={[
+              styles.footerBtn,
+              {
+                backgroundColor: "#FFFFFF",
+                color: "#171717",
+                borderWidth: 1,
+                borderColor: "#E2E2E2",
+              },
+            ]}
+          >
+            Quick Order
+          </Button>
+        </Link>
 
         <Button
           style={[

@@ -16,6 +16,7 @@ const usePriceCheck = (
     queryKey: ["user", "price-check", products, config],
     queryFn: () => priceCheck(config, products),
     placeholderData: staleListTillFetched ? keepPreviousData : undefined,
+    enabled: products.length > 0,
   });
 };
 
