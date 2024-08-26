@@ -1048,6 +1048,7 @@ const CartItem = ({
               isDirectlyShippedFromVendor={product.isDirectlyShippedFromVendor}
               handleSelectWillCallPlant={handleSelectWillCallPlant}
               willCallPlant={willCallPlant}
+              token={token}
             />
           ))}
 

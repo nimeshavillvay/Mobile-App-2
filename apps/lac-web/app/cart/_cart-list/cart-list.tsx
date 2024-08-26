@@ -95,7 +95,7 @@ const CartList = ({ token, plants }: CartListProps) => {
             onSettled: () => {
               setDeleteConfirmation(false);
 
-              if (gtmItemsInfo !== undefined) {
+              if (gtmItemsInfo !== undefined && gtmItemsInfo !== null) {
                 gtmItemsInfo.forEach((gtmItemInfo) => {
                   sendGTMEvent({
                     event: "remove_from_cart",

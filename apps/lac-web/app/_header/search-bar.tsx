@@ -1,5 +1,7 @@
 "use client";
 
+import useGtmUser from "@/_hooks/gtm/use-gtm-user.hook";
+import { sendGTMEvent } from "@next/third-parties/google";
 import {
   SearchBox,
   SearchBoxButton,
@@ -16,17 +18,53 @@ const SearchBar = () => {
   const router = useRouter();
   const [value, setValue] = useState("");
   const multiSearchQuery = useMultiSearch(value);
+
+  const gtmItemUserQuery = useGtmUser();
+  const gtmUser = gtmItemUserQuery.data;
+
   const handleSearch = () => {
     if (value !== "") {
       const queryParams = new URLSearchParams({
         query: value,
       });
+
+      sendGTMEvent({
+        event: "search",
+        search_term: value,
+        userid: gtmUser?.userid,
+        account_type: gtmUser?.account_type,
+        account_industry: gtmUser?.account_industry,
+        account_sales_category: gtmUser?.account_sales_category,
+      });
+
       router.push(`/search?${queryParams.toString()}`);
     }
   };
 
   const clearInput = () => {
     setValue("");
+  };
+
+  const onHandleDropDownClick = (
+    selectedName: string,
+    linkType: string,
+    linkUrl: string,
+  ) => {
+    sendGTMEvent({
+      event: "auto_suggest",
+      autoSuggestData: {
+        aq: value,
+        q: selectedName,
+        link_type: linkType,
+        link_url: linkUrl,
+      },
+      data: {
+        userid: gtmUser?.userid,
+        account_type: gtmUser?.account_type,
+        account_industry: gtmUser?.account_industry,
+        account_sales_category: gtmUser?.account_sales_category,
+      },
+    });
   };
 
   return (
@@ -37,6 +75,7 @@ const SearchBar = () => {
         setValue={setValue}
         onEnterPressed={handleSearch}
         placeholder="What are you looking for?"
+        onHandleDropDownClick={onHandleDropDownClick}
       >
         {value && <SearchClearButton onClick={clearInput} />}
         <SearchBoxButton onClick={handleSearch} />

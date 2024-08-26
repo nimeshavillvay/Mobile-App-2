@@ -1,3 +1,6 @@
+import useSuspenseCart from "@/_hooks/cart/use-suspense-cart.hook";
+import useGtmProducts from "@/_hooks/gtm/use-gtm-item-info.hook";
+import useGtmUser from "@/_hooks/gtm/use-gtm-user.hook";
 import {
   DEFAULT_PLANT,
   IN_STOCK,
@@ -12,6 +15,7 @@ import type {
   ShippingMethod,
 } from "@/_lib/types";
 import { cn } from "@/_lib/utils";
+import { sendGTMEvent } from "@next/third-parties/google";
 import { ChevronDown } from "@repo/web-ui/components/icons/chevron-down";
 import { Button } from "@repo/web-ui/components/ui/button";
 import { Checkbox } from "@repo/web-ui/components/ui/checkbox";
@@ -92,6 +96,7 @@ type CartItemShippingMethodProps = {
   readonly willCallPlant: { plantCode: string; plantName: string };
   readonly setSelectedBackorderShippingMethod: (method: string) => void;
   readonly selectedBackorderShippingMethod: string;
+  readonly token: string;
 };
 
 const CartItemShippingMethod = ({
@@ -115,6 +120,7 @@ const CartItemShippingMethod = ({
   willCallPlant,
   setSelectedBackorderShippingMethod,
   selectedBackorderShippingMethod,
+  token,
 }: CartItemShippingMethodProps) => {
   const id = useId();
   const shipToMeId = `${MAIN_OPTIONS.SHIP_TO_ME}-${id}`;
@@ -143,6 +149,55 @@ const CartItemShippingMethod = ({
     availabilityOptions,
     ALTERNATIVE_BRANCHES,
   );
+
+  const cartQuery = useSuspenseCart(token);
+
+  const gtmProducts = cartQuery.data.cartItems.map((item) => {
+    return {
+      productid: item.itemInfo.productId,
+      cartid: item.cartItemId,
+      quantity: item.quantity,
+    };
+  });
+
+  const gtmItemInfoQuery = useGtmProducts(
+    gtmProducts.length > 0 ? gtmProducts : [],
+  );
+  const gtmItemsInfo = gtmItemInfoQuery.data;
+
+  const gtmItemUserQuery = useGtmUser();
+  const gtmUser = gtmItemUserQuery.data;
+
+  const sendToGTMShippingMethodChanged = (method: string) => {
+    gtmItemsInfo?.forEach((gtmItemInfo) => {
+      sendGTMEvent({
+        event: "apply_shipping",
+        applyShippingData: {
+          currency: "USD",
+          value: gtmItemInfo?.price,
+          items: [
+            {
+              item_id: gtmItemInfo?.item_id,
+              item_sku: gtmItemInfo?.item_sku,
+              item_name: gtmItemInfo?.item_name,
+              item_brand: gtmItemInfo?.item_brand,
+              price: gtmItemInfo?.price,
+              shipping: method,
+              quantity: gtmProducts.find(
+                (item) => item.productid === Number(gtmItemInfo?.productid),
+              )?.quantity,
+            },
+          ],
+        },
+        data: {
+          userid: gtmUser?.userid,
+          account_type: gtmUser?.account_type,
+          account_industry: gtmUser?.account_industry,
+          account_sales_category: gtmUser?.account_sales_category,
+        },
+      });
+    });
+  };
 
   const calculateAllPlantsQuantity = (
     plants: {
@@ -232,6 +287,8 @@ const CartItemShippingMethod = ({
             will_call_plant: EMPTY_STRING,
             will_call_not_in_stock: FALSE_STRING,
           });
+
+          sendToGTMShippingMethodChanged(setShippingMethod);
         } else if (takeOnHand) {
           const setShippingMethod =
             takeOnHandPlant?.shippingMethods?.find(
@@ -254,6 +311,8 @@ const CartItemShippingMethod = ({
             will_call_plant: EMPTY_STRING,
             will_call_not_in_stock: FALSE_STRING,
           });
+
+          sendToGTMShippingMethodChanged(setShippingMethod);
         } else if (shipAlternativeBranch) {
           const setShippingMethod =
             shipAlternativeBranch.plants
@@ -279,6 +338,7 @@ const CartItemShippingMethod = ({
             }),
             will_call_not_in_stock: FALSE_STRING,
           });
+          sendToGTMShippingMethodChanged(setShippingMethod);
         }
       }
       if (
@@ -315,6 +375,8 @@ const CartItemShippingMethod = ({
           will_call_plant: EMPTY_STRING,
           will_call_not_in_stock: FALSE_STRING,
         });
+
+        sendToGTMShippingMethodChanged(setShippingMethod);
       }
     }
   };
@@ -341,6 +403,8 @@ const CartItemShippingMethod = ({
           item?.status === NOT_AVAILABLE ? TRUE_STRING : FALSE_STRING,
       });
     }
+
+    sendToGTMShippingMethodChanged(DEFAULT_SHIPPING_METHOD);
     // Will call pickup configs and all are backorder
     if (item && isNotInStock) {
       onSave({
@@ -358,6 +422,8 @@ const CartItemShippingMethod = ({
         will_call_not_in_stock:
           item?.status === NOT_AVAILABLE ? TRUE_STRING : FALSE_STRING,
       });
+
+      sendToGTMShippingMethodChanged(DEFAULT_SHIPPING_METHOD);
     }
   };
 
@@ -384,6 +450,7 @@ const CartItemShippingMethod = ({
 
   const handleShipToMeMethod = (shippingMethod: string) => {
     setSelectedShippingMethod(shippingMethod);
+    sendToGTMShippingMethodChanged(shippingMethod);
 
     if (shippingMethod) {
       switch (selectedShipToMe) {
@@ -434,6 +501,7 @@ const CartItemShippingMethod = ({
 
   const handleBackorderMethod = (shippingMethod: string) => {
     setSelectedShippingMethod(shippingMethod);
+    sendToGTMShippingMethodChanged(shippingMethod);
 
     if (shippingMethod) {
       switch (selectedShippingOption) {
@@ -464,6 +532,7 @@ const CartItemShippingMethod = ({
     // Reset the selected shipping method to default
     if (defaultShippingMethod) {
       setSelectedShippingMethod(defaultShippingMethod.code);
+      sendToGTMShippingMethodChanged(defaultShippingMethod.code);
 
       if (shipToMe === TAKE_ON_HAND && takeOnHand) {
         const setShippingMethod =
@@ -484,6 +553,8 @@ const CartItemShippingMethod = ({
           }),
           will_call_not_in_stock: FALSE_STRING,
         });
+
+        sendToGTMShippingMethodChanged(setShippingMethod);
       }
 
       if (shipToMe === ALTERNATIVE_BRANCHES && shipAlternativeBranch) {
