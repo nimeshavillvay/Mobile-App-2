@@ -51,7 +51,9 @@ const ProductCard = ({
   const href = `/product/${product.productId}/${product.slug}`;
   let uom = product.txtUom;
 
-  const removeShoppingListItemMutation = useRemoveShoppingListItemMutation();
+  const removeShoppingListItemMutation = useRemoveShoppingListItemMutation(
+    parseInt(id),
+  );
 
   const priceCheckQuery = useSuspensePriceCheck(token, [
     {
