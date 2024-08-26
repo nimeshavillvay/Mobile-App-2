@@ -106,16 +106,18 @@ const SearchResultsList = ({ query }: { readonly query: string }) => {
 
   return (
     <>
-      <XStack
-        height={58}
-        paddingHorizontal={16}
-        paddingVertical={7}
-        justifyContent="flex-end"
-      >
-        <Text color="#7E7E7E" fontSize={14} testID="total-search-results">
-          {numberOfProducts} {numberOfProducts === 1 ? "product" : "products"}
-        </Text>
-      </XStack>
+      {numberOfProducts > 0 && (
+        <XStack
+          height={58}
+          paddingHorizontal={16}
+          paddingVertical={7}
+          justifyContent="flex-end"
+        >
+          <Text color="#7E7E7E" fontSize={14} testID="total-search-results">
+            {numberOfProducts} {numberOfProducts === 1 ? "product" : "products"}
+          </Text>
+        </XStack>
+      )}
 
       <ProductsList
         data={deferredProducts.map((product) => ({
