@@ -3,13 +3,16 @@ import { API_BASE_URL, API_KEY } from "@/lib/constants";
 import { ProductCard } from "@repo/native-ui/components/product-card";
 import usePriceCheck from "@repo/shared-logic/apis/hooks/product/use-price-check.hook";
 import { FlashList, type FlashListProps } from "@shopify/flash-list";
+import { router } from "expo-router";
 import { type ComponentProps } from "react";
 import { H2, Text, View } from "tamagui";
 
 type ProductItem = Omit<
   ComponentProps<typeof ProductCard>,
-  "price" | "listPrice"
->;
+  "price" | "listPrice" | "handleDiscontinuedPressed"
+> & {
+  categoryId?: string;
+};
 type ListProps = FlashListProps<ProductItem>;
 
 type ProductsListProps = Omit<
@@ -93,6 +96,12 @@ const ProductsList = ({
               price={price}
               listPrice={listPrice}
               link={item.link}
+              status={item.status}
+              handleDiscontinuedPressed={() => {
+                if (item.categoryId) {
+                  router.push(`/category/${item.categoryId}`);
+                }
+              }}
             />
           </View>
         );

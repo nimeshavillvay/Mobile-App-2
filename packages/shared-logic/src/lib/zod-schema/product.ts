@@ -118,3 +118,6 @@ export const productSchema = z.object({
   }),
 });
 export type Product = z.infer<typeof productSchema>;
+
+export const productStatusSchema = z.enum(["active", "discontinued"]);
+export type ProductStatus = z.infer<typeof productStatusSchema>;

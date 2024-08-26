@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { productStatusSchema } from "./product";
 
 export const relatedProductSchema = z.object({
   productid: z.string(),
@@ -27,7 +28,7 @@ export const relatedProductSchema = z.object({
   on_sale: z.string(),
   is_new: z.string().or(z.null()).optional(),
   fclassid: z.string(),
-  txt_x_pant_Mat_status: z.string().or(z.undefined()),
+  txt_x_pant_Mat_status: productStatusSchema.optional(),
 });
 
 export const relatedProductResultSchema = z.object({
