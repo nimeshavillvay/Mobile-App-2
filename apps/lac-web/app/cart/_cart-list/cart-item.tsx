@@ -497,6 +497,7 @@ const CartItem = ({
       {
         onSettled: () => {
           setDeleteConfirmation(false);
+          sendToGTMDeleteProduct();
         },
       },
     );
@@ -733,7 +734,7 @@ const CartItem = ({
   const gtmItemUserQuery = useGtmUser();
   const gtmUser = gtmItemUserQuery.data;
 
-  const sendToGTM = () => {
+  const sendToGTMViewProduct = () => {
     if (gtmItemInfo && gtmUser) {
       sendGTMEvent({
         event: "select_item",
@@ -769,13 +770,42 @@ const CartItem = ({
       });
     }
   };
+  const sendToGTMDeleteProduct = () => {
+    if (gtmItemInfo && gtmUser) {
+      sendGTMEvent({
+        event: "remove_from_cart",
+        removeFromCartData: {
+          currency: "USD",
+          value: gtmItemInfo?.price,
+          items: [
+            {
+              item_id: gtmItemInfo?.item_id,
+              item_sku: gtmItemInfo?.item_sku,
+              item_name: gtmItemInfo?.item_name,
+              price: gtmItemInfo?.price,
+              quantity: 1,
+            },
+          ],
+        },
+        data: {
+          userid: gtmUser?.userid,
+          account_type: gtmUser?.account_type,
+          account_industry: gtmUser?.account_industry,
+          account_sales_category: gtmUser?.account_sales_category,
+        },
+        page_type: getGTMPageType(
+          pathnameHistory[pathnameHistory.length - 1] ?? "",
+        ),
+      });
+    }
+  };
 
   return (
     <div className="flex flex-col gap-6 md:flex-row">
       <div className="flex flex-row items-start gap-3 md:flex-1">
         <div className="flex w-[4.5rem] shrink-0 flex-col gap-2 md:w-[7.5rem]">
           <Link
-            onClick={sendToGTM}
+            onClick={sendToGTMViewProduct}
             href={`/product/${product.id}/${product.slug}`}
             className="btn-view-product"
           >
