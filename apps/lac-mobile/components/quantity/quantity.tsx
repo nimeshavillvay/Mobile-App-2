@@ -10,12 +10,14 @@ type QuantityInputProps = {
   readonly form: UseFormReturn<{
     quantity: number;
   }>;
+  readonly unitOfMeasure: string;
 } & ComponentProps<typeof XStack>;
 
 export const QuantityInput = ({
   minimumValue = 1,
   incrementBy = 1,
   form,
+  unitOfMeasure,
   ...style
 }: QuantityInputProps) => {
   const {
@@ -91,8 +93,8 @@ export const QuantityInput = ({
           paddingHorizontal={3}
           borderLeftColor="$gray8"
         >
-          <Text fontSize="$1" color="$gray9">
-            EACH
+          <Text fontSize="$1" color="$gray9" textTransform="uppercase">
+            {unitOfMeasure}
           </Text>
         </YStack>
       </View>

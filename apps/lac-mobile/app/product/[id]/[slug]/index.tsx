@@ -1,17 +1,22 @@
 import {
+  DropShipItemNotice,
   EnterQuantity,
+  ExcludedProductNotice,
+  HazardousNotice,
   PriceBreakdowns,
   ProductAction,
   ProductDetailsSkeleton,
   ProductPrices,
   ProductPriceSkeleton,
   ProductVariations,
+  Prop65WarningNotice,
   RelatedProducts,
   SalesBadges,
+  SpecialShippingNotice,
   StockStatus,
 } from "@/components/product";
 import useSessionTokenStorage from "@/hooks/auth/use-session-token-storage.hook";
-import { API_BASE_URL, API_KEY } from "@/lib/constants";
+import { API_BASE_URL, API_KEY, WURTH_LAC_DOMAIN } from "@/lib/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ExpandableView } from "@repo/native-ui/components/base/expandable-view";
 import {
@@ -75,16 +80,6 @@ const ProductDetails = ({ productId }: { readonly productId: string }) => {
 
   const token = useSessionTokenStorage((state) => state.token);
 
-  const form = useForm<z.infer<typeof quantitySchema>>({
-    resolver: zodResolver(z.object({ quantity: z.string() })),
-    values: {
-      quantity: 1,
-    },
-  });
-
-  const quantity = form.watch("quantity");
-  const deferredQuantity = useDeferredValue(quantity);
-
   const { data } = useSuspenseGetProduct(
     {
       baseUrl: API_BASE_URL,
@@ -92,6 +87,16 @@ const ProductDetails = ({ productId }: { readonly productId: string }) => {
     },
     productId,
   );
+
+  const form = useForm<z.infer<typeof quantitySchema>>({
+    resolver: zodResolver(z.object({ quantity: z.string() })),
+    values: {
+      quantity: data.selectedProduct.minimumOrderQuantity,
+    },
+  });
+
+  const quantity = form.watch("quantity");
+  const deferredQuantity = useDeferredValue(quantity);
 
   if (!data) {
     return null;
@@ -137,7 +142,7 @@ const ProductDetails = ({ productId }: { readonly productId: string }) => {
 
           <ProductAction
             width={screenWidth}
-            url={`https://www.youtube.com/watch?v=dQw4w9WgXcQ`}
+            url={`${WURTH_LAC_DOMAIN}/product/${data.selectedProduct.productId}/${data.selectedProduct.slug}`}
           />
 
           <ProductCarouselPagination data={productImages} index={index} />
@@ -192,6 +197,10 @@ const ProductDetails = ({ productId }: { readonly productId: string }) => {
             unitOfMeasure={data.selectedProduct.unitOfMeasure}
           />
 
+          {!!data.selectedProduct.isExcludedProduct && (
+            <ExcludedProductNotice />
+          )}
+
           <ProductVariations productId={data.selectedProduct.productId} />
 
           <ExpandableView blurColor="rgb(242,242,242)" marginTop={20} gap={10}>
@@ -207,6 +216,35 @@ const ProductDetails = ({ productId }: { readonly productId: string }) => {
               baseStyle={{ fontSize: 15 }}
               contentWidth={screenWidth - 40}
             />
+
+            {!!data.selectedProduct.isHazardous && <HazardousNotice />}
+
+            {!!data.selectedProduct.isDirectlyShippedFromVendor && (
+              <DropShipItemNotice />
+            )}
+
+            {!!data.selectedProduct.specialShipping && (
+              <SpecialShippingNotice />
+            )}
+
+            {!!data.selectedProduct.prop65MessageOne && (
+              <Prop65WarningNotice
+                html={data.selectedProduct.prop65MessageOne}
+                width={screenWidth - 80}
+              />
+            )}
+            {!!data.selectedProduct.prop65MessageTwo && (
+              <Prop65WarningNotice
+                html={data.selectedProduct.prop65MessageTwo}
+                width={screenWidth - 80}
+              />
+            )}
+            {!!data.selectedProduct.prop65MessageThree && (
+              <Prop65WarningNotice
+                html={data.selectedProduct.prop65MessageThree}
+                width={screenWidth - 80}
+              />
+            )}
           </ExpandableView>
 
           {!!data.selectedProduct.attributes &&
@@ -223,7 +261,12 @@ const ProductDetails = ({ productId }: { readonly productId: string }) => {
         </YStack>
       </ScrollView>
 
-      <EnterQuantity form={form} />
+      <EnterQuantity
+        form={form}
+        unitOfMeasure={data.selectedProduct.unitOfMeasure}
+        minimumValue={data.selectedProduct.minimumOrderQuantity}
+        incrementBy={data.selectedProduct.quantityByIncrements}
+      />
     </>
   );
 };

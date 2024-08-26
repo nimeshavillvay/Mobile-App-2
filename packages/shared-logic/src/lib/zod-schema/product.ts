@@ -48,7 +48,7 @@ export const checkAvailabilitySchema = z.object({
       type: z.string().optional(),
     }),
   ),
-  xplant: z.string(),
+  xplant: z.string().or(z.null()),
   available_locations: z.array(
     z.object({
       location: z.string(),

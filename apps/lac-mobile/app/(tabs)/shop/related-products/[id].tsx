@@ -13,7 +13,7 @@ const RelatedProductsPage = () => {
     category: string;
   }>();
 
-  if (!localSearchParams.id || !localSearchParams.category) {
+  if (!localSearchParams.id) {
     return null;
   }
 
@@ -36,7 +36,7 @@ const RelatedProducts = ({
   category,
 }: {
   readonly productId: string;
-  readonly category: string;
+  readonly category?: string;
 }) => {
   const { data } = useSuspenseRelatedProduct(
     {
@@ -56,9 +56,11 @@ const RelatedProducts = ({
 
   return (
     <View style={{ flex: 1, paddingHorizontal: 10, marginTop: 10 }}>
-      <Text fontSize="$6" fontWeight={900} marginBottom={10}>
-        {category}
-      </Text>
+      {!!category && (
+        <Text fontSize="$6" fontWeight={900} marginBottom={10}>
+          {category}
+        </Text>
+      )}
       <ProductsList
         data={products.map((product) => ({
           productId: Number(product.productId),

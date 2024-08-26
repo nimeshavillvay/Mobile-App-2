@@ -11,6 +11,9 @@ const SEARCH_URL = process.env.EXPO_PUBLIC_WURTH_LAC_SEARCH_API ?? "";
 export const SEARCH_API_BASE_URL =
   process.env.NODE_ENV === "test" ? "https://test.wurthlac.com" : SEARCH_URL;
 
+export const WURTH_LAC_DOMAIN =
+  process.env.EXPO_PUBLIC_WURTH_LAC_DOMAIN ?? "https://wurthlac.com";
+
 export const SESSION_TOKEN_COOKIE = "xid_00924";
 
 export const DEFAULT_PLANT = "L010";
