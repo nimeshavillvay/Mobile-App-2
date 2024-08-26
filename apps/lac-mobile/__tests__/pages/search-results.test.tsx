@@ -30,7 +30,7 @@ describe("Search Results", () => {
 
     // Check the count
     expect(screen.getByTestId("total-search-results")).toHaveTextContent(
-      "140 products",
+      "140 results",
     );
   });
 });
