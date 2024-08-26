@@ -113,7 +113,7 @@ const SearchResultsList = ({ query }: { readonly query: string }) => {
         justifyContent="flex-end"
       >
         <Text color="#7E7E7E" fontSize={14} testID="total-search-results">
-          {numberOfProducts} {numberOfProducts === 1 ? "product" : "products"}
+          {numberOfProducts} {numberOfProducts === 1 ? "result" : "results"}
         </Text>
       </XStack>
 
