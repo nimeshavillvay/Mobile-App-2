@@ -1,4 +1,8 @@
-import { GTM_PAGE_TYPE_OTHER, GTM_PAGE_TYPES } from "./constants";
+import {
+  GTM_ITEM_PAGE_TYPES,
+  GTM_PAGE_TYPE_OTHER,
+  GTM_PAGE_TYPES,
+} from "./constants";
 
 export const getGTMPageType = (pathName: string) => {
   const pageType = pathName.split("/");
@@ -34,6 +38,27 @@ export const getGTMPageType = (pathName: string) => {
     }
     case "": {
       return GTM_PAGE_TYPES.HOME;
+    }
+    default: {
+      return GTM_PAGE_TYPE_OTHER;
+    }
+  }
+};
+
+export const getGTMItemListPage = (pathName: string) => {
+  const pageType = pathName.split("/");
+  switch (pageType[1]) {
+    case "checkout": {
+      return GTM_ITEM_PAGE_TYPES.CHECKOUT;
+    }
+    case "search": {
+      return GTM_ITEM_PAGE_TYPES.SEARCH;
+    }
+    case "product": {
+      return GTM_ITEM_PAGE_TYPES.RELATED_PRODUCT;
+    }
+    case "catalog": {
+      return GTM_ITEM_PAGE_TYPES.CATALOG;
     }
     default: {
       return GTM_PAGE_TYPE_OTHER;

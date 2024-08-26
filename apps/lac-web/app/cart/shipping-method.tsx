@@ -4,6 +4,8 @@ import useSuspenseWillCallPlant from "@/_hooks/address/use-suspense-will-call-pl
 import useSuspenseCart from "@/_hooks/cart/use-suspense-cart.hook";
 import useSuspenseShippingMethods from "@/_hooks/cart/use-suspense-shipping-method.hook";
 import useUpdateCartItemMutation from "@/_hooks/cart/use-update-cart-item-mutation.hook";
+import useGtmProducts from "@/_hooks/gtm/use-gtm-item-info.hook";
+import useGtmUser from "@/_hooks/gtm/use-gtm-user.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
 import { checkAvailability } from "@/_lib/apis/shared";
 import {
@@ -14,6 +16,7 @@ import {
   NOT_IN_STOCK,
 } from "@/_lib/constants";
 import type { CartItemConfiguration } from "@/_lib/types";
+import { sendGTMEvent } from "@next/third-parties/google";
 import { Checkbox } from "@repo/web-ui/components/ui/checkbox";
 import { Label } from "@repo/web-ui/components/ui/label";
 import {
@@ -75,6 +78,52 @@ const ShippingMethod = ({ token }: ShippingMethodProps) => {
   const [isWillCallSelected, setIsWillCallSelected] = useState(false);
 
   const updateCartItemMutation = useUpdateCartItemMutation();
+
+  const gtmProducts = cartQuery.data.cartItems.map((item) => {
+    return {
+      productid: item.itemInfo.productId,
+      cartid: item.cartItemId,
+      quantity: item.quantity,
+    };
+  });
+
+  const gtmItemInfoQuery = useGtmProducts(
+    gtmProducts.length > 0 ? gtmProducts : [],
+  );
+  const gtmItemsInfo = gtmItemInfoQuery.data;
+
+  const gtmItemUserQuery = useGtmUser();
+  const gtmUser = gtmItemUserQuery.data;
+
+  const sendToGTMShippingMethodChanged = () => {
+    gtmItemsInfo?.forEach((gtmItemInfo) => {
+      sendGTMEvent({
+        event: "apply_shipping",
+        applyShippingData: {
+          currency: "USD",
+          value: gtmItemInfo?.price,
+          items: [
+            {
+              item_id: gtmItemInfo?.item_id,
+              item_sku: gtmItemInfo?.item_sku,
+              item_name: gtmItemInfo?.item_name,
+              item_brand: gtmItemInfo?.item_brand,
+              price: gtmItemInfo?.price,
+              quantity: gtmProducts.find(
+                (item) => item.productid === Number(gtmItemInfo?.productid),
+              )?.quantity,
+            },
+          ],
+        },
+        data: {
+          userid: gtmUser?.userid,
+          account_type: gtmUser?.account_type,
+          account_industry: gtmUser?.account_industry,
+          account_sales_category: gtmUser?.account_sales_category,
+        },
+      });
+    });
+  };
 
   const clearConfigKeys = (
     config: CartItemConfiguration,
@@ -321,6 +370,7 @@ const ShippingMethod = ({ token }: ShippingMethodProps) => {
           setIsShipToMeSelected(false);
           setSelectedDeliveryMethod(undefined);
           incrementCartItemKey();
+          sendToGTMShippingMethodChanged();
         },
       },
     );
@@ -364,6 +414,7 @@ const ShippingMethod = ({ token }: ShippingMethodProps) => {
         toast({ description: "Updated delivery method for all items" });
         setIsWillCallSelected(false);
         incrementCartItemKey();
+        sendToGTMShippingMethodChanged();
       },
     });
   };

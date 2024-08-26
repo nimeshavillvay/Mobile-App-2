@@ -6,7 +6,7 @@ import { z } from "zod";
 
 const userListSchema = z.object({
   userid: z.string(),
-  account_type: z.number(),
+  account_type: z.string(),
   account_industry: z.string(),
   account_sales_category: z.string(),
 });
@@ -17,18 +17,20 @@ const useGtmUser = () => {
 
   return useQuery({
     queryKey: ["gtm", "user", token],
-    queryFn: async () => {
-      const response = await api
-        .get("rest/gtm/user", {
-          headers: {
-            authorization: `Bearer ${token}`,
-          },
-        })
-        .json();
-
-      return userListSchema.parse(response);
-    },
+    queryFn: async () => getGtmUser(token),
   });
+};
+
+export const getGtmUser = async (token: string) => {
+  const response = await api
+    .get("rest/gtm/user", {
+      headers: {
+        authorization: `Bearer ${token}`,
+      },
+    })
+    .json();
+
+  return userListSchema.parse(response);
 };
 
 export default useGtmUser;

@@ -6,13 +6,17 @@ import ProductNotAvailable from "@/_components/product-not-available";
 import QuantityWarning from "@/_components/quantity-warning";
 import useSuspenseWillCallPlant from "@/_hooks/address/use-suspense-will-call-plant.hook";
 import useAddToCartMutation from "@/_hooks/cart/use-add-to-cart-mutation.hook";
+import useGtmProducts from "@/_hooks/gtm/use-gtm-item-info.hook";
+import useGtmUser from "@/_hooks/gtm/use-gtm-user.hook";
 import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
 import useDebouncedState from "@/_hooks/misc/use-debounced-state.hook";
+import usePathnameHistoryState from "@/_hooks/misc/use-pathname-history-state.hook";
 import useItemInfo from "@/_hooks/product/use-item-info.hook";
 import useSuspenseCheckAvailability from "@/_hooks/product/use-suspense-check-availability.hook";
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
 import { MAX_QUANTITY, NOT_AVAILABLE } from "@/_lib/constants";
+import { getGTMItemListPage, getGTMPageType } from "@/_lib/gtm-utils";
 import {
   calculateIncreaseQuantity,
   calculateReduceQuantity,
@@ -21,6 +25,7 @@ import {
 } from "@/_lib/utils";
 import { NUMBER_TYPE } from "@/_lib/zod-helper";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { sendGTMEvent } from "@next/third-parties/google";
 import { AddToCart as AddToCartIcon } from "@repo/web-ui/components/icons/add-to-cart";
 import { ChevronRight } from "@repo/web-ui/components/icons/chevron-right";
 import { Minus } from "@repo/web-ui/components/icons/minus";
@@ -99,6 +104,58 @@ const VerificationDialog = ({ token }: VerificationDialogProps) => {
   const delayedQuantity = useDebouncedState(quantity);
   const deferredQuantity = useDeferredValue(delayedQuantity);
 
+  const pathnameHistory = usePathnameHistoryState(
+    (state) => state.pathnameHistory,
+  );
+
+  const gtmItemInfoQuery = useGtmProducts(
+    productId ? [{ productid: productId, cartid: 0 }] : [],
+  );
+  const gtmItemInfo = gtmItemInfoQuery.data?.[0];
+
+  const gtmItemUserQuery = useGtmUser();
+  const gtmUser = gtmItemUserQuery.data;
+
+  const sendToGTM = () => {
+    setOpen("closed");
+    if (gtmItemInfo && gtmUser) {
+      sendGTMEvent({
+        event: "select_item",
+        item_list_name: getGTMItemListPage(
+          pathnameHistory[pathnameHistory.length - 1] ?? "",
+        ),
+        selectItemData: {
+          currency: "USD",
+          value: gtmItemInfo?.price,
+          items: [
+            {
+              item_id: gtmItemInfo?.item_id,
+              item_sku: gtmItemInfo?.item_sku,
+              item_name: gtmItemInfo?.item_name,
+              item_brand: gtmItemInfo?.item_brand,
+              price: gtmItemInfo?.price,
+              quantity: Number(deferredQuantity),
+              item_categoryid: gtmItemInfo?.item_categoryid,
+              item_primarycategory: gtmItemInfo?.item_primarycategory,
+              item_category: gtmItemInfo?.item_category_path[0] ?? "",
+              item_category1: gtmItemInfo?.item_category_path[1] ?? "",
+              item_category2: gtmItemInfo?.item_category_path[2] ?? "",
+            },
+          ],
+        },
+        data: {
+          userid: gtmUser?.userid,
+          account_type: gtmUser?.account_type,
+          account_industry: gtmUser?.account_industry,
+          account_sales_category: gtmUser?.account_sales_category,
+        },
+        page_type: getGTMPageType(
+          pathnameHistory[pathnameHistory.length - 1] ?? "",
+        ),
+      });
+    }
+  };
+
   return (
     <FormProvider {...addToCartForm}>
       <Dialog open={open === "verification"} onOpenChange={onOpenChange}>
@@ -116,7 +173,7 @@ const VerificationDialog = ({ token }: VerificationDialogProps) => {
               <div className="flex flex-row items-start gap-4">
                 <Link
                   href={`/product/${itemInfo.productId}/${itemInfo.slug}`}
-                  onClick={() => setOpen("closed")}
+                  onClick={sendToGTM}
                 >
                   <Image
                     src={itemInfo.image}
@@ -132,7 +189,7 @@ const VerificationDialog = ({ token }: VerificationDialogProps) => {
                     <Link
                       href={`/product/${itemInfo.productId}/${itemInfo.slug}`}
                       className="btn-view-product"
-                      onClick={() => setOpen("closed")}
+                      onClick={sendToGTM}
                     >
                       <h3
                         className="text-base text-black"

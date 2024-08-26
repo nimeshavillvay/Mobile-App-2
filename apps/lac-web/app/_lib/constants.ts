@@ -58,4 +58,16 @@ export const GTM_PAGE_TYPES = {
   LOGIN: "login_page",
 } as const;
 
+export const GTM_ITEM_PAGE_TYPES = {
+  CHECKOUT: "checkout",
+  CATALOG: "catalog",
+  SEARCH: "search",
+  RELATED_PRODUCT: "related products",
+  PURCHASE_HISTORY: "purchases history",
+  ORDER_HISTORY: "order history",
+  HOME_PAGE: "home page",
+  CART_PAGE: "cart page",
+  SHOPPING_LIST: "shopping list",
+} as const;
+
 export const GTM_PAGE_TYPE_OTHER = "other";

@@ -63,6 +63,7 @@ const RegionalExclusionAndShippingMethods = ({
       isDirectlyShippedFromVendor={isDirectlyShippedFromVendor}
       handleSelectWillCallPlant={handleSelectWillCallPlant}
       willCallPlant={willCallPlant}
+      token={token}
     />
   );
 };

@@ -13,6 +13,7 @@ import {
   BACKORDER_ENABLED,
   FALSE_STRING,
 } from "../../cart/constants";
+import useGtmUser from "../gtm/use-gtm-user.hook";
 import usePathnameHistoryState from "../misc/use-pathname-history-state.hook";
 import useCookies from "../storage/use-cookies.hook";
 
@@ -37,6 +38,9 @@ const useAddToCartMutation = ({ productId }: { productId: number }) => {
     productId ? [{ productid: productId, cartid: 0 }] : [],
   );
   const gtmItemInfo = gtmItemInfoQuery.data?.[0];
+
+  const gtmItemUserQuery = useGtmUser();
+  const gtmUser = gtmItemUserQuery.data;
 
   return useMutation({
     mutationFn: async ({
@@ -172,7 +176,6 @@ const useAddToCartMutation = ({ productId }: { productId: number }) => {
       } else {
         // Open the dialog
         setOpen("confirmation");
-
         sendGTMEvent({
           event: "add_to_cart",
           addToCartData: {
@@ -193,6 +196,12 @@ const useAddToCartMutation = ({ productId }: { productId: number }) => {
                 item_category1: gtmItemInfo?.item_category_path[1],
               },
             ],
+            data: {
+              userid: gtmUser?.userid,
+              account_type: gtmUser?.account_type,
+              account_industry: gtmUser?.account_industry,
+              account_sales_category: gtmUser?.account_sales_category,
+            },
             page_type: getGTMPageType(
               pathnameHistory[pathnameHistory.length - 1] ?? "",
             ),

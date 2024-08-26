@@ -2,9 +2,14 @@ import ProductNotAvailable from "@/_components/product-not-available";
 import Warning from "@/_components/warning";
 import WurthLacLogo from "@/_components/wurth-lac-logo";
 import useAddToCartMutation from "@/_hooks/cart/use-add-to-cart-mutation.hook";
+import useGtmProducts from "@/_hooks/gtm/use-gtm-item-info.hook";
+import useGtmUser from "@/_hooks/gtm/use-gtm-user.hook";
 import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
+import usePathnameHistoryState from "@/_hooks/misc/use-pathname-history-state.hook";
 import useItemInfo from "@/_hooks/product/use-item-info.hook";
 import useSuspenseProductExcluded from "@/_hooks/product/use-suspense-product-excluded.hook";
+import { GTM_ITEM_PAGE_TYPES } from "@/_lib/constants";
+import { getGTMPageType } from "@/_lib/gtm-utils";
 import { cn } from "@/_lib/utils";
 import ErrorBoundary from "@/old/_components/error-boundary";
 import { Button } from "@/old/_components/ui/button";
@@ -17,6 +22,7 @@ import { Input } from "@/old/_components/ui/input";
 import { Label } from "@/old/_components/ui/label";
 import { TableCell, TableRow } from "@/old/_components/ui/table";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { sendGTMEvent } from "@next/third-parties/google";
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import dayjs from "dayjs";
 import Image from "next/image";
@@ -121,6 +127,55 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
   const itemInfoQuery = useItemInfo([item.productId]);
   const itemInfo = itemInfoQuery.data?.[0];
 
+  const pathnameHistory = usePathnameHistoryState(
+    (state) => state.pathnameHistory,
+  );
+
+  const gtmItemInfoQuery = useGtmProducts(
+    item.productId ? [{ productid: item.productId, cartid: 0 }] : [],
+  );
+  const gtmItemInfo = gtmItemInfoQuery.data?.[0];
+
+  const gtmItemUserQuery = useGtmUser();
+  const gtmUser = gtmItemUserQuery.data;
+
+  const sendToGTM = () => {
+    if (gtmItemInfo && gtmUser) {
+      sendGTMEvent({
+        event: "select_item",
+        item_list_name: GTM_ITEM_PAGE_TYPES.PURCHASE_HISTORY,
+        selectItemData: {
+          currency: "USD",
+          value: gtmItemInfo?.price,
+          items: [
+            {
+              item_id: gtmItemInfo?.item_id,
+              item_sku: gtmItemInfo?.item_sku,
+              item_name: gtmItemInfo?.item_name,
+              item_brand: gtmItemInfo?.item_brand,
+              price: gtmItemInfo?.price,
+              quantity: 1,
+              item_categoryid: gtmItemInfo?.item_categoryid,
+              item_primarycategory: gtmItemInfo?.item_primarycategory,
+              item_category: gtmItemInfo?.item_category_path[0] ?? "",
+              item_category1: gtmItemInfo?.item_category_path[1] ?? "",
+              item_category2: gtmItemInfo?.item_category_path[2] ?? "",
+            },
+          ],
+        },
+        data: {
+          userid: gtmUser?.userid,
+          account_type: gtmUser?.account_type,
+          account_industry: gtmUser?.account_industry,
+          account_sales_category: gtmUser?.account_sales_category,
+        },
+        page_type: getGTMPageType(
+          pathnameHistory[pathnameHistory.length - 1] ?? "",
+        ),
+      });
+    }
+  };
+
   return (
     <>
       <TableRow
@@ -133,6 +188,7 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
         <TableCell className="min-w-[76px]">
           <Link
             href={generateItemUrl(item)}
+            onClick={sendToGTM}
             className={cn(
               isItemError(item) ? "pointer-events-none" : "pointer-events-auto",
               "btn-view-product",
@@ -159,6 +215,7 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
         <TableCell className="flex flex-col gap-0.5">
           <Link
             href={generateItemUrl(item)}
+            onClick={sendToGTM}
             className={cn(
               "btn-view-product text-sm text-brand-gray-500",
               isItemError(item) ? "pointer-events-none" : "pointer-events-auto",
