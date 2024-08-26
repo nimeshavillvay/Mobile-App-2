@@ -25,6 +25,7 @@ import Link from "next/link";
 import { Fragment, Suspense } from "react";
 import ProductsList from "./_products-list";
 import { getCategory } from "./apis";
+import CategoryPageGtm from "./category-page-gtm";
 import SubCategoriesList from "./sub-categories-list";
 import type { CategoryPageProps, SubCategory } from "./types";
 
@@ -168,6 +169,8 @@ const CategoryPage = async ({ params: { id, slug } }: CategoryPageProps) => {
       >
         <ProductsList categoryId={id} />
       </Suspense>
+
+      <CategoryPageGtm id={category.id} name={category.title} />
     </>
   );
 };
