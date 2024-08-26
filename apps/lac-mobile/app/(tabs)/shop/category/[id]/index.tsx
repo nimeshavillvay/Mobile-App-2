@@ -97,6 +97,7 @@ const CategoryPageHeader = ({ id }: { readonly id: string }) => {
       paddingTop={16}
       paddingBottom={24}
       fontSize={24}
+      lineHeight={28}
       fontWeight={400}
       testID="category-title"
     >

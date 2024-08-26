@@ -1,3 +1,4 @@
+import { decode } from "html-entities";
 import { z } from "zod";
 import { api } from "~/lib/api";
 import type { AuthenticatedApiConfig } from "~/lib/types";
@@ -115,5 +116,16 @@ export const getSearch = async (
     })
     .json();
 
-  return await searchResultSchema.parseAsync(response);
+  const parsedResponse = await searchResultSchema.parseAsync(response);
+
+  return {
+    ...parsedResponse,
+    group_list: parsedResponse.group_list.map((group) => ({
+      ...group,
+      itemSkuList: group.itemSkuList.map((item) => ({
+        ...item,
+        item_name: decode(item.item_name),
+      })),
+    })),
+  };
 };
