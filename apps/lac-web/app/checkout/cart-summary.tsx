@@ -15,7 +15,8 @@ import { Button, buttonVariants } from "@repo/web-ui/components/ui/button";
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import Image from "next/image";
 import Link from "next/link";
-import { Suspense, useState } from "react";
+// eslint-disable-next-line no-restricted-imports
+import { Suspense, useEffect, useState } from "react";
 import RegionalExclusionAndShippingMethods from "./regional-exclusion-and-shipping-methods";
 
 type CartSummaryProps = {
@@ -119,6 +120,42 @@ const CartSummary = ({ token, plants }: CartSummaryProps) => {
       });
     });
   };
+
+  useEffect(() => {
+    const gtmItemInfo = gtmItemInfoQuery.data?.[0];
+    const gtmUser = gtmItemUserQuery.data;
+    if (gtmItemInfo !== undefined && gtmUser !== undefined) {
+      sendGTMEvent({
+        event: "begin_checkout",
+        beginCheckoutData: {
+          currency: "USD",
+          value: gtmItemInfo?.price,
+          items: [
+            {
+              item_id: gtmItemInfo?.item_id,
+              item_sku: gtmItemInfo?.item_sku,
+              item_name: gtmItemInfo?.item_name,
+              item_brand: gtmItemInfo?.item_brand,
+              price: gtmItemInfo?.price,
+              quantity: 1,
+              item_categoryid: gtmItemInfo?.item_categoryid,
+              item_primarycategory: gtmItemInfo?.item_primarycategory,
+              item_category: gtmItemInfo?.item_category_path[0] ?? "",
+              item_category1: gtmItemInfo?.item_category_path[1] ?? "",
+              item_category2: gtmItemInfo?.item_category_path[2] ?? "",
+              item_category3: gtmItemInfo?.item_category_path[3] ?? "",
+            },
+          ],
+        },
+        data: {
+          userid: gtmUser?.userid,
+          account_type: gtmUser?.account_type,
+          account_industry: gtmUser?.account_industry,
+          account_sales_category: gtmUser?.account_sales_category,
+        },
+      });
+    }
+  }, [gtmItemInfoQuery.data, gtmItemUserQuery.data, pathnameHistory]);
 
   return (
     <section className="flex max-w-full flex-col gap-6 rounded-lg border border-wurth-gray-250 p-5 shadow-lg md:p-6">
