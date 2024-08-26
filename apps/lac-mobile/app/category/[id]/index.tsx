@@ -220,6 +220,7 @@ const CategoryProductsList = ({ id }: { readonly id: string }) => {
             sku: product.txt_wurth_lac_item,
             title: product.item_name,
             uom: product.txt_uom_label,
+            link: `product/${product.productid}/${product.slug}`,
           }))}
           onEndReached={infiniteSearchQuery.fetchNextPage}
         />

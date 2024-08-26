@@ -10,18 +10,21 @@ import { Picker } from "@react-native-picker/picker";
 import useSuspenseCheckAvailability from "@repo/shared-logic/apis/hooks/product/use-suspense-check-availability.hook";
 import { useSuspenseGroupFilters } from "@repo/shared-logic/apis/hooks/product/use-suspense-group-filters.hook";
 import useSuspensePriceCheck from "@repo/shared-logic/apis/hooks/product/use-suspense-price-check.hook";
+import useSuspenseRelatedProduct from "@repo/shared-logic/apis/hooks/product/use-suspense-related-product.hook";
 import { Bookmark, Upload, X, Zap } from "@tamagui/lucide-icons";
 import dayjs from "dayjs";
+import { Image } from "expo-image";
 import { Link, router, useRouter } from "expo-router";
 import { MotiView } from "moti";
 import { Skeleton } from "moti/skeleton";
-import { useState } from "react";
+import { type ComponentProps, useState } from "react";
 import { type UseFormReturn } from "react-hook-form";
 import {
   Dimensions,
   KeyboardAvoidingView,
   Platform,
   Pressable,
+  Share,
 } from "react-native";
 import { Button, ScrollView, Text, View, XStack, YStack } from "tamagui";
 
@@ -60,7 +63,13 @@ export const ProductPriceSkeleton = () => {
   );
 };
 
-export const ProductAction = ({ width }: { readonly width: number }) => {
+export const ProductAction = ({
+  width,
+  url,
+}: {
+  readonly width: number;
+  readonly url: string;
+}) => {
   return (
     <View
       flex={1}
@@ -116,6 +125,12 @@ export const ProductAction = ({ width }: { readonly width: number }) => {
           shadowRadius={2}
           shadowOffset={{ height: 3, width: 3 }}
           elevation={10}
+          onPress={async () => {
+            await Share.share({
+              message: url,
+              url: url,
+            });
+          }}
         />
       </XStack>
     </View>
@@ -592,5 +607,59 @@ const EnterQuantityBase = ({
         Add to Cart
       </Button>
     </XStack>
+  );
+};
+
+export const RelatedProducts = ({
+  productId,
+  ...style
+}: { readonly productId: string } & ComponentProps<typeof YStack>) => {
+  const { data } = useSuspenseRelatedProduct(
+    {
+      baseUrl: API_BASE_URL,
+      apiKey: API_KEY,
+    },
+    productId,
+  );
+
+  if (!data || data.length === 0) {
+    return null;
+  }
+
+  return (
+    <YStack {...style}>
+      <Text fontWeight={900} fontSize="$6" marginBottom={10}>
+        Related Products/Accessories
+      </Text>
+
+      <XStack flex={1} gap={20} flexWrap="wrap">
+        {data.map((category) => (
+          <Link
+            href={`(tabs)/shop/related-products/${productId}?category=${category.heading}`}
+            asChild
+            key={category.heading}
+          >
+            <Pressable>
+              <YStack
+                flex={1}
+                alignItems="center"
+                width={110}
+                paddingVertical={10}
+                backgroundColor="white"
+              >
+                <Image
+                  source={{ uri: category.products[0]?.image ?? "" }}
+                  alt={category.products[0]?.productName ?? ""}
+                  style={{ height: 85, width: 85 }}
+                />
+                <Text textAlign="center" paddingTop={10}>
+                  {category.heading ?? ""}
+                </Text>
+              </YStack>
+            </Pressable>
+          </Link>
+        ))}
+      </XStack>
+    </YStack>
   );
 };

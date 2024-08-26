@@ -106,16 +106,18 @@ const SearchResultsList = ({ query }: { readonly query: string }) => {
 
   return (
     <>
-      <XStack
-        height={58}
-        paddingHorizontal={16}
-        paddingVertical={7}
-        justifyContent="flex-end"
-      >
-        <Text color="#7E7E7E" fontSize={14} testID="total-search-results">
-          {numberOfProducts} {numberOfProducts === 1 ? "result" : "results"}
-        </Text>
-      </XStack>
+      {numberOfProducts > 0 && (
+        <XStack
+          height={58}
+          paddingHorizontal={16}
+          paddingVertical={7}
+          justifyContent="flex-end"
+        >
+          <Text color="#7E7E7E" fontSize={14} testID="total-search-results">
+            {numberOfProducts} {numberOfProducts === 1 ? "result" : "results"}
+          </Text>
+        </XStack>
+      )}
 
       <ProductsList
         data={deferredProducts.map((product) => ({
@@ -125,6 +127,7 @@ const SearchResultsList = ({ query }: { readonly query: string }) => {
           sku: product.materialNumber,
           image: product.itemImage,
           uom: product.uom ?? "",
+          link: `product/${product.id}/${product.slug}`,
         }))}
         onEndReached={fetchNextPage}
         onEndReachedThreshold={0.5}

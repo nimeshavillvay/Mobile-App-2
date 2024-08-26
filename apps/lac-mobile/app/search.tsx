@@ -66,7 +66,7 @@ const Search = () => {
 
       <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
         <ScreenHeader title="Search" type="center-aligned" />
-        <Form style={{ paddingHorizontal: 12 }}>
+        <Form style={{ paddingHorizontal: 12, marginTop: 10 }}>
           <Controller
             control={form.control}
             name="searchInput"
@@ -100,7 +100,7 @@ const CategorySuggestions = ({
 }: {
   readonly categoryData: z.infer<typeof categoryDataSchema>;
 }) => {
-  const categories = categoryData.results.splice(0, 5);
+  const categories = categoryData.results.slice(0, 5);
 
   if (!isCategoryResults(categories)) {
     return null;
@@ -114,7 +114,7 @@ const BrandSuggestions = ({
 }: {
   readonly brandData: z.infer<typeof brandDataSchema>;
 }) => {
-  const brands = brandData.results.splice(0, 5);
+  const brands = brandData.results.slice(0, 5);
 
   if (!isBrandResults(brands)) {
     return null;

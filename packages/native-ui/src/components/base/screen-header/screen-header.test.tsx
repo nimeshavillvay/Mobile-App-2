@@ -85,7 +85,6 @@ describe("ScreenHeader", () => {
     render(<ScreenHeader title="Test" />);
     const innerView = screen.getByTestId("screen-header-inner-view");
     expect(innerView.props.style).toMatchObject({
-      paddingBottom: 10,
       minHeight: 60,
       flexDirection: "row",
       alignItems: "center",
