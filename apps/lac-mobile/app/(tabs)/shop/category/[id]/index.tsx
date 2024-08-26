@@ -31,8 +31,8 @@ const CategoryPage = () => {
         }}
       />
 
-      <ScreenLayout>
-        <ScreenHeader title="" />
+      <ScreenLayout edges={["left", "top", "right"]}>
+        <ScreenHeader title="" barcodeScannerPath="/barcode-scanner" />
 
         <Suspense
           fallback={
@@ -139,7 +139,11 @@ const CategoryProductsList = ({ id }: { readonly id: string }) => {
   const selectedValues: Record<string, string[]> = {};
   let totalFiltersSelected = 0;
   for (const attributeId in globalSearchParams) {
-    if (attributeId !== "id") {
+    if (
+      attributeId !== "id" &&
+      attributeId !== "screen" &&
+      attributeId !== "params"
+    ) {
       const values = globalSearchParams[attributeId];
 
       if (values) {
@@ -191,7 +195,7 @@ const CategoryProductsList = ({ id }: { readonly id: string }) => {
       testID="category-products-container"
     >
       <XStack alignItems="center" justifyContent="space-between">
-        <Link href={`/category/${id}/filters`} asChild>
+        <Link href={`/shop/category/${id}/filters`} asChild>
           <Button style={styles.filtersBtn} icon={SlidersHorizontal}>
             Filters
             {!!totalFiltersSelected && (
