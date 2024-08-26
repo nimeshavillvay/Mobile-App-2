@@ -61,6 +61,7 @@ export const SearchBoxInput = ({
   value,
   setValue,
   onEnterPressed,
+  onHandleDropDownClick,
   children,
   ...delegated
 }: ComponentProps<"input"> & {
@@ -72,6 +73,11 @@ export const SearchBoxInput = ({
   readonly value: string;
   readonly setValue: (value: string) => void;
   readonly onEnterPressed: () => void;
+  readonly onHandleDropDownClick: (
+    value: string,
+    linkType: string,
+    linkUrl: string,
+  ) => void;
 }) => {
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
@@ -136,8 +142,13 @@ export const SearchBoxInput = ({
     return "";
   };
 
-  const handleDropDownClick = (value: string) => {
+  const handleDropDownClick = (
+    value: string,
+    linkType: string,
+    linkUrl: string,
+  ) => {
     setValue(value);
+    onHandleDropDownClick(value, linkType, linkUrl);
   };
 
   return (
@@ -185,7 +196,11 @@ export const SearchBoxInput = ({
                         className="m-2 mb-2 mr-2 flex items-center rounded-md border-2 p-2 shadow-sm hover:bg-gray-100"
                         onClick={() => {
                           if (brand.brandName) {
-                            handleDropDownClick(brand.brandName);
+                            handleDropDownClick(
+                              brand.brandName,
+                              "brand",
+                              `/search?query=${brand.slug}`,
+                            );
                           }
                         }}
                       >
@@ -229,7 +244,11 @@ export const SearchBoxInput = ({
                       key={category.id}
                       onClick={() => {
                         if (category.categoryName) {
-                          handleDropDownClick(category.categoryName);
+                          handleDropDownClick(
+                            category.categoryName,
+                            "category",
+                            `/category/${category.id}/${category.slug}`,
+                          );
                         }
                       }}
                     >
@@ -267,7 +286,11 @@ export const SearchBoxInput = ({
                         key={product.id}
                         onClick={() => {
                           if (product.productTitle) {
-                            handleDropDownClick(product.productTitle);
+                            handleDropDownClick(
+                              product.productTitle,
+                              "product",
+                              `/product/${product.id}/${product.slug}`,
+                            );
                           }
                         }}
                       >

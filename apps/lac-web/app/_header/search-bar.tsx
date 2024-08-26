@@ -45,6 +45,28 @@ const SearchBar = () => {
     setValue("");
   };
 
+  const onHandleDropDownClick = (
+    selectedName: string,
+    linkType: string,
+    linkUrl: string,
+  ) => {
+    sendGTMEvent({
+      event: "auto_suggest",
+      autoSuggestData: {
+        aq: value,
+        q: selectedName,
+        link_type: linkType,
+        link_url: linkUrl,
+      },
+      data: {
+        userid: gtmUser?.userid,
+        account_type: gtmUser?.account_type,
+        account_industry: gtmUser?.account_industry,
+        account_sales_category: gtmUser?.account_sales_category,
+      },
+    });
+  };
+
   return (
     <SearchBox>
       <SearchBoxInput
@@ -53,6 +75,7 @@ const SearchBar = () => {
         setValue={setValue}
         onEnterPressed={handleSearch}
         placeholder="What are you looking for?"
+        onHandleDropDownClick={onHandleDropDownClick}
       >
         {value && <SearchClearButton onClick={clearInput} />}
         <SearchBoxButton onClick={handleSearch} />
