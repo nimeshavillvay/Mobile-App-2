@@ -42,7 +42,11 @@ export const SubCategoryListItem = ({
       }}
       testID="sub-category-list-item"
     >
-      <Link href={`/category/${item.id}`} asChild testID="sub-category-link">
+      <Link
+        href={`/shop/category/${item.id}`}
+        asChild
+        testID="sub-category-link"
+      >
         <Pressable style={styles.subCategory}>
           <Image
             source={item.image}
@@ -79,6 +83,7 @@ export const SubCategoriesList = ({
   ),
   ItemSeparatorComponent = () => <View style={{ height: 16 }} />,
   estimatedItemSize = 176,
+  contentContainerStyle = { paddingBottom: 16 },
   ...delegated
 }: SubCategoriesListProps) => {
   return (
@@ -88,6 +93,7 @@ export const SubCategoriesList = ({
       renderItem={renderItem}
       ItemSeparatorComponent={ItemSeparatorComponent}
       estimatedItemSize={estimatedItemSize}
+      contentContainerStyle={contentContainerStyle}
       {...delegated}
     />
   );

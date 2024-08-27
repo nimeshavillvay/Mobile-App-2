@@ -61,7 +61,7 @@ const CategoryFiltersPage = () => {
       }
     }
 
-    router.push(`/category/${id}?${newSearchParams.toString()}`);
+    router.push(`/shop/category/${id}?${newSearchParams.toString()}`);
   };
 
   if (!id) {
@@ -76,7 +76,7 @@ const CategoryFiltersPage = () => {
         }}
       />
 
-      <ScreenLayout>
+      <ScreenLayout edges={["left", "top", "right"]}>
         <ScreenHeader title="Filters" hideSearchButton type="center-aligned" />
 
         <AttributesList

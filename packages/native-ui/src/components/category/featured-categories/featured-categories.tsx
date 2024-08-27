@@ -59,7 +59,7 @@ export const FeaturedCategoriesList = ({
   data,
   keyExtractor = (item) => item.id,
   renderItem = ({ item }) => (
-    <Link href={`/category/${item.id}`} testID="featured-category">
+    <Link href={`/shop/category/${item.id}`} testID="featured-category">
       <View style={{ gap: 16, alignItems: "center", alignSelf: "stretch" }}>
         <Image
           source={item.img}

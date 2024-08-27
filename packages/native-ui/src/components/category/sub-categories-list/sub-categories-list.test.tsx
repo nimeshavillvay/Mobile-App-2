@@ -50,7 +50,7 @@ describe("Sub Categories List Item", () => {
     expect(screen.getByTestId("sub-category-list-item")).toBeOnTheScreen();
     expect(screen.getByTestId("sub-category-link")).toHaveProp(
       "href",
-      `/category/${subCategory.id}`,
+      `/shop/category/${subCategory.id}`,
     );
     expect(screen.getByTestId("sub-category-image")).toHaveProp("source", [
       {
