@@ -20,10 +20,10 @@ const AvailabilityStatus = ({
   backOrderDate,
 }: AvailabilityStatusProps) => {
   return (
-    <div className="flex flex-row flex-wrap items-center gap-2">
+    <div className="availability-container flex flex-row flex-wrap items-center gap-2">
       <div
         className={cn(
-          "rounded px-4 py-2 text-sm font-semibold leading-4 md:px-2 md:py-1",
+          "stock-position rounded px-4 py-2 text-sm font-semibold leading-4 md:px-2 md:py-1",
           isLimitedStock || isNotInStock || !isHomeBranch
             ? "bg-yellow-50 text-yellow-700"
             : "bg-green-50 text-green-700",
@@ -38,7 +38,8 @@ const AvailabilityStatus = ({
 
       {isHomeBranch && !isNotInStock && (
         <div className="text-sm font-medium text-wurth-gray-800">
-          {amount} in stock at {location}
+          <span className="stock-available">{amount} in</span> stock at
+          <span className="stock-location"> {location}</span>
         </div>
       )}
       {(isNotInStock || !isHomeBranch) && !!backOrderDate && (

@@ -45,7 +45,10 @@ const FormContent = ({
             className="up-minus up-control ml-2 h-7 w-10 rounded-sm"
             {...decrementButtonProps}
           >
-            <Minus className="size-4" />
+            <Minus
+              className="btnAction size-4"
+              data-button-action="Decrease Quantity"
+            />
             <span className="sr-only">Reduce quantity</span>
           </Button>
 
@@ -58,7 +61,10 @@ const FormContent = ({
             className="up-plus up-control mr-2 h-7 w-10 rounded-sm"
             {...incrementButtonProps}
           >
-            <Plus className="size-4" />
+            <Plus
+              className="btnAction size-4"
+              data-button-action="Increase Quantity"
+            />
             <span className="sr-only">Increase quantity</span>
           </Button>
         </div>

@@ -77,7 +77,11 @@ export const ProductsGridMobileFiltersHeader = ({
 
           <DrawerFooter>
             {totalSelected > 0 && (
-              <Button className="w-full" onClick={clearAll}>
+              <Button
+                className="btnAction w-full"
+                onClick={clearAll}
+                data-button-action="Clear All Filters"
+              >
                 Clear all
               </Button>
             )}

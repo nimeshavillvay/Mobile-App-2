@@ -35,7 +35,7 @@ const DesktopNavigationMenu = ({ categories }: DesktopNavigationMenuProps) => {
             <NavigationMenuItem>
               <NavigationMenuTrigger>Categories</NavigationMenuTrigger>
 
-              <NavigationMenuContent className="flex flex-row">
+              <NavigationMenuContent className="categories-menu-container flex flex-row">
                 {/* Main Categories */}
                 <ul
                   className={cn(
@@ -60,8 +60,8 @@ const DesktopNavigationMenu = ({ categories }: DesktopNavigationMenuProps) => {
                 {/* Sub Categories */}
                 {!!selectedCategory &&
                   !!selectedCategory.subCategory?.length && (
-                    <ul className="p-4">
-                      <li className="btn-nav">
+                    <ul className="sub-menu-categories-wrapper p-4">
+                      <li>
                         <NavigationLink
                           id={selectedCategory.id}
                           slug={selectedCategory.slug}
