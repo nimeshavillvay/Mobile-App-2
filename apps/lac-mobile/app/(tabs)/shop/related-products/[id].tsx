@@ -70,6 +70,7 @@ const RelatedProducts = ({
           image: product.image,
           uom: product.unitOfMeasure ?? "",
           link: `product/${product.productId}/${product.slug}`,
+          status: product.productStatus,
         }))}
         onEndReachedThreshold={0.5}
       />

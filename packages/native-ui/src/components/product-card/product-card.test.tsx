@@ -1,4 +1,4 @@
-import { act, render, screen } from "~/lib/test-utils";
+import { act, fireEvent, render, screen } from "~/lib/test-utils";
 import { ProductCard } from "./product-card";
 
 const title =
@@ -24,6 +24,8 @@ describe("Product Card", () => {
         listPrice={price}
         uom={uom}
         link={link}
+        status="active"
+        handleDiscontinuedPressed={jest.fn()}
       />,
     );
 
@@ -66,6 +68,8 @@ describe("Product Card", () => {
         listPrice={price}
         uom={uom}
         link={link}
+        status="active"
+        handleDiscontinuedPressed={jest.fn()}
       />,
     );
 
@@ -93,6 +97,8 @@ describe("Product Card", () => {
         listPrice={price}
         uom={uom}
         link={link}
+        status="active"
+        handleDiscontinuedPressed={jest.fn()}
       />,
     );
 
@@ -117,6 +123,8 @@ describe("Product Card", () => {
         listPrice={price}
         uom={uom}
         link={link}
+        status="active"
+        handleDiscontinuedPressed={jest.fn()}
       />,
     );
 
@@ -151,6 +159,8 @@ describe("Product Card", () => {
         listPrice={listPrice}
         uom={uom}
         link={link}
+        status="active"
+        handleDiscontinuedPressed={jest.fn()}
       />,
     );
 
@@ -190,11 +200,48 @@ describe("Product Card", () => {
         listPrice={price}
         uom={uom}
         link={link}
+        status="active"
+        handleDiscontinuedPressed={jest.fn()}
       />,
     );
 
     expect(screen.getByTestId(/^add-to-list-/)).toBeOnTheScreen();
 
     await act(() => promise);
+  });
+
+  test("displays the alert for discontinued items", async () => {
+    const price = 18.32;
+    const handleDiscontinuedPressed = jest.fn();
+
+    render(
+      <ProductCard
+        productId={1}
+        image={image}
+        title={title}
+        sku={sku}
+        price={price}
+        listPrice={price}
+        uom={uom}
+        link={link}
+        status="discontinued"
+        handleDiscontinuedPressed={handleDiscontinuedPressed}
+      />,
+    );
+
+    const button = await screen.findByTestId("discontinued-alert-button");
+
+    fireEvent.press(button);
+
+    expect(screen.getByText("Discontinued")).toBeOnTheScreen();
+    expect(
+      screen.getByText(
+        "We're sorry, that product has been discontinued. Would you like to go its category to find a substitute?",
+      ),
+    ).toBeOnTheScreen();
+
+    const yesButton = screen.getByTestId("yes-button");
+    fireEvent.press(yesButton);
+    expect(handleDiscontinuedPressed).toHaveBeenCalledTimes(1);
   });
 });

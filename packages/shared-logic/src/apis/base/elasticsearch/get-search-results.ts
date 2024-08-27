@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { api } from "~/lib/api";
 import type { SearchApiConfig } from "~/lib/types";
+import { productStatusSchema } from "~/lib/zod-schema/product";
 
 const searchResultSchema = z.object({
   brandName: z.string().optional(),
@@ -13,7 +14,7 @@ const searchResultSchema = z.object({
   materialNumber: z.string(),
   productTitle: z.string(),
   Status: z.string().optional(),
-  productStatus: z.string(),
+  productStatus: productStatusSchema,
   createDate: z.number(),
   keywords: z.string(),
   minimumOrderQuantity: z.string(),
