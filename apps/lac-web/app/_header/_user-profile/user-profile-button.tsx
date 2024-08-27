@@ -48,7 +48,7 @@ const UserProfileButton = ({
 
   if (loginCheckData && "sales_rep_id" in loginCheckData) {
     isOSRUser = true;
-    customerDetails = loginCheckData.user.company || loginCheckData.user.billto;
+    customerDetails = loginCheckData.user.billto;
   }
 
   if (type === "mobile") {
