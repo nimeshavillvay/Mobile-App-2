@@ -22,6 +22,7 @@ const PasswordInput = forwardRef<HTMLInputElement, InputProps>(
           size="sm"
           className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
           onClick={() => setShowPassword(!showPassword)}
+          data-testid={`button-${showPassword ? "hide" : "show"}`}
         >
           {showPassword ? (
             <span aria-hidden="true">Hide</span>
