@@ -9,9 +9,13 @@ import Image from "next/image";
 
 type SalesRepresentativeProps = {
   readonly token: string;
+  readonly className?: string;
 };
 
-const SalesRepresentative = ({ token }: SalesRepresentativeProps) => {
+const SalesRepresentative = ({
+  token,
+  className,
+}: SalesRepresentativeProps) => {
   const accountListQuery = useSuspenseAccountList(token);
   const salesRep = accountListQuery.data.sales_rep;
 
@@ -21,7 +25,12 @@ const SalesRepresentative = ({ token }: SalesRepresentativeProps) => {
   }
 
   return (
-    <div className="space-y-6 rounded-lg border p-6 font-body text-wurth-gray-800 shadow-md">
+    <div
+      className={cn(
+        "space-y-6 rounded-lg border p-6 font-body text-wurth-gray-800 shadow-md",
+        className,
+      )}
+    >
       <h4 className="font-title text-xl font-medium tracking-[-0.1px]">
         Your Sales Representative
       </h4>
@@ -39,7 +48,7 @@ const SalesRepresentative = ({ token }: SalesRepresentativeProps) => {
           <div className="space-y-1">
             <h5 className="text-lg font-semibold">{salesRep.fullname}</h5>
 
-            <ul className="flex flex-col">
+            <ul className="flex flex-col text-[0.875rem]">
               <li>
                 <a
                   href={`tel:18663268131`}
@@ -70,13 +79,13 @@ const SalesRepresentative = ({ token }: SalesRepresentativeProps) => {
             </ul>
           </div>
 
-          {!!salesRep.message && (
-            <div className="space-y-1 rounded-md bg-wurth-gray-50 p-4 text-sm">
-              <h5 className="font-semibold">A message from Ronald</h5>
+          {/* {!!salesRep.message && ( */}
+          <div className="space-y-1 rounded-md bg-wurth-gray-50 p-4 text-sm">
+            <h5 className="font-semibold">A message from Ronald</h5>
 
-              <p>{salesRep.message}</p>
-            </div>
-          )}
+            <p>A message from Ronald A message from Ronald</p>
+          </div>
+          {/* )} */}
         </div>
       </div>
     </div>
