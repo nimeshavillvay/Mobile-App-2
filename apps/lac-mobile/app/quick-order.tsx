@@ -1,10 +1,10 @@
+import { QuantityInput } from "@/components/quantity";
 import useAuthenticatedApiConfig from "@/hooks/config/use-authenticated-api-config.hook";
 import { SEARCH_API_BASE_URL } from "@/lib/constants";
 import { formatNumberToPrice } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ScreenHeader } from "@repo/native-ui/components/base/screen-header";
 import { ScreenLayout } from "@repo/native-ui/components/base/screen-layout";
-import { QuantityField } from "@repo/native-ui/components/form/quantity-field";
 import useSuspenseSimulationCheckout from "@repo/shared-logic/apis/hooks/cart/use-suspense-simulation-checkout.hook";
 import useSuspenseInfiniteSearchResults from "@repo/shared-logic/apis/hooks/elasticsearch/use-suspense-infinite-search-results.hook";
 import useAddToCartMutation from "@repo/shared-logic/apis/hooks/product/use-add-to-cart-mutation.hook";
@@ -181,7 +181,25 @@ const QuickOrderResult = ({
   readonly quantityMultiple: number;
 }) => {
   const [openAdd, setOpenAdd] = useState(false);
-  const [quantity, setQuantity] = useState(minQuantity);
+
+  const quantityFormSchema = z.object({
+    quantity: z
+      .number()
+      .min(minQuantity, {
+        message: `Please consider minimum order quantity of ${minQuantity}`,
+      })
+      .multipleOf(quantityMultiple, {
+        message: `Please consider order quantity multiple of ${quantityMultiple}`,
+      }),
+  });
+
+  const form = useForm<z.infer<typeof quantityFormSchema>>({
+    resolver: zodResolver(formSchema),
+    values: {
+      quantity: minQuantity,
+    },
+  });
+  const quantity = form.watch("quantity");
 
   const authenticatedApiConfig = useAuthenticatedApiConfig();
 
@@ -308,13 +326,11 @@ const QuickOrderResult = ({
                 </View>
               </XStack>
 
-              <QuantityField
-                quantity={quantity}
-                setQuantity={setQuantity}
-                uom={uom}
-                minQuantity={minQuantity}
-                quantityMultiple={quantityMultiple}
-                disabled={addToCartMutation.isPending}
+              <QuantityInput
+                form={form}
+                minimumValue={minQuantity}
+                incrementBy={quantityMultiple}
+                unitOfMeasure={uom}
               />
 
               <XStack alignSelf="flex-end">
