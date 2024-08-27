@@ -55,7 +55,6 @@ export const ExpandableView = ({
 
       {height >= maxHeight && (
         <Button
-          marginHorizontal={15}
           backgroundColor="white"
           borderWidth={1}
           borderColor="$gray8"

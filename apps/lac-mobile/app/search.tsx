@@ -135,7 +135,11 @@ const SearchSuggestionsList = ({ query }: { readonly query: string }) => {
     <YStack flex={1} mt={20} paddingHorizontal={10}>
       {data.products.summary.total > 0 && (
         <View flex={1} mb={40} minHeight={10}>
-          <ProductSearch products={data.products.results.slice(0, 5)} />
+          <ProductSearch
+            products={data.products.results
+              .filter((product) => product.productStatus !== "discontinued")
+              .slice(0, 5)}
+          />
         </View>
       )}
 

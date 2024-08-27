@@ -11,10 +11,22 @@ import useSuspenseCheckAvailability from "@repo/shared-logic/apis/hooks/product/
 import { useSuspenseGroupFilters } from "@repo/shared-logic/apis/hooks/product/use-suspense-group-filters.hook";
 import useSuspensePriceCheck from "@repo/shared-logic/apis/hooks/product/use-suspense-price-check.hook";
 import useSuspenseRelatedProduct from "@repo/shared-logic/apis/hooks/product/use-suspense-related-product.hook";
-import { Bookmark, Upload, X, Zap } from "@tamagui/lucide-icons";
+import {
+  AlertCircle,
+  AlertTriangle,
+  Bookmark,
+  ChevronRight,
+  Package,
+  Radiation,
+  Truck,
+  Upload,
+  X,
+  Zap,
+} from "@tamagui/lucide-icons";
 import dayjs from "dayjs";
 import { Image } from "expo-image";
 import { Link, router, useRouter } from "expo-router";
+import { decode } from "html-entities";
 import { MotiView } from "moti";
 import { Skeleton } from "moti/skeleton";
 import { type ComponentProps, useState } from "react";
@@ -26,6 +38,7 @@ import {
   Pressable,
   Share,
 } from "react-native";
+import RenderHtml from "react-native-render-html";
 import { Button, ScrollView, Text, View, XStack, YStack } from "tamagui";
 
 export const ProductDetailsSkeleton = () => {
@@ -182,9 +195,11 @@ export const SalesBadges = ({
 
   return (
     <XStack flex={1} gap={10} alignItems="center" flexWrap="wrap">
-      <Button backgroundColor="$gray6" size="$3" marginRight={5}>
-        {brandName}
-      </Button>
+      <Link href={`search-results?query=${brandName}`} asChild>
+        <Button backgroundColor="$gray6" size="$3" marginRight={5}>
+          {brandName}
+        </Button>
+      </Link>
       {!!isNewItem && (
         <Button backgroundColor="$red4" size="$2" color="$red10">
           New
@@ -401,6 +416,7 @@ export const StockStatus = ({
     availabilityData.options[0]?.plants[0]?.backOrderDate ?? "";
 
   return (
+    // stock statuses and counts should be more refined based on the actual stock numbers
     <XStack>
       {availabilityData.status === "inStock" && (
         <XStack flex={1} alignItems="flex-start" gap={5}>
@@ -450,6 +466,10 @@ export const StockStatus = ({
             {dayjs(backOrderDate).format(UI_DATE_FORMAT)}
           </Text>
         </XStack>
+      )}
+
+      {availabilityData.status === "notAvailable" && (
+        <NotAvailableOnlineNotice />
       )}
     </XStack>
   );
@@ -571,26 +591,48 @@ export const ProductVariations = ({
 
 export const EnterQuantity = ({
   form,
+  unitOfMeasure,
+  minimumValue,
+  incrementBy,
 }: {
   readonly form: UseFormReturn<{
     quantity: number;
   }>;
+  readonly unitOfMeasure: string;
+  readonly minimumValue: number;
+  readonly incrementBy: number;
 }) => {
   return Platform.OS === "ios" ? (
     <KeyboardAvoidingView behavior="padding">
-      <EnterQuantityBase form={form} />
+      <EnterQuantityBase
+        form={form}
+        unitOfMeasure={unitOfMeasure}
+        minimumValue={minimumValue}
+        incrementBy={incrementBy}
+      />
     </KeyboardAvoidingView>
   ) : (
-    <EnterQuantityBase form={form} />
+    <EnterQuantityBase
+      form={form}
+      unitOfMeasure={unitOfMeasure}
+      minimumValue={minimumValue}
+      incrementBy={incrementBy}
+    />
   );
 };
 
 const EnterQuantityBase = ({
   form,
+  unitOfMeasure,
+  minimumValue,
+  incrementBy,
 }: {
   readonly form: UseFormReturn<{
     quantity: number;
   }>;
+  readonly unitOfMeasure: string;
+  readonly minimumValue: number;
+  readonly incrementBy: number;
 }) => {
   return (
     <XStack
@@ -602,7 +644,13 @@ const EnterQuantityBase = ({
       gap={5}
       paddingVertical={20}
     >
-      <QuantityInput flex={1} form={form} />
+      <QuantityInput
+        flex={1}
+        form={form}
+        unitOfMeasure={unitOfMeasure}
+        minimumValue={minimumValue}
+        incrementBy={incrementBy}
+      />
       <Button flex={1} backgroundColor="$red11" color="white" fontSize="$6">
         Add to Cart
       </Button>
@@ -626,6 +674,38 @@ export const RelatedProducts = ({
     return null;
   }
 
+  if (data.length === 1 && data[0]?.heading === "") {
+    return (
+      <Link
+        href={`(tabs)/shop/related-products/${productId}?category=`}
+        asChild
+      >
+        <Pressable>
+          <XStack
+            flex={1}
+            marginTop={20}
+            paddingVertical={5}
+            borderRadius={8}
+            backgroundColor="white"
+            justifyContent="space-between"
+            alignItems="center"
+            paddingLeft={10}
+          >
+            <Text fontWeight={900} fontSize="$5">
+              Related Products/Accessories
+            </Text>
+            <Button
+              backgroundColor="$colorTransparent"
+              icon={ChevronRight}
+              size={45}
+              paddingRight={5}
+            />
+          </XStack>
+        </Pressable>
+      </Link>
+    );
+  }
+
   return (
     <YStack {...style}>
       <Text fontWeight={900} fontSize="$6" marginBottom={10}>
@@ -646,6 +726,9 @@ export const RelatedProducts = ({
                 width={110}
                 paddingVertical={10}
                 backgroundColor="white"
+                borderRadius={8}
+                borderWidth={1}
+                borderColor="$gray8"
               >
                 <Image
                   source={{ uri: category.products[0]?.image ?? "" }}
@@ -661,5 +744,162 @@ export const RelatedProducts = ({
         ))}
       </XStack>
     </YStack>
+  );
+};
+
+export const HazardousNotice = () => {
+  return (
+    <XStack
+      flex={1}
+      backgroundColor="$yellow3"
+      alignItems="center"
+      paddingRight={5}
+      paddingVertical={5}
+      borderRadius={8}
+      borderWidth={1}
+      borderColor="$yellow10"
+    >
+      <Button icon={Radiation} backgroundColor="$colorTransparent" size={50} />
+      <Text flex={1}>
+        This item has been flagged as a hazardous material. Special shipping
+        costs may be added to your order.
+      </Text>
+    </XStack>
+  );
+};
+
+export const DropShipItemNotice = () => {
+  return (
+    <XStack
+      flex={1}
+      backgroundColor="$gray7"
+      alignItems="center"
+      paddingRight={5}
+      paddingVertical={5}
+      borderRadius={8}
+      borderWidth={1}
+      borderColor="$gray10"
+    >
+      <Button icon={Truck} backgroundColor="$colorTransparent" size={50} />
+      <YStack flex={1} gap={3}>
+        <Text fontWeight={700}>Drop Ship Item</Text>
+        <Text flex={1}>
+          This item ships directly from the vendor. Additional freight charges
+          may apply.
+        </Text>
+      </YStack>
+    </XStack>
+  );
+};
+
+export const SpecialShippingNotice = () => {
+  return (
+    <XStack
+      flex={1}
+      backgroundColor="$gray7"
+      alignItems="center"
+      paddingRight={5}
+      paddingVertical={5}
+      borderRadius={8}
+      borderWidth={1}
+      borderColor="$gray10"
+    >
+      <Button icon={Package} backgroundColor="$colorTransparent" size={50} />
+      <Text flex={1}>
+        This item may incur additional shipping costs and lead times.
+      </Text>
+    </XStack>
+  );
+};
+
+export const ExcludedProductNotice = () => {
+  return (
+    <XStack
+      flex={1}
+      backgroundColor="$red3"
+      alignItems="center"
+      paddingRight={5}
+      paddingVertical={5}
+      borderRadius={8}
+      borderWidth={1}
+      borderColor="$red10"
+    >
+      <Button
+        icon={AlertCircle}
+        color="$red10"
+        backgroundColor="$colorTransparent"
+        size={50}
+      />
+      <YStack flex={1} gap={3}>
+        <Text fontWeight={700} color="$red11">
+          Not Available
+        </Text>
+        <Text flex={1} color="$red11">
+          This item is not available in certain regions. For better experience
+          please Sign in or register.
+        </Text>
+      </YStack>
+    </XStack>
+  );
+};
+
+export const NotAvailableOnlineNotice = () => {
+  return (
+    <XStack
+      flex={1}
+      backgroundColor="$red3"
+      alignItems="center"
+      paddingRight={5}
+      paddingVertical={5}
+      borderRadius={8}
+      borderWidth={1}
+      borderColor="$red10"
+    >
+      <Button
+        icon={AlertTriangle}
+        color="$red10"
+        backgroundColor="$colorTransparent"
+        size={50}
+      />
+      <YStack flex={1} gap={3}>
+        <Text fontWeight={700} color="$red11">
+          Error
+        </Text>
+        <Text flex={1} color="$red11">
+          Not available online. Please call Customer Service for availability
+        </Text>
+      </YStack>
+    </XStack>
+  );
+};
+
+export const Prop65WarningNotice = ({
+  html,
+  width,
+}: {
+  readonly html: string;
+  readonly width: number;
+}) => {
+  return (
+    <XStack
+      flex={1}
+      backgroundColor="$yellow3"
+      alignItems="center"
+      paddingRight={5}
+      paddingVertical={5}
+      borderRadius={8}
+      borderWidth={1}
+      borderColor="$yellow10"
+    >
+      <Button
+        icon={AlertTriangle}
+        color="$yellow12"
+        backgroundColor="$colorTransparent"
+        size={50}
+      />
+      <View flex={1}>
+        <RenderHtml source={{ html: decode(html) }} contentWidth={width} />
+      </View>
+    </XStack>
   );
 };
