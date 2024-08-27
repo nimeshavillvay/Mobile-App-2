@@ -174,7 +174,7 @@ export const SearchBoxInput = ({
         {...getMenuProps()}
       >
         {isOpen && value && (
-          <>
+          <div id="instand_search_menu" className="block-did-you-mean">
             {brands.summary.total > 0 && (
               <>
                 <li className="text-black-500 break-all px-3 py-1 font-semibold">
@@ -193,7 +193,7 @@ export const SearchBoxInput = ({
                       <Link
                         href={`/search?query=${brand.slug}`}
                         key={brand.id}
-                        className="m-2 mb-2 mr-2 flex items-center rounded-md border-2 p-2 shadow-sm hover:bg-gray-100"
+                        className="cs-did-you-mean-link m-2 mb-2 mr-2 flex items-center rounded-md border-2 p-2 shadow-sm hover:bg-gray-100"
                         onClick={() => {
                           if (brand.brandName) {
                             handleDropDownClick(
@@ -225,7 +225,7 @@ export const SearchBoxInput = ({
             )}
 
             {categories.summary.total > 0 && (
-              <ul>
+              <ul className="block-categories">
                 <li className="text-black-500 break-all px-3 py-1 font-semibold">
                   Categories for &quot;{value}&quot;
                 </li>
@@ -239,7 +239,7 @@ export const SearchBoxInput = ({
                     })}
                   >
                     <Link
-                      className="root-category"
+                      className="root-category cs-category-link"
                       href={`/category/${category.id}/${category.slug}`}
                       key={category.id}
                       onClick={() => {
@@ -264,7 +264,7 @@ export const SearchBoxInput = ({
             )}
 
             {products.summary.total > 0 && validSearches.length > 0 && (
-              <>
+              <div id="block-products">
                 <li className="text-black-500 whitespace-normal break-all px-3 py-1 font-semibold">
                   Products for &quot;{value}&quot;
                 </li>
@@ -280,48 +280,64 @@ export const SearchBoxInput = ({
                           brands.results.length,
                       })}
                     >
-                      <Link
-                        className="btn-view-product flex items-start justify-start gap-4 px-3 py-2"
-                        href={`/product/${product.id}/${product.slug}`}
+                      <div
+                        className="cs-list-image flex items-start justify-start gap-4 px-3 py-2"
                         key={product.id}
-                        onClick={() => {
-                          if (product.productTitle) {
-                            handleDropDownClick(
-                              product.productTitle,
-                              "product",
-                              `/product/${product.id}/${product.slug}`,
-                            );
-                          }
-                        }}
                       >
-                        <div className="flex-shrink-0 overflow-hidden rounded-md border border-gray-300">
+                        <Link
+                          className="btn-view-product btnAction cs-product-link-img flex-shrink-0 overflow-hidden rounded-md border border-gray-300"
+                          href={`/product/${product.id}/${product.slug}`}
+                          onClick={() => {
+                            if (product.productTitle) {
+                              handleDropDownClick(
+                                product.productTitle,
+                                "product",
+                                `/product/${product.id}/${product.slug}`,
+                              );
+                            }
+                          }}
+                          data-btn-action="View Product"
+                        >
                           {product.itemImage && product.productTitle ? (
                             <Image
                               src={product.itemImage}
                               alt={product.productTitle}
-                              className="object-cover"
+                              className="cs-list-image object-cover"
                               width={80}
                               height={80}
                             />
                           ) : (
                             <div className="h-20 w-20 rounded-full" />
                           )}
-                        </div>
-                        <div>
-                          <div className="font-normal hover:underline">
+                        </Link>
+                        <Link
+                          className="btn-view-product btnAction cs-product-link"
+                          href={`/product/${product.id}/${product.slug}`}
+                          onClick={() => {
+                            if (product.productTitle) {
+                              handleDropDownClick(
+                                product.productTitle,
+                                "product",
+                                `/product/${product.id}/${product.slug}`,
+                              );
+                            }
+                          }}
+                          data-btn-action="View Product"
+                        >
+                          <div className="productcode font-normal hover:underline">
                             <p className="break-all">{product.productTitle}</p>
                           </div>
                           <div className="break-all text-[#74767B]">
                             Item# {product.materialNumber}
                           </div>
-                        </div>
-                      </Link>
+                        </Link>
+                      </div>
                     </li>
                   ))}
                 </ul>
-              </>
+              </div>
             )}
-          </>
+          </div>
         )}
       </ul>
     </div>
@@ -339,12 +355,15 @@ export const SearchBoxButton = ({
       variant="ghost"
       size="icon"
       className={cn(
-        "btnAction image-button btn-search mx-0.5 rounded-full px-2",
+        "image-button btn-search mx-0.5 rounded-full px-2",
         className,
       )}
       {...delegated}
     >
-      <MagnifyingGlass className="size-5" />
+      <MagnifyingGlass
+        className="btnAction size-5"
+        data-button-action="Search"
+      />
     </Button>
   );
 };

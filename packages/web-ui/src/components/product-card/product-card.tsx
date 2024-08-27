@@ -94,7 +94,8 @@ const ProductCardImage = ({
     <Link
       href={href}
       onClick={productTitleOrImageOnClick}
-      className="btn-view-product flex items-center justify-center"
+      className="btn-view-product btnAction btn-product-detail-img flex items-center justify-center"
+      data-btn-action="View Product"
     >
       <Image
         src={src}
@@ -199,8 +200,9 @@ const ProductCardDetails = ({
             <Link
               href={href}
               dangerouslySetInnerHTML={{ __html: title }}
-              className="btn-view-product"
+              className="btn-view-product btnAction product-title btn-product-detail"
               onClick={productTitleOrImageOnClick}
+              data-btn-action="View Product"
             />
           </h3>
         </TooltipTrigger>
@@ -320,7 +322,11 @@ const ProductCardVariantSelector = ({
         <SelectContent>
           <SelectGroup>
             {variants.map((variant) => (
-              <SelectItem key={variant.value} value={variant.value}>
+              <SelectItem
+                key={variant.value}
+                value={variant.value}
+                className="product-variant-select"
+              >
                 <span dangerouslySetInnerHTML={{ __html: variant.title }} />
               </SelectItem>
             ))}
@@ -338,7 +344,11 @@ const ProductCardVariantSelector = ({
       ) : (
         <Link
           href={href}
-          className={cn(buttonVariants({ variant: "default" }), "h-10 w-full")}
+          className={cn(
+            buttonVariants({ variant: "default" }),
+            "btnAction h-10 w-full",
+          )}
+          data-button-action="View Item"
         >
           View item
         </Link>

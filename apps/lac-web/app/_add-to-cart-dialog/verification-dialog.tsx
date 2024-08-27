@@ -174,13 +174,15 @@ const VerificationDialog = ({ token }: VerificationDialogProps) => {
                 <Link
                   href={`/product/${itemInfo.productId}/${itemInfo.slug}`}
                   onClick={sendToGTM}
+                  className="btn-view-product btnAction btn-product-detail-img"
+                  data-btn-action="View Product"
                 >
                   <Image
                     src={itemInfo.image}
                     alt={`An image of ${itemInfo.productName}`}
                     width={180}
                     height={180}
-                    className="btn-view-product shrink-0 rounded object-contain"
+                    className="shrink-0 rounded object-contain"
                   />
                 </Link>
 
@@ -188,7 +190,8 @@ const VerificationDialog = ({ token }: VerificationDialogProps) => {
                   <div className="space-y-1">
                     <Link
                       href={`/product/${itemInfo.productId}/${itemInfo.slug}`}
-                      className="btn-view-product"
+                      className="btn-view-product btnAction product-title btn-product-detail"
+                      data-btn-action="View Product"
                       onClick={sendToGTM}
                     >
                       <h3
@@ -454,7 +457,7 @@ const AddToCart = ({
             type="button"
             variant="subtle"
             size="icon"
-            className="up-minus up-control size-10 rounded-sm"
+            className="btnAction up-minus up-control size-10 rounded-sm"
             onClick={reduceQuantity}
             disabled={
               !quantity ||
@@ -463,7 +466,7 @@ const AddToCart = ({
               disableAddToCartButton
             }
           >
-            <Minus className="size-4" />
+            <Minus className="size-4" data-button-action="Decrease Quantity" />
             <span className="sr-only">Reduce quantity</span>
           </Button>
 
@@ -493,7 +496,7 @@ const AddToCart = ({
             type="button"
             variant="subtle"
             size="icon"
-            className="up-plus up-control size-10 rounded-sm"
+            className="btnAction up-plus up-control size-10 rounded-sm"
             onClick={increaseQuantity}
             disabled={
               quantity?.toString().length > 5 ||
@@ -502,7 +505,7 @@ const AddToCart = ({
               Number(quantity) + increments >= MAX_QUANTITY
             }
           >
-            <Plus className="size-4" />
+            <Plus className="size-4" data-button-action="Increase Quantity" />
             <span className="sr-only">Increase quantity</span>
           </Button>
         </div>

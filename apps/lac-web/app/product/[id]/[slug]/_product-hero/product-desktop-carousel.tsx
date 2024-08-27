@@ -77,8 +77,9 @@ const ProductDesktopCarousel = ({
                 alt={mediaItem.alt}
                 width={76}
                 height={76}
-                className="aspect-1 overflow-hidden rounded object-contain"
+                className="btnAction aspect-1 overflow-hidden rounded object-contain"
                 priority={index === 0}
+                data-button-action="View Large Image"
               />
             </Button>
           ))}
@@ -95,13 +96,13 @@ const ProductDesktopCarousel = ({
             <Fragment key={mediaItem.src}>
               {mediaItem.type === "IMAGE" && (
                 <Dialog>
-                  <DialogTrigger className="btn-magnify-image min-w-0 shrink-0 grow-0 basis-full">
+                  <DialogTrigger className="min-w-0 shrink-0 grow-0 basis-full">
                     <Image
                       src={mediaItem.src}
                       alt={mediaItem.alt}
                       width={980}
                       height={980}
-                      className="aspect-1 object-contain"
+                      className="btn-magnify-image aspect-1 object-contain"
                       priority={index === 0}
                     />
 

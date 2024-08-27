@@ -85,7 +85,8 @@ const LocationStocks = ({ token, productId }: LocationStocksProps) => {
                 <ChevronRight
                   width={16}
                   height={16}
-                  className="transition duration-150 ease-out group-data-[state=open]:rotate-90"
+                  className="btnAction transition duration-150 ease-out group-data-[state=open]:rotate-90"
+                  data-button-action="Check Other Stores"
                 />
               </Button>
             </CollapsibleTrigger>
