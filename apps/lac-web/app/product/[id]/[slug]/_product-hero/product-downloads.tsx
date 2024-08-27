@@ -71,18 +71,14 @@ const DownloadLink = ({
       href={`https://${path}`}
       className={cn(
         buttonVariants({ variant: "outline" }),
-        "flex h-fit max-w-full flex-col items-start gap-2 overflow-hidden rounded-lg border-wurth-gray-250 p-3 shadow-sm",
+        "btnAction flex h-fit max-w-full flex-col items-start gap-2 overflow-hidden rounded-lg border-wurth-gray-250 p-3 shadow-sm",
       )}
       target="_blank"
       rel="noopener noreferrer"
       download={name}
+      data-button-action="Download Resource"
     >
-      <Download
-        width={20}
-        height={20}
-        className="btnAction mt-1 shrink-0"
-        data-button-action="Download Resource"
-      />
+      <Download width={20} height={20} className="mt-1 shrink-0" />
 
       <span className="resource-name text-wrap text-left text-sm font-semibold text-wurth-gray-800">
         {title}
