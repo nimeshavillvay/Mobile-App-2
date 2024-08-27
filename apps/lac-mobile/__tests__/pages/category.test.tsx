@@ -1,5 +1,5 @@
 import { cleanup, renderRouter, screen } from "@/lib/test-utils-router";
-import CategoryPage from "../../app/category/[id]";
+import CategoryPage from "../../app/(tabs)/shop/category/[id]";
 
 describe("Search Results", () => {
   afterEach(() => {
