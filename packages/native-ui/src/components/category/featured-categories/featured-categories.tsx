@@ -8,6 +8,7 @@ import { Skeleton } from "moti/skeleton";
 import { type ComponentProps } from "react";
 import { Dimensions, StyleSheet, View } from "react-native";
 import { Circle, H2, Text } from "tamagui";
+import { ColumnItem } from "~/components/flat-list-column-item";
 
 const CATEGORY_WIDTH = 80;
 
@@ -32,7 +33,7 @@ export const FeaturedCategoriesSkeleton = () => {
 export const FeaturedCategoriesContainer = (
   props: ComponentProps<typeof View>,
 ) => {
-  return <View style={{ flex: 2, padding: 16 }} {...props} />;
+  return <View style={{ flex: 2.5, padding: 16 }} {...props} />;
 };
 
 export const FeaturedCategoriesHeader = ({
@@ -123,13 +124,15 @@ export const FeaturedCategoriesList = ({
     <FlashList
       data={allData}
       keyExtractor={keyExtractor}
-      renderItem={(props) =>
-        props.item.id !== "view-all" && !!renderItem ? (
-          renderItem(props)
-        ) : (
-          <ViewAllComponent />
-        )
-      }
+      renderItem={(props) => (
+        <ColumnItem index={props.index} numColumns={numColumns}>
+          {props.item.id !== "view-all" && !!renderItem ? (
+            renderItem(props)
+          ) : (
+            <ViewAllComponent />
+          )}
+        </ColumnItem>
+      )}
       numColumns={numColumns}
       estimatedItemSize={estimatedItemSize}
       ItemSeparatorComponent={ItemSeparatorComponent}

@@ -40,7 +40,7 @@ export const BannersCarousel = ({
     <Carousel
       loop={loop}
       width={defaultWidth}
-      height={defaultWidth / 2}
+      height={defaultWidth / 2.5}
       autoPlay={autoPlay}
       scrollAnimationDuration={scrollAnimationDuration}
       autoPlayInterval={autoPlayInterval}
