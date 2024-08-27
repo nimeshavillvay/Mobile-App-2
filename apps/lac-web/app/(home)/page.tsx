@@ -1,7 +1,7 @@
 import { getBanners } from "@/_lib/apis/server";
 import { ArrowRight } from "@repo/web-ui/components/icons/arrow-right";
 import { Download } from "@repo/web-ui/components/icons/download";
-import Image, { type StaticImageData } from "next/image";
+import { type StaticImageData } from "next/image";
 import Link from "next/link";
 import { type CSSProperties, type ComponentProps } from "react";
 import Balancer from "react-wrap-balancer";
@@ -12,8 +12,9 @@ import HeroBanners from "./hero-banners";
 import kessebohmer from "./kessebohmer.jpg";
 import makita from "./makita.jpg";
 import paintline from "./paintline.jpg";
-import wlacImage1 from "./wlac-image-1.jpg";
-import wlacImage2 from "./wlac-image-2.jpg";
+import subBanner1 from "./sub-banner-1.jpg";
+import subBanner2 from "./sub-banner-2.jpg";
+import subBanner3 from "./sub-banner-3.jpg";
 
 type Colors = {
   text: string;
@@ -22,6 +23,8 @@ type Colors = {
 };
 
 const apiUrl = process.env.NEXT_PUBLIC_WURTH_LAC_API;
+
+const images = [subBanner1.src, subBanner2.src, subBanner3.src];
 
 const ADS: {
   id: number;
@@ -76,6 +79,11 @@ const HomePage = async () => {
       pdfLink: banner.pdf_file_path,
     }));
 
+  const getRandomImage = () => {
+    const randomIndex = Math.floor(Math.random() * images.length);
+    return images[randomIndex];
+  };
+
   return (
     <>
       <HeroBanners banners={heroBanner} />
@@ -115,37 +123,35 @@ const HomePage = async () => {
       </section>
 
       <section className="container">
-        <div className="flex flex-col items-center gap-6 rounded-lg bg-wurth-gray-800 px-6 py-9 lg:flex-row lg:gap-8 lg:p-10">
-          <div className="space-y-3 text-white md:flex-1">
+        <div
+          className="flex h-full min-h-[30rem] w-full items-center gap-8 rounded-lg bg-wurth-gray-800 p-10 px-6 py-9"
+          style={{
+            backgroundImage: `url(${getRandomImage()})`,
+            backgroundSize: "cover",
+            backgroundPosition: "right",
+          }}
+        >
+          <div className="w-1/3 flex-none space-y-3 text-white">
             <h2 className="font-title text-4xl font-medium leading-none tracking-[-0.01688rem]">
               <Balancer>
                 Woodworking and Metalworking for Every Passion and Profession
               </Balancer>
             </h2>
-
             <p className="text-lg">
               We provide top-tier woodworking and metalworking supplies, serving
-              both professionals and hobbyists. With renowned brands like Blum,
-              Rev-a-Shelf, SCM and SawStop, 24/7 online ordering, and fast
-              delivery, we make it easy for everyone from businesses to DIY
-              enthusiasts to find the right tools and materials. Our expert
-              support ensures success for projects of any scale.
+              both professionals and hobbyists.
+            </p>
+            <p className="text-lg">
+              With leading brands like Blum, Rev-a-Shelf, SCM and SawStop, 24/7
+              online ordering, and fast delivery, we make it easy for everyone
+              from businesses to DIY enthusiasts to find the right tools and
+              materials.
+            </p>
+            <p className="text-lg">
+              Our knowledgeable expert customer support ensures success for
+              projects of any scale.
             </p>
           </div>
-
-          <Image
-            src={wlacImage1}
-            alt="A female worker using an industrial machine"
-            placeholder="blur"
-            className="h-[17rem] rounded-lg bg-white object-cover object-left md:h-80 md:min-w-0 md:flex-1"
-          />
-
-          <Image
-            src={wlacImage2}
-            alt="A male worker using a wood cutter"
-            placeholder="blur"
-            className="h-[17rem] rounded-lg bg-white object-cover object-right md:h-80 md:min-w-0 md:flex-1"
-          />
         </div>
       </section>
 
