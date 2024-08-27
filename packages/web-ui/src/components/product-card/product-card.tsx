@@ -94,7 +94,8 @@ const ProductCardImage = ({
     <Link
       href={href}
       onClick={productTitleOrImageOnClick}
-      className="btn-view-product flex items-center justify-center"
+      className="btn-view-product btn-product-detail-img flex items-center justify-center"
+      data-btn-action="View Product"
     >
       <Image
         src={src}
@@ -199,8 +200,9 @@ const ProductCardDetails = ({
             <Link
               href={href}
               dangerouslySetInnerHTML={{ __html: title }}
-              className="btn-view-product"
+              className="btn-view-product product-title btn-product-detail"
               onClick={productTitleOrImageOnClick}
+              data-btn-action="View Product"
             />
           </h3>
         </TooltipTrigger>

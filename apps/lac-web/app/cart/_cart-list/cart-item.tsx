@@ -807,7 +807,8 @@ const CartItem = ({
           <Link
             onClick={sendToGTMViewProduct}
             href={`/product/${product.id}/${product.slug}`}
-            className="btn-view-product"
+            className="btn-view-product btn-product-detail-img"
+            data-btn-action="View Product"
           >
             {product.image !== "" ? (
               <Image

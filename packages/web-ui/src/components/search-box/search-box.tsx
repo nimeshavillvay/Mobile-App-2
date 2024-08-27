@@ -280,21 +280,24 @@ export const SearchBoxInput = ({
                           brands.results.length,
                       })}
                     >
-                      <Link
-                        className="btn-view-product flex items-start justify-start gap-4 px-3 py-2"
-                        href={`/product/${product.id}/${product.slug}`}
+                      <div
+                        className="flex items-start justify-start gap-4 px-3 py-2"
                         key={product.id}
-                        onClick={() => {
-                          if (product.productTitle) {
-                            handleDropDownClick(
-                              product.productTitle,
-                              "product",
-                              `/product/${product.id}/${product.slug}`,
-                            );
-                          }
-                        }}
                       >
-                        <div className="flex-shrink-0 overflow-hidden rounded-md border border-gray-300">
+                        <Link
+                          className="btn-view-product btn-product-detail-img flex-shrink-0 overflow-hidden rounded-md border border-gray-300"
+                          href={`/product/${product.id}/${product.slug}`}
+                          onClick={() => {
+                            if (product.productTitle) {
+                              handleDropDownClick(
+                                product.productTitle,
+                                "product",
+                                `/product/${product.id}/${product.slug}`,
+                              );
+                            }
+                          }}
+                          data-btn-action="View Product"
+                        >
                           {product.itemImage && product.productTitle ? (
                             <Image
                               src={product.itemImage}
@@ -306,16 +309,29 @@ export const SearchBoxInput = ({
                           ) : (
                             <div className="h-20 w-20 rounded-full" />
                           )}
-                        </div>
-                        <div>
+                        </Link>
+                        <Link
+                          className="btn-view-product product-title btn-product-detail"
+                          href={`/product/${product.id}/${product.slug}`}
+                          onClick={() => {
+                            if (product.productTitle) {
+                              handleDropDownClick(
+                                product.productTitle,
+                                "product",
+                                `/product/${product.id}/${product.slug}`,
+                              );
+                            }
+                          }}
+                          data-btn-action="View Product"
+                        >
                           <div className="font-normal hover:underline">
                             <p className="break-all">{product.productTitle}</p>
                           </div>
                           <div className="break-all text-[#74767B]">
                             Item# {product.materialNumber}
                           </div>
-                        </div>
-                      </Link>
+                        </Link>
+                      </div>
                     </li>
                   ))}
                 </ul>
