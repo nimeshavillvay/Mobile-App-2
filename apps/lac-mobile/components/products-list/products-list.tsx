@@ -99,7 +99,7 @@ const ProductsList = ({
               status={item.status}
               handleDiscontinuedPressed={() => {
                 if (item.categoryId) {
-                  router.push(`/category/${item.categoryId}`);
+                  router.push(`/shop/category/${item.categoryId}`);
                 }
               }}
             />
