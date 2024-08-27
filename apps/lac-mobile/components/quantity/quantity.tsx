@@ -63,8 +63,15 @@ export const QuantityInput = ({
         borderTopRightRadius={0}
         borderBottomRightRadius={0}
         onPress={handleDecrement}
+        disabled={value <= minimumValue}
       />
-      <Form style={{ flex: 1 }}>
+      <Form
+        style={{ flex: 1 }}
+        borderTopWidth={1}
+        borderTopColor="rgba(0, 0, 0, 0.07))"
+        borderBottomWidth={1}
+        borderBottomColor="rgba(0, 0, 0, 0.07))"
+      >
         <Controller
           control={form.control}
           name="quantity"
@@ -77,7 +84,7 @@ export const QuantityInput = ({
               value={value.toString()}
               flex={1}
               borderRadius={0}
-              backgroundColor="$gray2"
+              backgroundColor="$colorTransparent"
               borderWidth={0}
               paddingHorizontal={3}
             />
@@ -85,7 +92,13 @@ export const QuantityInput = ({
         />
       </Form>
 
-      <View backgroundColor="$gray2" paddingVertical={10}>
+      <View
+        backgroundColor="$colorTransparent"
+        borderTopWidth={1}
+        borderTopColor="rgba(0, 0, 0, 0.07))"
+        borderBottomWidth={1}
+        borderBottomColor="rgba(0, 0, 0, 0.07))"
+      >
         <YStack
           flex={1}
           justifyContent="center"
@@ -98,6 +111,7 @@ export const QuantityInput = ({
           </Text>
         </YStack>
       </View>
+
       <Button
         icon={Plus}
         padding={8}
