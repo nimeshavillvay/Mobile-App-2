@@ -35,7 +35,7 @@ const SalesRepresentative = ({
         Your Sales Representative
       </h4>
 
-      <div className="flex flex-row items-start gap-4">
+      <div className="flex flex-col items-start gap-4 lg:flex-row">
         <Image
           src={salesRep.img}
           alt={salesRep.fullname}
@@ -51,7 +51,7 @@ const SalesRepresentative = ({
             <ul className="flex flex-col text-[0.875rem]">
               <li>
                 <a
-                  href={`tel:18663268131`}
+                  href={`tel:${salesRep.phone}`}
                   className={cn(
                     buttonVariants({ variant: "link" }),
                     "group h-fit p-0",
@@ -79,13 +79,14 @@ const SalesRepresentative = ({
             </ul>
           </div>
 
-          {/* {!!salesRep.message && ( */}
-          <div className="space-y-1 rounded-md bg-wurth-gray-50 p-4 text-sm">
-            <h5 className="font-semibold">A message from Ronald</h5>
-
-            <p>A message from Ronald A message from Ronald</p>
-          </div>
-          {/* )} */}
+          {!!salesRep.message && (
+            <div className="space-y-1 rounded-md bg-wurth-gray-50 p-4 text-sm">
+              <h5 className="font-semibold">
+                A message from {salesRep.fullname}
+              </h5>
+              <p>{salesRep.message}</p>
+            </div>
+          )}
         </div>
       </div>
     </div>

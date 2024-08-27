@@ -19,7 +19,7 @@ const FooterLinkWrapper = async () => {
     return <FooterLinksLoggedOut />;
   }
 
-  return <FooterLinksLoggedIn token={token} />;
+  return <FooterLinksLoggedIn />;
 };
 
 export default FooterLinkWrapper;

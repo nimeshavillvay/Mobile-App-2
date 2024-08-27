@@ -1,34 +1,38 @@
-import SalesRepresentative from "@/_components/sales-representative";
 import { cn } from "@/_lib/utils";
 import { buttonVariants } from "@repo/web-ui/components/ui/button";
-import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import Link from "next/link";
-import { Suspense } from "react";
 import { SECTIONS, SOCIAL_LINKS } from "./constants";
 import { Fsc, VenderFreightRouting, VikingCloud } from "./footer";
+import SalesRepWrapper from "./sales-rep-wrapper";
 import Subscribe from "./subscribe";
 
-const FooterLinksLoggedIn = ({ token }: { readonly token: string }) => {
+const FooterLinksLoggedIn = () => {
   return (
     <>
       <section className="container hidden md:grid md:grid-cols-5 md:gap-8">
-        {SECTIONS.map((section) => (
-          <div key={section.heading} className="space-y-3 text-sm text-black">
-            <h3 className="font-bold text-wurth-gray-500">{section.heading}</h3>
+        {SECTIONS.map(
+          (section) =>
+            section.links.length > 0 && (
+              <div
+                key={section.heading}
+                className="space-y-3 text-sm text-black"
+              >
+                <h3 className="font-bold text-wurth-gray-500">
+                  {section.heading}
+                </h3>
 
-            <ul>
-              {section.links.map((link) => (
-                <li key={link.label} className="leading-8 hover:underline">
-                  <Link href={link.href}>{link.label}</Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
+                <ul>
+                  {section.links.map((link) => (
+                    <li key={link.label} className="leading-8 hover:underline">
+                      <Link href={link.href}>{link.label}</Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ),
+        )}
         <div className="col-span-2">
-          <Suspense fallback={<Skeleton className="h-72" />}>
-            <SalesRepresentative token={token} />
-          </Suspense>
+          <SalesRepWrapper />
         </div>
       </section>
 
@@ -38,8 +42,10 @@ const FooterLinksLoggedIn = ({ token }: { readonly token: string }) => {
 
       <div className="container flex flex-col gap-6 md:flex-row-reverse md:items-center md:justify-between">
         <div className="flex flex-col">
-          <Subscribe />
-          <ul className="float-end flex flex-row items-center justify-center gap-4">
+          <div className="hidden md:block">
+            <Subscribe />
+          </div>
+          <ul className="float-end flex flex-row items-center justify-center gap-4 md:self-end">
             {SOCIAL_LINKS.map(({ name, Icon, url }) => (
               <li key={name}>
                 <a

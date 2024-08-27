@@ -34,6 +34,10 @@ export const REASONS = [
 
 export const SECTIONS = [
   {
+    heading: "Your Sales Representative",
+    links: [],
+  },
+  {
     heading: "Company Information",
     links: [
       { label: "About us", href: "/about-us" },

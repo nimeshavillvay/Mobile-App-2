@@ -10,6 +10,7 @@ import Link from "next/link";
 import Balancer from "react-wrap-balancer";
 import { SECTIONS } from "./constants";
 import FooterLinkWrapper from "./footer-link-wrapper";
+import SalesRepWrapper from "./sales-rep-wrapper";
 import ScrollToTopBtn from "./scroll-to-top-btn";
 import vikingCloudLogo from "./viking-cloud.png";
 import WhyShopWithUs from "./why-shop-with-us";
@@ -33,7 +34,12 @@ const Footer = () => {
 
           <ScrollToTopBtn />
         </div>
-        <Accordion type="single" collapsible className="container md:hidden">
+        <Accordion
+          type="single"
+          collapsible
+          className="container md:hidden"
+          defaultValue={SECTIONS[0].heading}
+        >
           {SECTIONS.map((section, index) => (
             <AccordionItem
               key={section.heading}
@@ -48,16 +54,20 @@ const Footer = () => {
               </AccordionTrigger>
 
               <AccordionContent className="px-3">
-                <ul>
-                  {section.links.map((link) => (
-                    <li
-                      key={link.label}
-                      className="text-sm font-normal leading-8 text-black hover:underline"
-                    >
-                      <Link href={link.href}>{link.label}</Link>
-                    </li>
-                  ))}
-                </ul>
+                {section.links.length === 0 ? (
+                  <SalesRepWrapper />
+                ) : (
+                  <ul>
+                    {section.links.map((link) => (
+                      <li
+                        key={link.label}
+                        className="text-sm font-normal leading-8 text-black hover:underline"
+                      >
+                        <Link href={link.href}>{link.label}</Link>
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </AccordionContent>
             </AccordionItem>
           ))}
