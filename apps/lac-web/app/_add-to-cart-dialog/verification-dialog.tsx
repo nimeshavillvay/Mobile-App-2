@@ -174,7 +174,7 @@ const VerificationDialog = ({ token }: VerificationDialogProps) => {
                 <Link
                   href={`/product/${itemInfo.productId}/${itemInfo.slug}`}
                   onClick={sendToGTM}
-                  className="btn-view-product btn-product-detail-img"
+                  className="btn-view-product btnAction btn-product-detail-img"
                   data-btn-action="View Product"
                 >
                   <Image
@@ -190,7 +190,7 @@ const VerificationDialog = ({ token }: VerificationDialogProps) => {
                   <div className="space-y-1">
                     <Link
                       href={`/product/${itemInfo.productId}/${itemInfo.slug}`}
-                      className="btn-view-product product-title btn-product-detail"
+                      className="btn-view-product btnAction product-title btn-product-detail"
                       data-btn-action="View Product"
                       onClick={sendToGTM}
                     >

@@ -92,7 +92,7 @@ const OrderItemImageTitle = ({
       onClick={sendToGTM}
       className={cn(
         productId ? "pointer-events-auto" : "pointer-events-none",
-        "btn-view-product btn-product-detail-img",
+        "btn-view-product btnAction btn-product-detail-img",
       )}
       data-btn-action="View Product"
     >

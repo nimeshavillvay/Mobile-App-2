@@ -285,7 +285,7 @@ export const SearchBoxInput = ({
                         key={product.id}
                       >
                         <Link
-                          className="btn-view-product btn-product-detail-img flex-shrink-0 overflow-hidden rounded-md border border-gray-300"
+                          className="btn-view-product btnAction btn-product-detail-img flex-shrink-0 overflow-hidden rounded-md border border-gray-300"
                           href={`/product/${product.id}/${product.slug}`}
                           onClick={() => {
                             if (product.productTitle) {
@@ -311,7 +311,7 @@ export const SearchBoxInput = ({
                           )}
                         </Link>
                         <Link
-                          className="btn-view-product product-title btn-product-detail"
+                          className="btn-view-product btnAction product-title btn-product-detail"
                           href={`/product/${product.id}/${product.slug}`}
                           onClick={() => {
                             if (product.productTitle) {

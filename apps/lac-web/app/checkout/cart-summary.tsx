@@ -212,7 +212,7 @@ const CartSummary = ({ token, plants }: CartSummaryProps) => {
                 <Link
                   href={`/product/${item.itemInfo.productId}/${item.itemInfo.slug}`}
                   onClick={() => sendToGTMProductView(item.itemInfo.productId)}
-                  className="btn-view-product btn-product-detail-img"
+                  className="btn-view-product btnAction btn-product-detail-img"
                   data-btn-action="View Product"
                 >
                   <Image
@@ -243,7 +243,7 @@ const CartSummary = ({ token, plants }: CartSummaryProps) => {
                     <Link
                       href={`/product/${itemInfo.productId}/${itemInfo.slug}`}
                       onClick={() => sendToGTMProductView(itemInfo.productId)}
-                      className="btn-view-product btn-product-detail-img"
+                      className="btn-view-product btnAction btn-product-detail-img"
                       data-btn-action="View Product"
                     >
                       <Image
@@ -261,7 +261,7 @@ const CartSummary = ({ token, plants }: CartSummaryProps) => {
                           onClick={() =>
                             sendToGTMProductView(itemInfo.productId)
                           }
-                          className="btn-view-product product-title btn-product-detail w-2/4 md:w-4/6"
+                          className="btn-view-product btnAction product-title btn-product-detail w-2/4 md:w-4/6"
                           data-btn-action="View Product"
                         >
                           <h4

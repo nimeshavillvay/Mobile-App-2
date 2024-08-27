@@ -191,7 +191,7 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
             onClick={sendToGTM}
             className={cn(
               isItemError(item) ? "pointer-events-none" : "pointer-events-auto",
-              "btn-view-product btn-product-detail-img",
+              "btn-view-product btnAction btn-product-detail-img",
             )}
             data-btn-action="View Product"
           >
@@ -218,7 +218,7 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
             href={generateItemUrl(item)}
             onClick={sendToGTM}
             className={cn(
-              "btn-view-product product-title btn-product-detail text-sm text-brand-gray-500",
+              "btn-view-product btnAction product-title btn-product-detail text-sm text-brand-gray-500",
               isItemError(item) ? "pointer-events-none" : "pointer-events-auto",
             )}
             data-btn-action="View Product"
