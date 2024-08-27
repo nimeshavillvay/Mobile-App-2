@@ -77,9 +77,14 @@ const DownloadLink = ({
       rel="noopener noreferrer"
       download={name}
     >
-      <Download width={20} height={20} className="mt-1 shrink-0" />
+      <Download
+        width={20}
+        height={20}
+        className="btnAction mt-1 shrink-0"
+        data-button-action="Download Resource"
+      />
 
-      <span className="text-wrap text-left text-sm font-semibold text-wurth-gray-800">
+      <span className="resource-name text-wrap text-left text-sm font-semibold text-wurth-gray-800">
         {title}
       </span>
     </a>

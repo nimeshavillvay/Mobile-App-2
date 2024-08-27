@@ -457,7 +457,7 @@ const AddToCart = ({
             type="button"
             variant="subtle"
             size="icon"
-            className="up-minus up-control size-10 rounded-sm"
+            className="btnAction up-minus up-control size-10 rounded-sm"
             onClick={reduceQuantity}
             disabled={
               !quantity ||
@@ -466,7 +466,7 @@ const AddToCart = ({
               disableAddToCartButton
             }
           >
-            <Minus className="size-4" />
+            <Minus className="size-4" data-button-action="Decrease Quantity" />
             <span className="sr-only">Reduce quantity</span>
           </Button>
 
@@ -496,7 +496,7 @@ const AddToCart = ({
             type="button"
             variant="subtle"
             size="icon"
-            className="up-plus up-control size-10 rounded-sm"
+            className="btnAction up-plus up-control size-10 rounded-sm"
             onClick={increaseQuantity}
             disabled={
               quantity?.toString().length > 5 ||
@@ -505,7 +505,7 @@ const AddToCart = ({
               Number(quantity) + increments >= MAX_QUANTITY
             }
           >
-            <Plus className="size-4" />
+            <Plus className="size-4" data-button-action="Increase Quantity" />
             <span className="sr-only">Increase quantity</span>
           </Button>
         </div>

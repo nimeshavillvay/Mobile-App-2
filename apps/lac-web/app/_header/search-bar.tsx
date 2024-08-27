@@ -76,6 +76,7 @@ const SearchBar = () => {
         onEnterPressed={handleSearch}
         placeholder="What are you looking for?"
         onHandleDropDownClick={onHandleDropDownClick}
+        className="search-bar"
       >
         {value && <SearchClearButton onClick={clearInput} />}
         <SearchBoxButton onClick={handleSearch} />

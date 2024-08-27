@@ -25,14 +25,17 @@ const HeroBanners = ({ banners }: HeroBannersProps) => {
         className="container w-full"
         plugins={[Autoplay({ delay: 5000 })]}
       >
-        <CarouselContent>
+        <CarouselContent
+          id="banner-system-T"
+          className="banner-promo banner-system"
+        >
           {banners.map((banner, index) => (
             <CarouselItem key={banner.id}>
               <a
                 href={banner.pdfLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="banner-promo aspect-h-9 aspect-w-[28] block"
+                className="aspect-w-[28] aspect-h-9 block"
               >
                 <Image
                   src={banner.image}
@@ -40,7 +43,9 @@ const HeroBanners = ({ banners }: HeroBannersProps) => {
                   width={1920}
                   height={538}
                   priority={index === 0}
-                  className="block rounded-lg bg-[#362A23] object-cover shadow-lg"
+                  className="banner-promo banner-system slideshow-content slide-top-home block rounded-lg bg-[#362A23] object-cover shadow-lg"
+                  id={banner.id}
+                  data-description="Slide description"
                 />
               </a>
             </CarouselItem>

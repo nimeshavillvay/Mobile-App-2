@@ -907,7 +907,10 @@ const CartItem = ({
                   onClick={reduceQuantity}
                   disabled={!quantity || Number(quantity) === product.minAmount}
                 >
-                  <Minus className="size-4" />
+                  <Minus
+                    className="btnAction size-4"
+                    data-button-action="Decrease Quantity"
+                  />
                   <span className="sr-only">Reduce quantity</span>
                 </Button>
 
@@ -957,7 +960,10 @@ const CartItem = ({
                     Number(quantity) + product.increment >= MAX_QUANTITY
                   }
                 >
-                  <Plus className="size-4" />
+                  <Plus
+                    className="btnAction size-4"
+                    data-button-action="Increase Quantity"
+                  />
                   <span className="sr-only">Increase quantity</span>
                 </Button>
               </div>

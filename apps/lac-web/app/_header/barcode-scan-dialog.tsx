@@ -64,10 +64,13 @@ const BarcodeScannerDialog = () => {
           <Button
             variant="ghost"
             size="icon"
-            className={cn("mx-0.5 rounded-full px-2")}
+            className={"mx-0.5 rounded-full px-2"}
             onClick={() => resetOnOpen()}
           >
-            <BarcodeScan className="size-5" />
+            <BarcodeScan
+              className="btnAction size-5"
+              data-button-action="Search By Scanning"
+            />
             <span className="sr-only">Scan barcode</span>
           </Button>
         </DialogTrigger>

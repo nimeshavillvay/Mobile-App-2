@@ -322,7 +322,11 @@ const ProductCardVariantSelector = ({
         <SelectContent>
           <SelectGroup>
             {variants.map((variant) => (
-              <SelectItem key={variant.value} value={variant.value}>
+              <SelectItem
+                key={variant.value}
+                value={variant.value}
+                className="product-variant-select"
+              >
                 <span dangerouslySetInnerHTML={{ __html: variant.title }} />
               </SelectItem>
             ))}
@@ -340,7 +344,11 @@ const ProductCardVariantSelector = ({
       ) : (
         <Link
           href={href}
-          className={cn(buttonVariants({ variant: "default" }), "h-10 w-full")}
+          className={cn(
+            buttonVariants({ variant: "default" }),
+            "btnAction h-10 w-full",
+          )}
+          data-button-action="View Item"
         >
           View item
         </Link>
