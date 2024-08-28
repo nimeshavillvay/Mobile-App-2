@@ -89,9 +89,10 @@ const BulkUpload = ({
         </div>
 
         <a
-          className="flex items-center gap-2 font-medium text-wurth-red-650"
+          className="btnAction flex items-center gap-2 font-medium text-wurth-red-650"
           href="/upload-order-form.csv"
           download={true}
+          data-btn-action="Download Bulk Order Template"
         >
           <FileDownload className="stroke-wurth-red-650" />
           <span>Download the template</span>

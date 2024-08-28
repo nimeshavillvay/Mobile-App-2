@@ -23,7 +23,8 @@ const TermsOfSalePage = () => {
             <a
               title="Click to dial Customer Service - Opens in Phone Dialer"
               href="tel:8004224389"
-              className="text-[#007bff] hover:underline"
+              className="btnAction text-[#007bff] hover:underline"
+              data-btn-action="Click to Dial Customer Service"
             >
               (800) 422-4389
             </a>
@@ -153,7 +154,8 @@ const TermsOfSalePage = () => {
           <a
             href="/terms-of-sale"
             rel="noopener noreferrer"
-            className="text-[#007bff] hover:underline"
+            className="btnAction text-[#007bff] hover:underline"
+            data-btn-action="View Terms of Sale"
           >
             www.wurthlac.com/terms-of-sale
             <VisuallyHidden>(opens in a new window)</VisuallyHidden>
@@ -244,7 +246,8 @@ const TermsOfSalePage = () => {
           <a
             href="/terms-of-sale"
             rel="noopener noreferrer"
-            className="text-[#007bff] hover:underline"
+            className="btnAction text-[#007bff] hover:underline"
+            data-btn-action="View Terms of Sale"
           >
             www.wurthlac.com/terms-of-sale
             <VisuallyHidden>(opens in a new window)</VisuallyHidden>

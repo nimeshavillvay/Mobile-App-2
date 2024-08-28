@@ -256,7 +256,8 @@ const CurrentUserFlow = ({ passwordPolicies }: CurrentUserFlowProps) => {
             target="_blank"
             rel="noopener noreferrer"
             href="/privacy-policy"
-            className="font-semibold underline"
+            className="btnAction font-semibold underline"
+            data-btn-action="Current User Flow Privacy Notice"
           >
             Privacy Notice
           </a>{" "}
@@ -265,7 +266,8 @@ const CurrentUserFlow = ({ passwordPolicies }: CurrentUserFlowProps) => {
             target="_blank"
             rel="noopener noreferrer"
             href="/terms-of-sale"
-            className="font-semibold underline"
+            className="btnAction font-semibold underline"
+            data-btn-action="Current User Flow Terms and Conditions"
           >
             Terms and Conditions
           </a>{" "}

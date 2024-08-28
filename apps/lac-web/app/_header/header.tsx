@@ -40,7 +40,11 @@ const Header = async () => {
               className="group h-fit px-0 py-0 font-medium"
               asChild
             >
-              <a href="tel:+18004224389">
+              <a
+                href="tel:+18004224389"
+                className="btnAction"
+                data-btn-action="Need Help Phone"
+              >
                 <Text
                   width={16}
                   height={16}
@@ -62,7 +66,11 @@ const Header = async () => {
               className="group h-fit px-0 py-0 font-medium"
               asChild
             >
-              <a href="mailto:southernsales@wurthlac.com">
+              <a
+                href="mailto:southernsales@wurthlac.com"
+                className="btnAction"
+                data-btn-action="Need Help Email"
+              >
                 <Email
                   width={16}
                   height={16}
