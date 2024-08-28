@@ -170,7 +170,7 @@ const ProductCard = ({
         {!!image && !!title && (
           <ProductCardImage
             src={image}
-            alt="A placeholder product"
+            alt={title}
             href={href}
             title={title}
             productTitleOrImageOnClick={productTitleOrImageOnClick}
