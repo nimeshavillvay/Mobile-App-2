@@ -1,21 +1,6 @@
-import { Check, ChevronDown, ChevronUp } from "@tamagui/lucide-icons";
-import {
-  forwardRef,
-  type ComponentProps,
-  type ComponentPropsWithoutRef,
-  type ElementRef,
-} from "react";
-import type { FontSizeTokens, SelectProps } from "tamagui";
-import {
-  Adapt,
-  Label,
-  Select as SelectPrimitive,
-  Sheet,
-  XStack,
-  YStack,
-  getFontSize,
-} from "tamagui";
-import { LinearGradient } from "tamagui/linear-gradient";
+import { Check, ChevronDown } from "@tamagui/lucide-icons";
+import { type ComponentProps } from "react";
+import { Adapt, Select as SelectPrimitive, Sheet } from "tamagui";
 
 export const Select = ({
   disablePreventBodyScroll = true,
