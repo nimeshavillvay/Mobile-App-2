@@ -39,7 +39,7 @@ const HeroBanners = ({ banners }: HeroBannersProps) => {
                 target="_blank"
                 rel="noopener noreferrer"
                 className={
-                  (cn("btnAction aspect-w-[28] aspect-h-9 block"), banner.class)
+                  (cn("btnAction aspect-h-9 aspect-w-[28] block"), banner.class)
                 }
                 data-desc={banner.dataDescription}
                 data-btn-action="Banners"
