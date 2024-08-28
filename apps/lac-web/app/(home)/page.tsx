@@ -124,30 +124,30 @@ const HomePage = async () => {
 
       <section className="container">
         <div
-          className="flex h-full min-h-[30rem] w-full items-center gap-8 rounded-lg bg-wurth-gray-800 p-10 px-6 py-9"
+          className="flex h-full min-h-[40rem] w-full items-center gap-8 rounded-lg bg-wurth-gray-800 p-10 px-6 py-9"
           style={{
             backgroundImage: `url(${getRandomImage()})`,
             backgroundSize: "cover",
             backgroundPosition: "right",
           }}
         >
-          <div className="w-1/3 flex-none space-y-3 text-white">
-            <h2 className="font-title text-4xl font-medium leading-none tracking-[-0.01688rem]">
+          <div className="w-2/3 flex-none space-y-3 text-white lg:pl-12 xl:w-2/5">
+            <h2 className="pb-6 font-title text-4xl font-medium leading-[3rem] tracking-[-0.01688rem]">
               <Balancer>
                 Woodworking and Metalworking for Every Passion and Profession
               </Balancer>
             </h2>
-            <p className="text-lg">
+            <p className="py-1.5 text-lg">
               We provide top-tier woodworking and metalworking supplies, serving
               both professionals and hobbyists.
             </p>
-            <p className="text-lg">
+            <p className="py-1.5 text-lg">
               With leading brands like Blum, Rev-a-Shelf, SCM and SawStop, 24/7
               online ordering, and fast delivery, we make it easy for everyone
               from businesses to DIY enthusiasts to find the right tools and
               materials.
             </p>
-            <p className="text-lg">
+            <p className="py-1.5 text-lg">
               Our knowledgeable expert customer support ensures success for
               projects of any scale.
             </p>
