@@ -291,7 +291,7 @@ const BillingAndPaymentInfo = ({
                       <Close
                         width={16}
                         height={16}
-                        data-button-action="Checkout Delete Credit Cart"
+                        data-button-action="Checkout Delete Credit Card"
                       />
                       <span className="sr-only">Remove</span>
                     </Button>
