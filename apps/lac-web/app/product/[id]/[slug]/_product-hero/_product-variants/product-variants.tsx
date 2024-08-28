@@ -152,10 +152,14 @@ const VariantLink = <Valid extends boolean>({
   return (
     <Link
       href={href}
-      className={linkStyle({
-        selected,
-        type,
-      })}
+      className={cn(
+        linkStyle({
+          selected,
+          type,
+        }),
+        "btnAction",
+      )}
+      data-btn-action="View Product Variant"
     >
       {children}
     </Link>

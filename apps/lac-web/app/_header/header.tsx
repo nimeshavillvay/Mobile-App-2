@@ -80,7 +80,11 @@ const Header = async () => {
       <div className="container flex w-full min-w-0 flex-row items-center gap-7 pt-1">
         <MobileNavigationMenu categories={categories} />
 
-        <Link href="/" className="flex-shrink-0">
+        <Link
+          href="/"
+          className="btnAction flex-shrink-0"
+          data-button-action="View Home"
+        >
           <WurthLacLogo className="h-[24px] w-[114px] md:h-[28px] md:w-[133px]" />
 
           <span className="sr-only">Home</span>
@@ -103,8 +107,9 @@ const Header = async () => {
                 variant: "ghost",
                 size: "icon",
               }),
-              "btn-view-cart size-6 md:hidden",
+              "btn-view-cart btnAction size-6 md:hidden",
             )}
+            data-button-action="View Cart"
           >
             <Suspense fallback={<Skeleton className="h-6 w-6" />}>
               <Cart type="mobile" />
@@ -122,8 +127,9 @@ const Header = async () => {
             href="/cart"
             className={cn(
               buttonVariants({ variant: "ghost" }),
-              "btn-view-cart hidden shrink-0 md:flex md:h-min md:flex-row md:items-center md:gap-2 md:p-0",
+              "btn-view-cart btnAction hidden shrink-0 md:flex md:h-min md:flex-row md:items-center md:gap-2 md:p-0",
             )}
+            data-button-action="View Cart"
           >
             <Suspense fallback={<Skeleton className="h-7 w-7" />}>
               <Cart type="desktop" />

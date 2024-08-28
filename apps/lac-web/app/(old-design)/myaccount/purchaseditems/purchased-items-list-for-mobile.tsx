@@ -60,8 +60,12 @@ const PurchasedItemRowForMobile = ({
   readonly onClick: () => void;
 }) => {
   return (
-    <div className="flex min-h-[180px] flex-row justify-between bg-white p-4">
-      <Link href={generateItemUrl(item)} className="min-w-[92px]">
+    <div className="btnAction flex min-h-[180px] flex-row justify-between bg-white p-4">
+      <Link
+        href={generateItemUrl(item)}
+        className="min-w-[92px]"
+        data-btn-action="View Product"
+      >
         {item.image ? (
           <Image
             src={item.image}

@@ -68,11 +68,15 @@ const UserProfileButton = ({
     return checkLoginQuery.data?.status_code === "NOT_LOGGED_IN" ? (
       <Link
         href="/sign-in"
-        className={buttonClasses({
-          variant: "ghost",
-          size: "default",
-          type: "desktop",
-        })}
+        className={cn(
+          buttonClasses({
+            variant: "ghost",
+            size: "default",
+            type: "desktop",
+          }),
+          "btnAction",
+        )}
+        data-button-action="Sign in / Register"
       >
         <ButtonContent />
       </Link>
@@ -199,7 +203,11 @@ const UserProfileDropdown = ({
               asChild
               className="flex flex-row items-center gap-2 text-black"
             >
-              <Link href="/osr/dashboard">
+              <Link
+                href="/osr/dashboard"
+                data-button-action="View My Customers"
+                className="btnAction"
+              >
                 <DropdownMenuShortcut className="ml-0 size-4" />
 
                 <span>My Customers</span>
@@ -211,7 +219,11 @@ const UserProfileDropdown = ({
             asChild
             className="flex flex-row items-center gap-2 text-black"
           >
-            <Link href="/myaccount/orderhistory">
+            <Link
+              href="/myaccount/orderhistory"
+              data-button-action="View My Orders"
+              className="btnAction"
+            >
               <DropdownMenuShortcut className="ml-0 size-4" />
 
               <span>My Orders</span>
@@ -222,7 +234,11 @@ const UserProfileDropdown = ({
             asChild
             className="flex flex-row items-center gap-2 text-black"
           >
-            <Link href="/myaccount/purchaseditems">
+            <Link
+              href="/myaccount/purchaseditems"
+              data-button-action="View My Purchased Items"
+              className="btnAction"
+            >
               <DropdownMenuShortcut className="ml-0 size-4" />
 
               <span>My Purchased Items</span>
@@ -235,7 +251,8 @@ const UserProfileDropdown = ({
           >
             <Link
               href="/myaccount/shopping-lists"
-              className="btn-view-favorites"
+              className="btn-view-favorites btnAction"
+              data-button-action="View My Shopping Lists"
             >
               <DropdownMenuShortcut className="ml-0">
                 <BookmarkOutline className="size-4 stroke-black stroke-2" />
@@ -255,7 +272,11 @@ const UserProfileDropdown = ({
             asChild
             className="flex flex-row items-center gap-2 text-black"
           >
-            <Link href="/myaccount/company-profile">
+            <Link
+              href="/myaccount/company-profile"
+              data-button-action="View Company Profile"
+              className="btnAction"
+            >
               <DropdownMenuShortcut className="ml-0">
                 <Building className="size-4 stroke-black stroke-2" />
               </DropdownMenuShortcut>
@@ -268,7 +289,11 @@ const UserProfileDropdown = ({
             asChild
             className="flex flex-row items-center gap-2 text-black"
           >
-            <Link href="/myaccount/manage-users">
+            <Link
+              href="/myaccount/manage-users"
+              data-button-action="View Manage Users"
+              className="btnAction"
+            >
               <DropdownMenuShortcut className="ml-0">
                 <UserGroup className="size-4 stroke-black stroke-2" />
               </DropdownMenuShortcut>

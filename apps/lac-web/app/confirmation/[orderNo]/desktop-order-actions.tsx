@@ -25,7 +25,11 @@ const DesktopOrderActions = () => {
 
       <Link
         href="/myaccount/orderhistory"
-        className={cn(buttonVariants({ variant: "ghost" }), "font-bold")}
+        className={cn(
+          buttonVariants({ variant: "ghost" }),
+          "btnAction font-bold",
+        )}
+        data-btn-action="View Confermation Order History"
       >
         <Receipt width={16} height={16} />
 

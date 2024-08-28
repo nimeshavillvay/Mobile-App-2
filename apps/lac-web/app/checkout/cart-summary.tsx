@@ -194,8 +194,9 @@ const CartSummary = ({ token, plants }: CartSummaryProps) => {
             buttonVariants({
               variant: "outline",
             }),
-            "font-bold text-black shadow-md",
+            "btnAction font-bold text-black shadow-md",
           )}
+          data-button-action="Checkout Edit Cart"
         >
           Edit Cart
         </Link>
@@ -255,7 +256,7 @@ const CartSummary = ({ token, plants }: CartSummaryProps) => {
                       />
                     </Link>
                     <div className="flex flex-1 flex-col justify-between">
-                      <div className="flex flex-row items-center text-sm text-wurth-gray-800">
+                      <div className="btnAction flex flex-row items-center text-sm text-wurth-gray-800">
                         <Link
                           href={`/product/${itemInfo.productId}/${itemInfo.slug}`}
                           onClick={() =>

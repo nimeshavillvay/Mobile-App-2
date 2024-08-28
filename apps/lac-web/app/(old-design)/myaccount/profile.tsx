@@ -66,7 +66,8 @@ const Profile = ({ token }: { readonly token: string }) => {
 
           <Link
             href="/myaccount/company-profile"
-            className="flex flex-row items-center gap-0.5 font-wurth text-sm font-extrabold uppercase hover:text-brand-primary"
+            className="btnAction flex flex-row items-center gap-0.5 font-wurth text-sm font-extrabold uppercase hover:text-brand-primary"
+            data-btn-action="View Company Profile"
           >
             <span>Company profile</span>
 

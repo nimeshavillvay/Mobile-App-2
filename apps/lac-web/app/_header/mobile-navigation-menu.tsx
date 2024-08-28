@@ -73,7 +73,11 @@ const MobileNavigationMenu = ({ categories }: MobileNavigationMenuProps) => {
                     />
                   ) : (
                     <SheetClose asChild className={sectionLinkStyles()}>
-                      <Link href={`/category/${category.id}/${category.slug}`}>
+                      <Link
+                        href={`/category/${category.id}/${category.slug}`}
+                        className="btnAction"
+                        data-button-action={`View Category ${category.name}`}
+                      >
                         <span>{category.name}</span>
 
                         <ChevronRight className="size-5" />
@@ -93,7 +97,11 @@ const MobileNavigationMenu = ({ categories }: MobileNavigationMenuProps) => {
             <ul className={dividerStyles()}>
               <li className="border-b border-b-wurth-gray-250">
                 <SheetClose asChild className={sectionLinkStyles()}>
-                  <Link href="/catalogs-literature">
+                  <Link
+                    href="/catalogs-literature"
+                    data-button-action="View Resources"
+                    className="btnAction"
+                  >
                     <span>Resources</span>
 
                     <ChevronRight className="size-5" />
@@ -174,7 +182,11 @@ const SubCategorySheet = ({ category, onCloseMain }: SubCategorySheetProps) => {
               className={cn(sectionLinkStyles(), "font-semibold")}
               onClick={onCloseMain}
             >
-              <Link href={`/category/${category.id}/${category.slug}`}>
+              <Link
+                href={`/category/${category.id}/${category.slug}`}
+                data-button-action="Shop All"
+                className="btnAction"
+              >
                 Shop all
               </Link>
             </SheetClose>
@@ -190,7 +202,11 @@ const SubCategorySheet = ({ category, onCloseMain }: SubCategorySheetProps) => {
                 className={sectionLinkStyles()}
                 onClick={onCloseMain}
               >
-                <Link href={`/category/${subcategory.id}/${subcategory.slug}`}>
+                <Link
+                  href={`/category/${subcategory.id}/${subcategory.slug}`}
+                  data-button-action={`View Sub-Category ${subcategory.name}`}
+                  className="btnAction"
+                >
                   <span>{subcategory.name}</span>
                 </Link>
               </SheetClose>

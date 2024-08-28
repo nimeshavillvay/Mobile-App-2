@@ -60,7 +60,9 @@ const SideMenu = ({ token }: { readonly token: string }) => {
             menuItem({
               status: link.href === pathname ? "active" : "inactive",
             }),
+            "btnAction",
           )}
+          data-button-action={`Side Menu View ${link.name}`}
         >
           {link.name}
         </Link>
@@ -90,15 +92,20 @@ const SideMenu = ({ token }: { readonly token: string }) => {
         href="/myaccount/shopping-lists"
         className={cn(
           menuItem({ status: "inactive" }),
-          "btn-view-favorites w-full text-left",
+          "btnAction btn-view-favorites w-full text-left",
         )}
+        data-button-action="Side Menu View My Shopping Lists"
       >
         My Shopping Lists
       </Link>
 
       <Link
         href="/tax-form"
-        className={cn(menuItem({ status: "inactive" }), "w-full text-left")}
+        className={cn(
+          menuItem({ status: "inactive" }),
+          "btnAction w-full text-left",
+        )}
+        data-button-action="Side Menu View Sales Tax"
       >
         Sales Tax
       </Link>

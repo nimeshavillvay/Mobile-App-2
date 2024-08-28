@@ -86,15 +86,33 @@ const DesktopNavigationMenu = ({ categories }: DesktopNavigationMenuProps) => {
             </NavigationMenuItem>
 
             <NavigationMenuItemLink asChild>
-              <Link href="/cart#quick-order-form">Quick Order</Link>
+              <Link
+                href="/cart#quick-order-form"
+                data-button-action="View Quick Order"
+                className="btnAction"
+              >
+                Quick Order
+              </Link>
             </NavigationMenuItemLink>
 
             <NavigationMenuItemLink asChild>
-              <Link href="/catalogs-literature">Resources</Link>
+              <Link
+                href="/catalogs-literature"
+                data-button-action="View Resources"
+                className="btnAction"
+              >
+                Resources
+              </Link>
             </NavigationMenuItemLink>
 
             <NavigationMenuItemLink asChild>
-              <Link href="/laminate-finder">Laminate Finder</Link>
+              <Link
+                href="/laminate-finder"
+                data-button-action="View Laminate Finder"
+                className="btnAction"
+              >
+                Laminate Finder
+              </Link>
             </NavigationMenuItemLink>
           </NavigationMenuList>
         </NavigationMenu>

@@ -231,8 +231,9 @@ const SignIn = () => {
                 buttonVariants({
                   variant: "link",
                 }),
-                "btn-register mx-auto inline-block h-fit p-0 px-4 py-2 text-center text-sm font-normal",
+                "btnAction btn-register mx-auto inline-block h-fit p-0 px-4 py-2 text-center text-sm font-normal",
               )}
+              data-button-action="Sign up"
             >
               Sign up
             </Link>
@@ -313,8 +314,9 @@ const SignIn = () => {
                 buttonVariants({
                   variant: "link",
                 }),
-                "btn-forgot-password mx-auto inline-block h-fit p-0 text-center text-sm font-normal",
+                "btnAction btn-forgot-password mx-auto inline-block h-fit p-0 text-center text-sm font-normal",
               )}
+              data-button-action="Sign in Forgot Password Link"
             >
               Forgot password?
             </Link>

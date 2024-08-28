@@ -78,7 +78,11 @@ const CategoryPage = async ({ params: { id, slug } }: CategoryPageProps) => {
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink asChild>
-              <Link href="/" className="bread-crumb">
+              <Link
+                href="/"
+                className="btnAction bread-crumb"
+                data-btn-action="Category Home Link"
+              >
                 Home
               </Link>
             </BreadcrumbLink>
@@ -94,9 +98,10 @@ const CategoryPage = async ({ params: { id, slug } }: CategoryPageProps) => {
                     <Link
                       className={cn(
                         index === 0 ? "root-category" : "btn-nav",
-                        "bread-crumb",
+                        "btnAction bread-crumb",
                       )}
                       href={`/category/${breadcrumb.id}/${breadcrumb.slug}`}
+                      data-btn-action={`View Category ${breadcrumb.categoryName}`}
                     >
                       {breadcrumb.categoryName}
                     </Link>

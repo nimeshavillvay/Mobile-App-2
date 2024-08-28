@@ -56,7 +56,13 @@ const Footer = () => {
                       key={link.label}
                       className="text-sm font-normal leading-8 text-black hover:underline"
                     >
-                      <Link href={link.href}>{link.label}</Link>
+                      <Link
+                        href={link.href}
+                        data-button-action="Footer Link"
+                        className="btnAction"
+                      >
+                        {link.label}
+                      </Link>
                     </li>
                   ))}
                 </ul>
@@ -79,7 +85,13 @@ const Footer = () => {
               <ul>
                 {section.links.map((link) => (
                   <li key={link.label} className="leading-8 hover:underline">
-                    <Link href={link.href}>{link.label}</Link>
+                    <Link
+                      href={link.href}
+                      data-button-action="Footer Link"
+                      className="btnAction"
+                    >
+                      {link.label}
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -204,14 +216,16 @@ const Footer = () => {
               <nav className="flex flex-row items-center justify-center gap-6">
                 <Link
                   href="/privacy-policy"
-                  className="text-nowrap hover:underline"
+                  className="btnAction text-nowrap hover:underline"
+                  data-button-action="Footer Link Privacy Policy"
                 >
                   Privacy Policy
                 </Link>
 
                 <Link
                   href="/terms-of-sale"
-                  className="text-nowrap hover:underline"
+                  className="btnAction text-nowrap hover:underline"
+                  data-button-action="Footer Link Terms of Sale"
                 >
                   Terms of Sale
                 </Link>
@@ -234,7 +248,8 @@ const SAMNotice = () => {
   return (
     <Link
       href="/government"
-      className="flex flex-col items-center gap-3 rounded-xl bg-wurth-gray-50 px-7 py-5 md:items-start"
+      className="btnAction flex flex-col items-center gap-3 rounded-xl bg-wurth-gray-50 px-7 py-5 md:items-start"
+      data-button-action="Footer Link SAMNotice"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"

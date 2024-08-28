@@ -47,8 +47,9 @@ const Register = ({
               href="/sign-in"
               className={cn(
                 buttonVariants({ variant: "outline" }),
-                "font-bold text-black shadow-md",
+                "btnAction font-bold text-black shadow-md",
               )}
+              data-button-action="Register Change Email"
             >
               Change email
             </Link>

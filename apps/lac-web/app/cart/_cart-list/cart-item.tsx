@@ -1033,7 +1033,14 @@ const CartItem = ({
                 <div className="text-sm leading-6 text-wurth-gray-800">
                   This item is not available in certain regions. For better
                   experience please{" "}
-                  <Link href="/sign-in">Sign in or register</Link>.
+                  <Link
+                    href="/sign-in"
+                    className="btnAction"
+                    data-btn-action="Cart Item Sign in or Register"
+                  >
+                    Sign in or register
+                  </Link>
+                  .
                 </div>
               </div>
             </div>

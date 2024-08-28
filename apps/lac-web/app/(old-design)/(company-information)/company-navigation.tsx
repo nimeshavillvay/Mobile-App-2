@@ -18,11 +18,12 @@ const CompanyNavigation = ({ links }: CompanyNavigationProps) => {
           <Link
             href={link.href}
             className={cn(
-              "px-4 py-2 font-wurth first:pl-0",
+              "btnAction px-4 py-2 font-wurth first:pl-0",
               pathname === link?.href
                 ? "text-brand-primary underline"
                 : "text-brand-gray-500 hover:text-brand-primary hover:underline",
             )}
+            data-button-action={`View ${link.label}`}
           >
             {link.label}
           </Link>

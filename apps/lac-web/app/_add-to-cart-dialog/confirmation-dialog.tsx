@@ -218,10 +218,11 @@ const ConfirmationDialog = ({ token }: ConfirmationDialogProps) => {
           <Button
             className="btn-view-cart flex-1 font-bold shadow-md"
             onClick={goToCart}
-            data-button-action="View Cart"
             asChild
           >
-            <Link href="/cart">Go to Cart</Link>
+            <Link href="/cart" data-button-action="View Cart">
+              Go to Cart
+            </Link>
           </Button>
         </DialogFooter>
       </DialogContent>
