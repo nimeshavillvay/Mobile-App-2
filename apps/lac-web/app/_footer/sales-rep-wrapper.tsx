@@ -1,15 +1,22 @@
 import SalesRepresentative from "@/_components/sales-representative";
+import { loginCheck } from "@/_hooks/user/use-suspense-check-login.hook";
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import { cookies } from "next/headers";
 import { Suspense } from "react";
 
-const SalesRepWrapper = () => {
+const SalesRepWrapper = async () => {
   const cookieStore = cookies();
   const sessionToken = cookieStore.get(SESSION_TOKEN_COOKIE);
 
   const token = sessionToken?.value;
   if (!token) {
+    return null;
+  }
+
+  const loginData = await loginCheck(token);
+
+  if (loginData?.status_code === "NOT_LOGGED_IN") {
     return null;
   }
 

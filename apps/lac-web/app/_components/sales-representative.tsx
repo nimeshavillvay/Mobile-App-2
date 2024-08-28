@@ -35,7 +35,7 @@ const SalesRepresentative = ({
         Your Sales Representative
       </h4>
 
-      <div className="flex flex-col items-start gap-4 lg:flex-row">
+      <div className="flex flex-col items-start gap-4 xl:flex-row">
         <Image
           src={salesRep.img}
           alt={salesRep.fullname}

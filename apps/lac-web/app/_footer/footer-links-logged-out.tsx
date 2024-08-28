@@ -9,19 +9,26 @@ const FooterLinksLoggedOut = () => {
   return (
     <>
       <section className="container hidden md:grid md:grid-cols-4 md:gap-8">
-        {SECTIONS.map((section) => (
-          <div key={section.heading} className="space-y-3 text-sm text-black">
-            <h3 className="font-bold text-wurth-gray-500">{section.heading}</h3>
-
-            <ul>
-              {section.links.map((link) => (
-                <li key={link.label} className="leading-8 hover:underline">
-                  <Link href={link.href}>{link.label}</Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
+        {SECTIONS.map(
+          (section) =>
+            section.links.length > 0 && (
+              <div
+                key={section.heading}
+                className="space-y-3 text-sm text-black"
+              >
+                <h3 className="font-bold text-wurth-gray-500">
+                  {section.heading}
+                </h3>
+                <ul>
+                  {section.links.map((link) => (
+                    <li key={link.label} className="leading-8 hover:underline">
+                      <Link href={link.href}>{link.label}</Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ),
+        )}
 
         <div className="space-y-6">
           <SAMNotice />
