@@ -120,7 +120,10 @@ const PurchasedItemRowForMobile = ({
         onClick={onClick}
         className="h-full items-start px-0.5"
       >
-        <MdKeyboardArrowRight className="text-3xl" />
+        <MdKeyboardArrowRight
+          className="text-3xl"
+          data-button-action="Purchase Items Mobile View Details"
+        />
       </Button>
     </div>
   );

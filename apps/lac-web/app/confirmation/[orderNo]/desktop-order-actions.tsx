@@ -14,9 +14,13 @@ const DesktopOrderActions = () => {
         className="font-bold"
         onClick={() => window.print()}
       >
-        <Printer width={16} height={16} />
+        <Printer
+          width={16}
+          height={16}
+          data-button-action="Thank You Print Receipt"
+        />
 
-        <span>Print receipt</span>
+        <span data-button-action="Thank You Print Receipt">Print receipt</span>
       </Button>
 
       <Link

@@ -763,6 +763,7 @@ const CartItemShippingMethod = ({
                               type="button"
                               variant="subtle"
                               className="h-full gap-2 px-2"
+                              data-button-action="Cart Show Breakdown by Branch"
                             >
                               <ChevronDown
                                 width={16}

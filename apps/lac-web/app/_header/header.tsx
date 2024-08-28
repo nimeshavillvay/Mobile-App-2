@@ -45,11 +45,13 @@ const Header = async () => {
                   width={16}
                   height={16}
                   className="group-hover:stroke-red-800"
+                  data-button-action="Call Link"
                 />
                 <Phone
                   width={16}
                   height={16}
                   className="group-hover:stroke-red-800"
+                  data-button-action="Text Link"
                 />
 
                 <span>(800) 422-4389</span>
@@ -65,6 +67,7 @@ const Header = async () => {
                   width={16}
                   height={16}
                   className="group-hover:fill-red-800"
+                  data-button-action="Need help"
                 />
 
                 <span>Need help?</span>

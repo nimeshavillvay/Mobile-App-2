@@ -71,11 +71,12 @@ const DesktopNavigationMenu = ({ categories }: DesktopNavigationMenuProps) => {
                       </li>
 
                       {selectedCategory.subCategory.map((subCategory) => (
-                        <li key={subCategory.id} className="btn-nav">
+                        <li key={subCategory.id}>
                           <NavigationLink
                             id={subCategory.id}
                             slug={subCategory.slug}
                             name={subCategory.name}
+                            className="btn-nav"
                           />
                         </li>
                       ))}
@@ -110,6 +111,7 @@ const NavigationLink = ({
   name,
   primary = false,
   showArrow = false,
+  className,
   onMouseOver,
 }: {
   readonly id: number;
@@ -117,6 +119,7 @@ const NavigationLink = ({
   readonly name: string;
   readonly primary?: boolean;
   readonly showArrow?: boolean;
+  readonly className?: string;
   readonly onMouseOver?: ComponentProps<
     typeof NavigationMenuLink
   >["onMouseOver"];
@@ -130,7 +133,10 @@ const NavigationLink = ({
       )}
       onMouseOver={onMouseOver}
     >
-      <Link href={`/category/${id}/${slug}`} className="btn-display-grid">
+      <Link
+        href={`/category/${id}/${slug}`}
+        className={cn("btn-display-grid", className)}
+      >
         <span>{name}</span>
 
         {showArrow && <ChevronRight className="size-4" />}

@@ -62,6 +62,7 @@ const SubCategoriesList = ({ categories }: SubCategoriesListProps) => {
             variant="outline"
             className="mx-auto self-center py-2.5 font-bold text-black"
             onClick={() => setShowAll(!showAll)}
+            data-button-action={`Sub-Category ${showAll ? "Show less" : "Show all"}`}
           >
             {showAll ? "Show less" : "Show all"}
           </Button>

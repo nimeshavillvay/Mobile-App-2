@@ -181,10 +181,17 @@ const OrderSummary = ({ token, children }: OrderSummaryProps) => {
                         <Button
                           variant="subtle"
                           className="h-fit gap-1 px-2 py-0.5 font-bold"
+                          data-button-action="Close Add Promo Code"
                         >
                           {!openPromo ? (
                             <>
-                              <Plus className="size-4" /> <span>Add</span>
+                              <Plus
+                                className="size-4"
+                                data-button-action="Open Add Promo Code"
+                              />{" "}
+                              <span data-button-action="Open Add Promo Code">
+                                Add
+                              </span>
                             </>
                           ) : (
                             "Cancel"
@@ -204,6 +211,7 @@ const OrderSummary = ({ token, children }: OrderSummaryProps) => {
                           }}
                           width={12}
                           height={12}
+                          data-button-action="Remove Promo Code"
                         />
                       </div>
                     )}
@@ -254,6 +262,7 @@ const OrderSummary = ({ token, children }: OrderSummaryProps) => {
                             updateCartConfigMutation.isPending ||
                             simulationCheckoutQuery.isFetching
                           }
+                          data-button-action="Add Promo Code"
                         >
                           Add
                         </Button>

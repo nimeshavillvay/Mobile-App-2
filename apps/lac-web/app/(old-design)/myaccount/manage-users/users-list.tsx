@@ -80,8 +80,12 @@ const UsersList = ({
             type="submit"
             className="mb-2 px-6"
             onClick={() => setOpenAddUserEmailDialog(true)}
+            data-button-action="Admin Open Add New User Dialog"
           >
-            <MdPersonAdd className="text-xl leading-none" />
+            <MdPersonAdd
+              className="text-xl leading-none"
+              data-button-action="Admin Open Add New User Dialog"
+            />
             Add user
           </Button>
         )}
@@ -137,12 +141,18 @@ const UsersList = ({
                       {showYourProfile ? (
                         <>
                           Close
-                          <MdKeyboardArrowUp className="text-xl leading-none" />
+                          <MdKeyboardArrowUp
+                            className="text-xl leading-none"
+                            data-button-action="Close Your Profile"
+                          />
                         </>
                       ) : (
                         <>
                           Open
-                          <MdKeyboardArrowDown className="text-xl leading-none" />
+                          <MdKeyboardArrowDown
+                            className="text-xl leading-none"
+                            data-button-action="View Your Profile"
+                          />
                         </>
                       )}
                     </Button>
@@ -183,12 +193,18 @@ const UsersList = ({
                 {showCurrentUsers ? (
                   <>
                     Hide
-                    <MdKeyboardArrowUp className="text-xl leading-none" />
+                    <MdKeyboardArrowUp
+                      className="text-xl leading-none"
+                      data-button-action="Hide Current User"
+                    />
                   </>
                 ) : (
                   <>
                     Show
-                    <MdKeyboardArrowDown className="text-xl leading-none" />
+                    <MdKeyboardArrowDown
+                      className="text-xl leading-none"
+                      data-button-action="View Current User"
+                    />
                   </>
                 )}
               </Button>

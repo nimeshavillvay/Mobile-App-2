@@ -842,7 +842,10 @@ const CartItem = ({
               onClick={() => setDeleteConfirmation(true)}
               disabled={deleteCartItemMutation.isPending}
             >
-              <Trash className="size-4 fill-wurth-red-650" />
+              <Trash
+                className="size-4 fill-wurth-red-650"
+                data-button-action="Cart Mobile Delete Item"
+              />
 
               <span className="sr-only">Save</span>
             </Button>
@@ -881,7 +884,10 @@ const CartItem = ({
                   setIsHazardClick(!isHazardClick);
                 }}
               >
-                <GiRadioactive className="mt-[2px] shrink-0 text-base leading-none text-yellow-700" />
+                <GiRadioactive
+                  className="mt-[2px] shrink-0 text-base leading-none text-yellow-700"
+                  data-button-action="Cart Hazard Icon Click"
+                />
               </Button>
             )}
             <div>Item # {product.sku}</div>
@@ -961,7 +967,7 @@ const CartItem = ({
                   }
                 >
                   <Plus
-                    className="btnAction size-4"
+                    className="size-4"
                     data-button-action="Increase Quantity"
                   />
                   <span className="sr-only">Increase quantity</span>
@@ -1113,9 +1119,17 @@ const CartItem = ({
             onClick={() => setDeleteConfirmation(true)}
             disabled={deleteCartItemMutation.isPending}
           >
-            <span className="text-[13px] leading-5">Delete</span>
+            <span
+              className="text-[13px] leading-5"
+              data-button-action="Cart Delete Item"
+            >
+              Delete
+            </span>
 
-            <Trash className="size-4 fill-wurth-red-650" />
+            <Trash
+              className="size-4 fill-wurth-red-650"
+              data-button-action="Cart Delete Item"
+            />
           </Button>
 
           <FavoriteButton

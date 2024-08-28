@@ -167,6 +167,9 @@ const AddressSuggestionDialog = ({
     }
   };
 
+  const buttonContent =
+    addressCheckSuggestions?.checkType == "ADDRESS" ? "continue" : "submit";
+
   return (
     <Dialog open={open} onOpenChange={setOpenAddressSuggestionDialog}>
       <DialogContent className="old-design-text-base max-h-dvh max-w-[500px] overflow-y-auto">
@@ -204,18 +207,18 @@ const AddressSuggestionDialog = ({
           {addressCheckSuggestions?.suggestions?.length == 0 ? (
             <button
               onClick={onBackButtonClicked}
-              className="mx-2rounded-[3px] border-2 border-gray-300 bg-transparent px-6 py-2 text-base font-normal uppercase text-black shadow"
+              className="btnAction mx-2rounded-[3px] border-2 border-gray-300 bg-transparent px-6 py-2 text-base font-normal uppercase text-black shadow"
+              data-button-action="Company Profile Close Add New Address Dialog"
             >
               back
             </button>
           ) : (
             <button
               onClick={onContinueOrSubmitButtonClicked}
-              className="mx-2 rounded-[3px] bg-black px-6 py-2 text-base font-normal uppercase text-white"
+              className="btnAction mx-2 rounded-[3px] bg-black px-6 py-2 text-base font-normal uppercase text-white"
+              data-button-action={`Company Profile Add New Address ${buttonContent}`}
             >
-              {addressCheckSuggestions?.checkType == "ADDRESS"
-                ? "continue"
-                : "submit"}
+              {buttonContent}
             </button>
           )}
         </div>

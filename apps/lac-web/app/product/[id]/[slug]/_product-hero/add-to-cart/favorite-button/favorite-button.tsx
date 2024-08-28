@@ -31,7 +31,10 @@ const FavoriteButton = ({ token, productId }: FavoriteButtonProps) => {
         router.push("/sign-in");
       }}
     >
-      <BookmarkOutline className="size-4" />
+      <BookmarkOutline
+        className="size-4"
+        data-button-action="Add to Shopping List Logged out"
+      />
 
       <span className="sr-only">Add to list</span>
     </Button>

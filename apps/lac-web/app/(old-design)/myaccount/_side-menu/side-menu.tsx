@@ -112,8 +112,9 @@ const SideMenu = ({ token }: { readonly token: string }) => {
         }}
         className={cn(
           menuItem({ status: "inactive" }),
-          "btn-sign-out w-full text-left",
+          "btnAction btn-sign-out w-full text-left",
         )}
+        data-button-action="Logout"
       >
         Logout
       </button>

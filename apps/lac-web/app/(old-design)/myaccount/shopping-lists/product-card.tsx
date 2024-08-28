@@ -238,14 +238,19 @@ const ShoppingListProductCardActions = ({
         aria-label="Add to List"
         onClick={removeFromShoppingList}
         disabled={disabled}
+        data-button-action="Shopping List Remove From List"
       >
-        <MdOutlineDelete className="size-4 fill-black" />
+        <MdOutlineDelete
+          className="size-4 fill-black"
+          data-button-action="Shopping List Remove From List"
+        />
       </Button>
 
       <Button
         className="h-10 max-h-full flex-1 px-4 text-[0.875rem] leading-5"
         onClick={addToCart}
         disabled={disabled}
+        data-button-action="Shopping List Open Add to Cart Dialog"
       >
         Add to cart
       </Button>

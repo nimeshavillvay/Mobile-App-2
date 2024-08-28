@@ -161,6 +161,7 @@ const UserMobileProfileNavigation = ({
                   <Button
                     variant="ghost"
                     className="flex h-full w-full flex-row items-center justify-between gap-2 bg-white px-4 py-3 text-base font-normal text-black"
+                    data-button-action="Shipping Details"
                   >
                     Shipping Details
                   </Button>

@@ -52,7 +52,11 @@ const ErrorPage = ({
           500 error
         </h2>
 
-        <Button className="mb-6 mt-9 uppercase" onClick={reset}>
+        <Button
+          className="mb-6 mt-9 uppercase"
+          onClick={reset}
+          data-button-action="Error Try Again"
+        >
           Try again
         </Button>
 

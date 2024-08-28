@@ -189,6 +189,7 @@ const SignIn = () => {
                   className="w-full py-2.5 font-bold"
                   disabled={checkEmailMutation.isPending}
                   onClick={onSubmitEmail}
+                  data-button-action="Sign in Check Email Address"
                 >
                   Continue
                   <span className="sr-only">Confirm Action</span>
@@ -205,10 +206,16 @@ const SignIn = () => {
                 </DialogHeader>
 
                 <DialogFooter>
-                  <Button onClick={() => setOpen(false)}>Yes</Button>
+                  <Button
+                    onClick={() => setOpen(false)}
+                    data-button-action="Sign in Check User's Email Correct"
+                  >
+                    Yes
+                  </Button>
                   <Button
                     disabled={checkEmailMutation.isPending}
                     onClick={() => createNewUser(emailForm.getValues("email"))}
+                    data-button-action="Sign Create New User"
                   >
                     No
                   </Button>
@@ -249,6 +256,7 @@ const SignIn = () => {
             className="w-20 flex-none text-sm font-bold"
             variant="outline"
             onClick={clearEmail}
+            data-button-action="Sign in Change Email Address"
           >
             Change
           </Button>
@@ -294,6 +302,7 @@ const SignIn = () => {
               type="submit"
               className="btn-submit-login w-full p-2.5 font-bold"
               disabled={signInMutation.isPending}
+              data-button-action="Sign in Submit Credentials"
             >
               Sign in
             </Button>

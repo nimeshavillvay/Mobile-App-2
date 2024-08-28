@@ -235,7 +235,10 @@ const HeaderSortButtons = ({
       )}
       onClick={onClickDesc}
     >
-      <CaretUpIcon className="h-4 w-4 opacity-70" />
+      <CaretUpIcon
+        className="h-4 w-4 opacity-70"
+        data-button-action="Order History Descending"
+      />
     </Button>
     <Button
       variant="ghost"
@@ -245,7 +248,10 @@ const HeaderSortButtons = ({
       )}
       onClick={onClickAsc}
     >
-      <CaretDownIcon className="h-4 w-4 opacity-70" />
+      <CaretDownIcon
+        className="h-4 w-4 opacity-70"
+        data-button-action="Order History Ascending"
+      />
     </Button>
   </div>
 );

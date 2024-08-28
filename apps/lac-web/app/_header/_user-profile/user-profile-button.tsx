@@ -177,10 +177,18 @@ const UserProfileDropdown = ({
             className="flex w-full flex-row items-center gap-2 text-black"
             asChild
           >
-            <button onClick={() => setOpenShippingDialog(true)}>
-              <MapPin className="ml-0 size-4" />
+            <button
+              onClick={() => setOpenShippingDialog(true)}
+              className="btnAction"
+            >
+              <MapPin
+                className="ml-0 size-4"
+                data-button-action="Open Shipping Details Dialog"
+              />
 
-              <span>Shipping Details</span>
+              <span data-button-action="Open Shipping Details Dialog">
+                Shipping Details
+              </span>
             </button>
           </DropdownMenuItem>
 

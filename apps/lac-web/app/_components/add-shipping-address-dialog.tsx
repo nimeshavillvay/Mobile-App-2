@@ -392,11 +392,16 @@ const AddShippingAddressDialog = ({
                     form.reset();
                     closeDialog();
                   }}
+                  data-button-action="Back to Change Shipping Address Dialog"
                 >
                   Back
                 </Button>
 
-                <Button type="submit" className="font-bold shadow-md">
+                <Button
+                  type="submit"
+                  className="font-bold shadow-md"
+                  data-button-action="Submit New Shipping Address"
+                >
                   Submit
                 </Button>
               </DialogFooter>
@@ -439,9 +444,13 @@ const AddShippingAddressDialog = ({
                         selectedSuggestionId === address.xcAddressId &&
                           "stroke-wurth-gray-800",
                       )}
+                      data-button-action="Select New Shipping Address from Conflicts"
                     />
 
-                    <span className="flex-1 text-wrap text-left text-base font-medium text-wurth-gray-800">
+                    <span
+                      className="flex-1 text-wrap text-left text-base font-medium text-wurth-gray-800"
+                      data-button-action="Select New Shipping Address from Conflicts"
+                    >
                       <FullAddress address={address} />
                     </span>
                   </Button>
@@ -457,6 +466,7 @@ const AddShippingAddressDialog = ({
                 onClick={() => {
                   setAddressSuggestions([]);
                 }}
+                data-button-action="Edit New Shipping Address"
               >
                 Back
               </Button>
@@ -468,6 +478,7 @@ const AddShippingAddressDialog = ({
                 disabled={
                   addShippingAddressMutation.isPending || !selectedSuggestionId
                 }
+                data-button-action="Submit Selected New Shipping Address"
               >
                 Submit
               </Button>

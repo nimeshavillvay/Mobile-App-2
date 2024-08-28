@@ -381,7 +381,7 @@ export const SearchClearButton = ({
       className={cn("mx-0.5 rounded-full px-2", className)}
       {...delegated}
     >
-      <Close className="size-5" />
+      <Close className="size-5" data-button-action="Clear Search" />
       <span className="sr-only">Clear search</span>
     </Button>
   );

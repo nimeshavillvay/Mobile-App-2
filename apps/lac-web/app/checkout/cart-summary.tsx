@@ -323,6 +323,7 @@ const CartSummary = ({ token, plants }: CartSummaryProps) => {
               "font-bold text-black transition duration-150 ease-out",
               showDetails && "rotate-180",
             )}
+            data-button-action={`Checkout ${showDetails ? "Hide" : "Show"} Details`}
           />
           <span>{showDetails ? "Hide" : "Show"} details</span>
         </Button>

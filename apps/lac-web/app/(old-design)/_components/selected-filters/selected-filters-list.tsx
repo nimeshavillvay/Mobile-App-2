@@ -70,14 +70,19 @@ const SelectedFiltersList = ({ sections }: SelectedFiltersListProps) => {
                 onClick={() => removeFilter(section.id, value.id)}
                 className="flex flex-row items-center gap-[5px]"
               >
-                <MdClose className="text-lg leading-none" />
-                <span>{`${section.name} : ${value.name}`}</span>
+                <MdClose
+                  className="text-lg leading-none"
+                  data-button-action="Remove Filters"
+                />
+                <span data-button-action="Remove Filters">{`${section.name} : ${value.name}`}</span>
               </Button>
             )),
           )}
         </ul>
 
-        <Button onClick={removeAll}>All</Button>
+        <Button onClick={removeAll} data-button-action="Remove All Filters">
+          All
+        </Button>
       </div>
     </div>
   );
@@ -89,7 +94,7 @@ const Button = ({ className, ...delegated }: ComponentProps<"button">) => {
   return (
     <button
       className={cn(
-        "min-w-0 shrink-0 text-nowrap rounded-[3px] bg-brand-primary px-5 py-1.5 text-base font-normal uppercase text-white",
+        "btnAction min-w-0 shrink-0 text-nowrap rounded-[3px] bg-brand-primary px-5 py-1.5 text-base font-normal uppercase text-white",
         className,
       )}
       {...delegated}

@@ -44,7 +44,7 @@ const MobileNavigationMenu = ({ categories }: MobileNavigationMenuProps) => {
           size="icon"
           className="size-6 flex-shrink-0 md:hidden"
         >
-          <Menu />
+          <Menu data-button-action="View Mobile Category Menu" />
 
           <span className="sr-only">Menu</span>
         </Button>
@@ -131,8 +131,13 @@ const SubCategorySheet = ({ category, onCloseMain }: SubCategorySheetProps) => {
     >
       <SheetTrigger asChild className={cn(sectionLinkStyles(), "h-fit w-full")}>
         <Button variant="ghost" onClick={() => setOpenSub(true)}>
-          <span>{category.name}</span>
-          <ChevronRight className="size-5" />
+          <span data-button-action="View Mobile Categories">
+            {category.name}
+          </span>
+          <ChevronRight
+            className="size-5"
+            data-button-action="View Mobile Categories"
+          />
         </Button>
       </SheetTrigger>
 
@@ -142,11 +147,19 @@ const SubCategorySheet = ({ category, onCloseMain }: SubCategorySheetProps) => {
       >
         <SheetHeader className="text-left">
           <button
-            className="flex flex-row items-center gap-1"
+            className="btnAction flex flex-row items-center gap-1"
             onClick={() => setOpenSub(false)}
           >
-            <ArrowLeft className="size-4 stroke-white" />
-            <span className="text-sm font-medium text-white">Back</span>
+            <ArrowLeft
+              className="size-4 stroke-white"
+              data-button-action="Close Mobile Categories"
+            />
+            <span
+              className="text-sm font-medium text-white"
+              data-button-action="Close Mobile Categories"
+            >
+              Back
+            </span>
           </button>
           <SheetTitle>{category.name}</SheetTitle>
           <SheetDescription className="sr-only">

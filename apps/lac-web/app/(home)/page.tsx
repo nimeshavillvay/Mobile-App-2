@@ -74,6 +74,8 @@ const HomePage = async () => {
       alt: banner.alt_tag,
       image: banner.file_path,
       pdfLink: banner.pdf_file_path,
+      class: banner.class,
+      dataDescription: banner["data-descr"],
     }));
 
   return (

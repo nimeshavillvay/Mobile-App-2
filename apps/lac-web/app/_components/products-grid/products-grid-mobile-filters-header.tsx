@@ -50,12 +50,18 @@ export const ProductsGridMobileFiltersHeader = ({
       <Drawer>
         <DrawerTrigger asChild>
           <MobileAttributePill>
-            <Settings className="size-5" />
+            <Settings
+              className="btnAction size-5"
+              data-button-action="Mobile Drawer Filters & Sort"
+            />
 
-            <span className="flex flex-row items-center gap-1">
+            <span
+              className="flex flex-row items-center gap-1"
+              data-button-action="Mobile Drawer Filters & Sort"
+            >
               Filters & sort
               {totalSelected > 0 && (
-                <span className="grid size-5 place-content-center rounded-full bg-wurth-gray-800 text-xs font-semibold leading-none text-white">
+                <span className="btnAction grid size-5 place-content-center rounded-full bg-wurth-gray-800 text-xs font-semibold leading-none text-white">
                   {totalSelected}
                 </span>
               )}
@@ -78,7 +84,7 @@ export const ProductsGridMobileFiltersHeader = ({
           <DrawerFooter>
             {totalSelected > 0 && (
               <Button
-                className="btnAction w-full"
+                className="w-full"
                 onClick={clearAll}
                 data-button-action="Clear All Filters"
               >
@@ -87,7 +93,11 @@ export const ProductsGridMobileFiltersHeader = ({
             )}
 
             <DrawerClose>
-              <Button variant="outline" className="w-full">
+              <Button
+                variant="outline"
+                className="w-full"
+                data-button-action="Close Mobile Filter Drawer"
+              >
                 Close
               </Button>
             </DrawerClose>
@@ -103,7 +113,7 @@ const MobileAttributePill = (
 ) => {
   return (
     <button
-      className="flex shrink-0 snap-start flex-row items-center gap-2 rounded-full border border-wurth-gray-250 px-4 py-3 text-sm font-medium text-wurth-gray-800 shadow-sm"
+      className="btnAction flex shrink-0 snap-start flex-row items-center gap-2 rounded-full border border-wurth-gray-250 px-4 py-3 text-sm font-medium text-wurth-gray-800 shadow-sm"
       {...props}
     />
   );

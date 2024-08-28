@@ -55,31 +55,43 @@ const TotalCountAndPagination = ({
       <div className="overflow-hidden py-3 md:hidden">
         <div className="flex flex-row justify-center gap-1 font-bold">
           <button
-            className="flex flex-row items-center bg-gray-100 px-3 py-3 text-base uppercase text-brand-gray-400"
+            className="btnAction flex flex-row items-center bg-gray-100 px-3 py-3 text-base uppercase text-brand-gray-400"
             onClick={() => {
               paginate(page - 1);
             }}
+            data-button-action="OSR Pagination Back"
           >
-            <MdArrowBack className="mr-[5px] text-2xl leading-none" />
+            <MdArrowBack
+              className="mr-[5px] text-2xl leading-none"
+              data-button-action="OSR Pagination Back"
+            />
             Back
           </button>
 
           <button
-            className="text-brand-[#000] flex w-full max-w-28 flex-row items-center justify-center rounded-sm border-2 border-black bg-gray-100 px-3 py-3 text-base font-bold uppercase"
+            className="btnAction text-brand-[#000] flex w-full max-w-28 flex-row items-center justify-center rounded-sm border-2 border-black bg-gray-100 px-3 py-3 text-base font-bold uppercase"
             onClick={() => setOpenMobilePagination(true)}
+            data-button-action="OSR Pagination"
           >
             {page}/{totalPagesCount}
-            <ChevronDown className="h-5 w-8 shrink-0" />
+            <ChevronDown
+              className="h-5 w-8 shrink-0"
+              data-button-action="OSR Pagination"
+            />
           </button>
 
           <button
-            className="flex flex-row items-center bg-gray-100 px-3 py-3 uppercase text-brand-gray-400"
+            className="btnAction flex flex-row items-center bg-gray-100 px-3 py-3 uppercase text-brand-gray-400"
             onClick={() => {
               paginate(page + 1);
             }}
+            data-button-action="OSR Pagination Next"
           >
             Next
-            <MdArrowForward className="ml-[5px] text-2xl leading-none" />
+            <MdArrowForward
+              className="ml-[5px] text-2xl leading-none"
+              data-button-action="OSR Pagination Next"
+            />
           </button>
         </div>
 

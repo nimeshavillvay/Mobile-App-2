@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from "@/_lib/utils";
 import {
   Carousel,
   CarouselContent,
@@ -15,6 +16,8 @@ type HeroBannersProps = {
     alt: string;
     image: string;
     pdfLink: string;
+    class: string;
+    dataDescription: string;
   }[];
 };
 
@@ -35,7 +38,8 @@ const HeroBanners = ({ banners }: HeroBannersProps) => {
                 href={banner.pdfLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="aspect-h-9 aspect-w-[28] block"
+                className={(cn("aspect-h-9 aspect-w-[28] block"), banner.class)}
+                data-desc={banner.dataDescription}
               >
                 <Image
                   src={banner.image}

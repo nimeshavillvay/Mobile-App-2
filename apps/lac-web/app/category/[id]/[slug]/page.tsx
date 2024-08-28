@@ -58,11 +58,16 @@ const CategoryPage = async ({ params: { id, slug } }: CategoryPageProps) => {
     <>
       <div className="container my-2 md:hidden">
         <Button variant="link" asChild className="group gap-1 px-0">
-          <Link href="/">
+          <Link
+            href="/"
+            className="btnAction"
+            data-button-action="Category Home Link"
+          >
             <ChevronLeft
               width={16}
               height={16}
               className="group-hover:stroke-red-800"
+              data-button-action="Category Home Link"
             />
             Home
           </Link>

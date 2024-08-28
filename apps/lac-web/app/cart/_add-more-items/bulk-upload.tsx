@@ -174,7 +174,12 @@ const FileInfoAndErrors = ({
       <div className="flex min-h-[68px] items-center justify-center gap-3">
         <div className="max-w-72">{file.name}</div>
 
-        <Button className="" variant="default" onClick={upload}>
+        <Button
+          className=""
+          variant="default"
+          onClick={upload}
+          data-button-action="Bulk Upload"
+        >
           Upload
         </Button>
 
@@ -185,9 +190,12 @@ const FileInfoAndErrors = ({
             setFile(null);
           }}
         >
-          <Close className="h-4 w-4 stroke-wurth-red-650" />
+          <Close
+            className="h-4 w-4 stroke-wurth-red-650"
+            data-button-action="Bulk Upload Remove File"
+          />
 
-          <span>Remove</span>
+          <span data-button-action="Bulk Upload Remove File">Remove</span>
         </Button>
       </div>
 

@@ -146,7 +146,10 @@ const Dashboard = ({ token }: { readonly token: string }) => {
                 ]);
               }}
             >
-              <MagnifyingGlass className="size-5" />
+              <MagnifyingGlass
+                className="size-5"
+                data-button-action="OSR Search"
+              />
             </Button>
           </div>
         </div>

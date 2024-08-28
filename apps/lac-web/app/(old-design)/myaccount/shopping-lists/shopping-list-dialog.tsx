@@ -131,6 +131,7 @@ const ShoppingListDialog = ({
                   createShoppingListMutation.isPending ||
                   updateShoppingListMutation.isPending
                 }
+                data-button-action="Shopping List Remove or Update List Name"
               >
                 Done
               </Button>

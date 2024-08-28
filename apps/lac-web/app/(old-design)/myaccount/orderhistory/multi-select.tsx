@@ -152,7 +152,10 @@ const MultiSelect = ({
                 className="h-4 gap-0 px-0.5"
                 onClick={() => removeAllSelectedItems()}
               >
-                <X className="h-3 w-3 opacity-50" />
+                <X
+                  className="h-3 w-3 opacity-50"
+                  data-button-action="Order History Filter Remove All"
+                />
               </Button>
             </div>
           )}
@@ -167,13 +170,16 @@ const MultiSelect = ({
               getDropdownProps({ preventKeyAction: isOpen }),
             )}
           >
-            <span>{selectedItems.length === 0 && placeholder}</span>
+            <span data-button-action="Order History Open Filter">
+              {selectedItems.length === 0 && placeholder}
+            </span>
 
             <ChevronDown
               className={cn(
                 "h-4 w-4 opacity-50 transition-transform duration-200 ease-out",
                 isOpen ? "rotate-180" : "",
               )}
+              data-button-action="Order History Open Filter"
             />
           </Button>
         </div>

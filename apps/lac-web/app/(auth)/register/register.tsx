@@ -75,9 +75,15 @@ const Register = ({
                   onClick={() => setIsCurrentUser(value)}
                 >
                   {value === isCurrentUser ? (
-                    <CheckCircleFilled className="size-5" />
+                    <CheckCircleFilled
+                      className="size-5"
+                      data-button-action="Register Select Current User Flow"
+                    />
                   ) : (
-                    <CheckCircle className="size-5 stroke-wurth-gray-150" />
+                    <CheckCircle
+                      className="size-5 stroke-wurth-gray-150"
+                      data-button-action="Register Select New User Flow"
+                    />
                   )}
 
                   <span>{value}</span>

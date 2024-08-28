@@ -28,7 +28,11 @@ const MobileListViewer = ({ token, products }: MobileListViewerProps) => {
       <ProductsList token={token} products={shownProducts} />
 
       {hasMore && (
-        <Button className="w-full font-bold" onClick={loadMore}>
+        <Button
+          className="w-full font-bold"
+          onClick={loadMore}
+          data-button-action="Product Mobile Load More Related Products"
+        >
           Load {PAGE_SIZE} more
         </Button>
       )}

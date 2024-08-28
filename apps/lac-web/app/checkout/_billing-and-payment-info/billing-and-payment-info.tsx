@@ -288,7 +288,11 @@ const BillingAndPaymentInfo = ({
                       className="absolute right-3 top-3 size-4 p-0"
                       onClick={() => deleteCreditCard(card.id)}
                     >
-                      <Close width={16} height={16} />
+                      <Close
+                        width={16}
+                        height={16}
+                        data-button-action="Checkout Delete Credit Cart"
+                      />
                       <span className="sr-only">Remove</span>
                     </Button>
                   </li>

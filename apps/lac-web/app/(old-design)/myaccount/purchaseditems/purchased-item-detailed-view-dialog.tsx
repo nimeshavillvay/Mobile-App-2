@@ -240,6 +240,7 @@ const PurchasedItemDetailedViewDialog = ({
                       className="flex h-10 w-full items-center justify-between rounded-sm border border-brand-gray-300 px-2 font-normal capitalize"
                       onClick={() => setShowPriceBreakdown(!showPriceBreakdown)}
                       disabled={isItemError(item) || disableAddToCartButton}
+                      data-button-action="Purchase Items View Price Breakdown"
                     >
                       <span>Price Breakdown</span>
                       <MdKeyboardArrowRight className="text-2xl leading-none" />
@@ -344,6 +345,7 @@ const PurchasedItemDetailedViewDialog = ({
                 onClick={() =>
                   router.push(`/product/${item.productId}/${item.slug}`)
                 }
+                data-button-action="Purchase Items View Product"
               >
                 View Product
               </Button>
@@ -355,8 +357,10 @@ const PurchasedItemDetailedViewDialog = ({
                   addToCartMutation.isPending ||
                   disableAddToCartButton
                 }
+                data-button-action="Purchase Items Add to Cart"
               >
-                <AddToCartIcon /> Add to Cart
+                <AddToCartIcon data-button-action="Purchase Items Add to Cart" />{" "}
+                Add to Cart
               </Button>
             </form>
           </div>
