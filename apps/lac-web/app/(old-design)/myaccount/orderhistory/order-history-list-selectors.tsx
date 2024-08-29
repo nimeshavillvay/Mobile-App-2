@@ -268,13 +268,18 @@ const OrderHistoryListSelectors = ({
           </div>
 
           <div className="flex flex-row items-center gap-2">
-            <Button className="min-w-24" onClick={handleSearch}>
+            <Button
+              className="min-w-24"
+              onClick={handleSearch}
+              data-button-action="Order History Search"
+            >
               Search
             </Button>
 
             <Button
               className="min-w-24 bg-brand-secondary hover:bg-[#008fc6]"
               onClick={handleReset}
+              data-button-action="Order History Search Reset"
             >
               Reset
             </Button>
@@ -341,9 +346,13 @@ const OrderHistoryListSelectors = ({
             variant="ghost"
             className="px-0"
             onClick={() => setMobileFiltersOpen(!mobileFiltersOpen)}
+            data-button-action="Order History Sort & Filter"
           >
             Sort & Filter
-            <MdKeyboardArrowDown className="text-2xl transition-transform duration-200" />
+            <MdKeyboardArrowDown
+              className="text-2xl transition-transform duration-200"
+              data-button-action="Order History Sort & Filter"
+            />
           </Button>
 
           <div>

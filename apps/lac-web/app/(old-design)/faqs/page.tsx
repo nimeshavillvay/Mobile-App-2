@@ -57,7 +57,8 @@ const FAQPage = () => {
             our promotional faxes, call&nbsp;
             <a
               href="tel:8008414362"
-              className="text-blue-500 hover:text-blue-900 hover:underline"
+              className="btnAction text-blue-500 hover:text-blue-900 hover:underline"
+              data-btn-action="Click FAQ phone"
             >
               800-841-4362
             </a>

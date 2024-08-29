@@ -133,32 +133,34 @@ const BillingAndPaymentInfo = ({
     );
 
     if (!selectedCreditCard || previousSelectedPaymentMethod) {
-      gtmItemsInfo?.forEach((gtmItemInfo) => {
-        sendGTMEvent({
-          event: "add_payment_info",
-          addPaymentInfoData: {
-            currency: "USD",
-            value: gtmItemInfo?.price,
-            payment_type: selectedPaymentMethod?.name ?? "Credit Card Only",
-            items: [
-              {
-                item_id: gtmItemInfo?.item_id,
-                item_sku: gtmItemInfo?.item_sku,
-                item_name: gtmItemInfo?.item_name,
-                item_brand: gtmItemInfo?.item_brand,
-                price: gtmItemInfo?.price,
-                quantity: 1,
-              },
-            ],
-          },
-          data: {
-            userid: gtmUser?.userid,
-            account_type: gtmUser?.account_type,
-            account_industry: gtmUser?.account_industry,
-            account_sales_category: gtmUser?.account_sales_category,
-          },
+      if (gtmItemsInfo !== null && gtmItemsInfo !== undefined) {
+        gtmItemsInfo?.forEach((gtmItemInfo) => {
+          sendGTMEvent({
+            event: "add_payment_info",
+            addPaymentInfoData: {
+              currency: "USD",
+              value: gtmItemInfo?.price,
+              payment_type: selectedPaymentMethod?.name ?? "Credit Card Only",
+              items: [
+                {
+                  item_id: gtmItemInfo?.item_id,
+                  item_sku: gtmItemInfo?.item_sku,
+                  item_name: gtmItemInfo?.item_name,
+                  item_brand: gtmItemInfo?.item_brand,
+                  price: gtmItemInfo?.price,
+                  quantity: 1,
+                },
+              ],
+            },
+            data: {
+              userid: gtmUser?.userid,
+              account_type: gtmUser?.account_type,
+              account_industry: gtmUser?.account_industry,
+              account_sales_category: gtmUser?.account_sales_category,
+            },
+          });
         });
-      });
+      }
     }
 
     setPaymentId(id);
@@ -288,7 +290,11 @@ const BillingAndPaymentInfo = ({
                       className="absolute right-3 top-3 size-4 p-0"
                       onClick={() => deleteCreditCard(card.id)}
                     >
-                      <Close width={16} height={16} />
+                      <Close
+                        width={16}
+                        height={16}
+                        data-button-action="Checkout Delete Credit Card"
+                      />
                       <span className="sr-only">Remove</span>
                     </Button>
                   </li>

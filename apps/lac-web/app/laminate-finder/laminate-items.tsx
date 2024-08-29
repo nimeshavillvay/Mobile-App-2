@@ -124,6 +124,7 @@ const LaminateItems = ({
             type="button"
             onClick={handleAddAllItemsToCart}
             disabled={priceCheckRequest.length === 0}
+            data-button-action="Laminate Finder Add To Cart"
           >
             Add to cart
           </Button>

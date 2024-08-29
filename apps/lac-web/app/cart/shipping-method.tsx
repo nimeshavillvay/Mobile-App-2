@@ -96,33 +96,35 @@ const ShippingMethod = ({ token }: ShippingMethodProps) => {
   const gtmUser = gtmItemUserQuery.data;
 
   const sendToGTMShippingMethodChanged = () => {
-    gtmItemsInfo?.forEach((gtmItemInfo) => {
-      sendGTMEvent({
-        event: "apply_shipping",
-        applyShippingData: {
-          currency: "USD",
-          value: gtmItemInfo?.price,
-          items: [
-            {
-              item_id: gtmItemInfo?.item_id,
-              item_sku: gtmItemInfo?.item_sku,
-              item_name: gtmItemInfo?.item_name,
-              item_brand: gtmItemInfo?.item_brand,
-              price: gtmItemInfo?.price,
-              quantity: gtmProducts.find(
-                (item) => item.productid === Number(gtmItemInfo?.productid),
-              )?.quantity,
-            },
-          ],
-        },
-        data: {
-          userid: gtmUser?.userid,
-          account_type: gtmUser?.account_type,
-          account_industry: gtmUser?.account_industry,
-          account_sales_category: gtmUser?.account_sales_category,
-        },
+    if (gtmItemsInfo !== null && gtmItemsInfo !== undefined) {
+      gtmItemsInfo?.forEach((gtmItemInfo) => {
+        sendGTMEvent({
+          event: "apply_shipping",
+          applyShippingData: {
+            currency: "USD",
+            value: gtmItemInfo?.price,
+            items: [
+              {
+                item_id: gtmItemInfo?.item_id,
+                item_sku: gtmItemInfo?.item_sku,
+                item_name: gtmItemInfo?.item_name,
+                item_brand: gtmItemInfo?.item_brand,
+                price: gtmItemInfo?.price,
+                quantity: gtmProducts.find(
+                  (item) => item.productid === Number(gtmItemInfo?.productid),
+                )?.quantity,
+              },
+            ],
+          },
+          data: {
+            userid: gtmUser?.userid,
+            account_type: gtmUser?.account_type,
+            account_industry: gtmUser?.account_industry,
+            account_sales_category: gtmUser?.account_sales_category,
+          },
+        });
       });
-    });
+    }
   };
 
   const clearConfigKeys = (

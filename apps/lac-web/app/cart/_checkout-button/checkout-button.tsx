@@ -52,9 +52,12 @@ const CheckoutButton = ({ token }: CheckoutButtonProps) => {
         className="btn-checkout h-fit w-full gap-2 rounded-lg px-5 py-4 text-lg font-normal shadow-md"
         disabled={isButtonDisabled}
       >
-        <Shield className="size-5 stroke-white" />
+        <Shield
+          className="size-5 stroke-white"
+          data-button-action="Cart Secure Checkout"
+        />
 
-        <span>Secure Checkout</span>
+        <span data-button-action="Cart Secure Checkout">Secure Checkout</span>
       </Button>
     </form>
   );

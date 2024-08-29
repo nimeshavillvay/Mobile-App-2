@@ -41,7 +41,8 @@ const NotFound = () => {
 
         <Link
           href="/"
-          className="mx-auto block max-w-fit rounded-sm bg-wurth-blue-450 p-2 px-3.5 py-2 font-extrabold uppercase text-white"
+          className="btnAction mx-auto block max-w-fit rounded-sm bg-wurth-blue-450 p-2 px-3.5 py-2 font-extrabold uppercase text-white"
+          data-btn-action="Not FoundGo To Home Page"
         >
           Go to homepage
         </Link>

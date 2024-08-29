@@ -132,6 +132,7 @@ const ShippingAndPickupDetails = ({
                       "mr-2 h-4 w-4 stroke-wurth-gray-250",
                       !!date && "stroke-wurth-gray-800",
                     )}
+                    data-button-action="Checkout Pick Delivery Date"
                   />
                   {date ? (
                     dayjs(date).format("MMMM Do, YYYY")
@@ -141,6 +142,7 @@ const ShippingAndPickupDetails = ({
                         "text-base text-wurth-gray-250",
                         !!date && "text-wurth-gray-800",
                       )}
+                      data-button-action="Checkout Pick Delivery Date"
                     >
                       Delivery date
                     </span>

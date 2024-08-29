@@ -31,9 +31,15 @@ const FavoriteButton = ({ token, productId }: FavoriteButtonProps) => {
         onClick={() => setShowShoppingListsDialog(true)}
       >
         {isFavorite ? (
-          <BookmarkFilled className="fill-black text-2xl text-brand-primary" />
+          <BookmarkFilled
+            className="fill-black text-2xl text-brand-primary"
+            data-button-action="Purchase Items Open Add to Wishlist Dialog"
+          />
         ) : (
-          <BookmarkOutline className="text-2xl text-brand-gray-500" />
+          <BookmarkOutline
+            className="text-2xl text-brand-gray-500"
+            data-button-action="Purchase Items Open Add to Wishlist Dialog"
+          />
         )}
       </Button>
 

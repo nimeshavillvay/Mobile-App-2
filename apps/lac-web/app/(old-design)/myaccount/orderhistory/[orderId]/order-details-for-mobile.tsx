@@ -78,7 +78,8 @@ const OrderDetailsForMobile = ({
         <div className="flex-1">
           <Link
             href={orderTrackingHref}
-            className="inline-flex h-12 w-full items-center justify-center gap-2 whitespace-nowrap rounded-sm border border-brand-primary px-3.5 py-2 text-center font-wurth text-base font-extrabold uppercase leading-5 text-brand-primary"
+            className="btnAction inline-flex h-12 w-full items-center justify-center gap-2 whitespace-nowrap rounded-sm border border-brand-primary px-3.5 py-2 text-center font-wurth text-base font-extrabold uppercase leading-5 text-brand-primary"
+            data-button-action="Order History Order Tracking"
           >
             Order Tracking
             <MdKeyboardArrowRight className="text-2xl leading-none" />

@@ -130,7 +130,11 @@ const PurchasedItemDetailedViewDialog = ({
         <DialogContent className="bottom-0 top-auto max-w-[768px] translate-y-[0%] gap-0 py-8 md:bottom-auto md:top-[50%] md:translate-y-[-50%]">
           <div className="flex flex-col gap-4 px-6 text-brand-gray-500">
             <div className="flex flex-row gap-4">
-              <Link href={generateItemUrl(item)} className="min-w-[92px]">
+              <Link
+                href={generateItemUrl(item)}
+                className="btnAction min-w-[92px]"
+                data-button-action="View Product"
+              >
                 {item.image ? (
                   <Image
                     src={item.image}
@@ -240,6 +244,7 @@ const PurchasedItemDetailedViewDialog = ({
                       className="flex h-10 w-full items-center justify-between rounded-sm border border-brand-gray-300 px-2 font-normal capitalize"
                       onClick={() => setShowPriceBreakdown(!showPriceBreakdown)}
                       disabled={isItemError(item) || disableAddToCartButton}
+                      data-button-action="Purchase Items View Price Breakdown"
                     >
                       <span>Price Breakdown</span>
                       <MdKeyboardArrowRight className="text-2xl leading-none" />
@@ -344,6 +349,7 @@ const PurchasedItemDetailedViewDialog = ({
                 onClick={() =>
                   router.push(`/product/${item.productId}/${item.slug}`)
                 }
+                data-button-action="Purchase Items View Product"
               >
                 View Product
               </Button>
@@ -355,8 +361,10 @@ const PurchasedItemDetailedViewDialog = ({
                   addToCartMutation.isPending ||
                   disableAddToCartButton
                 }
+                data-button-action="Purchase Items Add to Cart"
               >
-                <AddToCartIcon /> Add to Cart
+                <AddToCartIcon data-button-action="Purchase Items Add to Cart" />{" "}
+                Add to Cart
               </Button>
             </form>
           </div>

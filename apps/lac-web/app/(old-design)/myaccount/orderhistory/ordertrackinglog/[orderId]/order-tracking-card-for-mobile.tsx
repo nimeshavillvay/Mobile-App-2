@@ -95,7 +95,8 @@ const OrderTrackingCardForMobile = ({
                         key={`${delivery.deliveryNo}-${tracker.code}`}
                         href={tracker.url ?? "#"}
                         target="_blank"
-                        className="text-sm font-bold"
+                        className="btnAction text-sm font-bold"
+                        data-button-action={`View Tracker Code ${tracker.code ?? "N/A"}`}
                       >
                         {tracker.code ?? "N/A"}
                       </Link>

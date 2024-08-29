@@ -60,12 +60,18 @@ const UserRow = ({ user, index, jobRoles }: UserRowProps) => {
               {!isOpen ? (
                 <>
                   Open
-                  <MdKeyboardArrowDown className="text-xl leading-none" />
+                  <MdKeyboardArrowDown
+                    className="text-xl leading-none"
+                    data-button-action="Admin View Other User"
+                  />
                 </>
               ) : (
                 <>
                   Close
-                  <MdKeyboardArrowUp className="text-xl leading-none" />
+                  <MdKeyboardArrowUp
+                    className="text-xl leading-none"
+                    data-button-action="Admin Collapse Other User"
+                  />
                 </>
               )}
             </Button>

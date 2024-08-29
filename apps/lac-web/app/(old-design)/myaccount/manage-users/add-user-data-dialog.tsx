@@ -349,7 +349,11 @@ const AddUserDataDialog = ({
                 </div>
               </div>
 
-              <Button type="submit" className="w-full text-base">
+              <Button
+                type="submit"
+                className="w-full text-base"
+                data-button-action="Admin Add New User"
+              >
                 Add user
               </Button>
             </form>

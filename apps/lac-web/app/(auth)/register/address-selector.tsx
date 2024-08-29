@@ -91,6 +91,7 @@ const AddressSelector = ({
           variant="outline"
           onClick={clearSuggestions}
           disabled={disabled}
+          data-button-action="Register Update address"
         >
           Update address
         </Button>
@@ -104,6 +105,7 @@ const AddressSelector = ({
             disabled
           }
           onClick={() => onSubmit()}
+          data-button-action="Register Submit address"
         >
           Submit
         </Button>
@@ -150,9 +152,13 @@ const AddressList = ({
                   "size-5 shrink-0 stroke-wurth-gray-150",
                   selectedIndex === index && "stroke-wurth-gray-800",
                 )}
+                data-button-action="Register Select address"
               />
 
-              <div className="flex-1 whitespace-normal text-wrap text-left text-base font-medium text-wurth-gray-800">
+              <div
+                className="flex-1 whitespace-normal text-wrap text-left text-base font-medium text-wurth-gray-800"
+                data-button-action="Register Select address"
+              >
                 {address["street-address"]}, {address.locality},{" "}
                 {address.region} {address.county && `, ${address.county} `}
                 {address["postal-code"]}

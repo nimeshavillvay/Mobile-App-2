@@ -166,7 +166,12 @@ const CartList = ({ token, plants }: CartListProps) => {
             type="button"
             onClick={() => setExcludedSkus([])}
           >
-            <Close className="stroke-red-800" width={12} height={12} />
+            <Close
+              className="stroke-red-800"
+              width={12}
+              height={12}
+              data-button-action="Cart Remove Not Available Notice"
+            />
           </Button>
         </Alert>
       )}
@@ -193,7 +198,12 @@ const CartList = ({ token, plants }: CartListProps) => {
             type="button"
             onClick={() => setDiscontinuedSkus([])}
           >
-            <Close className="stroke-red-800" width={12} height={12} />
+            <Close
+              className="stroke-red-800"
+              width={12}
+              height={12}
+              data-button-action="Cart Remove Discontinued Notice"
+            />
           </Button>
         </Alert>
       )}
@@ -246,7 +256,10 @@ const CartList = ({ token, plants }: CartListProps) => {
                   className="btn-clear-cart flex-1 bg-red-50 font-bold text-wurth-red-650 hover:bg-red-100 md:flex-none"
                   disabled={deleteCartItemMutation.isPending}
                 >
-                  <Trash className="size-4 fill-wurth-red-650" />
+                  <Trash
+                    className="size-4 fill-wurth-red-650"
+                    data-button-action="Clear Cart"
+                  />
                   <span>Clear cart</span>
                 </Button>
               </AlertDialogTrigger>

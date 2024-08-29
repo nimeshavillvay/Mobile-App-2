@@ -52,7 +52,7 @@ const SearchBar = ({ className }: SearchBarProps) => {
         </Form.Control>
       </Form.Field>
 
-      <button type="button">
+      <button type="button" className="btnAction">
         <VisuallyHidden>Scan barcode</VisuallyHidden>
 
         <BiBarcodeReader />
@@ -64,7 +64,7 @@ const SearchBar = ({ className }: SearchBarProps) => {
       />
 
       <Form.Submit asChild>
-        <button>
+        <button className="btnAction">
           <VisuallyHidden>Search</VisuallyHidden>
 
           <MdSearch />

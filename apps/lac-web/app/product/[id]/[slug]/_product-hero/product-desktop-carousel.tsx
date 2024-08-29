@@ -125,7 +125,10 @@ const ProductDesktopCarousel = ({
                             size="icon"
                             className="h-fit p-0"
                           >
-                            <Close className="stroke-white" />
+                            <Close
+                              className="stroke-white"
+                              data-button-action="Close Enlarged Image"
+                            />
                           </Button>
                         </DialogClose>
                       </div>

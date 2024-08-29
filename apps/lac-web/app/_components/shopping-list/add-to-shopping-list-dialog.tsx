@@ -257,12 +257,10 @@ const AddToShoppingListDialog = ({
               <Button
                 type="submit"
                 className="h-9 w-[90px] rounded-[3px] bg-brand-primary px-4 text-base font-normal uppercase text-white"
+                data-button-action="Add to Wishlist"
               >
                 {isLoading ? (
-                  <LoaderCircle
-                    className="btnAction animate-spin"
-                    data-button-action="Open Wishlist"
-                  />
+                  <LoaderCircle className="animate-spin" />
                 ) : (
                   "UPDATE"
                 )}

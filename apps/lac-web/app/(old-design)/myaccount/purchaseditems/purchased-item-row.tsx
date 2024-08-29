@@ -355,6 +355,7 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
                 className="w-[170px]"
                 disabled={!isValidQuantity || addToCartMutation.isPending}
                 form={formId}
+                data-button-action="Purchase Items Add to Cart"
               >
                 Add to cart
               </Button>

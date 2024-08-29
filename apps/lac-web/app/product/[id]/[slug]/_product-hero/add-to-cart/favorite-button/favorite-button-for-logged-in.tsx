@@ -33,6 +33,7 @@ const FavoriteButtonForLoggedIn = ({
         onClick={() => {
           setShowShoppingListsDialog(true);
         }}
+        data-button-action="Open Wishlist"
       >
         {isFavorite ? (
           <BookmarkFilled className="size-4" />

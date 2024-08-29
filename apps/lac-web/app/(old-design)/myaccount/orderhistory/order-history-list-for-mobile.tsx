@@ -32,7 +32,11 @@ const OrderHistoryRowForMobile = ({ order }: { readonly order: Order }) => {
     order.orderNo !== "" ? `/myaccount/orderhistory/${order.orderNo}` : "#";
 
   return (
-    <Link className="flex flex-col gap-3 bg-white p-4" href={orderDetailHref}>
+    <Link
+      className="btnAction flex flex-col gap-3 bg-white p-4"
+      href={orderDetailHref}
+      data-button-action="Order History Mobile List"
+    >
       <div className="flex flex-row justify-between">
         <div className="font-bold">
           {order.attnName !== ""

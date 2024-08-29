@@ -79,8 +79,9 @@ const ShippingAddress = ({
         ))}
         {isAdminOrOsr && (
           <button
-            className="flex cursor-pointer flex-row items-center justify-center space-y-3 border-gray-100 bg-transparent p-5 text-center font-bold shadow hover:shadow-lg md:space-y-5 md:p-6"
+            className="btnAction flex cursor-pointer flex-row items-center justify-center space-y-3 border-gray-100 bg-transparent p-5 text-center font-bold shadow hover:shadow-lg md:space-y-5 md:p-6"
             onClick={() => setOpenShippingAddressDialog(true)}
+            data-button-action="Company Profile Open Add New Shipping Address Dialog"
           >
             <span className="sr-only">Add shipping address</span>+ Add new
             shipping address

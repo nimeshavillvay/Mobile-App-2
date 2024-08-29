@@ -59,6 +59,8 @@ const VariantSelect = ({ values }: VariantSelectProps) => {
             <Link
               key={value.id}
               href={`/product/${value.productid}/${value.slug}`}
+              className="btnAction"
+              data-btn-action="Select Product Variant"
             >
               {value.name}
             </Link>

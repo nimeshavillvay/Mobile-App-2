@@ -457,7 +457,7 @@ const AddToCart = ({
             type="button"
             variant="subtle"
             size="icon"
-            className="btnAction up-minus up-control size-10 rounded-sm"
+            className="up-minus up-control size-10 rounded-sm"
             onClick={reduceQuantity}
             disabled={
               !quantity ||
@@ -466,7 +466,10 @@ const AddToCart = ({
               disableAddToCartButton
             }
           >
-            <Minus className="size-4" data-button-action="Decrease Quantity" />
+            <Minus
+              className="btnAction size-4"
+              data-button-action="Decrease Quantity"
+            />
             <span className="sr-only">Reduce quantity</span>
           </Button>
 
@@ -496,7 +499,7 @@ const AddToCart = ({
             type="button"
             variant="subtle"
             size="icon"
-            className="btnAction up-plus up-control size-10 rounded-sm"
+            className="up-plus up-control size-10 rounded-sm"
             onClick={increaseQuantity}
             disabled={
               quantity?.toString().length > 5 ||
@@ -517,7 +520,10 @@ const AddToCart = ({
         className="h-full flex-[5] gap-2 rounded-lg px-5 py-4 shadow-md md:flex-[2]"
         disabled={addToCartMutation.isPending || disableAddToCartButton}
       >
-        <AddToCartIcon className="stroke-white" />
+        <AddToCartIcon
+          className="stroke-white"
+          data-button-action="Add to cart from Dialog"
+        />
 
         <span className="text-lg font-semibold">Add to cart</span>
       </Button>
@@ -595,6 +601,7 @@ const LocationStocks = ({
                   width={16}
                   height={16}
                   className="transition duration-150 ease-out group-data-[state=open]:rotate-90"
+                  data-button-action="Check Other Stores"
                 />
               </Button>
             </CollapsibleTrigger>

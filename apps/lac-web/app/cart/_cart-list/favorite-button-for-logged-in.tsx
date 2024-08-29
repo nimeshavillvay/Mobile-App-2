@@ -38,12 +38,23 @@ const FavoriteButtonForLoggedIn = ({
             setShowShoppingListsDialog(true);
           }}
         >
-          <span className="text-[13px] leading-5">Add to List</span>
+          <span
+            className="text-[13px] leading-5"
+            data-button-action="Cart Open Add to Shopping List Dialog"
+          >
+            Add to List
+          </span>
 
           {isFavorite ? (
-            <BookmarkFilled className="size-4" />
+            <BookmarkFilled
+              className="size-4"
+              data-button-action="Cart Open Add to Shopping List Dialog"
+            />
           ) : (
-            <BookmarkOutline className="size-4" />
+            <BookmarkOutline
+              className="size-4"
+              data-button-action="Cart Open Add to Shopping List Dialog"
+            />
           )}
         </Button>
       )}
@@ -57,9 +68,15 @@ const FavoriteButtonForLoggedIn = ({
           }}
         >
           {isFavorite ? (
-            <BookmarkFilled className="size-4" />
+            <BookmarkFilled
+              className="size-4"
+              data-button-action="Cart Mobile Open Add to Shopping List Dialog"
+            />
           ) : (
-            <BookmarkOutline className="size-4" />
+            <BookmarkOutline
+              className="size-4"
+              data-button-action="Cart Mobile Open Add to Shopping List Dialog"
+            />
           )}
 
           <span className="sr-only">Add to list</span>

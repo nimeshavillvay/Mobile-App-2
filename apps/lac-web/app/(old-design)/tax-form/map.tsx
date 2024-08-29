@@ -211,7 +211,8 @@ const Map = ({ taxFormDetails }: { readonly taxFormDetails: TaxFormItems }) => {
                   onClick={() => {
                     handleModalSelect(option.stateCode, option.taxFormType);
                   }}
-                  className="p-2.5 hover:bg-brand-gray-200"
+                  className="btnAction p-2.5 hover:bg-brand-gray-200"
+                  data-button-action="Tax Form Map"
                 >
                   {option.text}
                 </button>

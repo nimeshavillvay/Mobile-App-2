@@ -68,6 +68,7 @@ const ActionConfirmationDialog = ({
             <Button
               className="w-1/2 rounded-sm bg-brand-primary px-8 py-1.5 uppercase md:w-[120px]"
               onClick={onConfirm}
+              data-button-action="User Confirm Delete"
             >
               {okText}
             </Button>

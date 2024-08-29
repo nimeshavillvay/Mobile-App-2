@@ -45,8 +45,9 @@ const SalesRepresentative = ({ token }: SalesRepresentativeProps) => {
                   href={`tel:18663268131`}
                   className={cn(
                     buttonVariants({ variant: "link" }),
-                    "group h-fit p-0",
+                    "btnAction group h-fit p-0",
                   )}
+                  data-btn-action="Click Sales Rep Phone"
                 >
                   <Phone className="group-hover:stroke-red-800" />
 
@@ -59,8 +60,9 @@ const SalesRepresentative = ({ token }: SalesRepresentativeProps) => {
                   href={`mailto:johndoe@gmail.com`}
                   className={cn(
                     buttonVariants({ variant: "link" }),
-                    "group h-fit p-0",
+                    "btnAction group h-fit p-0",
                   )}
+                  data-btn-action="Click Sales Rep Email"
                 >
                   <Email className="group-hover:fill-red-800" />
 

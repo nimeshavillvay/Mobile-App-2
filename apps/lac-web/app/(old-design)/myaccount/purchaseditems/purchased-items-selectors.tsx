@@ -162,7 +162,11 @@ const PurchasedItemsSelectors = ({
         </div>
 
         <div className="mt-4 flex flex-row items-center gap-2">
-          <Button className="min-w-24" onClick={search}>
+          <Button
+            className="min-w-24"
+            onClick={search}
+            data-button-action="Purchase Items Mobile View Search"
+          >
             Search
           </Button>
           <Button
@@ -170,6 +174,7 @@ const PurchasedItemsSelectors = ({
             onClick={() => {
               onClickReset();
             }}
+            data-button-action="Purchase Items Mobile View Reset Filters"
           >
             Reset
           </Button>
@@ -179,11 +184,15 @@ const PurchasedItemsSelectors = ({
       <div className="block px-4 md:hidden">
         <div className="mb-3 flex justify-between">
           <button
-            className="items-left flex cursor-pointer items-center font-wurth text-base font-bold uppercase tracking-wide"
+            className="btnAction items-left flex cursor-pointer items-center font-wurth text-base font-bold uppercase tracking-wide"
             onClick={() => setOpen(true)}
+            data-button-action="Purchase Items Mobile Sort & Filter"
           >
             Sort & Filter
-            <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200" />
+            <ChevronDown
+              className="h-4 w-4 shrink-0 transition-transform duration-200"
+              data-button-action="Purchase Items Mobile Sort & Filter"
+            />
           </button>
           <div>
             {!isLoading && (

@@ -113,7 +113,8 @@ const Prop65Warning = async ({ warning }: { readonly warning: string }) => {
           href="${props.href}"
           target="_blank"
           rel="noopener noreferrer"
-          class="underline"
+          class="btnAction underline"
+          data-btn-action="Warning"
           >${children}</a
         >`,
     }),

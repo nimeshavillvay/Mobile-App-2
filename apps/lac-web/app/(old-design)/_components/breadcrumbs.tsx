@@ -17,7 +17,11 @@ const Breadcrumbs = ({ links }: BreadcrumbsProps) => {
         )}
       >
         <li className="flex flex-row items-center">
-          <Link href="/" className="text-xl leading-none text-black">
+          <Link
+            href="/"
+            className="btnAction text-xl leading-none text-black"
+            data-button-action="View Home"
+          >
             <VisuallyHidden>Home</VisuallyHidden>
             <MdOutlineHome />
           </Link>
@@ -28,7 +32,11 @@ const Breadcrumbs = ({ links }: BreadcrumbsProps) => {
             key={link.href}
             className="flex min-w-0 flex-row items-center last:text-[#828282]"
           >
-            <Link href={link.href} className="truncate">
+            <Link
+              href={link.href}
+              className="btnAction truncate"
+              data-button-action={link.label}
+            >
               {link.label}
             </Link>
           </li>

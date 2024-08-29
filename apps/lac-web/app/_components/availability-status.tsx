@@ -38,12 +38,12 @@ const AvailabilityStatus = ({
 
       {isHomeBranch && !isNotInStock && (
         <div className="text-sm font-medium text-wurth-gray-800">
-          <span className="stock-available">{amount} in</span> stock at
-          <span className="stock-location"> {location}</span>
+          <span className="stock-available">{amount}</span> in stock at{" "}
+          <span className="stock-location">{location}</span>
         </div>
       )}
       {(isNotInStock || !isHomeBranch) && !!backOrderDate && (
-        <div className="flex-1 text-sm font-medium text-wurth-gray-800">
+        <div className="stock-message flex-1 text-sm font-medium text-wurth-gray-800">
           Items are expected to ship by{" "}
           {dayjs(backOrderDate).format(UI_DATE_FORMAT)}.
         </div>

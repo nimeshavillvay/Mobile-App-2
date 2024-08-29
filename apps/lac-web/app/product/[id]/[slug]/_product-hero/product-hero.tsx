@@ -57,7 +57,8 @@ const ProductHero = async ({ id, slug }: ProductHeroProps) => {
       <div className="container my-2 flex flex-row items-center gap-2 md:my-1">
         <Link
           href={`/search?query=${product.brand}`}
-          className="btn-brand text-sm font-normal text-black hover:underline"
+          className="btnAction btn-brand text-sm font-normal text-black hover:underline"
+          data-btn-action={`Shop Brand ${product.brand}`}
         >
           Shop <span className="font-semibold">{product.brand}</span>
         </Link>

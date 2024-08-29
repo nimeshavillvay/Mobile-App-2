@@ -287,7 +287,8 @@ const TermsAndConditionsPage = () => {
               revisions will be available on the WLAC&apos;s website at{" "}
               <a
                 href="Terms-and-Conditions-for-WLACs-Purchase-of-Products-from-Suppliers"
-                className="text-blue-600 hover:text-blue-900 hover:underline"
+                className="btnAction text-blue-600 hover:text-blue-900 hover:underline"
+                data-btn-action="View Terms and Conditions"
               >
                 www.wurthlac.com/Terms-and-Conditions-for-WLACs-Purchase-of-Products-from-Suppliers
               </a>

@@ -37,12 +37,18 @@ const MobileFavoriteButton = ({ token, productId }: FavoriteButtonProps) => {
       >
         {isFavorite ? (
           <>
-            <FavoriteIcon className="text-2xl" />
+            <FavoriteIcon
+              className="text-2xl"
+              data-button-action="Purchase Items Open Add to Wishlist"
+            />
             added to list
           </>
         ) : (
           <>
-            <AddToFavoritesIcon className="pt-1 text-2xl" />
+            <AddToFavoritesIcon
+              className="pt-1 text-2xl"
+              data-button-action="Purchase Items Open Add to Wishlist"
+            />
             add to list
           </>
         )}

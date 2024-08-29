@@ -60,9 +60,10 @@ const OrderTrackingCard = ({
                 delivery.tracker.map((tracker) => (
                   <Link
                     key={`${delivery.deliveryNo}-${tracker.code}`}
-                    className="font-bold text-black"
+                    className="btnAction font-bold text-black"
                     href={tracker.url ?? "#"}
                     target="_blank"
+                    data-button-action={`View Tracker Code ${tracker.code ?? "N/A"}`}
                   >
                     Tracking#: {tracker.code ?? "N/A"}
                   </Link>

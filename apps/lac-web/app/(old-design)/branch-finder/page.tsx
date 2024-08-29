@@ -24,7 +24,13 @@ const Branch = ({ branchData }: { readonly branchData: BranchType }) => {
               key={phone.phoneNo}
               className="w-fit text-blue-600 hover:text-blue-800 hover:underline"
             >
-              <a href={phone.link}>{phone.phoneNo}</a>
+              <a
+                href={phone.link}
+                className="btnAction"
+                data-btn-action="Click Branch Phone"
+              >
+                {phone.phoneNo}
+              </a>
             </li>
           ))}
 
@@ -47,7 +53,8 @@ const BranchFinderPage = () => {
         contact Wurth Louis and Company Customer Service at{" "}
         <a
           href="tel:8004224389"
-          className="text-blue-700 hover:text-blue-900 hover:underline"
+          className="btnAction text-blue-700 hover:text-blue-900 hover:underline"
+          data-btn-action="Click Branch Customer Service Phone"
         >
           (800) 422-4389
         </a>

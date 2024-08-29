@@ -357,7 +357,11 @@ const ProfileUpdateForm = ({
           </div>
 
           <div className="col-span-3 flex justify-end">
-            <Button type="submit" className="px-6">
+            <Button
+              type="submit"
+              className="px-6"
+              data-button-action="User Update Profile"
+            >
               Update
             </Button>
           </div>
