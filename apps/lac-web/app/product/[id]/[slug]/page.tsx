@@ -20,6 +20,7 @@ import Balancer from "react-wrap-balancer";
 import ProductHero from "./_product-hero";
 import RelatedProductsList from "./_related-products-list";
 import { getProduct } from "./apis";
+import ProductPageGtm from "./product-page-gtm";
 import type { ProductPageProps, RelatedProduct } from "./types";
 
 export const generateMetadata = async ({
@@ -59,6 +60,7 @@ const ProductPage = async ({ params: { id, slug } }: ProductPageProps) => {
 
   return (
     <>
+      <ProductPageGtm productId={id} />
       {!!lastBreadcrumb && (
         <div className="container my-4 md:hidden">
           <Link

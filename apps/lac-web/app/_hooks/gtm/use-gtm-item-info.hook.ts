@@ -34,6 +34,7 @@ const useGtmProducts = (productIdList: Product) => {
   return useQuery({
     queryKey: ["gtm", "products", productIdList, token],
     queryFn: async () => getGtmProducts(productIdList, token),
+    enabled: productIdList.length > 0,
   });
 };
 
