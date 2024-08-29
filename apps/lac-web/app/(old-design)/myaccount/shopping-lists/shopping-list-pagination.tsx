@@ -1,3 +1,4 @@
+import { cn } from "@/_lib/utils";
 import {
   Pagination,
   PaginationContent,
@@ -37,11 +38,12 @@ const ShoppingListPagination = ({
       <PaginationContent>
         <PaginationItem>
           <PaginationPrevious
-            className={`${
+            className={cn(
               page === 1
                 ? "pointer-events-none cursor-not-allowed opacity-50"
-                : ""
-            }`}
+                : "",
+              "btnAction",
+            )}
             isActive={page !== 1}
             href={getHref(page - 1)}
           />
@@ -55,7 +57,11 @@ const ShoppingListPagination = ({
 
         {pages.map((aPage) => (
           <PaginationItem key={aPage}>
-            <PaginationLink href={getHref(aPage)} isActive={aPage === page}>
+            <PaginationLink
+              href={getHref(aPage)}
+              isActive={aPage === page}
+              className="btnAction"
+            >
               {aPage}
             </PaginationLink>
           </PaginationItem>
@@ -69,11 +75,12 @@ const ShoppingListPagination = ({
 
         <PaginationItem>
           <PaginationNext
-            className={`${
+            className={cn(
               page === totalPages || totalPages == 0
                 ? "pointer-events-none cursor-not-allowed opacity-50"
-                : ""
-            }`}
+                : "",
+              "btnAction",
+            )}
             isActive={page !== totalPages && totalPages !== 0}
             href={getHref(page + 1)}
           />

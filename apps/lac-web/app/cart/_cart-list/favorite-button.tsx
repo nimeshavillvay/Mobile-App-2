@@ -39,8 +39,16 @@ const FavoriteButton = ({ token, productId, display }: FavoriteButtonProps) => {
               router.push("/sign-in");
             }}
           >
-            <span className="text-[13px] leading-5">Add to List</span>
-            <BookmarkOutline className="size-4" />
+            <span
+              className="text-[13px] leading-5"
+              data-button-action="Cart Logged Out Open Add to Shopping List Dialog"
+            >
+              Add to List
+            </span>
+            <BookmarkOutline
+              className="size-4"
+              data-button-action="Cart Logged Out Open Add to Shopping List Dialog"
+            />
           </Button>
         ))}
 
@@ -61,7 +69,10 @@ const FavoriteButton = ({ token, productId, display }: FavoriteButtonProps) => {
               router.push("/sign-in");
             }}
           >
-            <BookmarkOutline className="size-4" />
+            <BookmarkOutline
+              className="size-4"
+              data-button-action="Cart Logged Out Mobile Open Add to Shopping List Dialog"
+            />
             <span className="sr-only">Add to list</span>
           </Button>
         ))}

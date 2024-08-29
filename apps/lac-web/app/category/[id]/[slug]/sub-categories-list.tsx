@@ -34,7 +34,8 @@ const SubCategoriesList = ({ categories }: SubCategoriesListProps) => {
             <li key={category.id}>
               <Link
                 href={`/category/${category.id}/${category.slug}`}
-                className="btn-nav flex flex-col items-center gap-4"
+                className="btnAction btn-nav flex flex-col items-center gap-4"
+                data-btn-action={`View Sub-Category ${category.title}`}
               >
                 <div className="grid size-28 place-items-center rounded-full bg-gradient-to-t from-[#EBEFF5] to-[#F7FAFF] md:size-[11.25rem]">
                   <Image
@@ -62,6 +63,7 @@ const SubCategoriesList = ({ categories }: SubCategoriesListProps) => {
             variant="outline"
             className="mx-auto self-center py-2.5 font-bold text-black"
             onClick={() => setShowAll(!showAll)}
+            data-button-action={`Sub-Category ${showAll ? "Show less" : "Show all"}`}
           >
             {showAll ? "Show less" : "Show all"}
           </Button>

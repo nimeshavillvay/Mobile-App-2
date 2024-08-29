@@ -321,6 +321,7 @@ const UserUpdateForm = ({
                 className="bg-brand-secondary px-6"
                 type="button"
                 onClick={() => handlePasswordReset()}
+                data-button-action="Logged In User Reset Password"
               >
                 Reset User Password
               </Button>
@@ -328,6 +329,7 @@ const UserUpdateForm = ({
                 type="submit"
                 className="px-6"
                 disabled={user?.status === "SUSPENDED"}
+                data-button-action="Update User"
               >
                 Update
               </Button>

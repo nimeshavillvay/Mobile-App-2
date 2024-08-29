@@ -57,7 +57,8 @@ const CompliancePage = () => {
               target="_blank"
               rel="noopener noreferrer"
               href="https://www.wuerth.com/downloads/pdf/Compliance/EN-Compliance_Buch_2021.pdf"
-              className="flex font-bold uppercase tracking-normal text-black no-underline"
+              className="btnAction flex font-bold uppercase tracking-normal text-black no-underline"
+              data-btn-action="Download Code of Compliance"
             >
               Download Code of Compliance
               <IoArrowForwardSharp className="self-center text-lg leading-none" />
@@ -70,7 +71,8 @@ const CompliancePage = () => {
               target="_blank"
               rel="noopener noreferrer"
               href="https://www.bkms-system.net/wuerth"
-              className="flex font-bold uppercase tracking-normal text-black no-underline"
+              className="btnAction flex font-bold uppercase tracking-normal text-black no-underline"
+              data-btn-action="Click Reporting Hotline Speak Up"
             >
               Reporting Hotline Speak Up
               <IoArrowForwardSharp className="self-center text-lg leading-none" />
@@ -122,7 +124,8 @@ const CompliancePage = () => {
             target="_blank"
             rel="noopener noreferrer"
             href="https://www.bkms-system.net/wuerth"
-            className="text-[#007bff] hover:underline"
+            className="btnAction text-[#007bff] hover:underline"
+            data-btn-action="Click Submit Report"
           >
             https://www.bkms-system.net/wuerth
             <VisuallyHidden>(opens in a new window)</VisuallyHidden>

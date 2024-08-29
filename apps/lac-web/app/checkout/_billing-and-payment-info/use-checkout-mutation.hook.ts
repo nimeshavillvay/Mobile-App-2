@@ -61,37 +61,39 @@ const useCheckoutMutation = () => {
         title: "Successfully placed order",
       });
 
-      gtmItemsInfo?.forEach((gtmItemInfo) => {
-        sendGTMEvent({
-          event: "purchase",
-          purchaseData: {
-            currency: "USD",
-            value: gtmItemInfo?.price,
-            orderEnteredByOSR: "",
-            items: [
-              {
-                item_id: gtmItemInfo?.item_id,
-                item_sku: gtmItemInfo?.item_sku,
-                item_name: gtmItemInfo?.item_name,
-                item_brand: gtmItemInfo?.item_brand,
-                price: gtmItemInfo?.price,
-                quantity: 1,
-                item_categoryid: gtmItemInfo?.item_categoryid,
-                item_primarycategory: gtmItemInfo?.item_primarycategory,
-                item_category: gtmItemInfo?.item_category_path[0] ?? "",
-                item_category1: gtmItemInfo?.item_category_path[1] ?? "",
-                item_category2: gtmItemInfo?.item_category_path[2] ?? "",
-              },
-            ],
-          },
-          data: {
-            userid: gtmUser?.userid,
-            account_type: gtmUser?.account_type,
-            account_industry: gtmUser?.account_industry,
-            account_sales_category: gtmUser?.account_sales_category,
-          },
+      if (gtmItemsInfo !== null && gtmItemsInfo !== undefined) {
+        gtmItemsInfo?.forEach((gtmItemInfo) => {
+          sendGTMEvent({
+            event: "purchase",
+            purchaseData: {
+              currency: "USD",
+              value: gtmItemInfo?.price,
+              orderEnteredByOSR: "",
+              items: [
+                {
+                  item_id: gtmItemInfo?.item_id,
+                  item_sku: gtmItemInfo?.item_sku,
+                  item_name: gtmItemInfo?.item_name,
+                  item_brand: gtmItemInfo?.item_brand,
+                  price: gtmItemInfo?.price,
+                  quantity: 1,
+                  item_categoryid: gtmItemInfo?.item_categoryid,
+                  item_primarycategory: gtmItemInfo?.item_primarycategory,
+                  item_category: gtmItemInfo?.item_category_path[0] ?? "",
+                  item_category1: gtmItemInfo?.item_category_path[1] ?? "",
+                  item_category2: gtmItemInfo?.item_category_path[2] ?? "",
+                },
+              ],
+            },
+            data: {
+              userid: gtmUser?.userid,
+              account_type: gtmUser?.account_type,
+              account_industry: gtmUser?.account_industry,
+              account_sales_category: gtmUser?.account_sales_category,
+            },
+          });
         });
-      });
+      }
 
       router.replace(`/confirmation/${data.orderids[0]}`);
     },

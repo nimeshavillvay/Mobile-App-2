@@ -234,6 +234,7 @@ const FiltersForMobileDialog = ({ open, setOpen }: FiltersForMobileProps) => {
           <Button
             className="min-w-24 rounded-sm border border-brand-primary bg-transparent p-6 font-bold text-brand-primary"
             onClick={onResetFiltersMobile}
+            data-button-action="Purchase Items Mobile Reset Filters"
           >
             Reset
           </Button>
@@ -241,6 +242,7 @@ const FiltersForMobileDialog = ({ open, setOpen }: FiltersForMobileProps) => {
           <Button
             className="min-w-24 p-6"
             onClick={() => onSearchMobileFilters()}
+            data-button-action="Purchase Items Mobile Apply Filters"
           >
             Apply
           </Button>
@@ -279,10 +281,11 @@ const MobileFilterSortItemOption = ({
       )}
     >
       <button
-        className="flex w-full items-center justify-between text-sm"
+        className="btnAction flex w-full items-center justify-between text-sm"
         onClick={() => {
           setActiveFilter(sortingType);
         }}
+        data-button-action="Purchase Items Mobile Sort"
       >
         {title}
         <MdCheck
@@ -290,6 +293,7 @@ const MobileFilterSortItemOption = ({
             "text-3xl leading-none text-brand-secondary",
             activeFilter == sortingType ? "block" : "hidden",
           )}
+          data-button-action="Purchase Items Mobile Sort"
         />
       </button>
     </div>

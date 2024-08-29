@@ -169,7 +169,11 @@ const PasswordResetForm = ({
         </div>
 
         <div className="text-right">
-          <Button type="submit" className="w-full p-2.5 font-bold">
+          <Button
+            type="submit"
+            className="w-full p-2.5 font-bold"
+            data-button-action="Reset Password"
+          >
             Reset Password
           </Button>
         </div>

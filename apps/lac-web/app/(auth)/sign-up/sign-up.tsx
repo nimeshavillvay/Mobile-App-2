@@ -109,6 +109,7 @@ const SignUp = () => {
           type="submit"
           className="w-full py-2.5 font-bold"
           disabled={checkEmailMutation.isPending}
+          data-button-action="Sign Up Check Email Address"
         >
           Continue
         </Button>

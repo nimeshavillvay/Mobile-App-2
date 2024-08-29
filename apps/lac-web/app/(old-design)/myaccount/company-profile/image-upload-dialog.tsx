@@ -120,7 +120,7 @@ const ImageUploadDialog = ({
               <br /> or
             </p>
             <div className="text-center">
-              <Button onClick={open}>
+              <Button onClick={open} data-button-action="Company Profile Image">
                 <span className="sr-only">Upload profile image</span>Choose File
               </Button>
 
@@ -136,7 +136,12 @@ const ImageUploadDialog = ({
               </ul>
 
               {files.length > 0 && (
-                <Button onClick={submitImage}>Upload Image</Button>
+                <Button
+                  onClick={submitImage}
+                  data-button-action="Company Profile Upload Image"
+                >
+                  Upload Image
+                </Button>
               )}
             </div>
           </div>

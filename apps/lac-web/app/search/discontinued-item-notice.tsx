@@ -56,10 +56,18 @@ const DiscontinuedItemNotice = ({
           </DialogDescription>
         </DialogHeader>
         <div className="flex flex-row items-center justify-end space-x-4">
-          <Button variant="outline" onClick={() => onCancelHandler()}>
+          <Button
+            variant="outline"
+            onClick={() => onCancelHandler()}
+            data-button-action="Product Discontinued Close And Redirect to Home"
+          >
             No
           </Button>
-          <Button variant="default" onClick={() => onAcceptHandler()}>
+          <Button
+            variant="default"
+            onClick={() => onAcceptHandler()}
+            data-button-action="Product Discontinued Close And Redirect to Category"
+          >
             Yes
           </Button>
         </div>

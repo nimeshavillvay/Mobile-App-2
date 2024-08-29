@@ -63,6 +63,7 @@ const ShippingAddressCard = ({
                   default: true,
                 })
               }
+              data-button-action="Company Profile Set Defalut Shipping Address"
             >
               Set Default
             </Button>
@@ -76,6 +77,7 @@ const ShippingAddressCard = ({
               variant="ghost"
               className="hover:bg-gray-200"
               onClick={() => setOpenShippingAddressDialog(true)}
+              data-button-action="Company Profile Open Edit Shipping Address Dialog"
             >
               <span className="sr-only">Edit shipping address</span>
               <MdOutlineEdit className="text-2xl" />

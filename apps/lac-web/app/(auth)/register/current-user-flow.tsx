@@ -256,7 +256,8 @@ const CurrentUserFlow = ({ passwordPolicies }: CurrentUserFlowProps) => {
             target="_blank"
             rel="noopener noreferrer"
             href="/privacy-policy"
-            className="font-semibold underline"
+            className="btnAction font-semibold underline"
+            data-btn-action="Current User Flow Privacy Notice"
           >
             Privacy Notice
           </a>{" "}
@@ -265,7 +266,8 @@ const CurrentUserFlow = ({ passwordPolicies }: CurrentUserFlowProps) => {
             target="_blank"
             rel="noopener noreferrer"
             href="/terms-of-sale"
-            className="font-semibold underline"
+            className="btnAction font-semibold underline"
+            data-btn-action="Current User Flow Terms and Conditions"
           >
             Terms and Conditions
           </a>{" "}
@@ -279,6 +281,7 @@ const CurrentUserFlow = ({ passwordPolicies }: CurrentUserFlowProps) => {
             onClick={onAccountDetailsSubmit}
             className="h-fit min-w-[7.5rem] py-2.5 font-bold shadow-md"
             disabled={!soldToAccount || !invoiceNo}
+            data-button-action="Register Current User Flow"
           >
             Continue
           </Button>
@@ -303,6 +306,7 @@ const CurrentUserFlow = ({ passwordPolicies }: CurrentUserFlowProps) => {
               className="font-bold"
               onClick={() => setStep("account")}
               disabled={createUserMutation.isPending}
+              data-button-action="Register Current User Flow Update"
             >
               Edit
             </Button>

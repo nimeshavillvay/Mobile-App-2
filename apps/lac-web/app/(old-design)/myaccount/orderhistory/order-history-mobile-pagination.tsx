@@ -64,11 +64,12 @@ const OrderHistoryMobilePagination = ({
               key={pageNumber}
               onClick={() => setPage(pageNumber)}
               className={cn(
-                "flex w-full items-center justify-between px-5 py-3 font-bold",
+                "btnAction flex w-full items-center justify-between px-5 py-3 font-bold",
                 page == pageNumber
                   ? "bg-brand-secondary bg-opacity-20 text-brand-secondary"
                   : "",
               )}
+              data-button-action="Order History Set Page Number"
             >
               Page {pageNumber}
               <MdCheck
@@ -76,6 +77,7 @@ const OrderHistoryMobilePagination = ({
                   "text-3xl leading-none text-brand-secondary",
                   page == pageNumber ? "block" : "hidden",
                 )}
+                data-button-action="Order History Set Page Number"
               />
             </button>
           ))}

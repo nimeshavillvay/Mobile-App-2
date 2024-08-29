@@ -65,7 +65,11 @@ export const ScrollablePreviousButton = ({
         className,
       )}
     >
-      <ArrowLeft width={16} height={16} />
+      <ArrowLeft
+        width={16}
+        height={16}
+        data-button-action="Scrollable Show previous"
+      />
 
       <span className="sr-only">Show previous</span>
     </Button>
@@ -95,7 +99,11 @@ export const ScrollableNextButton = ({
         className,
       )}
     >
-      <ArrowRight width={16} height={16} />
+      <ArrowRight
+        width={16}
+        height={16}
+        data-button-action="Scrollable Show Next"
+      />
 
       <span className="sr-only">Show next</span>
     </Button>

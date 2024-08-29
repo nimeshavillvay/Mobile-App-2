@@ -417,7 +417,7 @@ const AddMoreItemsForm = () => {
 
         <button
           type="button"
-          className="mt-3 flex flex-row items-center gap-1 rounded border px-4 py-2.5 text-sm font-semibold shadow-sm"
+          className="btnAction mt-3 flex flex-row items-center gap-1 rounded border px-4 py-2.5 text-sm font-semibold shadow-sm"
           onClick={() => {
             append({
               sku: "",
@@ -428,7 +428,7 @@ const AddMoreItemsForm = () => {
             setIsFormSubmitted(false);
           }}
         >
-          <MdAdd />
+          <MdAdd data-button-action="Quick Order Add More Items" />
           <span>Add more items</span>
         </button>
 
@@ -452,6 +452,7 @@ const AddMoreItemsForm = () => {
                   variant="ghost"
                   className="font-medium"
                   disabled={addMultipleToCartMutation.isPending}
+                  data-button-action="Quick Order Clear All Items"
                 >
                   Clear all
                 </Button>
@@ -483,8 +484,14 @@ const AddMoreItemsForm = () => {
               (!isFileProcessing && !isBulkUploadDone && !!file)
             }
           >
-            <AddToCart className="stroke-white stroke-2" width={16} />
-            <span>Add all items to cart</span>
+            <AddToCart
+              className="stroke-white stroke-2"
+              width={16}
+              data-button-action="Quick Order All Items to Cart"
+            />
+            <span data-button-action="Quick Order All Items to Cart">
+              Add all items to cart
+            </span>
           </Button>
         </div>
 

@@ -80,7 +80,9 @@ const LocationStocks = ({ token, productId }: LocationStocksProps) => {
               asChild
             >
               <Button type="button" variant="subtle">
-                <span>Check Other Stores</span>
+                <span data-button-action="Add to Shopping List Logged out">
+                  Check Other Stores
+                </span>
 
                 <ChevronRight
                   width={16}

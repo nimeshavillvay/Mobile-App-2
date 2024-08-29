@@ -55,9 +55,10 @@ const CompanyProfilePage = async () => {
           </Suspense>
           <div className="mt-3 flex items-center">
             <Link
-              className="flex items-center text-nowrap rounded-sm bg-brand-secondary px-4 py-2 text-center font-wurth font-extrabold uppercase text-white hover:bg-[#008fc6]"
+              className="btnAction flex items-center text-nowrap rounded-sm bg-brand-secondary px-4 py-2 text-center font-wurth font-extrabold uppercase text-white hover:bg-[#008fc6]"
               href={`${apiUrl}/assets/Account_Application.pdf`}
               target="_blank"
+              data-button-action="Company Profile Request for Payment Terms"
             >
               <CloudDownload className="ml-2 mr-4 h-5 w-5" />
               <span>Request for Payment Terms</span>

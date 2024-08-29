@@ -68,10 +68,12 @@ const BarcodeScannerDialog = () => {
             onClick={() => resetOnOpen()}
           >
             <BarcodeScan
-              className="btnAction size-5"
+              className="size-5"
               data-button-action="Search By Scanning"
             />
-            <span className="sr-only">Scan barcode</span>
+            <span className="sr-only" data-button-action="Search By Scanning">
+              Scan barcode
+            </span>
           </Button>
         </DialogTrigger>
 
@@ -111,7 +113,12 @@ const BarcodeScannerDialog = () => {
           <BarcodeScanner onScanSuccess={onScanSuccess} />
 
           <DialogFooter>
-            <Button onClick={() => setOpen(false)}>Cancel</Button>
+            <Button
+              onClick={() => setOpen(false)}
+              data-button-action="Cancel Search By Scanning"
+            >
+              Cancel
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

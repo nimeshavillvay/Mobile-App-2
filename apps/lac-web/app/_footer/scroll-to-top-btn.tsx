@@ -14,9 +14,9 @@ const ScrollToTopBtn = () => {
       className="w-full font-bold md:w-fit"
       onClick={scrollToTop}
     >
-      <ArrowPathUp className="size-4" />
+      <ArrowPathUp className="size-4" data-button-action="Scroll Back to top" />
 
-      <span>Back to top</span>
+      <span data-button-action="Scroll Back to top">Back to top</span>
     </Button>
   );
 };

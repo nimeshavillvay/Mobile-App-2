@@ -186,6 +186,7 @@ const LaminateEdgeBanding = ({
                     type="button"
                     onClick={handleAddAllItemsToCart}
                     disabled={priceCheckRequest.length === 0}
+                    data-button-action="Laminate Finder EdgeBand Add To Cart"
                   >
                     Add to cart
                   </Button>

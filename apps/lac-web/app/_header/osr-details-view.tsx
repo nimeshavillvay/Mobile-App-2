@@ -38,7 +38,7 @@ const OSRDetailsView = ({ token }: { readonly token: string }) => {
             className="h-auto w-px bg-brand-gray-500"
           />
           <button
-            className="ml-4 flex items-center gap-2 font-semibold"
+            className="btnAction ml-4 flex items-center gap-2 font-semibold"
             onClick={() =>
               logoutMutation.mutate(undefined, {
                 onSuccess: () => {
@@ -46,8 +46,10 @@ const OSRDetailsView = ({ token }: { readonly token: string }) => {
                 },
               })
             }
+            data-button-action="OSR Switch Back"
           >
-            Switch back <Switch width={16} />
+            Switch back{" "}
+            <Switch width={16} data-button-action="OSR Switch Back" />
           </button>
         </div>
       </div>

@@ -136,26 +136,38 @@ const TotalCountAndPagination = ({
               className="h-12 flex-1 bg-gray-100 text-base text-brand-gray-500"
               onClick={() => onPrevPage()}
               disabled={page === 1}
+              data-button-action="Purchase Items Mobile Previous Page"
             >
-              <MdArrowBack className="text-xl leading-none" />
+              <MdArrowBack
+                className="text-xl leading-none"
+                data-button-action="Purchase Items Mobile Previous Page"
+              />
               Back
             </Button>
 
             <Button
               className="h-12 flex-1 gap-3 border-2 border-black bg-gray-100 text-base text-black"
               onClick={() => setMobilePagination(true)}
+              data-button-action="Purchase Items Mobile Pagination"
             >
               {page}/{totalPagesCount}
-              <MdKeyboardArrowDown className="text-xl leading-none" />
+              <MdKeyboardArrowDown
+                className="text-xl leading-none"
+                data-button-action="Purchase Items Mobile Pagination"
+              />
             </Button>
 
             <Button
               className="h-12 flex-1 bg-gray-100 text-base text-brand-gray-500"
               onClick={() => onNextPage()}
               disabled={page === totalPagesCount}
+              data-button-action="Purchase Items Mobile Next Page"
             >
               Next
-              <MdArrowForward className="text-xl leading-none" />
+              <MdArrowForward
+                className="text-xl leading-none"
+                data-button-action="Purchase Items Mobile Next Page"
+              />
             </Button>
           </div>
 

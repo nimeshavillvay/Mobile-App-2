@@ -91,6 +91,7 @@ export const StepContainerOpen = ({
           type="submit"
           className="h-fit min-w-[7.5rem] py-2.5 font-bold shadow-md"
           disabled={disableSubmit}
+          data-button-action={submitBtnText}
         >
           {submitBtnText}
         </Button>
@@ -134,6 +135,7 @@ export const StepContainerClosed = ({
           className="font-bold"
           onClick={onClick}
           disabled={disabled}
+          data-button-action="Register Update User"
         >
           Edit
         </Button>

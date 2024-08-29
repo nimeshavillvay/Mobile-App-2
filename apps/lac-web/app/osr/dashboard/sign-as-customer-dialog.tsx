@@ -49,6 +49,7 @@ const SignAsCustomerDialog = ({
             variant="outline"
             onClick={() => setOpen(false)}
             disabled={loginAsCustomerMutation.isPending}
+            data-button-action="OSR Close Sign in As Customer Dialog"
           >
             NO
           </Button>
@@ -65,6 +66,7 @@ const SignAsCustomerDialog = ({
                 },
               )
             }
+            data-button-action="OSR Sign in As Customer Confirm"
           >
             {loginAsCustomerMutation.isPending ? (
               <LoaderCircle className="animate-spin" />

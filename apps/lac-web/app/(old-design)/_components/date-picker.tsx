@@ -37,8 +37,12 @@ const DatePicker = ({
             !date && "text-muted-foreground",
             containerClassName,
           )}
+          data-button-action="Open Date Picker"
         >
-          <CalendarIcon className="h-4 w-4" />
+          <CalendarIcon
+            className="h-4 w-4"
+            data-button-action="Open Date Picker"
+          />
 
           {date ? dayjs(date).format(dateFormat) : <span>{placeholder}</span>}
         </Button>

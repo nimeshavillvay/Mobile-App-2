@@ -32,9 +32,15 @@ const RegionalExclusionNoticeWrapper = ({
               Not Available
             </h4>
 
-            <div className="text-sm leading-6 text-wurth-gray-800">
+            <div className="btnAction text-sm leading-6 text-wurth-gray-800">
               This item is not available in certain regions. For better
-              experience please <Link href="/sign-in">Sign in or register</Link>
+              experience please{" "}
+              <Link
+                href="/sign-in"
+                data-btn-action="Regional Excluded Sign in or Register"
+              >
+                Sign in or register
+              </Link>
               .
             </div>
           </div>

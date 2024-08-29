@@ -83,7 +83,10 @@ const LaminateSearch = ({ token }: { readonly token: string }) => {
             size="icon"
             className="hover:text-wurth-blue-500 absolute right-2 top-1/2 -translate-y-1/2 transform text-wurth-gray-500"
           >
-            <MagnifyingGlass className="h-6 w-6" />
+            <MagnifyingGlass
+              className="h-6 w-6"
+              data-button-action="Laminate Finder Search"
+            />
             <span className="sr-only">Laminate Search</span>
           </Button>
         </form>

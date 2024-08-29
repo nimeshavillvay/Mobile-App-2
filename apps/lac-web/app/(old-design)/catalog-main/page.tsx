@@ -31,7 +31,8 @@ const CatalogSection = ({
             href={pdf}
             rel="noopener noreferrer"
             target="_blank"
-            className="rounded border bg-blue-300 p-2 text-center font-wurth text-sm uppercase hover:bg-blue-400 sm:text-base"
+            className="btnAction rounded border bg-blue-300 p-2 text-center font-wurth text-sm uppercase hover:bg-blue-400 sm:text-base"
+            data-btn-action="Download Catalog PDF"
           >
             pdf
           </a>

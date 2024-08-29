@@ -491,11 +491,16 @@ const SelectorsForMobileDialog = ({
               variant="secondary"
               className="h-12 border-brand-primary text-brand-primary"
               onClick={() => handleResetFilters()}
+              data-button-action="Order History Reset for Mobile Filter"
             >
               Reset
             </Button>
 
-            <Button className="h-12" onClick={() => handleApplyFilters()}>
+            <Button
+              className="h-12"
+              onClick={() => handleApplyFilters()}
+              data-button-action="Order History Apply for Mobile Filter"
+            >
               Apply
             </Button>
           </div>
@@ -567,6 +572,7 @@ const MobileSortFilterOption = ({
         variant="ghost"
         className="font-base flex w-full items-center justify-between font-bold normal-case"
         onClick={onChecked}
+        data-button-action="Order History Sort Mobile Filter"
       >
         {title}
         <MdCheck
@@ -574,6 +580,7 @@ const MobileSortFilterOption = ({
             "text-2xl leading-none text-brand-secondary",
             active ? "block" : "hidden",
           )}
+          data-button-action="Order History Sort Mobile Filter"
         />
       </Button>
     </div>

@@ -47,8 +47,9 @@ const Register = ({
               href="/sign-in"
               className={cn(
                 buttonVariants({ variant: "outline" }),
-                "font-bold text-black shadow-md",
+                "btnAction font-bold text-black shadow-md",
               )}
+              data-button-action="Register Change Email"
             >
               Change email
             </Link>
@@ -75,9 +76,15 @@ const Register = ({
                   onClick={() => setIsCurrentUser(value)}
                 >
                   {value === isCurrentUser ? (
-                    <CheckCircleFilled className="size-5" />
+                    <CheckCircleFilled
+                      className="size-5"
+                      data-button-action="Register Select Current User Flow"
+                    />
                   ) : (
-                    <CheckCircle className="size-5 stroke-wurth-gray-150" />
+                    <CheckCircle
+                      className="size-5 stroke-wurth-gray-150"
+                      data-button-action="Register Select New User Flow"
+                    />
                   )}
 
                   <span>{value}</span>

@@ -66,9 +66,16 @@ const MoreItemDetailsForMobile = ({
     <Collapsible open={showMoreDetails} onOpenChange={setShowMoreDetails}>
       <div className="flex flex-row justify-between">
         <CollapsibleTrigger asChild className="group">
-          <Button variant="outline" className="h-12 w-[170px] text-base">
+          <Button
+            variant="outline"
+            className="h-12 w-[170px] text-base"
+            data-button-action="Order History Mobile More Details"
+          >
             More Details
-            <MdKeyboardArrowDown className="text-2xl leading-none transition-transform duration-200 ease-out group-data-[state=open]:rotate-180" />
+            <MdKeyboardArrowDown
+              className="text-2xl leading-none transition-transform duration-200 ease-out group-data-[state=open]:rotate-180"
+              data-button-action="Order History Mobile More Details"
+            />
           </Button>
         </CollapsibleTrigger>
 
