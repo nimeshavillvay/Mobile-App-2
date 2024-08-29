@@ -51,38 +51,40 @@ const CartSummary = ({ token, plants }: CartSummaryProps) => {
   const gtmUser = gtmItemUserQuery.data;
 
   const sendToGTMCartClicked = () => {
-    gtmItemsInfo?.forEach((gtmItemInfo) => {
-      sendGTMEvent({
-        event: "view_cart",
-        viewCartData: {
-          currency: "USD",
-          value: gtmItemInfo?.price,
-          items: [
-            {
-              item_id: gtmItemInfo?.item_id,
-              item_sku: gtmItemInfo?.item_sku,
-              item_name: gtmItemInfo?.item_name,
-              item_brand: gtmItemInfo?.item_brand,
-              price: gtmItemInfo?.price,
-              quantity: gtmProducts.find(
-                (item) => item.productid === Number(gtmItemInfo?.productid),
-              )?.quantity,
-              item_categoryid: gtmItemInfo?.item_categoryid,
-              item_primarycategory: gtmItemInfo?.item_primarycategory,
-              item_category: gtmItemInfo?.item_category_path[0] ?? "",
-              item_category1: gtmItemInfo?.item_category_path[1] ?? "",
-              item_category2: gtmItemInfo?.item_category_path[2] ?? "",
-            },
-          ],
-        },
-        data: {
-          userid: gtmUser?.userid,
-          account_type: gtmUser?.account_type,
-          account_industry: gtmUser?.account_industry,
-          account_sales_category: gtmUser?.account_sales_category,
-        },
+    if (gtmItemsInfo !== null && gtmItemsInfo !== undefined) {
+      gtmItemsInfo?.forEach((gtmItemInfo) => {
+        sendGTMEvent({
+          event: "view_cart",
+          viewCartData: {
+            currency: "USD",
+            value: gtmItemInfo?.price,
+            items: [
+              {
+                item_id: gtmItemInfo?.item_id,
+                item_sku: gtmItemInfo?.item_sku,
+                item_name: gtmItemInfo?.item_name,
+                item_brand: gtmItemInfo?.item_brand,
+                price: gtmItemInfo?.price,
+                quantity: gtmProducts.find(
+                  (item) => item.productid === Number(gtmItemInfo?.productid),
+                )?.quantity,
+                item_categoryid: gtmItemInfo?.item_categoryid,
+                item_primarycategory: gtmItemInfo?.item_primarycategory,
+                item_category: gtmItemInfo?.item_category_path[0] ?? "",
+                item_category1: gtmItemInfo?.item_category_path[1] ?? "",
+                item_category2: gtmItemInfo?.item_category_path[2] ?? "",
+              },
+            ],
+          },
+          data: {
+            userid: gtmUser?.userid,
+            account_type: gtmUser?.account_type,
+            account_industry: gtmUser?.account_industry,
+            account_sales_category: gtmUser?.account_sales_category,
+          },
+        });
       });
-    });
+    }
   };
   const sendToGTMProductView = (productId: number) => {
     const gtmItemInfo = gtmItemsInfo?.filter(
