@@ -1,11 +1,9 @@
-import { Trash } from "@tamagui/lucide-icons";
 import { Image } from "expo-image";
 import { type ComponentProps } from "react";
-import { Animated, StyleSheet } from "react-native";
-import { RectButton } from "react-native-gesture-handler";
+import { StyleSheet } from "react-native";
 import Swipeable from "react-native-gesture-handler/Swipeable";
 import { Button, H3, Paragraph, Text, XStack, YStack } from "tamagui";
-import { ConfirmationDialog } from "~/components/confirmation-dialog";
+import { SwipeDeleteAction } from "~/components/base/swipe-delete-action";
 
 export const CartItem = ({
   image,
@@ -109,48 +107,18 @@ export const CartItem = ({
   );
 };
 
-export const CartItemRightSwipeAction = ({
-  dragAnimatedValue,
-  openConfirmationDialog,
-  setOpenConfirmationDialog,
-  onConfirm,
-}: {
-  readonly dragAnimatedValue: Animated.AnimatedInterpolation<string | number>;
-  readonly openConfirmationDialog: ComponentProps<
-    typeof ConfirmationDialog
-  >["open"];
-  readonly setOpenConfirmationDialog: ComponentProps<
-    typeof ConfirmationDialog
-  >["onOpenChange"];
-  readonly onConfirm: ComponentProps<typeof ConfirmationDialog>["onConfirm"];
-}) => {
-  const scale = dragAnimatedValue.interpolate({
-    inputRange: [-100, -50, 0],
-    outputRange: [2, 1, 0],
-    extrapolate: "clamp",
-  });
-
+export const CartItemRightSwipeAction = (
+  props: Omit<
+    ComponentProps<typeof SwipeDeleteAction>,
+    "title" | "description"
+  >,
+) => {
   return (
-    <ConfirmationDialog
-      open={openConfirmationDialog}
-      onOpenChange={setOpenConfirmationDialog}
+    <SwipeDeleteAction
       title="Clear Item"
       description="Are you sure you want to clear this item from your cart?"
-      onConfirm={onConfirm}
-    >
-      <RectButton style={styles.rightAction}>
-        <Animated.View
-          style={[
-            { flex: 1, justifyContent: "center" },
-            {
-              transform: [{ scale }],
-            },
-          ]}
-        >
-          <Trash color="white" size={16} />
-        </Animated.View>
-      </RectButton>
-    </ConfirmationDialog>
+      {...props}
+    />
   );
 };
 
@@ -201,11 +169,6 @@ const styles = StyleSheet.create({
     lineHeight: 12,
     fontWeight: 400,
     textAlign: "right",
-  },
-  rightAction: {
-    backgroundColor: "#AA2429",
-    paddingHorizontal: 24,
-    paddingVertical: 16,
   },
   confirmButton: {
     fontSize: 16,
