@@ -124,6 +124,7 @@ const CartItemShippingMethod = ({
 }: CartItemShippingMethodProps) => {
   const id = useId();
   const shipToMeId = `${MAIN_OPTIONS.SHIP_TO_ME}-${id}`;
+  const shipToMeAltId = `${MAIN_OPTIONS.SHIP_TO_ME_ALT}-${id}`;
   const willCallId = `${MAIN_OPTIONS.WILL_CALL}-${id}`;
   const backOrderId = `${MAIN_OPTIONS.BACK_ORDER}-${id}`;
 
@@ -238,6 +239,8 @@ const CartItemShippingMethod = ({
   // Back Order all logics
   const isBackOrderAllEnabled = !!backOrderAll;
 
+  const shipFromHomeBranch = isBackOrderAllEnabled || takeOnHand;
+
   const getFirstBackOrderDateFromPlants = (
     plants: {
       backOrderDate?: string;
@@ -268,6 +271,8 @@ const CartItemShippingMethod = ({
         willCallAnywhere !== undefined && willCallAnywhere !== null;
       // Ship to me configs
       if (selectedOption === MAIN_OPTIONS.SHIP_TO_ME) {
+        handleShipToMeOptions();
+        console.log(">> availableAll", availableAll);
         if (availableAll) {
           const setShippingMethod =
             availableAllPlant?.shippingMethods?.find(
@@ -315,7 +320,13 @@ const CartItemShippingMethod = ({
           });
 
           sendToGTMShippingMethodChanged(setShippingMethod);
-        } else if (shipAlternativeBranch) {
+        }
+      }
+
+      // Ship to me configs
+      if (selectedOption === MAIN_OPTIONS.SHIP_TO_ME_ALT) {
+        handleShipToMeFromAlternativeOptions();
+        if (shipAlternativeBranch) {
           const setShippingMethod =
             shipAlternativeBranch.plants
               ?.at(0)
@@ -324,6 +335,7 @@ const CartItemShippingMethod = ({
               )?.code ??
             shipAlternativeBranch.plants?.at(0)?.shippingMethods?.at(0)?.code ??
             selectedShippingMethod;
+          console.log(">> setShippingMethod", setShippingMethod);
           setSelectedShippingMethod(setShippingMethod);
           onSave({
             ...getAlternativeBranchesConfig({
@@ -529,14 +541,16 @@ const CartItemShippingMethod = ({
     }
   };
 
-  const handleShipToMeOptions = (shipToMe: ShipToMeOption) => {
-    setSelectedShipToMe(shipToMe);
+  const handleShipToMeOptions = () => {
     // Reset the selected shipping method to default
+    setSelectedShippingOption(MAIN_OPTIONS.SHIP_TO_ME);
     if (defaultShippingMethod) {
       setSelectedShippingMethod(defaultShippingMethod.code);
       sendToGTMShippingMethodChanged(defaultShippingMethod.code);
+      console.log(">> takeOnHand", takeOnHand);
+      const shipToMe = availableAll || takeOnHand;
 
-      if (shipToMe === TAKE_ON_HAND && takeOnHand) {
+      if (shipToMe) {
         const setShippingMethod =
           takeOnHandPlant?.shippingMethods?.find(
             (method) => method.code === selectedShippingMethod,
@@ -549,7 +563,7 @@ const CartItemShippingMethod = ({
             method: setShippingMethod,
             quantity: takeOnHandPlant?.quantity ?? 0,
             plant: takeOnHandPlant?.plant ?? EMPTY_STRING,
-            hash: takeOnHand.hash,
+            hash: shipToMe.hash,
             backOrderDate: takeOnHandPlant?.backOrderDate,
             backOrderQuantity: takeOnHandPlant?.backOrderQuantity,
           }),
@@ -558,8 +572,18 @@ const CartItemShippingMethod = ({
 
         sendToGTMShippingMethodChanged(setShippingMethod);
       }
+    }
+  };
 
-      if (shipToMe === ALTERNATIVE_BRANCHES && shipAlternativeBranch) {
+  const handleShipToMeFromAlternativeOptions = () => {
+    setSelectedShippingOption(MAIN_OPTIONS.SHIP_TO_ME_ALT);
+    // Reset the selected shipping method to default
+    if (defaultShippingMethod) {
+      setSelectedShippingMethod(defaultShippingMethod.code);
+      sendToGTMShippingMethodChanged(defaultShippingMethod.code);
+
+      if (shipAlternativeBranch) {
+        console.log(">> shipAlternativeBranch");
         onSave({
           ...getAlternativeBranchesConfig({
             plants: shipAlternativeBranch?.plants,
@@ -619,7 +643,8 @@ const CartItemShippingMethod = ({
             />
 
             <Label htmlFor={shipToMeId} className="text-base">
-              Ship to me
+              Availability at{" "}
+              <PlantName plants={plants} plantCode={availableAllPlant?.plant} />
             </Label>
           </div>
 
@@ -654,20 +679,15 @@ const CartItemShippingMethod = ({
             )}
 
             {selectedShippingOption === MAIN_OPTIONS.SHIP_TO_ME && (
-              <RadioGroup
-                value={selectedShipToMe}
-                onValueChange={(value) =>
-                  handleShipToMeOptions(value as ShipToMeOption)
-                }
-              >
+              <>
                 {/* All available option */}
                 {availableAll && (
                   <div className="flex flex-row gap-2 rounded-lg border border-wurth-gray-150 px-2 py-2 text-sm shadow-sm">
                     <div className="w-4">
-                      <RadioGroupItem
+                      {/* <RadioGroupItem
                         value={AVAILABLE_ALL}
                         id={AVAILABLE_ALL}
-                      />
+                      /> */}
                     </div>
 
                     <div className="flex flex-col gap-0.5">
@@ -684,222 +704,140 @@ const CartItemShippingMethod = ({
                     </div>
                   </div>
                 )}
-
-                {/* Take on hand option */}
-                {takeOnHand && (
-                  <div className="flex flex-row gap-2 rounded-lg border border-wurth-gray-150 px-2 py-2 text-sm shadow-sm">
-                    <div className="w-4">
-                      <RadioGroupItem value={TAKE_ON_HAND} id={TAKE_ON_HAND} />
-                    </div>
-
-                    <div className="flex flex-col gap-0.5">
-                      <div className="font-medium">
-                        {takeOnHandPlant?.quantity && (
-                          <ItemCountBadge count={takeOnHandPlant.quantity} />
-                        )}
-                        &nbsp;from&nbsp;
-                        <PlantName
-                          plants={plants}
-                          plantCode={takeOnHandPlant?.plant}
-                        />
-                      </div>
-
-                      {takeOnHand.backOrder && (
-                        <BackOrderItemCountLabel
-                          count={takeOnHandPlant?.backOrderQuantity ?? 0}
-                        />
-                      )}
-                    </div>
-                  </div>
-                )}
-
-                {/* Ship from alternative branches option */}
-                {shipAlternativeBranch && (
-                  <div className="flex flex-row gap-2 rounded-lg border border-wurth-gray-150 px-2 py-2 text-sm shadow-sm">
-                    <div className="w-4">
-                      <RadioGroupItem
-                        value={ALTERNATIVE_BRANCHES}
-                        id={ALTERNATIVE_BRANCHES}
-                      />
-                    </div>
-
-                    <div className="flex flex-col gap-0.5">
-                      <div className="text-wrap font-medium">
-                        {shipAlternativeBranch.plants?.length > 0 && (
-                          <ItemCountBadge
-                            count={calculateAllPlantsQuantity(
-                              shipAlternativeBranch.plants,
-                            )}
-                          />
-                        )}
-                        &nbsp;from&nbsp;
-                        <PlantName
-                          plants={plants}
-                          plantCode={shipAlternativeBranch.plants?.at(0)?.plant}
-                        />
-                        &nbsp;and&nbsp;
-                        <span className="font-normal">
-                          other alternative branches
-                        </span>
-                      </div>
-
-                      {shipAlternativeBranch.backOrder && (
-                        <BackOrderItemCountLabel
-                          count={
-                            shipAlternativeBranch.plants?.at(0)
-                              ?.backOrderQuantity ?? 0
-                          }
-                        />
-                      )}
-
-                      {selectedShipToMe === ALTERNATIVE_BRANCHES && (
-                        <Collapsible
-                          className="mt-1.5 flex flex-col gap-1"
-                          disabled={selectedShipToMe !== ALTERNATIVE_BRANCHES}
-                        >
-                          <CollapsibleTrigger
-                            className="group flex h-7 flex-row items-center justify-start"
-                            asChild
-                          >
-                            <Button
-                              type="button"
-                              variant="subtle"
-                              className="h-full gap-2 px-2"
-                              data-button-action="Cart Show Breakdown by Branch"
-                            >
-                              <ChevronDown
-                                width={16}
-                                height={16}
-                                className="transition duration-150 ease-out group-data-[state=open]:rotate-180"
-                              />
-                              <span className="text-balance text-left">
-                                Show breakdown by branch
-                              </span>
-                            </Button>
-                          </CollapsibleTrigger>
-
-                          <CollapsibleContent>
-                            <Table>
-                              <TableHeader>
-                                <TableRow>
-                                  <TableHead className="font-light">
-                                    Location
-                                  </TableHead>
-                                  <TableHead className="text-end font-light">
-                                    Items
-                                  </TableHead>
-                                </TableRow>
-                              </TableHeader>
-
-                              <TableBody className="font-light">
-                                {shipAlternativeBranch.plants &&
-                                  Object.values(
-                                    shipAlternativeBranch.plants,
-                                  )?.map((plant) => (
-                                    <TableRow key={plant.plant}>
-                                      <TableCell>
-                                        <div>
-                                          <PlantName
-                                            plants={plants}
-                                            plantCode={plant.plant}
-                                          />
-                                        </div>
-                                        <div className="text-xs">
-                                          via&nbsp;
-                                          {plant.plant ===
-                                          willCallPlant.plantCode
-                                            ? shippingMethods?.find(
-                                                (option) =>
-                                                  option.code ===
-                                                  selectedShippingMethod,
-                                              )?.name ??
-                                              defaultShippingMethod?.name
-                                            : "Ground"}
-                                        </div>
-                                      </TableCell>
-                                      <TableCell className="text-end">
-                                        {plant.quantity}
-                                      </TableCell>
-                                    </TableRow>
-                                  ))}
-                              </TableBody>
-                            </Table>
-                          </CollapsibleContent>
-                        </Collapsible>
-                      )}
-                    </div>
-                  </div>
-                )}
-
                 {selectedShipToMe === TAKE_ON_HAND && (
                   <ShipToMeBOInfoBanner option={takeOnHand} />
                 )}
-
-                {selectedShipToMe === ALTERNATIVE_BRANCHES && (
-                  <ShipToMeBOInfoBanner option={shipAlternativeBranch} />
-                )}
-              </RadioGroup>
+              </>
             )}
           </div>
         </li>
       )}
 
-      {isBackOrderAllEnabled && (
-        <li className="flex flex-col items-stretch gap-2">
-          <div className="flex flex-row items-center gap-3">
-            <Checkbox
-              id={backOrderId}
-              className="size-5 rounded-full"
-              iconClassName="size-4"
-              checked={selectedShippingOption === MAIN_OPTIONS.BACK_ORDER}
-              onCheckedChange={(checked) =>
-                handleDeliveryOptionSelect({
-                  checked: checked === true,
-                  selectedOption: MAIN_OPTIONS.BACK_ORDER,
-                })
-              }
-              disabled={!backOrderAll}
-            />
-
-            <Label htmlFor={backOrderId} className="text-base">
-              Backorder everything
-            </Label>
-          </div>
-          <div className="ml-[1.625rem] flex flex-col gap-2">
-            {backOrderAll?.plants[0]?.shippingMethods &&
-              backOrderAll?.plants[0]?.shippingMethods.length > 0 && (
-                <Select
-                  disabled={
-                    selectedShippingOption !== MAIN_OPTIONS.BACK_ORDER ||
-                    backOrderAll.plants[0]?.shippingMethods?.length <= 1
-                  }
-                  value={selectedBackorderShippingMethod}
-                  onValueChange={(method) => handleBackorderMethod(method)}
-                >
-                  <SelectTrigger className="avail-change-button w-full">
-                    <SelectValue placeholder="Select a delivery method" />
-                  </SelectTrigger>
-
-                  <SelectContent>
-                    {backOrderAll.plants[0]?.shippingMethods.map((option) => (
-                      <SelectItem key={option.code} value={option.code}>
-                        {option.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              )}
-          </div>
-          {selectedShippingOption === MAIN_OPTIONS.BACK_ORDER && (
-            <div className="ml-[1.625rem]">
-              <BackOrderInfoBanner
-                date={
-                  getFirstBackOrderDateFromPlants(backOrderAll?.plants) ?? "N/A"
+      {/* Ship from alternative branches option */}
+      {shipAlternativeBranch && (
+        <>
+          <div className="flex flex-col gap-2 px-2 py-2 text-sm shadow-sm">
+            <div className="flex flex-row items-center gap-3">
+              <Checkbox
+                id={shipToMeAltId}
+                className="size-5 rounded-full"
+                iconClassName="size-4"
+                checked={selectedShippingOption === MAIN_OPTIONS.SHIP_TO_ME_ALT}
+                onCheckedChange={(checked) =>
+                  handleDeliveryOptionSelect({
+                    checked: checked === true,
+                    selectedOption: MAIN_OPTIONS.SHIP_TO_ME_ALT,
+                  })
                 }
+                disabled={!backOrderAll}
               />
+
+              <Label htmlFor={shipToMeAltId} className="text-base">
+                Ship from Alternate Branch(es)
+              </Label>
             </div>
-          )}
-        </li>
+
+            <div className="flex flex-col gap-0.5">
+              <div className="text-wrap font-medium">
+                {shipAlternativeBranch.plants?.length > 0 && (
+                  <ItemCountBadge
+                    count={calculateAllPlantsQuantity(
+                      shipAlternativeBranch.plants,
+                    )}
+                  />
+                )}
+                &nbsp;from&nbsp;
+                <PlantName
+                  plants={plants}
+                  plantCode={shipAlternativeBranch.plants?.at(0)?.plant}
+                />
+                &nbsp;and&nbsp;
+                <span className="font-normal">other alternative branches</span>
+              </div>
+
+              {shipAlternativeBranch.backOrder && (
+                <BackOrderItemCountLabel
+                  count={
+                    shipAlternativeBranch.plants?.at(0)?.backOrderQuantity ?? 0
+                  }
+                />
+              )}
+
+              {/* {selectedShipToMe === ALTERNATIVE_BRANCHES && ( */}
+              <Collapsible
+                className="mt-1.5 flex flex-col gap-1"
+                disabled={selectedShipToMe !== ALTERNATIVE_BRANCHES}
+              >
+                <CollapsibleTrigger
+                  className="group flex h-7 flex-row items-center justify-start"
+                  asChild
+                >
+                  <Button
+                    type="button"
+                    variant="subtle"
+                    className="h-full gap-2 px-2"
+                    data-button-action="Cart Show Breakdown by Branch"
+                  >
+                    <ChevronDown
+                      width={16}
+                      height={16}
+                      className="transition duration-150 ease-out group-data-[state=open]:rotate-180"
+                    />
+                    <span className="text-balance text-left">
+                      Show breakdown by branch
+                    </span>
+                  </Button>
+                </CollapsibleTrigger>
+
+                <CollapsibleContent>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead className="font-light">Location</TableHead>
+                        <TableHead className="text-end font-light">
+                          Items
+                        </TableHead>
+                      </TableRow>
+                    </TableHeader>
+
+                    <TableBody className="font-light">
+                      {shipAlternativeBranch.plants &&
+                        Object.values(shipAlternativeBranch.plants)?.map(
+                          (plant) => (
+                            <TableRow key={plant.plant}>
+                              <TableCell>
+                                <div>
+                                  <PlantName
+                                    plants={plants}
+                                    plantCode={plant.plant}
+                                  />
+                                </div>
+                                <div className="text-xs">
+                                  via&nbsp;
+                                  {plant.plant === willCallPlant.plantCode
+                                    ? shippingMethods?.find(
+                                        (option) =>
+                                          option.code ===
+                                          selectedShippingMethod,
+                                      )?.name ?? defaultShippingMethod?.name
+                                    : "Ground"}
+                                </div>
+                              </TableCell>
+                              <TableCell className="text-end">
+                                {plant.quantity}
+                              </TableCell>
+                            </TableRow>
+                          ),
+                        )}
+                    </TableBody>
+                  </Table>
+                </CollapsibleContent>
+              </Collapsible>
+              {/* )} */}
+            </div>
+          </div>
+          <ShipToMeBOInfoBanner option={shipAlternativeBranch} />
+        </>
       )}
 
       <li className="flex flex-col items-stretch gap-2">

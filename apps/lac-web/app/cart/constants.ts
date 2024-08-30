@@ -7,6 +7,7 @@ export const ALTERNATIVE_BRANCHES = "shipAlternativeBranch" as const;
 // Main shipping options UI
 export const MAIN_OPTIONS = {
   SHIP_TO_ME: "ship-to-me",
+  SHIP_TO_ME_ALT: "ship-to-me-alt",
   WILL_CALL: "will-call",
   WILL_CALL_TRANSFER: "will-call-transfer",
   BACK_ORDER: "back-order",

@@ -664,7 +664,7 @@ const CartItem = ({
         setSelectedShippingOption(MAIN_OPTIONS.SHIP_TO_ME);
         setSelectedShipToMe(TAKE_ON_HAND);
       } else if (matchedAvailabilityOption.type === ALTERNATIVE_BRANCHES) {
-        setSelectedShippingOption(MAIN_OPTIONS.SHIP_TO_ME);
+        setSelectedShippingOption(MAIN_OPTIONS.SHIP_TO_ME_ALT);
         setSelectedShipToMe(ALTERNATIVE_BRANCHES);
       } else if (matchedAvailabilityOption.type === BACK_ORDER_ALL) {
         setSelectedShippingOption(MAIN_OPTIONS.BACK_ORDER);
