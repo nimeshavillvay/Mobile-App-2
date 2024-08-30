@@ -76,6 +76,7 @@ import type {
 // Vendor Direct Shipping Method
 
 type CartItemShippingMethodProps = {
+  readonly quantity: number;
   readonly plants: Plant[];
   readonly availability: Availability;
   readonly setSelectedWillCallPlant: (plant: string) => void;
@@ -100,6 +101,7 @@ type CartItemShippingMethodProps = {
 };
 
 const CartItemShippingMethod = ({
+  quantity,
   plants,
   availability,
   setSelectedWillCallPlant,
@@ -239,7 +241,7 @@ const CartItemShippingMethod = ({
   // Back Order all logics
   const isBackOrderAllEnabled = !!backOrderAll;
 
-  const shipFromHomeBranch = isBackOrderAllEnabled || takeOnHand;
+  const shipToMeAvailable = availableAllPlant ?? takeOnHandPlant;
 
   const getFirstBackOrderDateFromPlants = (
     plants: {
@@ -272,7 +274,7 @@ const CartItemShippingMethod = ({
       // Ship to me configs
       if (selectedOption === MAIN_OPTIONS.SHIP_TO_ME) {
         handleShipToMeOptions();
-        console.log(">> availableAll", availableAll);
+
         if (availableAll) {
           const setShippingMethod =
             availableAllPlant?.shippingMethods?.find(
@@ -547,8 +549,7 @@ const CartItemShippingMethod = ({
     if (defaultShippingMethod) {
       setSelectedShippingMethod(defaultShippingMethod.code);
       sendToGTMShippingMethodChanged(defaultShippingMethod.code);
-      console.log(">> takeOnHand", takeOnHand);
-      const shipToMe = availableAll || takeOnHand;
+      const shipToMe = availableAll ?? takeOnHand ?? backOrderAll;
 
       if (shipToMe) {
         const setShippingMethod =
@@ -644,11 +645,22 @@ const CartItemShippingMethod = ({
 
             <Label htmlFor={shipToMeId} className="text-base">
               Availability at{" "}
-              <PlantName plants={plants} plantCode={availableAllPlant?.plant} />
+              <PlantName
+                plants={plants}
+                plantCode={willCallPlant.plantCode ?? DEFAULT_PLANT.code}
+              />
             </Label>
           </div>
 
           <div className="ml-[1.625rem] flex flex-col gap-2">
+            <div className="text-sm font-medium">
+              {shipToMeAvailable?.quantity && (
+                <HomeBranchItemCountBadge
+                  enteredCount={Number(quantity)}
+                  availableCount={shipToMeAvailable.quantity}
+                />
+              )}
+            </div>
             {shippingMethods?.length > 0 && (
               <Select
                 disabled={
@@ -683,13 +695,6 @@ const CartItemShippingMethod = ({
                 {/* All available option */}
                 {availableAll && (
                   <div className="flex flex-row gap-2 rounded-lg border border-wurth-gray-150 px-2 py-2 text-sm shadow-sm">
-                    <div className="w-4">
-                      {/* <RadioGroupItem
-                        value={AVAILABLE_ALL}
-                        id={AVAILABLE_ALL}
-                      /> */}
-                    </div>
-
                     <div className="flex flex-col gap-0.5">
                       <div className="font-medium">
                         {availableAllPlant?.quantity && (
@@ -1123,6 +1128,36 @@ const ItemCountBadge = ({
     >
       {count}&nbsp;{count > 1 ? "items" : "item"}
     </span>
+  );
+};
+
+const HomeBranchItemCountBadge = ({
+  enteredCount = 0,
+  availableCount = 0,
+}: {
+  readonly enteredCount: number;
+  readonly availableCount: number;
+}) => {
+  if (enteredCount <= availableCount) {
+    return (
+      <>
+        <span className="text-green-700">{availableCount} </span>
+        in stock
+      </>
+    );
+  }
+  if (enteredCount > availableCount) {
+    return (
+      <>
+        Only <span className="text-yellow-700">{availableCount}</span> in stock
+      </>
+    );
+  }
+  return (
+    <>
+      <span className="text-red-700">{enteredCount} </span>
+      backorder
+    </>
   );
 };
 

@@ -1046,6 +1046,7 @@ const CartItem = ({
             </div>
           ) : (
             <CartItemShippingMethod
+              quantity={Number(deferredQuantity)}
               plants={plants}
               availability={checkAvailabilityQuery.data}
               setSelectedWillCallPlant={setSelectedWillCallPlant}
@@ -1075,6 +1076,7 @@ const CartItem = ({
         {checkLoginQuery.data?.status_code === "OK" && (
           <Suspense fallback={<Skeleton className="h-48 w-full" />}>
             <RegionalExclusionAndShippingMethods
+              quantity={Number(deferredQuantity)}
               token={token}
               productId={product.id}
               plants={plants}
