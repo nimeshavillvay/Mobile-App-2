@@ -5,7 +5,7 @@ import {
   ScrollView,
   StyleSheet,
 } from "react-native";
-import { YStack } from "tamagui";
+import { XStack, YStack } from "tamagui";
 
 const styles = StyleSheet.create({
   root: {
@@ -17,6 +17,7 @@ export const FormRootContainer = ({
   style,
   contentContainerStyle = {
     rowGap: 24,
+    paddingBottom: 24,
   },
   ...delegated
 }: ComponentProps<typeof ScrollView>) => {
@@ -42,4 +43,20 @@ export const FormFieldContainer = ({
   ...delegated
 }: ComponentProps<typeof YStack>) => {
   return <YStack gap={gap} {...delegated} />;
+};
+
+export const FormFieldHorizontalContainer = ({
+  gap = 10,
+  paddingVertical = 16,
+  alignItems = "center",
+  ...delegated
+}: ComponentProps<typeof XStack>) => {
+  return (
+    <XStack
+      gap={gap}
+      paddingVertical={paddingVertical}
+      alignItems={alignItems}
+      {...delegated}
+    />
+  );
 };

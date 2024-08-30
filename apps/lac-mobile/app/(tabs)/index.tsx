@@ -1,6 +1,7 @@
 import useSessionTokenStorage from "@/hooks/auth/use-session-token-storage.hook";
 import { ScreenHeader } from "@repo/native-ui/components/base/screen-header";
 import { ScreenLayout } from "@repo/native-ui/components/base/screen-layout";
+import { Link } from "expo-router";
 import { useState } from "react";
 import { Button, Input, Text, YStack } from "tamagui";
 
@@ -27,6 +28,8 @@ const HomePage = () => {
         <Input value={input} onChangeText={setInput} />
 
         <Button onPress={saveToken}>Save Token</Button>
+
+        <Link href="/my-account/manage-users">Edit Profile</Link>
       </YStack>
     </ScreenLayout>
   );

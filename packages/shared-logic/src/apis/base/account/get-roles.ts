@@ -28,7 +28,5 @@ export const getRoles = async (
     })
     .json();
 
-  console.log("> response: ", response);
-
   return await jobRolesSchema.parseAsync(response);
 };
