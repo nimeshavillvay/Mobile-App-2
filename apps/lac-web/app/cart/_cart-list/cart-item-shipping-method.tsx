@@ -213,11 +213,11 @@ const CartItemShippingMethod = ({
     return plantValues.reduce((acc, plant) => acc + (plant.quantity ?? 0), 0);
   };
 
-  const isVendorShipped = isDirectlyShippedFromVendor === true ?? false;
+  const isVendorShipped = isDirectlyShippedFromVendor === true;
 
-  const isSameDayShippingEnabled =
-    !!availableAll?.plants?.find((value) => value?.isSameDayAvail)
-      ?.isSameDayAvail ?? false;
+  const isSameDayShippingEnabled = !!availableAll?.plants?.find(
+    (value) => value?.isSameDayAvail,
+  )?.isSameDayAvail;
 
   // Ship to me logics
   const isShipToMeEnabled = status === IN_STOCK || status === LIMITED_STOCK;
