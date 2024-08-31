@@ -15,10 +15,14 @@ import {
   NOT_AVAILABLE,
   NOT_IN_STOCK,
 } from "@/_lib/constants";
-import type { CartItemConfiguration } from "@/_lib/types";
+import type { CartItemConfiguration, Plant } from "@/_lib/types";
 import { sendGTMEvent } from "@next/third-parties/google";
 import { Checkbox } from "@repo/web-ui/components/ui/checkbox";
 import { Label } from "@repo/web-ui/components/ui/label";
+import {
+  RadioGroup,
+  RadioGroupItem,
+} from "@repo/web-ui/components/ui/radio-group";
 import {
   Select,
   SelectContent,
@@ -46,12 +50,13 @@ const SHIP_TO_ME = "ship-to-me";
 const WILL_CALL = "will-call";
 
 type ShippingMethodProps = {
+  readonly plants: Plant[];
   readonly token: string;
 };
 
 type ConfigKey = keyof CartItemConfiguration;
 
-const ShippingMethod = ({ token }: ShippingMethodProps) => {
+const ShippingMethod = ({ token, plants }: ShippingMethodProps) => {
   const { toast } = useToast();
   const id = useId();
   const shipToMeId = `${SHIP_TO_ME}-${id}`;
@@ -76,6 +81,8 @@ const ShippingMethod = ({ token }: ShippingMethodProps) => {
 
   const [isShipToMeSelected, setIsShipToMeSelected] = useState(false);
   const [isWillCallSelected, setIsWillCallSelected] = useState(false);
+
+  const [selectedWillCallPlant, setSelectedWillCallPlant] = useState("");
 
   const updateCartItemMutation = useUpdateCartItemMutation();
 
@@ -180,7 +187,7 @@ const ShippingMethod = ({ token }: ShippingMethodProps) => {
       config.will_call_avail =
         availability.willCallAnywhere[0]?.willCallQuantity.toString();
       config.will_call_plant = willCallPlant?.plantCode ?? DEFAULT_PLANT.code;
-      config.will_call_shipping = WILLCALL_SHIPING_METHOD;
+      config.will_call_shipping = willCallPlant.willCallMethod;
       config.will_call_not_in_stock = FALSE_STRING;
     } else if (
       availability.willCallAnywhere &&
@@ -197,7 +204,7 @@ const ShippingMethod = ({ token }: ShippingMethodProps) => {
       config.backorder_quantity =
         availability.willCallAnywhere[0]?.willCallQuantity.toString();
       config.will_call_plant = willCallPlant?.plantCode ?? DEFAULT_PLANT.code;
-      config.will_call_shipping = WILLCALL_SHIPING_METHOD;
+      config.will_call_shipping = willCallPlant.willCallMethod;
       config.will_call_not_in_stock = FALSE_STRING;
     } else if (
       availability.willCallAnywhere &&
@@ -217,7 +224,7 @@ const ShippingMethod = ({ token }: ShippingMethodProps) => {
       config.backorder_all = "F";
       config.backorder_quantity =
         availability.willCallAnywhere[0]?.backOrderQuantity_1?.toString() ?? "";
-      config.will_call_shipping = WILLCALL_SHIPING_METHOD;
+      config.will_call_shipping = willCallPlant.willCallMethod;
       config.will_call_not_in_stock = FALSE_STRING;
     }
     return config;
@@ -478,28 +485,84 @@ const ShippingMethod = ({ token }: ShippingMethodProps) => {
           </div>
         </li>
 
-        <li className="flex flex-row items-center gap-3">
-          <Checkbox
-            id={willCallId}
-            className="avail-change-button rounded-full"
-            checked={selectedSection === WILL_CALL && isWillCallSelected}
-            onCheckedChange={(checked) => {
-              if (checked === true) {
-                setIsWillCallSelected(true);
-                setSelectedSection(WILL_CALL);
-                handleGlobalWillCall();
-              } else {
-                setIsWillCallSelected(false);
-                setSelectedSection(undefined);
-              }
-            }}
-            disabled={updateCartItemMutation.isPending}
-          />
+        <li className="flex flex-col items-stretch gap-2">
+          <div className="flex flex-row items-center gap-3">
+            <Checkbox
+              id={willCallId}
+              className="avail-change-button rounded-full"
+              checked={selectedSection === WILL_CALL && isWillCallSelected}
+              onCheckedChange={(checked) => {
+                if (checked === true) {
+                  setIsWillCallSelected(true);
+                  setSelectedSection(WILL_CALL);
+                } else {
+                  setIsWillCallSelected(false);
+                  setSelectedSection(undefined);
+                }
+              }}
+              disabled={updateCartItemMutation.isPending}
+            />
 
-          <Label htmlFor={willCallId}>
-            Store pick up (Will call) at&nbsp;
-            {willCallPlant?.plantName ?? DEFAULT_PLANT.name}
-          </Label>
+            <Label htmlFor={willCallId}>Store pick up (Will call)</Label>
+          </div>
+          <div className="ml-[1.625rem]">
+            <Select
+              disabled={selectedSection !== WILL_CALL}
+              value={selectedWillCallPlant}
+              onValueChange={setSelectedWillCallPlant}
+            >
+              <SelectTrigger className="avail-change-button w-full">
+                <SelectValue placeholder="Select a store" />
+              </SelectTrigger>
+
+              <SelectContent>
+                {plants?.length > 0 &&
+                  plants.map((option) => (
+                    <SelectItem key={option.code} value={option.code}>
+                      {option.name}
+                    </SelectItem>
+                  ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {selectedWillCallPlant && (
+            <RadioGroup
+              className="ml-[1.625rem] flex flex-col"
+              onValueChange={handleGlobalWillCall}
+            >
+              <div className="flex shrink-0 flex-row items-center gap-0.5 rounded border border-wurth-gray-250 object-contain p-1 text-sm shadow-sm">
+                <RadioGroupItem
+                  className="h-3.5 w-3.5"
+                  value={"ees"}
+                  id={"id"}
+                />
+                <span className="pl-2">
+                  Pick up at{" "}
+                  {
+                    plants.find((plant) => plant.code === selectedWillCallPlant)
+                      ?.name
+                  }
+                </span>
+              </div>
+              <div className="flex shrink-0 flex-row items-center gap-0.5 rounded border border-wurth-gray-250 object-contain p-1 text-sm shadow-sm">
+                <RadioGroupItem
+                  className="h-3.5 w-3.5"
+                  value={"ewe"}
+                  id={"iwd"}
+                  // disabled={false}
+                />
+                <span className="pl-2">
+                  Transfer from {willCallPlant?.plantName ?? DEFAULT_PLANT.name}{" "}
+                  to{" "}
+                  {
+                    plants.find((plant) => plant.code === selectedWillCallPlant)
+                      ?.name
+                  }
+                </span>
+              </div>
+            </RadioGroup>
+          )}
         </li>
       </ul>
     </div>

@@ -82,7 +82,7 @@ const CartPage = async () => {
           <Suspense
             fallback={<Skeleton className="h-[158px] rounded-lg shadow-md" />}
           >
-            <ShippingMethod token={sessionToken.value} />
+            <ShippingMethod token={sessionToken.value} plants={plants} />
           </Suspense>
 
           <Suspense
