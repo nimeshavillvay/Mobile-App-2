@@ -128,7 +128,6 @@ const CartItemShippingMethod = ({
   const shipToMeId = `${MAIN_OPTIONS.SHIP_TO_ME}-${id}`;
   const shipToMeAltId = `${MAIN_OPTIONS.SHIP_TO_ME_ALT}-${id}`;
   const willCallId = `${MAIN_OPTIONS.WILL_CALL}-${id}`;
-  const backOrderId = `${MAIN_OPTIONS.BACK_ORDER}-${id}`;
 
   const {
     options: availabilityOptions,
@@ -238,10 +237,11 @@ const CartItemShippingMethod = ({
     takeOnHandPlant = Object.values(takeOnHand?.plants)?.at(0) ?? undefined;
   }
 
-  // Back Order all logics
-  const isBackOrderAllEnabled = !!backOrderAll;
+  const homeBranchAvailability = availability.availableLocations?.find(
+    ({ location }) => location === willCallPlant?.plantCode,
+  );
 
-  const shipToMeAvailable = availableAllPlant ?? takeOnHandPlant;
+  const homeBranchAvailableQuantity = homeBranchAvailability?.amount ?? 0;
 
   const getFirstBackOrderDateFromPlants = (
     plants: {
@@ -271,6 +271,7 @@ const CartItemShippingMethod = ({
         selectedOption === MAIN_OPTIONS.WILL_CALL;
       const isWillCallAnywhere =
         willCallAnywhere !== undefined && willCallAnywhere !== null;
+
       // Ship to me configs
       if (selectedOption === MAIN_OPTIONS.SHIP_TO_ME) {
         handleShipToMeOptions();
@@ -323,6 +324,36 @@ const CartItemShippingMethod = ({
 
           sendToGTMShippingMethodChanged(setShippingMethod);
         }
+
+        // Back order all can have only this config
+        else if (backOrderAll) {
+          const setShippingMethod =
+            backOrderAll.plants
+              ?.at(0)
+              ?.shippingMethods?.find(
+                (method) => method.code === selectedBackorderShippingMethod,
+              )?.code ??
+            backOrderAll.plants?.at(0)?.shippingMethods?.at(0)?.code ??
+            selectedBackorderShippingMethod;
+          setSelectedBackorderShippingMethod(setShippingMethod);
+          onSave({
+            ...createCartItemConfig({
+              method: setShippingMethod,
+              quantity: 0,
+              plant: getFirstPlantFromPlants(backOrderAll?.plants),
+              hash: backOrderAll.hash,
+              backOrderAll: true,
+              backOrderDate: backOrderAll.plants[0]?.backOrderDate ?? "",
+              backOrderQuantity: backOrderAll.plants[0]?.backOrderQuantity ?? 0,
+            }),
+            will_call_avail: EMPTY_STRING,
+            will_call_shipping: EMPTY_STRING,
+            will_call_plant: EMPTY_STRING,
+            will_call_not_in_stock: FALSE_STRING,
+          });
+
+          sendToGTMShippingMethodChanged(setShippingMethod);
+        }
       }
 
       // Ship to me configs
@@ -337,7 +368,6 @@ const CartItemShippingMethod = ({
               )?.code ??
             shipAlternativeBranch.plants?.at(0)?.shippingMethods?.at(0)?.code ??
             selectedShippingMethod;
-          console.log(">> setShippingMethod", setShippingMethod);
           setSelectedShippingMethod(setShippingMethod);
           onSave({
             ...getAlternativeBranchesConfig({
@@ -365,39 +395,12 @@ const CartItemShippingMethod = ({
         setSelectedWillCallTransfer(MAIN_OPTIONS.WILL_CALL);
         processWillCallAnywhereItem(willCallAnywhere[0]);
       }
-      // Back order all can have only this config
-      if (selectedOption === MAIN_OPTIONS.BACK_ORDER && backOrderAll) {
-        const setShippingMethod =
-          backOrderAll.plants
-            ?.at(0)
-            ?.shippingMethods?.find(
-              (method) => method.code === selectedBackorderShippingMethod,
-            )?.code ??
-          backOrderAll.plants?.at(0)?.shippingMethods?.at(0)?.code ??
-          selectedBackorderShippingMethod;
-        setSelectedBackorderShippingMethod(setShippingMethod);
-        onSave({
-          ...createCartItemConfig({
-            method: setShippingMethod,
-            quantity: 0,
-            plant: getFirstPlantFromPlants(backOrderAll?.plants),
-            hash: backOrderAll.hash,
-            backOrderAll: true,
-            backOrderDate: backOrderAll.plants[0]?.backOrderDate ?? "",
-            backOrderQuantity: backOrderAll.plants[0]?.backOrderQuantity ?? 0,
-          }),
-          will_call_avail: EMPTY_STRING,
-          will_call_shipping: EMPTY_STRING,
-          will_call_plant: EMPTY_STRING,
-          will_call_not_in_stock: FALSE_STRING,
-        });
-
-        sendToGTMShippingMethodChanged(setShippingMethod);
-      }
     }
   };
 
   const processWillCallAnywhereItem = (item: WillCallAnywhere) => {
+    setSelectedShippingOption(MAIN_OPTIONS.WILL_CALL);
+
     const isNotInStock = item && item.status === NOT_IN_STOCK;
     if (item && !isNotInStock) {
       onSave({
@@ -549,9 +552,8 @@ const CartItemShippingMethod = ({
     if (defaultShippingMethod) {
       setSelectedShippingMethod(defaultShippingMethod.code);
       sendToGTMShippingMethodChanged(defaultShippingMethod.code);
-      const shipToMe = availableAll ?? takeOnHand ?? backOrderAll;
 
-      if (shipToMe) {
+      if (takeOnHand) {
         const setShippingMethod =
           takeOnHandPlant?.shippingMethods?.find(
             (method) => method.code === selectedShippingMethod,
@@ -564,7 +566,7 @@ const CartItemShippingMethod = ({
             method: setShippingMethod,
             quantity: takeOnHandPlant?.quantity ?? 0,
             plant: takeOnHandPlant?.plant ?? EMPTY_STRING,
-            hash: shipToMe.hash,
+            hash: takeOnHand.hash,
             backOrderDate: takeOnHandPlant?.backOrderDate,
             backOrderQuantity: takeOnHandPlant?.backOrderQuantity,
           }),
@@ -584,7 +586,6 @@ const CartItemShippingMethod = ({
       sendToGTMShippingMethodChanged(defaultShippingMethod.code);
 
       if (shipAlternativeBranch) {
-        console.log(">> shipAlternativeBranch");
         onSave({
           ...getAlternativeBranchesConfig({
             plants: shipAlternativeBranch?.plants,
@@ -627,8 +628,8 @@ const CartItemShippingMethod = ({
 
   return (
     <ul className="flex flex-col gap-3">
-      {isShipToMeEnabled && (
-        <li className="flex flex-col items-stretch gap-2">
+      {(isShipToMeEnabled || !!backOrderAll) && (
+        <li className="flex flex-col items-stretch">
           <div className="flex flex-row items-center gap-3">
             <Checkbox
               id={shipToMeId}
@@ -653,11 +654,15 @@ const CartItemShippingMethod = ({
           </div>
 
           <div className="ml-[1.625rem] flex flex-col gap-2">
-            <div className="text-sm font-medium">
-              {shipToMeAvailable?.quantity && (
-                <HomeBranchItemCountBadge
-                  enteredCount={Number(quantity)}
-                  availableCount={shipToMeAvailable.quantity}
+            <div className="pl-1.5 text-sm font-medium">
+              {quantity <= homeBranchAvailableQuantity && (
+                <HomeBranchItemInStockCountBadge
+                  availableCount={homeBranchAvailableQuantity}
+                />
+              )}
+              {quantity > homeBranchAvailableQuantity && (
+                <HomeBranchItemLimitedStockCountBadge
+                  availableCount={homeBranchAvailableQuantity}
                 />
               )}
             </div>
@@ -688,31 +693,6 @@ const CartItemShippingMethod = ({
               <div className="text-sm">
                 Get it by <b>today</b> if you order before noon
               </div>
-            )}
-
-            {selectedShippingOption === MAIN_OPTIONS.SHIP_TO_ME && (
-              <>
-                {/* All available option */}
-                {availableAll && (
-                  <div className="flex flex-row gap-2 rounded-lg border border-wurth-gray-150 px-2 py-2 text-sm shadow-sm">
-                    <div className="flex flex-col gap-0.5">
-                      <div className="font-medium">
-                        {availableAllPlant?.quantity && (
-                          <ItemCountBadge count={availableAllPlant.quantity} />
-                        )}
-                        &nbsp;from&nbsp;
-                        <PlantName
-                          plants={plants}
-                          plantCode={availableAllPlant?.plant}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                )}
-                {selectedShipToMe === TAKE_ON_HAND && (
-                  <ShipToMeBOInfoBanner option={takeOnHand} />
-                )}
-              </>
             )}
           </div>
         </li>
@@ -1131,32 +1111,30 @@ const ItemCountBadge = ({
   );
 };
 
-const HomeBranchItemCountBadge = ({
-  enteredCount = 0,
+const HomeBranchItemInStockCountBadge = ({
   availableCount = 0,
 }: {
-  readonly enteredCount: number;
   readonly availableCount: number;
 }) => {
-  if (enteredCount <= availableCount) {
-    return (
-      <>
-        <span className="text-green-700">{availableCount} </span>
-        in stock
-      </>
-    );
-  }
-  if (enteredCount > availableCount) {
-    return (
-      <>
-        Only <span className="text-yellow-700">{availableCount}</span> in stock
-      </>
-    );
+  return (
+    <>
+      <span className="text-green-700">{availableCount} </span>
+      in stock
+    </>
+  );
+};
+
+const HomeBranchItemLimitedStockCountBadge = ({
+  availableCount = 0,
+}: {
+  readonly availableCount: number;
+}) => {
+  if (availableCount === 0) {
+    return <span className="text-red-700">Out of stock</span>;
   }
   return (
     <>
-      <span className="text-red-700">{enteredCount} </span>
-      backorder
+      Only <span className="text-yellow-700">{availableCount}</span> in stock
     </>
   );
 };

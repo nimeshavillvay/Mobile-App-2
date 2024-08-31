@@ -657,17 +657,14 @@ const CartItem = ({
   useEffect(() => {
     // Check if matched availability option exists
     if (matchedAvailabilityOption) {
-      if (matchedAvailabilityOption.type === AVAILABLE_ALL) {
+      if (
+        matchedAvailabilityOption.type === AVAILABLE_ALL ||
+        matchedAvailabilityOption.type === TAKE_ON_HAND ||
+        matchedAvailabilityOption.type === BACK_ORDER_ALL
+      ) {
         setSelectedShippingOption(MAIN_OPTIONS.SHIP_TO_ME);
-        setSelectedShipToMe(AVAILABLE_ALL);
-      } else if (matchedAvailabilityOption.type === TAKE_ON_HAND) {
-        setSelectedShippingOption(MAIN_OPTIONS.SHIP_TO_ME);
-        setSelectedShipToMe(TAKE_ON_HAND);
       } else if (matchedAvailabilityOption.type === ALTERNATIVE_BRANCHES) {
         setSelectedShippingOption(MAIN_OPTIONS.SHIP_TO_ME_ALT);
-        setSelectedShipToMe(ALTERNATIVE_BRANCHES);
-      } else if (matchedAvailabilityOption.type === BACK_ORDER_ALL) {
-        setSelectedShippingOption(MAIN_OPTIONS.BACK_ORDER);
       }
     } else {
       // Check if hash matches with the will call hash
