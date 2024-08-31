@@ -243,6 +243,13 @@ const CartItemShippingMethod = ({
 
   const homeBranchAvailableQuantity = homeBranchAvailability?.amount ?? 0;
 
+  const shipToMeShippingMethods =
+    shippingMethods?.length > 0
+      ? shippingMethods
+      : backOrderAll?.plants[0]?.shippingMethods
+        ? backOrderAll?.plants[0]?.shippingMethods
+        : [];
+
   const getFirstBackOrderDateFromPlants = (
     plants: {
       backOrderDate?: string;
@@ -666,11 +673,11 @@ const CartItemShippingMethod = ({
                 />
               )}
             </div>
-            {shippingMethods?.length > 0 && (
+            {shipToMeShippingMethods.length > 0 && (
               <Select
                 disabled={
                   selectedShippingOption !== MAIN_OPTIONS.SHIP_TO_ME ||
-                  shippingMethods?.length <= 1
+                  shipToMeShippingMethods?.length === 1
                 }
                 value={selectedShippingMethod}
                 onValueChange={(method) => handleShipToMeMethod(method)}
@@ -680,7 +687,7 @@ const CartItemShippingMethod = ({
                 </SelectTrigger>
 
                 <SelectContent>
-                  {shippingMethods.map((option) => (
+                  {shipToMeShippingMethods.map((option) => (
                     <SelectItem key={option.code} value={option.code}>
                       {option.name}
                     </SelectItem>
