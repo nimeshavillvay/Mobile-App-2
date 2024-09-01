@@ -16,7 +16,7 @@ const contactSchema = z.object({
   role: z.string(),
   role_description: z.string(),
   permission: permissionSchema,
-  sold_to_status: z.string(),
+  sold_to_status: statusSchema,
 });
 const manageContactSchema = z.object({
   manage_contact: z.object({

@@ -73,6 +73,7 @@ const UsersList = () => {
   return (
     <UserListPrimitive
       data={userQuery.data.manageContact.contactList}
+      editUserHref={(userId) => `/my-account/manage-users/${userId}`}
       deleteUser={deleteUser}
     />
   );

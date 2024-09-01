@@ -45,7 +45,9 @@ const queryClient = new QueryClient({
   },
   mutationCache: new MutationCache({
     onSuccess: () => {
-      queryClient.invalidateQueries();
+      queryClient.invalidateQueries({
+        type: "all",
+      });
     },
   }),
 });

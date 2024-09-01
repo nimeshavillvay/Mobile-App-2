@@ -31,14 +31,18 @@ import useSuspensePasswordPolicy from "@repo/shared-logic/apis/hooks/account/use
 import { isPermission } from "@repo/shared-logic/zod-schema/misc";
 import { router } from "expo-router";
 import Stack from "expo-router/stack";
+import { MotiView } from "moti";
+import { Skeleton } from "moti/skeleton";
 // eslint-disable-next-line no-restricted-imports
 import { Suspense, useEffect, useId } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { View } from "react-native";
+import { Dimensions, View } from "react-native";
 import { Button } from "tamagui";
 import { z } from "zod";
 
 const AddUserPage = () => {
+  const width = Dimensions.get("window").width;
+
   return (
     <>
       <Stack.Screen
@@ -50,7 +54,13 @@ const AddUserPage = () => {
       <ScreenLayout>
         <ScreenHeader title="Add New User" type="center-aligned" />
 
-        <Suspense>
+        <Suspense
+          fallback={
+            <MotiView style={{ flex: 1 }}>
+              <Skeleton width={width} height="100%" colorMode="light" />
+            </MotiView>
+          }
+        >
           <AddUserForm />
         </Suspense>
       </ScreenLayout>
