@@ -130,6 +130,7 @@ const SearchResultsList = ({ query }: { readonly query: string }) => {
           link: `product/${product.id}/${product.slug}`,
           status: product.productStatus,
           categoryId: product.categoryId,
+          brand: product.brandName,
         }))}
         onEndReached={fetchNextPage}
         onEndReachedThreshold={0.5}

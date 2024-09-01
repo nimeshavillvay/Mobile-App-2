@@ -3,13 +3,12 @@ import { API_BASE_URL, API_KEY } from "@/lib/constants";
 import { ProductCard } from "@repo/native-ui/components/product-card";
 import usePriceCheck from "@repo/shared-logic/apis/hooks/product/use-price-check.hook";
 import { FlashList, type FlashListProps } from "@shopify/flash-list";
-import { router } from "expo-router";
 import { type ComponentProps } from "react";
 import { H2, Text, View } from "tamagui";
 
 type ProductItem = Omit<
   ComponentProps<typeof ProductCard>,
-  "price" | "listPrice" | "handleDiscontinuedPressed"
+  "price" | "listPrice"
 > & {
   categoryId?: string;
 };
@@ -27,7 +26,7 @@ type ProductsListProps = Omit<
 const ProductsList = ({
   data,
   onEndReachedThreshold = 0.5,
-  ItemSeparatorComponent = () => <View height={16} />,
+  ItemSeparatorComponent = () => <View height={24} />,
   ListEmptyComponent = (
     <View padding={16} gap={12}>
       <H2 fontSize={20} lineHeight={20} fontWeight={400}>
@@ -74,36 +73,21 @@ const ProductsList = ({
       extraData={priceCheckQuery.data}
       keyExtractor={(item) => item.productId.toString()}
       horizontal={false}
-      numColumns={2}
       renderItem={({ item, index }) => {
         const { price, listPrice } = getPrice(item.productId.toString());
 
-        const isOddIndex = index % 2 === 1;
-
         return (
-          <View
-            style={{
-              paddingRight: !isOddIndex ? 8 : 0,
-              paddingLeft: isOddIndex ? 8 : 0,
-            }}
-          >
-            <ProductCard
-              productId={item.productId}
-              image={item.image}
-              title={item.title}
-              sku={item.sku}
-              uom={item.uom}
-              price={price}
-              listPrice={listPrice}
-              link={item.link}
-              status={item.status}
-              handleDiscontinuedPressed={() => {
-                if (item.categoryId) {
-                  router.push(`/shop/category/${item.categoryId}`);
-                }
-              }}
-            />
-          </View>
+          <ProductCard
+            productId={item.productId}
+            image={item.image}
+            title={item.title}
+            sku={item.sku}
+            uom={item.uom}
+            price={price}
+            listPrice={listPrice}
+            brand={item.brand}
+            noOfVariants={item.noOfVariants}
+          />
         );
       }}
       ItemSeparatorComponent={ItemSeparatorComponent}

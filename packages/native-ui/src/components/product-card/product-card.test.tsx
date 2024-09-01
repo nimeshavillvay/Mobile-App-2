@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen } from "~/lib/test-utils";
+import { act, render, screen } from "~/lib/test-utils";
 import { ProductCard } from "./product-card";
 
 const title =
@@ -6,7 +6,6 @@ const title =
 const sku = "NC8053-346A-4G";
 const uom = "pair";
 const image = "https://picsum.photos/seed/696/3000/2000";
-const link = "product/1/test";
 
 describe("Product Card", () => {
   test("displays the product title, SKU, Unit Of Measurement, and Image", async () => {
@@ -23,9 +22,6 @@ describe("Product Card", () => {
         price={price}
         listPrice={price}
         uom={uom}
-        link={link}
-        status="active"
-        handleDiscontinuedPressed={jest.fn()}
       />,
     );
 
@@ -67,9 +63,6 @@ describe("Product Card", () => {
         price={price}
         listPrice={price}
         uom={uom}
-        link={link}
-        status="active"
-        handleDiscontinuedPressed={jest.fn()}
       />,
     );
 
@@ -96,9 +89,6 @@ describe("Product Card", () => {
         price={price}
         listPrice={price}
         uom={uom}
-        link={link}
-        status="active"
-        handleDiscontinuedPressed={jest.fn()}
       />,
     );
 
@@ -122,9 +112,6 @@ describe("Product Card", () => {
         price={price}
         listPrice={price}
         uom={uom}
-        link={link}
-        status="active"
-        handleDiscontinuedPressed={jest.fn()}
       />,
     );
 
@@ -158,9 +145,6 @@ describe("Product Card", () => {
         price={price}
         listPrice={listPrice}
         uom={uom}
-        link={link}
-        status="active"
-        handleDiscontinuedPressed={jest.fn()}
       />,
     );
 
@@ -199,9 +183,6 @@ describe("Product Card", () => {
         price={price}
         listPrice={price}
         uom={uom}
-        link={link}
-        status="active"
-        handleDiscontinuedPressed={jest.fn()}
       />,
     );
 
@@ -210,38 +191,62 @@ describe("Product Card", () => {
     await act(() => promise);
   });
 
-  test("displays the alert for discontinued items", async () => {
-    const price = 18.32;
-    const handleDiscontinuedPressed = jest.fn();
+  test("shows the brand name if the 'brand' prop is given", async () => {
+    const price = 34.11;
 
     render(
       <ProductCard
         productId={1}
         image={image}
         title={title}
-        sku={sku}
         price={price}
         listPrice={price}
         uom={uom}
-        link={link}
-        status="discontinued"
-        handleDiscontinuedPressed={handleDiscontinuedPressed}
+        brand="Wurth"
       />,
     );
 
-    const button = await screen.findByTestId("discontinued-alert-button");
+    // Check for brand name
+    expect(screen.getByTestId(/^brand-/)).toHaveTextContent("Wurth");
+  });
 
-    fireEvent.press(button);
+  test("shows the number of variations if the 'noOfVariants' prop is given", async () => {
+    const price = 34.11;
 
-    expect(screen.getByText("Discontinued")).toBeOnTheScreen();
-    expect(
-      screen.getByText(
-        "We're sorry, that product has been discontinued. Would you like to go its category to find a substitute?",
-      ),
-    ).toBeOnTheScreen();
+    render(
+      <ProductCard
+        productId={1}
+        image={image}
+        title={title}
+        price={price}
+        listPrice={price}
+        uom={uom}
+        noOfVariants={2}
+      />,
+    );
 
-    const yesButton = screen.getByTestId("yes-button");
-    fireEvent.press(yesButton);
-    expect(handleDiscontinuedPressed).toHaveBeenCalledTimes(1);
+    // Check for brand name
+    expect(screen.getByTestId(/^variations-/)).toHaveTextContent(
+      "2 Variations",
+    );
+  });
+
+  test("shows the singular of the number of variations if the 'noOfVariants' prop is 1", async () => {
+    const price = 34.11;
+
+    render(
+      <ProductCard
+        productId={1}
+        image={image}
+        title={title}
+        price={price}
+        listPrice={price}
+        uom={uom}
+        noOfVariants={1}
+      />,
+    );
+
+    // Check for brand name
+    expect(screen.getByTestId(/^variations-/)).toHaveTextContent("1 Variation");
   });
 });
