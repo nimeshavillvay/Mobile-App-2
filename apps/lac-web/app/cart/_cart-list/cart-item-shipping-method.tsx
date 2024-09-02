@@ -45,7 +45,6 @@ import {
 } from "@repo/web-ui/components/ui/table";
 import dayjs from "dayjs";
 import { useId } from "react";
-import { useCartItemQuantityContext } from "../cart-item-quantity-context";
 import {
   ALTERNATIVE_BRANCHES,
   AVAILABLE_ALL,
@@ -67,12 +66,7 @@ import {
   getAlternativeBranchesConfig,
 } from "./helpers";
 import PlantName from "./plant-name";
-import type {
-  MainOption,
-  OptionPlant,
-  ShipToMeOption,
-  WillCallOption,
-} from "./types";
+import type { MainOption, OptionPlant, WillCallOption } from "./types";
 
 // Vendor Direct Shipping Method
 
@@ -84,8 +78,7 @@ type CartItemShippingMethodProps = {
   readonly selectedWillCallPlant: string;
   readonly setSelectedShippingOption: (option: MainOption | undefined) => void;
   readonly selectedShippingOption: MainOption | undefined;
-  readonly setSelectedShipToMe: (shipToMe: ShipToMeOption) => void;
-  readonly selectedShipToMe: ShipToMeOption;
+  // readonly selectedShipToMe: ShipToMeOption;
   readonly setSelectedShippingMethod: (method: string) => void;
   readonly selectedShippingMethod: string;
   readonly onSave: (config: Partial<CartItemConfiguration>) => void;
@@ -109,10 +102,8 @@ const CartItemShippingMethod = ({
   selectedWillCallPlant,
   setSelectedShippingOption,
   selectedShippingOption,
-  setSelectedShipToMe,
   setSelectedWillCallTransfer,
   selectedWillCallTransfer,
-  selectedShipToMe,
   setSelectedShippingMethod,
   selectedShippingMethod,
   onSave,
@@ -248,8 +239,6 @@ const CartItemShippingMethod = ({
   const homeBranchAvailability = availability.availableLocations?.find(
     ({ location }) => location === willCallPlant?.plantCode,
   );
-
-  const { lineQuantity, setLineQuantity } = useCartItemQuantityContext();
 
   const homeBranchAvailableQuantity = homeBranchAvailability?.amount ?? 0;
 
@@ -485,53 +474,35 @@ const CartItemShippingMethod = ({
   };
 
   const handleShipToMeMethod = (shippingMethod: string) => {
+    console.log(">> handleShipToMeMethod", shippingMethod);
     setSelectedShippingMethod(shippingMethod);
     sendToGTMShippingMethodChanged(shippingMethod);
 
     if (shippingMethod) {
-      switch (selectedShipToMe) {
-        case AVAILABLE_ALL:
-          onSave(
-            createCartItemConfig({
-              method: shippingMethod,
-              quantity: availableAllPlant?.quantity ?? 0,
-              plant: availableAllPlant?.plant ?? EMPTY_STRING,
-              hash: availableAll?.hash ?? "",
-              backOrderAll: false,
-            }),
-          );
-          break;
-        case TAKE_ON_HAND:
-          onSave(
-            createCartItemConfig({
-              method: shippingMethod,
-              quantity: takeOnHandPlant?.quantity ?? 0,
-              plant: takeOnHandPlant?.plant ?? EMPTY_STRING,
-              hash: takeOnHand?.hash ?? "",
-              backOrderDate: takeOnHandPlant?.backOrderDate,
-              backOrderQuantity: takeOnHandPlant?.backOrderQuantity,
-            }),
-          );
-          break;
-        case ALTERNATIVE_BRANCHES:
-          if (shipAlternativeBranch) {
-            onSave(
-              getAlternativeBranchesConfig({
-                plants: shipAlternativeBranch.plants,
-                method: shippingMethod,
-                hash: shipAlternativeBranch.hash,
-                backOrderDate: shipAlternativeBranch.backOrder
-                  ? shipAlternativeBranch?.plants?.[0]?.backOrderDate
-                  : "",
-                backOrderQuantity: shipAlternativeBranch.backOrder
-                  ? shipAlternativeBranch?.plants?.[0]?.backOrderQuantity
-                  : 0,
-                homePlant: willCallPlant.plantCode ?? DEFAULT_PLANT.code,
-              }),
-            );
-          }
-          break;
+      if (availableAll) {
+        onSave(
+          createCartItemConfig({
+            method: shippingMethod,
+            quantity: availableAllPlant?.quantity ?? 0,
+            plant: availableAllPlant?.plant ?? EMPTY_STRING,
+            hash: availableAll?.hash ?? "",
+            backOrderAll: false,
+          }),
+        );
+      } else if (takeOnHand) {
+        onSave(
+          createCartItemConfig({
+            method: shippingMethod,
+            quantity: takeOnHandPlant?.quantity ?? 0,
+            plant: takeOnHandPlant?.plant ?? EMPTY_STRING,
+            hash: takeOnHand?.hash ?? "",
+            backOrderDate: takeOnHandPlant?.backOrderDate,
+            backOrderQuantity: takeOnHandPlant?.backOrderQuantity,
+          }),
+        );
       }
+
+      // todo: need to add BO
     }
   };
 

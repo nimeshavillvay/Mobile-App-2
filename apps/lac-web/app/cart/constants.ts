@@ -1,5 +1,6 @@
 // Available shipping options
 export const AVAILABLE_ALL = "availableAll" as const;
+export const SHIP_TO_ME = "shipToMe" as const;
 export const TAKE_ON_HAND = "takeOnHand" as const;
 export const BACK_ORDER_ALL = "backOrderAll" as const;
 export const ALTERNATIVE_BRANCHES = "shipAlternativeBranch" as const;

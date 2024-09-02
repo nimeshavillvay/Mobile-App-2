@@ -73,6 +73,7 @@ import {
   EMPTY_STRING,
   FALSE_STRING,
   MAIN_OPTIONS,
+  SHIP_TO_ME,
   TAKE_ON_HAND,
   TRUE_STRING,
   WILLCALL_SHIPING_METHOD,
@@ -260,29 +261,26 @@ const CartItem = ({
     [BACK_ORDER_ALL]: backOrderAll,
   };
 
-  const [selectedShipToMe, setSelectedShipToMe] = useState<ShipToMeOption>(
-    () => {
-      // State initialization based on availability options
-      if (availableAll) {
-        return AVAILABLE_ALL;
-      } else if (takeOnHand) {
-        return TAKE_ON_HAND;
-      } else if (shipAlternativeBranch) {
-        return ALTERNATIVE_BRANCHES;
-      }
-      // Return a default value here if none of the conditions match
+  const selectedShipToMe: ShipToMeOption = (() => {
+    // State initialization based on availability options
+    if (availableAll || takeOnHand || backOrderAll) {
+      return SHIP_TO_ME;
+    } else {
       return undefined;
-    },
-  );
+    }
+    // Return a default value here if none of the conditions match
+  })();
 
   const [selectedWillCallTransfer, setSelectedWillCallTransfer] =
     useState<WillCallOption>(MAIN_OPTIONS.WILL_CALL);
 
+  console.log(">> selectedShipToMe", selectedShipToMe);
   // use the new function to determine the available options
   const shippingMethods = getShippingMethods(
     selectedShipToMe,
     AVAILABLE_OPTIONS_MAP,
   );
+  console.log(">> shippingMethods", shippingMethods);
   const backorderShippingMethods = getShippingMethods(
     BACK_ORDER_ALL,
     BACKORDER_OPTIONS_MAP,
@@ -1066,10 +1064,8 @@ const CartItem = ({
                 selectedWillCallPlant={selectedWillCallPlant}
                 setSelectedShippingOption={setSelectedShippingOption}
                 selectedShippingOption={selectedShippingOption}
-                setSelectedShipToMe={setSelectedShipToMe}
                 setSelectedWillCallTransfer={setSelectedWillCallTransfer}
                 selectedWillCallTransfer={selectedWillCallTransfer}
-                selectedShipToMe={selectedShipToMe}
                 setSelectedShippingMethod={setSelectedShippingMethod}
                 selectedShippingMethod={selectedShippingMethod}
                 setSelectedBackorderShippingMethod={
@@ -1102,8 +1098,6 @@ const CartItem = ({
                 selectedWillCallPlant={selectedWillCallPlant}
                 setSelectedShippingOption={setSelectedShippingOption}
                 selectedShippingOption={selectedShippingOption}
-                setSelectedShipToMe={setSelectedShipToMe}
-                selectedShipToMe={selectedShipToMe}
                 setSelectedWillCallTransfer={setSelectedWillCallTransfer}
                 selectedWillCallTransfer={selectedWillCallTransfer}
                 setSelectedShippingMethod={setSelectedShippingMethod}
