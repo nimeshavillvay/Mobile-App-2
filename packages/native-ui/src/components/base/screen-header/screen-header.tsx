@@ -11,6 +11,7 @@ export const ScreenHeader = ({
   hideBackButton = false,
   hideSearchButton = false,
   barcodeScannerPath,
+  RightAction,
   ...delegated
 }: {
   readonly title: string;
@@ -19,6 +20,7 @@ export const ScreenHeader = ({
   readonly hideBackButton?: boolean;
   readonly hideSearchButton?: boolean;
   readonly barcodeScannerPath?: string;
+  readonly RightAction?: JSX.Element;
 } & ComponentProps<typeof View>) => {
   const router = useRouter();
 
@@ -87,6 +89,8 @@ export const ScreenHeader = ({
                   />
                 </Link>
               )}
+
+              {!!RightAction && <View>{RightAction}</View>}
             </View>
           </>
         ) : (
@@ -121,6 +125,12 @@ export const ScreenHeader = ({
             >
               {title}
             </Text>
+
+            {!!RightAction && (
+              <View pos="absolute" top={8} right={0}>
+                {RightAction}
+              </View>
+            )}
           </>
         )}
       </View>

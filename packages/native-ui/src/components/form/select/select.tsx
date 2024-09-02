@@ -17,11 +17,14 @@ export const Select = ({
 
 export const SelectTrigger = ({
   iconAfter = ChevronDown,
+  placeholder,
   ...delegated
-}: ComponentProps<typeof SelectPrimitive.Trigger>) => {
+}: ComponentProps<typeof SelectPrimitive.Trigger> & {
+  readonly placeholder?: string;
+}) => {
   return (
     <SelectPrimitive.Trigger iconAfter={iconAfter} {...delegated}>
-      <SelectPrimitive.Value />
+      <SelectPrimitive.Value placeholder={placeholder} />
     </SelectPrimitive.Trigger>
   );
 };

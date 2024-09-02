@@ -4,7 +4,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ScreenHeader } from "@repo/native-ui/components/base/screen-header";
 import { ScreenLayout } from "@repo/native-ui/components/base/screen-layout";
 import {
+  CheckIcon,
+  Checkbox,
+  CheckboxIndicator,
+} from "@repo/native-ui/components/form/checkbox";
+import {
   FormFieldContainer,
+  FormFieldHorizontalContainer,
   FormRootContainer,
 } from "@repo/native-ui/components/form/container";
 import { Input, InputError } from "@repo/native-ui/components/form/input";
@@ -18,22 +24,21 @@ import {
   SelectItemText,
   SelectTrigger,
 } from "@repo/native-ui/components/form/select";
+import useAddUserMutation from "@repo/shared-logic/apis/hooks/account/use-add-user-mutation.hook";
+import useCheckEmail from "@repo/shared-logic/apis/hooks/account/use-check-email.hook";
 import useJobRoles from "@repo/shared-logic/apis/hooks/account/use-job-roles.hook";
 import useSuspensePasswordPolicy from "@repo/shared-logic/apis/hooks/account/use-suspense-password-policy.hook";
-import useSuspenseUser from "@repo/shared-logic/apis/hooks/account/use-suspense-user.hook";
-import useUpdateProfileMutation from "@repo/shared-logic/apis/hooks/account/use-update-profile-mutation.hook";
+import { isPermission } from "@repo/shared-logic/zod-schema/misc";
+import { router } from "expo-router";
 import Stack from "expo-router/stack";
-import { MotiView } from "moti";
-import { Skeleton } from "moti/skeleton";
-import { Suspense, useId } from "react";
+// eslint-disable-next-line no-restricted-imports
+import { Suspense, useEffect, useId } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Dimensions, View } from "react-native";
+import { View } from "react-native";
 import { Button } from "tamagui";
 import { z } from "zod";
 
-const EditProfilePage = () => {
-  const width = Dimensions.get("window").width;
-
+const AddUserPage = () => {
   return (
     <>
       <Stack.Screen
@@ -43,43 +48,36 @@ const EditProfilePage = () => {
       />
 
       <ScreenLayout>
-        <ScreenHeader title="Edit Profile" type="center-aligned" />
+        <ScreenHeader title="Add New User" type="center-aligned" />
 
-        <Suspense
-          fallback={
-            <MotiView style={{ flex: 1 }}>
-              <Skeleton width={width} height="100%" colorMode="light" />
-            </MotiView>
-          }
-        >
-          <ProfileForm />
+        <Suspense>
+          <AddUserForm />
         </Suspense>
       </ScreenLayout>
     </>
   );
 };
 
-export default EditProfilePage;
+export default AddUserPage;
 
-const ProfileForm = () => {
+const AddUserForm = () => {
   const id = useId();
   const apiConfig = useApiConfig();
   const authenticatedApiConfig = useAuthenticatedApiConfig();
 
-  const userQuery = useSuspenseUser(authenticatedApiConfig);
   const passwordPolicyQuery = useSuspensePasswordPolicy(apiConfig);
   const jobRolesQuery = useJobRoles(apiConfig);
-
-  const profile = userQuery.data.manageContact.yourProfile;
 
   const formSchema = z
     .object({
       firstName: z.string().min(1),
       lastName: z.string().min(1),
-      jobTitle: z.string().min(1),
+      jobTitle: z.string().min(1, { message: "Select a Job Title" }),
+      permission: z.string().min(1, { message: "Select the Permission" }),
       email: z.string().email(),
       password: z.string(),
       confirmPassword: z.string(),
+      resetPassword: z.boolean(),
     })
     .superRefine(({ password, confirmPassword }, ctx) => {
       if (confirmPassword !== password) {
@@ -142,29 +140,56 @@ const ProfileForm = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     values: {
-      firstName: profile.firstName,
-      lastName: profile.lastName,
-      jobTitle: profile.role,
-      email: profile.email,
+      firstName: "",
+      lastName: "",
+      jobTitle: "",
+      permission: "",
+      email: "",
       password: "",
       confirmPassword: "",
+      resetPassword: true,
     },
   });
+  const email = form.watch("email");
   const jobTitle = form.watch("jobTitle");
+  const permission = form.watch("permission");
+  const resetPassword = form.watch("resetPassword");
 
-  const updateProfileMutation = useUpdateProfileMutation(
-    authenticatedApiConfig,
-  );
+  const checkEmailQuery = useCheckEmail(apiConfig, email);
+  const checkEmailData = checkEmailQuery.data;
 
-  const handleSave = form.handleSubmit((data) => {
-    updateProfileMutation.mutate({
-      userId: Number(profile.id),
-      firstName: data.firstName,
-      lastName: data.lastName,
-      jobTitle: data.jobTitle,
-      email: data.email,
-      password: data.password,
-    });
+  useEffect(() => {
+    if (checkEmailData?.status_code === "USER_ACTIVE") {
+      form.setError("email", {
+        message:
+          "The email address you entered is already in use. Please use a different email.",
+      });
+    }
+  }, [checkEmailData, form]);
+
+  const addUserMutation = useAddUserMutation(authenticatedApiConfig);
+
+  const addUser = form.handleSubmit((data) => {
+    const permission = data.permission;
+
+    if (isPermission(permission)) {
+      addUserMutation.mutate(
+        {
+          firstName: data.firstName,
+          lastName: data.lastName,
+          jobTitle: data.jobTitle,
+          permission,
+          email: data.email,
+          password: data.password,
+          resetPassword: data.resetPassword,
+        },
+        {
+          onSuccess: () => {
+            router.back();
+          },
+        },
+      );
+    }
   });
 
   return (
@@ -216,9 +241,12 @@ const ProfileForm = () => {
           <Select
             id={`job-title-${id}`}
             value={jobTitle}
-            onValueChange={(value) => form.setValue("jobTitle", value)}
+            onValueChange={(value) => {
+              form.setValue("jobTitle", value);
+              form.clearErrors("jobTitle");
+            }}
           >
-            <SelectTrigger />
+            <SelectTrigger placeholder="Please select" />
 
             <SelectAdapt />
 
@@ -232,6 +260,41 @@ const ProfileForm = () => {
               ))}
             </SelectContent>
           </Select>
+
+          <InputError>{form.formState.errors.jobTitle?.message}</InputError>
+        </FormFieldContainer>
+
+        <FormFieldContainer>
+          <Label htmlFor={`permission-${id}`}>Permission</Label>
+
+          <Select
+            id={`permission-${id}`}
+            value={permission}
+            onValueChange={(value) => {
+              form.setValue("permission", value);
+              form.clearErrors("permission");
+            }}
+          >
+            <SelectTrigger placeholder="Please select" />
+
+            <SelectAdapt />
+
+            <SelectContent>
+              <SelectItem index={0} value={"ADMIN"}>
+                <SelectItemText>Administrator</SelectItemText>
+
+                <SelectItemIndicator />
+              </SelectItem>
+
+              <SelectItem index={1} value={"BUYER"}>
+                <SelectItemText>Buyer</SelectItemText>
+
+                <SelectItemIndicator />
+              </SelectItem>
+            </SelectContent>
+          </Select>
+
+          <InputError>{form.formState.errors.permission?.message}</InputError>
         </FormFieldContainer>
 
         <FormFieldContainer>
@@ -299,13 +362,28 @@ const ProfileForm = () => {
             {form.formState.errors.confirmPassword?.message}
           </InputError>
         </FormFieldContainer>
+
+        <FormFieldHorizontalContainer>
+          <Checkbox
+            checked={resetPassword}
+            onCheckedChange={(checked) =>
+              form.setValue("resetPassword", checked === true)
+            }
+          >
+            <CheckboxIndicator>
+              <CheckIcon />
+            </CheckboxIndicator>
+          </Checkbox>
+
+          <Label htmlFor={`reset-password-${id}`}>Force Password Reset</Label>
+        </FormFieldHorizontalContainer>
       </FormRootContainer>
 
       <View
         style={{ paddingHorizontal: 16, paddingTop: 12, paddingBottom: 17 }}
       >
         <Button
-          onPress={handleSave}
+          onPress={addUser}
           style={{
             backgroundColor: "#282828",
             borderRadius: 9,
@@ -313,7 +391,7 @@ const ProfileForm = () => {
             fontSize: 16,
           }}
         >
-          Save Changes
+          Add User
         </Button>
       </View>
     </View>
