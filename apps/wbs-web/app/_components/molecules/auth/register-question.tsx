@@ -1,4 +1,4 @@
-import { cn } from "@/_lib/utils";
+import { cn, toCamelCase } from "@/_lib/utils";
 import { Button } from "@repo/web-ui/components/base/atoms/button";
 import { CheckCircle } from "@repo/web-ui/components/icons/check-circle";
 import { CheckCircleFilled } from "@repo/web-ui/components/icons/check-circle-filled";
@@ -16,14 +16,14 @@ const RegisterQuestion = ({
   options,
   selectedOption,
   onOptionSelect,
-  testIdPrefix = "existing-customer-question",
+  testIdPrefix,
 }: RegisterQuestionProps) => {
   return (
-    <section className="space-y-4 rounded-lg bg-wurth-gray-50 p-6">
-      <h2
-        className="text-center text-base font-semibold text-black"
-        data-testid={`${testIdPrefix}-heading`}
-      >
+    <section
+      className="space-y-4 rounded-lg bg-wurth-gray-50 p-6"
+      data-testid={`${testIdPrefix ? testIdPrefix + "-" : ""}question`}
+    >
+      <h2 className="text-center text-base font-semibold text-black">
         {question}
       </h2>
 
@@ -36,18 +36,18 @@ const RegisterQuestion = ({
               "h-fit flex-1 gap-2 rounded-lg border-2 border-wurth-gray-150 bg-white p-4 font-bold text-wurth-gray-800 md:min-w-[7.5rem] md:flex-none",
               value === selectedOption && "border-black",
             )}
-            data-testid={`${testIdPrefix}-btn-${value.trim().toLowerCase().replace(/\s+/g, "-")}`}
+            data-testid={`button-${toCamelCase(value)}`}
             onClick={() => onOptionSelect(value)}
           >
             {value === selectedOption ? (
               <CheckCircleFilled
                 className="size-5"
-                data-testid={`${testIdPrefix}-icon-check-circle-filled`}
+                data-testid={`icon-${toCamelCase("check-circle-filled")}`}
               />
             ) : (
               <CheckCircle
                 className="size-5 stroke-wurth-gray-150"
-                data-testid={`${testIdPrefix}-icon-check-circle`}
+                data-testid={`icon-${toCamelCase("check-circle")}`}
               />
             )}
 
