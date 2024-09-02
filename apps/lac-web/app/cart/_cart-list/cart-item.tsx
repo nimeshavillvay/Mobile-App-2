@@ -29,7 +29,6 @@ import {
   cn,
   formatNumberToPrice,
 } from "@/_lib/utils";
-import { NUMBER_TYPE } from "@/_lib/zod-helper";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { sendGTMEvent } from "@next/third-parties/google";
 import { Alert } from "@repo/web-ui/components/icons/alert";
@@ -64,8 +63,8 @@ import {
 import { Controller, FormProvider, useForm } from "react-hook-form";
 import { GiRadioactive } from "react-icons/gi";
 import Balancer from "react-wrap-balancer";
-import { z } from "zod";
 import { useCartFormIdContext } from "../cart-form-id-context";
+import { useCartItemQuantityContext } from "../cart-item-quantity-context";
 import {
   ALTERNATIVE_BRANCHES,
   AVAILABLE_ALL,
@@ -85,8 +84,9 @@ import CartItemShippingMethod from "./cart-item-shipping-method";
 import FavoriteButton from "./favorite-button";
 import FavoriteButtonSkeleton from "./favorite-button-skeleton";
 import HazardousMaterialNotice from "./hazardous-material-notice";
-import type { ShipFromAltQtySchema } from "./helpers";
+import type { CartItemSchema, ShipFromAltQtySchema } from "./helpers";
 import {
+  cartItemSchema,
   createCartItemConfig,
   findAvailabilityOptionForType,
   getAlternativeBranchesConfig,
@@ -96,11 +96,6 @@ import {
 import RegionalExclusionAndShippingMethods from "./regional-exclusion-and-shipping-methods";
 import type { MainOption, ShipToMeOption, WillCallOption } from "./types";
 import useCheckAvailabilityMutation from "./use-check-availability-mutation.hook";
-
-const cartItemSchema = z.object({
-  quantity: NUMBER_TYPE,
-  po: z.string().optional(),
-});
 
 type CartItemProps = {
   readonly token: Token;
@@ -143,6 +138,8 @@ const CartItem = ({
 
   const [isHazardClick, setIsHazardClick] = useState(false);
 
+  const { setLineQuantity } = useCartItemQuantityContext();
+
   // This ref is to delay the check availability calls when the quantity or
   // PO Name changes to avoid multiple API calls
   const qtyOrPoChangeTimeoutRef = useRef<NodeJS.Timeout>();
@@ -165,15 +162,14 @@ const CartItem = ({
   const [selectedShippingOption, setSelectedShippingOption] =
     useState<MainOption>();
 
-  const { register, getValues, setValue, watch, control } = useForm<
-    z.infer<typeof cartItemSchema>
-  >({
-    resolver: zodResolver(cartItemSchema),
-    defaultValues: {
-      quantity: product.quantity,
-      po: product.configuration.poOrJobName ?? "",
-    },
-  });
+  const { register, getValues, setValue, watch, control } =
+    useForm<CartItemSchema>({
+      resolver: zodResolver(cartItemSchema),
+      defaultValues: {
+        quantity: product.quantity,
+        po: product.configuration.poOrJobName ?? "",
+      },
+    });
 
   const quantity = watch("quantity");
   const delayedQuantity = useDebouncedState(quantity);
@@ -700,6 +696,7 @@ const CartItem = ({
 
   const reduceQuantity = () => {
     // Use `Number(quantity)` because `quantity` is a string at runtime
+    setLineQuantity(Number(quantity));
     setValue(
       "quantity",
       calculateReduceQuantity(
@@ -711,6 +708,7 @@ const CartItem = ({
   };
   const increaseQuantity = () => {
     // Use `Number(quantity)` because `quantity` is a string at runtime
+    setLineQuantity(Number(quantity));
     setValue(
       "quantity",
       calculateIncreaseQuantity(
@@ -769,6 +767,7 @@ const CartItem = ({
       });
     }
   };
+
   const sendToGTMDeleteProduct = () => {
     if (gtmItemInfo && gtmUser) {
       sendGTMEvent({
@@ -801,6 +800,7 @@ const CartItem = ({
 
   const form = useForm<ShipFromAltQtySchema>({
     resolver: zodResolver(shipFromAltQtySchema),
+    defaultValues: { quantityAlt: shipAlternativeBranch?.plants.map(() => "") },
   });
 
   return (
@@ -914,7 +914,11 @@ const CartItem = ({
                   size="icon"
                   className="up-minus up-control h-7 w-7 rounded-sm"
                   onClick={reduceQuantity}
-                  disabled={!quantity || Number(quantity) === product.minAmount}
+                  disabled={
+                    !quantity ||
+                    Number(quantity) === product.minAmount ||
+                    selectedShippingOption === MAIN_OPTIONS.SHIP_TO_ME_ALT
+                  }
                 >
                   <Minus
                     className="btnAction size-4"
@@ -927,7 +931,7 @@ const CartItem = ({
                   control={control}
                   name="quantity"
                   render={({
-                    field: { onChange, onBlur, value, name, ref },
+                    field: { onChange, value, onBlur, name, ref },
                   }) => (
                     <NumberInputField
                       onBlur={onBlur}
@@ -939,6 +943,7 @@ const CartItem = ({
                           handleChangeQtyOrPO(Number(event.target.value));
                         }
 
+                        setLineQuantity(Number(event.target.value));
                         onChange(event);
                       }}
                       value={value}
@@ -951,7 +956,10 @@ const CartItem = ({
                       required
                       min={product.minAmount}
                       step={product.increment}
-                      disabled={checkAvailabilityQuery.isPending}
+                      disabled={
+                        checkAvailabilityQuery.isPending ||
+                        selectedShippingOption === MAIN_OPTIONS.SHIP_TO_ME_ALT
+                      }
                       form={cartFormId} // This is to check the validity when clicking "checkout"
                       label="Quantity"
                     />
@@ -966,7 +974,8 @@ const CartItem = ({
                   onClick={increaseQuantity}
                   disabled={
                     quantity?.toString().length > 5 ||
-                    Number(quantity) + product.increment >= MAX_QUANTITY
+                    Number(quantity) + product.increment >= MAX_QUANTITY ||
+                    selectedShippingOption === MAIN_OPTIONS.SHIP_TO_ME_ALT
                   }
                 >
                   <Plus

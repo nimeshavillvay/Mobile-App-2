@@ -1,7 +1,7 @@
 import NumberInputField from "@/_components/number-input-field";
+import useDebouncedState from "@/_hooks/misc/use-debounced-state.hook";
 import { type AvailabilityOptionPlants } from "@/_hooks/product/use-suspense-check-availability.hook";
 import { type Plant } from "@/_lib/types";
-import { cn } from "@/_lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Select,
@@ -11,7 +11,15 @@ import {
   SelectValue,
 } from "@repo/web-ui/components/ui/select";
 import { TableCell, TableRow } from "@repo/web-ui/components/ui/table";
+import { useDeferredValue } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { useCartItemQuantityContext } from "../cart-item-quantity-context";
+import { type Availability } from "../types";
+import {
+  BackOrderItemCountLabel,
+  ItemCountBadge,
+  ItemInStockCountBadge,
+} from "./cart-item-shipping-method";
 import { shipFromAltQtySchema, type ShipFromAltQtySchema } from "./helpers";
 import PlantName from "./plant-name";
 
@@ -19,79 +27,88 @@ type BranchRowProps = {
   readonly quantityFieldIndex: number;
   readonly plant: AvailabilityOptionPlants;
   readonly plants: Plant[];
+  readonly willCallPlant: { plantCode: string; plantName: string };
+  // readonly homeBranchAvailableQuantity: number;
+  readonly availability: Availability;
+  readonly requiredQuantity: number;
 };
 
 const CartItemShipFromAlternativeBranchRow = ({
   quantityFieldIndex,
   plant,
   plants,
+  willCallPlant,
+  availability,
+  requiredQuantity,
 }: BranchRowProps) => {
-  const { control } = useForm<ShipFromAltQtySchema>({
+  const { lineQuantity, setLineQuantity } = useCartItemQuantityContext();
+
+  const { control, watch } = useForm<ShipFromAltQtySchema>({
     resolver: zodResolver(shipFromAltQtySchema),
   });
+
+  const quantities = watch("quantityAlt");
+  const delayedQuantities = useDebouncedState(quantities);
+  const deferredQuantities = useDeferredValue(delayedQuantities);
+
   const handleChangeQty = (qty: number) => {
-    console.log(">> number", qty);
+    console.log(">> lineQuantity", lineQuantity);
+    console.log(">> getValues", deferredQuantities);
+    const altQtySum = deferredQuantities.reduce((collector, num) => {
+      return (collector += Number(num));
+    }, 0);
+    setLineQuantity(lineQuantity + altQtySum - qty);
   };
+
+  const isHomePlant = plant.plant === willCallPlant.plantCode;
+  const availabilityOfPlant =
+    availability.availableLocations.find(
+      (item) => item.location === plant.plant,
+    )?.amount ?? 0;
+
+  const getRequiredQuantity = () => {
+    if (isHomePlant) {
+      return availabilityOfPlant;
+    }
+    return requiredQuantity;
+  };
+
   return (
     <>
-      <TableRow key={plant.plant} className="border-b-0">
-        <TableCell>
-          <div>
-            <PlantName plants={plants} plantCode={plant.plant} />
+      <TableRow key={plant.plant} className="w-full border-b-0">
+        <TableCell className="w-1/2 font-medium">
+          <PlantName plants={plants} plantCode={plant.plant} />
+          <div className="text-sm">
+            <ItemInStockCountBadge availableCount={availabilityOfPlant} />
           </div>
-          {/* <div className="text-xs">
-        via&nbsp;
-        {plant.plant === willCallPlant.plantCode
-          ? shippingMethods?.find(
-              (option) =>
-                option.code ===
-                selectedShippingMethod,
-            )?.name ?? defaultShippingMethod?.name
-          : "Ground"}
-      </div> */}
         </TableCell>
-        <TableCell className="float-right text-end">
-          {/* {plant.quantity} */}
+        <TableCell className="w-1/2 text-right">
           <Controller
             control={control}
-            name={`quantity.${quantityFieldIndex}`}
-            render={({ field: { onChange, onBlur, value, name, ref } }) => (
+            name={`quantityAlt.${quantityFieldIndex}`}
+            render={({ field: { onChange, onBlur, name, ref } }) => (
               <div className="flex items-center rounded border focus:border-none focus:outline-none focus:ring-0">
                 <NumberInputField
                   onBlur={onBlur}
                   onChange={(event) => {
-                    // if (
-                    //   Number(event.target.value) >= product.minAmount &&
-                    //   Number(event.target.value) % product.increment === 0
-                    // ) {
-                    //   handleChangeQtyOrPO(Number(event.target.value));
-                    // }
                     handleChangeQty(Number(event.target.value));
                     onChange(event);
                   }}
-                  value={value}
+                  defaultValue={getRequiredQuantity()}
                   ref={ref}
                   name={name}
                   removeDefaultStyles
-                  className={cn(
-                    "h-fit w-24 border-none px-2.5 py-1 text-base shadow-none focus:border-r-0 focus:border-none focus:outline-none focus:ring-0 md:w-20",
-                    // isQuantityLessThanMin ? "border-red-700" : "",
-                  )}
-                  // className="float-right md:w-[6.125rem]"
+                  className="h-fit w-24 border-none px-2.5 py-1 text-base shadow-none focus:border-r-0 focus:border-none focus:outline-none focus:ring-0 md:w-20"
                   min={0}
-                  // step={product.increment}
-                  // disabled={checkAvailabilityQuery.isPending}
                   label="Quantity"
                 />
-                <span className={cn("px-1.5 lowercase text-zinc-500")}>
-                  each
-                  {/* {product.uom} */}
-                </span>
+                <span className="px-1.5 lowercase text-zinc-500">each</span>
               </div>
             )}
           />
         </TableCell>
       </TableRow>
+
       <TableRow>
         <TableCell colSpan={2} className="">
           {plant.shippingMethods.length > 0 && (
@@ -115,6 +132,20 @@ const CartItemShipFromAlternativeBranchRow = ({
                 ))}
               </SelectContent>
             </Select>
+          )}
+          {isHomePlant && (
+            <div className="py-2 text-sm font-medium">
+              {/* {availability.availableLocations.find(plant.plant)} */}
+              <span>
+                <ItemCountBadge count={availabilityOfPlant} />{" "}
+                <span className="text-sm font-medium">ship to me</span>
+              </span>
+              {lineQuantity < availabilityOfPlant && (
+                <BackOrderItemCountLabel
+                  count={availabilityOfPlant - lineQuantity}
+                />
+              )}{" "}
+            </div>
           )}
         </TableCell>
       </TableRow>

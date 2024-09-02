@@ -45,6 +45,7 @@ import {
 } from "@repo/web-ui/components/ui/table";
 import dayjs from "dayjs";
 import { useId } from "react";
+import { useCartItemQuantityContext } from "../cart-item-quantity-context";
 import {
   ALTERNATIVE_BRANCHES,
   AVAILABLE_ALL,
@@ -129,6 +130,8 @@ const CartItemShippingMethod = ({
   const shipToMeAltId = `${MAIN_OPTIONS.SHIP_TO_ME_ALT}-${id}`;
   const willCallId = `${MAIN_OPTIONS.WILL_CALL}-${id}`;
 
+  // const [totalQuantityAtAlt, setTotalQuantityAtAlt] = useState(0);
+
   const {
     options: availabilityOptions,
     status,
@@ -203,6 +206,11 @@ const CartItemShippingMethod = ({
     }
   };
 
+  // const form = useForm<ShipFromAltQtySchema>({
+  //   resolver: zodResolver(shipFromAltQtySchema),
+  // defaultValues: { quantityAlt: shipAlternativeBranch?.plants.map(() => "") },
+  // });
+
   const calculateAllPlantsQuantity = (
     plants: {
       quantity?: number;
@@ -240,6 +248,8 @@ const CartItemShippingMethod = ({
   const homeBranchAvailability = availability.availableLocations?.find(
     ({ location }) => location === willCallPlant?.plantCode,
   );
+
+  const { lineQuantity, setLineQuantity } = useCartItemQuantityContext();
 
   const homeBranchAvailableQuantity = homeBranchAvailability?.amount ?? 0;
 
@@ -584,7 +594,12 @@ const CartItemShippingMethod = ({
     }
   };
 
-  // console.log(">> shipAlternativeBranch", shipAlternativeBranch);
+  const getAvailableQuantityForPlant = (plant: string) => {
+    const availabilityAtPlant =
+      availability.availableLocations.find((item) => item.location === plant)
+        ?.amount ?? 0;
+    return availabilityAtPlant - homeBranchAvailableQuantity;
+  };
 
   if (isVendorShipped) {
     const date = backOrderAll?.plants
@@ -637,12 +652,12 @@ const CartItemShippingMethod = ({
           <div className="ml-[1.625rem] flex flex-col gap-2">
             <div className="pl-1.5 text-sm font-medium">
               {quantity <= homeBranchAvailableQuantity && (
-                <HomeBranchItemInStockCountBadge
+                <ItemInStockCountBadge
                   availableCount={homeBranchAvailableQuantity}
                 />
               )}
               {quantity > homeBranchAvailableQuantity && (
-                <HomeBranchItemLimitedStockCountBadge
+                <ItemLimitedStockOrBoCountBadge
                   availableCount={homeBranchAvailableQuantity}
                 />
               )}
@@ -776,6 +791,14 @@ const CartItemShippingMethod = ({
                                 plants={plants}
                                 quantityFieldIndex={quantityFieldIndex}
                                 key={quantityFieldIndex}
+                                willCallPlant={willCallPlant}
+                                // homeBranchAvailableQuantity={
+                                //   homeBranchAvailableQuantity
+                                // }
+                                availability={availability}
+                                requiredQuantity={getAvailableQuantityForPlant(
+                                  plant.plant,
+                                )}
                               />
                             ),
                           )}
@@ -1058,7 +1081,7 @@ const CartItemShippingMethod = ({
 
 export default CartItemShippingMethod;
 
-const ItemCountBadge = ({
+export const ItemCountBadge = ({
   count = 0,
   className,
 }: {
@@ -1077,20 +1100,19 @@ const ItemCountBadge = ({
   );
 };
 
-const HomeBranchItemInStockCountBadge = ({
+export const ItemInStockCountBadge = ({
   availableCount = 0,
 }: {
   readonly availableCount: number;
 }) => {
   return (
     <>
-      <span className="text-green-700">{availableCount} </span>
-      in stock
+      <span className="text-green-700">{availableCount}</span>&nbsp;in stock
     </>
   );
 };
 
-const HomeBranchItemLimitedStockCountBadge = ({
+export const ItemLimitedStockOrBoCountBadge = ({
   availableCount = 0,
 }: {
   readonly availableCount: number;
@@ -1105,7 +1127,11 @@ const HomeBranchItemLimitedStockCountBadge = ({
   );
 };
 
-const BackOrderItemCountLabel = ({ count }: { readonly count: number }) => {
+export const BackOrderItemCountLabel = ({
+  count,
+}: {
+  readonly count: number;
+}) => {
   return (
     <div className="text-sm font-medium">
       <span className="rounded bg-yellow-700/10 px-1 text-yellow-700">
