@@ -186,7 +186,13 @@ const CategoryProductsList = ({ id }: { readonly id: string }) => {
   const firstPage = infiniteSearchQuery.data.pages[0];
   const productsList = infiniteSearchQuery.data.pages
     .flatMap((page) => page.group_list)
-    .flatMap((group) => group.itemSkuList);
+    .flatMap((group) =>
+      group.itemSkuList.map((product) => ({
+        ...product,
+        brand: group.brandName,
+        noOfVariants: group.variationsCount,
+      })),
+    );
 
   const total = firstPage?.pagination[0].db_count ?? 0;
 
@@ -226,6 +232,8 @@ const CategoryProductsList = ({ id }: { readonly id: string }) => {
             title: product.item_name,
             uom: product.txt_uom_label,
             link: `product/${product.productid}/${product.slug}`,
+            brand: typeof product.brand === "string" ? product.brand : "",
+            noOfVariants: product.noOfVariants,
           }))}
           onEndReached={infiniteSearchQuery.fetchNextPage}
         />
