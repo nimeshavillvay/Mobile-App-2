@@ -39,7 +39,6 @@ import {
 import {
   Table,
   TableBody,
-  TableCell,
   TableHead,
   TableHeader,
   TableRow,
@@ -59,6 +58,7 @@ import {
 } from "../constants";
 import type { Availability, WillCallAnywhere } from "../types";
 import NotAvailableInfoBanner from "./cart-item-not-available-banner";
+import CartItemShipFromAlternativeBranchRow from "./cart-item-ship-from-alternative-branch-row";
 import CartItemWillCallTransfer from "./cart-item-will-call-transfer";
 import {
   createCartItemConfig,
@@ -525,34 +525,6 @@ const CartItemShippingMethod = ({
     }
   };
 
-  const handleBackorderMethod = (shippingMethod: string) => {
-    setSelectedShippingMethod(shippingMethod);
-    sendToGTMShippingMethodChanged(shippingMethod);
-
-    if (shippingMethod) {
-      switch (selectedShippingOption) {
-        case MAIN_OPTIONS.BACK_ORDER:
-          if (backOrderAll) {
-            onSave({
-              ...createCartItemConfig({
-                method: shippingMethod,
-                quantity: 0,
-                plant: getFirstPlantFromPlants(backOrderAll?.plants),
-                hash: backOrderAll.hash,
-                backOrderAll: true,
-                backOrderDate: backOrderAll.plants[0]?.backOrderDate ?? "",
-                backOrderQuantity:
-                  backOrderAll.plants[0]?.backOrderQuantity ?? 0,
-              }),
-              will_call_avail: EMPTY_STRING,
-              will_call_shipping: EMPTY_STRING,
-              will_call_plant: EMPTY_STRING,
-            });
-          }
-      }
-    }
-  };
-
   const handleShipToMeOptions = () => {
     // Reset the selected shipping method to default
     setSelectedShippingOption(MAIN_OPTIONS.SHIP_TO_ME);
@@ -611,6 +583,8 @@ const CartItemShippingMethod = ({
       }
     }
   };
+
+  console.log(">> shipAlternativeBranch", shipAlternativeBranch);
 
   if (isVendorShipped) {
     const date = backOrderAll?.plants
@@ -758,7 +732,7 @@ const CartItemShippingMethod = ({
               {/* {selectedShipToMe === ALTERNATIVE_BRANCHES && ( */}
               <Collapsible
                 className="mt-1.5 flex flex-col gap-1"
-                disabled={selectedShipToMe !== ALTERNATIVE_BRANCHES}
+                // disabled={selectedShipToMe !== ALTERNATIVE_BRANCHES}
               >
                 <CollapsibleTrigger
                   className="group flex h-7 flex-row items-center justify-start"
@@ -795,30 +769,76 @@ const CartItemShippingMethod = ({
                     <TableBody className="font-light">
                       {shipAlternativeBranch.plants &&
                         Object.values(shipAlternativeBranch.plants)?.map(
-                          (plant) => (
-                            <TableRow key={plant.plant}>
-                              <TableCell>
-                                <div>
-                                  <PlantName
-                                    plants={plants}
-                                    plantCode={plant.plant}
-                                  />
-                                </div>
-                                <div className="text-xs">
-                                  via&nbsp;
-                                  {plant.plant === willCallPlant.plantCode
-                                    ? shippingMethods?.find(
-                                        (option) =>
-                                          option.code ===
-                                          selectedShippingMethod,
-                                      )?.name ?? defaultShippingMethod?.name
-                                    : "Ground"}
-                                </div>
-                              </TableCell>
-                              <TableCell className="text-end">
-                                {plant.quantity}
-                              </TableCell>
-                            </TableRow>
+                          (plant, quantityFieldIndex) => (
+                            <CartItemShipFromAlternativeBranchRow
+                              plant={plant}
+                              plants={plants}
+                              quantityFieldIndex={quantityFieldIndex}
+                              key={quantityFieldIndex}
+                            />
+                            // <TableRow key={plant.plant}>
+                            //   <TableCell>
+                            //     <div>
+                            //       <PlantName
+                            //         plants={plants}
+                            //         plantCode={plant.plant}
+                            //       />
+                            //     </div>
+                            //     {/* <div className="text-xs">
+                            //       via&nbsp;
+                            //       {plant.plant === willCallPlant.plantCode
+                            //         ? shippingMethods?.find(
+                            //             (option) =>
+                            //               option.code ===
+                            //               selectedShippingMethod,
+                            //           )?.name ?? defaultShippingMethod?.name
+                            //         : "Ground"}
+                            //     </div> */}
+                            //   </TableCell>
+                            //   <TableCell className="text-end">
+                            //     {plant.quantity}
+                            //     <Controller
+                            //       control={control}
+                            //       name={`quantity.${quantityFieldIndex}`}
+                            //       render={({
+                            //         field: {
+                            //           onChange,
+                            //           onBlur,
+                            //           value,
+                            //           name,
+                            //           ref,
+                            //         },
+                            //       }) => (
+                            //         <NumberInputField
+                            //           onBlur={onBlur}
+                            //           // onChange={(event) => {
+                            //           //   if (
+                            //           //     Number(event.target.value) >= product.minAmount &&
+                            //           //     Number(event.target.value) % product.increment === 0
+                            //           //   ) {
+                            //           //     handleChangeQtyOrPO(Number(event.target.value));
+                            //           //   }
+
+                            //           //   onChange(event);
+                            //           // }}
+                            //           value={value}
+                            //           ref={ref}
+                            //           name={name}
+                            //           className={cn(
+                            //             "h-fit w-24 rounded border-r-0 px-2.5 py-1 text-base focus:border-none focus:outline-none focus:ring-0 md:w-20",
+                            //             // isQuantityLessThanMin ? "border-red-700" : "",
+                            //           )}
+                            //           required
+                            //           // min={product.minAmount}
+                            //           // step={product.increment}
+                            //           // disabled={checkAvailabilityQuery.isPending}
+                            //           // form={cartFormId} // This is to check the validity when clicking "checkout"
+                            //           label="Quantity"
+                            //         />
+                            //       )}
+                            //     />
+                            //   </TableCell>
+                            // </TableRow>
                           ),
                         )}
                     </TableBody>

@@ -1,4 +1,5 @@
 import type { CartItemConfiguration } from "@/_lib/types";
+import { z } from "zod";
 import {
   DEFAULT_SHIPPING_METHOD,
   EMPTY_STRING,
@@ -122,3 +123,9 @@ export const findAvailabilityOptionForType = (
 ) => {
   return options.find((option) => option.type === type) ?? undefined;
 };
+
+export const shipFromAltQtySchema = z.object({
+  quantity: z.array(z.string()),
+});
+
+export type ShipFromAltQtySchema = z.infer<typeof shipFromAltQtySchema>;
