@@ -11,21 +11,19 @@ describe("Register Component", () => {
   });
 
   it("renders the main heading", () => {
-    expect(screen.getByTestId("register-heading-title")).toHaveTextContent(
-      "Create an account",
-    );
+    expect(screen.getByText("Create an account")).toBeInTheDocument();
   });
 
   it("renders the first question for current user check with correct heading and buttons", () => {
-    expect(screen.getByTestId("register-heading")).toHaveTextContent(
-      "Are you a current Würth Baer Supply Company customer?",
-    );
-    expect(screen.getByTestId("register-btn-yes")).toBeInTheDocument();
-    expect(screen.getByTestId("register-btn-no")).toBeInTheDocument();
+    expect(
+      screen.getByText("Are you a current Würth Baer Supply Company customer?"),
+    ).toBeInTheDocument();
+    expect(screen.getByTestId("button-yes")).toBeInTheDocument();
+    expect(screen.getByTestId("button-no")).toBeInTheDocument();
   });
 
   it("renders CurrentUserFlow when Yes is selected", () => {
-    fireEvent.click(screen.getByTestId("register-btn-yes"));
+    fireEvent.click(screen.getByTestId("button-yes"));
     expect(screen.getByTestId("register-current-user-flow")).toBeDefined();
   });
 
@@ -34,16 +32,12 @@ describe("Register Component", () => {
   });
 
   it("renders second question when No is selected with correct heading and buttons", () => {
-    fireEvent.click(screen.getByTestId("register-btn-no"));
-    expect(screen.getByTestId("register-user-type-heading")).toHaveTextContent(
-      "Please select your account type",
-    );
+    fireEvent.click(screen.getByTestId("button-no"));
     expect(
-      screen.getByTestId("register-user-type-btn-buying-for-business"),
+      screen.getByText("Please select your account type"),
     ).toBeInTheDocument();
-    expect(
-      screen.getByTestId("register-user-type-btn-homeowner"),
-    ).toBeInTheDocument();
+    expect(screen.getByTestId("button-buyingForBusiness")).toBeInTheDocument();
+    expect(screen.getByTestId("button-homeowner")).toBeInTheDocument();
   });
 
   it("renders NewUserFlow when newUserType is selected", () => {
@@ -60,7 +54,7 @@ describe("Register Component", () => {
 
   it("does not render any user flow initially", () => {
     expect(
-      screen.queryByTestId("register-user-type-heading"),
+      screen.queryByText("Please select your account type"),
     ).not.toBeInTheDocument();
     expect(
       screen.queryByTestId("register-current-user-flow"),

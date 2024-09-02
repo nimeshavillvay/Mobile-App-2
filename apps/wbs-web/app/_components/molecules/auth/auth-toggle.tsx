@@ -1,4 +1,4 @@
-import { cn } from "@/_lib/utils";
+import { cn, toCamelCase } from "@/_lib/utils";
 import { buttonVariants } from "@repo/web-ui/components/base/atoms/button";
 import Link from "next/link";
 
@@ -28,7 +28,7 @@ const AuthenticationToggle = ({ mode }: AuthenticationToggleProps) => {
           }),
           "inline-block h-fit p-0 px-4 py-1 text-center text-sm font-bold",
         )}
-        data-testid="auth-toggle-link"
+        data-testid={`link-${toCamelCase(linkText)}`}
       >
         {linkText}
       </Link>
