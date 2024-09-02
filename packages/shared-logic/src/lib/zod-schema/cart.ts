@@ -42,7 +42,7 @@ export const cartConfigurationSchema = z.object({
   osr: z.null(),
   "first-name": z.string().nullable(),
   default_shipping: z.union([z.boolean(), z.string()]).optional(),
-  delivering_plant: z.null(),
+  delivering_plant: z.string().nullable(),
   avail_payment_options: z.string().optional(),
   attnName: z.string().nullable(),
   pickDate: z.string().nullable(),

@@ -1,7 +1,11 @@
 import { z } from "zod";
 import { api } from "~/lib/api";
 import type { AuthenticatedApiConfig } from "~/lib/types";
-import { permissionSchema, statusSchema } from "~/lib/zod-schema/misc";
+import {
+  permissionSchema,
+  statusSchema,
+  type Permission,
+} from "~/lib/zod-schema/misc";
 
 const contactSchema = z.object({
   id: z.string(),
@@ -20,6 +24,18 @@ const manageContactSchema = z.object({
     contact_list: z.array(contactSchema),
   }),
 });
+
+export type MappedContact = {
+  id: number;
+  status: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  role: string;
+  roleDescription: string;
+  permission: Permission;
+  soldToAccountStatus: string;
+};
 
 const mapContact = (contact: z.infer<typeof contactSchema>) => ({
   id: Number(contact.id),

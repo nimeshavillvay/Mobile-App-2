@@ -23,13 +23,17 @@ import useSuspensePasswordPolicy from "@repo/shared-logic/apis/hooks/account/use
 import useSuspenseUser from "@repo/shared-logic/apis/hooks/account/use-suspense-user.hook";
 import useUpdateProfileMutation from "@repo/shared-logic/apis/hooks/account/use-update-profile-mutation.hook";
 import Stack from "expo-router/stack";
+import { MotiView } from "moti";
+import { Skeleton } from "moti/skeleton";
 import { Suspense, useId } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { View } from "react-native";
+import { Dimensions, View } from "react-native";
 import { Button } from "tamagui";
 import { z } from "zod";
 
 const EditProfilePage = () => {
+  const width = Dimensions.get("window").width;
+
   return (
     <>
       <Stack.Screen
@@ -41,7 +45,13 @@ const EditProfilePage = () => {
       <ScreenLayout>
         <ScreenHeader title="Edit Profile" type="center-aligned" />
 
-        <Suspense>
+        <Suspense
+          fallback={
+            <MotiView style={{ flex: 1 }}>
+              <Skeleton width={width} height="100%" colorMode="light" />
+            </MotiView>
+          }
+        >
           <ProfileForm />
         </Suspense>
       </ScreenLayout>
