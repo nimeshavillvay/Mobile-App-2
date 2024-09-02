@@ -12,9 +12,7 @@ describe("RegisterQuestion", () => {
 
   it("renders the question", () => {
     render(<RegisterQuestion {...defaultProps} />);
-    expect(screen.getByTestId("test-heading")).toHaveTextContent(
-      "Test Question",
-    );
+    expect(screen.getByText("Test Question")).toBeInTheDocument();
   });
 
   it("renders all options", () => {
@@ -32,8 +30,8 @@ describe("RegisterQuestion", () => {
   it("applies correct classes to selected option", () => {
     const props = { ...defaultProps, selectedOption: "Option1" };
     render(<RegisterQuestion {...props} />);
-    expect(screen.getByTestId("test-btn-option1")).toHaveClass("border-black");
-    expect(screen.getByTestId("test-btn-option2")).not.toHaveClass(
+    expect(screen.getByTestId("button-option1")).toHaveClass("border-black");
+    expect(screen.getByTestId("button-option2")).not.toHaveClass(
       "border-black",
     );
   });
@@ -41,19 +39,17 @@ describe("RegisterQuestion", () => {
   it("renders CheckCircleFilled for selected option and CheckCircle for others", () => {
     const props = { ...defaultProps, selectedOption: "Option1" };
     render(<RegisterQuestion {...props} />);
-    expect(screen.getByTestId("test-btn-option1")).toContainElement(
-      screen.getByTestId("test-icon-check-circle-filled"),
+    expect(screen.getByTestId("button-option1")).toContainElement(
+      screen.getByTestId("icon-checkCircleFilled"),
     );
-    expect(screen.getByTestId("test-btn-option2")).toContainElement(
-      screen.getByTestId("test-icon-check-circle"),
+    expect(screen.getByTestId("button-option2")).toContainElement(
+      screen.getByTestId("icon-checkCircle"),
     );
   });
 
   it("uses default testIdPrefix when not provided", () => {
     const props = { ...defaultProps, testIdPrefix: undefined };
     render(<RegisterQuestion {...props} />);
-    expect(
-      screen.getByTestId("existing-customer-question-heading"),
-    ).toBeInTheDocument();
+    expect(screen.getByTestId("question")).toBeInTheDocument();
   });
 });
