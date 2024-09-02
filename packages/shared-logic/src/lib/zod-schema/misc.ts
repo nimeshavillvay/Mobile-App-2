@@ -7,3 +7,12 @@ export const paginationSchema = z.tuple([
     perPage: z.number(),
   }),
 ]);
+
+export const statusSchema = z.enum(["ACTIVE", "SUSPENDED"]);
+export type Status = z.infer<typeof statusSchema>;
+
+export const permissionSchema = z.enum(["ADMIN", "BUYER"]);
+export type Permission = z.infer<typeof permissionSchema>;
+export const isPermission = (permission: unknown): permission is Permission => {
+  return permissionSchema.safeParse(permission).success;
+};

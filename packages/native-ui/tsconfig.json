@@ -23,7 +23,7 @@
     "outDir": "dist",
     "baseUrl": ".",
     "paths": {
-      "~/*": ["./src/*"]
+      "~/*": ["./src/*", "../shared-logic/src/*"]
     },
 
     "rootDir": "."
