@@ -3,8 +3,9 @@ import type { MappedContact } from "@repo/shared-logic/apis/base/account/get-use
 import type { FlashListProps } from "@shopify/flash-list";
 import { FlashList } from "@shopify/flash-list";
 import { ChevronRight } from "@tamagui/lucide-icons";
+import { Link } from "expo-router";
 import { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import Swipeable from "react-native-gesture-handler/Swipeable";
 import { H3, XStack, YStack } from "tamagui";
 
@@ -34,13 +35,19 @@ const styles = StyleSheet.create({
 
 export const UsersList = ({
   estimatedItemSize = 132,
+  editUserHref,
   deleteUser,
   renderItem = ({ item }) => (
-    <UsersListItem item={item} deleteUser={deleteUser} />
+    <UsersListItem
+      item={item}
+      editUserHref={editUserHref}
+      deleteUser={deleteUser}
+    />
   ),
   ...delegated
 }: Omit<FlashListProps<MappedContact>, "keyExtractor" | "renderItem"> &
   Partial<Pick<FlashListProps<MappedContact>, "renderItem">> & {
+    readonly editUserHref: (userId: number) => string;
     readonly deleteUser: (userId: number) => Promise<void>;
   }) => {
   return (
@@ -55,9 +62,11 @@ export const UsersList = ({
 
 export const UsersListItem = ({
   item,
+  editUserHref,
   deleteUser,
 }: {
   readonly item: MappedContact;
+  readonly editUserHref: (userId: number) => string;
   readonly deleteUser: (userId: number) => Promise<void>;
 }) => {
   const [openRemoveDialog, setOpenRemoveDialog] = useState(false);
@@ -81,44 +90,48 @@ export const UsersListItem = ({
         />
       )}
     >
-      <XStack justifyContent="space-between" alignItems="center">
-        <YStack gap={10}>
-          <XStack gap={4} alignItems="center">
-            <H3 style={styles.userName}>
-              {item.firstName} {item.lastName}
-            </H3>
+      <Link href={editUserHref(item.id)} asChild>
+        <Pressable>
+          <XStack justifyContent="space-between" alignItems="center">
+            <YStack gap={10}>
+              <XStack gap={4} alignItems="center">
+                <H3 style={styles.userName}>
+                  {item.firstName} {item.lastName}
+                </H3>
 
-            <View
-              style={StyleSheet.flatten([
-                styles.statusLabel,
-                {
-                  backgroundColor:
-                    item.status === "ACTIVE"
-                      ? "rgba(229, 251, 235, 0.80)"
-                      : "#FEECEE",
-                },
-              ])}
-            >
-              <Text
-                style={{
-                  fontSize: 12,
-                  color: item.status === "ACTIVE" ? "#236E4A" : "#AA2429",
-                }}
-              >
-                {item.status === "ACTIVE" ? "Active" : "Inactive"}
+                <View
+                  style={StyleSheet.flatten([
+                    styles.statusLabel,
+                    {
+                      backgroundColor:
+                        item.status === "ACTIVE"
+                          ? "rgba(229, 251, 235, 0.80)"
+                          : "#FEECEE",
+                    },
+                  ])}
+                >
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      color: item.status === "ACTIVE" ? "#236E4A" : "#AA2429",
+                    }}
+                  >
+                    {item.status === "ACTIVE" ? "Active" : "Inactive"}
+                  </Text>
+                </View>
+              </XStack>
+
+              <Text style={styles.userDetail}>
+                {item.permission === "ADMIN" ? "Administrator" : "Buyer"}
               </Text>
-            </View>
+
+              <Text style={styles.userDetail}>{item.email}</Text>
+            </YStack>
+
+            <ChevronRight size={20} color="#000000" opacity={0.439} />
           </XStack>
-
-          <Text style={styles.userDetail}>
-            {item.permission === "ADMIN" ? "Administrator" : "Buyer"}
-          </Text>
-
-          <Text style={styles.userDetail}>{item.email}</Text>
-        </YStack>
-
-        <ChevronRight size={20} color="#000000" opacity={0.439} />
-      </XStack>
+        </Pressable>
+      </Link>
     </Swipeable>
   );
 };
