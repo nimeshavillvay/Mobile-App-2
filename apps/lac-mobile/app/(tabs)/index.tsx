@@ -29,7 +29,11 @@ const HomePage = () => {
 
         <Button onPress={saveToken}>Save Token</Button>
 
-        <Link href="/my-account/manage-users">Edit Profile</Link>
+        <YStack gap={4} margin={10}>
+          <Link href="/my-account/profile/edit">Edit Profile</Link>
+
+          <Link href="/my-account/manage-users">Manage Users</Link>
+        </YStack>
       </YStack>
     </ScreenLayout>
   );
