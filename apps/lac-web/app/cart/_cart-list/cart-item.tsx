@@ -274,13 +274,12 @@ const CartItem = ({
   const [selectedWillCallTransfer, setSelectedWillCallTransfer] =
     useState<WillCallOption>(MAIN_OPTIONS.WILL_CALL);
 
-  console.log(">> selectedShipToMe", selectedShipToMe);
   // use the new function to determine the available options
   const shippingMethods = getShippingMethods(
     selectedShipToMe,
     AVAILABLE_OPTIONS_MAP,
   );
-  console.log(">> shippingMethods", shippingMethods);
+
   const backorderShippingMethods = getShippingMethods(
     BACK_ORDER_ALL,
     BACKORDER_OPTIONS_MAP,
@@ -1083,6 +1082,9 @@ const CartItem = ({
                 handleSelectWillCallPlant={handleSelectWillCallPlant}
                 willCallPlant={willCallPlant}
                 token={token}
+                minAmount={product.minAmount}
+                increment={product.increment}
+                uom={product.uom}
               />
             ))}
 
@@ -1116,6 +1118,9 @@ const CartItem = ({
                 }
                 handleSelectWillCallPlant={handleSelectWillCallPlant}
                 willCallPlant={willCallPlant}
+                minAmount={product.minAmount}
+                increment={product.increment}
+                uom={product.uom}
               />
             </Suspense>
           )}

@@ -1,6 +1,7 @@
 import NumberInputField from "@/_components/number-input-field";
 import useDebouncedState from "@/_hooks/misc/use-debounced-state.hook";
 import { type AvailabilityOptionPlants } from "@/_hooks/product/use-suspense-check-availability.hook";
+import { MAX_QUANTITY } from "@/_lib/constants";
 import { type Plant } from "@/_lib/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -31,6 +32,9 @@ type BranchRowProps = {
   // readonly homeBranchAvailableQuantity: number;
   readonly availability: Availability;
   readonly requiredQuantity: number;
+  readonly minAmount: number;
+  readonly increment: number;
+  readonly uom: string;
 };
 
 const CartItemShipFromAlternativeBranchRow = ({
@@ -40,6 +44,9 @@ const CartItemShipFromAlternativeBranchRow = ({
   willCallPlant,
   availability,
   requiredQuantity,
+  minAmount,
+  increment,
+  uom,
 }: BranchRowProps) => {
   const { lineQuantity, setLineQuantity } = useCartItemQuantityContext();
 
@@ -52,12 +59,10 @@ const CartItemShipFromAlternativeBranchRow = ({
   const deferredQuantities = useDeferredValue(delayedQuantities);
 
   const handleChangeQty = (qty: number) => {
-    console.log(">> lineQuantity", lineQuantity);
-    console.log(">> getValues", deferredQuantities);
-    const altQtySum = deferredQuantities.reduce((collector, num) => {
-      return (collector += Number(num));
-    }, 0);
-    setLineQuantity(lineQuantity + altQtySum - qty);
+    // const altQtySum = deferredQuantities.reduce((collector, num) => {
+    //   return (collector += Number(num));
+    // }, 0);
+    // setLineQuantity(lineQuantity + altQtySum - qty);
   };
 
   const isHomePlant = plant.plant === willCallPlant.plantCode;
@@ -66,12 +71,9 @@ const CartItemShipFromAlternativeBranchRow = ({
       (item) => item.location === plant.plant,
     )?.amount ?? 0;
 
-  const getRequiredQuantity = () => {
-    if (isHomePlant) {
-      return availabilityOfPlant;
-    }
-    return requiredQuantity;
-  };
+  const requiredQtyOfPlant = isHomePlant
+    ? availabilityOfPlant
+    : requiredQuantity;
 
   return (
     <>
@@ -94,15 +96,18 @@ const CartItemShipFromAlternativeBranchRow = ({
                     handleChangeQty(Number(event.target.value));
                     onChange(event);
                   }}
-                  defaultValue={getRequiredQuantity()}
+                  // value={value}
+                  defaultValue={requiredQtyOfPlant}
                   ref={ref}
                   name={name}
                   removeDefaultStyles
                   className="h-fit w-24 border-none px-2.5 py-1 text-base shadow-none focus:border-r-0 focus:border-none focus:outline-none focus:ring-0 md:w-20"
-                  min={0}
+                  min={minAmount}
+                  max={isHomePlant ? MAX_QUANTITY : requiredQtyOfPlant}
+                  step={increment}
                   label="Quantity"
                 />
-                <span className="px-1.5 lowercase text-zinc-500">each</span>
+                <span className="px-1.5 lowercase text-zinc-500">{uom}</span>
               </div>
             )}
           />
@@ -110,15 +115,22 @@ const CartItemShipFromAlternativeBranchRow = ({
       </TableRow>
 
       <TableRow>
-        <TableCell colSpan={2} className="">
+        <TableCell colSpan={2}>
+          {requiredQtyOfPlant < minAmount && (
+            <p className="text-sm text-red-700">
+              Please consider min. order quantity of: {minAmount}
+            </p>
+          )}
+        </TableCell>
+      </TableRow>
+
+      <TableRow>
+        <TableCell colSpan={2}>
           {plant.shippingMethods.length > 0 && (
             <Select
-            // disabled={
-            //   selectedShippingOption !== MAIN_OPTIONS.SHIP_TO_ME ||
-            //   shipToMeShippingMethods?.length === 1
-            // }
-            // value={selectedShippingMethod}
-            // onValueChange={(method) => handleShipToMeMethod(method)}
+              disabled={plant.shippingMethods.length === 1}
+              value={plant.shippingMethods[0]?.code}
+              // onValueChange={(method) => handleShipToMeMethod(method)}
             >
               <SelectTrigger className="avail-change-button w-full">
                 <SelectValue placeholder="Select a delivery method" />

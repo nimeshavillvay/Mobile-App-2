@@ -25,10 +25,16 @@ const RegionalExclusionAndShippingMethods = ({
   willCallPlant,
   setSelectedBackorderShippingMethod,
   selectedBackorderShippingMethod,
+  minAmount,
+  increment,
+  uom,
 }: ComponentProps<typeof CartItemShippingMethod> & {
   readonly token: string;
   readonly productId: number;
   readonly quantity: number;
+  readonly minAmount: number;
+  readonly uom: string;
+  readonly increment: number;
 }) => {
   const productExcludedQuery = useSuspenseProductExcluded(token, productId);
 
@@ -63,6 +69,9 @@ const RegionalExclusionAndShippingMethods = ({
       handleSelectWillCallPlant={handleSelectWillCallPlant}
       willCallPlant={willCallPlant}
       token={token}
+      minAmount={minAmount}
+      increment={increment}
+      uom={uom}
     />
   );
 };

@@ -44,7 +44,7 @@ import {
   TableRow,
 } from "@repo/web-ui/components/ui/table";
 import dayjs from "dayjs";
-import { useId } from "react";
+import { useId, useState } from "react";
 import {
   ALTERNATIVE_BRANCHES,
   AVAILABLE_ALL,
@@ -92,6 +92,9 @@ type CartItemShippingMethodProps = {
   readonly setSelectedBackorderShippingMethod: (method: string) => void;
   readonly selectedBackorderShippingMethod: string;
   readonly token: string;
+  readonly minAmount: number;
+  readonly increment: number;
+  readonly uom: string;
 };
 
 const CartItemShippingMethod = ({
@@ -115,6 +118,9 @@ const CartItemShippingMethod = ({
   setSelectedBackorderShippingMethod,
   selectedBackorderShippingMethod,
   token,
+  minAmount,
+  increment,
+  uom,
 }: CartItemShippingMethodProps) => {
   const id = useId();
   const shipToMeId = `${MAIN_OPTIONS.SHIP_TO_ME}-${id}`;
@@ -145,6 +151,8 @@ const CartItemShippingMethod = ({
     availabilityOptions,
     ALTERNATIVE_BRANCHES,
   );
+
+  const [open, setOpen] = useState(false);
 
   const cartQuery = useSuspenseCart(token);
 
@@ -273,6 +281,9 @@ const CartItemShippingMethod = ({
     selectedOption: MainOption;
   }) => {
     if (checked) {
+      if (selectedOption !== MAIN_OPTIONS.SHIP_TO_ME_ALT) {
+        setOpen(false);
+      }
       const isWillCallOptionSelected =
         selectedOption === MAIN_OPTIONS.WILL_CALL;
       const isWillCallAnywhere =
@@ -474,7 +485,6 @@ const CartItemShippingMethod = ({
   };
 
   const handleShipToMeMethod = (shippingMethod: string) => {
-    console.log(">> handleShipToMeMethod", shippingMethod);
     setSelectedShippingMethod(shippingMethod);
     sendToGTMShippingMethodChanged(shippingMethod);
 
@@ -666,7 +676,7 @@ const CartItemShippingMethod = ({
       )}
 
       {/* Ship from alternative branches option */}
-      {shipAlternativeBranch && (
+      {shipAlternativeBranch && shipAlternativeBranch.plants?.length > 0 && (
         <>
           <div className="flex flex-col gap-2 px-2 py-2 text-sm shadow-sm">
             <div className="flex flex-row items-center gap-3">
@@ -720,6 +730,8 @@ const CartItemShippingMethod = ({
                 disabled={
                   selectedShippingOption !== MAIN_OPTIONS.SHIP_TO_ME_ALT
                 }
+                open={open}
+                onOpenChange={setOpen}
               >
                 <CollapsibleTrigger
                   className="group flex h-7 flex-row items-center justify-start"
@@ -770,6 +782,9 @@ const CartItemShippingMethod = ({
                                 requiredQuantity={getAvailableQuantityForPlant(
                                   plant.plant,
                                 )}
+                                minAmount={minAmount}
+                                increment={increment}
+                                uom={uom}
                               />
                             ),
                           )}
