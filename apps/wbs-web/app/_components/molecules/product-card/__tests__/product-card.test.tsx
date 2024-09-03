@@ -1,7 +1,7 @@
+import ProductCard from "@/_components/molecules/product-card/product-card"; // Adjust the import path as necessary
 import { calculateDiscount } from "@/_lib/utils";
 import type { LiteProduct } from "@repo/shared-logic/models/product";
 import { render, screen } from "@testing-library/react";
-import ProductCard from "./product-card"; // Adjust the import path as necessary
 
 jest.mock("@/_lib/utils", () => ({
   calculateDiscount: jest.fn(),

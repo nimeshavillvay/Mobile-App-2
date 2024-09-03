@@ -1,5 +1,6 @@
 import "@testing-library/jest-dom";
 import { fireEvent, render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { Label } from "~/components/base/atoms/label";
 import { Input, inputStyles } from "./input";
 
@@ -88,5 +89,89 @@ describe("Input Component", () => {
 
     // Assert that the input element correctly handles an empty value
     expect(input).toHaveValue(null);
+  });
+
+  // Test for phone number masking
+  it("should apply phone number mask correctly", async () => {
+    const user = userEvent.setup();
+    render(
+      <Input
+        type="tel"
+        mask="(___) ___-____"
+        replacement={{ _: /\d/ }}
+        placeholder="(123) 456-7890"
+      />,
+    );
+
+    const input = screen.getByPlaceholderText(
+      "(123) 456-7890",
+    ) as HTMLInputElement;
+
+    await user.type(input, "1234567890");
+    expect(input.value).toBe("(123) 456-7890");
+
+    await user.clear(input);
+    await user.type(input, "12345");
+    expect(input.value).toBe("(123) 45");
+  });
+
+  it("should apply custom pattern mask correctly", async () => {
+    const user = userEvent.setup();
+    render(
+      <Input
+        type="text"
+        mask="xx-____"
+        replacement={{ x: /[A-Z]/, _: /\d/ }}
+        placeholder="AB-1234"
+      />,
+    );
+
+    const input = screen.getByPlaceholderText("AB-1234") as HTMLInputElement;
+
+    await user.type(input, "AB1234");
+    expect(input.value).toBe("AB-1234");
+  });
+
+  // Test for handling invalid input with mask
+  it("should handle invalid input with mask", async () => {
+    const user = userEvent.setup();
+    render(
+      <Input
+        type="tel"
+        mask="(___) ___-____"
+        replacement={{ _: /\d/ }}
+        placeholder="(123) 456-7890"
+      />,
+    );
+
+    const input = screen.getByPlaceholderText(
+      "(123) 456-7890",
+    ) as HTMLInputElement;
+
+    await user.type(input, "abcdefghij");
+    expect(input.value).toBe("");
+  });
+
+  // Test for maintaining cursor position after masking
+  it("should maintain cursor position after masking", () => {
+    render(
+      <Input
+        type="tel"
+        mask="(___) ___-____"
+        replacement={{ _: /\d/ }}
+        placeholder="(123) 456-7890"
+      />,
+    );
+
+    const input = screen.getByPlaceholderText(
+      "(123) 456-7890",
+    ) as HTMLInputElement;
+
+    fireEvent.change(input, { target: { value: "123" } });
+    input.setSelectionRange(3, 3);
+
+    fireEvent.change(input, { target: { value: "(123) 4" } });
+    expect(input.selectionStart).toBe(7);
+    expect(input.selectionEnd).toBe(7);
   });
 });

@@ -1,5 +1,5 @@
+import AuthenticationToggle from "@/_components/molecules/auth/auth-toggle";
 import { render, screen } from "@testing-library/react";
-import AuthenticationToggle from "./auth-toggle";
 
 describe("AuthenticationToggle", () => {
   it("renders correctly for register mode", () => {

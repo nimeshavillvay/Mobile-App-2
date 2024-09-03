@@ -1,5 +1,5 @@
+import { CompareButton } from "@/_components/molecules/product-card/buttons/add-to-compare";
 import { fireEvent, render, screen } from "@testing-library/react";
-import { CompareButton } from "./add-to-compare";
 
 describe("CompareButton", () => {
   it("renders with the correct icon when not compared", () => {

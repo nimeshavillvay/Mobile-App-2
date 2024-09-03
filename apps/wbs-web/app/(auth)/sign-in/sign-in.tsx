@@ -6,14 +6,17 @@ import { PasswordInput } from "@repo/web-ui/components/base/molecules/password-i
 
 import AuthenticationToggle from "@/_components/molecules/auth/auth-toggle";
 import {
+  Button,
+  buttonVariants,
+} from "@repo/web-ui/components/base/atoms/button";
+import { Input } from "@repo/web-ui/components/base/atoms/input";
+import { Label } from "@repo/web-ui/components/base/atoms/label";
+import {
   Alert,
   AlertDescription,
   AlertTitle,
 } from "@repo/web-ui/components/base/molecules/alert";
 import { Alert as AlertIcon } from "@repo/web-ui/components/icons/alert";
-import { Button, buttonVariants } from "@repo/web-ui/components/ui/button";
-import { Input } from "@repo/web-ui/components/ui/input";
-import { Label } from "@repo/web-ui/components/ui/label";
 import { HTTPError } from "ky";
 import Link from "next/link";
 import { useId } from "react";
@@ -67,10 +70,13 @@ const SignIn = () => {
   return (
     <div className="container" data-testid="sign-in">
       <div className="mx-auto my-20 max-w-[28rem] space-y-5 rounded-lg border border-wurth-gray-250 p-6 shadow-lg">
-        <h1 className="text-center font-title text-3xl font-medium tracking-[-0.225px] text-wurth-gray-800">
+        <h1
+          className="text-center font-title text-3xl font-medium tracking-[-0.225px] text-wurth-gray-800"
+          data-testid="sign-in-title"
+        >
           Account Sign in
         </h1>
-        <p className="text-md text-center">
+        <p className="text-md text-center" data-testid="sign-in-description">
           Log into your account to access custom pricing, exclusive discounts,
           personalized support, and many more.
         </p>
@@ -113,7 +119,6 @@ const SignIn = () => {
               autoComplete="password"
               required
               placeholder="Password"
-              className="rounded border-wurth-gray-250 px-3 py-2 text-sm shadow-sm"
               disabled={signInMutation.isPending}
               data-testid="input-password"
             />

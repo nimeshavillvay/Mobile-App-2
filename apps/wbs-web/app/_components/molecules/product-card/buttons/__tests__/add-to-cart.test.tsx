@@ -1,5 +1,5 @@
+import { AddToCartButton } from "@/_components/molecules/product-card/buttons/add-to-cart";
 import { fireEvent, render, screen } from "@testing-library/react";
-import { AddToCartButton } from "./add-to-cart";
 
 describe("AddToCartButton", () => {
   it("renders with the correct label", () => {

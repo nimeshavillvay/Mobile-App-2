@@ -1,5 +1,5 @@
+import RegisterQuestion from "@/_components/molecules/auth/register-question";
 import { fireEvent, render, screen } from "@testing-library/react";
-import RegisterQuestion from "./register-question";
 
 describe("RegisterQuestion", () => {
   const defaultProps = {

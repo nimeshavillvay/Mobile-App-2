@@ -1,7 +1,7 @@
+import SignIn from "@/(auth)/sign-in/sign-in";
 import { renderWithClient } from "@/_lib/test-utils";
 import { fireEvent, screen, waitFor } from "@testing-library/react";
-import { server } from "../../../mocks/server";
-import SignIn from "./sign-in";
+import { server } from "../../../../mocks/server";
 
 beforeAll(() => server.listen());
 afterEach(() => {

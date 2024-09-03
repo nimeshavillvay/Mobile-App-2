@@ -14,6 +14,7 @@ const meta: Meta = {
   },
   args: {
     disabled: false,
+    mask: "",
   },
   tags: ["autodocs"],
 };
@@ -66,6 +67,36 @@ export const InputWithButton: Story = {
     <div className="flex w-full max-w-sm items-center space-x-2">
       <Input type="email" placeholder="Email" />
       <Button type="submit">Subscribe</Button>
+    </div>
+  ),
+};
+
+export const CreditCardInput: Story = {
+  render: () => (
+    <div className="grid w-full max-w-sm items-center gap-1.5">
+      <Label htmlFor="credit-card">Credit Card</Label>
+      <Input
+        id="credit-card"
+        type="text"
+        placeholder="1234 5678 9012 3456"
+        mask="____ ____ ____ ____"
+        replacement={{ _: /\d/ }}
+      />
+    </div>
+  ),
+};
+
+export const CustomPatternInput: Story = {
+  render: () => (
+    <div className="grid w-full max-w-sm items-center gap-1.5">
+      <Label htmlFor="custom">Custom Pattern (AA-1234)</Label>
+      <Input
+        id="custom"
+        type="text"
+        placeholder="AB-1234"
+        mask="AA-____"
+        replacement={{ A: /[A-Z]/, _: /\d/ }}
+      />
     </div>
   ),
 };

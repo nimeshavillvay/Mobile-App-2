@@ -1,5 +1,5 @@
+import { FavoriteButton } from "@/_components/molecules/product-card/buttons/add-to-favorite";
 import { fireEvent, render, screen } from "@testing-library/react";
-import { FavoriteButton } from "./add-to-favorite";
 
 describe("FavoriteButton", () => {
   it("renders with the correct icon when not favorite", () => {

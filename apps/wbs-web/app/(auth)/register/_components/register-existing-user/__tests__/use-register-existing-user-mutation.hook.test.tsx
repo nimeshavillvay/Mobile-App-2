@@ -1,9 +1,9 @@
+import useRegisterExistingUserMutation from "@/(auth)/register/_components/register-existing-user/use-register-existing-user-mutation.hook";
 import { revalidateSiteLayout } from "@/_actions/revalidate";
 import { createWrapper } from "@/_lib/test-utils";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { act, renderHook, waitFor } from "@testing-library/react";
-import { server } from "../../../mocks/server";
-import useSignInMutation from "./use-sign-in-mutation.hook";
+import { server } from "../../../../../../mocks/server";
 
 jest.mock("@/_actions/revalidate", () => ({
   revalidateSiteLayout: jest.fn(),
@@ -15,9 +15,20 @@ afterEach(() => {
 });
 afterAll(() => server.close());
 
-describe("useSignInMutation", () => {
+const mockData = {
+  accountNo: "123456",
+  documentId: "DOC123",
+  firstName: "John",
+  lastName: "Doe",
+  email: "john@example.com",
+  userName: "johndoe",
+  password: "password123",
+  phoneNumber: "1234567890",
+};
+
+describe("useRegisterExistingUserMutation", () => {
   it("should return the initial values for data, error and loading", async () => {
-    const { result } = renderHook(() => useSignInMutation(), {
+    const { result } = renderHook(() => useRegisterExistingUserMutation(), {
       wrapper: createWrapper(),
     });
     const { data, error } = result.current;
@@ -26,39 +37,37 @@ describe("useSignInMutation", () => {
     expect(error).toBe(null);
   });
 
-  it("should execute useSignInMutation and return expected user data when successful", async () => {
-    const { result } = renderHook(() => useSignInMutation(), {
+  it("should execute useRegisterExistingUserMutation and return expected data when successful", async () => {
+    const { result } = renderHook(() => useRegisterExistingUserMutation(), {
       wrapper: createWrapper(),
     });
 
     await act(async () => {
-      result.current.mutate({ userName: "testuser", password: "testpass" });
+      result.current.mutate(mockData);
     });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
     expect(result.current.data).toEqual({
-      statusCode: "200",
-      userId: 123,
-      authentication: {
-        authorities: {
-          authority: "ROLE_USER",
-        },
-        name: "John Doe",
-      },
-      changePassword: false,
-      isSalesRep: true,
+      statusCode: "OK",
+      type: "USER",
+      id: 123,
     });
   });
 
-  it("should execute useSignInMutation and return error", async () => {
-    const { result } = renderHook(() => useSignInMutation(), {
+  it("should execute useRegisterExistingUserMutation and return error", async () => {
+    const { result } = renderHook(() => useRegisterExistingUserMutation(), {
       wrapper: createWrapper(),
     });
 
+    const invalidMockData = {
+      ...mockData,
+      accountNo: "11111",
+      documentId: "11111",
+    };
+
     await act(async () => {
-      //using "testwrong" as a wrong password, the handler defines an error
-      result.current.mutate({ userName: "testuser", password: "testwrong" });
+      result.current.mutate(invalidMockData);
     });
 
     await waitFor(() => expect(result.current.isError).toBe(true));
@@ -66,7 +75,7 @@ describe("useSignInMutation", () => {
     expect(result.current.error).toBeDefined();
   });
 
-  it("should invalidate queries on successful sign-in", async () => {
+  it("should invalidate queries on successful registration", async () => {
     const queryClient = new QueryClient();
     queryClient.invalidateQueries = jest.fn();
 
@@ -74,10 +83,12 @@ describe("useSignInMutation", () => {
       <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
     );
 
-    const { result } = renderHook(() => useSignInMutation(), { wrapper });
+    const { result } = renderHook(() => useRegisterExistingUserMutation(), {
+      wrapper,
+    });
 
     await act(async () => {
-      result.current.mutate({ userName: "testuser", password: "testpass" });
+      result.current.mutate(mockData);
     });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
@@ -85,17 +96,17 @@ describe("useSignInMutation", () => {
     expect(queryClient.invalidateQueries).toHaveBeenCalled();
   });
 
-  it("should call revalidateSiteLayout on successful sign-in", async () => {
-    const { result } = renderHook(() => useSignInMutation(), {
+  it("should call revalidateSiteLayout on successful registration", async () => {
+    const { result } = renderHook(() => useRegisterExistingUserMutation(), {
       wrapper: createWrapper(),
     });
 
     await act(async () => {
-      result.current.mutate({ userName: "testuser", password: "testpass" });
+      result.current.mutate(mockData);
     });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(revalidateSiteLayout).toHaveBeenCalledWith("/");
+    expect(revalidateSiteLayout).toHaveBeenCalledWith("/register/success");
   });
 });

@@ -1,9 +1,22 @@
-import { fireEvent, render, screen } from "@testing-library/react";
-import Register from "./register";
+import { renderWithClient } from "@/_lib/test-utils";
+import { fireEvent, screen } from "@testing-library/react";
+import Register from "../register";
+
+jest.mock("@/_context/recaptcha-ref", () => ({
+  RecaptchaRefProvider: ({ children }: { children: React.ReactNode }) =>
+    children,
+  useCheckRecaptcha: jest.fn().mockReturnValue(() => Promise.resolve()),
+}));
+
+global.ResizeObserver = class ResizeObserver {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+};
 
 describe("Register Component", () => {
   const setup = () => {
-    render(<Register />);
+    renderWithClient(<Register />);
   };
 
   beforeEach(() => {
@@ -24,7 +37,7 @@ describe("Register Component", () => {
 
   it("renders CurrentUserFlow when Yes is selected", () => {
     fireEvent.click(screen.getByTestId("button-yes"));
-    expect(screen.getByTestId("register-current-user-flow")).toBeDefined();
+    expect(screen.getByTestId("existing-user")).toBeDefined();
   });
 
   it("renders AuthenticationToggle when newUserType is undefined", () => {
@@ -57,7 +70,7 @@ describe("Register Component", () => {
       screen.queryByText("Please select your account type"),
     ).not.toBeInTheDocument();
     expect(
-      screen.queryByTestId("register-current-user-flow"),
+      screen.queryByTestId("register-existing-user"),
     ).not.toBeInTheDocument();
     expect(
       screen.queryByTestId("register-new-user-flow"),
