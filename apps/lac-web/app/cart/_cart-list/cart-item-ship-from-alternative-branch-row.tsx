@@ -1,7 +1,8 @@
 import NumberInputField from "@/_components/number-input-field";
 import useDebouncedState from "@/_hooks/misc/use-debounced-state.hook";
 import { type AvailabilityOptionPlants } from "@/_hooks/product/use-suspense-check-availability.hook";
-import { MAX_QUANTITY } from "@/_lib/constants";
+import { DEFAULT_PLANT, MAX_QUANTITY } from "@/_lib/constants";
+import type { CartItemConfiguration } from "@/_lib/types";
 import { type Plant } from "@/_lib/types";
 import {
   Select,
@@ -14,13 +15,17 @@ import { TableCell, TableRow } from "@repo/web-ui/components/ui/table";
 import { useDeferredValue } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { useCartItemQuantityContext } from "../cart-item-quantity-context";
+import { FALSE_STRING } from "../constants";
 import { type Availability } from "../types";
 import {
   BackOrderItemCountLabel,
   ItemCountBadge,
   ItemInStockCountBadge,
 } from "./cart-item-shipping-method";
-import { type ShipFromAltQtySchema } from "./helpers";
+import {
+  getAlternativeBranchesConfig,
+  type ShipFromAltQtySchema,
+} from "./helpers";
 import PlantName from "./plant-name";
 
 type BranchRowProps = {
@@ -28,12 +33,14 @@ type BranchRowProps = {
   readonly plant: AvailabilityOptionPlants;
   readonly plants: Plant[];
   readonly willCallPlant: { plantCode: string; plantName: string };
-  // readonly homeBranchAvailableQuantity: number;
   readonly availability: Availability;
   readonly requiredQuantity: number;
   readonly minAmount: number;
   readonly increment: number;
   readonly uom: string;
+  readonly onSave: (config: Partial<CartItemConfiguration>) => void;
+  readonly hash: string;
+  //todo: send selected shipping method
 };
 
 const CartItemShipFromAlternativeBranchRow = ({
@@ -46,6 +53,8 @@ const CartItemShipFromAlternativeBranchRow = ({
   minAmount,
   increment,
   uom,
+  hash,
+  onSave,
 }: BranchRowProps) => {
   const { lineQuantity, setLineQuantity } = useCartItemQuantityContext();
 
@@ -55,12 +64,44 @@ const CartItemShipFromAlternativeBranchRow = ({
   const delayedQuantities = useDebouncedState(quantities);
   const deferredQuantities = useDeferredValue(delayedQuantities);
 
-  const handleChangeQty = (qty: number) => {
+  const handleChangeQtyShippingMethod = (qtyOrMethod: {
+    qty?: number;
+    method?: string;
+  }) => {
+    console.log("qtyOrMethod qty", qtyOrMethod.qty);
+    console.log("qtyOrMethod", qtyOrMethod.method);
+    if (qtyOrMethod.qty === undefined && !!qtyOrMethod.method) {
+      return;
+    }
+    console.log(">> pass");
+    const newQuantity =
+      qtyOrMethod.qty ?? Number(deferredQuantities[quantityFieldIndex]);
     const existingQuantity = deferredQuantities.filter(
       (_, index) => index === quantityFieldIndex,
     );
-    const totalQty = lineQuantity + qty - Number(existingQuantity);
+    const totalQty = lineQuantity + newQuantity - Number(existingQuantity);
     setLineQuantity(totalQty);
+
+    const SelectedPlant = [
+      {
+        index: plant.index,
+        quantity: newQuantity,
+        method: qtyOrMethod.method,
+        plant: plant.plant,
+      },
+    ];
+
+    onSave({
+      ...getAlternativeBranchesConfig({
+        plants: SelectedPlant,
+        method: qtyOrMethod.method ?? "",
+        hash: hash,
+        backOrderDate: "",
+        backOrderQuantity: 0,
+        homePlant: willCallPlant.plantCode ?? DEFAULT_PLANT.code,
+      }),
+      will_call_not_in_stock: FALSE_STRING,
+    });
   };
 
   const isHomePlant = plant.plant === willCallPlant.plantCode;
@@ -91,7 +132,9 @@ const CartItemShipFromAlternativeBranchRow = ({
                 <NumberInputField
                   onBlur={onBlur}
                   onChange={(event) => {
-                    handleChangeQty(Number(event.target.value));
+                    handleChangeQtyShippingMethod({
+                      qty: Number(event.target.value),
+                    });
                     onChange(event);
                   }}
                   value={value}
@@ -111,7 +154,7 @@ const CartItemShipFromAlternativeBranchRow = ({
         </TableCell>
       </TableRow>
 
-      <TableRow className="border-y-0">
+      <TableRow className="border-y-0 hover:bg-transparent">
         <TableCell colSpan={2}>
           {requiredQtyOfPlant < minAmount && (
             <p className="text-sm text-red-700">
@@ -127,7 +170,9 @@ const CartItemShipFromAlternativeBranchRow = ({
             <Select
               disabled={plant.shippingMethods.length === 1}
               defaultValue={plant.shippingMethods[0]?.code}
-              // onValueChange={(method) => handleShipToMeMethod(method)}
+              onValueChange={(method) => {
+                handleChangeQtyShippingMethod({ method: method });
+              }}
             >
               <SelectTrigger className="avail-change-button w-full">
                 <SelectValue placeholder="Select a delivery method" />
@@ -144,14 +189,13 @@ const CartItemShipFromAlternativeBranchRow = ({
           )}
           {isHomePlant && (
             <div className="py-2 text-sm font-medium">
-              {/* {availability.availableLocations.find(plant.plant)} */}
               <span>
                 <ItemCountBadge count={availabilityOfPlant} />{" "}
                 <span className="text-sm font-medium">ship to me</span>
               </span>
-              {lineQuantity < availabilityOfPlant && (
+              {lineQuantity - availabilityOfPlant > 0 && (
                 <BackOrderItemCountLabel
-                  count={availabilityOfPlant - lineQuantity}
+                  count={lineQuantity - availabilityOfPlant}
                 />
               )}{" "}
             </div>

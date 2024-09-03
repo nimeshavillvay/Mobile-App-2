@@ -66,6 +66,7 @@ export const getAlternativeBranchesConfig = ({
     index: number;
     quantity?: number;
     plant: string;
+    method?: string;
   }[];
   method: string;
   hash: string;
@@ -87,8 +88,11 @@ export const getAlternativeBranchesConfig = ({
   const data = plants?.map((plant) => ({
     [`avail_${plant?.index}`]: (plant?.quantity ?? 0).toString(),
     [`plant_${plant?.index}`]: plant?.plant ?? "",
-    [`shipping_method_${plant?.index}`]:
-      plant?.plant !== plantName ? DEFAULT_SHIPPING_METHOD : method,
+    [`shipping_method_${plant?.index}`]: plant.method
+      ? plant.method
+      : plant?.plant !== plantName
+        ? DEFAULT_SHIPPING_METHOD
+        : method,
   }));
 
   config = Object.assign(config, ...data);

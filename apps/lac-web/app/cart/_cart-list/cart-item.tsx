@@ -788,11 +788,6 @@ const CartItem = ({
     }
   };
 
-  // const form = useForm<ShipFromAltQtySchema>({
-  //   resolver: zodResolver(shipFromAltQtySchema),
-  //   defaultValues: { quantityAlt: shipAlternativeBranch?.plants.map(() => "") },
-  // });
-
   return (
     <div className="flex flex-col gap-6 md:flex-row">
       <div className="flex flex-row items-start gap-3 md:flex-1">
@@ -1006,7 +1001,6 @@ const CartItem = ({
         </div>
       </div>
 
-      {/* <FormProvider {...form}> */}
       <div className="md:w-80">
         {checkLoginQuery.data?.status_code === "NOT_LOGGED_IN" &&
           (product.isExcludedProduct ? (
@@ -1097,7 +1091,6 @@ const CartItem = ({
           </Suspense>
         )}
       </div>
-      {/* </FormProvider> */}
 
       <div className="hidden space-y-3 md:block md:shrink-0">
         {isOSRLoggedInAsOSR && (
