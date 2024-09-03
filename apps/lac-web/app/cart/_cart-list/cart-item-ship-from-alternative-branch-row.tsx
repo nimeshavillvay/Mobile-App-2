@@ -56,12 +56,11 @@ const CartItemShipFromAlternativeBranchRow = ({
   const deferredQuantities = useDeferredValue(delayedQuantities);
 
   const handleChangeQty = (qty: number) => {
-    console.log(">> quantities", quantities);
-    const altQtySum = deferredQuantities.reduce((collector, num) => {
-      return (collector += Number(num));
-    }, 0);
-    console.log(">> altQtySum", altQtySum);
-    setLineQuantity(lineQuantity + altQtySum - qty);
+    const existingQuantity = deferredQuantities.filter(
+      (_, index) => index === quantityFieldIndex,
+    );
+    const totalQty = lineQuantity + qty - Number(existingQuantity);
+    setLineQuantity(totalQty);
   };
 
   const isHomePlant = plant.plant === willCallPlant.plantCode;

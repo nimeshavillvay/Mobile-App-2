@@ -314,7 +314,7 @@ const CartItem = ({
         checkAvailabilityMutation.mutate(
           {
             productId: product.id,
-            qty: lineQuantity,
+            qty: newQuantity,
           },
           {
             onSuccess: ({ options }) => {
@@ -443,7 +443,7 @@ const CartItem = ({
   const handleSave = (config?: Partial<CartItemConfiguration>) => {
     const data = getValues();
 
-    if (Number(data.quantity) > 0) {
+    if (Number(lineQuantity) > 0) {
       updateCartConfigMutation.mutate([
         {
           cartItemId: product.cartItemId,
@@ -918,12 +918,6 @@ const CartItem = ({
                   <span className="sr-only">Reduce quantity</span>
                 </Button>
 
-                {/* <Controller
-                  control={control}
-                  name="quantity"
-                  render={({
-                    field: { onChange, value, onBlur, name, ref },
-                  }) => ( */}
                 <NumberInputField
                   name="quantity"
                   onChange={(event) => {
@@ -933,7 +927,6 @@ const CartItem = ({
                     ) {
                       handleChangeQtyOrPO(Number(event.target.value));
                     }
-
                     setLineQuantity(Number(event.target.value));
                   }}
                   value={lineQuantity}
@@ -951,8 +944,6 @@ const CartItem = ({
                   form={cartFormId} // This is to check the validity when clicking "checkout"
                   label="Quantity"
                 />
-                {/* )}
-                /> */}
 
                 <Button
                   type="button"
