@@ -1,6 +1,8 @@
 import { cn } from "@/_lib/utils";
 import { buttonVariants } from "@repo/web-ui/components/ui/button";
+import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import Link from "next/link";
+import { Suspense } from "react";
 import { SECTIONS, SOCIAL_LINKS } from "./constants";
 import { Fsc, VenderFreightRouting, VikingCloud } from "./footer";
 import FooterSaleRepDetails from "./footer-sales-rep-details";
@@ -32,7 +34,9 @@ const FooterLinksLoggedIn = () => {
             ),
         )}
         <div className="col-span-2">
-          <FooterSaleRepDetails />
+          <Suspense fallback={<Skeleton className="h-fit w-full" />}>
+            <FooterSaleRepDetails />
+          </Suspense>
         </div>
       </section>
 

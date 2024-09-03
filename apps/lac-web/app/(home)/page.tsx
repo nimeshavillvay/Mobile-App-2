@@ -141,7 +141,7 @@ const HomePage = async () => {
             <Image
               src={getRandomImage()}
               alt="Random image background"
-              layout="fill"
+              fill
               quality={100}
               className="object-cover object-right"
             />

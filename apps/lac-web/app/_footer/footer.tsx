@@ -5,8 +5,10 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@repo/web-ui/components/ui/accordion";
+import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import Image from "next/image";
 import Link from "next/link";
+import { Suspense } from "react";
 import Balancer from "react-wrap-balancer";
 import { SECTIONS } from "./constants";
 import FooterLinks from "./footer-links";
@@ -55,7 +57,9 @@ const Footer = () => {
 
               <AccordionContent className="px-3">
                 {section.links.length === 0 ? (
-                  <FooterSaleRepDetails />
+                  <Suspense fallback={<Skeleton className="h-fit w-full" />}>
+                    <FooterSaleRepDetails />
+                  </Suspense>
                 ) : (
                   <ul>
                     {section.links.map((link) => (
@@ -82,7 +86,9 @@ const Footer = () => {
           <SAMNotice />
         </section>
 
-        <FooterLinks />
+        <Suspense fallback={<Skeleton className="h-fit w-full" />}>
+          <FooterLinks />
+        </Suspense>
 
         <div className="container">
           <div className="flex flex-col gap-6 md:flex-row md:justify-between md:border-t md:border-wurth-gray-250 md:pt-7">
