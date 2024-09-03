@@ -49,7 +49,11 @@ const FooterLinksLoggedOut = () => {
                 href={url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={cn(buttonVariants({ variant: "link" }), "group p-0")}
+                className={cn(
+                  buttonVariants({ variant: "link" }),
+                  "btnAction group p-0",
+                )}
+                data-btn-action="Footer Social Link"
               >
                 <Icon className="size-4 fill-wurth-gray-800 group-hover:fill-red-800 md:size-6" />
 

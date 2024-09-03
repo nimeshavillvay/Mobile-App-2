@@ -54,8 +54,9 @@ const FooterLinksLoggedIn = () => {
                   rel="noopener noreferrer"
                   className={cn(
                     buttonVariants({ variant: "link" }),
-                    "group p-0",
+                    "btnAction group p-0",
                   )}
+                  data-btn-action="Footer Social Link"
                 >
                   <Icon className="size-4 fill-wurth-gray-800 group-hover:fill-red-800 md:size-6" />
 
