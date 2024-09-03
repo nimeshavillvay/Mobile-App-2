@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 import FooterLinksLoggedIn from "./footer-links-logged-in";
 import FooterLinksLoggedOut from "./footer-links-logged-out";
 
-const FooterLinkWrapper = async () => {
+const FooterLinks = async () => {
   const cookieStore = cookies();
   const sessionToken = cookieStore.get(SESSION_TOKEN_COOKIE);
 
@@ -22,4 +22,4 @@ const FooterLinkWrapper = async () => {
   return <FooterLinksLoggedIn />;
 };
 
-export default FooterLinkWrapper;
+export default FooterLinks;

@@ -3,7 +3,7 @@ import { buttonVariants } from "@repo/web-ui/components/ui/button";
 import Link from "next/link";
 import { SECTIONS, SOCIAL_LINKS } from "./constants";
 import { Fsc, VenderFreightRouting, VikingCloud } from "./footer";
-import SalesRepWrapper from "./sales-rep-wrapper";
+import FooterSaleRepDetails from "./footer-sales-rep-details";
 import Subscribe from "./subscribe";
 
 const FooterLinksLoggedIn = () => {
@@ -32,7 +32,7 @@ const FooterLinksLoggedIn = () => {
             ),
         )}
         <div className="col-span-2">
-          <SalesRepWrapper />
+          <FooterSaleRepDetails />
         </div>
       </section>
 

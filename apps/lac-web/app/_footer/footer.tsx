@@ -9,8 +9,8 @@ import Image from "next/image";
 import Link from "next/link";
 import Balancer from "react-wrap-balancer";
 import { SECTIONS } from "./constants";
-import FooterLinkWrapper from "./footer-link-wrapper";
-import SalesRepWrapper from "./sales-rep-wrapper";
+import FooterLinks from "./footer-links";
+import FooterSaleRepDetails from "./footer-sales-rep-details";
 import ScrollToTopBtn from "./scroll-to-top-btn";
 import vikingCloudLogo from "./viking-cloud.png";
 import WhyShopWithUs from "./why-shop-with-us";
@@ -55,7 +55,7 @@ const Footer = () => {
 
               <AccordionContent className="px-3">
                 {section.links.length === 0 ? (
-                  <SalesRepWrapper />
+                  <FooterSaleRepDetails />
                 ) : (
                   <ul>
                     {section.links.map((link) => (
@@ -82,7 +82,7 @@ const Footer = () => {
           <SAMNotice />
         </section>
 
-        <FooterLinkWrapper />
+        <FooterLinks />
 
         <div className="container">
           <div className="flex flex-col gap-6 md:flex-row md:justify-between md:border-t md:border-wurth-gray-250 md:pt-7">

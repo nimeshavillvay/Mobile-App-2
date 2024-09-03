@@ -5,7 +5,7 @@ import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import { cookies } from "next/headers";
 import { Suspense } from "react";
 
-const SalesRepWrapper = async () => {
+const FooterSaleRepDetails = async () => {
   const cookieStore = cookies();
   const sessionToken = cookieStore.get(SESSION_TOKEN_COOKIE);
 
@@ -27,4 +27,4 @@ const SalesRepWrapper = async () => {
   );
 };
 
-export default SalesRepWrapper;
+export default FooterSaleRepDetails;

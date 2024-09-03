@@ -1,7 +1,7 @@
 import { getBanners } from "@/_lib/apis/server";
 import { ArrowRight } from "@repo/web-ui/components/icons/arrow-right";
 import { Download } from "@repo/web-ui/components/icons/download";
-import { type StaticImageData } from "next/image";
+import Image, { type StaticImageData } from "next/image";
 import Link from "next/link";
 import { type CSSProperties, type ComponentProps } from "react";
 import Balancer from "react-wrap-balancer";
@@ -24,7 +24,7 @@ type Colors = {
 
 const apiUrl = process.env.NEXT_PUBLIC_WURTH_LAC_API;
 
-const images = [subBanner1.src, subBanner2.src, subBanner3.src];
+const images: StaticImageData[] = [subBanner1, subBanner2, subBanner3];
 
 const ADS: {
   id: number;
@@ -87,7 +87,8 @@ const HomePage = async () => {
 
   const getRandomImage = () => {
     const randomIndex = Math.floor(Math.random() * images.length);
-    return images[randomIndex];
+    const image = images[randomIndex];
+    return image as StaticImageData;
   };
 
   return (
@@ -134,15 +135,17 @@ const HomePage = async () => {
         ))}
       </section>
 
-      <section className="container">
-        <div
-          className="flex h-full min-h-[40rem] w-full items-center gap-8 rounded-lg bg-wurth-gray-800 p-10 px-6 py-9"
-          style={{
-            backgroundImage: `url(${getRandomImage()})`,
-            backgroundSize: "cover",
-            backgroundPosition: "right",
-          }}
-        >
+      <section className="container relative">
+        <div className="relative flex h-full min-h-[40rem] w-full items-center rounded-lg p-10 px-6 py-9">
+          <div className="absolute inset-0 -z-10">
+            <Image
+              src={getRandomImage()}
+              alt="Random image background"
+              layout="fill"
+              quality={100}
+              className="object-cover object-right"
+            />
+          </div>
           <div className="w-2/3 flex-none space-y-3 text-white lg:pl-12 xl:w-2/5">
             <h2 className="pb-6 font-title text-4xl font-medium leading-[3rem] tracking-[-0.01688rem]">
               <Balancer>
