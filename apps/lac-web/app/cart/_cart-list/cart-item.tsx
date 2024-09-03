@@ -852,7 +852,7 @@ const CartItem = ({
           </div>
         </div>
 
-        <div className="flex-1 space-y-2 md:space-y-1">
+        <div className="flex-1 space-y-2 @container md:space-y-1">
           {isOSRLoggedInAsOSR && (
             <div className="text-lg font-semibold md:hidden">
               ${formatNumberToPrice(parseFloat(osrCartItemTotal.toFixed(2)))}
@@ -899,7 +899,7 @@ const CartItem = ({
 
           {product.isHazardous && isHazardClick && <HazardousMaterialNotice />}
 
-          <div className="flex flex-col gap-2 md:flex-row md:items-center">
+          <div className="flex flex-col gap-2 @sm:flex-row @sm:items-center">
             <div className="flex w-44 flex-col rounded-md border border-wurth-gray-250 p-0.5">
               <div className="text-center text-xs font-medium uppercase leading-none text-wurth-gray-400">
                 Qty / {product.uom}
