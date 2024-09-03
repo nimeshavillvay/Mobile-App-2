@@ -52,13 +52,18 @@ const ErrorPage = ({
           500 error
         </h2>
 
-        <Button className="mb-6 mt-9 uppercase" onClick={reset}>
+        <Button
+          className="mb-6 mt-9 uppercase"
+          onClick={reset}
+          data-button-action="Error Try Again"
+        >
           Try again
         </Button>
 
         <Link
           href="/"
-          className="mx-auto block max-w-fit rounded-sm bg-wurth-blue-450 p-2 px-3.5 py-2 font-extrabold uppercase text-white"
+          className="btnAction mx-auto block max-w-fit rounded-sm bg-wurth-blue-450 p-2 px-3.5 py-2 font-extrabold uppercase text-white"
+          data-btn-action="Error Go To Home Page"
         >
           Go to homepage
         </Link>

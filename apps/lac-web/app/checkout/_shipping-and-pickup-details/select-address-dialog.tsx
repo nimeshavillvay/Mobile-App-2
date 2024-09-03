@@ -77,7 +77,11 @@ const SelectAddressDialog = ({
     <>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <Button variant="outline" className="max-w-fit font-bold shadow-md">
+          <Button
+            variant="outline"
+            className="max-w-fit font-bold shadow-md"
+            data-button-action="Checkout Open Change Address Dialog"
+          >
             Change Address
           </Button>
         </DialogTrigger>
@@ -113,10 +117,14 @@ const SelectAddressDialog = ({
                       width={20}
                       height={20}
                       className="shrink-0 stroke-wurth-gray-150"
+                      data-button-action="Checkout Select Change Address"
                     />
                   )}
 
-                  <span className="flex-1 text-wrap text-left text-base text-wurth-gray-800">
+                  <span
+                    className="flex-1 text-wrap text-left text-base text-wurth-gray-800"
+                    data-button-action="Checkout Select Change Address"
+                  >
                     <FullAddress address={address} />
                   </span>
                 </Button>
@@ -133,6 +141,7 @@ const SelectAddressDialog = ({
                   setOpenAdd(true);
                   setOpen(false);
                 }}
+                data-button-action="Checkout Admin or osr Add New Address"
               >
                 Add new address
               </Button>
@@ -142,6 +151,7 @@ const SelectAddressDialog = ({
               className="font-bold shadow-md"
               onClick={handleConfirm}
               disabled={updateCartConfigMutation.isPending}
+              data-button-action="Checkout Confirm Change Address"
             >
               Confirm
             </Button>

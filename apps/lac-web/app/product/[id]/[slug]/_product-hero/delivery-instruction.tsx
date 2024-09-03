@@ -15,6 +15,7 @@ const DeliveryInstruction = () => {
         <Button
           variant="ghost"
           className="mx-0.5 justify-start pl-0 hover:bg-transparent hover:underline"
+          data-button-action="View delivery instructions"
         >
           View delivery instructions
           <span className="sr-only">Instruction</span>

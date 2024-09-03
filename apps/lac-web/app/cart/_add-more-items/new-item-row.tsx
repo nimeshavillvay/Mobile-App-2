@@ -137,8 +137,14 @@ const NewItemRow = ({
         variant="ghost"
         className="h-6 w-6 cursor-pointer px-1.5"
         onClick={removeLineItem}
+        data-button-action="Quick Order Remove Item"
       >
-        <Close width={12} height={12} className="stroke-2 hover:stroke-black" />
+        <Close
+          width={12}
+          height={12}
+          className="stroke-2 hover:stroke-black"
+          data-button-action="Quick Order Remove Item"
+        />
       </Button>
     </div>
   );

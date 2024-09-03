@@ -43,7 +43,8 @@ const CareersPage = () => {
             target="_blank"
             rel="noopener noreferrer"
             href="https://recruiting.ultipro.com/WUR1001WGNA/JobBoard/6e3d14dc-8c54-4ad8-8378-c52ee53cd531/?q=&o=postedDateDesc"
-            className="text-[#007bff] hover:underline"
+            className="btnAction text-[#007bff] hover:underline"
+            data-btn-action="Go to the wurthlac.com Careers"
           >
             Go to the wurthlac.com Careers mini-site.
             <VisuallyHidden>(opens in a new window)</VisuallyHidden>

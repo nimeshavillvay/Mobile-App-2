@@ -48,7 +48,11 @@ export const ProductCardDetails = ({
   readonly title: string;
 }) => {
   return (
-    <Link href={href} className="block text-center">
+    <Link
+      href={href}
+      className="block text-center"
+      data-button-action={`View ${brand} ${title}`}
+    >
       <Image
         src={src}
         alt={alt}

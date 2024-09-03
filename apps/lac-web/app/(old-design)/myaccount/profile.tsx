@@ -34,10 +34,10 @@ const Profile = ({ token }: { readonly token: string }) => {
           />
 
           <button
-            className="absolute bottom-0 right-0 bg-brand-secondary p-1 text-white"
+            className="btnAction absolute bottom-0 right-0 bg-brand-secondary p-1 text-white"
             aria-label="Edit profile picture"
           >
-            <MdOutlineModeEdit />
+            <MdOutlineModeEdit data-button-action="Edit Company Profile Picture" />
           </button>
         </div>
 
@@ -48,10 +48,14 @@ const Profile = ({ token }: { readonly token: string }) => {
             <span>{billingAddress?.soldTo ?? "N/A"}</span>
 
             <button
+              className="btnAction"
               aria-label="Switch address"
               onClick={() => setAccountSelectorOpen(true)}
             >
-              <MdOutlineSwapHoriz className="text-lg leading-none" />
+              <MdOutlineSwapHoriz
+                className="text-lg leading-none"
+                data-button-action="Switch address"
+              />
             </button>
           </div>
 
@@ -62,7 +66,8 @@ const Profile = ({ token }: { readonly token: string }) => {
 
           <Link
             href="/myaccount/company-profile"
-            className="flex flex-row items-center gap-0.5 font-wurth text-sm font-extrabold uppercase hover:text-brand-primary"
+            className="btnAction flex flex-row items-center gap-0.5 font-wurth text-sm font-extrabold uppercase hover:text-brand-primary"
+            data-btn-action="View Company Profile"
           >
             <span>Company profile</span>
 

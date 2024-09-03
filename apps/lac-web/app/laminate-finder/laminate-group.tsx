@@ -68,7 +68,10 @@ const LaminateGroup = ({
               className="absolute right-2 top-2 z-10 size-6 bg-black p-0 text-white hover:bg-black hover:text-white/[.7]"
               onClick={() => setLightboxOpen(false)}
             >
-              <X className="h-6 w-6" />
+              <X
+                className="h-6 w-6"
+                data-button-action="Laminate Finder Close Enlarged Image"
+              />
             </Button>
             <Image
               src={product.groupImage ?? product.variants[0]?.image}

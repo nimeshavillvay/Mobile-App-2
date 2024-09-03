@@ -29,8 +29,9 @@ const OrderHistoryLoading = () => {
 
       <div className="flex flex-row items-center md:justify-end md:py-4">
         <Link
-          className="hidden text-nowrap rounded-sm bg-brand-secondary px-4 py-2 text-center font-wurth font-extrabold uppercase text-white md:block"
+          className="btnAction hidden text-nowrap rounded-sm bg-brand-secondary px-4 py-2 text-center font-wurth font-extrabold uppercase text-white md:block"
           href="https://wurthlac.billtrust.com/"
+          data-button-action="Pay Your Bill Online"
         >
           Pay Your Bill Online
         </Link>

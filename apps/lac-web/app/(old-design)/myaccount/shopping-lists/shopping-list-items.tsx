@@ -204,8 +204,12 @@ const ShoppingListButtons = ({
         aria-label="Rename shopping list"
         onClick={renameShoppingList}
         disabled={disabled}
+        data-button-action="Shopping List Open Rename List Name Dialog"
       >
-        <PiPenNibDuotone className="size-4" />
+        <PiPenNibDuotone
+          className="size-4"
+          data-button-action="Shopping List Open Rename List Name Dialog"
+        />
         <span className="sr-only">Rename shopping list</span>
         Rename list
       </Button>
@@ -215,8 +219,12 @@ const ShoppingListButtons = ({
         aria-label="Delete shopping list"
         onClick={deleteShoppingList}
         disabled={disabled}
+        data-button-action="Shopping List Open Delete List Name Dialog"
       >
-        <MdOutlineDelete className="size-4" />
+        <MdOutlineDelete
+          className="size-4"
+          data-button-action="Shopping List Open Delete List Name Dialog"
+        />
         <span className="sr-only">Delete shopping list</span>
         Delete list
       </Button>

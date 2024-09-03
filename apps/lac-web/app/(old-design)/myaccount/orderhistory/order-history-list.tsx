@@ -90,8 +90,9 @@ const OrderHistoryList = ({ token }: { readonly token: string }) => {
     <>
       <div className="flex flex-row items-center md:justify-end md:py-4">
         <Link
-          className="hidden text-nowrap rounded-sm bg-brand-secondary px-4 py-2 text-center font-wurth font-extrabold uppercase text-white hover:bg-[#008fc6] md:block"
+          className="btnAction hidden text-nowrap rounded-sm bg-brand-secondary px-4 py-2 text-center font-wurth font-extrabold uppercase text-white hover:bg-[#008fc6] md:block"
           href="https://wurthlac.billtrust.com/"
+          data-button-action="Pay Your Bill Online"
         >
           Pay Your Bill Online
         </Link>
@@ -235,7 +236,10 @@ const HeaderSortButtons = ({
       )}
       onClick={onClickDesc}
     >
-      <CaretUpIcon className="h-4 w-4 opacity-70" />
+      <CaretUpIcon
+        className="h-4 w-4 opacity-70"
+        data-button-action="Order History Descending"
+      />
     </Button>
     <Button
       variant="ghost"
@@ -245,7 +249,10 @@ const HeaderSortButtons = ({
       )}
       onClick={onClickAsc}
     >
-      <CaretDownIcon className="h-4 w-4 opacity-70" />
+      <CaretDownIcon
+        className="h-4 w-4 opacity-70"
+        data-button-action="Order History Ascending"
+      />
     </Button>
   </div>
 );

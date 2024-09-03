@@ -32,6 +32,7 @@ const ADS: {
   image: StaticImageData;
   shopNowLink: string;
   promoLink: string;
+  promoName: string;
 }[] = [
   {
     id: 1,
@@ -43,6 +44,7 @@ const ADS: {
     image: kessebohmer,
     shopNowLink: "/search?query=lemans+II",
     promoLink: `${apiUrl}/assets/banners/LP2037-Kessebohmer-LeMans_II-No_Links.pdf`,
+    promoName: "LeMans II",
   },
   {
     id: 2,
@@ -54,6 +56,7 @@ const ADS: {
     image: makita,
     shopNowLink: "/search?query=makita",
     promoLink: `${apiUrl}/assets/banners/LP2036-WLAC-Makita_catalog_SV-No_Links.pdf`,
+    promoName: "Makita",
   },
   {
     id: 3,
@@ -65,6 +68,7 @@ const ADS: {
     image: paintline,
     shopNowLink: "/product/351979/PRO-DRYING-RACK-WALL-MNT-15-SHELF-PDRWM",
     promoLink: `${apiUrl}/assets/banners/LP2080-WLAC-Paintline-PDRWM-No_Links.pdf`,
+    promoName: "Paintline",
   },
 ];
 
@@ -77,6 +81,8 @@ const HomePage = async () => {
       alt: banner.alt_tag,
       image: banner.file_path,
       pdfLink: banner.pdf_file_path,
+      class: banner.class,
+      dataDescription: banner["data-descr"],
     }));
 
   const getRandomImage = () => {
@@ -104,7 +110,10 @@ const HomePage = async () => {
             <div className="absolute bottom-0 left-0 right-0 flex h-8 justify-between px-2 pb-2 sm:h-9 md:h-16 md:px-4 md:pb-4 lg:h-[1.84rem] lg:pb-[0.4rem] lg:pl-2 lg:pr-1 xl:px-3 xl:pb-3 2xl:h-12">
               <Link
                 href={ad.shopNowLink}
-                className="z-[1] flex flex-row items-center rounded-md bg-[var(--accent-color)] bg-red-700 px-4 py-2 pl-4 pt-2 text-sm font-bold text-white md:gap-[0.2rem] xl:gap-2"
+                className="btnAction z-[1] flex flex-row items-center rounded-md bg-[var(--accent-color)] bg-red-700 px-4 py-2 pl-4 pt-2 text-sm font-bold text-white md:gap-[0.2rem] xl:gap-2"
+                data-button-action="Promo Block Shop Now"
+                data-promo-desc={ad.promoName}
+                data-promo-position={ad.id}
               >
                 <span>Shop Now</span>
                 <ArrowRight className="stroke-white" width={16} height={16} />
@@ -112,7 +121,10 @@ const HomePage = async () => {
               <Link
                 href={ad.promoLink}
                 target="_blank"
-                className="z-[1] flex flex-row items-center gap-2 rounded-md bg-[var(--accent-color)] px-4 py-2 pl-4 pt-2 text-sm font-bold text-white md:gap-[0.2rem] xl:gap-2 3xl:py-4 3xl:pl-9"
+                className="btnAction z-[1] flex flex-row items-center gap-2 rounded-md bg-[var(--accent-color)] px-4 py-2 pl-4 pt-2 text-sm font-bold text-white md:gap-[0.2rem] xl:gap-2 3xl:py-4 3xl:pl-9"
+                data-button-action="Promo Block PDF"
+                data-promo={ad.promoName}
+                data-promo-position={ad.id}
               >
                 <span>Download Promo</span>
                 <Download className="stroke-white" width={16} height={16} />

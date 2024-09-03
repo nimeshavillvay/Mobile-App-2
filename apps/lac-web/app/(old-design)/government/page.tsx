@@ -35,7 +35,8 @@ const GovernmentPage = () => {
           href="https://en.wikipedia.org/wiki/Commercial_and_Government_Entity_code"
           rel="noreferrer noopener"
           target="_blank"
-          className="text-blue-600 hover:text-blue-900 hover:underline"
+          className="btnAction text-blue-600 hover:text-blue-900 hover:underline"
+          data-btn-action="Click Commercial and Government Entity"
         >
           Commercial and Government Entity
         </a>
@@ -62,7 +63,8 @@ const GovernmentPage = () => {
           href="https://www.sam.gov/"
           rel="noopener noreferrer"
           target="_blank"
-          className="text-blue-600 hover:text-blue-900 hover:underline"
+          className="btnAction text-blue-600 hover:text-blue-900 hover:underline"
+          data-btn-action="Click SAM system Link"
         >
           Click for more information about SAM.gov.
         </a>
@@ -74,7 +76,8 @@ const GovernmentPage = () => {
         phone at:{" "}
         <a
           href="tel:8004224389"
-          className="text-blue-600 hover:text-blue-900 hover:underline"
+          className="btnAction text-blue-600 hover:text-blue-900 hover:underline"
+          data-btn-action="Click SAM system Phone"
         >
           800-422-4389
         </a>

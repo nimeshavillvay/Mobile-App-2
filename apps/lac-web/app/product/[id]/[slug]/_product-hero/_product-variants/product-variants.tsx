@@ -65,6 +65,7 @@ const ProductVariants = async ({ id, className }: ProductVariantsProps) => {
                       ? `/product/${value.productid}/${value.slug}`
                       : null
                   }
+                  data-button-action="Product Variant"
                 >
                   {filter.type === "icon" ? (
                     <>
@@ -73,11 +74,15 @@ const ProductVariants = async ({ id, className }: ProductVariantsProps) => {
                         alt={`A picture of the ${filter.name} ${value.name}`}
                         width={52}
                         height={52}
+                        data-button-action="Product Variant"
                       />
 
                       {value.selected && (
                         <div className="absolute left-1/2 top-1/2 z-10 grid size-5 -translate-x-1/2 -translate-y-1/2 select-none place-items-center rounded-full border-2 border-wurth-gray-250 bg-wurth-red-650">
-                          <Check className="size-3 stroke-white" />
+                          <Check
+                            className="size-3 stroke-white"
+                            data-button-action="Product Variant"
+                          />
                         </div>
                       )}
 
@@ -130,10 +135,13 @@ const VariantLink = <Valid extends boolean>({
   if (!valid || !href) {
     return (
       <button
-        className={linkStyle({
-          selected: false,
-          type,
-        })}
+        className={cn(
+          linkStyle({
+            selected: false,
+            type,
+          }),
+          "btnAction",
+        )}
         disabled
       >
         {children}
@@ -144,10 +152,14 @@ const VariantLink = <Valid extends boolean>({
   return (
     <Link
       href={href}
-      className={linkStyle({
-        selected,
-        type,
-      })}
+      className={cn(
+        linkStyle({
+          selected,
+          type,
+        }),
+        "btnAction",
+      )}
+      data-btn-action="View Product Variant"
     >
       {children}
     </Link>

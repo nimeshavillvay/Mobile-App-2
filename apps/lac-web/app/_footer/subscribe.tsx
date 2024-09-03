@@ -76,6 +76,7 @@ const Subscribe = () => {
           type="submit"
           className="shrink-0"
           disabled={subscribeMutation.isPending}
+          data-button-action="Subscribe"
         >
           Subscribe
         </Button>

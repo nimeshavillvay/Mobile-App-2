@@ -270,6 +270,7 @@ const ProductCardActions = ({
         className="h-10 max-h-full flex-1 px-4 text-[0.875rem] leading-5"
         onClick={addToCart}
         disabled={disabled}
+        data-button-action="Product Card Add to Cart"
       >
         Add to cart
       </Button>
@@ -283,9 +284,15 @@ const ProductCardActions = ({
         onClick={onClickShoppingList}
       >
         {isFavorite ? (
-          <BookmarkFilled className="size-4" />
+          <BookmarkFilled
+            className="size-4"
+            data-button-action="Product Card Add to Wishlist"
+          />
         ) : (
-          <BookmarkOutline className="size-4" />
+          <BookmarkOutline
+            className="size-4"
+            data-button-action="Product Card Add to Wishlist"
+          />
         )}
       </Button>
     </div>

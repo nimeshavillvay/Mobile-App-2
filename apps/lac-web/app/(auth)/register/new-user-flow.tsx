@@ -781,7 +781,8 @@ const NewUserFlow = ({
                 target="_blank"
                 rel="noopener noreferrer"
                 href="/privacy-policy"
-                className="font-semibold underline"
+                className="btnAction font-semibold underline"
+                data-btn-action="New User Flow Privacy Notice"
               >
                 Privacy Notice
               </a>{" "}
@@ -790,7 +791,8 @@ const NewUserFlow = ({
                 target="_blank"
                 rel="noopener noreferrer"
                 href="/terms-of-sale"
-                className="font-semibold underline"
+                className="btnAction font-semibold underline"
+                data-btn-action="New User Flow Terms and Conditions"
               >
                 Terms and Conditions
               </a>{" "}

@@ -60,12 +60,7 @@ export const ProductsGridDesktopFiltersHeader = ({
       >
         <span className="text-sm font-bold">Clear all</span>
 
-        <Close
-          width={16}
-          height={16}
-          className="btnAction"
-          data-button-action="Clear All Filters"
-        />
+        <Close width={16} height={16} data-button-action="Clear All Filters" />
       </Button>
     </div>
   );
@@ -104,7 +99,6 @@ const AttributePill = ({
                 <Close
                   width={12}
                   height={12}
-                  className="btnAction"
                   data-button-action={`Clear Filter ${value.name}`}
                 />
               </Button>
@@ -121,7 +115,11 @@ const AttributePill = ({
                 {values.length} selected
               </span>
 
-              <Close width={12} height={12} />
+              <Close
+                width={12}
+                height={12}
+                data-button-action={`Clear Filter ${name}`}
+              />
             </Button>
           </li>
         )}

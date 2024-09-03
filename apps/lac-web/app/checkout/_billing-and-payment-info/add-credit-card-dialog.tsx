@@ -198,9 +198,15 @@ const AddCreditCardDialog = ({
     >
       <DialogTrigger asChild>
         <Button variant="outline" className="max-w-fit font-bold shadow-md">
-          <Plus width={16} height={16} />
+          <Plus
+            width={16}
+            height={16}
+            data-button-action="Checkout Open Add New Credit Card Dialog"
+          />
 
-          <span>Add new card</span>
+          <span data-button-action="Checkout Open Add New Credit Card Dialog">
+            Add new card
+          </span>
         </Button>
       </DialogTrigger>
 
@@ -333,6 +339,7 @@ const AddCreditCardDialog = ({
               type="submit"
               className="self-end"
               disabled={addCreditCardMutation.isPending}
+              data-button-action="Checkout Submit Add New Credit Card"
             >
               Submit
             </Button>

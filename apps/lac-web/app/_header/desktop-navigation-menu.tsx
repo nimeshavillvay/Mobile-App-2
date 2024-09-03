@@ -71,11 +71,12 @@ const DesktopNavigationMenu = ({ categories }: DesktopNavigationMenuProps) => {
                       </li>
 
                       {selectedCategory.subCategory.map((subCategory) => (
-                        <li key={subCategory.id} className="btn-nav">
+                        <li key={subCategory.id}>
                           <NavigationLink
                             id={subCategory.id}
                             slug={subCategory.slug}
                             name={subCategory.name}
+                            className="btn-nav"
                           />
                         </li>
                       ))}
@@ -85,15 +86,33 @@ const DesktopNavigationMenu = ({ categories }: DesktopNavigationMenuProps) => {
             </NavigationMenuItem>
 
             <NavigationMenuItemLink asChild>
-              <Link href="/cart#quick-order-form">Quick Order</Link>
+              <Link
+                href="/cart#quick-order-form"
+                data-button-action="View Quick Order"
+                className="btnAction"
+              >
+                Quick Order
+              </Link>
             </NavigationMenuItemLink>
 
             <NavigationMenuItemLink asChild>
-              <Link href="/catalogs-literature">Resources</Link>
+              <Link
+                href="/catalogs-literature"
+                data-button-action="View Resources"
+                className="btnAction"
+              >
+                Resources
+              </Link>
             </NavigationMenuItemLink>
 
             <NavigationMenuItemLink asChild>
-              <Link href="/laminate-finder">Laminate Finder</Link>
+              <Link
+                href="/laminate-finder"
+                data-button-action="View Laminate Finder"
+                className="btnAction"
+              >
+                Laminate Finder
+              </Link>
             </NavigationMenuItemLink>
           </NavigationMenuList>
         </NavigationMenu>
@@ -110,6 +129,7 @@ const NavigationLink = ({
   name,
   primary = false,
   showArrow = false,
+  className,
   onMouseOver,
 }: {
   readonly id: number;
@@ -117,6 +137,7 @@ const NavigationLink = ({
   readonly name: string;
   readonly primary?: boolean;
   readonly showArrow?: boolean;
+  readonly className?: string;
   readonly onMouseOver?: ComponentProps<
     typeof NavigationMenuLink
   >["onMouseOver"];
@@ -130,7 +151,10 @@ const NavigationLink = ({
       )}
       onMouseOver={onMouseOver}
     >
-      <Link href={`/category/${id}/${slug}`} className="btn-display-grid">
+      <Link
+        href={`/category/${id}/${slug}`}
+        className={cn("btn-display-grid", className)}
+      >
         <span>{name}</span>
 
         {showArrow && <ChevronRight className="size-4" />}

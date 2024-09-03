@@ -18,7 +18,8 @@ const PrivacyPolicyPage = () => {
           contact Wurth Louis and Company Customer Service at{" "}
           <a
             href="tel:8004224389"
-            className="text-blue-500 hover:text-blue-900 hover:underline"
+            className="btnAction text-blue-500 hover:text-blue-900 hover:underline"
+            data-btn-action="Click Privacy Policy Phone"
           >
             (800) 422-4389
           </a>
@@ -35,7 +36,8 @@ const PrivacyPolicyPage = () => {
           <a
             href="http://www.wurthlac.com"
             target="_blank"
-            className="text-blue-600 hover:text-blue-900 hover:underline"
+            className="btnAction text-blue-600 hover:text-blue-900 hover:underline"
+            data-btn-action="View Home"
           >
             www.wurthlac.com
           </a>{" "}
@@ -58,7 +60,8 @@ const PrivacyPolicyPage = () => {
           <a
             href="/terms-of-sale"
             target="_blank"
-            className="text-blue-600 hover:text-blue-900 hover:underline"
+            className="btnAction text-blue-600 hover:text-blue-900 hover:underline"
+            data-btn-action="View Terms of Sale"
           >
             Terms of Sale
           </a>
@@ -74,7 +77,8 @@ const PrivacyPolicyPage = () => {
           <a
             href="/terms-of-sale"
             target="_blank"
-            className="text-blue-600 hover:text-blue-900 hover:underline"
+            className="btnAction text-blue-600 hover:text-blue-900 hover:underline"
+            data-btn-action="View Terms of Sale"
           >
             Terms of Sale
           </a>
@@ -208,7 +212,8 @@ const PrivacyPolicyPage = () => {
             <a
               href="/terms-of-sale"
               target="_blank"
-              className="text-blue-600 hover:text-blue-900 hover:underline"
+              className="btnAction text-blue-600 hover:text-blue-900 hover:underline"
+              data-btn-action="View Terms of Sale"
             >
               Terms of Sale
             </a>{" "}
@@ -232,7 +237,8 @@ const PrivacyPolicyPage = () => {
             href="https://policies.google.com/privacy?hl=en"
             rel="noopener noreferrer"
             target="_blank"
-            className="text-blue-600 hover:text-blue-900 hover:underline"
+            className="btnAction text-blue-600 hover:text-blue-900 hover:underline"
+            data-btn-action="View YouTube Privacy Notice"
           >
             YouTube Privacy Notice
           </a>
@@ -456,7 +462,8 @@ const PrivacyPolicyPage = () => {
             href="https://www.google.com/intl/en_us/help/terms_maps/"
             rel="noopener noreferrer"
             target="_blank"
-            className="text-blue-600 hover:text-blue-900 hover:underline"
+            className="btnAction text-blue-600 hover:text-blue-900 hover:underline"
+            data-btn-action="View Google Privacy Policy"
           >
             Google Privacy Policy
           </a>
@@ -488,7 +495,8 @@ const PrivacyPolicyPage = () => {
           <a
             href="/terms-of-sale"
             target="_blank"
-            className="text-blue-600 hover:text-blue-900 hover:underline"
+            className="btnAction text-blue-600 hover:text-blue-900 hover:underline"
+            data-btn-action="View Terms of Sale"
           >
             Terms of Sale
           </a>{" "}
@@ -524,7 +532,8 @@ const PrivacyPolicyPage = () => {
               Phone:
               <a
                 href="tel:18004224389"
-                className="text-blue-500 hover:text-blue-900 hover:underline"
+                className="btnAction text-blue-500 hover:text-blue-900 hover:underline"
+                data-btn-action="Click Privacy Policy Phone"
               >
                 1-800-422-4389
               </a>{" "}

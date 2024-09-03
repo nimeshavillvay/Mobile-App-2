@@ -67,7 +67,11 @@ const UserMobileNavigation = ({
           <ul className={dividerStyles()}>
             <li>
               <SheetClose asChild className={sectionLinkStyles()}>
-                <Link href="/sign-in">
+                <Link
+                  href="/sign-in"
+                  data-button-action="Log in to Your Account"
+                  className="btnAction"
+                >
                   Log in to your account
                   <ChevronRight className="stroke-wurth-gray-400" />
                 </Link>
@@ -75,7 +79,11 @@ const UserMobileNavigation = ({
             </li>
             <li>
               <SheetClose asChild className={sectionLinkStyles()}>
-                <Link href="/sign-up">
+                <Link
+                  href="/sign-up"
+                  data-button-action="Create an Account"
+                  className="btnAction"
+                >
                   Create an account
                   <ChevronRight className="stroke-wurth-gray-400" />
                 </Link>
@@ -161,6 +169,7 @@ const UserMobileProfileNavigation = ({
                   <Button
                     variant="ghost"
                     className="flex h-full w-full flex-row items-center justify-between gap-2 bg-white px-4 py-3 text-base font-normal text-black"
+                    data-button-action="Shipping Details"
                   >
                     Shipping Details
                   </Button>
@@ -172,20 +181,38 @@ const UserMobileProfileNavigation = ({
           {isOsr && !isOSRLoggedInAsCustomer && (
             <li>
               <SheetClose asChild className={sectionLinkStyles()}>
-                <Link href="/osr/dashboard">My Customers</Link>
+                <Link
+                  href="/osr/dashboard"
+                  data-button-action="View My Customers"
+                  className="btnAction"
+                >
+                  My Customers
+                </Link>
               </SheetClose>
             </li>
           )}
 
           <li>
             <SheetClose asChild className={sectionLinkStyles()}>
-              <Link href="/myaccount/orderhistory">My Orders</Link>
+              <Link
+                href="/myaccount/orderhistory"
+                data-button-action="View My Orders"
+                className="btnAction"
+              >
+                My Orders
+              </Link>
             </SheetClose>
           </li>
 
           <li>
             <SheetClose asChild className={sectionLinkStyles()}>
-              <Link href="/myaccount/purchaseditems">My Purchased Items</Link>
+              <Link
+                href="/myaccount/purchaseditems"
+                data-button-action="View My Purchased Items"
+                className="btnAction"
+              >
+                My Purchased Items
+              </Link>
             </SheetClose>
           </li>
 
@@ -193,7 +220,8 @@ const UserMobileProfileNavigation = ({
             <SheetClose asChild className={sectionLinkStyles()}>
               <Link
                 href="/myaccount/shopping-lists"
-                className="btn-view-favorites"
+                className="btn-view-favorites btnAction"
+                data-button-action="My Shopping Lists"
               >
                 My Shopping Lists
               </Link>

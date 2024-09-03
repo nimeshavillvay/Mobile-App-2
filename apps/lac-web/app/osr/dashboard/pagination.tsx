@@ -50,7 +50,10 @@ const Pagination = ({ pageSize, totalSize, currentPage }: PaginationProps) => {
     <PaginationComponent className="justify-end">
       <PaginationContent>
         <PaginationItem>
-          <PaginationPrevious href={getHref(currentPage - 1)} />
+          <PaginationPrevious
+            href={getHref(currentPage - 1)}
+            className="btnAction"
+          />
         </PaginationItem>
 
         {currentPage - 2 > 1 && (
@@ -64,6 +67,7 @@ const Pagination = ({ pageSize, totalSize, currentPage }: PaginationProps) => {
             <PaginationComponentLink
               href={getHref(page)}
               isActive={page === currentPage}
+              className="btnAction"
             >
               {page}
             </PaginationComponentLink>
@@ -77,7 +81,10 @@ const Pagination = ({ pageSize, totalSize, currentPage }: PaginationProps) => {
         )}
 
         <PaginationItem>
-          <PaginationNext href={getHref(currentPage + 1)} />
+          <PaginationNext
+            href={getHref(currentPage + 1)}
+            className="btnAction"
+          />
         </PaginationItem>
       </PaginationContent>
     </PaginationComponent>

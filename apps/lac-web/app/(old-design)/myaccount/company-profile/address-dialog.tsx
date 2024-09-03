@@ -497,7 +497,8 @@ const AddressDialog = ({
             <div className="text-right">
               <button
                 type="submit"
-                className="h-9 rounded-[3px] bg-brand-primary px-4 text-base font-normal uppercase text-white"
+                className="btnAction h-9 rounded-[3px] bg-brand-primary px-4 text-base font-normal uppercase text-white"
+                data-button-action={`Company Profile Update ${isShippingAddress ? "Shipping" : "Billing"} Address`}
               >
                 Done
               </button>

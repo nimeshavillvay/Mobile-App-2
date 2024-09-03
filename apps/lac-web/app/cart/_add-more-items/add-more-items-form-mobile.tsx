@@ -176,8 +176,13 @@ const AddMoreItemsFormMobile = () => {
             variant="default"
             className="flex h-fit w-full flex-row items-center gap-2 font-bold"
           >
-            <Plus className="h-4 w-4 stroke-white stroke-2" />
-            <span>Add an item</span>
+            <Plus
+              className="h-4 w-4 stroke-white stroke-2"
+              data-button-action="Cart Add an Item"
+            />
+            <span data-button-action="Cart Mobile Open Add an Item Drawer">
+              Add an item
+            </span>
           </Button>
         </DrawerTrigger>
 
@@ -282,7 +287,10 @@ const AddMoreItemsFormMobile = () => {
               </div>
 
               <DrawerFooter className="px-0 pb-9">
-                <Button type="submit">
+                <Button
+                  type="submit"
+                  data-button-action={`Cart Mobile Open ${isVerified ? "Add item" : "Verify"}`}
+                >
                   {isVerified ? "Add item" : "Verify"}
                 </Button>
               </DrawerFooter>

@@ -26,7 +26,7 @@ const Footer = () => {
             Need help? Call{" "}
             <a
               href="tel:+18004224389"
-              className="hover:underline focus:underline"
+              className="btnAction hover:underline focus:underline"
             >
               (800) 422-4389
             </a>
@@ -63,7 +63,13 @@ const Footer = () => {
                         key={link.label}
                         className="text-sm font-normal leading-8 text-black hover:underline"
                       >
-                        <Link href={link.href}>{link.label}</Link>
+                        <Link
+                          href={link.href}
+                          data-button-action="Footer Link"
+                          className="btnAction"
+                        >
+                          {link.label}
+                        </Link>
                       </li>
                     ))}
                   </ul>
@@ -92,14 +98,16 @@ const Footer = () => {
               <nav className="flex flex-row items-center justify-center gap-6">
                 <Link
                   href="/privacy-policy"
-                  className="text-nowrap hover:underline"
+                  className="btnAction text-nowrap hover:underline"
+                  data-button-action="Footer Link Privacy Policy"
                 >
                   Privacy Policy
                 </Link>
 
                 <Link
                   href="/terms-of-sale"
-                  className="text-nowrap hover:underline"
+                  className="btnAction text-nowrap hover:underline"
+                  data-button-action="Footer Link Terms of Sale"
                 >
                   Terms of Sale
                 </Link>
@@ -120,7 +128,13 @@ export default Footer;
 
 export const Fsc = () => {
   return (
-    <a target="_blank" rel="noopener noreferrer" href="https://fsc.org">
+    <a
+      target="_blank"
+      rel="noopener noreferrer"
+      href="https://fsc.org"
+      className="btnAction"
+      data-btn-action="Footer FSC"
+    >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="109"
@@ -162,6 +176,8 @@ export const VikingCloud = () => {
       target="_blank"
       rel="noopener noreferrer"
       href="https://sealserver.trustwave.com/cert.php?customerId=w6oj3Bo5yhnnpWYTgYaQ7ih5yrcC2k&size=105x54&style=invert"
+      className="btnAction"
+      data-btn-action="Footer Viking Cloud"
     >
       <Image src={vikingCloudLogo} alt="The logo of Viking Cloud" />
     </a>
@@ -174,6 +190,8 @@ export const VenderFreightRouting = () => {
       target="_blank"
       rel="noopener noreferrer"
       href="https://my.ratelinx.com/ui/Shipping/Ship/v1?byShipVia=BWAYLTL&estimate=True"
+      className="btnAction"
+      data-btn-action="Footer Vender Freight"
     >
       <span className="flex flex-row items-center gap-2">
         <svg
@@ -203,7 +221,8 @@ export const SAMNotice = () => {
   return (
     <Link
       href="/government"
-      className="flex flex-col items-center gap-3 rounded-xl bg-wurth-gray-50 px-7 py-5 md:items-start"
+      className="btnAction flex flex-col items-center gap-3 rounded-xl bg-wurth-gray-50 px-7 py-5 md:items-start"
+      data-button-action="Footer Link SAMNotice"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"

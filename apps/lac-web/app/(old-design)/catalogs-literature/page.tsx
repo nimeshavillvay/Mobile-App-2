@@ -29,8 +29,9 @@ const Catalog = ({
     <a
       href={url}
       target="_blank"
-      rel="noopener noreferrer"
+      rel="btnAction noopener noreferrer"
       className="border border-gray-300 shadow-md shadow-gray-300 hover:shadow-xl hover:shadow-gray-500"
+      data-btn-action="Download Catalog"
     >
       <Image src={imageSrc} alt={alt} placeholder="blur" />
     </a>
@@ -49,7 +50,13 @@ const NonInteractiveCatalog = ({
 }) => {
   return (
     <li className="w-fit list-outside list-disc text-blue-700 hover:text-blue-900 hover:underline">
-      <a href={url} title={title} target="_blank">
+      <a
+        href={url}
+        title={title}
+        target="_blank"
+        className="btnAction"
+        data-btn-action="Download NonInteractive Catalog"
+      >
         {children}
       </a>
     </li>
@@ -70,7 +77,11 @@ const CatalogsLiteraturePage = () => {
             Click the catalog cover below to go to the individual sections of
             the catalog.
           </p>
-          <a href="/catalog-main" className="w-fit self-center sm:self-auto">
+          <a
+            href="/catalog-main"
+            className="btnAction w-fit self-center sm:self-auto"
+            data-btn-action="Download Catalog Cover"
+          >
             <Image src={catalogCover} alt="Catalog Cover" placeholder="blur" />
           </a>
         </div>
@@ -81,7 +92,8 @@ const CatalogsLiteraturePage = () => {
             title="WurthLAC 2022-2023 Full Catalog"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex w-fit flex-col sm:flex-row"
+            className="btnAction flex w-fit flex-col sm:flex-row"
+            data-btn-action="Download 2022/2023 Full Catalog"
           >
             <div className="flex w-full justify-center border border-b-0 border-gray-400 sm:w-auto sm:border-0">
               <Image

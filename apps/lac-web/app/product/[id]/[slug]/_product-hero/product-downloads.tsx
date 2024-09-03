@@ -44,6 +44,7 @@ const ProductDownloads = ({ attachments }: ProductDownloadsProps) => {
                 variant="link"
                 className="h-fit p-0 text-sm font-medium"
                 onClick={() => setHidden((hidden) => !hidden)}
+                data-button-action={`Product ${hidden ? "Show" : "Hide"} All Downloads`}
               >
                 {hidden ? "Show" : "Hide"} all downloads
               </Button>

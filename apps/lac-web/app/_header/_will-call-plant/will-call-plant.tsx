@@ -46,9 +46,15 @@ const WillCallPlantDrawer = ({ token }: WillCallPlantProps) => {
           variant="ghost"
           className="flex h-fit flex-row items-center gap-2 p-0 text-black"
         >
-          <Shop width={16} height={16} />
+          <Shop
+            width={16}
+            height={16}
+            data-button-action="Open My Pickup Branch Dialog"
+          />
 
-          <span>{plantName ?? DEFAULT_PLANT.name}</span>
+          <span data-button-action="Open My Pickup Branch Dialog">
+            {plantName ?? DEFAULT_PLANT.name}
+          </span>
         </Button>
       </DrawerTrigger>
 
@@ -113,7 +119,9 @@ const WillCallPlantDrawer = ({ token }: WillCallPlantProps) => {
 
             <DrawerFooter className="pb-9">
               <DrawerClose asChild>
-                <Button>Done</Button>
+                <Button data-button-action="Close My Pickup Branch Dialog">
+                  Done
+                </Button>
               </DrawerClose>
             </DrawerFooter>
           </div>

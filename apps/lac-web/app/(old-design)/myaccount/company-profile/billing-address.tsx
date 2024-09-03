@@ -51,7 +51,10 @@ const BillingAddress = ({ token }: { readonly token: string }) => {
               onClick={() => setOpenBillingAddressDialog(true)}
             >
               <span className="sr-only">Edit Billing Address</span>
-              <MdOutlineEdit className="text-2xl" />
+              <MdOutlineEdit
+                className="text-2xl"
+                data-button-action="Company Profile Open Edit Billing Address Dialog"
+              />
             </Button>
           )}
         </div>

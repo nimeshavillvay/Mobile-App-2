@@ -77,7 +77,11 @@ const SearchPage = async ({
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink asChild>
-              <Link href="/" className="bread-crumb">
+              <Link
+                href="/"
+                className="btnAction bread-crumb"
+                data-btn-action="View Home Link"
+              >
                 Home
               </Link>
             </BreadcrumbLink>

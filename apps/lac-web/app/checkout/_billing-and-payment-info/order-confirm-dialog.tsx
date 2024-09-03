@@ -50,6 +50,7 @@ const OrderConfirmDialog = ({
           size="lg"
           className="btn-proceed-to-checkout h-fit rounded-lg px-20 py-4 text-lg font-normal shadow-md md:max-w-60 md:self-end"
           disabled={cartQuery.data.allRegionalExluded || !paymentMethodSelected}
+          data-button-action="Checkout Open Place Your Order Dialog"
         >
           Place your Order
         </Button>
@@ -72,12 +73,14 @@ const OrderConfirmDialog = ({
           <Button
             disabled={checkoutMutation.isPending || buttonDisable}
             onClick={() => setOpen(false)}
+            data-button-action="Checkout Cancel Place Your Order"
           >
             Cancel
           </Button>
           <Button
             onClick={() => clickConfirmOrder()}
             disabled={checkoutMutation.isPending || buttonDisable}
+            data-button-action="Checkout Confirm Place Your Order"
           >
             Confirm
           </Button>

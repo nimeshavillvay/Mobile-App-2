@@ -36,8 +36,11 @@ export const Showcase: Story = {
           </h4>
           <CollapsibleTrigger asChild>
             <Button variant="ghost" size="sm">
-              <CaretSortIcon className="h-4 w-4" />
-              <span className="sr-only">Toggle</span>
+              <CaretSortIcon
+                className="h-4 w-4"
+                data-button-action="Collapsible Collapsible"
+              />
+              <span className="sr-only">Collapsible</span>
             </Button>
           </CollapsibleTrigger>
         </div>

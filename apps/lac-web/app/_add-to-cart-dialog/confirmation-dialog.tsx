@@ -210,6 +210,7 @@ const ConfirmationDialog = ({ token }: ConfirmationDialogProps) => {
             variant="outline"
             className="btn-continue-shopping flex-1 border border-wurth-gray-400 font-bold shadow-md"
             onClick={closeDialog}
+            data-button-action="Continue shopping"
           >
             Continue shopping
           </Button>
@@ -219,7 +220,9 @@ const ConfirmationDialog = ({ token }: ConfirmationDialogProps) => {
             onClick={goToCart}
             asChild
           >
-            <Link href="/cart">Go to Cart</Link>
+            <Link href="/cart" data-button-action="View Cart">
+              Go to Cart
+            </Link>
           </Button>
         </DialogFooter>
       </DialogContent>

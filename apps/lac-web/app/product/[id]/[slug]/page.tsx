@@ -2,6 +2,7 @@ import ProductCardSkeleton from "@/_components/product-card-skeleton";
 import { api } from "@/_lib/api";
 import { getBreadcrumbs } from "@/_lib/apis/server";
 import { DEFAULT_REVALIDATE } from "@/_lib/constants";
+import { cn } from "@/_lib/utils";
 import { ChevronLeft } from "@repo/web-ui/components/icons/chevron-left";
 import {
   Breadcrumb,
@@ -19,6 +20,7 @@ import Balancer from "react-wrap-balancer";
 import ProductHero from "./_product-hero";
 import RelatedProductsList from "./_related-products-list";
 import { getProduct } from "./apis";
+import ProductPageGtm from "./product-page-gtm";
 import type { ProductPageProps, RelatedProduct } from "./types";
 
 export const generateMetadata = async ({
@@ -58,14 +60,19 @@ const ProductPage = async ({ params: { id, slug } }: ProductPageProps) => {
 
   return (
     <>
+      <ProductPageGtm productId={id} />
       {!!lastBreadcrumb && (
         <div className="container my-4 md:hidden">
           <Link
             href={`/category/${lastBreadcrumb.id}/${lastBreadcrumb.slug}`}
-            className={buttonVariants({
-              variant: "link",
-              className: "h-fit gap-1 p-0",
-            })}
+            className={cn(
+              buttonVariants({
+                variant: "link",
+                className: "h-fit gap-1 p-0",
+              }),
+              "btnAction",
+            )}
+            data-btn-action={`View Breadcrumb ${lastBreadcrumb.categoryName}`}
           >
             <ChevronLeft className="size-4" />
 
@@ -78,7 +85,11 @@ const ProductPage = async ({ params: { id, slug } }: ProductPageProps) => {
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink asChild>
-              <Link href="/" className="bread-crumb">
+              <Link
+                href="/"
+                className="btnAction bread-crumb"
+                data-btn-action="View Home Link"
+              >
                 Home
               </Link>
             </BreadcrumbLink>
@@ -92,7 +103,8 @@ const ProductPage = async ({ params: { id, slug } }: ProductPageProps) => {
                 <BreadcrumbLink asChild>
                   <Link
                     href={`/category/${breadcrumb.id}/${breadcrumb.slug}`}
-                    className="bread-crumb"
+                    className="btnAction bread-crumb"
+                    data-btn-action={`View Breadcrumb ${breadcrumb.categoryName}`}
                   >
                     {breadcrumb.categoryName}
                   </Link>

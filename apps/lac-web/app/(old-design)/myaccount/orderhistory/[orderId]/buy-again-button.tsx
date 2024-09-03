@@ -23,6 +23,7 @@ const BuyAgainButton = ({ productId, ...delegated }: BuyAgainButtonProps) => {
       className="h-12 w-[170px] text-base md:h-9"
       onClick={() => addToCart()}
       {...delegated}
+      data-button-action="Order History Buy Again"
     >
       Buy Again
     </Button>

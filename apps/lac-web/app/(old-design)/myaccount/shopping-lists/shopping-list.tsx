@@ -86,7 +86,10 @@ const ShoppingList = ({ token }: { readonly token: string }) => {
           onClick={() => setIsOpenShoppingListDialog(true)}
         >
           <span className="sr-only">Create shopping list</span>
-          <MdOutlineAdd className="border-1 size-6 rounded-sm border-gray-100 bg-transparent font-bold text-black shadow" />
+          <MdOutlineAdd
+            className="border-1 size-6 rounded-sm border-gray-100 bg-transparent font-bold text-black shadow"
+            data-button-action="Shopping List Create New List"
+          />
         </Button>
       </div>
 

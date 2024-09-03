@@ -34,7 +34,10 @@ export const ProductsGridPagination = ({
     <Pagination className="pt-4">
       <PaginationContent>
         <PaginationItem>
-          <PaginationPrevious href={getHref(previousPage)} />
+          <PaginationPrevious
+            href={getHref(previousPage)}
+            className="btnAction"
+          />
         </PaginationItem>
 
         {pageNo !== previousPage && (
@@ -46,7 +49,10 @@ export const ProductsGridPagination = ({
             )}
 
             <PaginationItem>
-              <PaginationLink href={getHref(previousPage)}>
+              <PaginationLink
+                href={getHref(previousPage)}
+                className="btnAction"
+              >
                 {previousPage}
               </PaginationLink>
             </PaginationItem>
@@ -54,7 +60,7 @@ export const ProductsGridPagination = ({
         )}
 
         <PaginationItem>
-          <PaginationLink href={getHref(pageNo)} isActive>
+          <PaginationLink href={getHref(pageNo)} isActive className="btnAction">
             {pageNo}
           </PaginationLink>
         </PaginationItem>
@@ -62,7 +68,7 @@ export const ProductsGridPagination = ({
         {pageNo !== nextPage && (
           <>
             <PaginationItem>
-              <PaginationLink href={getHref(nextPage)}>
+              <PaginationLink href={getHref(nextPage)} className="btnAction">
                 {nextPage}
               </PaginationLink>
             </PaginationItem>
@@ -76,7 +82,7 @@ export const ProductsGridPagination = ({
         )}
 
         <PaginationItem>
-          <PaginationNext href={getHref(nextPage)} />
+          <PaginationNext href={getHref(nextPage)} className="btnAction" />
         </PaginationItem>
       </PaginationContent>
     </Pagination>

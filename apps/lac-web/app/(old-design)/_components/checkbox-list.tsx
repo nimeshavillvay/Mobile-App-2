@@ -59,7 +59,10 @@ const CheckboxList = ({
           </CollapsibleContent>
 
           <CollapsibleTrigger asChild>
-            <button className="text-brand-primary data-[state=open]:mt-2">
+            <button
+              className="btnAction text-brand-primary data-[state=open]:mt-2"
+              data-button-action={`Filters ${isOpen ? "less" : "more..."}`}
+            >
               {isOpen ? "less" : "more..."}
             </button>
           </CollapsibleTrigger>

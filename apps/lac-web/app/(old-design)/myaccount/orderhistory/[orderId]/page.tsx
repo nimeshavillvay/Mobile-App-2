@@ -276,7 +276,8 @@ const DetailedOrderPage = async ({
 
           <Link
             href={orderTrackingHref}
-            className="block w-fit rounded-sm bg-brand-secondary px-4 py-2 text-center font-wurth text-base font-extrabold uppercase text-white"
+            className="btnAction block w-fit rounded-sm bg-brand-secondary px-4 py-2 text-center font-wurth text-base font-extrabold uppercase text-white"
+            data-button-action="Order History Order Tracking Log"
           >
             Order Tracking Log
           </Link>
