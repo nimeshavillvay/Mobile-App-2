@@ -134,18 +134,20 @@ const CartItemPrice = ({
   return (
     <div
       className={cn(
-        "flex",
+        "flex flex-wrap",
         type === "desktop"
           ? "flex-col items-end text-right"
           : "flex-row items-center md:hidden",
       )}
     >
-      <div className="text-lg text-green-700">
-        ${formatNumberToPrice(extendedPrice)}
-      </div>
+      <div className="flex flex-row flex-wrap items-center gap-x-2">
+        <div className="text-lg text-green-700">
+          ${formatNumberToPrice(extendedPrice)}
+        </div>
 
-      <div className="ml-2 text-sm font-medium text-wurth-gray-500">
-        ${formatNumberToPrice(price)}/{priceUnit}
+        <div className="text-sm font-medium text-wurth-gray-500">
+          ${formatNumberToPrice(price)}/{priceUnit}
+        </div>
       </div>
 
       {listPrice && price && listPrice > price && (

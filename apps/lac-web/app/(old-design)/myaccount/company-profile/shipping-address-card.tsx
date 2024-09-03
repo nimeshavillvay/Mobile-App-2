@@ -1,11 +1,23 @@
 import useUpdateShippingAddressMutation from "@/_hooks/address/use-update-shipping-address-mutation.hook";
 import type { Address, AddressFormData } from "@/_lib/types";
 import { Button } from "@/old/_components/ui/button";
+import { Button as NewButton } from "@repo/web-ui/components/ui/button";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@repo/web-ui/components/ui/dialog";
 import { useState } from "react";
-import { MdOutlineEdit } from "react-icons/md";
+import { MdOutlineDelete, MdOutlineEdit } from "react-icons/md";
 import AddressDialog from "./address-dialog";
 import AddressSuggestionDialog from "./address-suggestion-dialog";
 import type { AddressCheckSuggestionsWithUuid } from "./types";
+import useDeleteShippingAddressMutation from "./use-delete-shipping-address-mutation.hook";
 
 const ShippingAddressCard = ({
   shippingAddress,
@@ -17,6 +29,9 @@ const ShippingAddressCard = ({
   readonly isAdminOrOsr: boolean;
 }) => {
   const [openShippingAddressDialog, setOpenShippingAddressDialog] =
+    useState(false);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [openDeleteConfirmationDialog, setOpenDeleteConfirmationDialog] =
     useState(false);
 
   const [
@@ -32,6 +47,19 @@ const ShippingAddressCard = ({
 
   const isSameAsBilling = soldTo && soldTo === shippingAddress.shipTo;
 
+  const deleteShippingAddressMutation = useDeleteShippingAddressMutation();
+
+  const deleteShippingAddress = () => {
+    if (shippingAddress.xcAddressId) {
+      deleteShippingAddressMutation.mutate(Number(shippingAddress.shipTo), {
+        onSuccess: () => {
+          setOpenDeleteDialog(false);
+          setOpenDeleteConfirmationDialog(true);
+        },
+      });
+    }
+  };
+
   return (
     <>
       <div className="flex flex-row space-y-3 border-gray-100 bg-transparent p-5 shadow hover:shadow-lg md:space-y-5 md:p-6">
@@ -45,7 +73,7 @@ const ShippingAddressCard = ({
           <p className="text-sm font-medium md:text-base">
             {shippingAddress?.streetAddress}, {shippingAddress?.locality},{" "}
             {shippingAddress?.region},{" "}
-            {shippingAddress?.county?.length ?? 0 > 0
+            {(shippingAddress?.county?.length ?? 0) > 0
               ? shippingAddress?.county + ", "
               : ""}
             {shippingAddress?.postalCode}
@@ -72,7 +100,7 @@ const ShippingAddressCard = ({
           )}
         </div>
         {!isSameAsBilling && isAdminOrOsr && (
-          <div className="w-20 text-center">
+          <div className="flex w-20 flex-col items-center gap-2 text-center">
             <Button
               variant="ghost"
               className="hover:bg-gray-200"
@@ -82,6 +110,71 @@ const ShippingAddressCard = ({
               <span className="sr-only">Edit shipping address</span>
               <MdOutlineEdit className="text-2xl" />
             </Button>
+
+            <Dialog open={openDeleteDialog} onOpenChange={setOpenDeleteDialog}>
+              <DialogTrigger asChild>
+                <Button
+                  variant="ghost"
+                  className="hover:bg-gray-200"
+                  data-button-action="Company Profile Delete Shipping Address Dialog"
+                >
+                  <span className="sr-only">
+                    Request deletion of shipping address
+                  </span>
+
+                  <MdOutlineDelete className="text-2xl" />
+                </Button>
+              </DialogTrigger>
+
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Shipping Address Delete Request</DialogTitle>
+
+                  <DialogDescription>
+                    Are you sure you want to request this shipping address
+                    deletion?
+                  </DialogDescription>
+                </DialogHeader>
+
+                <DialogFooter>
+                  <DialogClose
+                    asChild
+                    disabled={deleteShippingAddressMutation.isPending}
+                  >
+                    <NewButton variant="outline">Cancel</NewButton>
+                  </DialogClose>
+
+                  <NewButton
+                    onClick={deleteShippingAddress}
+                    disabled={deleteShippingAddressMutation.isPending}
+                  >
+                    Confirm
+                  </NewButton>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+
+            <Dialog
+              open={openDeleteConfirmationDialog}
+              onOpenChange={setOpenDeleteConfirmationDialog}
+            >
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Sent Request</DialogTitle>
+
+                  <DialogDescription>
+                    Your address deletion request has been sent to the
+                    Webmaster. You will hear back from them shortly.
+                  </DialogDescription>
+                </DialogHeader>
+
+                <DialogFooter>
+                  <DialogClose asChild>
+                    <NewButton>OK</NewButton>
+                  </DialogClose>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
           </div>
         )}
       </div>

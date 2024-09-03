@@ -69,7 +69,7 @@ export const ProductsGridMobileFiltersHeader = ({
           </MobileAttributePill>
         </DrawerTrigger>
 
-        <DrawerContent className="flex max-h-[calc(100vh-30px)] flex-col">
+        <DrawerContent className="flex max-h-[95dvh] flex-col">
           <DrawerHeader>
             <DrawerTitle>Filters</DrawerTitle>
             <DrawerDescription className="sr-only">

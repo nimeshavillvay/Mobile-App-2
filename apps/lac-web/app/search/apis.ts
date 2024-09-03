@@ -20,7 +20,7 @@ export const getSearchResults = async ({
         pageNo,
         query,
         isFilterByBrand: "false",
-        pageSize: "24",
+        pageSize: "25",
       }),
       headers: {
         searchParams: searchParamsCookie?.value,

@@ -10,7 +10,7 @@ import {
 } from "@/old/_components/ui/popover";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import dayjs from "dayjs";
-import type { Dispatch, SetStateAction } from "react";
+import { useState, type Dispatch, type SetStateAction } from "react";
 
 type DatePickerProps = {
   readonly date: Date;
@@ -27,8 +27,10 @@ const DatePicker = ({
   placeholder = "Pick a date",
   containerClassName,
 }: DatePickerProps) => {
+  const [open, setOpen] = useState(false);
+
   return (
-    <Popover>
+    <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
           variant="outline"
@@ -57,6 +59,8 @@ const DatePicker = ({
             if (selectedDate) {
               onSelectDate(selectedDate);
             }
+
+            setOpen(false);
           }}
         />
       </PopoverContent>
