@@ -3,7 +3,6 @@ import useDebouncedState from "@/_hooks/misc/use-debounced-state.hook";
 import { type AvailabilityOptionPlants } from "@/_hooks/product/use-suspense-check-availability.hook";
 import { MAX_QUANTITY } from "@/_lib/constants";
 import { type Plant } from "@/_lib/types";
-import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Select,
   SelectContent,
@@ -13,7 +12,7 @@ import {
 } from "@repo/web-ui/components/ui/select";
 import { TableCell, TableRow } from "@repo/web-ui/components/ui/table";
 import { useDeferredValue } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 import { useCartItemQuantityContext } from "../cart-item-quantity-context";
 import { type Availability } from "../types";
 import {
@@ -21,7 +20,7 @@ import {
   ItemCountBadge,
   ItemInStockCountBadge,
 } from "./cart-item-shipping-method";
-import { shipFromAltQtySchema, type ShipFromAltQtySchema } from "./helpers";
+import { type ShipFromAltQtySchema } from "./helpers";
 import PlantName from "./plant-name";
 
 type BranchRowProps = {
@@ -50,19 +49,19 @@ const CartItemShipFromAlternativeBranchRow = ({
 }: BranchRowProps) => {
   const { lineQuantity, setLineQuantity } = useCartItemQuantityContext();
 
-  const { control, watch } = useForm<ShipFromAltQtySchema>({
-    resolver: zodResolver(shipFromAltQtySchema),
-  });
+  const { control, watch } = useFormContext<ShipFromAltQtySchema>();
 
   const quantities = watch("quantityAlt");
   const delayedQuantities = useDebouncedState(quantities);
   const deferredQuantities = useDeferredValue(delayedQuantities);
 
   const handleChangeQty = (qty: number) => {
-    // const altQtySum = deferredQuantities.reduce((collector, num) => {
-    //   return (collector += Number(num));
-    // }, 0);
-    // setLineQuantity(lineQuantity + altQtySum - qty);
+    console.log(">> quantities", quantities);
+    const altQtySum = deferredQuantities.reduce((collector, num) => {
+      return (collector += Number(num));
+    }, 0);
+    console.log(">> altQtySum", altQtySum);
+    setLineQuantity(lineQuantity + altQtySum - qty);
   };
 
   const isHomePlant = plant.plant === willCallPlant.plantCode;
@@ -77,7 +76,7 @@ const CartItemShipFromAlternativeBranchRow = ({
 
   return (
     <>
-      <TableRow key={plant.plant} className="w-full border-b-0">
+      <TableRow key={plant.plant} className="w-full border-b-0 pt-5">
         <TableCell className="w-1/2 font-medium">
           <PlantName plants={plants} plantCode={plant.plant} />
           <div className="text-sm">
@@ -88,7 +87,7 @@ const CartItemShipFromAlternativeBranchRow = ({
           <Controller
             control={control}
             name={`quantityAlt.${quantityFieldIndex}`}
-            render={({ field: { onChange, onBlur, name, ref } }) => (
+            render={({ field: { onChange, onBlur, value, name, ref } }) => (
               <div className="flex items-center rounded border focus:border-none focus:outline-none focus:ring-0">
                 <NumberInputField
                   onBlur={onBlur}
@@ -96,8 +95,7 @@ const CartItemShipFromAlternativeBranchRow = ({
                     handleChangeQty(Number(event.target.value));
                     onChange(event);
                   }}
-                  // value={value}
-                  defaultValue={requiredQtyOfPlant}
+                  value={value}
                   ref={ref}
                   name={name}
                   removeDefaultStyles
@@ -114,7 +112,7 @@ const CartItemShipFromAlternativeBranchRow = ({
         </TableCell>
       </TableRow>
 
-      <TableRow>
+      <TableRow className="border-y-0">
         <TableCell colSpan={2}>
           {requiredQtyOfPlant < minAmount && (
             <p className="text-sm text-red-700">
@@ -129,7 +127,7 @@ const CartItemShipFromAlternativeBranchRow = ({
           {plant.shippingMethods.length > 0 && (
             <Select
               disabled={plant.shippingMethods.length === 1}
-              value={plant.shippingMethods[0]?.code}
+              defaultValue={plant.shippingMethods[0]?.code}
               // onValueChange={(method) => handleShipToMeMethod(method)}
             >
               <SelectTrigger className="avail-change-button w-full">

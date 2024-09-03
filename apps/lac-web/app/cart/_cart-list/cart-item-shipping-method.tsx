@@ -15,6 +15,7 @@ import type {
   ShippingMethod,
 } from "@/_lib/types";
 import { cn } from "@/_lib/utils";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { sendGTMEvent } from "@next/third-parties/google";
 import { ChevronDown } from "@repo/web-ui/components/icons/chevron-down";
 import { Button } from "@repo/web-ui/components/ui/button";
@@ -45,6 +46,7 @@ import {
 } from "@repo/web-ui/components/ui/table";
 import dayjs from "dayjs";
 import { useId, useState } from "react";
+import { FormProvider, useForm } from "react-hook-form";
 import { useCartItemQuantityContext } from "../cart-item-quantity-context";
 import {
   ALTERNATIVE_BRANCHES,
@@ -61,10 +63,12 @@ import type { Availability, WillCallAnywhere } from "../types";
 import NotAvailableInfoBanner from "./cart-item-not-available-banner";
 import CartItemShipFromAlternativeBranchRow from "./cart-item-ship-from-alternative-branch-row";
 import CartItemWillCallTransfer from "./cart-item-will-call-transfer";
+import type { ShipFromAltQtySchema } from "./helpers";
 import {
   createCartItemConfig,
   findAvailabilityOptionForType,
   getAlternativeBranchesConfig,
+  shipFromAltQtySchema,
 } from "./helpers";
 import PlantName from "./plant-name";
 import type { MainOption, OptionPlant, WillCallOption } from "./types";
@@ -248,6 +252,16 @@ const CartItemShippingMethod = ({
   );
 
   const homeBranchAvailableQuantity = homeBranchAvailability?.amount ?? 0;
+
+  const form = useForm<ShipFromAltQtySchema>({
+    resolver: zodResolver(shipFromAltQtySchema),
+    defaultValues: {
+      quantityAlt:
+        shipAlternativeBranch?.plants.map(
+          (plant) => plant.quantity?.toString() ?? "",
+        ) ?? [],
+    },
+  });
 
   const shipToMeShippingMethods =
     shippingMethods?.length > 0
@@ -754,42 +768,46 @@ const CartItemShippingMethod = ({
                 </CollapsibleTrigger>
 
                 <CollapsibleContent>
-                  <form>
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead className="font-light">Location</TableHead>
-                          <TableHead className="text-end font-light">
-                            Items
-                          </TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody className="font-light">
-                        {shipAlternativeBranch.plants &&
-                          Object.values(shipAlternativeBranch.plants)?.map(
-                            (plant, quantityFieldIndex) => (
-                              <CartItemShipFromAlternativeBranchRow
-                                plant={plant}
-                                plants={plants}
-                                quantityFieldIndex={quantityFieldIndex}
-                                key={quantityFieldIndex}
-                                willCallPlant={willCallPlant}
-                                // homeBranchAvailableQuantity={
-                                //   homeBranchAvailableQuantity
-                                // }
-                                availability={availability}
-                                requiredQuantity={getAvailableQuantityForPlant(
-                                  plant.plant,
-                                )}
-                                minAmount={minAmount}
-                                increment={increment}
-                                uom={uom}
-                              />
-                            ),
-                          )}
-                      </TableBody>
-                    </Table>
-                  </form>
+                  <FormProvider {...form}>
+                    <form>
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead className="font-light">
+                              Location
+                            </TableHead>
+                            <TableHead className="text-end font-light">
+                              Items
+                            </TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody className="font-light">
+                          {shipAlternativeBranch.plants &&
+                            Object.values(shipAlternativeBranch.plants)?.map(
+                              (plant, quantityFieldIndex) => (
+                                <CartItemShipFromAlternativeBranchRow
+                                  plant={plant}
+                                  plants={plants}
+                                  quantityFieldIndex={quantityFieldIndex}
+                                  key={quantityFieldIndex}
+                                  willCallPlant={willCallPlant}
+                                  // homeBranchAvailableQuantity={
+                                  //   homeBranchAvailableQuantity
+                                  // }
+                                  availability={availability}
+                                  requiredQuantity={getAvailableQuantityForPlant(
+                                    plant.plant,
+                                  )}
+                                  minAmount={minAmount}
+                                  increment={increment}
+                                  uom={uom}
+                                />
+                              ),
+                            )}
+                        </TableBody>
+                      </Table>
+                    </form>
+                  </FormProvider>
                 </CollapsibleContent>
               </Collapsible>
               {/* )} */}

@@ -60,7 +60,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { FormProvider, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { GiRadioactive } from "react-icons/gi";
 import Balancer from "react-wrap-balancer";
 import { useCartFormIdContext } from "../cart-form-id-context";
@@ -85,14 +85,13 @@ import CartItemShippingMethod from "./cart-item-shipping-method";
 import FavoriteButton from "./favorite-button";
 import FavoriteButtonSkeleton from "./favorite-button-skeleton";
 import HazardousMaterialNotice from "./hazardous-material-notice";
-import type { CartItemSchema, ShipFromAltQtySchema } from "./helpers";
+import type { CartItemSchema } from "./helpers";
 import {
   cartItemSchema,
   createCartItemConfig,
   findAvailabilityOptionForType,
   getAlternativeBranchesConfig,
   getShippingMethods,
-  shipFromAltQtySchema,
 } from "./helpers";
 import RegionalExclusionAndShippingMethods from "./regional-exclusion-and-shipping-methods";
 import type { MainOption, ShipToMeOption, WillCallOption } from "./types";
@@ -789,10 +788,10 @@ const CartItem = ({
     }
   };
 
-  const form = useForm<ShipFromAltQtySchema>({
-    resolver: zodResolver(shipFromAltQtySchema),
-    defaultValues: { quantityAlt: shipAlternativeBranch?.plants.map(() => "") },
-  });
+  // const form = useForm<ShipFromAltQtySchema>({
+  //   resolver: zodResolver(shipFromAltQtySchema),
+  //   defaultValues: { quantityAlt: shipAlternativeBranch?.plants.map(() => "") },
+  // });
 
   return (
     <div className="flex flex-col gap-6 md:flex-row">
@@ -1016,106 +1015,98 @@ const CartItem = ({
         </div>
       </div>
 
-      <FormProvider {...form}>
-        <div className="md:w-80">
-          {checkLoginQuery.data?.status_code === "NOT_LOGGED_IN" &&
-            (product.isExcludedProduct ? (
-              <div className="flex flex-row gap-2 rounded-lg bg-red-50 p-4">
-                <Alert
-                  className="mt-1 shrink-0 stroke-wurth-red-650"
-                  width={16}
-                  height={16}
-                />
+      {/* <FormProvider {...form}> */}
+      <div className="md:w-80">
+        {checkLoginQuery.data?.status_code === "NOT_LOGGED_IN" &&
+          (product.isExcludedProduct ? (
+            <div className="flex flex-row gap-2 rounded-lg bg-red-50 p-4">
+              <Alert
+                className="mt-1 shrink-0 stroke-wurth-red-650"
+                width={16}
+                height={16}
+              />
 
-                <div className="flex-1 space-y-1">
-                  <h4 className="text-base font-semibold text-wurth-red-650">
-                    Not Available
-                  </h4>
+              <div className="flex-1 space-y-1">
+                <h4 className="text-base font-semibold text-wurth-red-650">
+                  Not Available
+                </h4>
 
-                  <div className="text-sm leading-6 text-wurth-gray-800">
-                    This item is not available in certain regions. For better
-                    experience please{" "}
-                    <Link
-                      href="/sign-in"
-                      className="btnAction"
-                      data-btn-action="Cart Item Sign in or Register"
-                    >
-                      Sign in or register
-                    </Link>
-                    .
-                  </div>
+                <div className="text-sm leading-6 text-wurth-gray-800">
+                  This item is not available in certain regions. For better
+                  experience please{" "}
+                  <Link
+                    href="/sign-in"
+                    className="btnAction"
+                    data-btn-action="Cart Item Sign in or Register"
+                  >
+                    Sign in or register
+                  </Link>
+                  .
                 </div>
               </div>
-            ) : (
-              <CartItemShippingMethod
-                plants={plants}
-                availability={checkAvailabilityQuery.data}
-                setSelectedWillCallPlant={setSelectedWillCallPlant}
-                selectedWillCallPlant={selectedWillCallPlant}
-                setSelectedShippingOption={setSelectedShippingOption}
-                selectedShippingOption={selectedShippingOption}
-                setSelectedWillCallTransfer={setSelectedWillCallTransfer}
-                selectedWillCallTransfer={selectedWillCallTransfer}
-                setSelectedShippingMethod={setSelectedShippingMethod}
-                selectedShippingMethod={selectedShippingMethod}
-                setSelectedBackorderShippingMethod={
-                  setSelectedBackorderShippingMethod
-                }
-                selectedBackorderShippingMethod={
-                  selectedBackorderShippingMethod
-                }
-                onSave={handleSave}
-                defaultShippingMethod={defaultShippingMethod}
-                shippingMethods={shippingMethods}
-                isDirectlyShippedFromVendor={
-                  product.isDirectlyShippedFromVendor
-                }
-                handleSelectWillCallPlant={handleSelectWillCallPlant}
-                willCallPlant={willCallPlant}
-                token={token}
-                minAmount={product.minAmount}
-                increment={product.increment}
-                uom={product.uom}
-              />
-            ))}
+            </div>
+          ) : (
+            <CartItemShippingMethod
+              plants={plants}
+              availability={checkAvailabilityQuery.data}
+              setSelectedWillCallPlant={setSelectedWillCallPlant}
+              selectedWillCallPlant={selectedWillCallPlant}
+              setSelectedShippingOption={setSelectedShippingOption}
+              selectedShippingOption={selectedShippingOption}
+              setSelectedWillCallTransfer={setSelectedWillCallTransfer}
+              selectedWillCallTransfer={selectedWillCallTransfer}
+              setSelectedShippingMethod={setSelectedShippingMethod}
+              selectedShippingMethod={selectedShippingMethod}
+              setSelectedBackorderShippingMethod={
+                setSelectedBackorderShippingMethod
+              }
+              selectedBackorderShippingMethod={selectedBackorderShippingMethod}
+              onSave={handleSave}
+              defaultShippingMethod={defaultShippingMethod}
+              shippingMethods={shippingMethods}
+              isDirectlyShippedFromVendor={product.isDirectlyShippedFromVendor}
+              handleSelectWillCallPlant={handleSelectWillCallPlant}
+              willCallPlant={willCallPlant}
+              token={token}
+              minAmount={product.minAmount}
+              increment={product.increment}
+              uom={product.uom}
+            />
+          ))}
 
-          {checkLoginQuery.data?.status_code === "OK" && (
-            <Suspense fallback={<Skeleton className="h-48 w-full" />}>
-              <RegionalExclusionAndShippingMethods
-                token={token}
-                productId={product.id}
-                plants={plants}
-                availability={checkAvailabilityQuery.data}
-                setSelectedWillCallPlant={handleSelectWillCallPlant}
-                selectedWillCallPlant={selectedWillCallPlant}
-                setSelectedShippingOption={setSelectedShippingOption}
-                selectedShippingOption={selectedShippingOption}
-                setSelectedWillCallTransfer={setSelectedWillCallTransfer}
-                selectedWillCallTransfer={selectedWillCallTransfer}
-                setSelectedShippingMethod={setSelectedShippingMethod}
-                selectedShippingMethod={selectedShippingMethod}
-                setSelectedBackorderShippingMethod={
-                  setSelectedBackorderShippingMethod
-                }
-                selectedBackorderShippingMethod={
-                  selectedBackorderShippingMethod
-                }
-                onSave={handleSave}
-                defaultShippingMethod={defaultShippingMethod}
-                shippingMethods={shippingMethods}
-                isDirectlyShippedFromVendor={
-                  product.isDirectlyShippedFromVendor
-                }
-                handleSelectWillCallPlant={handleSelectWillCallPlant}
-                willCallPlant={willCallPlant}
-                minAmount={product.minAmount}
-                increment={product.increment}
-                uom={product.uom}
-              />
-            </Suspense>
-          )}
-        </div>
-      </FormProvider>
+        {checkLoginQuery.data?.status_code === "OK" && (
+          <Suspense fallback={<Skeleton className="h-48 w-full" />}>
+            <RegionalExclusionAndShippingMethods
+              token={token}
+              productId={product.id}
+              plants={plants}
+              availability={checkAvailabilityQuery.data}
+              setSelectedWillCallPlant={handleSelectWillCallPlant}
+              selectedWillCallPlant={selectedWillCallPlant}
+              setSelectedShippingOption={setSelectedShippingOption}
+              selectedShippingOption={selectedShippingOption}
+              setSelectedWillCallTransfer={setSelectedWillCallTransfer}
+              selectedWillCallTransfer={selectedWillCallTransfer}
+              setSelectedShippingMethod={setSelectedShippingMethod}
+              selectedShippingMethod={selectedShippingMethod}
+              setSelectedBackorderShippingMethod={
+                setSelectedBackorderShippingMethod
+              }
+              selectedBackorderShippingMethod={selectedBackorderShippingMethod}
+              onSave={handleSave}
+              defaultShippingMethod={defaultShippingMethod}
+              shippingMethods={shippingMethods}
+              isDirectlyShippedFromVendor={product.isDirectlyShippedFromVendor}
+              handleSelectWillCallPlant={handleSelectWillCallPlant}
+              willCallPlant={willCallPlant}
+              minAmount={product.minAmount}
+              increment={product.increment}
+              uom={product.uom}
+            />
+          </Suspense>
+        )}
+      </div>
+      {/* </FormProvider> */}
 
       <div className="hidden space-y-3 md:block md:shrink-0">
         {isOSRLoggedInAsOSR && (
