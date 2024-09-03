@@ -1,7 +1,7 @@
 import NumberInputField from "@/_components/number-input-field";
 import useDebouncedState from "@/_hooks/misc/use-debounced-state.hook";
 import { type AvailabilityOptionPlants } from "@/_hooks/product/use-suspense-check-availability.hook";
-import { DEFAULT_PLANT, MAX_QUANTITY } from "@/_lib/constants";
+import { DEFAULT_PLANT } from "@/_lib/constants";
 import type { CartItemConfiguration } from "@/_lib/types";
 import { type Plant } from "@/_lib/types";
 import {
@@ -41,6 +41,7 @@ type BranchRowProps = {
   readonly onSave: (config: Partial<CartItemConfiguration>) => void;
   readonly hash: string;
   //todo: send selected shipping method
+  readonly availableQuantityInPlant: number;
 };
 
 const CartItemShipFromAlternativeBranchRow = ({
@@ -55,6 +56,7 @@ const CartItemShipFromAlternativeBranchRow = ({
   uom,
   hash,
   onSave,
+  availableQuantityInPlant,
 }: BranchRowProps) => {
   const { lineQuantity, setLineQuantity } = useCartItemQuantityContext();
 
@@ -68,12 +70,12 @@ const CartItemShipFromAlternativeBranchRow = ({
     qty?: number;
     method?: string;
   }) => {
-    console.log("qtyOrMethod qty", qtyOrMethod.qty);
-    console.log("qtyOrMethod", qtyOrMethod.method);
+    // console.log("qtyOrMethod qty", qtyOrMethod.qty);
+    // console.log("qtyOrMethod", qtyOrMethod.method);
     if (qtyOrMethod.qty === undefined && !!qtyOrMethod.method) {
       return;
     }
-    console.log(">> pass");
+
     const newQuantity =
       qtyOrMethod.qty ?? Number(deferredQuantities[quantityFieldIndex]);
     const existingQuantity = deferredQuantities.filter(
@@ -135,7 +137,11 @@ const CartItemShipFromAlternativeBranchRow = ({
                     handleChangeQtyShippingMethod({
                       qty: Number(event.target.value),
                     });
-                    onChange(event);
+                    onChange(
+                      Number(event.target.value) > availableQuantityInPlant
+                        ? availableQuantityInPlant
+                        : event,
+                    );
                   }}
                   value={value}
                   ref={ref}
@@ -143,7 +149,6 @@ const CartItemShipFromAlternativeBranchRow = ({
                   removeDefaultStyles
                   className="h-fit w-24 border-none px-2.5 py-1 text-base shadow-none focus:border-r-0 focus:border-none focus:outline-none focus:ring-0 md:w-20"
                   min={minAmount}
-                  max={isHomePlant ? MAX_QUANTITY : requiredQtyOfPlant}
                   step={increment}
                   label="Quantity"
                 />

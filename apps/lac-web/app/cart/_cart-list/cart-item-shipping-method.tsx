@@ -99,6 +99,7 @@ type CartItemShippingMethodProps = {
   readonly minAmount: number;
   readonly increment: number;
   readonly uom: string;
+  readonly cartItemId: number;
 };
 
 const CartItemShippingMethod = ({
@@ -124,6 +125,7 @@ const CartItemShippingMethod = ({
   minAmount,
   increment,
   uom,
+  cartItemId,
 }: CartItemShippingMethodProps) => {
   const id = useId();
   const shipToMeId = `${MAIN_OPTIONS.SHIP_TO_ME}-${id}`;
@@ -531,6 +533,8 @@ const CartItemShippingMethod = ({
     }
   };
 
+  // const getBranchQuantityFromCart = (cartConfig:) => {};
+
   const handleShipToMeFromAlternativeOptions = () => {
     setSelectedShippingOption(MAIN_OPTIONS.SHIP_TO_ME_ALT);
     if (shipAlternativeBranch) {
@@ -543,10 +547,23 @@ const CartItemShippingMethod = ({
         shipAlternativeBranch.plants?.at(0)?.shippingMethods?.at(0)?.code ??
         selectedShippingMethod;
       setSelectedShippingMethod(setShippingMethod);
-      //todo: update to send only for the homebranch
+      //todo: update to send only for the home branch and check cart config
+      const cartItem = cartQuery.data.cartItems.filter(
+        (itemData) => itemData.cartItemId === cartItemId,
+      );
+      const cartConfig = cartItem.map((item) => item.configuration);
+      // getBranchQuantityFromCart(cartConfig)
+      console.log("cartConfig", cartConfig);
+      const homePlant = willCallPlant.plantCode ?? DEFAULT_PLANT.code;
+      console.log("shipAlternativeBranch.plants", shipAlternativeBranch.plants);
+      const plants = shipAlternativeBranch.plants
+        .filter((plant) => plant.plant === homePlant)
+        .map((plant) => ({ ...plant, quantity: lineQuantity }));
+      console.log(">>plants", plants);
+
       onSave({
         ...getAlternativeBranchesConfig({
-          plants: shipAlternativeBranch.plants,
+          plants: plants,
           method: setShippingMethod,
           hash: shipAlternativeBranch.hash,
           backOrderDate: shipAlternativeBranch.backOrder
@@ -555,7 +572,7 @@ const CartItemShippingMethod = ({
           backOrderQuantity: shipAlternativeBranch.backOrder
             ? shipAlternativeBranch?.plants?.[0]?.backOrderQuantity
             : 0,
-          homePlant: willCallPlant.plantCode ?? DEFAULT_PLANT.code,
+          homePlant: homePlant,
         }),
         will_call_not_in_stock: FALSE_STRING,
       });
@@ -587,6 +604,7 @@ const CartItemShippingMethod = ({
   };
 
   const getAvailableQuantityForPlant = (plant: string) => {
+    //todo: update to satisfy all plants
     const availabilityAtPlant =
       availability.availableLocations.find((item) => item.location === plant)
         ?.amount ?? 0;
@@ -793,6 +811,7 @@ const CartItemShippingMethod = ({
                                   requiredQuantity={getAvailableQuantityForPlant(
                                     plant.plant,
                                   )}
+                                  availableQuantityInPlant={plant.quantity ?? 0}
                                   minAmount={minAmount}
                                   increment={increment}
                                   uom={uom}

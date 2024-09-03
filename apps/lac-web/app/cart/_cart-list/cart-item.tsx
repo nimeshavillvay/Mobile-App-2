@@ -1056,6 +1056,7 @@ const CartItem = ({
               minAmount={product.minAmount}
               increment={product.increment}
               uom={product.uom}
+              cartItemId={product.cartItemId}
             />
           ))}
 
@@ -1087,6 +1088,7 @@ const CartItem = ({
               minAmount={product.minAmount}
               increment={product.increment}
               uom={product.uom}
+              cartItemId={product.cartItemId}
             />
           </Suspense>
         )}

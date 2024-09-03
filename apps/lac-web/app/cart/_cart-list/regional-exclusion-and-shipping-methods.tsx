@@ -27,12 +27,10 @@ const RegionalExclusionAndShippingMethods = ({
   minAmount,
   increment,
   uom,
+  cartItemId,
 }: ComponentProps<typeof CartItemShippingMethod> & {
   readonly token: string;
   readonly productId: number;
-  readonly minAmount: number;
-  readonly uom: string;
-  readonly increment: number;
 }) => {
   const productExcludedQuery = useSuspenseProductExcluded(token, productId);
 
@@ -69,6 +67,7 @@ const RegionalExclusionAndShippingMethods = ({
       minAmount={minAmount}
       increment={increment}
       uom={uom}
+      cartItemId={cartItemId}
     />
   );
 };
