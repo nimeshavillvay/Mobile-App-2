@@ -9,36 +9,29 @@ import { createContext, useContext, useState, type ReactNode } from "react";
 
 const CartItemQuantityContext = createContext<{
   lineQuantity: number;
-  // totalQuantity: number;
   setLineQuantity: (quantity: number) => void;
-  // setTotalQuantity: (quantity: number) => void;
-}>({
-  lineQuantity: 0,
-  // totalQuantity: 0,
-  setLineQuantity: () => {},
-  // setTotalQuantity: () => {},
-});
+} | null>(null);
 
 export const useCartItemQuantityContext = () => {
-  return useContext(CartItemQuantityContext);
+  const context = useContext(CartItemQuantityContext);
+
+  if (!context) {
+    throw new Error(
+      "useCartItemQuantityContext should be used within CartItemQuantityProvider",
+    );
+  }
+
+  return context;
 };
 
 export const CartItemQuantityProvider = ({
   children,
   lineQuantity: initialLineQuantity,
-  // totalQuantity: initialTotalQuantity,
 }: {
   readonly children: ReactNode;
   readonly lineQuantity: number;
-  // readonly totalQuantity: number;
 }) => {
-  console.log(
-    ">> CartItemQuantityProvider initialLineQuantity",
-    initialLineQuantity,
-  );
   const [lineQuantity, setLineQuantity] = useState(Number(initialLineQuantity));
-  // const [totalQuantity, setTotalQuantity] = useState(initialTotalQuantity);
-  console.log(">> CartItemQuantityProvider lineQuantity", lineQuantity);
 
   return (
     <CartItemQuantityContext.Provider value={{ lineQuantity, setLineQuantity }}>

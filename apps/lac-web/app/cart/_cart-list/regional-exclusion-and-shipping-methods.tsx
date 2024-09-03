@@ -4,7 +4,6 @@ import type { ComponentProps } from "react";
 import CartItemShippingMethod from "./cart-item-shipping-method";
 
 const RegionalExclusionAndShippingMethods = ({
-  quantity,
   token,
   productId,
   plants,
@@ -31,7 +30,6 @@ const RegionalExclusionAndShippingMethods = ({
 }: ComponentProps<typeof CartItemShippingMethod> & {
   readonly token: string;
   readonly productId: number;
-  readonly quantity: number;
   readonly minAmount: number;
   readonly uom: string;
   readonly increment: number;
@@ -49,7 +47,6 @@ const RegionalExclusionAndShippingMethods = ({
 
   return (
     <CartItemShippingMethod
-      quantity={Number(quantity)}
       plants={plants}
       availability={availability}
       setSelectedWillCallPlant={setSelectedWillCallPlant}

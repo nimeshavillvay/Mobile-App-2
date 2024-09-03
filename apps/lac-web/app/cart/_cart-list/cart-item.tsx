@@ -60,7 +60,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { Controller, FormProvider, useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import { GiRadioactive } from "react-icons/gi";
 import Balancer from "react-wrap-balancer";
 import { useCartFormIdContext } from "../cart-form-id-context";
@@ -139,7 +139,7 @@ const CartItem = ({
 
   const [isHazardClick, setIsHazardClick] = useState(false);
 
-  const { setLineQuantity } = useCartItemQuantityContext();
+  const { lineQuantity, setLineQuantity } = useCartItemQuantityContext();
 
   // This ref is to delay the check availability calls when the quantity or
   // PO Name changes to avoid multiple API calls
@@ -163,19 +163,16 @@ const CartItem = ({
   const [selectedShippingOption, setSelectedShippingOption] =
     useState<MainOption>();
 
-  const { register, getValues, setValue, watch, control } =
-    useForm<CartItemSchema>({
-      resolver: zodResolver(cartItemSchema),
-      defaultValues: {
-        quantity: product.quantity,
-        po: product.configuration.poOrJobName ?? "",
-      },
-    });
+  const { register, getValues } = useForm<CartItemSchema>({
+    resolver: zodResolver(cartItemSchema),
+    defaultValues: {
+      po: product.configuration.poOrJobName ?? "",
+    },
+  });
 
-  const quantity = watch("quantity");
-  const delayedQuantity = useDebouncedState(quantity);
+  const delayedQuantity = useDebouncedState(lineQuantity);
   const deferredQuantity = useDeferredValue(delayedQuantity);
-  const isQuantityLessThanMin = quantity < product.minAmount;
+  const isQuantityLessThanMin = deferredQuantity < product.minAmount;
 
   const priceCheckQuery = useSuspensePriceCheck(token, [
     {
@@ -188,7 +185,7 @@ const CartItem = ({
   const priceCheckData = priceCheckQuery.data;
 
   const [osrCartItemTotal, setOsrCartItemTotal] = useState(
-    quantity * (priceCheckData?.productPrices[0]?.price ?? 0),
+    lineQuantity * (priceCheckData?.productPrices[0]?.price ?? 0),
   );
 
   const updateCartConfigMutation = useUpdateCartItemMutation();
@@ -306,9 +303,10 @@ const CartItem = ({
     useState(defaultBackOrderShippingMethod?.code ?? DEFAULT_SHIPPING_METHOD);
 
   const handleChangeQtyOrPO = (quantity?: number) => {
-    const newQuantity = quantity ?? Number(deferredQuantity);
+    const newQuantity = quantity ?? lineQuantity;
 
     if (newQuantity > 0) {
+      setLineQuantity(newQuantity);
       // Clear the existing timeout
       clearTimeout(qtyOrPoChangeTimeoutRef.current);
 
@@ -317,7 +315,7 @@ const CartItem = ({
         checkAvailabilityMutation.mutate(
           {
             productId: product.id,
-            qty: newQuantity,
+            qty: lineQuantity,
           },
           {
             onSuccess: ({ options }) => {
@@ -450,7 +448,7 @@ const CartItem = ({
       updateCartConfigMutation.mutate([
         {
           cartItemId: product.cartItemId,
-          quantity: Number(data.quantity),
+          quantity: Number(lineQuantity),
           config: {
             ...product.configuration,
             ...config,
@@ -459,7 +457,7 @@ const CartItem = ({
         },
       ]);
       setOsrCartItemTotal(
-        data.quantity * (priceCheckData?.productPrices[0]?.price ?? 0),
+        lineQuantity * (priceCheckData?.productPrices[0]?.price ?? 0),
       );
     }
   };
@@ -467,13 +465,13 @@ const CartItem = ({
   const handlePriceOverride = (newPrice: number) => {
     const data = getValues();
 
-    setOsrCartItemTotal(data.quantity * newPrice);
+    setOsrCartItemTotal(lineQuantity * newPrice);
 
-    if (Number(data.quantity) > 0) {
+    if (Number(lineQuantity) > 0) {
       updateCartConfigMutation.mutate([
         {
           cartItemId: product.cartItemId,
-          quantity: Number(data.quantity),
+          quantity: Number(lineQuantity),
           price: newPrice,
           config: {
             ...product.configuration,
@@ -505,7 +503,7 @@ const CartItem = ({
       checkAvailabilityMutation.mutate(
         {
           productId: product.id,
-          qty: quantity,
+          qty: lineQuantity,
           plant: plant,
         },
         {
@@ -693,11 +691,9 @@ const CartItem = ({
 
   const reduceQuantity = () => {
     // Use `Number(quantity)` because `quantity` is a string at runtime
-    setLineQuantity(Number(quantity));
-    setValue(
-      "quantity",
+    setLineQuantity(
       calculateReduceQuantity(
-        Number(quantity),
+        Number(lineQuantity),
         product.minAmount,
         product.increment,
       ),
@@ -705,11 +701,9 @@ const CartItem = ({
   };
   const increaseQuantity = () => {
     // Use `Number(quantity)` because `quantity` is a string at runtime
-    setLineQuantity(Number(quantity));
-    setValue(
-      "quantity",
+    setLineQuantity(
       calculateIncreaseQuantity(
-        Number(quantity),
+        Number(lineQuantity),
         product.minAmount,
         product.increment,
       ),
@@ -904,6 +898,7 @@ const CartItem = ({
               <div className="text-center text-xs font-medium uppercase leading-none text-wurth-gray-400">
                 Qty / {product.uom}
               </div>
+
               <div className="flex flex-row items-center justify-between gap-2 shadow-sm">
                 <Button
                   type="button"
@@ -912,8 +907,8 @@ const CartItem = ({
                   className="up-minus up-control h-7 w-7 rounded-sm"
                   onClick={reduceQuantity}
                   disabled={
-                    !quantity ||
-                    Number(quantity) === product.minAmount ||
+                    !lineQuantity ||
+                    Number(lineQuantity) === product.minAmount ||
                     selectedShippingOption === MAIN_OPTIONS.SHIP_TO_ME_ALT
                   }
                 >
@@ -924,44 +919,41 @@ const CartItem = ({
                   <span className="sr-only">Reduce quantity</span>
                 </Button>
 
-                <Controller
+                {/* <Controller
                   control={control}
                   name="quantity"
                   render={({
                     field: { onChange, value, onBlur, name, ref },
-                  }) => (
-                    <NumberInputField
-                      onBlur={onBlur}
-                      onChange={(event) => {
-                        if (
-                          Number(event.target.value) >= product.minAmount &&
-                          Number(event.target.value) % product.increment === 0
-                        ) {
-                          handleChangeQtyOrPO(Number(event.target.value));
-                        }
+                  }) => ( */}
+                <NumberInputField
+                  name="quantity"
+                  onChange={(event) => {
+                    if (
+                      Number(event.target.value) >= product.minAmount &&
+                      Number(event.target.value) % product.increment === 0
+                    ) {
+                      handleChangeQtyOrPO(Number(event.target.value));
+                    }
 
-                        setLineQuantity(Number(event.target.value));
-                        onChange(event);
-                      }}
-                      value={value}
-                      ref={ref}
-                      name={name}
-                      className={cn(
-                        "h-fit w-24 rounded border-r-0 px-2.5 py-1 text-base focus:border-none focus:outline-none focus:ring-0 md:w-20",
-                        isQuantityLessThanMin ? "border-red-700" : "",
-                      )}
-                      required
-                      min={product.minAmount}
-                      step={product.increment}
-                      disabled={
-                        checkAvailabilityQuery.isPending ||
-                        selectedShippingOption === MAIN_OPTIONS.SHIP_TO_ME_ALT
-                      }
-                      form={cartFormId} // This is to check the validity when clicking "checkout"
-                      label="Quantity"
-                    />
+                    setLineQuantity(Number(event.target.value));
+                  }}
+                  value={lineQuantity}
+                  className={cn(
+                    "h-fit w-24 rounded border-r-0 px-2.5 py-1 text-base focus:border-none focus:outline-none focus:ring-0 md:w-20",
+                    isQuantityLessThanMin ? "border-red-700" : "",
                   )}
+                  required
+                  min={product.minAmount}
+                  step={product.increment}
+                  disabled={
+                    checkAvailabilityQuery.isPending ||
+                    selectedShippingOption === MAIN_OPTIONS.SHIP_TO_ME_ALT
+                  }
+                  form={cartFormId} // This is to check the validity when clicking "checkout"
+                  label="Quantity"
                 />
+                {/* )}
+                /> */}
 
                 <Button
                   type="button"
@@ -970,8 +962,8 @@ const CartItem = ({
                   className="up-plus up-control h-7 w-7 rounded-sm"
                   onClick={increaseQuantity}
                   disabled={
-                    quantity?.toString().length > 5 ||
-                    Number(quantity) + product.increment >= MAX_QUANTITY ||
+                    lineQuantity?.toString().length > 5 ||
+                    Number(lineQuantity) + product.increment >= MAX_QUANTITY ||
                     selectedShippingOption === MAIN_OPTIONS.SHIP_TO_ME_ALT
                   }
                 >
@@ -1056,7 +1048,6 @@ const CartItem = ({
               </div>
             ) : (
               <CartItemShippingMethod
-                quantity={Number(deferredQuantity)}
                 plants={plants}
                 availability={checkAvailabilityQuery.data}
                 setSelectedWillCallPlant={setSelectedWillCallPlant}
@@ -1091,7 +1082,6 @@ const CartItem = ({
           {checkLoginQuery.data?.status_code === "OK" && (
             <Suspense fallback={<Skeleton className="h-48 w-full" />}>
               <RegionalExclusionAndShippingMethods
-                quantity={Number(deferredQuantity)}
                 token={token}
                 productId={product.id}
                 plants={plants}

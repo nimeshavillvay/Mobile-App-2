@@ -45,6 +45,7 @@ import {
 } from "@repo/web-ui/components/ui/table";
 import dayjs from "dayjs";
 import { useId, useState } from "react";
+import { useCartItemQuantityContext } from "../cart-item-quantity-context";
 import {
   ALTERNATIVE_BRANCHES,
   AVAILABLE_ALL,
@@ -71,7 +72,6 @@ import type { MainOption, OptionPlant, WillCallOption } from "./types";
 // Vendor Direct Shipping Method
 
 type CartItemShippingMethodProps = {
-  readonly quantity: number;
   readonly plants: Plant[];
   readonly availability: Availability;
   readonly setSelectedWillCallPlant: (plant: string) => void;
@@ -98,7 +98,6 @@ type CartItemShippingMethodProps = {
 };
 
 const CartItemShippingMethod = ({
-  quantity,
   plants,
   availability,
   setSelectedWillCallPlant,
@@ -127,7 +126,7 @@ const CartItemShippingMethod = ({
   const shipToMeAltId = `${MAIN_OPTIONS.SHIP_TO_ME_ALT}-${id}`;
   const willCallId = `${MAIN_OPTIONS.WILL_CALL}-${id}`;
 
-  // const [totalQuantityAtAlt, setTotalQuantityAtAlt] = useState(0);
+  const { lineQuantity } = useCartItemQuantityContext();
 
   const {
     options: availabilityOptions,
@@ -632,12 +631,12 @@ const CartItemShippingMethod = ({
 
           <div className="ml-[1.625rem] flex flex-col gap-2">
             <div className="pl-1.5 text-sm font-medium">
-              {quantity <= homeBranchAvailableQuantity && (
+              {lineQuantity <= homeBranchAvailableQuantity && (
                 <ItemInStockCountBadge
                   availableCount={homeBranchAvailableQuantity}
                 />
               )}
-              {quantity > homeBranchAvailableQuantity && (
+              {lineQuantity > homeBranchAvailableQuantity && (
                 <ItemLimitedStockOrBoCountBadge
                   availableCount={homeBranchAvailableQuantity}
                 />

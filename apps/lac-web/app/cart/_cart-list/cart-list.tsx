@@ -35,6 +35,7 @@ import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import dynamic from "next/dynamic";
 import { Suspense, useState } from "react";
 import CartItemFallback from "../cart-item-fallback";
+import { CartItemQuantityProvider } from "../cart-item-quantity-context";
 import useCartPageStore from "../use-cart-page-store.hook";
 import useCartStore from "../use-cart-store.hook";
 import CartItem from "./cart-item";
@@ -214,33 +215,35 @@ const CartList = ({ token, plants }: CartListProps) => {
             key={`${item.itemInfo.productId}-${item.cartItemId}`}
             className="border-b border-b-wurth-gray-250 px-4 pb-7 md:px-0 [&:not(:first-child)]:pt-7"
           >
-            <Suspense fallback={<CartItemFallback />}>
-              <CartItem
-                key={cartItemKey.toString()}
-                token={token}
-                product={{
-                  id: item.itemInfo.productId,
-                  title: item.itemInfo.productName,
-                  sku: item.itemInfo.productSku,
-                  manufacturerId: item.itemInfo.mfrPartNo,
-                  quantity: item.quantity,
-                  configuration: item.configuration,
-                  minAmount: item.itemInfo.minimumOrderQuantity,
-                  increment: item.itemInfo.quantityByIncrements,
-                  image: item.itemInfo.image,
-                  cartItemId: item.cartItemId,
-                  slug: item.itemInfo.slug,
-                  isExcludedProduct: item.itemInfo.isExcludedProduct,
-                  uom: item.itemInfo.unitOfMeasure,
-                  isHazardous: item.itemInfo.isHazardous,
-                  isDirectlyShippedFromVendor:
-                    item.itemInfo.isDirectlyShippedFromVendor,
-                }}
-                plants={plants}
-                cartConfiguration={data.configuration}
-                willCallPlant={willCallPlantQuery?.data}
-              />
-            </Suspense>
+            <CartItemQuantityProvider lineQuantity={item.quantity}>
+              <Suspense fallback={<CartItemFallback />}>
+                <CartItem
+                  key={cartItemKey.toString()}
+                  token={token}
+                  product={{
+                    id: item.itemInfo.productId,
+                    title: item.itemInfo.productName,
+                    sku: item.itemInfo.productSku,
+                    manufacturerId: item.itemInfo.mfrPartNo,
+                    quantity: item.quantity,
+                    configuration: item.configuration,
+                    minAmount: item.itemInfo.minimumOrderQuantity,
+                    increment: item.itemInfo.quantityByIncrements,
+                    image: item.itemInfo.image,
+                    cartItemId: item.cartItemId,
+                    slug: item.itemInfo.slug,
+                    isExcludedProduct: item.itemInfo.isExcludedProduct,
+                    uom: item.itemInfo.unitOfMeasure,
+                    isHazardous: item.itemInfo.isHazardous,
+                    isDirectlyShippedFromVendor:
+                      item.itemInfo.isDirectlyShippedFromVendor,
+                  }}
+                  plants={plants}
+                  cartConfiguration={data.configuration}
+                  willCallPlant={willCallPlantQuery?.data}
+                />
+              </Suspense>
+            </CartItemQuantityProvider>
           </li>
         ))}
 
