@@ -24,11 +24,7 @@ const OSRDetailsView = ({ token }: { readonly token: string }) => {
           <span>Logged in as&nbsp;</span>
 
           {loginCheckData?.status_code === "OK" && (
-            <span className="font-bold">
-              {loginCheckData.user.company !== ""
-                ? loginCheckData.user.company
-                : loginCheckData.user.billto}
-            </span>
+            <span className="font-bold">{loginCheckData.user.billto}</span>
           )}
         </div>
 

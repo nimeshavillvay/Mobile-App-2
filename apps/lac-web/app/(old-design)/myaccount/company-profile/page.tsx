@@ -1,3 +1,4 @@
+import SalesRepresentative from "@/_components/sales-representative";
 import { getCountries } from "@/_lib/apis/server";
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import Separator from "@/old/_components/separator";
@@ -11,7 +12,6 @@ import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import BillingAddress from "./billing-address";
 import CompanyProfileImage from "./company-profile-image";
-import SalesRepresentative from "./sales-representative";
 import ShippingAddress from "./shipping-address";
 
 export const metadata: Metadata = {
