@@ -28,6 +28,7 @@ type UsernameInputProps<
   readonly label?: string;
   readonly description?: string;
   readonly disabled?: boolean;
+  readonly onUsernameCheck?: (isDisabled: boolean) => void;
 };
 
 export const UsernameInput = <
@@ -39,6 +40,7 @@ export const UsernameInput = <
   label = "Requested User ID",
   description = "This is your username.",
   disabled = false,
+  onUsernameCheck,
 }: UsernameInputProps<TFieldValues, TName>) => {
   const [username, setUsername] = useState("");
   const delayedUsername = useDebouncedState(username, 1000);
@@ -46,10 +48,13 @@ export const UsernameInput = <
   const checkUsernameMutation = useCheckUsernameMutation();
   const { trigger, setError, clearErrors, formState } = useFormContext();
 
+  const isDisabled = disabled || checkUsernameMutation.isPending;
+
   const checkUsername = async (value: string) => {
     if (!value) {
       lastCheckedUsername.current = "";
       clearErrors(name);
+      onUsernameCheck?.(false);
       return;
     }
     if (value !== lastCheckedUsername.current && !formState.errors[name]) {
@@ -57,13 +62,15 @@ export const UsernameInput = <
       checkUsernameMutation.mutate(value, {
         onSuccess: () => {
           clearErrors(name);
+          onUsernameCheck?.(false);
         },
         onError: async (error) => {
           if (error?.response?.status === 400) {
             const errorResponse = await error.response.json();
             if (
-              isErrorResponse(errorResponse) &&
-              errorResponse["status_code"] === "FAILED"
+              (isErrorResponse(errorResponse) &&
+                errorResponse["status_code"] === "FAILED") ||
+              errorResponse["status_code"] === "USER_ACTIVE"
             ) {
               setError(name, {
                 type: "manual",
@@ -77,6 +84,7 @@ export const UsernameInput = <
               });
             }
           }
+          onUsernameCheck?.(false);
         },
       });
     }
@@ -97,11 +105,12 @@ export const UsernameInput = <
               {...field}
               autoComplete={name}
               required
-              disabled={disabled || checkUsernameMutation.isPending}
+              disabled={isDisabled}
               onChange={(e) => {
                 field.onChange(e);
                 setUsername(e.target.value);
                 trigger(name);
+                onUsernameCheck?.(true);
               }}
               data-testid={`input-${name}`}
             />

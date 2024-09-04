@@ -21,7 +21,10 @@ jest.mock("@/_context/recaptcha-ref", () => ({
     children,
   useCheckRecaptcha: jest.fn().mockReturnValue(() => Promise.resolve()),
 }));
-
+jest.mock("@/_hooks/misc/use-debounced-state.hook", () => ({
+  __esModule: true,
+  default: jest.fn((value) => value), // This makes the debounce immediate
+}));
 global.ResizeObserver = class ResizeObserver {
   observe() {}
   unobserve() {}
@@ -62,6 +65,13 @@ const fillPersonalInformationStep = async (
       });
     }
   }
+  const createAccountButton = screen.getByText(
+    "Create account",
+  ) as HTMLButtonElement;
+  await waitFor(() => {
+    expect(createAccountButton).not.toBeDisabled();
+  });
+  fireEvent.click(createAccountButton);
 };
 
 describe("RegisterExistingUser", () => {
@@ -111,8 +121,6 @@ describe("RegisterExistingUser", () => {
 
     await fillPersonalInformationStep(screen);
 
-    fireEvent.click(screen.getByText("Create account"));
-
     await waitFor(() => {
       expect(
         screen.queryByText("Registration unsuccessful. Please try again"),
@@ -137,8 +145,6 @@ describe("RegisterExistingUser", () => {
     });
 
     await fillPersonalInformationStep(screen);
-
-    fireEvent.click(screen.getByText("Create account"));
 
     await waitFor(() => {
       expect(
@@ -171,8 +177,6 @@ describe("RegisterExistingUser", () => {
 
     await fillPersonalInformationStep(screen);
 
-    fireEvent.click(screen.getByText("Create account"));
-
     await waitFor(() => {
       expect(mockToast).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -200,8 +204,6 @@ describe("RegisterExistingUser", () => {
     });
 
     await fillPersonalInformationStep(screen);
-
-    fireEvent.click(screen.getByText("Create account"));
 
     await waitFor(() => {
       expect(
@@ -231,8 +233,6 @@ describe("RegisterExistingUser", () => {
     await fillPersonalInformationStep(screen, {
       email: "existing@example.com",
     });
-
-    fireEvent.click(screen.getByText("Create account"));
 
     await waitFor(() => {
       expect(

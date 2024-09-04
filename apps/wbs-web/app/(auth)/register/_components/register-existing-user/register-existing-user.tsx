@@ -43,6 +43,12 @@ const RegisterExistingUser = () => {
 
   const createUserMutation = useRegisterExistingUserMutation();
   const onSubmit = form.handleSubmit(async (data) => {
+    if (form.formState.errors.userName) {
+      form.setError("userName", {
+        message: form.formState.errors.userName.message,
+      });
+      return;
+    }
     try {
       await checkRecaptcha();
     } catch {
