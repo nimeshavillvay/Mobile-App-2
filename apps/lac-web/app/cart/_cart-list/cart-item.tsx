@@ -171,7 +171,7 @@ const CartItem = ({
     },
   });
 
-  const delayedQuantity = useDebouncedState(lineQuantity);
+  const delayedQuantity = useDebouncedState(Number(lineQuantity));
   const deferredQuantity = useDeferredValue(delayedQuantity);
   const isQuantityLessThanMin = deferredQuantity < product.minAmount;
 
@@ -186,7 +186,7 @@ const CartItem = ({
   const priceCheckData = priceCheckQuery.data;
 
   const [osrCartItemTotal, setOsrCartItemTotal] = useState(
-    lineQuantity * (priceCheckData?.productPrices[0]?.price ?? 0),
+    Number(lineQuantity) * (priceCheckData?.productPrices[0]?.price ?? 0),
   );
 
   const updateCartConfigMutation = useUpdateCartItemMutation();
@@ -304,11 +304,11 @@ const CartItem = ({
     useState(defaultBackOrderShippingMethod?.code ?? DEFAULT_SHIPPING_METHOD);
 
   const handleChangeQtyOrPO = (quantity?: number) => {
-    const newQuantity = quantity ?? lineQuantity;
+    const newQuantity = quantity ?? Number(lineQuantity);
 
     if (newQuantity > 0) {
       setPreventUpdateCart(false);
-      setLineQuantity(newQuantity);
+      setLineQuantity(newQuantity.toString());
       // Clear the existing timeout
       clearTimeout(qtyOrPoChangeTimeoutRef.current);
 
@@ -446,11 +446,11 @@ const CartItem = ({
   const handleSave = (config?: Partial<CartItemConfiguration>) => {
     const data = getValues();
 
-    if (Number(lineQuantity) > 0) {
+    if (Number(Number(lineQuantity)) > 0) {
       updateCartConfigMutation.mutate([
         {
           cartItemId: product.cartItemId,
-          quantity: Number(lineQuantity),
+          quantity: Number(Number(lineQuantity)),
           config: {
             ...product.configuration,
             ...config,
@@ -459,7 +459,7 @@ const CartItem = ({
         },
       ]);
       setOsrCartItemTotal(
-        lineQuantity * (priceCheckData?.productPrices[0]?.price ?? 0),
+        Number(lineQuantity) * (priceCheckData?.productPrices[0]?.price ?? 0),
       );
     }
   };
@@ -467,13 +467,13 @@ const CartItem = ({
   const handlePriceOverride = (newPrice: number) => {
     const data = getValues();
 
-    setOsrCartItemTotal(lineQuantity * newPrice);
+    setOsrCartItemTotal(Number(lineQuantity) * newPrice);
 
-    if (Number(lineQuantity) > 0) {
+    if (Number(Number(lineQuantity)) > 0) {
       updateCartConfigMutation.mutate([
         {
           cartItemId: product.cartItemId,
-          quantity: Number(lineQuantity),
+          quantity: Number(Number(lineQuantity)),
           price: newPrice,
           config: {
             ...product.configuration,
@@ -505,7 +505,7 @@ const CartItem = ({
       checkAvailabilityMutation.mutate(
         {
           productId: product.id,
-          qty: lineQuantity,
+          qty: Number(lineQuantity),
           plant: plant,
         },
         {
@@ -697,10 +697,10 @@ const CartItem = ({
     // Use `Number(quantity)` because `quantity` is a string at runtime
     setLineQuantity(
       calculateReduceQuantity(
-        Number(lineQuantity),
+        Number(Number(lineQuantity)),
         product.minAmount,
         product.increment,
-      ),
+      ).toString(),
     );
 
     setPreventUpdateCart(false);
@@ -709,10 +709,10 @@ const CartItem = ({
     // Use `Number(quantity)` because `quantity` is a string at runtime
     setLineQuantity(
       calculateIncreaseQuantity(
-        Number(lineQuantity),
+        Number(Number(lineQuantity)),
         product.minAmount,
         product.increment,
-      ),
+      ).toString(),
     );
     setPreventUpdateCart(false);
   };
@@ -909,8 +909,8 @@ const CartItem = ({
                   className="up-minus up-control h-7 w-7 rounded-sm"
                   onClick={reduceQuantity}
                   disabled={
-                    !lineQuantity ||
-                    Number(lineQuantity) === product.minAmount ||
+                    !Number(lineQuantity) ||
+                    Number(Number(lineQuantity)) === product.minAmount ||
                     selectedShippingOption === MAIN_OPTIONS.SHIP_TO_ME_ALT
                   }
                 >
@@ -930,9 +930,9 @@ const CartItem = ({
                     ) {
                       handleChangeQtyOrPO(Number(event.target.value));
                     }
-                    setLineQuantity(Number(event.target.value));
+                    setLineQuantity(event.target.value);
                   }}
-                  value={lineQuantity}
+                  value={Number(lineQuantity)}
                   className={cn(
                     "h-fit w-24 rounded border-r-0 px-2.5 py-1 text-base focus:border-none focus:outline-none focus:ring-0 md:w-20",
                     isQuantityLessThanMin ? "border-red-700" : "",
@@ -955,8 +955,9 @@ const CartItem = ({
                   className="up-plus up-control h-7 w-7 rounded-sm"
                   onClick={increaseQuantity}
                   disabled={
-                    lineQuantity?.toString().length > 5 ||
-                    Number(lineQuantity) + product.increment >= MAX_QUANTITY ||
+                    Number(lineQuantity)?.toString().length > 5 ||
+                    Number(Number(lineQuantity)) + product.increment >=
+                      MAX_QUANTITY ||
                     selectedShippingOption === MAIN_OPTIONS.SHIP_TO_ME_ALT
                   }
                 >

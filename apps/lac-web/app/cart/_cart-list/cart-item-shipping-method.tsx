@@ -265,14 +265,13 @@ const CartItemShippingMethod = ({
   const homePlant = willCallPlant.plantCode ?? DEFAULT_PLANT.code;
 
   const getHomePlantDisplayQuantity = () => {
-    // if data in db show it
     const totalAvailableQty =
       shipAlternativeBranch?.plants.reduce((sum, current) => {
         return sum + Number(current.quantity);
       }, 0) ?? 0;
 
-    return lineQuantity > totalAvailableQty
-      ? homeBranchAvailableQuantity + lineQuantity - totalAvailableQty
+    return Number(lineQuantity) > totalAvailableQty
+      ? homeBranchAvailableQuantity + Number(lineQuantity) - totalAvailableQty
       : homeBranchAvailableQuantity;
   };
 
@@ -297,7 +296,6 @@ const CartItemShippingMethod = ({
     resolver: zodResolver(shipFromAltQtySchema),
     defaultValues: getDefaultFormValues(),
   });
-  //todo: check if db has data for default
 
   const shipToMeShippingMethods =
     shippingMethods?.length > 0
@@ -536,8 +534,6 @@ const CartItemShippingMethod = ({
           }),
         );
       }
-
-      // todo: need to add BO
     }
   };
 
@@ -664,7 +660,7 @@ const CartItemShippingMethod = ({
               );
               shipAlternativeBranch?.hash;
               if (shipAlternativeBranch) {
-                setLineQuantity(altQtySum);
+                setLineQuantity(altQtySum.toString());
                 setSelectedShippingOption(MAIN_OPTIONS.SHIP_TO_ME_ALT);
 
                 const SelectedPlants = shipAlternativeBranch.plants.map(
@@ -771,12 +767,12 @@ const CartItemShippingMethod = ({
 
           <div className="ml-[1.625rem] flex flex-col gap-2">
             <div className="pl-1.5 text-sm font-medium">
-              {lineQuantity <= homeBranchAvailableQuantity && (
+              {Number(lineQuantity) <= homeBranchAvailableQuantity && (
                 <ItemInStockCountBadge
                   availableCount={homeBranchAvailableQuantity}
                 />
               )}
-              {lineQuantity > homeBranchAvailableQuantity && (
+              {Number(lineQuantity) > homeBranchAvailableQuantity && (
                 <ItemLimitedStockOrBoCountBadge
                   availableCount={homeBranchAvailableQuantity}
                 />

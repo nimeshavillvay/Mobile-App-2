@@ -215,7 +215,10 @@ const CartList = ({ token, plants }: CartListProps) => {
             key={`${item.itemInfo.productId}-${item.cartItemId}`}
             className="border-b border-b-wurth-gray-250 px-4 pb-7 md:px-0 [&:not(:first-child)]:pt-7"
           >
-            <CartItemQuantityProvider lineQuantity={item.quantity}>
+            <CartItemQuantityProvider
+              lineQuantity={item.quantity.toString()}
+              minQuantity={item.itemInfo.minimumOrderQuantity}
+            >
               <Suspense fallback={<CartItemFallback />}>
                 <CartItem
                   key={cartItemKey.toString()}
