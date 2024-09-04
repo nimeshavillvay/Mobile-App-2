@@ -3,7 +3,7 @@ const nextConfig = {
   reactStrictMode: true,
   transpilePackages: ["@repo/web-ui"],
   images: {
-    unoptimized: process.env.VERCEL_ENV !== "production", // Optimize images only in the production environment in Vercel
+    // unoptimized: process.env.VERCEL_ENV !== "production", // Optimize images only in the production environment in Vercel
     formats: ["image/avif", "image/webp"],
     remotePatterns: [
       {
