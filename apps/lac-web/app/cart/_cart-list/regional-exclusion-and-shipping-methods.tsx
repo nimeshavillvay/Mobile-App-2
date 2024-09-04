@@ -28,6 +28,8 @@ const RegionalExclusionAndShippingMethods = ({
   increment,
   uom,
   cartItemId,
+  configuration,
+  setPreventUpdateCart,
 }: ComponentProps<typeof CartItemShippingMethod> & {
   readonly token: string;
   readonly productId: number;
@@ -68,6 +70,8 @@ const RegionalExclusionAndShippingMethods = ({
       increment={increment}
       uom={uom}
       cartItemId={cartItemId}
+      configuration={configuration}
+      setPreventUpdateCart={setPreventUpdateCart}
     />
   );
 };

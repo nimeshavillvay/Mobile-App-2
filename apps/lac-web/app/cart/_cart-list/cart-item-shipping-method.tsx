@@ -1,4 +1,5 @@
 import useSuspenseCart from "@/_hooks/cart/use-suspense-cart.hook";
+import useUpdateCartItemMutation from "@/_hooks/cart/use-update-cart-item-mutation.hook";
 import useGtmProducts from "@/_hooks/gtm/use-gtm-item-info.hook";
 import useGtmUser from "@/_hooks/gtm/use-gtm-user.hook";
 import {
@@ -46,6 +47,7 @@ import {
   TableRow,
 } from "@repo/web-ui/components/ui/table";
 import dayjs from "dayjs";
+import type { Dispatch, SetStateAction } from "react";
 import { useId, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useCartItemQuantityContext } from "../cart-item-quantity-context";
@@ -83,7 +85,6 @@ type CartItemShippingMethodProps = {
   readonly selectedWillCallPlant: string;
   readonly setSelectedShippingOption: (option: MainOption | undefined) => void;
   readonly selectedShippingOption: MainOption | undefined;
-  // readonly selectedShipToMe: ShipToMeOption;
   readonly setSelectedShippingMethod: (method: string) => void;
   readonly selectedShippingMethod: string;
   readonly onSave: (config: Partial<CartItemConfiguration>) => void;
@@ -101,6 +102,8 @@ type CartItemShippingMethodProps = {
   readonly increment: number;
   readonly uom: string;
   readonly cartItemId: number;
+  readonly configuration: CartItemConfiguration;
+  readonly setPreventUpdateCart: Dispatch<SetStateAction<boolean>>;
 };
 
 const CartItemShippingMethod = ({
@@ -127,6 +130,8 @@ const CartItemShippingMethod = ({
   increment,
   uom,
   cartItemId,
+  configuration,
+  setPreventUpdateCart,
 }: CartItemShippingMethodProps) => {
   const id = useId();
   const shipToMeId = `${MAIN_OPTIONS.SHIP_TO_ME}-${id}`;
@@ -159,6 +164,8 @@ const CartItemShippingMethod = ({
   );
 
   const [open, setOpen] = useState(false);
+
+  const updateCartConfigMutation = useUpdateCartItemMutation(true);
 
   const cartQuery = useSuspenseCart(token);
 
@@ -280,6 +287,8 @@ const CartItemShippingMethod = ({
     },
   });
   //todo: check if db has data for default
+
+  // const cartForm = useFormContext<CartItemSchema>();
 
   const shipToMeShippingMethods =
     shippingMethods?.length > 0
@@ -574,11 +583,11 @@ const CartItemShippingMethod = ({
       // getBranchQuantityFromCart(cartConfig)
       console.log("cartConfig", cartConfig);
       const homePlant = willCallPlant.plantCode ?? DEFAULT_PLANT.code;
-      console.log("shipAlternativeBranch.plants", shipAlternativeBranch.plants);
+      // console.log("shipAlternativeBranch.plants", shipAlternativeBranch.plants);
       const plants = shipAlternativeBranch.plants
         .filter((plant) => plant.plant === homePlant)
         .map((plant) => ({ ...plant, quantity: lineQuantity }));
-      console.log(">>plants", plants);
+      // console.log(">>plants", plants);
 
       onSave({
         ...getAlternativeBranchesConfig({
@@ -631,9 +640,9 @@ const CartItemShippingMethod = ({
   // };
 
   const applyAlternativeBranchChanges = () => {
+    // todo: if happens here prevent default shipping method change
     if (shipAlternativeBranch) {
       const formData = form.getValues();
-      console.log(">> formData", formData);
       const altQtySum = formData.quantityAlt.reduce((collector, num) => {
         return (collector += Number(num));
       }, 0);
@@ -653,7 +662,7 @@ const CartItemShippingMethod = ({
         }),
       );
 
-      onSave({
+      const config = {
         ...getAlternativeBranchesConfig({
           plants: SelectedPlants,
           method: SelectedPlants[0]?.method ?? "G",
@@ -663,7 +672,21 @@ const CartItemShippingMethod = ({
           homePlant: homePlant,
         }),
         will_call_not_in_stock: FALSE_STRING,
-      });
+      };
+      if (Number(lineQuantity) > 0) {
+        console.log(">> updateCartConfigMutation 0");
+        setPreventUpdateCart(true);
+        updateCartConfigMutation.mutate([
+          {
+            cartItemId: cartItemId,
+            quantity: Number(lineQuantity),
+            config: {
+              ...configuration,
+              ...config,
+            },
+          },
+        ]);
+      }
     }
   };
 

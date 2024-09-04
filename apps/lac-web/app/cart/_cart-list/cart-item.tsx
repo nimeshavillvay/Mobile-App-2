@@ -140,6 +140,8 @@ const CartItem = ({
 
   const { lineQuantity, setLineQuantity } = useCartItemQuantityContext();
 
+  const [preventUpdateCart, setPreventUpdateCart] = useState(false);
+
   // This ref is to delay the check availability calls when the quantity or
   // PO Name changes to avoid multiple API calls
   const qtyOrPoChangeTimeoutRef = useRef<NodeJS.Timeout>();
@@ -305,6 +307,7 @@ const CartItem = ({
     const newQuantity = quantity ?? lineQuantity;
 
     if (newQuantity > 0) {
+      setPreventUpdateCart(false);
       setLineQuantity(newQuantity);
       // Clear the existing timeout
       clearTimeout(qtyOrPoChangeTimeoutRef.current);
@@ -675,7 +678,9 @@ const CartItem = ({
       } else {
         // Update the cart config with default option based on the priority
         // This is needed so that if the the cart gets expired we update it here
-        setDefaultsForCartConfig();
+        if (!preventUpdateCart) {
+          setDefaultsForCartConfig();
+        }
       }
     }
     // eslint-disable-next-line react-compiler/react-compiler
@@ -697,6 +702,8 @@ const CartItem = ({
         product.increment,
       ),
     );
+
+    setPreventUpdateCart(false);
   };
   const increaseQuantity = () => {
     // Use `Number(quantity)` because `quantity` is a string at runtime
@@ -707,6 +714,7 @@ const CartItem = ({
         product.increment,
       ),
     );
+    setPreventUpdateCart(false);
   };
 
   const pathnameHistory = usePathnameHistoryState(
@@ -1057,6 +1065,8 @@ const CartItem = ({
               increment={product.increment}
               uom={product.uom}
               cartItemId={product.cartItemId}
+              configuration={product.configuration}
+              setPreventUpdateCart={setPreventUpdateCart}
             />
           ))}
 
@@ -1089,6 +1099,8 @@ const CartItem = ({
               increment={product.increment}
               uom={product.uom}
               cartItemId={product.cartItemId}
+              configuration={product.configuration}
+              setPreventUpdateCart={setPreventUpdateCart}
             />
           </Suspense>
         )}
