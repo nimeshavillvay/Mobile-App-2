@@ -94,9 +94,9 @@ const CartItemShipFromAlternativeBranchRow = ({
                   onChange={(event) => {
                     updateBackOrderQuantity(Number(event.target.value));
                     onChange(
-                      Number(event.target.value) > availableQuantityInPlant &&
+                      Number(event.target.value) > availabilityOfPlant &&
                         !isHomePlant
-                        ? availableQuantityInPlant
+                        ? availabilityOfPlant
                         : event,
                     );
                   }}

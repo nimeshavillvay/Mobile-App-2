@@ -48,7 +48,7 @@ import {
 } from "@repo/web-ui/components/ui/table";
 import dayjs from "dayjs";
 import type { Dispatch, SetStateAction } from "react";
-import { useId, useState } from "react";
+import { useId, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useCartItemQuantityContext } from "../cart-item-quantity-context";
 import {
@@ -75,6 +75,7 @@ import {
 } from "./helpers";
 import PlantName from "./plant-name";
 import type { MainOption, OptionPlant, WillCallOption } from "./types";
+import useCheckAvailabilityMutation from "./use-check-availability-mutation.hook";
 
 // Vendor Direct Shipping Method
 
@@ -165,9 +166,12 @@ const CartItemShippingMethod = ({
 
   const [open, setOpen] = useState(false);
 
-  const updateCartConfigMutation = useUpdateCartItemMutation(true);
+  const updateCartConfigMutation = useUpdateCartItemMutation();
+  const checkAvailabilityMutation = useCheckAvailabilityMutation();
 
   const cartQuery = useSuspenseCart(token);
+
+  const qtyChangeTimeoutRef = useRef<NodeJS.Timeout>();
 
   const gtmProducts = cartQuery.data.cartItems.map((item) => {
     return {
@@ -266,25 +270,32 @@ const CartItemShippingMethod = ({
       shipAlternativeBranch?.plants.reduce((sum, current) => {
         return sum + Number(current.quantity);
       }, 0) ?? 0;
+
     return lineQuantity > totalAvailableQty
       ? homeBranchAvailableQuantity + lineQuantity - totalAvailableQty
       : homeBranchAvailableQuantity;
   };
 
-  const form = useForm<ShipFromAltQtySchema>({
-    resolver: zodResolver(shipFromAltQtySchema),
-    defaultValues: {
+  const getDefaultFormValues = () => {
+    return {
       quantityAlt:
         shipAlternativeBranch?.plants.map((plant) =>
           plant.plant === homePlant
-            ? getHomePlantDisplayQuantity().toString()
+            ? (
+                (plant.quantity ?? 0) + (plant.backOrderQuantity ?? 0)
+              ).toString()
             : plant.quantity?.toString(),
         ) ?? [],
       shippingMethod:
         shipAlternativeBranch?.plants.map(
           (plant) => plant.shippingMethods[0]?.code,
         ) ?? [],
-    },
+    };
+  };
+
+  const form = useForm<ShipFromAltQtySchema>({
+    resolver: zodResolver(shipFromAltQtySchema),
+    defaultValues: getDefaultFormValues(),
   });
   //todo: check if db has data for default
 
@@ -321,6 +332,7 @@ const CartItemShippingMethod = ({
     selectedOption: MainOption;
   }) => {
     if (checked) {
+      form.reset(getDefaultFormValues());
       if (selectedOption !== MAIN_OPTIONS.SHIP_TO_ME_ALT) {
         setOpen(false);
       }
@@ -573,23 +585,11 @@ const CartItemShippingMethod = ({
         shipAlternativeBranch.plants?.at(0)?.shippingMethods?.at(0)?.code ??
         selectedShippingMethod;
       setSelectedShippingMethod(setShippingMethod);
-      //todo: update to send only for the home branch and check cart config
-      const cartItem = cartQuery.data.cartItems.filter(
-        (itemData) => itemData.cartItemId === cartItemId,
-      );
-      const cartConfig = cartItem.map((item) => item.configuration);
-      // getBranchQuantityFromCart(cartConfig)
-      console.log("cartConfig", cartConfig);
       const homePlant = willCallPlant.plantCode ?? DEFAULT_PLANT.code;
-      // console.log("shipAlternativeBranch.plants", shipAlternativeBranch.plants);
-      const plants = shipAlternativeBranch.plants
-        .filter((plant) => plant.plant === homePlant)
-        .map((plant) => ({ ...plant, quantity: lineQuantity }));
-      // console.log(">>plants", plants);
 
       onSave({
         ...getAlternativeBranchesConfig({
-          plants: plants,
+          plants: shipAlternativeBranch.plants,
           method: setShippingMethod,
           hash: shipAlternativeBranch.hash,
           backOrderDate: shipAlternativeBranch.backOrder
@@ -642,54 +642,77 @@ const CartItemShippingMethod = ({
   };
 
   const applyAlternativeBranchChanges = () => {
-    if (shipAlternativeBranch) {
-      const formData = form.getValues();
-      const altQtySum = formData.quantityAlt.reduce((collector, num) => {
-        return (collector += Number(num));
-      }, 0);
+    clearTimeout(qtyChangeTimeoutRef.current);
 
-      setLineQuantity(altQtySum);
+    const formData = form.getValues();
+    const altQtySum = formData.quantityAlt.reduce((collector, num) => {
+      return (collector += Number(num));
+    }, 0);
 
-      const SelectedPlants = shipAlternativeBranch.plants.map(
-        (plant, index) => ({
-          index: plant.index,
-          quantity: getQuantity(
-            plant.plant,
-            Number(formData.quantityAlt[index]),
-          ),
-          method: formData.shippingMethod[index],
-          plant: plant.plant,
-        }),
-      );
+    qtyChangeTimeoutRef.current = setTimeout(() => {
+      checkAvailabilityMutation.mutate(
+        {
+          productId: availability.productId,
+          qty: altQtySum,
+        },
+        {
+          onSuccess: ({ options }) => {
+            if (options.length > 0) {
+              const shipAlternativeBranch = findAvailabilityOptionForType(
+                options,
+                ALTERNATIVE_BRANCHES,
+              );
+              shipAlternativeBranch?.hash;
+              if (shipAlternativeBranch) {
+                setLineQuantity(altQtySum);
+                setSelectedShippingOption(MAIN_OPTIONS.SHIP_TO_ME_ALT);
 
-      const config = {
-        ...getAlternativeBranchesConfig({
-          plants: SelectedPlants,
-          method: SelectedPlants[0]?.method ?? "G",
-          hash: shipAlternativeBranch.hash,
-          // backOrderDate: "", //todo:
-          backOrderQuantity: calculateDefaultAltBO(
-            homePlant,
-            Number(formData.quantityAlt[0]),
-          ),
-          homePlant: homePlant,
-        }),
-        will_call_not_in_stock: FALSE_STRING,
-      };
-      if (altQtySum > 0) {
-        setPreventUpdateCart(true);
-        updateCartConfigMutation.mutate([
-          {
-            cartItemId: cartItemId,
-            quantity: altQtySum,
-            config: {
-              ...configuration,
-              ...config,
-            },
+                const SelectedPlants = shipAlternativeBranch.plants.map(
+                  (plant, index) => ({
+                    index: plant.index,
+                    quantity: getQuantity(
+                      plant.plant,
+                      Number(formData.quantityAlt[index]),
+                    ),
+                    method: formData.shippingMethod[index],
+                    plant: plant.plant,
+                  }),
+                );
+                const config = {
+                  ...getAlternativeBranchesConfig({
+                    plants: SelectedPlants,
+                    method: selectedShippingMethod,
+                    hash: shipAlternativeBranch.hash,
+                    backOrderDate: shipAlternativeBranch.backOrder
+                      ? shipAlternativeBranch?.plants?.[0]?.backOrderDate
+                      : "",
+                    backOrderQuantity: calculateDefaultAltBO(
+                      homePlant,
+                      Number(formData.quantityAlt[0]),
+                    ),
+                    homePlant: homePlant,
+                  }),
+                  will_call_not_in_stock: FALSE_STRING,
+                };
+                if (altQtySum > 0) {
+                  setPreventUpdateCart(true);
+                  updateCartConfigMutation.mutate([
+                    {
+                      cartItemId: cartItemId,
+                      quantity: altQtySum,
+                      config: {
+                        ...configuration,
+                        ...config,
+                      },
+                    },
+                  ]);
+                }
+              }
+            }
           },
-        ]);
-      }
-    }
+        },
+      );
+    }, 100);
   };
 
   const calculateDefaultAltBO = (plant: string, plantQty: number) => {

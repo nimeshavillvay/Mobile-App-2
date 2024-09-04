@@ -652,14 +652,14 @@ const CartItem = ({
   useEffect(() => {
     // Check if matched availability option exists
     if (matchedAvailabilityOption) {
-      if (
+      if (matchedAvailabilityOption.type === ALTERNATIVE_BRANCHES) {
+        setSelectedShippingOption(MAIN_OPTIONS.SHIP_TO_ME_ALT);
+      } else if (
         matchedAvailabilityOption.type === AVAILABLE_ALL ||
         matchedAvailabilityOption.type === TAKE_ON_HAND ||
         matchedAvailabilityOption.type === BACK_ORDER_ALL
       ) {
         setSelectedShippingOption(MAIN_OPTIONS.SHIP_TO_ME);
-      } else if (matchedAvailabilityOption.type === ALTERNATIVE_BRANCHES) {
-        setSelectedShippingOption(MAIN_OPTIONS.SHIP_TO_ME_ALT);
       }
     } else {
       // Check if hash matches with the will call hash

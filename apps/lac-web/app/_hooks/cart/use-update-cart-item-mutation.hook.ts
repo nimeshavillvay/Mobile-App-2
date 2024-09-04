@@ -4,7 +4,7 @@ import type { CartItemConfiguration } from "@/_lib/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import useCookies from "../storage/use-cookies.hook";
 
-const useUpdateCartItemMutation = (preventCartInvalidation = false) => {
+const useUpdateCartItemMutation = () => {
   const [cookies] = useCookies();
   const queryClient = useQueryClient();
   return useMutation({
@@ -33,16 +33,13 @@ const useUpdateCartItemMutation = (preventCartInvalidation = false) => {
         .json();
     },
     onSettled: async () => {
-      console.log(">> preventCartInvalidation", preventCartInvalidation);
-      if (!preventCartInvalidation) {
-        await queryClient.invalidateQueries({
-          queryKey: ["cart"],
-        });
-      }
+      await queryClient.invalidateQueries({
+        queryKey: ["cart"],
+      });
     },
     onSuccess: (_data, variables) => {
       // Check if the price has been updated and invalidate the price-check query
-      if (variables?.at(0)?.price && !preventCartInvalidation) {
+      if (variables?.at(0)?.price) {
         queryClient.invalidateQueries({
           queryKey: ["user", "price-check"],
         });
