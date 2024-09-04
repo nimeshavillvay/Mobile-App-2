@@ -263,8 +263,8 @@ const CartItemShippingMethod = ({
   const getHomePlantDisplayQuantity = () => {
     // if data in db show it
     const totalAvailableQty =
-      shipAlternativeBranch?.plants.reduce((accumulator, current) => {
-        return accumulator + Number(current.quantity);
+      shipAlternativeBranch?.plants.reduce((sum, current) => {
+        return sum + Number(current.quantity);
       }, 0) ?? 0;
     return lineQuantity > totalAvailableQty
       ? homeBranchAvailableQuantity + lineQuantity - totalAvailableQty
@@ -288,14 +288,14 @@ const CartItemShippingMethod = ({
   });
   //todo: check if db has data for default
 
-  // const cartForm = useFormContext<CartItemSchema>();
-
   const shipToMeShippingMethods =
     shippingMethods?.length > 0
       ? shippingMethods
-      : backOrderAll?.plants[0]?.shippingMethods
-        ? backOrderAll?.plants[0]?.shippingMethods
-        : [];
+      : availableAll?.plants[0]?.shippingMethods
+        ? availableAll?.plants[0]?.shippingMethods
+        : backOrderAll?.plants[0]?.shippingMethods
+          ? backOrderAll?.plants[0]?.shippingMethods
+          : [];
 
   const getFirstBackOrderDateFromPlants = (
     plants: {
@@ -561,8 +561,6 @@ const CartItemShippingMethod = ({
     }
   };
 
-  // const getBranchQuantityFromCart = (cartConfig:) => {};
-
   const handleShipToMeFromAlternativeOptions = () => {
     setSelectedShippingOption(MAIN_OPTIONS.SHIP_TO_ME_ALT);
     if (shipAlternativeBranch) {
@@ -639,6 +637,18 @@ const CartItemShippingMethod = ({
   //   return availabilityAtPlant - homeBranchAvailableQuantity;
   // };
 
+  const getQuantity = (plant: string, qty: number) => {
+    if (plant === homePlant) {
+      if (qty > homeBranchAvailableQuantity) {
+        return homeBranchAvailableQuantity;
+      } else {
+        return qty;
+      }
+    } else {
+      return qty;
+    }
+  };
+
   const applyAlternativeBranchChanges = () => {
     // todo: if happens here prevent default shipping method change
     if (shipAlternativeBranch) {
@@ -652,10 +662,9 @@ const CartItemShippingMethod = ({
       const SelectedPlants = shipAlternativeBranch.plants.map(
         (plant, index) => ({
           index: plant.index,
-          quantity: Number(
-            plant.plant === homePlant
-              ? homeBranchAvailableQuantity
-              : formData.quantityAlt[index],
+          quantity: getQuantity(
+            plant.plant,
+            Number(formData.quantityAlt[index]),
           ),
           method: formData.shippingMethod[index],
           plant: plant.plant,
@@ -667,19 +676,21 @@ const CartItemShippingMethod = ({
           plants: SelectedPlants,
           method: SelectedPlants[0]?.method ?? "G",
           hash: shipAlternativeBranch.hash,
-          backOrderDate: "", //todo:
-          backOrderQuantity: calculateDefaultAltBO(),
+          // backOrderDate: "", //todo:
+          backOrderQuantity: calculateDefaultAltBO(
+            homePlant,
+            Number(formData.quantityAlt[0]),
+          ),
           homePlant: homePlant,
         }),
         will_call_not_in_stock: FALSE_STRING,
       };
-      if (Number(lineQuantity) > 0) {
-        console.log(">> updateCartConfigMutation 0");
+      if (altQtySum > 0) {
         setPreventUpdateCart(true);
         updateCartConfigMutation.mutate([
           {
             cartItemId: cartItemId,
-            quantity: Number(lineQuantity),
+            quantity: altQtySum,
             config: {
               ...configuration,
               ...config,
@@ -690,9 +701,9 @@ const CartItemShippingMethod = ({
     }
   };
 
-  const calculateDefaultAltBO = (plant = homePlant) => {
-    return plant === homePlant
-      ? getHomePlantDisplayQuantity() - homeBranchAvailableQuantity
+  const calculateDefaultAltBO = (plant: string, plantQty: number) => {
+    return plant === homePlant && plantQty > homeBranchAvailableQuantity
+      ? plantQty - homeBranchAvailableQuantity
       : 0;
   };
 
@@ -897,9 +908,12 @@ const CartItemShippingMethod = ({
                                   minAmount={minAmount}
                                   increment={increment}
                                   uom={uom}
-                                  defaultBoQty={calculateDefaultAltBO(
-                                    plant.plant,
-                                  )}
+                                  defaultBoQty={
+                                    plant.plant === homePlant
+                                      ? getHomePlantDisplayQuantity() -
+                                        homeBranchAvailableQuantity
+                                      : 0
+                                  }
                                 />
                               ),
                             )}
