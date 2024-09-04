@@ -18,7 +18,6 @@ import type {
 import { cn } from "@/_lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { sendGTMEvent } from "@next/third-parties/google";
-import { ChevronDown } from "@repo/web-ui/components/icons/chevron-down";
 import { Button } from "@repo/web-ui/components/ui/button";
 import { Checkbox } from "@repo/web-ui/components/ui/checkbox";
 import {
@@ -229,18 +228,6 @@ const CartItemShippingMethod = ({
         });
       });
     }
-  };
-
-  const calculateAllPlantsQuantity = (
-    plants: {
-      quantity?: number;
-    }[],
-  ) => {
-    // Get all the values of the plants
-    const plantValues = Object.values(plants);
-
-    // Calculate the total quantity
-    return plantValues.reduce((acc, plant) => acc + (plant.quantity ?? 0), 0);
   };
 
   const isVendorShipped = isDirectlyShippedFromVendor === true;
@@ -867,53 +854,8 @@ const CartItemShippingMethod = ({
       {/* Ship from alternative branches option */}
       {shipAlternativeBranch && shipAlternativeBranch.plants?.length > 0 && (
         <>
-          <div className="flex flex-col gap-2 px-2 py-2 text-sm shadow-sm">
-            <div className="flex flex-row items-center gap-3">
-              <Checkbox
-                id={shipToMeAltId}
-                className="size-5 rounded-full"
-                iconClassName="size-4"
-                checked={selectedShippingOption === MAIN_OPTIONS.SHIP_TO_ME_ALT}
-                onCheckedChange={(checked) =>
-                  handleDeliveryOptionSelect({
-                    checked: checked === true,
-                    selectedOption: MAIN_OPTIONS.SHIP_TO_ME_ALT,
-                  })
-                }
-                disabled={!backOrderAll}
-              />
-
-              <Label htmlFor={shipToMeAltId} className="text-base">
-                Ship from Alternate Branch(es)
-              </Label>
-            </div>
-
+          <div className="flex flex-col gap-2 px-2 py-2 text-sm">
             <div className="flex flex-col gap-0.5">
-              <div className="text-wrap font-medium">
-                {shipAlternativeBranch.plants?.length > 0 && (
-                  <ItemCountBadge
-                    count={calculateAllPlantsQuantity(
-                      shipAlternativeBranch.plants,
-                    )}
-                  />
-                )}
-                &nbsp;from&nbsp;
-                <PlantName
-                  plants={plants}
-                  plantCode={shipAlternativeBranch.plants?.at(0)?.plant}
-                />
-                &nbsp;and&nbsp;
-                <span className="font-normal">other alternative branches</span>
-              </div>
-
-              {shipAlternativeBranch.backOrder && (
-                <BackOrderItemCountLabel
-                  count={
-                    shipAlternativeBranch.plants?.at(0)?.backOrderQuantity ?? 0
-                  }
-                />
-              )}
-
               <Collapsible
                 className="mt-1.5 flex flex-col gap-1"
                 disabled={
@@ -926,21 +868,27 @@ const CartItemShippingMethod = ({
                   className="group flex h-7 flex-row items-center justify-start"
                   asChild
                 >
-                  <Button
-                    type="button"
-                    variant="subtle"
-                    className="h-full gap-2 px-2"
-                    data-button-action="Cart Show Breakdown by Branch"
-                  >
-                    <ChevronDown
-                      width={16}
-                      height={16}
-                      className="transition duration-150 ease-out group-data-[state=open]:rotate-180"
+                  <div className="flex flex-row items-center gap-3">
+                    <Checkbox
+                      id={shipToMeAltId}
+                      className="size-5 rounded-full"
+                      iconClassName="size-4"
+                      checked={
+                        selectedShippingOption === MAIN_OPTIONS.SHIP_TO_ME_ALT
+                      }
+                      onCheckedChange={(checked) =>
+                        handleDeliveryOptionSelect({
+                          checked: checked === true,
+                          selectedOption: MAIN_OPTIONS.SHIP_TO_ME_ALT,
+                        })
+                      }
+                      disabled={!backOrderAll}
                     />
-                    <span className="text-balance text-left">
-                      Show breakdown by branch
-                    </span>
-                  </Button>
+
+                    <Label htmlFor={shipToMeAltId} className="text-base">
+                      Ship from Alternate Branch(es)
+                    </Label>
+                  </div>
                 </CollapsibleTrigger>
 
                 <CollapsibleContent>
@@ -1004,10 +952,9 @@ const CartItemShippingMethod = ({
                   </FormProvider>
                 </CollapsibleContent>
               </Collapsible>
-              {/* )} */}
             </div>
           </div>
-          <ShipToMeBOInfoBanner option={shipAlternativeBranch} />
+          {open && <ShipToMeBOInfoBanner option={shipAlternativeBranch} />}
         </>
       )}
 
