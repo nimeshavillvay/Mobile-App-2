@@ -629,14 +629,6 @@ const CartItemShippingMethod = ({
     }
   };
 
-  // const getAvailableQuantityForPlant = (plant: string) => {
-  //   //todo: update to satisfy all plants
-  //   const availabilityAtPlant =
-  //     availability.availableLocations.find((item) => item.location === plant)
-  //       ?.amount ?? 0;
-  //   return availabilityAtPlant - homeBranchAvailableQuantity;
-  // };
-
   const getQuantity = (plant: string, qty: number) => {
     if (plant === homePlant) {
       if (qty > homeBranchAvailableQuantity) {
@@ -650,7 +642,6 @@ const CartItemShippingMethod = ({
   };
 
   const applyAlternativeBranchChanges = () => {
-    // todo: if happens here prevent default shipping method change
     if (shipAlternativeBranch) {
       const formData = form.getValues();
       const altQtySum = formData.quantityAlt.reduce((collector, num) => {
