@@ -46,9 +46,11 @@ import {
   TableHeader,
   TableRow,
 } from "@repo/web-ui/components/ui/table";
+import { toast } from "@repo/web-ui/components/ui/toast";
 import dayjs from "dayjs";
 import type { Dispatch, SetStateAction } from "react";
-import { useId, useRef, useState } from "react";
+// eslint-disable-next-line no-restricted-imports
+import { useEffect, useId, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useCartItemQuantityContext } from "../cart-item-quantity-context";
 import {
@@ -63,6 +65,7 @@ import {
   TRUE_STRING,
 } from "../constants";
 import type { Availability, WillCallAnywhere } from "../types";
+import useUnSavedAlternativeQuantityState from "../use-cart-aternative-qty-method-store.hook";
 import NotAvailableInfoBanner from "./cart-item-not-available-banner";
 import CartItemShipFromAlternativeBranchRow from "./cart-item-ship-from-alternative-branch-row";
 import CartItemWillCallTransfer from "./cart-item-will-call-transfer";
@@ -105,6 +108,7 @@ type CartItemShippingMethodProps = {
   readonly cartItemId: number;
   readonly configuration: CartItemConfiguration;
   readonly setPreventUpdateCart: Dispatch<SetStateAction<boolean>>;
+  readonly sku: string;
 };
 
 const CartItemShippingMethod = ({
@@ -132,6 +136,7 @@ const CartItemShippingMethod = ({
   uom,
   cartItemId,
   configuration,
+  sku,
   setPreventUpdateCart,
 }: CartItemShippingMethodProps) => {
   const id = useId();
@@ -140,6 +145,10 @@ const CartItemShippingMethod = ({
   const willCallId = `${MAIN_OPTIONS.WILL_CALL}-${id}`;
 
   const { lineQuantity, setLineQuantity } = useCartItemQuantityContext();
+  const skus = useUnSavedAlternativeQuantityState((state) => state.sku);
+  const { pushSku, popSku } = useUnSavedAlternativeQuantityState(
+    (state) => state.actions,
+  );
 
   const {
     options: availabilityOptions,
@@ -287,7 +296,7 @@ const CartItemShippingMethod = ({
         ) ?? [],
       shippingMethod:
         shipAlternativeBranch?.plants.map(
-          (plant) => plant.shippingMethods[0]?.code,
+          (plant) => plant.shippingMethods[0]?.code, //todo: has to be updated with db value
         ) ?? [],
     };
   };
@@ -692,24 +701,64 @@ const CartItemShippingMethod = ({
                 };
                 if (altQtySum > 0) {
                   setPreventUpdateCart(true);
-                  updateCartConfigMutation.mutate([
+                  updateCartConfigMutation.mutate(
+                    [
+                      {
+                        cartItemId: cartItemId,
+                        quantity: altQtySum,
+                        config: {
+                          ...configuration,
+                          ...config,
+                        },
+                      },
+                    ],
                     {
-                      cartItemId: cartItemId,
-                      quantity: altQtySum,
-                      config: {
-                        ...configuration,
-                        ...config,
+                      onSettled: () => {
+                        setOpen(false);
+                        popSku([sku]);
+                        form.reset({
+                          quantityAlt:
+                            shipAlternativeBranch?.plants.map((plant) =>
+                              plant.plant === homePlant
+                                ? (
+                                    (plant.quantity ?? 0) +
+                                    (plant.backOrderQuantity ?? 0)
+                                  ).toString()
+                                : plant.quantity?.toString(),
+                            ) ?? [],
+                          shippingMethod:
+                            shipAlternativeBranch?.plants.map(
+                              (plant) => plant.shippingMethods[0]?.code, //todo: not updating correctly
+                            ) ?? [],
+                        });
+                        toast({
+                          description: "Successfully updated cart",
+                        });
                       },
                     },
-                  ]);
+                  );
                 }
               }
             }
           },
         },
       );
-    }, 100);
+    }, 500);
   };
+
+  const isDirty = form.formState.isDirty;
+
+  useEffect(() => {
+    if (isDirty) {
+      if (!skus.includes(sku)) {
+        pushSku(sku);
+      }
+    } else {
+      if (skus.includes(sku)) {
+        popSku([sku]);
+      }
+    }
+  }, [isDirty, sku, skus, pushSku, popSku]);
 
   const calculateDefaultAltBO = (plant: string, plantQty: number) => {
     return plant === homePlant && plantQty > homeBranchAvailableQuantity
@@ -934,6 +983,11 @@ const CartItemShippingMethod = ({
                                 type="button"
                                 className="float-right justify-end"
                                 onClick={applyAlternativeBranchChanges}
+                                disabled={
+                                  !form.formState.isDirty ||
+                                  updateCartConfigMutation.isPending ||
+                                  !skus.includes(sku)
+                                }
                               >
                                 Apply
                               </Button>

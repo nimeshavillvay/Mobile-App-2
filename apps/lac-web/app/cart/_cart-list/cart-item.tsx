@@ -1068,6 +1068,7 @@ const CartItem = ({
               cartItemId={product.cartItemId}
               configuration={product.configuration}
               setPreventUpdateCart={setPreventUpdateCart}
+              sku={product.sku}
             />
           ))}
 
@@ -1102,6 +1103,7 @@ const CartItem = ({
               cartItemId={product.cartItemId}
               configuration={product.configuration}
               setPreventUpdateCart={setPreventUpdateCart}
+              sku={product.sku}
             />
           </Suspense>
         )}
