@@ -24,7 +24,8 @@
       "@/*": ["./app/*"],
       "@/old/*": ["./app/(old-design)/*"],
       "~/*": ["../../packages/web-ui/src/*"]
-    }
+    },
+    "target": "ES2017"
   },
   "include": [
     "next-env.d.ts",
