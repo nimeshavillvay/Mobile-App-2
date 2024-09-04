@@ -24,7 +24,7 @@ type Colors = {
 
 const apiUrl = process.env.NEXT_PUBLIC_WURTH_LAC_API;
 
-const images: StaticImageData[] = [subBanner1, subBanner2, subBanner3];
+const images = [subBanner1, subBanner2, subBanner3];
 
 const ADS: {
   id: number;
@@ -137,16 +137,14 @@ const HomePage = async () => {
 
       <section className="container relative">
         <div className="relative flex h-full min-h-[40rem] w-full items-center rounded-lg p-10 px-6 py-9">
-          <div className="absolute inset-0 -z-10">
-            <Image
-              src={getRandomImage()}
-              alt="Random image background"
-              fill
-              quality={100}
-              className="object-cover object-right"
-            />
-          </div>
-          <div className="w-2/3 flex-none space-y-3 text-white lg:pl-12 xl:w-2/5">
+          <Image
+            src={getRandomImage()}
+            alt="Random image background"
+            fill
+            placeholder="blur"
+            className="object-cover object-right"
+          />
+          <div className="relative w-2/3 flex-none space-y-3 text-white lg:pl-12 xl:w-2/5">
             <h2 className="pb-6 font-title text-4xl font-medium leading-[3rem] tracking-[-0.01688rem]">
               <Balancer>
                 Woodworking and Metalworking for Every Passion and Profession
