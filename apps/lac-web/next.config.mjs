@@ -8,6 +8,10 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
+        hostname: "wurthlac-dev.x-shops.com",
+      },
+      {
+        protocol: "https",
         hostname: "xcart.wurthlac.com",
       },
       {
