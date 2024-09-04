@@ -7,7 +7,6 @@ import { type ReactNode } from "react";
 import AddToCartDialog from "./_add-to-cart-dialog";
 import Footer from "./_footer";
 import Header from "./_header";
-import ServerTokenRefresher from "./_server-token-refresher";
 import "./global.css";
 import Providers from "./providers";
 import SessionChecker from "./session-checker";
@@ -66,7 +65,6 @@ const RootLayout = ({ children }: { readonly children: ReactNode }) => {
           <Toaster />
           <AddToCartDialog />
           <SessionChecker />
-          <ServerTokenRefresher />
         </Providers>
       </body>
     </html>
