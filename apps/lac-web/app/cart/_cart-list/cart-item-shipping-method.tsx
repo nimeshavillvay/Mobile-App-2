@@ -822,9 +822,14 @@ const CartItemShippingMethod = ({
                 />
               )}
               {Number(lineQuantity) > homeBranchAvailableQuantity && (
-                <ItemLimitedStockOrBoCountBadge
-                  availableCount={homeBranchAvailableQuantity}
-                />
+                <>
+                  <ItemLimitedStockOrBoCountBadge
+                    availableCount={homeBranchAvailableQuantity}
+                  />
+                  <BackOrderItemCountLabel
+                    count={Number(lineQuantity) - homeBranchAvailableQuantity}
+                  />
+                </>
               )}
             </div>
             {shipToMeShippingMethods.length > 0 && (

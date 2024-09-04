@@ -111,7 +111,7 @@ const CheckoutButton = ({ token }: CheckoutButtonProps) => {
               disabled={isDisabled}
               data-button-action="Proceed to Secure Checkout"
             >
-              Confirm
+              Discard and Proceed
             </Button>
           </DialogFooter>
         </DialogContent>
