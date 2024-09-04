@@ -40,6 +40,7 @@ import {
 import {
   Table,
   TableBody,
+  TableCell,
   TableHead,
   TableHeader,
   TableRow,
@@ -132,7 +133,7 @@ const CartItemShippingMethod = ({
   const shipToMeAltId = `${MAIN_OPTIONS.SHIP_TO_ME_ALT}-${id}`;
   const willCallId = `${MAIN_OPTIONS.WILL_CALL}-${id}`;
 
-  const { lineQuantity } = useCartItemQuantityContext();
+  const { lineQuantity, setLineQuantity } = useCartItemQuantityContext();
 
   const {
     options: availabilityOptions,
@@ -257,10 +258,15 @@ const CartItemShippingMethod = ({
     defaultValues: {
       quantityAlt:
         shipAlternativeBranch?.plants.map((plant) =>
-          plant.plant === homePlant ? lineQuantity.toString() : "",
+          plant.quantity?.toString(),
+        ) ?? [],
+      shippingMethod:
+        shipAlternativeBranch?.plants.map(
+          (plant) => plant.shippingMethods[0]?.code,
         ) ?? [],
     },
   });
+  //todo: check if db has data for default
 
   const shipToMeShippingMethods =
     shippingMethods?.length > 0
@@ -611,6 +617,52 @@ const CartItemShippingMethod = ({
     return availabilityAtPlant - homeBranchAvailableQuantity;
   };
 
+  const applyAlternativeBranchChanges = () => {
+    if (shipAlternativeBranch) {
+      const formData = form.getValues();
+      const altQtySum = formData.quantityAlt.reduce((collector, num) => {
+        return (collector += Number(num));
+      }, 0);
+
+      setLineQuantity(altQtySum);
+      const SelectedPlants = shipAlternativeBranch.plants.map(
+        (plant, index) => ({
+          index: plant.index,
+          quantity: Number(formData.quantityAlt[index]),
+          method: formData.shippingMethod[index],
+          plant: plant.plant,
+        }),
+      );
+
+      onSave({
+        ...getAlternativeBranchesConfig({
+          plants: SelectedPlants,
+          method: SelectedPlants[0]?.method ?? "G",
+          hash: shipAlternativeBranch.hash,
+          backOrderDate: "",
+          backOrderQuantity: calculateDefaultAltBO(
+            SelectedPlants[0]?.plant === homePlant
+              ? Number(SelectedPlants[0]?.quantity)
+              : 0,
+          ),
+          homePlant: homePlant,
+        }),
+        will_call_not_in_stock: FALSE_STRING,
+      });
+    }
+  };
+
+  const calculateDefaultAltBO = (enteredQuantity: number, plant?: string) => {
+    let qty = enteredQuantity;
+    if (plant && plant === homePlant) {
+      const homePlantEnteredQty = form.getValues("quantityAlt");
+      qty = Number(homePlantEnteredQty[0]);
+    }
+    const ret =
+      qty > homeBranchAvailableQuantity ? homeBranchAvailableQuantity : qty;
+    return ret;
+  };
+
   if (isVendorShipped) {
     const date = backOrderAll?.plants
       ? getFirstBackOrderDateFromPlants(backOrderAll?.plants)
@@ -815,11 +867,25 @@ const CartItemShippingMethod = ({
                                   minAmount={minAmount}
                                   increment={increment}
                                   uom={uom}
-                                  onSave={onSave}
-                                  hash={shipAlternativeBranch.hash}
+                                  defaultBoQty={calculateDefaultAltBO(
+                                    0,
+                                    plant.plant,
+                                  )}
                                 />
                               ),
                             )}
+                          <TableRow className="border-y-0 hover:bg-transparent">
+                            <TableCell colSpan={2}>
+                              <Button
+                                variant="default"
+                                type="button"
+                                className="float-right justify-end"
+                                onClick={applyAlternativeBranchChanges}
+                              >
+                                Apply
+                              </Button>
+                            </TableCell>
+                          </TableRow>
                         </TableBody>
                       </Table>
                     </form>

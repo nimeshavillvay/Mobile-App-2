@@ -138,6 +138,7 @@ export type CartItemSchema = z.infer<typeof cartItemSchema>;
 
 export const shipFromAltQtySchema = z.object({
   quantityAlt: z.array(z.string()),
+  shippingMethod: z.array(z.string()),
 });
 
 export type ShipFromAltQtySchema = z.infer<typeof shipFromAltQtySchema>;
