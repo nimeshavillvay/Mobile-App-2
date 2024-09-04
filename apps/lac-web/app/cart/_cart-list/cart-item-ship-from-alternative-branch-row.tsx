@@ -1,4 +1,5 @@
 import NumberInputField from "@/_components/number-input-field";
+import useDebouncedState from "@/_hooks/misc/use-debounced-state.hook";
 import { type AvailabilityOptionPlants } from "@/_hooks/product/use-suspense-check-availability.hook";
 import { type Plant } from "@/_lib/types";
 import {
@@ -16,7 +17,7 @@ import {
   SelectValue,
 } from "@repo/web-ui/components/ui/select";
 import { TableCell, TableRow } from "@repo/web-ui/components/ui/table";
-import { useState } from "react";
+import { useDeferredValue, useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { type Availability } from "../types";
 import {
@@ -33,7 +34,6 @@ type BranchRowProps = {
   readonly plants: Plant[];
   readonly willCallPlant: { plantCode: string; plantName: string };
   readonly availability: Availability;
-  readonly requiredQuantity: number;
   readonly minAmount: number;
   readonly increment: number;
   readonly uom: string;
@@ -47,21 +47,24 @@ const CartItemShipFromAlternativeBranchRow = ({
   plants,
   willCallPlant,
   availability,
-  requiredQuantity,
   minAmount,
   increment,
   uom,
   availableQuantityInPlant,
   defaultBoQty,
 }: BranchRowProps) => {
-  const { control } = useFormContext<ShipFromAltQtySchema>();
+  const { control, watch } = useFormContext<ShipFromAltQtySchema>();
   const [boQty, setBoQty] = useState(defaultBoQty);
+
+  const quantity = watch("quantityAlt");
+  const delayedQuantity = useDebouncedState(quantity);
+  const deferredQuantity = useDeferredValue(delayedQuantity);
 
   const updateBackOrderQuantity = (quantity: number) => {
     setBoQty(
-      availableQuantityInPlant >= quantity
-        ? 0
-        : quantity - availableQuantityInPlant,
+      availableQuantityInPlant < quantity
+        ? quantity - availableQuantityInPlant
+        : 0,
     );
   };
 
@@ -70,10 +73,6 @@ const CartItemShipFromAlternativeBranchRow = ({
     availability.availableLocations.find(
       (item) => item.location === plant.plant,
     )?.amount ?? 0;
-
-  const requiredQtyOfPlant = isHomePlant
-    ? availabilityOfPlant
-    : requiredQuantity;
 
   return (
     <>
@@ -119,7 +118,7 @@ const CartItemShipFromAlternativeBranchRow = ({
 
       <TableRow className="border-y-0 hover:bg-transparent">
         <TableCell colSpan={2}>
-          {requiredQtyOfPlant < minAmount && (
+          {Number(deferredQuantity[quantityFieldIndex]) < minAmount && (
             <p className="text-sm text-red-700">
               Please consider min. order quantity of: {minAmount}
             </p>
