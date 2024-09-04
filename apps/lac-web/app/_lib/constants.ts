@@ -71,3 +71,17 @@ export const GTM_ITEM_PAGE_TYPES = {
 } as const;
 
 export const GTM_PAGE_TYPE_OTHER = "other";
+
+// sitemap related types
+
+export const VALID_CHANGE_FREQUENCIES = [
+  "never",
+  "always",
+  "hourly",
+  "daily",
+  "weekly",
+  "monthly",
+  "yearly",
+] as const;
+
+export const SITEMAP_PAGE_SIZE = 50000;

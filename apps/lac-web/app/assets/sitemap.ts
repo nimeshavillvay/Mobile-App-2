@@ -3,14 +3,12 @@ import { VALID_CHANGE_FREQUENCIES } from "@/_lib/constants";
 import { type MetadataRoute } from "next";
 import { z } from "zod";
 
-const categorySitemapSchema = z.array(
+const assetsSitemapSchema = z.array(
   z.object({
-    category: z.string(),
-    categoryid: z.string(),
+    url: z.string(),
+    type: z.string(),
     priority: z.string(),
     changefreq: z.string(),
-    image: z.string(),
-    slug: z.string(),
   }),
 );
 
@@ -25,29 +23,22 @@ const validateChangeFrequency = (
 };
 
 const sitemap = async (): Promise<MetadataRoute.Sitemap> => {
-  const generateUrl = (id: string, slug: string) => {
-    return `${process.env.NEXT_PUBLIC_WURTH_LAC_BASE_URL}/category/${id}/${slug}`; // todo: update the base url
-  };
-  const categorySiteMap = await getCategorySiteMap();
-  return categorySiteMap.map((item) => ({
-    url: generateUrl(item.categoryid, item.slug),
+  const assetsSiteMap = await getAssetsSiteMap();
+  return assetsSiteMap.map((item) => ({
     changeFrequency: validateChangeFrequency(item.changefreq),
     priority: Number(item.priority),
-    image: item.image,
-    category: item.category,
-    categoryId: item.categoryid,
-    slug: item.slug,
+    url: item.url,
   }));
 };
 
 export default sitemap;
 
-const getCategorySiteMap = async () => {
+const getAssetsSiteMap = async () => {
   const response = await xCartSearchApi
-    .get("rest/sitemap/category", {
+    .get("rest/sitemap/assets", {
       cache: "no-store",
       throwHttpErrors: false,
     })
     .json();
-  return categorySitemapSchema.parse(response);
+  return assetsSitemapSchema.parse(response);
 };

@@ -1,9 +1,9 @@
 import { xCartSearchApi } from "@/_lib/api";
+import { SITEMAP_PAGE_SIZE, VALID_CHANGE_FREQUENCIES } from "@/_lib/constants";
 import { type MetadataRoute } from "next";
 import { z } from "zod";
-import { SITEMAP_PAGE_SIZE, VALID_CHANGE_FREQUENCIES } from "./_lib/constants";
 
-const productSitemapSchema = z.object({
+const imageSitemapSchema = z.object({
   pagination: z.object({
     totalItems: z.number(),
     currentPage: z.number(),
@@ -13,13 +13,10 @@ const productSitemapSchema = z.object({
   data: z.array(
     z.object({
       productid: z.string(),
-      product: z.string(),
       priority: z.string(),
       changefreq: z.string(),
-      categoryid: z.string(),
-      category: z.string(),
       image: z.string(),
-      slug: z.string(),
+      type: z.string(),
     }),
   ),
 });
@@ -38,12 +35,12 @@ export const generateSitemaps = async () => {
     page: 1,
     limit: SITEMAP_PAGE_SIZE,
   };
-  const productSiteMap = await getProductSiteMap(searchParams);
+  const imageSiteMap = await getImageSiteMap(searchParams);
   const arr = Array.from(
-    { length: productSiteMap.pagination.totalPages },
+    { length: imageSiteMap.pagination.totalPages },
     (_, index) => ({ id: index }),
   );
-  console.log(">> pagination", productSiteMap.pagination);
+  console.log(">> pagination", imageSiteMap.pagination);
   return arr;
 };
 
@@ -62,35 +59,26 @@ const sitemap = async ({
     page: id,
     limit: 1000,
   };
-  const productSiteMap = await getProductSiteMap(searchParams);
+  const imageSiteMap = await getImageSiteMap(searchParams);
 
-  console.log(">> productSiteMap", productSiteMap);
-  return productSiteMap.data.map((item) => ({
-    url: generateUrl(item.productid, item.slug),
+  return imageSiteMap.data.map((item) => ({
     changeFrequency: validateChangeFrequency(item.changefreq),
     priority: Number(item.priority),
-    image: item.image,
-    category: item.category,
-    categoryId: item.categoryid,
+    url: item.image,
     productid: item.productid,
-    product: item.product,
-    slug: item.slug,
+    type: item.type,
   }));
 };
 
 export default sitemap;
 
-const getProductSiteMap = async (searchParams: Page) => {
+const getImageSiteMap = async (searchParams: Page) => {
   const response = await xCartSearchApi
-    .get("rest/sitemap/product", {
+    .get("rest/sitemap/image", {
       cache: "no-store",
       throwHttpErrors: false,
       searchParams,
     })
     .json();
-  return productSitemapSchema.parse(response);
-};
-
-const generateUrl = (id: string, slug: string) => {
-  return `${process.env.NEXT_PUBLIC_WURTH_LAC_BASE_URL}/product/${id}/${slug}`; // todo: update the base url
+  return imageSitemapSchema.parse(response);
 };
