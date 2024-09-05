@@ -1,44 +1,31 @@
-import { xCartSearchApi } from "@/_lib/api";
-import { VALID_CHANGE_FREQUENCIES } from "@/_lib/constants";
-import { type MetadataRoute } from "next";
-import { z } from "zod";
+import { getSitemapAssets, isChangeFrequency } from "@/_lib/sitemap-helpers";
+import type { MetadataRoute } from "next";
 
-const assetsSitemapSchema = z.array(
-  z.object({
-    url: z.string(),
-    type: z.string(),
-    priority: z.string(),
-    changefreq: z.string(),
-  }),
-);
+export const generateSitemaps = async () => {
+  const sitemapAssets = await getSitemapAssets(1);
 
-type ChangeFrequency = (typeof VALID_CHANGE_FREQUENCIES)[number];
-
-const validateChangeFrequency = (
-  value: string,
-): ChangeFrequency | undefined => {
-  return VALID_CHANGE_FREQUENCIES.includes(value as ChangeFrequency)
-    ? (value as ChangeFrequency)
-    : undefined;
+  return Array.from({ length: sitemapAssets.pagination.totalPages }).map(
+    (_, index) => ({
+      id: index,
+    }),
+  );
 };
 
-const sitemap = async (): Promise<MetadataRoute.Sitemap> => {
-  const assetsSiteMap = await getAssetsSiteMap();
-  return assetsSiteMap.map((item) => ({
-    changeFrequency: validateChangeFrequency(item.changefreq),
-    priority: Number(item.priority),
-    url: item.url,
+const sitemap = async ({
+  id,
+}: {
+  id: number;
+}): Promise<MetadataRoute.Sitemap> => {
+  const sitemapAssets = await getSitemapAssets(id + 1);
+
+  return sitemapAssets.data.map((sitemapAsset) => ({
+    url: sitemapAsset.url,
+    changeFrequency: isChangeFrequency(sitemapAsset.changefreq)
+      ? sitemapAsset.changefreq
+      : undefined,
+    priority: Number(sitemapAsset.priority),
+    lastModified: new Date(),
   }));
 };
 
 export default sitemap;
-
-const getAssetsSiteMap = async () => {
-  const response = await xCartSearchApi
-    .get("rest/sitemap/assets", {
-      cache: "no-store",
-      throwHttpErrors: false,
-    })
-    .json();
-  return assetsSitemapSchema.parse(response);
-};

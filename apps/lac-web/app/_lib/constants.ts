@@ -4,6 +4,11 @@ export const TOKEN_EXPIRE_COOKIE = "xid_00924_expire";
 export const TOKEN_MAX_AGE =
   process.env.VERCEL_ENV === "production" ? 172800 : 7200;
 
+export const PRODUCTION_URL = process.env.VERCEL_PROJECT_PRODUCTION_URL
+  ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+  : "http://localhost:3000";
+export const SITEMAP_PAGE_SIZE = 50000;
+
 export const PRIVATE_ROUTES = [
   "/osr",
   "/checkout",
@@ -71,17 +76,3 @@ export const GTM_ITEM_PAGE_TYPES = {
 } as const;
 
 export const GTM_PAGE_TYPE_OTHER = "other";
-
-// sitemap related types
-
-export const VALID_CHANGE_FREQUENCIES = [
-  "never",
-  "always",
-  "hourly",
-  "daily",
-  "weekly",
-  "monthly",
-  "yearly",
-] as const;
-
-export const SITEMAP_PAGE_SIZE = 50000;
