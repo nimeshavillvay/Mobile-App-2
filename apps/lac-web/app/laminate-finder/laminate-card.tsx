@@ -140,7 +140,6 @@ const LaminateCard = ({
             >
               <LaminateGroup
                 product={product}
-                token={token}
                 brandImage={laminateData?.brandImage ?? ""}
                 brandName={laminateData?.brandName ?? ""}
               />

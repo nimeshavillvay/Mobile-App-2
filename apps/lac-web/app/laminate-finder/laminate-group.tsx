@@ -1,6 +1,4 @@
-import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import type { Product } from "@/_lib/types";
-import { formatNumberToPrice } from "@/_lib/utils";
 import { Button } from "@repo/web-ui/components/ui/button";
 import {
   Dialog,
@@ -13,23 +11,14 @@ import { useState } from "react";
 
 const LaminateGroup = ({
   product,
-  token,
   brandName,
   brandImage,
 }: {
   readonly product: Product;
-  readonly token: string;
   readonly brandName: string;
   readonly brandImage: string;
 }) => {
   const [lightboxOpen, setLightboxOpen] = useState(false);
-
-  const priceCheckQuery = useSuspensePriceCheck(token, [
-    { productId: Number(product.variants[0]?.id), qty: 1 },
-  ]);
-  const groupPriceData = priceCheckQuery.data.productPrices[0];
-  const groupPrice = groupPriceData?.uomPrice ?? groupPriceData?.price ?? 0; // Note: discounts are not considered for laminates
-  const groupUom = groupPriceData?.uomPriceUnit ?? groupPriceData?.priceUnit;
 
   return (
     <div className="flex w-full gap-4 lg:w-60 lg:flex-col">
@@ -44,9 +33,6 @@ const LaminateGroup = ({
           className="mt-2 text-xl font-bold"
           dangerouslySetInnerHTML={{ __html: product.groupName }}
         />
-        <p className="mb-2">
-          ${formatNumberToPrice(groupPrice)}/ {groupUom}
-        </p>
       </div>
 
       <Dialog open={lightboxOpen} onOpenChange={setLightboxOpen}>
