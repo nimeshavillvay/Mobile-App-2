@@ -277,12 +277,7 @@ const CartItemShippingMethod = ({
     (item) => item.cartItemId === cartItemId,
   );
 
-  const getPlantQuantity = (
-    plant: string,
-    quantity = 0,
-    backOrderQuantity = 0,
-    index: number,
-  ) => {
+  const getPlantQuantity = (plant: string, quantity = 0, index: number) => {
     const avail_1 = cartItem[0]?.configuration.avail_1;
     const avail_2 = cartItem[0]?.configuration.avail_2;
     const avail_3 = cartItem[0]?.configuration.avail_3;
@@ -308,14 +303,7 @@ const CartItemShippingMethod = ({
         }
       }
     } else {
-      return Number(avail_1) < homeBranchAvailableQuantity
-        ? avail_1
-        : avail_2 !== ""
-          ? getHomePlantDisplayQuantity()
-          : avail_1 !== ""
-            ? Number(configuration?.backorder_quantity) +
-              homeBranchAvailableQuantity
-            : Number(quantity) + Number(backOrderQuantity);
+      return getHomePlantDisplayQuantity();
     }
   };
 
@@ -326,7 +314,6 @@ const CartItemShippingMethod = ({
           getPlantQuantity(
             plant.plant,
             plant.quantity,
-            plant.backOrderQuantity,
             plant.index,
           )?.toString(),
         ) ?? [],
@@ -376,7 +363,6 @@ const CartItemShippingMethod = ({
     selectedOption: MainOption;
   }) => {
     if (checked) {
-      form.reset(getDefaultFormValues());
       if (selectedOption !== MAIN_OPTIONS.SHIP_TO_ME_ALT) {
         setOpen(false);
       }
@@ -471,6 +457,7 @@ const CartItemShippingMethod = ({
 
       // Ship to me configs
       if (selectedOption === MAIN_OPTIONS.SHIP_TO_ME_ALT) {
+        form.reset(getDefaultFormValues());
         handleShipToMeFromAlternativeOptions();
       }
       if (
@@ -720,6 +707,9 @@ const CartItemShippingMethod = ({
                     plant: plant.plant,
                   }),
                 );
+
+                setPreventUpdateCart(true);
+
                 const config = {
                   ...getAlternativeBranchesConfig({
                     plants: SelectedPlants,
@@ -752,7 +742,26 @@ const CartItemShippingMethod = ({
                     {
                       onSettled: () => {
                         popSku([sku]);
-                        form.reset(getDefaultFormValues());
+                        const r = {
+                          quantityAlt:
+                            SelectedPlants.map((plant) =>
+                              (plant.plant === homePlant
+                                ? plant.quantity +
+                                  calculateDefaultAltBO(
+                                    homePlant,
+                                    Number(formData.quantityAlt[0]),
+                                  )
+                                : plant.quantity
+                              )?.toString(),
+                            ) ?? [],
+
+                          shippingMethod:
+                            shipAlternativeBranch?.plants.map(
+                              (plant) => plant.shippingMethods[0]?.code, //todo: has to be updated with db value
+                            ) ?? [],
+                        };
+                        console.log(">>>>>>>>>>>>>>>>>>>>>>", SelectedPlants);
+                        form.reset(r);
 
                         toast({
                           description: "Successfully updated cart",
