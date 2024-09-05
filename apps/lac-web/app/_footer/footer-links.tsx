@@ -19,7 +19,7 @@ const FooterLinks = async () => {
     return <FooterLinksLoggedOut />;
   }
 
-  return <FooterLinksLoggedIn />;
+  return <FooterLinksLoggedIn token={token} />;
 };
 
 export default FooterLinks;

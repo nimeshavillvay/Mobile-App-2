@@ -12,7 +12,7 @@ import { Suspense } from "react";
 import Balancer from "react-wrap-balancer";
 import { SECTIONS } from "./constants";
 import FooterLinks from "./footer-links";
-import FooterSaleRepDetails from "./footer-sales-rep-details";
+import FooterMobileLoggedInSalesRep from "./footer-mobile-logged-in-sales-rep";
 import ScrollToTopBtn from "./scroll-to-top-btn";
 import vikingCloudLogo from "./viking-cloud.png";
 import WhyShopWithUs from "./why-shop-with-us";
@@ -42,25 +42,31 @@ const Footer = () => {
           className="container md:hidden"
           defaultValue={SECTIONS[0].heading}
         >
-          {SECTIONS.map((section, index) => (
-            <AccordionItem
-              key={section.heading}
-              value={section.heading}
-              className={cn(
-                "border-t border-y-wurth-gray-250",
-                index === SECTIONS.length - 1 && "border-b",
-              )}
-            >
-              <AccordionTrigger className="flex-row-reverse justify-between gap-4 p-3 text-base font-semibold text-black">
-                {section.heading}
-              </AccordionTrigger>
+          {SECTIONS.map((section, index) =>
+            section.links.length === 0 ? (
+              <Suspense
+                fallback={<Skeleton className="h-fit w-full" />}
+                key="mobile-sales-rep"
+              >
+                <FooterMobileLoggedInSalesRep
+                  heading={section.heading}
+                  index={index}
+                />
+              </Suspense>
+            ) : (
+              <AccordionItem
+                key={section.heading}
+                value={section.heading}
+                className={cn(
+                  "border-t border-y-wurth-gray-250",
+                  index === SECTIONS.length - 1 && "border-b",
+                )}
+              >
+                <AccordionTrigger className="flex-row-reverse justify-between gap-4 p-3 text-base font-semibold text-black">
+                  {section.heading}
+                </AccordionTrigger>
 
-              <AccordionContent className="px-3">
-                {section.links.length === 0 ? (
-                  <Suspense fallback={<Skeleton className="h-fit w-full" />}>
-                    <FooterSaleRepDetails />
-                  </Suspense>
-                ) : (
+                <AccordionContent className="px-3">
                   <ul>
                     {section.links.map((link) => (
                       <li
@@ -77,10 +83,10 @@ const Footer = () => {
                       </li>
                     ))}
                   </ul>
-                )}
-              </AccordionContent>
-            </AccordionItem>
-          ))}
+                </AccordionContent>
+              </AccordionItem>
+            ),
+          )}
         </Accordion>
         <section className="container md:hidden">
           <SAMNotice />
