@@ -530,6 +530,7 @@ export type ProductItemInfo = {
     attribute_name: string;
     attribute_value: null | string;
   }[];
+  size: string;
 };
 
 export type LaminateItemInfo = ProductItemInfo & {
@@ -573,4 +574,5 @@ export type EdgeBanding = {
   productSummary: string;
   brand: string;
   productCategory: string;
+  size: string;
 };
