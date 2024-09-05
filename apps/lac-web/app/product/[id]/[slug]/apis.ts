@@ -1,10 +1,10 @@
 import { api } from "@/_lib/api";
 import { DEFAULT_REVALIDATE } from "@/_lib/constants";
 import { getBoolean } from "@/_lib/utils";
-import { notFound } from "next/navigation";
+import { permanentRedirect } from "next/navigation";
 import "server-only";
 
-type Product = {
+export type Product = {
   page_title: string;
   group_id: string;
   txt_group_part_number: string;
@@ -88,7 +88,7 @@ export const getProduct = async (id: string, slug: string) => {
 
   // Check if the slug matches the product's slug
   if (slug !== response.selected_item.slug) {
-    return notFound();
+    return permanentRedirect(`/product/${id}/${response.selected_item.slug}`);
   }
 
   const { selected_item } = response;
