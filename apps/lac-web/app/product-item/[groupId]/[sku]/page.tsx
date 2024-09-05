@@ -4,14 +4,11 @@ import { notFound, permanentRedirect } from "next/navigation";
 
 type OldProductPageProps = {
   params: {
-    groupId: string;
     sku: string;
   };
 };
 
-const OldProductPage = async ({
-  params: { groupId, sku },
-}: OldProductPageProps) => {
+const OldProductPage = async ({ params: { sku } }: OldProductPageProps) => {
   const response = await api
     .get("rest/getproductid", {
       searchParams: {
@@ -21,17 +18,23 @@ const OldProductPage = async ({
         revalidate: DEFAULT_REVALIDATE,
       },
     })
-    .json<{
-      productid: string;
-      groupid: string;
-      slug: string;
-    }>();
+    .json<
+      [
+        {
+          productid: string;
+          groupid: string;
+          slug: string;
+        },
+      ]
+    >();
 
-  if (response.groupid !== groupId) {
+  if (!response[0].productid || !response[0].slug) {
     return notFound();
   }
 
-  return permanentRedirect(`/product/${response.productid}/${response.slug}`);
+  return permanentRedirect(
+    `/product/${response[0].productid}/${response[0].slug}`,
+  );
 };
 
 export default OldProductPage;
