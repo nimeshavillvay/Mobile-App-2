@@ -19,7 +19,6 @@ export const xCartSearchApi = ky.create({
   timeout: 60000,
   retry: 0,
   headers: {
-    "X-AUTH-TOKEN":
-      process.env.NEXT_PUBLIC_WURTH_LAC_SEARCH_DATA_AND_SITEMAP_API_KEY,
+    "X-AUTH-TOKEN": process.env.WURTH_LAC_SEARCH_DATA_AND_SITEMAP_API_KEY,
   },
 });
