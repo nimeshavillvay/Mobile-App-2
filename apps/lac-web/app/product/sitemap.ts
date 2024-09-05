@@ -1,7 +1,7 @@
 import { xCartSearchApi } from "@/_lib/api";
-import { SITEMAP_PAGE_SIZE, VALID_CHANGE_FREQUENCIES } from "@/_lib/constants";
 import { type MetadataRoute } from "next";
 import { z } from "zod";
+import { SITEMAP_PAGE_SIZE, VALID_CHANGE_FREQUENCIES } from "./_lib/constants";
 
 const productSitemapSchema = z.object({
   pagination: z.object({
@@ -33,41 +33,64 @@ const validateChangeFrequency = (
     : undefined;
 };
 
-export async function generateSitemaps() {
-  const productSiteMap = await getProductSiteMap();
-  const totalPages =
-    productSiteMap.pagination.totalItems / SITEMAP_PAGE_SIZE + 1;
-  return Array.from({ length: totalPages }, (_, index) => ({ id: index }));
-}
+export const generateSitemaps = async () => {
+  const searchParams = {
+    page: 1,
+    limit: SITEMAP_PAGE_SIZE,
+  };
+  const productSiteMap = await getProductSiteMap(searchParams);
+  const arr = Array.from(
+    { length: productSiteMap.pagination.totalPages },
+    (_, index) => ({ id: index }),
+  );
+  console.log(">> pagination", productSiteMap.pagination);
+  return arr;
+};
+
+type Page = {
+  page: number;
+  limit: number;
+};
 
 const sitemap = async ({
   id,
 }: {
   id: number;
 }): Promise<MetadataRoute.Sitemap> => {
-  const generateUrl = (id: string, slug: string) => {
-    return `${process.env.NEXT_PUBLIC_WURTH_LAC_BASE_URL}/category/${id}/${slug}`; // todo: update the base url
+  console.log(">> id", id);
+  const searchParams = {
+    page: id,
+    limit: 1000,
   };
+  const productSiteMap = await getProductSiteMap(searchParams);
 
-  const productSiteMap = await getProductSiteMap();
+  console.log(">> productSiteMap", productSiteMap);
   return productSiteMap.data.map((item) => ({
-    url: generateUrl(item.categoryid, item.slug),
+    url: generateUrl(item.productid, item.slug),
     changeFrequency: validateChangeFrequency(item.changefreq),
     priority: Number(item.priority),
     image: item.image,
     category: item.category,
     categoryId: item.categoryid,
+    productid: item.productid,
+    product: item.product,
+    slug: item.slug,
   }));
 };
 
 export default sitemap;
 
-const getProductSiteMap = async () => {
+const getProductSiteMap = async (searchParams: Page) => {
   const response = await xCartSearchApi
-    .get("rest/sitemap/category", {
+    .get("rest/sitemap/product", {
       cache: "no-store",
       throwHttpErrors: false,
+      searchParams,
     })
     .json();
   return productSitemapSchema.parse(response);
+};
+
+const generateUrl = (id: string, slug: string) => {
+  return `${process.env.NEXT_PUBLIC_WURTH_LAC_BASE_URL}/product/${id}/${slug}`; // todo: update the base url
 };
