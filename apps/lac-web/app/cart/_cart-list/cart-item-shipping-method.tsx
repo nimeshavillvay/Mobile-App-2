@@ -18,6 +18,7 @@ import type {
 import { cn } from "@/_lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { sendGTMEvent } from "@next/third-parties/google";
+import { CheckIcon } from "@radix-ui/react-icons";
 import { Button } from "@repo/web-ui/components/ui/button";
 import { Checkbox } from "@repo/web-ui/components/ui/checkbox";
 import {
@@ -346,7 +347,9 @@ const CartItemShippingMethod = ({
 
       shippingMethod:
         shipAlternativeBranch?.plants.map(
-          (plant) => getPlantShippingMethod(plant.index), //todo: has to be updated with db value
+          (plant) =>
+            getPlantShippingMethod(plant.index) ??
+            plant?.shippingMethods[0]?.code,
         ) ?? [],
     };
   };
@@ -925,37 +928,38 @@ const CartItemShippingMethod = ({
             <div className="flex flex-col gap-0.5">
               <Collapsible
                 className="mt-1.5 flex flex-col gap-1"
-                disabled={
-                  selectedShippingOption !== MAIN_OPTIONS.SHIP_TO_ME_ALT
-                }
+                disabled={!backOrderAll}
                 open={open}
                 onOpenChange={setOpen}
               >
                 <CollapsibleTrigger
                   className="group flex h-7 flex-row items-center justify-start"
-                  asChild
+                  id={shipToMeAltId}
+                  onClick={() => {
+                    setSelectedShippingOption(MAIN_OPTIONS.SHIP_TO_ME_ALT);
+                    handleDeliveryOptionSelect({
+                      checked:
+                        selectedShippingOption === MAIN_OPTIONS.SHIP_TO_ME_ALT,
+                      selectedOption: MAIN_OPTIONS.SHIP_TO_ME_ALT,
+                    });
+                  }}
                 >
-                  <div className="flex flex-row items-center gap-3">
-                    <Checkbox
-                      id={shipToMeAltId}
-                      className="size-5 rounded-full"
-                      iconClassName="size-4"
-                      checked={
-                        selectedShippingOption === MAIN_OPTIONS.SHIP_TO_ME_ALT
-                      }
-                      onCheckedChange={(checked) =>
-                        handleDeliveryOptionSelect({
-                          checked: checked === true,
-                          selectedOption: MAIN_OPTIONS.SHIP_TO_ME_ALT,
-                        })
-                      }
-                      disabled={!backOrderAll}
-                    />
+                  <span
+                    className={cn(
+                      selectedShippingOption === MAIN_OPTIONS.SHIP_TO_ME_ALT
+                        ? "size-[1.12rem] bg-wurth-gray-800 text-wurth-gray-50"
+                        : "size-5 shrink-0 rounded-sm border",
+                      "mr-2 rounded-full hover:cursor-pointer",
+                    )}
+                  >
+                    {selectedShippingOption === MAIN_OPTIONS.SHIP_TO_ME_ALT && (
+                      <CheckIcon className={"size-4"} />
+                    )}
+                  </span>
 
-                    <Label htmlFor={shipToMeAltId} className="text-base">
-                      Ship from Alternate Branch(es)
-                    </Label>
-                  </div>
+                  <span className="text-base">
+                    Ship from Alternate Branch(es)
+                  </span>
                 </CollapsibleTrigger>
 
                 <CollapsibleContent>
