@@ -57,16 +57,16 @@ const FeaturedBrand = async () => {
       className="my-14 space-y-6 py-9 md:my-20 md:space-y-9 md:py-16"
     >
       <div className="container">
-        <div className="overflow-hidden rounded-lg bg-[var(--brand-color)] shadow-lg md:flex md:flex-row-reverse">
+        <div className="overflow-hidden rounded-lg bg-[var(--brand-color)] shadow-lg xl:flex xl:flex-row-reverse">
           <Image
             src={details.background}
             alt={`The background image of ${details.name}`}
-            className="block aspect-2 object-cover md:flex-1"
-            width={880}
-            height={440}
+            className="block aspect-2 object-cover xl:flex-1"
+            width={1216}
+            height={608}
           />
 
-          <div className="p-6 text-white md:flex-1 md:p-12">
+          <div className="p-6 text-white xl:flex-1 xl:p-12">
             <Image
               src={details.logo}
               alt={`The logo of ${details.name}`}

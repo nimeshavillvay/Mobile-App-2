@@ -59,9 +59,25 @@ const ShippingAndPickupDetails = ({
     });
   };
 
-  const date = dayjs(
-    cartQuery.data.mappedConfiguration.pickDate ?? undefined,
-  ).toDate();
+  // Have to manually read the pickDate and set the values in the date
+  // because a certain trillion dollar company cannot update their
+  // dumpster fire of a browser (Safari) to keep up with modern web standards.
+  let pickDate = dayjs();
+  const pickDateElements =
+    cartQuery.data.mappedConfiguration.pickDate?.split("-");
+  if (pickDateElements && pickDateElements.length === 3) {
+    const pickDateMonth = pickDateElements[0];
+    const pickDateDay = pickDateElements[1];
+    const pickDateYear = pickDateElements[2];
+    if (pickDateDay && pickDateMonth && pickDateYear) {
+      pickDate = pickDate
+        .set("date", Number(pickDateDay))
+        .set("month", Number(pickDateMonth) - 1) // Months start from 0 https://day.js.org/docs/en/get-set/get#list-of-all-available-units
+        .set("year", Number(pickDateYear));
+    }
+  }
+
+  const date = pickDate.toDate();
   const handleDateChange = (date?: Date) => {
     if (date) {
       setOpenCalendar(false);

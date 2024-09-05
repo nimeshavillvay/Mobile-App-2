@@ -45,13 +45,14 @@ const NumberInputField = forwardRef<
         )}
         onKeyDown={(event) => {
           if (
-            !ALLOWED_KEYS.includes(event.key) ||
-            (value &&
-              value.toString().length >= 5 &&
-              event.key !== "Backspace") || // Limit to 5 characters
-            (value !== undefined &&
-              value.toString().length === 0 &&
-              event.key === "0") // Disable "0" as first character
+            (!ALLOWED_KEYS.includes(event.key) ||
+              (value &&
+                value.toString().length >= 5 &&
+                event.key !== "Backspace") || // Limit to 5 characters
+              (value !== undefined &&
+                value.toString().length === 0 &&
+                event.key === "0")) && // Disable "0" as first character
+            !(event.metaKey && (event.key === "c" || event.key === "v")) // Allow Copy & Paste
           ) {
             event.preventDefault();
           }

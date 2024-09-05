@@ -11,6 +11,7 @@ import {
 } from "@repo/web-ui/components/ui/pagination";
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import { usePathname } from "next/navigation";
+import { Fragment } from "react";
 import { useFilterParams } from "./use-filter-params.hook";
 
 export const ProductsGridPagination = ({
@@ -23,6 +24,24 @@ export const ProductsGridPagination = ({
 
   const previousPage = pageNo - 1 < 1 ? 1 : pageNo - 1;
   const nextPage = pageNo + 1 > totalPages ? totalPages : pageNo + 1;
+
+  const pages = new Set([1]);
+  // Add 2nd page
+  if (2 < totalPages) {
+    pages.add(2);
+  }
+  // Add previous page
+  pages.add(previousPage);
+  // Add current page
+  pages.add(pageNo);
+  // Add next page
+  pages.add(nextPage);
+  // Add 2nd last page
+  if (totalPages - 1 > 0) {
+    pages.add(totalPages - 1);
+  }
+  // Add last page
+  pages.add(totalPages);
 
   const getHref = (page: number) => {
     const newUrlSearchParams = new URLSearchParams(searchParams);
@@ -40,9 +59,9 @@ export const ProductsGridPagination = ({
           />
         </PaginationItem>
 
-        {pageNo !== previousPage && (
-          <>
-            {previousPage > 1 && (
+        {Array.from(pages).map((page) => (
+          <Fragment key={page}>
+            {!pages.has(page - 1) && page !== 1 && (
               <PaginationItem>
                 <PaginationEllipsis />
               </PaginationItem>
@@ -50,36 +69,15 @@ export const ProductsGridPagination = ({
 
             <PaginationItem>
               <PaginationLink
-                href={getHref(previousPage)}
+                href={getHref(page)}
+                isActive={pageNo === page}
                 className="btnAction"
               >
-                {previousPage}
+                {page}
               </PaginationLink>
             </PaginationItem>
-          </>
-        )}
-
-        <PaginationItem>
-          <PaginationLink href={getHref(pageNo)} isActive className="btnAction">
-            {pageNo}
-          </PaginationLink>
-        </PaginationItem>
-
-        {pageNo !== nextPage && (
-          <>
-            <PaginationItem>
-              <PaginationLink href={getHref(nextPage)} className="btnAction">
-                {nextPage}
-              </PaginationLink>
-            </PaginationItem>
-
-            {nextPage < totalPages && (
-              <PaginationItem>
-                <PaginationEllipsis />
-              </PaginationItem>
-            )}
-          </>
-        )}
+          </Fragment>
+        ))}
 
         <PaginationItem>
           <PaginationNext href={getHref(nextPage)} className="btnAction" />
@@ -93,6 +91,10 @@ export const ProductsGridPaginationSkeleton = () => {
   return (
     <div className="flex flex-row items-center justify-center gap-1 pt-4">
       <Skeleton className="h-9 w-28" />
+
+      <Skeleton className="size-9" />
+
+      <Skeleton className="size-9" />
 
       <Skeleton className="size-9" />
 
