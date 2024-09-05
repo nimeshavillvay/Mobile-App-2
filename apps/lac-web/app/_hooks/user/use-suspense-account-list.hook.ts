@@ -74,4 +74,17 @@ const useSuspenseAccountList = (token: string) => {
   });
 };
 
+export const getAccountList = async (token: string) => {
+  const response = await api
+    .get("rest/auth/account-list", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      cache: "no-store",
+    })
+    .json();
+
+  return await accountListSchema.parseAsync(response);
+};
+
 export default useSuspenseAccountList;
