@@ -18,8 +18,8 @@ const ProductsListPagination = ({ token }: ProductsListPaginationProps) => {
     token,
     categoryFiltersQuery.data,
   );
-  const urlSearchParams = useSearchParams();
 
+  const urlSearchParams = useSearchParams();
   const perPage = urlSearchParams.get(QUERY_KEYS.PER_PAGE) ?? INIT_PER_PAGE;
 
   if (searchQuery.data.pagination.totalCount === 0) {
