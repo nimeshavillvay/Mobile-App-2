@@ -69,6 +69,7 @@ const useLaminateFilter = (productId: number) => {
           productSummary: item.product_summary,
           brand: item.brand_name,
           productCategory: item.category_name,
+          size: item.size,
         })),
       };
     },

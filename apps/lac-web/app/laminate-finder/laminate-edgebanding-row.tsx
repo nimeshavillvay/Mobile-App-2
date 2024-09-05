@@ -74,6 +74,7 @@ const LaminateEdgeBandingRow = ({
         )}
         {isNotAvailableOnline && <NotAvailableOnlineNotice />}
       </TableCell>
+      <TableCell className="font-medium">{product.size}</TableCell>
       <TableCell className="text-right">
         <span className="text-lg font-semibold">
           $
