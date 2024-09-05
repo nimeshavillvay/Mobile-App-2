@@ -7,6 +7,7 @@ import useCookies from "../storage/use-cookies.hook";
 const useUpdateCartItemMutation = () => {
   const [cookies] = useCookies();
   const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: async (
       products: {

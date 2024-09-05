@@ -17,7 +17,7 @@ import { useRouter } from "next/navigation";
 import { useState, type ComponentProps } from "react";
 import { useCartFormIdContext } from "../cart-form-id-context";
 import { TRUE_STRING } from "../constants";
-import useUnSavedAlternativeQuantityState from "../use-cart-aternative-qty-method-store.hook";
+import useUnSavedAlternativeQuantityState from "../use-cart-alternative-qty-method-store.hook";
 
 type CheckoutButtonProps = {
   readonly token: string;
@@ -86,6 +86,7 @@ const CheckoutButton = ({ token }: CheckoutButtonProps) => {
           <span data-button-action="Cart Secure Checkout">Secure Checkout</span>
         </Button>
       </form>
+
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent>
           <DialogHeader>

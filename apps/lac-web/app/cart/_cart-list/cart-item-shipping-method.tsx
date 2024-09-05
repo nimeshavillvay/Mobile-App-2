@@ -65,7 +65,7 @@ import {
   TRUE_STRING,
 } from "../constants";
 import type { Availability, WillCallAnywhere } from "../types";
-import useUnSavedAlternativeQuantityState from "../use-cart-aternative-qty-method-store.hook";
+import useUnSavedAlternativeQuantityState from "../use-cart-alternative-qty-method-store.hook";
 import NotAvailableInfoBanner from "./cart-item-not-available-banner";
 import CartItemShipFromAlternativeBranchRow from "./cart-item-ship-from-alternative-branch-row";
 import CartItemWillCallTransfer from "./cart-item-will-call-transfer";
