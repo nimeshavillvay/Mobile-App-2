@@ -932,7 +932,7 @@ const CartItemShippingMethod = ({
                 onOpenChange={setOpen}
               >
                 <CollapsibleTrigger
-                  className="group flex h-7 flex-row items-center justify-start"
+                  className="group flex h-7 cursor-default flex-row items-center justify-start"
                   id={shipToMeAltId}
                   onClick={() => {
                     setSelectedShippingOption(MAIN_OPTIONS.SHIP_TO_ME_ALT);
@@ -947,7 +947,7 @@ const CartItemShippingMethod = ({
                       selectedShippingOption === MAIN_OPTIONS.SHIP_TO_ME_ALT
                         ? "size-[1.12rem] bg-wurth-gray-800 text-wurth-gray-50"
                         : "flex size-5 shrink-0 items-center justify-center rounded-sm border text-current",
-                      "mr-2 rounded-full hover:cursor-pointer",
+                      "mr-2 cursor-pointer rounded-full",
                     )}
                   >
                     {selectedShippingOption === MAIN_OPTIONS.SHIP_TO_ME_ALT && (
