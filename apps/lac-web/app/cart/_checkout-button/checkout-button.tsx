@@ -92,9 +92,13 @@ const CheckoutButton = ({ token }: CheckoutButtonProps) => {
             <DialogTitle>Proceed to Secure Checkout</DialogTitle>
 
             <DialogDescription>
-              There are some quantities or delivery methods in alternative
-              branches selection {skus.length === 1 ? "has" : "have"} not been
-              saved with Item # {skus.join(", ")}
+              The updated quantities and delivery methods for the following
+              items have not been applied correctly:
+              <span className="font-bold">
+                {" "}
+                Item # {skus.join(", Item # ")}
+              </span>
+              <div>Do you want to discard these changes and proceed?</div>
             </DialogDescription>
           </DialogHeader>
 
@@ -104,14 +108,14 @@ const CheckoutButton = ({ token }: CheckoutButtonProps) => {
               data-button-action="Save Unsaved Alternative Quantities"
               disabled={isDisabled}
             >
-              Cancel
+              No
             </Button>
             <Button
               onClick={() => proceedToCheckout()}
               disabled={isDisabled}
               data-button-action="Proceed to Secure Checkout"
             >
-              Discard and Proceed
+              Yes
             </Button>
           </DialogFooter>
         </DialogContent>
