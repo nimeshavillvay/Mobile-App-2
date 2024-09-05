@@ -172,7 +172,9 @@ const CartItemShippingMethod = ({
     ALTERNATIVE_BRANCHES,
   );
 
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(
+    selectedShippingOption === MAIN_OPTIONS.SHIP_TO_ME_ALT,
+  );
 
   const updateCartConfigMutation = useUpdateCartItemMutation();
   const checkAvailabilityMutation = useCheckAvailabilityMutation();
@@ -271,16 +273,64 @@ const CartItemShippingMethod = ({
       : homeBranchAvailableQuantity;
   };
 
+  const cartItem = cartQuery.data.cartItems.filter(
+    (item) => item.cartItemId === cartItemId,
+  );
+
+  const getPlantQuantity = (
+    plant: string,
+    quantity = 0,
+    backOrderQuantity = 0,
+    index: number,
+  ) => {
+    const avail_1 = cartItem[0]?.configuration.avail_1;
+    const avail_2 = cartItem[0]?.configuration.avail_2;
+    const avail_3 = cartItem[0]?.configuration.avail_3;
+    const avail_4 = cartItem[0]?.configuration.avail_4;
+    const avail_5 = cartItem[0]?.configuration.avail_5;
+
+    if (plant !== homePlant) {
+      switch (`avail_${index}`) {
+        case "avail_1": {
+          return avail_1 ? Number(avail_1) : Number(quantity);
+        }
+        case "avail_2": {
+          return avail_2 ? Number(avail_2) : Number(quantity);
+        }
+        case "avail_3": {
+          return avail_3 ? Number(avail_3) : Number(quantity);
+        }
+        case "avail_4": {
+          return avail_4 ? Number(avail_4) : Number(quantity);
+        }
+        case "avail_5": {
+          return avail_5 ? Number(avail_5) : Number(quantity);
+        }
+      }
+    } else {
+      return Number(avail_1) < homeBranchAvailableQuantity
+        ? avail_1
+        : avail_2 !== ""
+          ? getHomePlantDisplayQuantity()
+          : avail_1 !== ""
+            ? Number(configuration?.backorder_quantity) +
+              homeBranchAvailableQuantity
+            : Number(quantity) + Number(backOrderQuantity);
+    }
+  };
+
   const getDefaultFormValues = () => {
     return {
       quantityAlt:
         shipAlternativeBranch?.plants.map((plant) =>
-          plant.plant === homePlant
-            ? (
-                (plant.quantity ?? 0) + (plant.backOrderQuantity ?? 0)
-              ).toString()
-            : plant.quantity?.toString(),
+          getPlantQuantity(
+            plant.plant,
+            plant.quantity,
+            plant.backOrderQuantity,
+            plant.index,
+          )?.toString(),
         ) ?? [],
+
       shippingMethod:
         shipAlternativeBranch?.plants.map(
           (plant) => plant.shippingMethods[0]?.code, //todo: has to be updated with db value
@@ -701,23 +751,9 @@ const CartItemShippingMethod = ({
                     ],
                     {
                       onSettled: () => {
-                        setOpen(false);
                         popSku([sku]);
-                        form.reset({
-                          quantityAlt:
-                            shipAlternativeBranch?.plants.map((plant) =>
-                              plant.plant === homePlant
-                                ? (
-                                    (plant.quantity ?? 0) +
-                                    (plant.backOrderQuantity ?? 0)
-                                  ).toString()
-                                : plant.quantity?.toString(),
-                            ) ?? [],
-                          shippingMethod:
-                            shipAlternativeBranch?.plants.map(
-                              (plant) => plant.shippingMethods[0]?.code, //todo: not updating correctly
-                            ) ?? [],
-                        });
+                        form.reset(getDefaultFormValues());
+
                         toast({
                           description: "Successfully updated cart",
                         });
