@@ -49,8 +49,7 @@ import {
 import { toast } from "@repo/web-ui/components/ui/toast";
 import dayjs from "dayjs";
 import type { Dispatch, SetStateAction } from "react";
-// eslint-disable-next-line no-restricted-imports
-import { useEffect, useId, useRef, useState } from "react";
+import { useId, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useCartItemQuantityContext } from "../cart-item-quantity-context";
 import {
@@ -803,9 +802,9 @@ const CartItemShippingMethod = ({
     }, 500);
   };
 
-  const isDirty = form.formState.isDirty;
+  const onFormChange = () => {
+    const isDirty = form.formState.isDirty;
 
-  useEffect(() => {
     if (isDirty) {
       if (!skus.includes(sku)) {
         pushSku(sku);
@@ -815,7 +814,7 @@ const CartItemShippingMethod = ({
         popSku([sku]);
       }
     }
-  }, [isDirty, sku, skus, pushSku, popSku]);
+  };
 
   const calculateDefaultAltBO = (plant: string, plantQty: number) => {
     return plant === homePlant && plantQty > homeBranchAvailableQuantity
@@ -963,7 +962,7 @@ const CartItemShippingMethod = ({
 
                 <CollapsibleContent>
                   <FormProvider {...form}>
-                    <form>
+                    <form onChange={onFormChange}>
                       <Table>
                         <TableHeader>
                           <TableRow>
