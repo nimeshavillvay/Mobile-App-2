@@ -307,6 +307,32 @@ const CartItemShippingMethod = ({
     }
   };
 
+  const getPlantShippingMethod = (index: number) => {
+    const shipping_method_1 = cartItem[0]?.configuration.shipping_method_1;
+    const shipping_method_2 = cartItem[0]?.configuration.shipping_method_2;
+    const shipping_method_3 = cartItem[0]?.configuration.shipping_method_3;
+    const shipping_method_4 = cartItem[0]?.configuration.shipping_method_4;
+    const shipping_method_5 = cartItem[0]?.configuration.shipping_method_5;
+
+    switch (`shipping_method_${index}`) {
+      case "shipping_method_1": {
+        return shipping_method_1;
+      }
+      case "shipping_method_2": {
+        return shipping_method_2;
+      }
+      case "shipping_method_3": {
+        return shipping_method_3;
+      }
+      case "shipping_method_4": {
+        return shipping_method_4;
+      }
+      case "shipping_method_5": {
+        return shipping_method_5;
+      }
+    }
+  };
+
   const getDefaultFormValues = () => {
     return {
       quantityAlt:
@@ -320,7 +346,7 @@ const CartItemShippingMethod = ({
 
       shippingMethod:
         shipAlternativeBranch?.plants.map(
-          (plant) => plant.shippingMethods[0]?.code, //todo: has to be updated with db value
+          (plant) => getPlantShippingMethod(plant.index), //todo: has to be updated with db value
         ) ?? [],
     };
   };
@@ -742,7 +768,7 @@ const CartItemShippingMethod = ({
                     {
                       onSettled: () => {
                         popSku([sku]);
-                        const r = {
+                        form.reset({
                           quantityAlt:
                             SelectedPlants.map((plant) =>
                               (plant.plant === homePlant
@@ -756,12 +782,8 @@ const CartItemShippingMethod = ({
                             ) ?? [],
 
                           shippingMethod:
-                            shipAlternativeBranch?.plants.map(
-                              (plant) => plant.shippingMethods[0]?.code, //todo: has to be updated with db value
-                            ) ?? [],
-                        };
-                        console.log(">>>>>>>>>>>>>>>>>>>>>>", SelectedPlants);
-                        form.reset(r);
+                            SelectedPlants.map((plant) => plant.method) ?? [],
+                        });
 
                         toast({
                           description: "Successfully updated cart",
