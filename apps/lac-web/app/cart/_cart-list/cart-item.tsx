@@ -801,9 +801,9 @@ const CartItem = ({
   };
 
   return (
-    <div className="flex flex-col gap-6 md:flex-row">
-      <div className="flex flex-row items-start gap-3 md:flex-1">
-        <div className="flex w-[4.5rem] shrink-0 flex-col gap-2 md:w-[7.5rem]">
+    <div className="flex flex-col gap-6 lg:flex-row">
+      <div className="flex flex-row items-start gap-3 lg:flex-1">
+        <div className="flex w-[4.5rem] shrink-0 flex-col gap-2 lg:w-[7.5rem]">
           <Link
             onClick={sendToGTMViewProduct}
             href={`/product/${product.id}/${product.slug}`}
@@ -816,7 +816,7 @@ const CartItem = ({
                 alt={`A picture of ${product.title}`}
                 width={120}
                 height={120}
-                className="size-[4.5rem] rounded border border-wurth-gray-250 object-contain shadow-sm md:size-[7.5rem]"
+                className="size-[4.5rem] rounded border border-wurth-gray-250 object-contain shadow-sm lg:size-[7.5rem]"
               />
             ) : (
               <WurthLacLogo
@@ -827,7 +827,7 @@ const CartItem = ({
             )}
           </Link>
 
-          <div className="flex flex-col gap-1 md:hidden">
+          <div className="flex flex-col gap-1 lg:hidden">
             <Suspense fallback={<FavoriteButtonSkeleton display="mobile" />}>
               <FavoriteButton
                 display="mobile"
@@ -852,9 +852,9 @@ const CartItem = ({
           </div>
         </div>
 
-        <div className="flex-1 space-y-2 @container md:space-y-1">
+        <div className="flex-1 space-y-2 @container lg:space-y-1">
           {isOSRLoggedInAsOSR && (
-            <div className="text-lg font-semibold md:hidden">
+            <div className="text-lg font-semibold lg:hidden">
               ${formatNumberToPrice(parseFloat(osrCartItemTotal.toFixed(2)))}
             </div>
           )}
@@ -942,7 +942,7 @@ const CartItem = ({
                       ref={ref}
                       name={name}
                       className={cn(
-                        "h-fit w-24 rounded border-r-0 px-2.5 py-1 text-base focus:border-none focus:outline-none focus:ring-0 md:w-20",
+                        "h-fit w-24 rounded border-r-0 px-2.5 py-1 text-base focus:border-none focus:outline-none focus:ring-0 lg:w-20",
                         isQuantityLessThanMin ? "border-red-700" : "",
                       )}
                       required
@@ -1015,7 +1015,7 @@ const CartItem = ({
         </div>
       </div>
 
-      <div className="md:w-80">
+      <div className="lg:w-80">
         {checkLoginQuery.data?.status_code === "NOT_LOGGED_IN" &&
           (product.isExcludedProduct ? (
             <div className="flex flex-row gap-2 rounded-lg bg-red-50 p-4">
@@ -1104,7 +1104,7 @@ const CartItem = ({
         )}
       </div>
 
-      <div className="hidden space-y-3 md:block md:shrink-0">
+      <div className="hidden space-y-3 lg:block lg:shrink-0">
         {isOSRLoggedInAsOSR && (
           <div className="text-right text-lg font-semibold">
             ${formatNumberToPrice(parseFloat(osrCartItemTotal.toFixed(2)))}

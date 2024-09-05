@@ -12,8 +12,9 @@ import HeroBanners from "./hero-banners";
 import kessebohmer from "./kessebohmer.jpg";
 import makita from "./makita.jpg";
 import paintline from "./paintline.jpg";
-import wlacImage1 from "./wlac-image-1.jpg";
-import wlacImage2 from "./wlac-image-2.jpg";
+import subBanner1 from "./sub-banner-1.jpg";
+import subBanner2 from "./sub-banner-2.jpg";
+import subBanner3 from "./sub-banner-3.jpg";
 
 type Colors = {
   text: string;
@@ -22,6 +23,8 @@ type Colors = {
 };
 
 const apiUrl = process.env.NEXT_PUBLIC_WURTH_LAC_API;
+
+const images = [subBanner1, subBanner2, subBanner3];
 
 const ADS: {
   id: number;
@@ -82,6 +85,12 @@ const HomePage = async () => {
       dataDescription: banner["data-descr"],
     }));
 
+  const getRandomImage = () => {
+    const randomIndex = Math.floor(Math.random() * images.length);
+    const image = images[randomIndex];
+    return image as StaticImageData;
+  };
+
   return (
     <>
       <HeroBanners banners={heroBanner} />
@@ -94,11 +103,12 @@ const HomePage = async () => {
               {
                 backgroundColor: ad.colors.background,
                 "--text-color": ad.colors.text,
-                backgroundImage: `url(${ad.image.src})`,
               } as CSSProperties
             }
             className="relative flex aspect-[10/9] w-full flex-col justify-between overflow-hidden rounded-md bg-cover bg-center"
           >
+            <Image src={ad.image} alt={ad.promoName} fill placeholder="blur" />
+
             <div className="absolute bottom-0 left-0 right-0 flex h-8 justify-between px-2 pb-2 sm:h-9 md:h-16 md:px-4 md:pb-4 lg:h-[1.84rem] lg:pb-[0.4rem] lg:pl-2 lg:pr-1 xl:px-3 xl:pb-3 2xl:h-12">
               <Link
                 href={ad.shopNowLink}
@@ -126,38 +136,36 @@ const HomePage = async () => {
         ))}
       </section>
 
-      <section className="container">
-        <div className="flex flex-col items-center gap-6 rounded-lg bg-wurth-gray-800 px-6 py-9 lg:flex-row lg:gap-8 lg:p-10">
-          <div className="space-y-3 text-white md:flex-1">
-            <h2 className="font-title text-4xl font-medium leading-none tracking-[-0.01688rem]">
+      <section className="container relative">
+        <div className="relative flex h-full min-h-[40rem] w-full items-center rounded-lg p-10 px-6 py-9">
+          <Image
+            src={getRandomImage()}
+            alt="Random image background"
+            fill
+            placeholder="blur"
+            className="object-cover object-right"
+          />
+          <div className="relative w-2/3 flex-none space-y-3 text-white lg:pl-12 xl:w-2/5">
+            <h2 className="pb-6 font-title text-4xl font-medium leading-[3rem] tracking-[-0.01688rem]">
               <Balancer>
                 Woodworking and Metalworking for Every Passion and Profession
               </Balancer>
             </h2>
-
-            <p className="text-lg">
+            <p className="py-1.5 text-lg">
               We provide top-tier woodworking and metalworking supplies, serving
-              both professionals and hobbyists. With renowned brands like Blum,
-              Rev-a-Shelf, SCM and SawStop, 24/7 online ordering, and fast
-              delivery, we make it easy for everyone from businesses to DIY
-              enthusiasts to find the right tools and materials. Our expert
-              support ensures success for projects of any scale.
+              both professionals and hobbyists.
+            </p>
+            <p className="py-1.5 text-lg">
+              With leading brands like Blum, Rev-a-Shelf, SCM and SawStop, 24/7
+              online ordering, and fast delivery, we make it easy for everyone
+              from businesses to DIY enthusiasts to find the right tools and
+              materials.
+            </p>
+            <p className="py-1.5 text-lg">
+              Our knowledgeable expert customer support ensures success for
+              projects of any scale.
             </p>
           </div>
-
-          <Image
-            src={wlacImage1}
-            alt="A female worker using an industrial machine"
-            placeholder="blur"
-            className="h-[17rem] rounded-lg bg-white object-cover object-left md:h-80 md:min-w-0 md:flex-1"
-          />
-
-          <Image
-            src={wlacImage2}
-            alt="A male worker using a wood cutter"
-            placeholder="blur"
-            className="h-[17rem] rounded-lg bg-white object-cover object-right md:h-80 md:min-w-0 md:flex-1"
-          />
         </div>
       </section>
 

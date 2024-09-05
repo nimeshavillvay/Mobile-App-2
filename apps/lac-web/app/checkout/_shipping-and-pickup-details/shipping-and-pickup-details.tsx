@@ -60,19 +60,20 @@ const ShippingAndPickupDetails = ({
   };
 
   // Have to manually read the pickDate and set the values in the date
-  // because a trillion dollar company called Apple cannot update their
+  // because a certain trillion dollar company cannot update their
   // dumpster fire of a browser (Safari) to keep up with modern web standards.
-  const pickDate = dayjs();
+  let pickDate = dayjs();
   const pickDateElements =
     cartQuery.data.mappedConfiguration.pickDate?.split("-");
   if (pickDateElements && pickDateElements.length === 3) {
-    const pickDateDay = pickDateElements[0];
-    const pickDateMonth = pickDateElements[1];
+    const pickDateMonth = pickDateElements[0];
+    const pickDateDay = pickDateElements[1];
     const pickDateYear = pickDateElements[2];
     if (pickDateDay && pickDateMonth && pickDateYear) {
-      pickDate.set("day", Number(pickDateDay));
-      pickDate.set("month", Number(pickDateMonth));
-      pickDate.set("year", Number(pickDateYear));
+      pickDate = pickDate
+        .set("date", Number(pickDateDay))
+        .set("month", Number(pickDateMonth) - 1) // Months start from 0 https://day.js.org/docs/en/get-set/get#list-of-all-available-units
+        .set("year", Number(pickDateYear));
     }
   }
 
