@@ -1,6 +1,10 @@
-import type { NextConfig } from "next";
+// @ts-check
 
-const nextConfig: NextConfig = {
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  experimental: {
+    dynamicIO: true,
+  },
   reactStrictMode: true,
   transpilePackages: ["@repo/web-ui"],
   images: {
