@@ -143,6 +143,9 @@ const LaminateEdgeBanding = ({
                       <TableHeader>
                         <TableRow>
                           <TableHead>Item #/MFR Part #</TableHead>
+                          <TableHead className="text-center lg:w-1/6">
+                            Width x Roll Size
+                          </TableHead>
                           <TableHead className="text-center lg:w-1/4">
                             Price
                           </TableHead>
