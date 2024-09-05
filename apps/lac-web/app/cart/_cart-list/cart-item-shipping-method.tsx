@@ -1,4 +1,5 @@
 import useSuspenseCart from "@/_hooks/cart/use-suspense-cart.hook";
+import useUpdateCartItemMutation from "@/_hooks/cart/use-update-cart-item-mutation.hook";
 import useGtmProducts from "@/_hooks/gtm/use-gtm-item-info.hook";
 import useGtmUser from "@/_hooks/gtm/use-gtm-user.hook";
 import {
@@ -15,8 +16,9 @@ import type {
   ShippingMethod,
 } from "@/_lib/types";
 import { cn } from "@/_lib/utils";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { sendGTMEvent } from "@next/third-parties/google";
-import { ChevronDown } from "@repo/web-ui/components/icons/chevron-down";
+import { CheckIcon } from "@radix-ui/react-icons";
 import { Button } from "@repo/web-ui/components/ui/button";
 import { Checkbox } from "@repo/web-ui/components/ui/checkbox";
 import {
@@ -44,8 +46,12 @@ import {
   TableHeader,
   TableRow,
 } from "@repo/web-ui/components/ui/table";
+import { toast } from "@repo/web-ui/components/ui/toast";
 import dayjs from "dayjs";
-import { useId } from "react";
+import type { Dispatch, SetStateAction } from "react";
+import { useId, useRef, useState } from "react";
+import { FormProvider, useForm } from "react-hook-form";
+import { useCartItemQuantityContext } from "../cart-item-quantity-context";
 import {
   ALTERNATIVE_BRANCHES,
   AVAILABLE_ALL,
@@ -58,20 +64,20 @@ import {
   TRUE_STRING,
 } from "../constants";
 import type { Availability, WillCallAnywhere } from "../types";
+import useUnSavedAlternativeQuantityState from "../use-cart-alternative-qty-method-store.hook";
 import NotAvailableInfoBanner from "./cart-item-not-available-banner";
+import CartItemShipFromAlternativeBranchRow from "./cart-item-ship-from-alternative-branch-row";
 import CartItemWillCallTransfer from "./cart-item-will-call-transfer";
+import type { ShipFromAltQtySchema } from "./helpers";
 import {
   createCartItemConfig,
   findAvailabilityOptionForType,
   getAlternativeBranchesConfig,
+  shipFromAltQtySchema,
 } from "./helpers";
 import PlantName from "./plant-name";
-import type {
-  MainOption,
-  OptionPlant,
-  ShipToMeOption,
-  WillCallOption,
-} from "./types";
+import type { MainOption, OptionPlant, WillCallOption } from "./types";
+import useCheckAvailabilityMutation from "./use-check-availability-mutation.hook";
 
 // Vendor Direct Shipping Method
 
@@ -82,8 +88,6 @@ type CartItemShippingMethodProps = {
   readonly selectedWillCallPlant: string;
   readonly setSelectedShippingOption: (option: MainOption | undefined) => void;
   readonly selectedShippingOption: MainOption | undefined;
-  readonly setSelectedShipToMe: (shipToMe: ShipToMeOption) => void;
-  readonly selectedShipToMe: ShipToMeOption;
   readonly setSelectedShippingMethod: (method: string) => void;
   readonly selectedShippingMethod: string;
   readonly onSave: (config: Partial<CartItemConfiguration>) => void;
@@ -97,6 +101,13 @@ type CartItemShippingMethodProps = {
   readonly setSelectedBackorderShippingMethod: (method: string) => void;
   readonly selectedBackorderShippingMethod: string;
   readonly token: string;
+  readonly minAmount: number;
+  readonly increment: number;
+  readonly uom: string;
+  readonly cartItemId: number;
+  readonly configuration: CartItemConfiguration;
+  readonly setPreventUpdateCart: Dispatch<SetStateAction<boolean>>;
+  readonly sku: string;
 };
 
 const CartItemShippingMethod = ({
@@ -106,10 +117,8 @@ const CartItemShippingMethod = ({
   selectedWillCallPlant,
   setSelectedShippingOption,
   selectedShippingOption,
-  setSelectedShipToMe,
   setSelectedWillCallTransfer,
   selectedWillCallTransfer,
-  selectedShipToMe,
   setSelectedShippingMethod,
   selectedShippingMethod,
   onSave,
@@ -121,11 +130,24 @@ const CartItemShippingMethod = ({
   setSelectedBackorderShippingMethod,
   selectedBackorderShippingMethod,
   token,
+  minAmount,
+  increment,
+  uom,
+  cartItemId,
+  configuration,
+  sku,
+  setPreventUpdateCart,
 }: CartItemShippingMethodProps) => {
   const id = useId();
   const shipToMeId = `${MAIN_OPTIONS.SHIP_TO_ME}-${id}`;
+  const shipToMeAltId = `${MAIN_OPTIONS.SHIP_TO_ME_ALT}-${id}`;
   const willCallId = `${MAIN_OPTIONS.WILL_CALL}-${id}`;
-  const backOrderId = `${MAIN_OPTIONS.BACK_ORDER}-${id}`;
+
+  const { lineQuantity, setLineQuantity } = useCartItemQuantityContext();
+  const skus = useUnSavedAlternativeQuantityState((state) => state.sku);
+  const { pushSku, popSku } = useUnSavedAlternativeQuantityState(
+    (state) => state.actions,
+  );
 
   const {
     options: availabilityOptions,
@@ -150,7 +172,16 @@ const CartItemShippingMethod = ({
     ALTERNATIVE_BRANCHES,
   );
 
+  const [open, setOpen] = useState(
+    selectedShippingOption === MAIN_OPTIONS.SHIP_TO_ME_ALT,
+  );
+
+  const updateCartConfigMutation = useUpdateCartItemMutation();
+  const checkAvailabilityMutation = useCheckAvailabilityMutation();
+
   const cartQuery = useSuspenseCart(token);
+
+  const qtyChangeTimeoutRef = useRef<NodeJS.Timeout>();
 
   const gtmProducts = cartQuery.data.cartItems.map((item) => {
     return {
@@ -201,23 +232,11 @@ const CartItemShippingMethod = ({
     }
   };
 
-  const calculateAllPlantsQuantity = (
-    plants: {
-      quantity?: number;
-    }[],
-  ) => {
-    // Get all the values of the plants
-    const plantValues = Object.values(plants);
+  const isVendorShipped = isDirectlyShippedFromVendor === true;
 
-    // Calculate the total quantity
-    return plantValues.reduce((acc, plant) => acc + (plant.quantity ?? 0), 0);
-  };
-
-  const isVendorShipped = isDirectlyShippedFromVendor === true ?? false;
-
-  const isSameDayShippingEnabled =
-    !!availableAll?.plants?.find((value) => value?.isSameDayAvail)
-      ?.isSameDayAvail ?? false;
+  const isSameDayShippingEnabled = !!availableAll?.plants?.find(
+    (value) => value?.isSameDayAvail,
+  )?.isSameDayAvail;
 
   // Ship to me logics
   const isShipToMeEnabled = status === IN_STOCK || status === LIMITED_STOCK;
@@ -235,8 +254,118 @@ const CartItemShippingMethod = ({
     takeOnHandPlant = Object.values(takeOnHand?.plants)?.at(0) ?? undefined;
   }
 
-  // Back Order all logics
-  const isBackOrderAllEnabled = !!backOrderAll;
+  const homeBranchAvailability = availability.availableLocations?.find(
+    ({ location }) => location === willCallPlant?.plantCode,
+  );
+
+  const homeBranchAvailableQuantity = homeBranchAvailability?.amount ?? 0;
+
+  const homePlant = willCallPlant.plantCode ?? DEFAULT_PLANT.code;
+
+  const getHomePlantDisplayQuantity = () => {
+    const totalAvailableQty =
+      shipAlternativeBranch?.plants.reduce((sum, current) => {
+        return sum + Number(current.quantity);
+      }, 0) ?? 0;
+
+    return Number(lineQuantity) > totalAvailableQty
+      ? homeBranchAvailableQuantity + Number(lineQuantity) - totalAvailableQty
+      : homeBranchAvailableQuantity;
+  };
+
+  const cartItem = cartQuery.data.cartItems.filter(
+    (item) => item.cartItemId === cartItemId,
+  );
+
+  const getPlantQuantity = (plant: string, quantity = 0, index: number) => {
+    const avail_1 = cartItem[0]?.configuration.avail_1;
+    const avail_2 = cartItem[0]?.configuration.avail_2;
+    const avail_3 = cartItem[0]?.configuration.avail_3;
+    const avail_4 = cartItem[0]?.configuration.avail_4;
+    const avail_5 = cartItem[0]?.configuration.avail_5;
+
+    if (plant !== homePlant) {
+      switch (`avail_${index}`) {
+        case "avail_1": {
+          return avail_1 ? Number(avail_1) : Number(quantity);
+        }
+        case "avail_2": {
+          return avail_2 ? Number(avail_2) : Number(quantity);
+        }
+        case "avail_3": {
+          return avail_3 ? Number(avail_3) : Number(quantity);
+        }
+        case "avail_4": {
+          return avail_4 ? Number(avail_4) : Number(quantity);
+        }
+        case "avail_5": {
+          return avail_5 ? Number(avail_5) : Number(quantity);
+        }
+      }
+    } else {
+      return getHomePlantDisplayQuantity();
+    }
+  };
+
+  const getPlantShippingMethod = (index: number) => {
+    const shipping_method_1 = cartItem[0]?.configuration.shipping_method_1;
+    const shipping_method_2 = cartItem[0]?.configuration.shipping_method_2;
+    const shipping_method_3 = cartItem[0]?.configuration.shipping_method_3;
+    const shipping_method_4 = cartItem[0]?.configuration.shipping_method_4;
+    const shipping_method_5 = cartItem[0]?.configuration.shipping_method_5;
+
+    switch (`shipping_method_${index}`) {
+      case "shipping_method_1": {
+        return shipping_method_1;
+      }
+      case "shipping_method_2": {
+        return shipping_method_2;
+      }
+      case "shipping_method_3": {
+        return shipping_method_3;
+      }
+      case "shipping_method_4": {
+        return shipping_method_4;
+      }
+      case "shipping_method_5": {
+        return shipping_method_5;
+      }
+    }
+  };
+
+  const getDefaultFormValues = () => {
+    return {
+      quantityAlt:
+        shipAlternativeBranch?.plants.map((plant) =>
+          getPlantQuantity(
+            plant.plant,
+            plant.quantity,
+            plant.index,
+          )?.toString(),
+        ) ?? [],
+
+      shippingMethod:
+        shipAlternativeBranch?.plants.map(
+          (plant) =>
+            getPlantShippingMethod(plant.index) ??
+            plant?.shippingMethods[0]?.code,
+        ) ?? [],
+    };
+  };
+
+  const form = useForm<ShipFromAltQtySchema>({
+    resolver: zodResolver(shipFromAltQtySchema),
+    defaultValues: getDefaultFormValues(),
+  });
+
+  const shipToMeShippingMethods =
+    shippingMethods?.length > 0
+      ? shippingMethods
+      : availableAll?.plants[0]?.shippingMethods
+        ? availableAll?.plants[0]?.shippingMethods
+        : backOrderAll?.plants[0]?.shippingMethods
+          ? backOrderAll?.plants[0]?.shippingMethods
+          : [];
 
   const getFirstBackOrderDateFromPlants = (
     plants: {
@@ -262,12 +391,18 @@ const CartItemShippingMethod = ({
     selectedOption: MainOption;
   }) => {
     if (checked) {
+      if (selectedOption !== MAIN_OPTIONS.SHIP_TO_ME_ALT) {
+        setOpen(false);
+      }
       const isWillCallOptionSelected =
         selectedOption === MAIN_OPTIONS.WILL_CALL;
       const isWillCallAnywhere =
         willCallAnywhere !== undefined && willCallAnywhere !== null;
+
       // Ship to me configs
       if (selectedOption === MAIN_OPTIONS.SHIP_TO_ME) {
+        handleShipToMeOptions();
+
         if (availableAll) {
           const setShippingMethod =
             availableAllPlant?.shippingMethods?.find(
@@ -315,33 +450,43 @@ const CartItemShippingMethod = ({
           });
 
           sendToGTMShippingMethodChanged(setShippingMethod);
-        } else if (shipAlternativeBranch) {
+        }
+
+        // Back order all can have only this config
+        else if (backOrderAll) {
           const setShippingMethod =
-            shipAlternativeBranch.plants
+            backOrderAll.plants
               ?.at(0)
               ?.shippingMethods?.find(
-                (method) => method.code === selectedShippingMethod,
+                (method) => method.code === selectedBackorderShippingMethod,
               )?.code ??
-            shipAlternativeBranch.plants?.at(0)?.shippingMethods?.at(0)?.code ??
-            selectedShippingMethod;
-          setSelectedShippingMethod(setShippingMethod);
+            backOrderAll.plants?.at(0)?.shippingMethods?.at(0)?.code ??
+            selectedBackorderShippingMethod;
+          setSelectedBackorderShippingMethod(setShippingMethod);
           onSave({
-            ...getAlternativeBranchesConfig({
-              plants: shipAlternativeBranch.plants,
+            ...createCartItemConfig({
               method: setShippingMethod,
-              hash: shipAlternativeBranch.hash,
-              backOrderDate: shipAlternativeBranch.backOrder
-                ? shipAlternativeBranch?.plants?.[0]?.backOrderDate
-                : "",
-              backOrderQuantity: shipAlternativeBranch.backOrder
-                ? shipAlternativeBranch?.plants?.[0]?.backOrderQuantity
-                : 0,
-              homePlant: willCallPlant.plantCode ?? DEFAULT_PLANT.code,
+              quantity: 0,
+              plant: getFirstPlantFromPlants(backOrderAll?.plants),
+              hash: backOrderAll.hash,
+              backOrderAll: true,
+              backOrderDate: backOrderAll.plants[0]?.backOrderDate ?? "",
+              backOrderQuantity: backOrderAll.plants[0]?.backOrderQuantity ?? 0,
             }),
+            will_call_avail: EMPTY_STRING,
+            will_call_shipping: EMPTY_STRING,
+            will_call_plant: EMPTY_STRING,
             will_call_not_in_stock: FALSE_STRING,
           });
+
           sendToGTMShippingMethodChanged(setShippingMethod);
         }
+      }
+
+      // Ship to me configs
+      if (selectedOption === MAIN_OPTIONS.SHIP_TO_ME_ALT) {
+        form.reset(getDefaultFormValues());
+        handleShipToMeFromAlternativeOptions();
       }
       if (
         isWillCallOptionSelected &&
@@ -351,39 +496,12 @@ const CartItemShippingMethod = ({
         setSelectedWillCallTransfer(MAIN_OPTIONS.WILL_CALL);
         processWillCallAnywhereItem(willCallAnywhere[0]);
       }
-      // Back order all can have only this config
-      if (selectedOption === MAIN_OPTIONS.BACK_ORDER && backOrderAll) {
-        const setShippingMethod =
-          backOrderAll.plants
-            ?.at(0)
-            ?.shippingMethods?.find(
-              (method) => method.code === selectedBackorderShippingMethod,
-            )?.code ??
-          backOrderAll.plants?.at(0)?.shippingMethods?.at(0)?.code ??
-          selectedBackorderShippingMethod;
-        setSelectedBackorderShippingMethod(setShippingMethod);
-        onSave({
-          ...createCartItemConfig({
-            method: setShippingMethod,
-            quantity: 0,
-            plant: getFirstPlantFromPlants(backOrderAll?.plants),
-            hash: backOrderAll.hash,
-            backOrderAll: true,
-            backOrderDate: backOrderAll.plants[0]?.backOrderDate ?? "",
-            backOrderQuantity: backOrderAll.plants[0]?.backOrderQuantity ?? 0,
-          }),
-          will_call_avail: EMPTY_STRING,
-          will_call_shipping: EMPTY_STRING,
-          will_call_plant: EMPTY_STRING,
-          will_call_not_in_stock: FALSE_STRING,
-        });
-
-        sendToGTMShippingMethodChanged(setShippingMethod);
-      }
     }
   };
 
   const processWillCallAnywhereItem = (item: WillCallAnywhere) => {
+    setSelectedShippingOption(MAIN_OPTIONS.WILL_CALL);
+
     const isNotInStock = item && item.status === NOT_IN_STOCK;
     if (item && !isNotInStock) {
       onSave({
@@ -455,88 +573,39 @@ const CartItemShippingMethod = ({
     sendToGTMShippingMethodChanged(shippingMethod);
 
     if (shippingMethod) {
-      switch (selectedShipToMe) {
-        case AVAILABLE_ALL:
-          onSave(
-            createCartItemConfig({
-              method: shippingMethod,
-              quantity: availableAllPlant?.quantity ?? 0,
-              plant: availableAllPlant?.plant ?? EMPTY_STRING,
-              hash: availableAll?.hash ?? "",
-              backOrderAll: false,
-            }),
-          );
-          break;
-        case TAKE_ON_HAND:
-          onSave(
-            createCartItemConfig({
-              method: shippingMethod,
-              quantity: takeOnHandPlant?.quantity ?? 0,
-              plant: takeOnHandPlant?.plant ?? EMPTY_STRING,
-              hash: takeOnHand?.hash ?? "",
-              backOrderDate: takeOnHandPlant?.backOrderDate,
-              backOrderQuantity: takeOnHandPlant?.backOrderQuantity,
-            }),
-          );
-          break;
-        case ALTERNATIVE_BRANCHES:
-          if (shipAlternativeBranch) {
-            onSave(
-              getAlternativeBranchesConfig({
-                plants: shipAlternativeBranch.plants,
-                method: shippingMethod,
-                hash: shipAlternativeBranch.hash,
-                backOrderDate: shipAlternativeBranch.backOrder
-                  ? shipAlternativeBranch?.plants?.[0]?.backOrderDate
-                  : "",
-                backOrderQuantity: shipAlternativeBranch.backOrder
-                  ? shipAlternativeBranch?.plants?.[0]?.backOrderQuantity
-                  : 0,
-                homePlant: willCallPlant.plantCode ?? DEFAULT_PLANT.code,
-              }),
-            );
-          }
-          break;
+      if (availableAll) {
+        onSave(
+          createCartItemConfig({
+            method: shippingMethod,
+            quantity: availableAllPlant?.quantity ?? 0,
+            plant: availableAllPlant?.plant ?? EMPTY_STRING,
+            hash: availableAll?.hash ?? "",
+            backOrderAll: false,
+          }),
+        );
+      } else if (takeOnHand) {
+        onSave(
+          createCartItemConfig({
+            method: shippingMethod,
+            quantity: takeOnHandPlant?.quantity ?? 0,
+            plant: takeOnHandPlant?.plant ?? EMPTY_STRING,
+            hash: takeOnHand?.hash ?? "",
+            backOrderDate: takeOnHandPlant?.backOrderDate,
+            backOrderQuantity: takeOnHandPlant?.backOrderQuantity,
+          }),
+        );
       }
     }
   };
 
-  const handleBackorderMethod = (shippingMethod: string) => {
-    setSelectedShippingMethod(shippingMethod);
-    sendToGTMShippingMethodChanged(shippingMethod);
-
-    if (shippingMethod) {
-      switch (selectedShippingOption) {
-        case MAIN_OPTIONS.BACK_ORDER:
-          if (backOrderAll) {
-            onSave({
-              ...createCartItemConfig({
-                method: shippingMethod,
-                quantity: 0,
-                plant: getFirstPlantFromPlants(backOrderAll?.plants),
-                hash: backOrderAll.hash,
-                backOrderAll: true,
-                backOrderDate: backOrderAll.plants[0]?.backOrderDate ?? "",
-                backOrderQuantity:
-                  backOrderAll.plants[0]?.backOrderQuantity ?? 0,
-              }),
-              will_call_avail: EMPTY_STRING,
-              will_call_shipping: EMPTY_STRING,
-              will_call_plant: EMPTY_STRING,
-            });
-          }
-      }
-    }
-  };
-
-  const handleShipToMeOptions = (shipToMe: ShipToMeOption) => {
-    setSelectedShipToMe(shipToMe);
+  const handleShipToMeOptions = () => {
     // Reset the selected shipping method to default
+    setSelectedShippingOption(MAIN_OPTIONS.SHIP_TO_ME);
     if (defaultShippingMethod) {
       setSelectedShippingMethod(defaultShippingMethod.code);
       sendToGTMShippingMethodChanged(defaultShippingMethod.code);
 
-      if (shipToMe === TAKE_ON_HAND && takeOnHand) {
+      if (takeOnHand) {
         const setShippingMethod =
           takeOnHandPlant?.shippingMethods?.find(
             (method) => method.code === selectedShippingMethod,
@@ -558,8 +627,46 @@ const CartItemShippingMethod = ({
 
         sendToGTMShippingMethodChanged(setShippingMethod);
       }
+    }
+  };
 
-      if (shipToMe === ALTERNATIVE_BRANCHES && shipAlternativeBranch) {
+  const handleShipToMeFromAlternativeOptions = () => {
+    setSelectedShippingOption(MAIN_OPTIONS.SHIP_TO_ME_ALT);
+    if (shipAlternativeBranch) {
+      const setShippingMethod =
+        shipAlternativeBranch.plants
+          ?.at(0)
+          ?.shippingMethods?.find(
+            (method) => method.code === selectedShippingMethod,
+          )?.code ??
+        shipAlternativeBranch.plants?.at(0)?.shippingMethods?.at(0)?.code ??
+        selectedShippingMethod;
+      setSelectedShippingMethod(setShippingMethod);
+      const homePlant = willCallPlant.plantCode ?? DEFAULT_PLANT.code;
+
+      onSave({
+        ...getAlternativeBranchesConfig({
+          plants: shipAlternativeBranch.plants,
+          method: setShippingMethod,
+          hash: shipAlternativeBranch.hash,
+          backOrderDate: shipAlternativeBranch.backOrder
+            ? shipAlternativeBranch?.plants?.[0]?.backOrderDate
+            : "",
+          backOrderQuantity: shipAlternativeBranch.backOrder
+            ? shipAlternativeBranch?.plants?.[0]?.backOrderQuantity
+            : 0,
+          homePlant: homePlant,
+        }),
+        will_call_not_in_stock: FALSE_STRING,
+      });
+      sendToGTMShippingMethodChanged(setShippingMethod);
+    }
+    // Reset the selected shipping method to default
+    if (defaultShippingMethod) {
+      setSelectedShippingMethod(defaultShippingMethod.code);
+      sendToGTMShippingMethodChanged(defaultShippingMethod.code);
+
+      if (shipAlternativeBranch) {
         onSave({
           ...getAlternativeBranchesConfig({
             plants: shipAlternativeBranch?.plants,
@@ -577,6 +684,142 @@ const CartItemShippingMethod = ({
         });
       }
     }
+  };
+
+  const getQuantity = (plant: string, qty: number) => {
+    if (plant === homePlant) {
+      if (qty > homeBranchAvailableQuantity) {
+        return homeBranchAvailableQuantity;
+      } else {
+        return qty;
+      }
+    } else {
+      return qty;
+    }
+  };
+
+  const applyAlternativeBranchChanges = () => {
+    clearTimeout(qtyChangeTimeoutRef.current);
+
+    const formData = form.getValues();
+    const altQtySum = formData.quantityAlt.reduce((collector, num) => {
+      return (collector += Number(num));
+    }, 0);
+
+    qtyChangeTimeoutRef.current = setTimeout(() => {
+      checkAvailabilityMutation.mutate(
+        {
+          productId: availability.productId,
+          qty: altQtySum,
+        },
+        {
+          onSuccess: ({ options }) => {
+            if (options.length > 0) {
+              const shipAlternativeBranch = findAvailabilityOptionForType(
+                options,
+                ALTERNATIVE_BRANCHES,
+              );
+              shipAlternativeBranch?.hash;
+              if (shipAlternativeBranch) {
+                setLineQuantity(altQtySum.toString());
+                setSelectedShippingOption(MAIN_OPTIONS.SHIP_TO_ME_ALT);
+
+                const SelectedPlants = shipAlternativeBranch.plants.map(
+                  (plant, index) => ({
+                    index: plant.index,
+                    quantity: getQuantity(
+                      plant.plant,
+                      Number(formData.quantityAlt[index]),
+                    ),
+                    method: formData.shippingMethod[index],
+                    plant: plant.plant,
+                  }),
+                );
+
+                setPreventUpdateCart(true);
+
+                const config = {
+                  ...getAlternativeBranchesConfig({
+                    plants: SelectedPlants,
+                    method: selectedShippingMethod,
+                    hash: shipAlternativeBranch.hash,
+                    backOrderDate: shipAlternativeBranch.backOrder
+                      ? shipAlternativeBranch?.plants?.[0]?.backOrderDate
+                      : "",
+                    backOrderQuantity: calculateDefaultAltBO(
+                      homePlant,
+                      Number(formData.quantityAlt[0]),
+                    ),
+                    homePlant: homePlant,
+                  }),
+                  will_call_not_in_stock: FALSE_STRING,
+                };
+                if (altQtySum > 0) {
+                  setPreventUpdateCart(true);
+                  updateCartConfigMutation.mutate(
+                    [
+                      {
+                        cartItemId: cartItemId,
+                        quantity: altQtySum,
+                        config: {
+                          ...configuration,
+                          ...config,
+                        },
+                      },
+                    ],
+                    {
+                      onSettled: () => {
+                        popSku([sku]);
+                        form.reset({
+                          quantityAlt:
+                            SelectedPlants.map((plant) =>
+                              (plant.plant === homePlant
+                                ? plant.quantity +
+                                  calculateDefaultAltBO(
+                                    homePlant,
+                                    Number(formData.quantityAlt[0]),
+                                  )
+                                : plant.quantity
+                              )?.toString(),
+                            ) ?? [],
+
+                          shippingMethod:
+                            SelectedPlants.map((plant) => plant.method) ?? [],
+                        });
+
+                        toast({
+                          description: "Successfully updated cart",
+                        });
+                      },
+                    },
+                  );
+                }
+              }
+            }
+          },
+        },
+      );
+    }, 500);
+  };
+
+  const onFormChange = () => {
+    const isDirty = form.formState.isDirty;
+
+    if (isDirty) {
+      if (!skus.includes(sku)) {
+        pushSku(sku);
+      }
+    } else {
+      if (skus.includes(sku)) {
+        popSku([sku]);
+      }
+    }
+  };
+
+  const calculateDefaultAltBO = (plant: string, plantQty: number) => {
+    return plant === homePlant && plantQty > homeBranchAvailableQuantity
+      ? plantQty - homeBranchAvailableQuantity
+      : 0;
   };
 
   if (isVendorShipped) {
@@ -602,8 +845,8 @@ const CartItemShippingMethod = ({
 
   return (
     <ul className="flex flex-col gap-3">
-      {isShipToMeEnabled && (
-        <li className="flex flex-col items-stretch gap-2">
+      {(isShipToMeEnabled || !!backOrderAll) && (
+        <li className="flex flex-col items-stretch">
           <div className="flex flex-row items-center gap-3">
             <Checkbox
               id={shipToMeId}
@@ -619,16 +862,37 @@ const CartItemShippingMethod = ({
             />
 
             <Label htmlFor={shipToMeId} className="text-base">
-              Ship to me
+              Availability at{" "}
+              <PlantName
+                plants={plants}
+                plantCode={willCallPlant.plantCode ?? DEFAULT_PLANT.code}
+              />
             </Label>
           </div>
 
           <div className="ml-[1.625rem] flex flex-col gap-2">
-            {shippingMethods?.length > 0 && (
+            <div className="pl-1.5 text-sm font-medium">
+              {Number(lineQuantity) <= homeBranchAvailableQuantity && (
+                <ItemInStockCountBadge
+                  availableCount={homeBranchAvailableQuantity}
+                />
+              )}
+              {Number(lineQuantity) > homeBranchAvailableQuantity && (
+                <>
+                  <ItemLimitedStockOrBoCountBadge
+                    availableCount={homeBranchAvailableQuantity}
+                  />
+                  <BackOrderItemCountLabel
+                    count={Number(lineQuantity) - homeBranchAvailableQuantity}
+                  />
+                </>
+              )}
+            </div>
+            {shipToMeShippingMethods.length > 0 && (
               <Select
                 disabled={
                   selectedShippingOption !== MAIN_OPTIONS.SHIP_TO_ME ||
-                  shippingMethods?.length <= 1
+                  shipToMeShippingMethods?.length === 1
                 }
                 value={selectedShippingMethod}
                 onValueChange={(method) => handleShipToMeMethod(method)}
@@ -638,7 +902,7 @@ const CartItemShippingMethod = ({
                 </SelectTrigger>
 
                 <SelectContent>
-                  {shippingMethods.map((option) => (
+                  {shipToMeShippingMethods.map((option) => (
                     <SelectItem key={option.code} value={option.code}>
                       {option.name}
                     </SelectItem>
@@ -652,254 +916,115 @@ const CartItemShippingMethod = ({
                 Get it by <b>today</b> if you order before noon
               </div>
             )}
-
-            {selectedShippingOption === MAIN_OPTIONS.SHIP_TO_ME && (
-              <RadioGroup
-                value={selectedShipToMe}
-                onValueChange={(value) =>
-                  handleShipToMeOptions(value as ShipToMeOption)
-                }
-              >
-                {/* All available option */}
-                {availableAll && (
-                  <div className="flex flex-row gap-2 rounded-lg border border-wurth-gray-150 px-2 py-2 text-sm shadow-sm">
-                    <div className="w-4">
-                      <RadioGroupItem
-                        value={AVAILABLE_ALL}
-                        id={AVAILABLE_ALL}
-                      />
-                    </div>
-
-                    <div className="flex flex-col gap-0.5">
-                      <div className="font-medium">
-                        {availableAllPlant?.quantity && (
-                          <ItemCountBadge count={availableAllPlant.quantity} />
-                        )}
-                        &nbsp;from&nbsp;
-                        <PlantName
-                          plants={plants}
-                          plantCode={availableAllPlant?.plant}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {/* Take on hand option */}
-                {takeOnHand && (
-                  <div className="flex flex-row gap-2 rounded-lg border border-wurth-gray-150 px-2 py-2 text-sm shadow-sm">
-                    <div className="w-4">
-                      <RadioGroupItem value={TAKE_ON_HAND} id={TAKE_ON_HAND} />
-                    </div>
-
-                    <div className="flex flex-col gap-0.5">
-                      <div className="font-medium">
-                        {takeOnHandPlant?.quantity && (
-                          <ItemCountBadge count={takeOnHandPlant.quantity} />
-                        )}
-                        &nbsp;from&nbsp;
-                        <PlantName
-                          plants={plants}
-                          plantCode={takeOnHandPlant?.plant}
-                        />
-                      </div>
-
-                      {takeOnHand.backOrder && (
-                        <BackOrderItemCountLabel
-                          count={takeOnHandPlant?.backOrderQuantity ?? 0}
-                        />
-                      )}
-                    </div>
-                  </div>
-                )}
-
-                {/* Ship from alternative branches option */}
-                {shipAlternativeBranch && (
-                  <div className="flex flex-row gap-2 rounded-lg border border-wurth-gray-150 px-2 py-2 text-sm shadow-sm">
-                    <div className="w-4">
-                      <RadioGroupItem
-                        value={ALTERNATIVE_BRANCHES}
-                        id={ALTERNATIVE_BRANCHES}
-                      />
-                    </div>
-
-                    <div className="flex flex-col gap-0.5">
-                      <div className="text-wrap font-medium">
-                        {shipAlternativeBranch.plants?.length > 0 && (
-                          <ItemCountBadge
-                            count={calculateAllPlantsQuantity(
-                              shipAlternativeBranch.plants,
-                            )}
-                          />
-                        )}
-                        &nbsp;from&nbsp;
-                        <PlantName
-                          plants={plants}
-                          plantCode={shipAlternativeBranch.plants?.at(0)?.plant}
-                        />
-                        &nbsp;and&nbsp;
-                        <span className="font-normal">
-                          other alternative branches
-                        </span>
-                      </div>
-
-                      {shipAlternativeBranch.backOrder && (
-                        <BackOrderItemCountLabel
-                          count={
-                            shipAlternativeBranch.plants?.at(0)
-                              ?.backOrderQuantity ?? 0
-                          }
-                        />
-                      )}
-
-                      {selectedShipToMe === ALTERNATIVE_BRANCHES && (
-                        <Collapsible
-                          className="mt-1.5 flex flex-col gap-1"
-                          disabled={selectedShipToMe !== ALTERNATIVE_BRANCHES}
-                        >
-                          <CollapsibleTrigger
-                            className="group flex h-7 flex-row items-center justify-start"
-                            asChild
-                          >
-                            <Button
-                              type="button"
-                              variant="subtle"
-                              className="h-full gap-2 px-2"
-                              data-button-action="Cart Show Breakdown by Branch"
-                            >
-                              <ChevronDown
-                                width={16}
-                                height={16}
-                                className="transition duration-150 ease-out group-data-[state=open]:rotate-180"
-                              />
-                              <span className="text-balance text-left">
-                                Show breakdown by branch
-                              </span>
-                            </Button>
-                          </CollapsibleTrigger>
-
-                          <CollapsibleContent>
-                            <Table>
-                              <TableHeader>
-                                <TableRow>
-                                  <TableHead className="font-light">
-                                    Location
-                                  </TableHead>
-                                  <TableHead className="text-end font-light">
-                                    Items
-                                  </TableHead>
-                                </TableRow>
-                              </TableHeader>
-
-                              <TableBody className="font-light">
-                                {shipAlternativeBranch.plants &&
-                                  Object.values(
-                                    shipAlternativeBranch.plants,
-                                  )?.map((plant) => (
-                                    <TableRow key={plant.plant}>
-                                      <TableCell>
-                                        <div>
-                                          <PlantName
-                                            plants={plants}
-                                            plantCode={plant.plant}
-                                          />
-                                        </div>
-                                        <div className="text-xs">
-                                          via&nbsp;
-                                          {plant.plant ===
-                                          willCallPlant.plantCode
-                                            ? shippingMethods?.find(
-                                                (option) =>
-                                                  option.code ===
-                                                  selectedShippingMethod,
-                                              )?.name ??
-                                              defaultShippingMethod?.name
-                                            : "Ground"}
-                                        </div>
-                                      </TableCell>
-                                      <TableCell className="text-end">
-                                        {plant.quantity}
-                                      </TableCell>
-                                    </TableRow>
-                                  ))}
-                              </TableBody>
-                            </Table>
-                          </CollapsibleContent>
-                        </Collapsible>
-                      )}
-                    </div>
-                  </div>
-                )}
-
-                {selectedShipToMe === TAKE_ON_HAND && (
-                  <ShipToMeBOInfoBanner option={takeOnHand} />
-                )}
-
-                {selectedShipToMe === ALTERNATIVE_BRANCHES && (
-                  <ShipToMeBOInfoBanner option={shipAlternativeBranch} />
-                )}
-              </RadioGroup>
-            )}
           </div>
         </li>
       )}
 
-      {isBackOrderAllEnabled && (
-        <li className="flex flex-col items-stretch gap-2">
-          <div className="flex flex-row items-center gap-3">
-            <Checkbox
-              id={backOrderId}
-              className="size-5 rounded-full"
-              iconClassName="size-4"
-              checked={selectedShippingOption === MAIN_OPTIONS.BACK_ORDER}
-              onCheckedChange={(checked) =>
-                handleDeliveryOptionSelect({
-                  checked: checked === true,
-                  selectedOption: MAIN_OPTIONS.BACK_ORDER,
-                })
-              }
-              disabled={!backOrderAll}
-            />
-
-            <Label htmlFor={backOrderId} className="text-base">
-              Backorder everything
-            </Label>
-          </div>
-          <div className="ml-[1.625rem] flex flex-col gap-2">
-            {backOrderAll?.plants[0]?.shippingMethods &&
-              backOrderAll?.plants[0]?.shippingMethods.length > 0 && (
-                <Select
-                  disabled={
-                    selectedShippingOption !== MAIN_OPTIONS.BACK_ORDER ||
-                    backOrderAll.plants[0]?.shippingMethods?.length <= 1
-                  }
-                  value={selectedBackorderShippingMethod}
-                  onValueChange={(method) => handleBackorderMethod(method)}
+      {/* Ship from alternative branches option */}
+      {shipAlternativeBranch && shipAlternativeBranch.plants?.length > 0 && (
+        <>
+          <div className="flex flex-col gap-2 px-2 py-2 text-sm">
+            <div className="flex flex-col gap-0.5">
+              <Collapsible
+                className="mt-1.5 flex flex-col gap-1"
+                disabled={!backOrderAll}
+                open={open}
+                onOpenChange={setOpen}
+              >
+                <CollapsibleTrigger
+                  className="group flex h-7 cursor-default flex-row items-center justify-start"
+                  id={shipToMeAltId}
+                  onClick={() => {
+                    setSelectedShippingOption(MAIN_OPTIONS.SHIP_TO_ME_ALT);
+                    handleDeliveryOptionSelect({
+                      checked: true,
+                      selectedOption: MAIN_OPTIONS.SHIP_TO_ME_ALT,
+                    });
+                  }}
                 >
-                  <SelectTrigger className="avail-change-button w-full">
-                    <SelectValue placeholder="Select a delivery method" />
-                  </SelectTrigger>
+                  <span
+                    className={cn(
+                      selectedShippingOption === MAIN_OPTIONS.SHIP_TO_ME_ALT
+                        ? "size-[1.12rem] bg-wurth-gray-800 text-wurth-gray-50"
+                        : "flex size-5 shrink-0 items-center justify-center rounded-sm border text-current",
+                      "mr-2 cursor-pointer rounded-full",
+                    )}
+                  >
+                    {selectedShippingOption === MAIN_OPTIONS.SHIP_TO_ME_ALT && (
+                      <CheckIcon className={"size-4"} />
+                    )}
+                  </span>
 
-                  <SelectContent>
-                    {backOrderAll.plants[0]?.shippingMethods.map((option) => (
-                      <SelectItem key={option.code} value={option.code}>
-                        {option.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              )}
-          </div>
-          {selectedShippingOption === MAIN_OPTIONS.BACK_ORDER && (
-            <div className="ml-[1.625rem]">
-              <BackOrderInfoBanner
-                date={
-                  getFirstBackOrderDateFromPlants(backOrderAll?.plants) ?? "N/A"
-                }
-              />
+                  <span className="text-base">
+                    Ship from Alternate Branch(es)
+                  </span>
+                </CollapsibleTrigger>
+
+                <CollapsibleContent>
+                  <FormProvider {...form}>
+                    <form onChange={onFormChange}>
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead className="font-light">
+                              Location
+                            </TableHead>
+                            <TableHead className="text-end font-light">
+                              Items
+                            </TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody className="font-light">
+                          {shipAlternativeBranch.plants &&
+                            Object.values(shipAlternativeBranch.plants)?.map(
+                              (plant, quantityFieldIndex) => (
+                                <CartItemShipFromAlternativeBranchRow
+                                  plant={plant}
+                                  plants={plants}
+                                  quantityFieldIndex={quantityFieldIndex}
+                                  key={quantityFieldIndex}
+                                  willCallPlant={willCallPlant}
+                                  availability={availability}
+                                  availableQuantityInPlant={plant.quantity ?? 0}
+                                  minAmount={minAmount}
+                                  increment={increment}
+                                  uom={uom}
+                                  defaultBoQty={
+                                    plant.plant === homePlant
+                                      ? getHomePlantDisplayQuantity() -
+                                        homeBranchAvailableQuantity
+                                      : 0
+                                  }
+                                />
+                              ),
+                            )}
+                          <TableRow className="border-y-0 hover:bg-transparent">
+                            <TableCell colSpan={2}>
+                              <Button
+                                variant="default"
+                                type="button"
+                                className="float-right justify-end"
+                                onClick={applyAlternativeBranchChanges}
+                                disabled={
+                                  !form.formState.isDirty ||
+                                  updateCartConfigMutation.isPending ||
+                                  !skus.includes(sku)
+                                }
+                              >
+                                Apply
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        </TableBody>
+                      </Table>
+                    </form>
+                  </FormProvider>
+                </CollapsibleContent>
+              </Collapsible>
             </div>
-          )}
-        </li>
+          </div>
+          {open && <ShipToMeBOInfoBanner option={shipAlternativeBranch} />}
+        </>
       )}
 
       <li className="flex flex-col items-stretch gap-2">
@@ -1169,7 +1294,7 @@ const CartItemShippingMethod = ({
 
 export default CartItemShippingMethod;
 
-const ItemCountBadge = ({
+export const ItemCountBadge = ({
   count = 0,
   className,
 }: {
@@ -1188,7 +1313,38 @@ const ItemCountBadge = ({
   );
 };
 
-const BackOrderItemCountLabel = ({ count }: { readonly count: number }) => {
+export const ItemInStockCountBadge = ({
+  availableCount = 0,
+}: {
+  readonly availableCount: number;
+}) => {
+  return (
+    <>
+      <span className="text-green-700">{availableCount}</span>&nbsp;in stock
+    </>
+  );
+};
+
+export const ItemLimitedStockOrBoCountBadge = ({
+  availableCount = 0,
+}: {
+  readonly availableCount: number;
+}) => {
+  if (availableCount === 0) {
+    return <span className="text-red-700">Out of stock</span>;
+  }
+  return (
+    <>
+      Only <span className="text-yellow-700">{availableCount}</span> in stock
+    </>
+  );
+};
+
+export const BackOrderItemCountLabel = ({
+  count,
+}: {
+  readonly count: number;
+}) => {
   return (
     <div className="text-sm font-medium">
       <span className="rounded bg-yellow-700/10 px-1 text-yellow-700">

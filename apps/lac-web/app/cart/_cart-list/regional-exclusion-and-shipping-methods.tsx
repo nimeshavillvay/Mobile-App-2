@@ -12,8 +12,6 @@ const RegionalExclusionAndShippingMethods = ({
   selectedWillCallPlant,
   setSelectedShippingOption,
   selectedShippingOption,
-  setSelectedShipToMe,
-  selectedShipToMe,
   setSelectedShippingMethod,
   selectedShippingMethod,
   setSelectedWillCallTransfer,
@@ -26,6 +24,13 @@ const RegionalExclusionAndShippingMethods = ({
   willCallPlant,
   setSelectedBackorderShippingMethod,
   selectedBackorderShippingMethod,
+  minAmount,
+  increment,
+  uom,
+  cartItemId,
+  configuration,
+  setPreventUpdateCart,
+  sku,
 }: ComponentProps<typeof CartItemShippingMethod> & {
   readonly token: string;
   readonly productId: number;
@@ -49,8 +54,6 @@ const RegionalExclusionAndShippingMethods = ({
       selectedWillCallPlant={selectedWillCallPlant}
       setSelectedShippingOption={setSelectedShippingOption}
       selectedShippingOption={selectedShippingOption}
-      setSelectedShipToMe={setSelectedShipToMe}
-      selectedShipToMe={selectedShipToMe}
       setSelectedWillCallTransfer={setSelectedWillCallTransfer}
       selectedWillCallTransfer={selectedWillCallTransfer}
       setSelectedShippingMethod={setSelectedShippingMethod}
@@ -64,6 +67,13 @@ const RegionalExclusionAndShippingMethods = ({
       handleSelectWillCallPlant={handleSelectWillCallPlant}
       willCallPlant={willCallPlant}
       token={token}
+      minAmount={minAmount}
+      increment={increment}
+      uom={uom}
+      cartItemId={cartItemId}
+      configuration={configuration}
+      setPreventUpdateCart={setPreventUpdateCart}
+      sku={sku}
     />
   );
 };

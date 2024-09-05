@@ -47,7 +47,6 @@ const CartPage = async () => {
       >
         <CartHeading token={sessionToken.value} />
       </Suspense>
-
       <div className="ml-2 flex flex-col md:container xl:flex-row xl:gap-12">
         <div className="flex-1">
           <Suspense
@@ -82,7 +81,7 @@ const CartPage = async () => {
           <Suspense
             fallback={<Skeleton className="h-[158px] rounded-lg shadow-md" />}
           >
-            <ShippingMethod token={sessionToken.value} />
+            <ShippingMethod token={sessionToken.value} plants={plants} />
           </Suspense>
 
           <Suspense

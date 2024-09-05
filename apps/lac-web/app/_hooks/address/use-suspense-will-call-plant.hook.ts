@@ -15,6 +15,7 @@ const useSuspenseWillCallPlant = (token: string) => {
         .json<{
           plant: string;
           name: string;
+          willcall_method: string;
           address?: {
             "country-name": string;
             locality: string;
@@ -29,6 +30,7 @@ const useSuspenseWillCallPlant = (token: string) => {
     select: (data) => ({
       plantCode: data.plant,
       plantName: data.name,
+      willCallMethod: data.willcall_method,
       address: {
         countryName: data.address?.["country-name"],
         locality: data.address?.locality,

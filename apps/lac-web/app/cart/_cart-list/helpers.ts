@@ -1,4 +1,6 @@
 import type { CartItemConfiguration } from "@/_lib/types";
+import { NUMBER_TYPE } from "@/_lib/zod-helper";
+import { z } from "zod";
 import {
   DEFAULT_SHIPPING_METHOD,
   EMPTY_STRING,
@@ -64,6 +66,7 @@ export const getAlternativeBranchesConfig = ({
     index: number;
     quantity?: number;
     plant: string;
+    method?: string;
   }[];
   method: string;
   hash: string;
@@ -85,8 +88,11 @@ export const getAlternativeBranchesConfig = ({
   const data = plants?.map((plant) => ({
     [`avail_${plant?.index}`]: (plant?.quantity ?? 0).toString(),
     [`plant_${plant?.index}`]: plant?.plant ?? "",
-    [`shipping_method_${plant?.index}`]:
-      plant?.plant !== plantName ? DEFAULT_SHIPPING_METHOD : method,
+    [`shipping_method_${plant?.index}`]: plant.method
+      ? plant.method
+      : plant?.plant !== plantName
+        ? DEFAULT_SHIPPING_METHOD
+        : method,
   }));
 
   config = Object.assign(config, ...data);
@@ -122,3 +128,17 @@ export const findAvailabilityOptionForType = (
 ) => {
   return options.find((option) => option.type === type) ?? undefined;
 };
+
+export const cartItemSchema = z.object({
+  quantity: NUMBER_TYPE,
+  po: z.string().optional(),
+});
+
+export type CartItemSchema = z.infer<typeof cartItemSchema>;
+
+export const shipFromAltQtySchema = z.object({
+  quantityAlt: z.array(z.string()),
+  shippingMethod: z.array(z.string()),
+});
+
+export type ShipFromAltQtySchema = z.infer<typeof shipFromAltQtySchema>;

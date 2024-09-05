@@ -15,10 +15,14 @@ import {
   NOT_AVAILABLE,
   NOT_IN_STOCK,
 } from "@/_lib/constants";
-import type { CartItemConfiguration } from "@/_lib/types";
+import type { CartItemConfiguration, Plant } from "@/_lib/types";
 import { sendGTMEvent } from "@next/third-parties/google";
 import { Checkbox } from "@repo/web-ui/components/ui/checkbox";
 import { Label } from "@repo/web-ui/components/ui/label";
+import {
+  RadioGroup,
+  RadioGroupItem,
+} from "@repo/web-ui/components/ui/radio-group";
 import {
   Select,
   SelectContent,
@@ -38,6 +42,7 @@ import {
   FALSE_STRING,
   TAKE_ON_HAND,
   WILLCALL_SHIPING_METHOD,
+  WILLCALL_TRANSFER_SHIPING_METHOD,
 } from "./constants";
 import type { Availability, ShippingMethod } from "./types";
 import useCartPageStore from "./use-cart-page-store.hook";
@@ -46,12 +51,13 @@ const SHIP_TO_ME = "ship-to-me";
 const WILL_CALL = "will-call";
 
 type ShippingMethodProps = {
+  readonly plants: Plant[];
   readonly token: string;
 };
 
 type ConfigKey = keyof CartItemConfiguration;
 
-const ShippingMethod = ({ token }: ShippingMethodProps) => {
+const ShippingMethod = ({ token, plants }: ShippingMethodProps) => {
   const { toast } = useToast();
   const id = useId();
   const shipToMeId = `${SHIP_TO_ME}-${id}`;
@@ -73,9 +79,12 @@ const ShippingMethod = ({ token }: ShippingMethodProps) => {
   const cartQuery = useSuspenseCart(token);
   const willCallPlantQuery = useSuspenseWillCallPlant(token);
   const willCallPlant = willCallPlantQuery.data;
+  const willCallAvailableOption = willCallPlant.willCallMethod;
 
   const [isShipToMeSelected, setIsShipToMeSelected] = useState(false);
   const [isWillCallSelected, setIsWillCallSelected] = useState(false);
+
+  const [selectedWillCallPlant, setSelectedWillCallPlant] = useState<string>();
 
   const updateCartItemMutation = useUpdateCartItemMutation();
 
@@ -154,13 +163,12 @@ const ShippingMethod = ({ token }: ShippingMethodProps) => {
     config[configKeyPlant] = plantValue;
     config[configKeyShippingMethod] = shippingMethodValue;
   };
-
   const transformConfiguration = (
     availability: Availability,
     config: CartItemConfiguration,
   ) => {
     clearConfigKeys(config, ["avail_", "shipping_method_", "plant_"]);
-    config.plant_1 = willCallPlant?.plantCode ?? DEFAULT_PLANT.code;
+    config.plant_1 = selectedWillCallPlant ?? DEFAULT_PLANT.code;
     config.hashvalue = availability?.willCallAnywhere?.[0]?.hash
       ? availability.willCallAnywhere[0].hash
       : "";
@@ -179,8 +187,8 @@ const ShippingMethod = ({ token }: ShippingMethodProps) => {
         availability.willCallAnywhere[0]?.backOrderDate_1 ?? "";
       config.will_call_avail =
         availability.willCallAnywhere[0]?.willCallQuantity.toString();
-      config.will_call_plant = willCallPlant?.plantCode ?? DEFAULT_PLANT.code;
-      config.will_call_shipping = WILLCALL_SHIPING_METHOD;
+      config.will_call_plant = selectedWillCallPlant ?? DEFAULT_PLANT.code;
+      config.will_call_shipping = willCallAvailableOption;
       config.will_call_not_in_stock = FALSE_STRING;
     } else if (
       availability.willCallAnywhere &&
@@ -196,8 +204,8 @@ const ShippingMethod = ({ token }: ShippingMethodProps) => {
         availability.willCallAnywhere[0]?.willCallBackOrder ?? "";
       config.backorder_quantity =
         availability.willCallAnywhere[0]?.willCallQuantity.toString();
-      config.will_call_plant = willCallPlant?.plantCode ?? DEFAULT_PLANT.code;
-      config.will_call_shipping = WILLCALL_SHIPING_METHOD;
+      config.will_call_plant = selectedWillCallPlant ?? DEFAULT_PLANT.code;
+      config.will_call_shipping = willCallAvailableOption;
       config.will_call_not_in_stock = FALSE_STRING;
     } else if (
       availability.willCallAnywhere &&
@@ -213,11 +221,11 @@ const ShippingMethod = ({ token }: ShippingMethodProps) => {
         availability.willCallAnywhere[0]?.backOrderDate_1 ?? "";
       config.will_call_avail =
         availability.willCallAnywhere[0]?.willCallQuantity.toString();
-      config.will_call_plant = willCallPlant?.plantCode ?? DEFAULT_PLANT.code;
+      config.will_call_plant = selectedWillCallPlant ?? DEFAULT_PLANT.code;
       config.backorder_all = "F";
       config.backorder_quantity =
         availability.willCallAnywhere[0]?.backOrderQuantity_1?.toString() ?? "";
-      config.will_call_shipping = WILLCALL_SHIPING_METHOD;
+      config.will_call_shipping = willCallAvailableOption;
       config.will_call_not_in_stock = FALSE_STRING;
     }
     return config;
@@ -396,11 +404,8 @@ const ShippingMethod = ({ token }: ShippingMethodProps) => {
       const availability = cartItemsAvailability.find(
         (willCall) =>
           willCall.productId === item.itemInfo.productId &&
-          willCall.willCallAnywhere[0]?.shippingMethod ===
-            WILLCALL_SHIPING_METHOD &&
           willCall.willCallAnywhere[0]?.status !== NOT_AVAILABLE,
       );
-
       const transformedConfig = availability
         ? transformConfiguration(availability, config)
         : config;
@@ -415,6 +420,7 @@ const ShippingMethod = ({ token }: ShippingMethodProps) => {
       onSuccess: () => {
         toast({ description: "Updated delivery method for all items" });
         setIsWillCallSelected(false);
+        setSelectedWillCallPlant(undefined);
         incrementCartItemKey();
         sendToGTMShippingMethodChanged();
       },
@@ -478,28 +484,96 @@ const ShippingMethod = ({ token }: ShippingMethodProps) => {
           </div>
         </li>
 
-        <li className="flex flex-row items-center gap-3">
-          <Checkbox
-            id={willCallId}
-            className="avail-change-button rounded-full"
-            checked={selectedSection === WILL_CALL && isWillCallSelected}
-            onCheckedChange={(checked) => {
-              if (checked === true) {
-                setIsWillCallSelected(true);
-                setSelectedSection(WILL_CALL);
-                handleGlobalWillCall();
-              } else {
-                setIsWillCallSelected(false);
-                setSelectedSection(undefined);
-              }
-            }}
-            disabled={updateCartItemMutation.isPending}
-          />
+        <li className="flex flex-col items-stretch gap-2">
+          <div className="flex flex-row items-center gap-3">
+            <Checkbox
+              id={willCallId}
+              className="avail-change-button rounded-full"
+              checked={selectedSection === WILL_CALL && isWillCallSelected}
+              onCheckedChange={(checked) => {
+                if (checked === true) {
+                  setIsWillCallSelected(true);
+                  setSelectedSection(WILL_CALL);
+                } else {
+                  setIsWillCallSelected(false);
+                  setSelectedSection(undefined);
+                }
+              }}
+              disabled={updateCartItemMutation.isPending}
+            />
 
-          <Label htmlFor={willCallId}>
-            Store pick up (Will call) at&nbsp;
-            {willCallPlant?.plantName ?? DEFAULT_PLANT.name}
-          </Label>
+            <Label htmlFor={willCallId}>Store pick up (Will call)</Label>
+          </div>
+          <div className="ml-[1.625rem]">
+            <Select
+              disabled={
+                selectedSection !== WILL_CALL ||
+                updateCartItemMutation.isPending ||
+                !isWillCallSelected
+              }
+              key={selectedWillCallPlant}
+              value={selectedWillCallPlant}
+              onValueChange={setSelectedWillCallPlant}
+            >
+              <SelectTrigger className="avail-change-button w-full">
+                <SelectValue placeholder="Select a store" />
+              </SelectTrigger>
+
+              <SelectContent>
+                {plants?.length > 0 &&
+                  plants.map((option) => (
+                    <SelectItem key={option.code} value={option.code}>
+                      {option.name}
+                    </SelectItem>
+                  ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {selectedSection === WILL_CALL && selectedWillCallPlant && (
+            <RadioGroup
+              className="ml-[1.625rem] flex flex-col"
+              onValueChange={handleGlobalWillCall}
+            >
+              <div className="flex shrink-0 flex-row items-center gap-0.5 rounded border border-wurth-gray-250 object-contain p-1 text-sm shadow-sm">
+                <RadioGroupItem
+                  value={WILLCALL_SHIPING_METHOD}
+                  className="h-3.5 w-3.5"
+                  disabled={
+                    willCallAvailableOption ===
+                      WILLCALL_TRANSFER_SHIPING_METHOD ||
+                    updateCartItemMutation.isPending
+                  }
+                />
+                <span className="pl-2">
+                  Pick up at{" "}
+                  {
+                    plants.find((plant) => plant.code === selectedWillCallPlant)
+                      ?.name
+                  }
+                </span>
+              </div>
+
+              <div className="flex shrink-0 flex-row items-center gap-0.5 rounded border border-wurth-gray-250 object-contain p-1 text-sm shadow-sm">
+                <RadioGroupItem
+                  value={WILLCALL_TRANSFER_SHIPING_METHOD}
+                  className="h-3.5 w-3.5"
+                  disabled={
+                    willCallAvailableOption === WILLCALL_SHIPING_METHOD ||
+                    updateCartItemMutation.isPending
+                  }
+                />
+                <span className="pl-2">
+                  Transfer from {willCallPlant?.plantName ?? DEFAULT_PLANT.name}{" "}
+                  to{" "}
+                  {
+                    plants.find((plant) => plant.code === selectedWillCallPlant)
+                      ?.name
+                  }
+                </span>
+              </div>
+            </RadioGroup>
+          )}
         </li>
       </ul>
     </div>

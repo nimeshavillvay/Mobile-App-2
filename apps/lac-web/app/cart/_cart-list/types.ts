@@ -1,10 +1,5 @@
 import type { ShippingMethod } from "@/_lib/types";
-import type {
-  ALTERNATIVE_BRANCHES,
-  AVAILABLE_ALL,
-  MAIN_OPTIONS,
-  TAKE_ON_HAND,
-} from "../constants";
+import type { MAIN_OPTIONS, SHIP_TO_ME } from "../constants";
 
 export type OptionPlant = {
   isSameDayAvail: boolean;
@@ -15,11 +10,7 @@ export type OptionPlant = {
   shippingMethods: ShippingMethod[];
 };
 
-export type ShipToMeOption =
-  | typeof AVAILABLE_ALL
-  | typeof TAKE_ON_HAND
-  | typeof ALTERNATIVE_BRANCHES
-  | undefined;
+export type ShipToMeOption = typeof SHIP_TO_ME | undefined;
 
 export type WillCallOption =
   | typeof MAIN_OPTIONS.WILL_CALL
