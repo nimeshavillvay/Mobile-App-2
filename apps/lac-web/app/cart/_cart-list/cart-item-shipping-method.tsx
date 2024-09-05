@@ -938,8 +938,7 @@ const CartItemShippingMethod = ({
                   onClick={() => {
                     setSelectedShippingOption(MAIN_OPTIONS.SHIP_TO_ME_ALT);
                     handleDeliveryOptionSelect({
-                      checked:
-                        selectedShippingOption === MAIN_OPTIONS.SHIP_TO_ME_ALT,
+                      checked: true,
                       selectedOption: MAIN_OPTIONS.SHIP_TO_ME_ALT,
                     });
                   }}
@@ -948,7 +947,7 @@ const CartItemShippingMethod = ({
                     className={cn(
                       selectedShippingOption === MAIN_OPTIONS.SHIP_TO_ME_ALT
                         ? "size-[1.12rem] bg-wurth-gray-800 text-wurth-gray-50"
-                        : "size-5 shrink-0 rounded-sm border",
+                        : "flex size-5 shrink-0 items-center justify-center rounded-sm border text-current",
                       "mr-2 rounded-full hover:cursor-pointer",
                     )}
                   >
