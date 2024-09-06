@@ -1,3 +1,4 @@
+import * as Sentry from "@sentry/nextjs";
 import ky from "ky";
 
 export const api = ky.create({
@@ -6,6 +7,15 @@ export const api = ky.create({
   retry: 0,
   headers: {
     "X-AUTH-TOKEN": process.env.NEXT_PUBLIC_WURTH_LAC_API_KEY,
+  },
+  hooks: {
+    beforeError: [
+      (error) => {
+        Sentry.captureException(error);
+
+        return error;
+      },
+    ],
   },
 });
 
