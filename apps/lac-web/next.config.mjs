@@ -38,7 +38,7 @@ export default withSentryConfig(nextConfig, {
   // https://github.com/getsentry/sentry-webpack-plugin#options
 
   org: "villvay-systems-pvt-ltd",
-  project: "wurth-lac",
+  project: "wurth-lac-web",
 
   // Only print logs for uploading source maps in CI
   silent: !process.env.CI,
