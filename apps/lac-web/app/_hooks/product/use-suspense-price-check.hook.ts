@@ -53,7 +53,7 @@ const useSuspensePriceCheck = (
             products: products.map((product) => ({
               productid: product.productId,
               qty: Number(product.qty) <= 0 ? 1 : product.qty,
-              ...(product.cartId !== undefined && { cartid: product.cartId }),
+              cartid: product.cartId,
             })),
           },
           cache: "no-store",
