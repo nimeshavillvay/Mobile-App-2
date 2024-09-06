@@ -43,8 +43,10 @@ const useSuspensePriceCheck = (
 ) => {
   return useSuspenseQuery({
     queryKey: ["user", "price-check", token, products],
-    queryFn: () =>
-      api
+    queryFn: () => {
+      console.log("> products: ", products);
+
+      return api
         .post("rest/pricecheck", {
           headers: {
             authorization: token ? `Bearer ${token}` : undefined,
@@ -58,7 +60,8 @@ const useSuspensePriceCheck = (
           },
           cache: "no-store",
         })
-        .json<ItemsPriceResultOld>(),
+        .json<ItemsPriceResultOld>();
+    },
     select: (data): ItemsPriceResult => {
       const { items, error } = data;
       const mappedItems = items.map(
