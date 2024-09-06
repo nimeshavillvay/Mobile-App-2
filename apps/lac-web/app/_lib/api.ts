@@ -11,15 +11,17 @@ export const api = ky.create({
   hooks: {
     beforeError: [
       (error) => {
-        Sentry.captureException("Ky HTTP Error", {
-          tags: {
-            url: error.request.url,
-            method: error.request.method,
-            status: error.response.status,
-            headers: error.options.headers?.toString(),
-            body: error.options.body?.toString(),
-          },
-        });
+        if (error.request.url.includes("/rest/pricecheck")) {
+          Sentry.captureException("Ky HTTP Error", {
+            tags: {
+              url: error.request.url,
+              method: error.request.method,
+              status: error.response.status,
+              headers: error.options.headers?.toString(),
+              body: error.options.body?.toString() ?? "No Body",
+            },
+          });
+        }
 
         return error;
       },
