@@ -11,7 +11,7 @@ export const api = ky.create({
   hooks: {
     beforeError: [
       (error) => {
-        Sentry.captureException(error, {
+        Sentry.captureException(new Error("HTTP Request Error"), {
           data: {
             url: error.request.url,
             method: error.request.method,
