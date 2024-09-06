@@ -11,10 +11,11 @@ export const api = ky.create({
   hooks: {
     beforeError: [
       (error) => {
-        Sentry.captureException(error, {
+        Sentry.captureException("Ky HTTP Error", {
           data: {
             url: error.request.url,
             method: error.request.method,
+            status: error.response.status,
             headers: error.options.headers,
             body: error.options.body,
           },
