@@ -50,14 +50,16 @@ const useSuspensePriceCheck = (
         .post("rest/pricecheck", {
           headers: {
             authorization: token ? `Bearer ${token}` : undefined,
+            "content-type": "application/json",
+            accept: "application/json",
           },
-          json: {
+          body: JSON.stringify({
             products: products.map((product) => ({
               productid: product.productId,
               qty: Number(product.qty) <= 0 ? 1 : product.qty,
               cartid: product.cartId,
             })),
-          },
+          }),
           cache: "no-store",
         })
         .json<ItemsPriceResultOld>();
