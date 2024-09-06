@@ -12,12 +12,12 @@ export const api = ky.create({
     beforeError: [
       (error) => {
         Sentry.captureException("Ky HTTP Error", {
-          data: {
+          tags: {
             url: error.request.url,
             method: error.request.method,
             status: error.response.status,
-            headers: error.options.headers,
-            body: error.options.body,
+            headers: error.options.headers?.toString(),
+            body: error.options.body?.toString(),
           },
         });
 
