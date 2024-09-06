@@ -241,4 +241,10 @@ export const nonInteractiveCatalogs: NonInteractiveCatalogDataType[] = [
     title: "Kessebohmer Catalog",
     text: "Kessebohmer Catalog",
   },
+  {
+    id: "omega_national_catalog",
+    url: `/catalog/omega_national_catalog.pdf`,
+    title: "Omega National Catalog",
+    text: "Omega National Catalog",
+  },
 ];
