@@ -61,7 +61,7 @@ const HeroBanners = ({ banners }: HeroBannersProps) => {
 
         <CarouselDots
           className="mt-2.5"
-          buttonClassName="border-white/40 data-[selected]:bg-white/40"
+          buttonClassName="size-3 border-white/40 data-[selected]:bg-white/40"
         />
       </Carousel>
     </section>

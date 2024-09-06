@@ -126,7 +126,7 @@ const ProductCardDiscount = ({
   return (
     <div
       className={cn(
-        "flex items-center gap-0.5 bg-green-50 px-1.5 pr-5 text-base text-green-600",
+        "flex items-center gap-0.5 bg-green-50 px-1.5 pr-5 text-base text-green-700",
         orientation === "vertical" && "md:px-2 md:text-lg",
         className,
       )}
@@ -212,7 +212,7 @@ const ProductCardDetails = ({
         </TooltipContent>
       </Tooltip>
 
-      <div className="font-normal leading-none text-wurth-gray-400">{sku}</div>
+      <div className="font-normal leading-none text-wurth-gray-500">{sku}</div>
     </div>
   );
 };
@@ -234,7 +234,7 @@ const ProductCardPrice = ({
         className={cn(
           "font-bold",
           !isLaminateItem && actualPrice && price < actualPrice
-            ? "text-green-600"
+            ? "text-green-700"
             : "text-wurth-gray-800",
         )}
       >
@@ -244,7 +244,7 @@ const ProductCardPrice = ({
         </span>
       </span>
       {!isLaminateItem && !!actualPrice && price < actualPrice && (
-        <span className="ml-1 text-base font-normal text-wurth-gray-400 line-through md:text-lg">
+        <span className="ml-1 text-base font-normal text-wurth-gray-500 line-through md:text-lg">
           {formatNumberToPrice(actualPrice)}
         </span>
       )}
@@ -323,7 +323,7 @@ const ProductCardVariantSelector = ({
       </h4>
 
       <Select value={value} onValueChange={onValueChange}>
-        <SelectTrigger className="w-full">
+        <SelectTrigger className="w-full" aria-label="Select a variation">
           <SelectValue placeholder="Select a variation" />
         </SelectTrigger>
         <SelectContent>

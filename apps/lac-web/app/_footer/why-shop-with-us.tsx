@@ -49,7 +49,7 @@ const WhyShopWithUs = () => {
                 <Icon className="stroke-white md:size-12" />
               </div>
 
-              <h3 className="text-clip break-words font-title text-2xl uppercase leading-7 tracking-[-0.12px] text-wurth-blue-450 md:text-[1.75rem] md:leading-8 md:tracking-[-0.14px]">
+              <h3 className="text-clip break-words font-title text-2xl uppercase leading-7 tracking-[-0.12px] text-wurth-gray-800 md:text-[1.75rem] md:leading-8 md:tracking-[-0.14px]">
                 {title}
               </h3>
             </div>

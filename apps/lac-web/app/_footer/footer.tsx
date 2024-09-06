@@ -178,6 +178,8 @@ export const Fsc = () => {
           </clipPath>
         </defs>
       </svg>
+
+      <span className="sr-only">Forest Stewardship Council</span>
     </a>
   );
 };

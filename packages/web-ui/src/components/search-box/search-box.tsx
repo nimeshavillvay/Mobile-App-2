@@ -366,6 +366,8 @@ export const SearchBoxButton = ({
         className="btnAction size-5"
         data-button-action="Search"
       />
+
+      <span className="sr-only">Search</span>
     </Button>
   );
 };
