@@ -307,7 +307,7 @@ const CartItemShippingMethod = ({
     }
   };
 
-  const getPlantShippingMethod = (index: number) => {
+  const getPlantShippingMethodFromCart = (index: number) => {
     const shipping_method_1 = cartItem[0]?.configuration.shipping_method_1;
     const shipping_method_2 = cartItem[0]?.configuration.shipping_method_2;
     const shipping_method_3 = cartItem[0]?.configuration.shipping_method_3;
@@ -330,7 +330,21 @@ const CartItemShippingMethod = ({
       case "shipping_method_5": {
         return shipping_method_5;
       }
+      default:
+        return "";
     }
+  };
+
+  const getPlantShippingMethod = (
+    index: number,
+    shippingMethods: ShippingMethod[],
+  ) => {
+    const shippingMethod = getPlantShippingMethodFromCart(index);
+    return shippingMethod !== ""
+      ? shippingMethod
+      : shippingMethods.length > 0
+        ? shippingMethods[0]?.code
+        : DEFAULT_PLANT.code;
   };
 
   const getDefaultFormValues = () => {
@@ -345,10 +359,8 @@ const CartItemShippingMethod = ({
         ) ?? [],
 
       shippingMethod:
-        shipAlternativeBranch?.plants.map(
-          (plant) =>
-            getPlantShippingMethod(plant.index) ??
-            plant?.shippingMethods[0]?.code,
+        shipAlternativeBranch?.plants.map((plant) =>
+          getPlantShippingMethod(plant.index, plant.shippingMethods),
         ) ?? [],
     };
   };
@@ -392,6 +404,7 @@ const CartItemShippingMethod = ({
   }) => {
     if (checked) {
       if (selectedOption !== MAIN_OPTIONS.SHIP_TO_ME_ALT) {
+        form.reset(getDefaultFormValues());
         setOpen(false);
       }
       const isWillCallOptionSelected =
@@ -485,7 +498,6 @@ const CartItemShippingMethod = ({
 
       // Ship to me configs
       if (selectedOption === MAIN_OPTIONS.SHIP_TO_ME_ALT) {
-        form.reset(getDefaultFormValues());
         handleShipToMeFromAlternativeOptions();
       }
       if (
@@ -719,8 +731,33 @@ const CartItemShippingMethod = ({
                 options,
                 ALTERNATIVE_BRANCHES,
               );
+              const availableAll = findAvailabilityOptionForType(
+                options,
+                AVAILABLE_ALL,
+              );
               shipAlternativeBranch?.hash;
-              if (shipAlternativeBranch) {
+
+              if (availableAll) {
+                setLineQuantity(altQtySum.toString());
+                const setShippingMethod =
+                  availableAll.plants
+                    ?.at(0)
+                    ?.shippingMethods?.find(
+                      (method) => method.code === selectedShippingMethod,
+                    )?.code ??
+                  availableAll.plants?.at(0)?.shippingMethods?.at(0)?.code ??
+                  selectedShippingMethod;
+                setSelectedShippingMethod(setShippingMethod);
+                onSave({
+                  ...createCartItemConfig({
+                    method: setShippingMethod,
+                    quantity: availableAll.plants?.at(0)?.quantity ?? 0,
+                    plant: availableAll.plants?.at(0)?.plant ?? EMPTY_STRING,
+                    hash: availableAll.hash,
+                  }),
+                  will_call_not_in_stock: FALSE_STRING,
+                });
+              } else if (shipAlternativeBranch) {
                 setLineQuantity(altQtySum.toString());
                 setSelectedShippingOption(MAIN_OPTIONS.SHIP_TO_ME_ALT);
 
@@ -769,22 +806,35 @@ const CartItemShippingMethod = ({
                     ],
                     {
                       onSettled: () => {
+                        const getQuantity = (
+                          plant: string,
+                          quantity: number,
+                        ) => {
+                          return plant === homePlant
+                            ? quantity +
+                                calculateDefaultAltBO(
+                                  homePlant,
+                                  Number(formData.quantityAlt[0]),
+                                )
+                            : quantity;
+                        };
+
                         popSku([sku]);
                         form.reset({
                           quantityAlt:
                             SelectedPlants.map((plant) =>
-                              (plant.plant === homePlant
-                                ? plant.quantity +
-                                  calculateDefaultAltBO(
-                                    homePlant,
-                                    Number(formData.quantityAlt[0]),
-                                  )
-                                : plant.quantity
-                              )?.toString(),
+                              getQuantity(plant.plant, plant.quantity) === 0
+                                ? ""
+                                : getQuantity(
+                                    plant.plant,
+                                    plant.quantity,
+                                  ).toString(),
                             ) ?? [],
 
                           shippingMethod:
-                            SelectedPlants.map((plant) => plant.method) ?? [],
+                            SelectedPlants.map(
+                              (plant) => plant.method ?? DEFAULT_PLANT.code,
+                            ) ?? [],
                         });
 
                         toast({
@@ -955,7 +1005,7 @@ const CartItemShippingMethod = ({
                     )}
                   </span>
 
-                  <span className="text-base">
+                  <span className="text-base font-medium text-wurth-gray-800">
                     Ship from Alternate Branch(es)
                   </span>
                 </CollapsibleTrigger>

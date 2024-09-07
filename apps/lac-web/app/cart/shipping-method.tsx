@@ -163,6 +163,7 @@ const ShippingMethod = ({ token, plants }: ShippingMethodProps) => {
     config[configKeyPlant] = plantValue;
     config[configKeyShippingMethod] = shippingMethodValue;
   };
+
   const transformConfiguration = (
     availability: Availability,
     config: CartItemConfiguration,
@@ -257,9 +258,9 @@ const ShippingMethod = ({ token, plants }: ShippingMethodProps) => {
 
         // Get all methods for "Ship to me"
         const options = [
+          alternativeBranchesOption,
           allAvailableOption,
           takeOnHandOption,
-          alternativeBranchesOption,
         ];
 
         const selectedOption = options.find((option) =>
@@ -267,9 +268,8 @@ const ShippingMethod = ({ token, plants }: ShippingMethodProps) => {
             plant?.shippingMethods.some((method) => method?.code === value),
           ),
         );
-
         const shippingMethods =
-          selectedOption?.plants.at(0)?.shippingMethods ?? [];
+          selectedOption?.plants.map((plant) => plant.shippingMethods) ?? [];
         return {
           id: item.itemInfo.productId,
           hashvalue: selectedOption?.hash ?? "",
@@ -287,7 +287,6 @@ const ShippingMethod = ({ token, plants }: ShippingMethodProps) => {
           ...item.configuration,
         };
 
-        let newValue: string | undefined = undefined;
         let newHashValue: string | undefined = undefined;
         // Check if the value is available
         const shippingMethod = itemShippingMethods.find(
@@ -295,12 +294,11 @@ const ShippingMethod = ({ token, plants }: ShippingMethodProps) => {
         );
         if (shippingMethod) {
           // Check if the global shipping method selected is available for the item
-          const isValid = !!shippingMethod.shippingMethods.find(
-            (element) => element.code === value,
+          const isValidForAny = !!shippingMethod.shippingMethods.map(
+            (methods) => methods.find((element) => element.code === value),
           );
 
-          if (isValid) {
-            newValue = value;
+          if (isValidForAny) {
             newHashValue = shippingMethod.hashvalue;
           }
         }
@@ -308,12 +306,11 @@ const ShippingMethod = ({ token, plants }: ShippingMethodProps) => {
         const selectedOption = shippingMethod;
         const addedIndexes: number[] = [];
 
-        if (newValue && newHashValue) {
+        if (newHashValue) {
           config.will_call_shipping = "";
           config.will_call_avail = "";
           config.will_call_plant = "";
           config.will_call_not_in_stock = FALSE_STRING;
-          // Set hash value
           config.hashvalue = newHashValue;
           if (selectedOption) {
             config.backorder_all =
@@ -333,7 +330,6 @@ const ShippingMethod = ({ token, plants }: ShippingMethodProps) => {
               selectedOption.plants[i]
             ) {
               const selectedPlant = selectedOption.plants[i];
-
               if (selectedPlant) {
                 const quantity = selectedPlant.quantity ?? "";
                 const index = selectedPlant.index;
@@ -341,11 +337,11 @@ const ShippingMethod = ({ token, plants }: ShippingMethodProps) => {
 
                 const availValue = quantity?.toString() ?? "";
                 const plantValue = selectedPlant.plant ?? "";
-                const shippingMethodValue =
-                  selectedPlant.plant !== willCallPlant?.plantCode
-                    ? DEFAULT_SHIPPING_METHOD
-                    : newValue ?? "";
-
+                const shippingMethodValue = selectedPlant?.shippingMethods.find(
+                  (method) => method.code === value,
+                )
+                  ? value
+                  : DEFAULT_SHIPPING_METHOD;
                 // Set values for the selected plant
                 setConfigValues(
                   config,

@@ -86,13 +86,18 @@ export const getAlternativeBranchesConfig = ({
   };
   const plantName = homePlant;
   const data = plants?.map((plant) => ({
-    [`avail_${plant?.index}`]: (plant?.quantity ?? 0).toString(),
-    [`plant_${plant?.index}`]: plant?.plant ?? "",
-    [`shipping_method_${plant?.index}`]: plant.method
-      ? plant.method
-      : plant?.plant !== plantName
-        ? DEFAULT_SHIPPING_METHOD
-        : method,
+    [`avail_${plant?.index}`]:
+      (plant?.quantity ?? 0) > 0 ? plant?.quantity?.toString() : "",
+    [`plant_${plant?.index}`]:
+      (plant?.quantity ?? 0) > 0 ? plant?.plant ?? "" : "",
+    [`shipping_method_${plant?.index}`]:
+      (plant?.quantity ?? 0) === 0
+        ? ""
+        : plant.method
+          ? plant.method
+          : plant?.plant !== plantName
+            ? DEFAULT_SHIPPING_METHOD
+            : method,
   }));
 
   config = Object.assign(config, ...data);
