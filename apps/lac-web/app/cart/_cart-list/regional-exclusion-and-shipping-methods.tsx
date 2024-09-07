@@ -24,7 +24,6 @@ const RegionalExclusionAndShippingMethods = ({
   willCallPlant,
   setSelectedBackorderShippingMethod,
   selectedBackorderShippingMethod,
-  minAmount,
   increment,
   uom,
   cartItemId,
@@ -67,7 +66,6 @@ const RegionalExclusionAndShippingMethods = ({
       handleSelectWillCallPlant={handleSelectWillCallPlant}
       willCallPlant={willCallPlant}
       token={token}
-      minAmount={minAmount}
       increment={increment}
       uom={uom}
       cartItemId={cartItemId}

@@ -297,7 +297,10 @@ const CartItem = ({
 
   // User selected shipping method (ship-to-me)
   const [selectedShippingMethod, setSelectedShippingMethod] = useState(
-    defaultShippingMethod?.code ?? product.configuration.shipping_method_1,
+    defaultShippingMethod?.code ??
+      product.configuration.shipping_method_1 !== ""
+      ? product.configuration.shipping_method_1
+      : DEFAULT_SHIPPING_METHOD,
   );
 
   const [selectedBackorderShippingMethod, setSelectedBackorderShippingMethod] =
@@ -1062,7 +1065,6 @@ const CartItem = ({
               handleSelectWillCallPlant={handleSelectWillCallPlant}
               willCallPlant={willCallPlant}
               token={token}
-              minAmount={product.minAmount}
               increment={product.increment}
               uom={product.uom}
               cartItemId={product.cartItemId}
@@ -1097,7 +1099,6 @@ const CartItem = ({
               isDirectlyShippedFromVendor={product.isDirectlyShippedFromVendor}
               handleSelectWillCallPlant={handleSelectWillCallPlant}
               willCallPlant={willCallPlant}
-              minAmount={product.minAmount}
               increment={product.increment}
               uom={product.uom}
               cartItemId={product.cartItemId}

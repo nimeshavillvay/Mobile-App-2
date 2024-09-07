@@ -39,7 +39,7 @@ const DesktopView = async ({ orderNo }: DesktopViewProps) => {
   const [orderDetails, paymentMethods, plants] = await Promise.all([
     getOrderDetails(sessionToken.value, orderNo),
     getPaymentMethods(),
-    getPlants(),
+    getPlants(sessionToken?.value),
   ]);
 
   return (

@@ -5,6 +5,7 @@ import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import type { Metadata } from "next";
 import dynamic from "next/dynamic";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import CartList from "./_cart-list";
 import CheckoutButton from "./_checkout-button";
@@ -30,7 +31,11 @@ const CartPage = async () => {
   const cookiesStore = cookies();
   const sessionToken = cookiesStore.get(SESSION_TOKEN_COOKIE);
 
-  const plants = await getPlants();
+  if (!sessionToken?.value) {
+    return redirect("/");
+  }
+
+  const plants = await getPlants(sessionToken?.value);
 
   if (!sessionToken?.value) {
     return null;

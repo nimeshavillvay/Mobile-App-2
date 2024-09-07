@@ -140,7 +140,11 @@ const CartItemPrice = ({
           : "flex-row items-center md:hidden",
       )}
     >
-      <div className="flex flex-row flex-wrap items-center gap-x-2">
+      <div
+        className={cn(
+          type === "mobile" && "flex flex-row flex-wrap items-center gap-x-2",
+        )}
+      >
         <div className="text-lg text-green-700">
           ${formatNumberToPrice(extendedPrice)}
         </div>

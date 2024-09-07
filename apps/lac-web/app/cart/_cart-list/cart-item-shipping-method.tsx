@@ -51,6 +51,7 @@ import dayjs from "dayjs";
 import type { Dispatch, SetStateAction } from "react";
 import { useId, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
+import type { z } from "zod";
 import { useCartItemQuantityContext } from "../cart-item-quantity-context";
 import {
   ALTERNATIVE_BRANCHES,
@@ -68,7 +69,6 @@ import useUnSavedAlternativeQuantityState from "../use-cart-alternative-qty-meth
 import NotAvailableInfoBanner from "./cart-item-not-available-banner";
 import CartItemShipFromAlternativeBranchRow from "./cart-item-ship-from-alternative-branch-row";
 import CartItemWillCallTransfer from "./cart-item-will-call-transfer";
-import type { ShipFromAltQtySchema } from "./helpers";
 import {
   createCartItemConfig,
   findAvailabilityOptionForType,
@@ -101,7 +101,6 @@ type CartItemShippingMethodProps = {
   readonly setSelectedBackorderShippingMethod: (method: string) => void;
   readonly selectedBackorderShippingMethod: string;
   readonly token: string;
-  readonly minAmount: number;
   readonly increment: number;
   readonly uom: string;
   readonly cartItemId: number;
@@ -130,7 +129,6 @@ const CartItemShippingMethod = ({
   setSelectedBackorderShippingMethod,
   selectedBackorderShippingMethod,
   token,
-  minAmount,
   increment,
   uom,
   cartItemId,
@@ -307,7 +305,7 @@ const CartItemShippingMethod = ({
     }
   };
 
-  const getPlantShippingMethod = (index: number) => {
+  const getPlantShippingMethodFromCart = (index: number) => {
     const shipping_method_1 = cartItem[0]?.configuration.shipping_method_1;
     const shipping_method_2 = cartItem[0]?.configuration.shipping_method_2;
     const shipping_method_3 = cartItem[0]?.configuration.shipping_method_3;
@@ -330,40 +328,54 @@ const CartItemShippingMethod = ({
       case "shipping_method_5": {
         return shipping_method_5;
       }
+      default:
+        return "";
     }
+  };
+
+  const getPlantShippingMethod = (
+    index: number,
+    shippingMethods: ShippingMethod[],
+  ) => {
+    const shippingMethod = getPlantShippingMethodFromCart(index);
+    return shippingMethod !== ""
+      ? shippingMethod
+      : shippingMethods.length > 0
+        ? shippingMethods[0]?.code
+        : DEFAULT_PLANT.code;
   };
 
   const getDefaultFormValues = () => {
     return {
       quantityAlt:
         shipAlternativeBranch?.plants.map((plant) =>
-          getPlantQuantity(
-            plant.plant,
-            plant.quantity,
-            plant.index,
-          )?.toString(),
+          getPlantQuantity(plant.plant, plant.quantity, plant.index),
         ) ?? [],
 
       shippingMethod:
-        shipAlternativeBranch?.plants.map(
-          (plant) =>
-            getPlantShippingMethod(plant.index) ??
-            plant?.shippingMethods[0]?.code,
+        shipAlternativeBranch?.plants.map((plant) =>
+          getPlantShippingMethod(plant.index, plant.shippingMethods),
         ) ?? [],
     };
   };
+  const schema = shipFromAltQtySchema(increment);
+  type ShipFromAltQtySchema = z.infer<typeof schema>;
 
   const form = useForm<ShipFromAltQtySchema>({
-    resolver: zodResolver(shipFromAltQtySchema),
+    resolver: zodResolver(schema),
     defaultValues: getDefaultFormValues(),
   });
+
+  const formId = `alternative-${cartItemId}`;
 
   const shipToMeShippingMethods =
     shippingMethods?.length > 0
       ? shippingMethods
-      : availableAll?.plants[0]?.shippingMethods
+      : availableAll?.plants[0] !== undefined &&
+          availableAll?.plants[0]?.shippingMethods.length > 0
         ? availableAll?.plants[0]?.shippingMethods
-        : backOrderAll?.plants[0]?.shippingMethods
+        : backOrderAll?.plants[0] !== undefined &&
+            backOrderAll?.plants[0]?.shippingMethods.length > 0
           ? backOrderAll?.plants[0]?.shippingMethods
           : [];
 
@@ -380,7 +392,7 @@ const CartItemShippingMethod = ({
       plant: string;
     }[],
   ) => {
-    return plants?.at(0)?.plant ?? "";
+    return plants?.at(0)?.plant ?? DEFAULT_PLANT.code;
   };
 
   const handleDeliveryOptionSelect = ({
@@ -391,6 +403,7 @@ const CartItemShippingMethod = ({
     selectedOption: MainOption;
   }) => {
     if (checked) {
+      form.reset(getDefaultFormValues());
       if (selectedOption !== MAIN_OPTIONS.SHIP_TO_ME_ALT) {
         setOpen(false);
       }
@@ -485,7 +498,6 @@ const CartItemShippingMethod = ({
 
       // Ship to me configs
       if (selectedOption === MAIN_OPTIONS.SHIP_TO_ME_ALT) {
-        form.reset(getDefaultFormValues());
         handleShipToMeFromAlternativeOptions();
       }
       if (
@@ -698,10 +710,10 @@ const CartItemShippingMethod = ({
     }
   };
 
-  const applyAlternativeBranchChanges = () => {
+  const onSubmit = form.handleSubmit(async (formData) => {
     clearTimeout(qtyChangeTimeoutRef.current);
+    popSku([sku]);
 
-    const formData = form.getValues();
     const altQtySum = formData.quantityAlt.reduce((collector, num) => {
       return (collector += Number(num));
     }, 0);
@@ -719,8 +731,33 @@ const CartItemShippingMethod = ({
                 options,
                 ALTERNATIVE_BRANCHES,
               );
+              const availableAll = findAvailabilityOptionForType(
+                options,
+                AVAILABLE_ALL,
+              );
               shipAlternativeBranch?.hash;
-              if (shipAlternativeBranch) {
+
+              if (availableAll) {
+                setLineQuantity(altQtySum.toString());
+                const setShippingMethod =
+                  availableAll.plants
+                    ?.at(0)
+                    ?.shippingMethods?.find(
+                      (method) => method.code === selectedShippingMethod,
+                    )?.code ??
+                  availableAll.plants?.at(0)?.shippingMethods?.at(0)?.code ??
+                  selectedShippingMethod;
+                setSelectedShippingMethod(setShippingMethod);
+                onSave({
+                  ...createCartItemConfig({
+                    method: setShippingMethod,
+                    quantity: availableAll.plants?.at(0)?.quantity ?? 0,
+                    plant: availableAll.plants?.at(0)?.plant ?? EMPTY_STRING,
+                    hash: availableAll.hash,
+                  }),
+                  will_call_not_in_stock: FALSE_STRING,
+                });
+              } else if (shipAlternativeBranch) {
                 setLineQuantity(altQtySum.toString());
                 setSelectedShippingOption(MAIN_OPTIONS.SHIP_TO_ME_ALT);
 
@@ -769,22 +806,30 @@ const CartItemShippingMethod = ({
                     ],
                     {
                       onSettled: () => {
-                        popSku([sku]);
+                        const getQuantity = (
+                          plant: string,
+                          quantity: number,
+                        ) => {
+                          return plant === homePlant
+                            ? quantity +
+                                calculateDefaultAltBO(
+                                  homePlant,
+                                  Number(formData.quantityAlt[0]),
+                                )
+                            : quantity;
+                        };
                         form.reset({
                           quantityAlt:
                             SelectedPlants.map((plant) =>
-                              (plant.plant === homePlant
-                                ? plant.quantity +
-                                  calculateDefaultAltBO(
-                                    homePlant,
-                                    Number(formData.quantityAlt[0]),
-                                  )
-                                : plant.quantity
-                              )?.toString(),
+                              getQuantity(plant.plant, plant.quantity) === 0
+                                ? 0
+                                : getQuantity(plant.plant, plant.quantity),
                             ) ?? [],
 
                           shippingMethod:
-                            SelectedPlants.map((plant) => plant.method) ?? [],
+                            SelectedPlants.map(
+                              (plant) => plant.method ?? DEFAULT_PLANT.code,
+                            ) ?? [],
                         });
 
                         toast({
@@ -797,14 +842,16 @@ const CartItemShippingMethod = ({
               }
             }
           },
+          onError: () => {
+            pushSku(sku);
+          },
         },
       );
     }, 500);
-  };
+  });
 
   const onFormChange = () => {
     const isDirty = form.formState.isDirty;
-
     if (isDirty) {
       if (!skus.includes(sku)) {
         pushSku(sku);
@@ -955,14 +1002,18 @@ const CartItemShippingMethod = ({
                     )}
                   </span>
 
-                  <span className="text-base">
+                  <span className="text-base font-medium text-wurth-gray-800">
                     Ship from Alternate Branch(es)
                   </span>
                 </CollapsibleTrigger>
 
                 <CollapsibleContent>
                   <FormProvider {...form}>
-                    <form onChange={onFormChange}>
+                    <form
+                      onChange={onFormChange}
+                      onSubmit={onSubmit}
+                      id={formId}
+                    >
                       <Table>
                         <TableHeader>
                           <TableRow>
@@ -986,7 +1037,6 @@ const CartItemShippingMethod = ({
                                   willCallPlant={willCallPlant}
                                   availability={availability}
                                   availableQuantityInPlant={plant.quantity ?? 0}
-                                  minAmount={minAmount}
                                   increment={increment}
                                   uom={uom}
                                   defaultBoQty={
@@ -995,16 +1045,18 @@ const CartItemShippingMethod = ({
                                         homeBranchAvailableQuantity
                                       : 0
                                   }
+                                  sku={sku}
+                                  cartItemId={cartItemId}
                                 />
                               ),
                             )}
+
                           <TableRow className="border-y-0 hover:bg-transparent">
                             <TableCell colSpan={2}>
                               <Button
                                 variant="default"
-                                type="button"
+                                type="submit"
                                 className="float-right justify-end"
-                                onClick={applyAlternativeBranchChanges}
                                 disabled={
                                   !form.formState.isDirty ||
                                   updateCartConfigMutation.isPending ||

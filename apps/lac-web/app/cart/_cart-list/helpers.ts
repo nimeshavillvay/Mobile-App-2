@@ -86,13 +86,18 @@ export const getAlternativeBranchesConfig = ({
   };
   const plantName = homePlant;
   const data = plants?.map((plant) => ({
-    [`avail_${plant?.index}`]: (plant?.quantity ?? 0).toString(),
-    [`plant_${plant?.index}`]: plant?.plant ?? "",
-    [`shipping_method_${plant?.index}`]: plant.method
-      ? plant.method
-      : plant?.plant !== plantName
-        ? DEFAULT_SHIPPING_METHOD
-        : method,
+    [`avail_${plant?.index}`]:
+      (plant?.quantity ?? 0) > 0 ? plant?.quantity?.toString() : "",
+    [`plant_${plant?.index}`]:
+      (plant?.quantity ?? 0) > 0 ? plant?.plant ?? "" : "",
+    [`shipping_method_${plant?.index}`]:
+      (plant?.quantity ?? 0) === 0
+        ? ""
+        : plant.method
+          ? plant.method
+          : plant?.plant !== plantName
+            ? DEFAULT_SHIPPING_METHOD
+            : method,
   }));
 
   config = Object.assign(config, ...data);
@@ -136,9 +141,12 @@ export const cartItemSchema = z.object({
 
 export type CartItemSchema = z.infer<typeof cartItemSchema>;
 
-export const shipFromAltQtySchema = z.object({
-  quantityAlt: z.array(z.string()),
-  shippingMethod: z.array(z.string()),
-});
-
-export type ShipFromAltQtySchema = z.infer<typeof shipFromAltQtySchema>;
+export const shipFromAltQtySchema = (increment: number) =>
+  z.object({
+    quantityAlt: z.array(
+      z.coerce.number().multipleOf(increment, {
+        message: `This product is sold in multiples of: ${increment}`,
+      }),
+    ),
+    shippingMethod: z.array(z.string()),
+  });

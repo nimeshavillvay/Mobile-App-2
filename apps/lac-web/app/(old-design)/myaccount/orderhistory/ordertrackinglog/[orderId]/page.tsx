@@ -49,7 +49,7 @@ const OrderTrackingLogPage = async ({
 
   const [shippingMethods, plants] = await Promise.all([
     getShippingMethods(),
-    getPlants(),
+    getPlants(sessionTokenCookie?.value),
   ]);
 
   return (

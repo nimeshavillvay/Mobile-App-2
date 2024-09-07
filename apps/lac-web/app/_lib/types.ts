@@ -217,6 +217,9 @@ export type PaymentMethod = {
 export type Plant = {
   code: string;
   name: string;
+  is_willcall: boolean;
+  is_transfer: boolean;
+  xPlant: string;
 };
 
 export type FilterValues = {
