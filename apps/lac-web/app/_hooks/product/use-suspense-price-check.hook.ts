@@ -1,5 +1,5 @@
-import { api } from "@/_lib/api";
 import type { ItemsPriceResult, PriceBreakDowns } from "@/_lib/types";
+import { getFetchHeaders, getFetchUrl } from "@/_lib/utils";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
 type ItemPriceOld = {
@@ -36,31 +36,34 @@ type Product = {
   cartId?: number;
 };
 
-// TODO: Need to remove usePriceCheck hook and replace it with useSuspensePriceCheck
 const useSuspensePriceCheck = (
   token: string | undefined,
   products: Product[],
 ) => {
-  return useSuspenseQuery({
+  return useSuspenseQuery<ItemsPriceResult, Error>({
     queryKey: ["user", "price-check", token, products],
-    queryFn: () =>
-      api
-        .post("rest/pricecheck", {
-          headers: {
-            authorization: token ? `Bearer ${token}` : token,
-          },
-          json: {
-            products: products.map((product) => ({
-              productid: product.productId,
-              qty: Number(product.qty) <= 0 ? 1 : product.qty,
-              ...(product.cartId !== undefined && { cartid: product.cartId }),
-            })),
-          },
-          cache: "no-store",
-        })
-        .json<ItemsPriceResultOld>(),
-    select: (data): ItemsPriceResult => {
-      const { items, error } = data;
+    queryFn: async () => {
+      const headers = getFetchHeaders(token);
+
+      const response = await fetch(getFetchUrl("/rest/pricecheck"), {
+        method: "POST",
+        headers,
+        body: JSON.stringify({
+          products: products.map((product) => ({
+            productid: product.productId,
+            qty: Number(product.qty) <= 0 ? 1 : product.qty,
+            cartid: product.cartId,
+          })),
+        }),
+        cache: "no-store",
+      });
+
+      if (!response.ok) {
+        throw new Error("Price Check Error");
+      }
+
+      const { items, error } = (await response.json()) as ItemsPriceResultOld;
+
       const mappedItems = items.map(
         ({
           productid,

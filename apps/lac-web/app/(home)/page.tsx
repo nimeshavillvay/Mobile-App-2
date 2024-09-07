@@ -94,11 +94,12 @@ const HomePage = async () => {
               {
                 backgroundColor: ad.colors.background,
                 "--text-color": ad.colors.text,
-                backgroundImage: `url(${ad.image.src})`,
               } as CSSProperties
             }
             className="relative flex aspect-[10/9] w-full flex-col justify-between overflow-hidden rounded-md bg-cover bg-center"
           >
+            <Image src={ad.image} alt={ad.promoName} fill placeholder="blur" />
+
             <div className="absolute bottom-0 left-0 right-0 flex h-8 justify-between px-2 pb-2 sm:h-9 md:h-16 md:px-4 md:pb-4 lg:h-[1.84rem] lg:pb-[0.4rem] lg:pl-2 lg:pr-1 xl:px-3 xl:pb-3 2xl:h-12">
               <Link
                 href={ad.shopNowLink}
