@@ -1,4 +1,5 @@
 import NumberInputField from "@/_components/number-input-field";
+import useDebouncedState from "@/_hooks/misc/use-debounced-state.hook";
 import { type AvailabilityOptionPlants } from "@/_hooks/product/use-suspense-check-availability.hook";
 import { type Plant } from "@/_lib/types";
 import {
@@ -16,7 +17,7 @@ import {
   SelectValue,
 } from "@repo/web-ui/components/ui/select";
 import { TableCell, TableRow } from "@repo/web-ui/components/ui/table";
-import { useState } from "react";
+import { useDeferredValue, useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { type Availability } from "../types";
 import useUnSavedAlternativeQuantityState from "../use-cart-alternative-qty-method-store.hook";
@@ -55,7 +56,14 @@ const CartItemShipFromAlternativeBranchRow = ({
   sku,
   cartItemId,
 }: BranchRowProps) => {
-  const { control } = useFormContext<ShipFromAltQtySchema>();
+  const { control, watch } = useFormContext<ShipFromAltQtySchema>();
+
+  const quantity = watch("quantityAlt");
+  const delayedQuantity = useDebouncedState(quantity);
+  const deferredQuantity = useDeferredValue(delayedQuantity);
+
+  const currentEnteredQuantity = Number(deferredQuantity[quantityFieldIndex]);
+
   const [boQty, setBoQty] = useState(defaultBoQty);
   const { pushSku, popSku } = useUnSavedAlternativeQuantityState(
     (state) => state.actions,
@@ -167,7 +175,9 @@ const CartItemShipFromAlternativeBranchRow = ({
           {isHomePlant && (
             <div className="py-2 text-sm font-medium">
               <span>
-                <ItemCountBadge count={availabilityOfPlant} />{" "}
+                <ItemCountBadge
+                  count={Math.min(currentEnteredQuantity, availabilityOfPlant)}
+                />{" "}
                 <span className="text-sm font-medium">ship to me</span>
               </span>
               {boQty > 0 && <BackOrderItemCountLabel count={boQty} />}{" "}
