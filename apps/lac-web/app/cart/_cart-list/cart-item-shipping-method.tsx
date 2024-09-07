@@ -48,7 +48,7 @@ import {
 } from "@repo/web-ui/components/ui/table";
 import { toast } from "@repo/web-ui/components/ui/toast";
 import dayjs from "dayjs";
-import type { Dispatch, SetStateAction } from "react";
+import type { ComponentProps, Dispatch, SetStateAction } from "react";
 import { useId, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useCartItemQuantityContext } from "../cart-item-quantity-context";
@@ -101,7 +101,6 @@ type CartItemShippingMethodProps = {
   readonly setSelectedBackorderShippingMethod: (method: string) => void;
   readonly selectedBackorderShippingMethod: string;
   readonly token: string;
-  readonly minAmount: number;
   readonly increment: number;
   readonly uom: string;
   readonly cartItemId: number;
@@ -130,7 +129,6 @@ const CartItemShippingMethod = ({
   setSelectedBackorderShippingMethod,
   selectedBackorderShippingMethod,
   token,
-  minAmount,
   increment,
   uom,
   cartItemId,
@@ -370,14 +368,20 @@ const CartItemShippingMethod = ({
     defaultValues: getDefaultFormValues(),
   });
 
+  const formId = `alternative-${cartItemId}`;
+
   const shipToMeShippingMethods =
     shippingMethods?.length > 0
       ? shippingMethods
-      : availableAll?.plants[0]?.shippingMethods
+      : availableAll?.plants[0] !== undefined &&
+          availableAll?.plants[0]?.shippingMethods.length > 0
         ? availableAll?.plants[0]?.shippingMethods
-        : backOrderAll?.plants[0]?.shippingMethods
+        : backOrderAll?.plants[0] !== undefined &&
+            backOrderAll?.plants[0]?.shippingMethods.length > 0
           ? backOrderAll?.plants[0]?.shippingMethods
           : [];
+
+  // console.log(">> shipToMeShippingMethods", shipToMeShippingMethods);
 
   const getFirstBackOrderDateFromPlants = (
     plants: {
@@ -710,7 +714,10 @@ const CartItemShippingMethod = ({
     }
   };
 
-  const applyAlternativeBranchChanges = () => {
+  const applyAlternativeBranchChanges: ComponentProps<"form">["onSubmit"] = (
+    event,
+  ) => {
+    event.preventDefault();
     clearTimeout(qtyChangeTimeoutRef.current);
     popSku([sku]);
 
@@ -856,7 +863,6 @@ const CartItemShippingMethod = ({
 
   const onFormChange = () => {
     const isDirty = form.formState.isDirty;
-
     if (isDirty) {
       if (!skus.includes(sku)) {
         pushSku(sku);
@@ -1014,7 +1020,11 @@ const CartItemShippingMethod = ({
 
                 <CollapsibleContent>
                   <FormProvider {...form}>
-                    <form onChange={onFormChange}>
+                    <form
+                      onChange={onFormChange}
+                      onSubmit={applyAlternativeBranchChanges}
+                      id={formId}
+                    >
                       <Table>
                         <TableHeader>
                           <TableRow>
@@ -1038,7 +1048,6 @@ const CartItemShippingMethod = ({
                                   willCallPlant={willCallPlant}
                                   availability={availability}
                                   availableQuantityInPlant={plant.quantity ?? 0}
-                                  minAmount={minAmount}
                                   increment={increment}
                                   uom={uom}
                                   defaultBoQty={
@@ -1047,6 +1056,8 @@ const CartItemShippingMethod = ({
                                         homeBranchAvailableQuantity
                                       : 0
                                   }
+                                  sku={sku}
+                                  cartItemId={cartItemId}
                                 />
                               ),
                             )}
@@ -1054,9 +1065,8 @@ const CartItemShippingMethod = ({
                             <TableCell colSpan={2}>
                               <Button
                                 variant="default"
-                                type="button"
+                                type="submit"
                                 className="float-right justify-end"
-                                onClick={applyAlternativeBranchChanges}
                                 disabled={
                                   !form.formState.isDirty ||
                                   updateCartConfigMutation.isPending ||

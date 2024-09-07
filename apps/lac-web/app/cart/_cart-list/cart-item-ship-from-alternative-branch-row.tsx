@@ -1,5 +1,4 @@
 import NumberInputField from "@/_components/number-input-field";
-import useDebouncedState from "@/_hooks/misc/use-debounced-state.hook";
 import { type AvailabilityOptionPlants } from "@/_hooks/product/use-suspense-check-availability.hook";
 import { type Plant } from "@/_lib/types";
 import {
@@ -17,9 +16,10 @@ import {
   SelectValue,
 } from "@repo/web-ui/components/ui/select";
 import { TableCell, TableRow } from "@repo/web-ui/components/ui/table";
-import { useDeferredValue, useState } from "react";
+import { useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { type Availability } from "../types";
+import useUnSavedAlternativeQuantityState from "../use-cart-alternative-qty-method-store.hook";
 import {
   BackOrderItemCountLabel,
   ItemCountBadge,
@@ -34,11 +34,12 @@ type BranchRowProps = {
   readonly plants: Plant[];
   readonly willCallPlant: { plantCode: string; plantName: string };
   readonly availability: Availability;
-  readonly minAmount: number;
   readonly increment: number;
   readonly uom: string;
   readonly availableQuantityInPlant: number;
   readonly defaultBoQty: number;
+  readonly sku: string;
+  readonly cartItemId: number;
 };
 
 const CartItemShipFromAlternativeBranchRow = ({
@@ -47,20 +48,28 @@ const CartItemShipFromAlternativeBranchRow = ({
   plants,
   willCallPlant,
   availability,
-  minAmount,
   increment,
   uom,
   availableQuantityInPlant,
   defaultBoQty,
+  sku,
+  cartItemId,
 }: BranchRowProps) => {
-  const { control, watch } = useFormContext<ShipFromAltQtySchema>();
+  const { control } = useFormContext<ShipFromAltQtySchema>();
   const [boQty, setBoQty] = useState(defaultBoQty);
+  const { pushSku, popSku } = useUnSavedAlternativeQuantityState(
+    (state) => state.actions,
+  );
 
-  const quantity = watch("quantityAlt");
-  const delayedQuantity = useDebouncedState(quantity);
-  const deferredQuantity = useDeferredValue(delayedQuantity);
+  const formId = `alternative-${cartItemId}`;
 
-  const updateBackOrderQuantity = (quantity: number) => {
+  const updateBackOrderQuantity = (quantity: number, defaultValue: number) => {
+    if (quantity !== defaultValue) {
+      pushSku(sku);
+    } else {
+      popSku([sku]);
+    }
+
     setBoQty(
       availableQuantityInPlant < quantity
         ? quantity - availableQuantityInPlant
@@ -92,7 +101,10 @@ const CartItemShipFromAlternativeBranchRow = ({
                 <NumberInputField
                   onBlur={onBlur}
                   onChange={(event) => {
-                    updateBackOrderQuantity(Number(event.target.value));
+                    updateBackOrderQuantity(
+                      Number(event.target.value),
+                      Number(event.target.defaultValue),
+                    );
                     onChange(
                       Number(event.target.value) > availabilityOfPlant &&
                         !isHomePlant
@@ -105,24 +117,14 @@ const CartItemShipFromAlternativeBranchRow = ({
                   name={name}
                   removeDefaultStyles
                   className="h-fit w-24 border-none px-2.5 py-1 text-base shadow-none focus:border-r-0 focus:border-none focus:outline-none focus:ring-0 md:w-20"
-                  min={minAmount}
                   step={increment}
                   label="Quantity"
+                  form={formId}
                 />
                 <span className="px-1.5 lowercase text-zinc-500">{uom}</span>
               </div>
             )}
           />
-        </TableCell>
-      </TableRow>
-
-      <TableRow className="border-y-0 hover:bg-transparent">
-        <TableCell colSpan={2}>
-          {Number(deferredQuantity[quantityFieldIndex]) < minAmount && (
-            <p className="text-sm text-red-700">
-              Please consider min. order quantity of: {minAmount}
-            </p>
-          )}
         </TableCell>
       </TableRow>
 
