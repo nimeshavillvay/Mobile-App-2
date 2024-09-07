@@ -51,6 +51,12 @@ export const generateMetadata = async ({
 const DetailedOrderPage = async ({
   params: { orderId },
 }: DetailedOrderPageProps) => {
+  const cookiesStore = cookies();
+  const sessionToken = cookiesStore.get(SESSION_TOKEN_COOKIE);
+
+  if (!sessionToken?.value) {
+    return redirect("/sign-in");
+  }
   const orderDetail = await getOrder(orderId);
 
   const itemList = orderDetail.items
@@ -65,7 +71,7 @@ const DetailedOrderPage = async ({
     await Promise.all([
       getPaymentMethods(),
       getShippingMethods(),
-      getPlants(),
+      getPlants(sessionToken?.value),
       getItemInfo(itemList),
     ]);
 

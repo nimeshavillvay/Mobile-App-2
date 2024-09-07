@@ -531,43 +531,49 @@ const ShippingMethod = ({ token, plants }: ShippingMethodProps) => {
               className="ml-[1.625rem] flex flex-col"
               onValueChange={handleGlobalWillCall}
             >
-              <div className="flex shrink-0 flex-row items-center gap-0.5 rounded border border-wurth-gray-250 object-contain p-1 text-sm shadow-sm">
-                <RadioGroupItem
-                  value={WILLCALL_SHIPING_METHOD}
-                  className="h-3.5 w-3.5"
-                  disabled={
-                    willCallAvailableOption ===
-                      WILLCALL_TRANSFER_SHIPING_METHOD ||
-                    updateCartItemMutation.isPending
-                  }
-                />
-                <span className="pl-2">
-                  Pick up at{" "}
-                  {
-                    plants.find((plant) => plant.code === selectedWillCallPlant)
-                      ?.name
-                  }
-                </span>
-              </div>
+              {plants.find((plant) => plant.code === selectedWillCallPlant)
+                ?.is_willcall && (
+                <div className="flex shrink-0 flex-row items-center gap-0.5 rounded border border-wurth-gray-250 object-contain p-1 text-sm shadow-sm">
+                  <RadioGroupItem
+                    value={WILLCALL_SHIPING_METHOD}
+                    className="h-3.5 w-3.5"
+                    disabled={updateCartItemMutation.isPending}
+                  />
+                  <span className="pl-2">
+                    Pick up at{" "}
+                    {
+                      plants.find(
+                        (plant) => plant.code === selectedWillCallPlant,
+                      )?.name
+                    }
+                  </span>
+                </div>
+              )}
 
-              <div className="flex shrink-0 flex-row items-center gap-0.5 rounded border border-wurth-gray-250 object-contain p-1 text-sm shadow-sm">
-                <RadioGroupItem
-                  value={WILLCALL_TRANSFER_SHIPING_METHOD}
-                  className="h-3.5 w-3.5"
-                  disabled={
-                    willCallAvailableOption === WILLCALL_SHIPING_METHOD ||
-                    updateCartItemMutation.isPending
-                  }
-                />
-                <span className="pl-2">
-                  Transfer from {willCallPlant?.plantName ?? DEFAULT_PLANT.name}{" "}
-                  to{" "}
-                  {
-                    plants.find((plant) => plant.code === selectedWillCallPlant)
-                      ?.name
-                  }
-                </span>
-              </div>
+              {plants.find((plant) => plant.code === selectedWillCallPlant)
+                ?.is_transfer && (
+                <div className="flex shrink-0 flex-row items-center gap-0.5 rounded border border-wurth-gray-250 object-contain p-1 text-sm shadow-sm">
+                  <RadioGroupItem
+                    value={WILLCALL_TRANSFER_SHIPING_METHOD}
+                    className="h-3.5 w-3.5"
+                    disabled={updateCartItemMutation.isPending}
+                  />
+                  <span className="pl-2">
+                    Transfer from{" "}
+                    {
+                      plants.find(
+                        (plant) => plant.code === selectedWillCallPlant,
+                      )?.xPlant
+                    }{" "}
+                    to{" "}
+                    {
+                      plants.find(
+                        (plant) => plant.code === selectedWillCallPlant,
+                      )?.name
+                    }
+                  </span>
+                </div>
+              )}
             </RadioGroup>
           )}
         </li>
