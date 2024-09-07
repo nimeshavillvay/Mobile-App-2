@@ -4,6 +4,13 @@ export const TOKEN_EXPIRE_COOKIE = "xid_00924_expire";
 export const TOKEN_MAX_AGE =
   process.env.VERCEL_ENV === "production" ? 172800 : 7200;
 
+export const API_URL = process.env.NEXT_PUBLIC_WURTH_LAC_API ?? "";
+export const API_HEADERS = {
+  "X-AUTH-TOKEN": process.env.NEXT_PUBLIC_WURTH_LAC_API_KEY ?? "",
+  "content-type": "application/json",
+  accept: "application/json",
+} as const;
+
 export const PRODUCTION_URL = process.env.VERCEL_PROJECT_PRODUCTION_URL
   ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
   : "http://localhost:3000";

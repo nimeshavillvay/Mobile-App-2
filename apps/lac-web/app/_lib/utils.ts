@@ -2,12 +2,27 @@ import type { Filters, FilterTitle, PasswordPolicies } from "@/_lib/types";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import type { RefinementCtx } from "zod";
+import { API_HEADERS, API_URL } from "./constants";
 
 /**
  * Conditionally merge Tailwind CSS classes without conflicts
  */
 export const cn = (...args: ClassValue[]) => {
   return twMerge(clsx(args));
+};
+
+export const getFetchHeaders = (token?: string) => {
+  const headers: HeadersInit = structuredClone(API_HEADERS);
+
+  if (token) {
+    headers["authorization"] = token;
+  }
+
+  return headers;
+};
+
+export const getFetchUrl = (route: string) => {
+  return `${API_URL}${route}`;
 };
 
 export const filterAndMapValues = (filters: Filters[], title: FilterTitle) => {

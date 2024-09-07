@@ -52,20 +52,22 @@ const useSuspenseCheckAvailability = (
   token: Token | undefined,
   { productId, qty, plant }: AvailabilityParameters,
 ) => {
-  return useSuspenseQuery({
-    queryKey: [
-      "user",
-      "product",
-      "availability",
-      {
-        productId,
-        qty,
-        plant,
-      },
-      token,
-    ],
-    queryFn: () => checkAvailability(token, { productId, qty, plant }),
-  });
+  return useSuspenseQuery<Awaited<ReturnType<typeof checkAvailability>>, Error>(
+    {
+      queryKey: [
+        "user",
+        "product",
+        "availability",
+        {
+          productId,
+          qty,
+          plant,
+        },
+        token,
+      ],
+      queryFn: () => checkAvailability(token, { productId, qty, plant }),
+    },
+  );
 };
 
 export default useSuspenseCheckAvailability;
