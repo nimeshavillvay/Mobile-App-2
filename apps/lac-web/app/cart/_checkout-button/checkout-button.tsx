@@ -99,7 +99,8 @@ const CheckoutButton = ({ token }: CheckoutButtonProps) => {
                 {" "}
                 Item # {skus.join(", Item # ")}
               </span>
-              <div>Do you want to discard these changes and proceed?</div>
+              <br />
+              <span>Do you want to discard these changes and proceed?</span>
             </DialogDescription>
           </DialogHeader>
 

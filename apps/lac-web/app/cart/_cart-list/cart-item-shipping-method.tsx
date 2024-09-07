@@ -392,7 +392,7 @@ const CartItemShippingMethod = ({
       plant: string;
     }[],
   ) => {
-    return plants?.at(0)?.plant ?? "";
+    return plants?.at(0)?.plant ?? DEFAULT_PLANT.code;
   };
 
   const handleDeliveryOptionSelect = ({
@@ -712,6 +712,7 @@ const CartItemShippingMethod = ({
 
   const applyAlternativeBranchChanges = () => {
     clearTimeout(qtyChangeTimeoutRef.current);
+    popSku([sku]);
 
     const formData = form.getValues();
     const altQtySum = formData.quantityAlt.reduce((collector, num) => {
@@ -818,8 +819,6 @@ const CartItemShippingMethod = ({
                                 )
                             : quantity;
                         };
-
-                        popSku([sku]);
                         form.reset({
                           quantityAlt:
                             SelectedPlants.map((plant) =>
@@ -846,6 +845,9 @@ const CartItemShippingMethod = ({
                 }
               }
             }
+          },
+          onError: () => {
+            pushSku(sku);
           },
         },
       );
