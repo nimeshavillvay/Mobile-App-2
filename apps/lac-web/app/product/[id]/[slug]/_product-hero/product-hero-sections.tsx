@@ -6,7 +6,7 @@ import { FiPackage } from "react-icons/fi";
 import { GiRadioactive } from "react-icons/gi";
 import { html, transform } from "ultrahtml";
 import swap from "ultrahtml/transformers/swap";
-import { getProduct } from "../apis";
+import { getProduct } from "../../../apis";
 import DeliveryInstruction from "./delivery-instruction";
 import ProductDownloads from "./product-downloads";
 

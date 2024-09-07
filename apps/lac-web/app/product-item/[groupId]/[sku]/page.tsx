@@ -5,6 +5,7 @@ import { notFound, permanentRedirect } from "next/navigation";
 type OldProductPageProps = {
   params: {
     sku: string;
+    groupId: string;
   };
 };
 
@@ -19,22 +20,20 @@ const OldProductPage = async ({ params: { sku } }: OldProductPageProps) => {
       },
     })
     .json<
-      [
-        {
-          productid: string;
-          groupid: string;
-          slug: string;
-        },
-      ]
+      {
+        productid: string;
+        groupid: string;
+        slug: string;
+      }[]
     >();
 
-  if (!response[0].productid || !response[0].slug) {
+  if (response[0] && response[0].productid && response[0].slug) {
+    return permanentRedirect(
+      `/product/${response[0].productid}/${response[0].slug}`,
+    );
+  } else {
     return notFound();
   }
-
-  return permanentRedirect(
-    `/product/${response[0].productid}/${response[0].slug}`,
-  );
 };
 
 export default OldProductPage;

@@ -17,9 +17,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Fragment, Suspense } from "react";
 import Balancer from "react-wrap-balancer";
+import { getProduct } from "../../apis";
 import ProductHero from "./_product-hero";
 import RelatedProductsList from "./_related-products-list";
-import { getProduct } from "./apis";
 import ProductPageGtm from "./product-page-gtm";
 import type { ProductPageProps, RelatedProduct } from "./types";
 
