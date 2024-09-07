@@ -1,6 +1,6 @@
 import OGImage from "@/_lib/og-image";
 import { unstable_noStore as noStore } from "next/cache";
-import { getProduct } from "./apis";
+import { getProduct } from "../../apis";
 import type { ProductPageProps } from "./types";
 
 export const size = {
