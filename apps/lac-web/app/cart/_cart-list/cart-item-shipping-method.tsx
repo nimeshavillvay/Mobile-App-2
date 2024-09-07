@@ -403,8 +403,8 @@ const CartItemShippingMethod = ({
     selectedOption: MainOption;
   }) => {
     if (checked) {
+      form.reset(getDefaultFormValues());
       if (selectedOption !== MAIN_OPTIONS.SHIP_TO_ME_ALT) {
-        form.reset(getDefaultFormValues());
         setOpen(false);
       }
       const isWillCallOptionSelected =
