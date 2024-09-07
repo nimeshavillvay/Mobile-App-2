@@ -19,6 +19,7 @@ import {
 import { TableCell, TableRow } from "@repo/web-ui/components/ui/table";
 import { useDeferredValue, useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
+import type { z } from "zod";
 import { type Availability } from "../types";
 import useUnSavedAlternativeQuantityState from "../use-cart-alternative-qty-method-store.hook";
 import {
@@ -26,7 +27,7 @@ import {
   ItemCountBadge,
   ItemInStockCountBadge,
 } from "./cart-item-shipping-method";
-import { type ShipFromAltQtySchema } from "./helpers";
+import { shipFromAltQtySchema } from "./helpers";
 import PlantName from "./plant-name";
 
 type BranchRowProps = {
@@ -56,6 +57,8 @@ const CartItemShipFromAlternativeBranchRow = ({
   sku,
   cartItemId,
 }: BranchRowProps) => {
+  const schema = shipFromAltQtySchema(increment);
+  type ShipFromAltQtySchema = z.infer<typeof schema>;
   const { control, watch } = useFormContext<ShipFromAltQtySchema>();
 
   const quantity = watch("quantityAlt");

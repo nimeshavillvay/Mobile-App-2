@@ -297,7 +297,10 @@ const CartItem = ({
 
   // User selected shipping method (ship-to-me)
   const [selectedShippingMethod, setSelectedShippingMethod] = useState(
-    defaultShippingMethod?.code ?? product.configuration.shipping_method_1,
+    defaultShippingMethod?.code ??
+      product.configuration.shipping_method_1 !== ""
+      ? product.configuration.shipping_method_1
+      : DEFAULT_SHIPPING_METHOD,
   );
 
   const [selectedBackorderShippingMethod, setSelectedBackorderShippingMethod] =

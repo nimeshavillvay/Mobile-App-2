@@ -141,9 +141,12 @@ export const cartItemSchema = z.object({
 
 export type CartItemSchema = z.infer<typeof cartItemSchema>;
 
-export const shipFromAltQtySchema = z.object({
-  quantityAlt: z.array(z.string()),
-  shippingMethod: z.array(z.string()),
-});
-
-export type ShipFromAltQtySchema = z.infer<typeof shipFromAltQtySchema>;
+export const shipFromAltQtySchema = (increment: number) =>
+  z.object({
+    quantityAlt: z.array(
+      z.coerce.number().multipleOf(increment, {
+        message: `This product is sold in multiples of: ${increment}`,
+      }),
+    ),
+    shippingMethod: z.array(z.string()),
+  });

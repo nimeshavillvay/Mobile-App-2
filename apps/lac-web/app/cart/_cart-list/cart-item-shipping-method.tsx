@@ -48,9 +48,10 @@ import {
 } from "@repo/web-ui/components/ui/table";
 import { toast } from "@repo/web-ui/components/ui/toast";
 import dayjs from "dayjs";
-import type { ComponentProps, Dispatch, SetStateAction } from "react";
+import type { Dispatch, SetStateAction } from "react";
 import { useId, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
+import type { z } from "zod";
 import { useCartItemQuantityContext } from "../cart-item-quantity-context";
 import {
   ALTERNATIVE_BRANCHES,
@@ -68,7 +69,6 @@ import useUnSavedAlternativeQuantityState from "../use-cart-alternative-qty-meth
 import NotAvailableInfoBanner from "./cart-item-not-available-banner";
 import CartItemShipFromAlternativeBranchRow from "./cart-item-ship-from-alternative-branch-row";
 import CartItemWillCallTransfer from "./cart-item-will-call-transfer";
-import type { ShipFromAltQtySchema } from "./helpers";
 import {
   createCartItemConfig,
   findAvailabilityOptionForType,
@@ -349,11 +349,7 @@ const CartItemShippingMethod = ({
     return {
       quantityAlt:
         shipAlternativeBranch?.plants.map((plant) =>
-          getPlantQuantity(
-            plant.plant,
-            plant.quantity,
-            plant.index,
-          )?.toString(),
+          getPlantQuantity(plant.plant, plant.quantity, plant.index),
         ) ?? [],
 
       shippingMethod:
@@ -362,9 +358,11 @@ const CartItemShippingMethod = ({
         ) ?? [],
     };
   };
+  const schema = shipFromAltQtySchema(increment);
+  type ShipFromAltQtySchema = z.infer<typeof schema>;
 
   const form = useForm<ShipFromAltQtySchema>({
-    resolver: zodResolver(shipFromAltQtySchema),
+    resolver: zodResolver(schema),
     defaultValues: getDefaultFormValues(),
   });
 
@@ -380,8 +378,6 @@ const CartItemShippingMethod = ({
             backOrderAll?.plants[0]?.shippingMethods.length > 0
           ? backOrderAll?.plants[0]?.shippingMethods
           : [];
-
-  // console.log(">> shipToMeShippingMethods", shipToMeShippingMethods);
 
   const getFirstBackOrderDateFromPlants = (
     plants: {
@@ -714,14 +710,10 @@ const CartItemShippingMethod = ({
     }
   };
 
-  const applyAlternativeBranchChanges: ComponentProps<"form">["onSubmit"] = (
-    event,
-  ) => {
-    event.preventDefault();
+  const onSubmit = form.handleSubmit(async (formData) => {
     clearTimeout(qtyChangeTimeoutRef.current);
     popSku([sku]);
 
-    const formData = form.getValues();
     const altQtySum = formData.quantityAlt.reduce((collector, num) => {
       return (collector += Number(num));
     }, 0);
@@ -830,11 +822,8 @@ const CartItemShippingMethod = ({
                           quantityAlt:
                             SelectedPlants.map((plant) =>
                               getQuantity(plant.plant, plant.quantity) === 0
-                                ? ""
-                                : getQuantity(
-                                    plant.plant,
-                                    plant.quantity,
-                                  ).toString(),
+                                ? 0
+                                : getQuantity(plant.plant, plant.quantity),
                             ) ?? [],
 
                           shippingMethod:
@@ -859,7 +848,7 @@ const CartItemShippingMethod = ({
         },
       );
     }, 500);
-  };
+  });
 
   const onFormChange = () => {
     const isDirty = form.formState.isDirty;
@@ -1022,7 +1011,7 @@ const CartItemShippingMethod = ({
                   <FormProvider {...form}>
                     <form
                       onChange={onFormChange}
-                      onSubmit={applyAlternativeBranchChanges}
+                      onSubmit={onSubmit}
                       id={formId}
                     >
                       <Table>
@@ -1061,6 +1050,7 @@ const CartItemShippingMethod = ({
                                 />
                               ),
                             )}
+
                           <TableRow className="border-y-0 hover:bg-transparent">
                             <TableCell colSpan={2}>
                               <Button
