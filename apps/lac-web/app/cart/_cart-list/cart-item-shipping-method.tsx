@@ -327,7 +327,7 @@ const CartItemShippingMethod = ({
     const backorder_all = cartItem[0]?.configuration.backorder_all;
 
     if (backorder_all !== TRUE_STRING) {
-      return backorder_all;
+      return shipping_method_1;
     }
     switch (`shipping_method_${index}`) {
       case "shipping_method_1": {
@@ -346,7 +346,7 @@ const CartItemShippingMethod = ({
         return shipping_method_5;
       }
       default:
-        return DEFAULT_SHIPPING_METHOD;
+        return "";
     }
   };
 
