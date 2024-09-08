@@ -324,7 +324,11 @@ const CartItemShippingMethod = ({
     const shipping_method_3 = cartItem[0]?.configuration.shipping_method_3;
     const shipping_method_4 = cartItem[0]?.configuration.shipping_method_4;
     const shipping_method_5 = cartItem[0]?.configuration.shipping_method_5;
+    const backorder_all = cartItem[0]?.configuration.backorder_all;
 
+    if (backorder_all !== TRUE_STRING) {
+      return backorder_all;
+    }
     switch (`shipping_method_${index}`) {
       case "shipping_method_1": {
         return shipping_method_1;
@@ -342,7 +346,7 @@ const CartItemShippingMethod = ({
         return shipping_method_5;
       }
       default:
-        return "";
+        return DEFAULT_SHIPPING_METHOD;
     }
   };
 
@@ -351,11 +355,12 @@ const CartItemShippingMethod = ({
     shippingMethods: ShippingMethod[],
   ) => {
     const shippingMethod = getPlantShippingMethodFromCart(index);
-    return shippingMethod !== ""
+    return shippingMethod !== "" &&
+      shippingMethods.some((method) => method.code === shippingMethod)
       ? shippingMethod
       : shippingMethods.length > 0
         ? shippingMethods[0]?.code
-        : DEFAULT_PLANT.code;
+        : DEFAULT_SHIPPING_METHOD;
   };
 
   const getDefaultFormValues = () => {
