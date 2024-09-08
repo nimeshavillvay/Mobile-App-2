@@ -171,6 +171,7 @@ const ShippingMethod = ({ token, plants }: ShippingMethodProps) => {
   const transformConfiguration = (
     availability: Availability,
     config: CartItemConfiguration,
+    selectedValue: string,
   ) => {
     clearConfigKeys(config, ["avail_", "shipping_method_", "plant_"]);
     config.plant_1 = selectedWillCallPlant ?? DEFAULT_PLANT.code;
@@ -179,6 +180,24 @@ const ShippingMethod = ({ token, plants }: ShippingMethodProps) => {
       : "";
 
     if (
+      availability.willCallAnywhere &&
+      availability.willCallAnywhere[1] &&
+      availability.willCallAnywhere[1].isTransfer &&
+      selectedValue === WILLCALL_TRANSFER_SHIPING_METHOD
+    ) {
+      config.shipping_method_1 =
+        availability?.options?.at(1)?.plants?.at(1)?.shippingMethods?.at(1)
+          ?.code ?? "0";
+      config.avail_1 =
+        availability.willCallAnywhere[1]?.willCallQuantity.toString();
+      config.backorder_date =
+        availability.willCallAnywhere[1]?.backOrderDate_1 ?? "";
+      config.will_call_avail =
+        availability.willCallAnywhere[1]?.willCallQuantity.toString();
+      config.will_call_plant = selectedWillCallPlant ?? DEFAULT_PLANT.code;
+      config.will_call_shipping = WILLCALL_TRANSFER_SHIPING_METHOD;
+      config.will_call_not_in_stock = FALSE_STRING;
+    } else if (
       availability.willCallAnywhere &&
       availability.willCallAnywhere[0] &&
       availability.willCallAnywhere[0].status === IN_STOCK
@@ -398,13 +417,13 @@ const ShippingMethod = ({ token, plants }: ShippingMethodProps) => {
     );
   };
 
-  const handleGlobalWillCall = async () => {
+  const handleGlobalWillCall = async (value: string) => {
     const cartItemsAvailability = await Promise.all(
       cartQuery.data.cartItems.map(async (item) => {
         return await checkAvailability(token, {
           productId: item.itemInfo.productId,
           qty: item.quantity,
-          plant: willCallPlant?.plantCode ?? DEFAULT_PLANT.code,
+          plant: selectedWillCallPlant ?? DEFAULT_PLANT.code,
         });
       }),
     );
@@ -416,10 +435,12 @@ const ShippingMethod = ({ token, plants }: ShippingMethodProps) => {
       const availability = cartItemsAvailability.find(
         (willCall) =>
           willCall.productId === item.itemInfo.productId &&
-          willCall.willCallAnywhere[0]?.status !== NOT_AVAILABLE,
+          (willCall.willCallAnywhere[0]?.status !== NOT_AVAILABLE ||
+            willCall.willCallAnywhere[1]?.status !== NOT_AVAILABLE),
       );
+
       const transformedConfig = availability
-        ? transformConfiguration(availability, config)
+        ? transformConfiguration(availability, config, value)
         : config;
       return {
         cartItemId: item.cartItemId,

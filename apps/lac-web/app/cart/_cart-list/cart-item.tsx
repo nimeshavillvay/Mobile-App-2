@@ -77,6 +77,7 @@ import {
   TAKE_ON_HAND,
   TRUE_STRING,
   WILLCALL_SHIPING_METHOD,
+  WILLCALL_TRANSFER_SHIPING_METHOD,
 } from "../constants";
 import type { ShippingMethod, WillCallAnywhere } from "../types";
 import AvailabilityStatus from "./availability-status";
@@ -672,6 +673,12 @@ const CartItem = ({
     } else {
       // Check if hash matches with the will call hash
       if (
+        product.configuration.will_call_shipping ===
+        WILLCALL_TRANSFER_SHIPING_METHOD
+      ) {
+        setSelectedWillCallTransfer(MAIN_OPTIONS.WILL_CALL_TRANSFER);
+        setSelectedShippingOption(MAIN_OPTIONS.WILL_CALL);
+      } else if (
         willCallAnywhere[0] &&
         isWillCallAnywhere(willCallAnywhere[0], itemConfigHash)
       ) {
