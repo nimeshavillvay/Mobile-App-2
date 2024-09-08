@@ -295,10 +295,15 @@ const CartItem = ({
     cartConfiguration?.default_shipping,
   );
 
+  const shipToMeAvailability = availableAll ?? takeOnHand ?? backOrderAll;
+
   // User selected shipping method (ship-to-me)
   const [selectedShippingMethod, setSelectedShippingMethod] = useState(
     defaultShippingMethod?.code ??
-      product.configuration.shipping_method_1 !== ""
+      (product.configuration.shipping_method_1 !== "" &&
+        shipToMeAvailability?.plants[0]?.shippingMethods.find(
+          (method) => method.code === product.configuration.shipping_method_1,
+        ))
       ? product.configuration.shipping_method_1
       : DEFAULT_SHIPPING_METHOD,
   );
