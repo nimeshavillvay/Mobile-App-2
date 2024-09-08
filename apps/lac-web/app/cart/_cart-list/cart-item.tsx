@@ -1071,6 +1071,7 @@ const CartItem = ({
               configuration={product.configuration}
               setPreventUpdateCart={setPreventUpdateCart}
               sku={product.sku}
+              setOsrCartItemTotal={setOsrCartItemTotal}
             />
           ))}
 
@@ -1105,6 +1106,7 @@ const CartItem = ({
               configuration={product.configuration}
               setPreventUpdateCart={setPreventUpdateCart}
               sku={product.sku}
+              setOsrCartItemTotal={setOsrCartItemTotal}
             />
           </Suspense>
         )}
