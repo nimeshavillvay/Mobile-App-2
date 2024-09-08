@@ -7,7 +7,7 @@ import {
   ProductsGridMobileFiltersHeaderSkeleton,
   ProductsGridPaginationSkeleton,
 } from "@/_components/products-grid";
-import { getBreadcrumbs } from "@/_lib/apis/server";
+import { getBreadcrumbs, getCategoriesList } from "@/_lib/apis/server";
 import { cn } from "@/_lib/utils";
 import { ChevronLeft } from "@repo/web-ui/components/icons/chevron-left";
 import {
@@ -28,6 +28,37 @@ import { getCategory } from "./apis";
 import CategoryPageGtm from "./category-page-gtm";
 import SubCategoriesList from "./sub-categories-list";
 import type { CategoryPageProps, SubCategory } from "./types";
+
+export const generateStaticParams = async () => {
+  const categories = await getCategoriesList();
+
+  const params: { id: string; slug: string }[] = [];
+
+  categories.forEach((category) => {
+    params.push({
+      id: category.id.toString(),
+      slug: category.slug,
+    });
+
+    // Sub Category
+    category.subCategory?.map((subCategory) => {
+      params.push({
+        id: subCategory.id.toString(),
+        slug: subCategory.slug,
+      });
+
+      // Sub Sub Categories
+      subCategory.subCategory?.map((subSubCategory) => {
+        params.push({
+          id: subSubCategory.id.toString(),
+          slug: subSubCategory.slug,
+        });
+      });
+    });
+  });
+
+  return params;
+};
 
 export const generateMetadata = async ({
   params: { id, slug },
