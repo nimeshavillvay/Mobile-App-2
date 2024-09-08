@@ -8,6 +8,7 @@ import {
   ProductsGridPaginationSkeleton,
 } from "@/_components/products-grid";
 import { getBreadcrumbs, getCategoriesList } from "@/_lib/apis/server";
+import type { TransformedCategory } from "@/_lib/types";
 import { cn } from "@/_lib/utils";
 import { ChevronLeft } from "@repo/web-ui/components/icons/chevron-left";
 import {
@@ -33,28 +34,21 @@ export const generateStaticParams = async () => {
   const categories = await getCategoriesList();
 
   const params: { id: string; slug: string }[] = [];
-
-  categories.forEach((category) => {
+  const addCategoryPages = (category: TransformedCategory) => {
     params.push({
       id: category.id.toString(),
       slug: category.slug,
     });
 
-    // Sub Category
-    category.subCategory?.map((subCategory) => {
-      params.push({
-        id: subCategory.id.toString(),
-        slug: subCategory.slug,
+    if (category.subCategory) {
+      category.subCategory.forEach((subCategory) => {
+        addCategoryPages(subCategory);
       });
+    }
+  };
 
-      // Sub Sub Categories
-      subCategory.subCategory?.map((subSubCategory) => {
-        params.push({
-          id: subSubCategory.id.toString(),
-          slug: subSubCategory.slug,
-        });
-      });
-    });
+  categories.forEach((category) => {
+    addCategoryPages(category);
   });
 
   return params;
