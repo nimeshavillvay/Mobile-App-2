@@ -1,4 +1,5 @@
 "use client";
+
 import AuthenticationToggle from "@/_components/molecules/auth/auth-toggle";
 import RegisterQuestion from "@/_components/molecules/auth/register-question";
 import { RecaptchaRefProvider } from "@/_context/recaptcha-ref";

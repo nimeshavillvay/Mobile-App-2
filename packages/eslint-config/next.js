@@ -80,6 +80,8 @@ module.exports = {
     "@stylistic/js/padding-line-between-statements": [
       "error",
       { blankLine: "always", prev: "*", next: "return" },
+      { blankLine: "always", prev: "directive", next: "*" },
+      { blankLine: "never", prev: "directive", next: "directive" },
     ],
   },
   overrides: [
