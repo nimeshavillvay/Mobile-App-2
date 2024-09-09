@@ -1,4 +1,5 @@
 import { getSitemapAssets, isChangeFrequency } from "@/_lib/sitemap-helpers";
+import { encode } from "html-entities";
 import type { MetadataRoute } from "next";
 
 export const generateSitemaps = async () => {
@@ -19,7 +20,7 @@ const sitemap = async ({
   const sitemapAssets = await getSitemapAssets(id + 1);
 
   return sitemapAssets.data.map((sitemapAsset) => ({
-    url: sitemapAsset.url,
+    url: encode(`https://${sitemapAsset.url}`),
     changeFrequency: isChangeFrequency(sitemapAsset.changefreq)
       ? sitemapAsset.changefreq
       : undefined,
