@@ -312,6 +312,7 @@ const AddMoreItemsForm = ({ token }: { readonly token: string }) => {
 
     if (!isFormValid(values?.cart)) {
       setIsFormInvalid(true);
+
       return;
     }
 

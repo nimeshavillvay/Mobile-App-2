@@ -25,6 +25,7 @@ const ShoppingListPagination = ({
     const newUrlSearchParams = new URLSearchParams(searchParams);
     newUrlSearchParams.set("page", pageNo.toString());
     newUrlSearchParams.set("shoppingListId", shoppingListId.toString());
+
     return `${pathname}?${newUrlSearchParams.toString()}`;
   };
 

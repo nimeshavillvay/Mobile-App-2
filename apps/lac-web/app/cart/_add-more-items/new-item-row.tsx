@@ -66,6 +66,7 @@ const NewItemRow = ({
     if (lineItemFormData.sku == "") {
       return null;
     }
+
     return lineItemFormData.isInvalid;
   };
 

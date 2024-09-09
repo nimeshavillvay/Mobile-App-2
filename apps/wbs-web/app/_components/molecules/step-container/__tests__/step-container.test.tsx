@@ -12,6 +12,7 @@ describe("StepContainer Components", () => {
     it("renders children and provides context", () => {
       const TestChild = () => {
         const context = React.useContext(StepContext);
+
         return <div>{context.title}</div>;
       };
 

@@ -55,6 +55,7 @@ export const UsernameInput = <
       lastCheckedUsername.current = "";
       clearErrors(name);
       onUsernameCheck?.(false);
+
       return;
     }
     if (value !== lastCheckedUsername.current && !formState.errors[name]) {
@@ -93,6 +94,7 @@ export const UsernameInput = <
   if (delayedUsername !== lastCheckedUsername.current) {
     checkUsername(delayedUsername);
   }
+
   return (
     <FormField
       control={control}

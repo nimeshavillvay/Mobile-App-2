@@ -6,6 +6,7 @@
     "react-library.js"
   ],
   "devDependencies": {
+    "@stylistic/eslint-plugin-js": "^2.7.2",
     "@tanstack/eslint-plugin-query": "^5.49.1",
     "@typescript-eslint/eslint-plugin": "^7.15.0",
     "eslint": "8.57.0",

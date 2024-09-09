@@ -12,6 +12,7 @@ const TestComponent = ({ disabled = false }) => {
   const methods = useForm({
     resolver: zodResolver(z.object({ phoneNumber: PHONE_NUMBER_VALIDATION })),
   });
+
   return (
     <FormProvider {...methods}>
       <PhoneNumberInput
