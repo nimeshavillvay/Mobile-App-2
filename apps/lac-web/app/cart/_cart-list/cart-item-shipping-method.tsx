@@ -420,7 +420,15 @@ const CartItemShippingMethod = ({
     selectedOption: MainOption;
   }) => {
     if (checked) {
-      if (selectedOption !== MAIN_OPTIONS.SHIP_TO_ME_ALT) {
+      const quantities = form.getValues("quantityAlt");
+      const currentTotalOfAltFields =
+        quantities.reduce((sum: number, current) => {
+          return sum + Number(current);
+        }, 0) ?? 0;
+      if (
+        selectedOption !== MAIN_OPTIONS.SHIP_TO_ME_ALT ||
+        currentTotalOfAltFields !== Number(lineQuantity)
+      ) {
         form.reset(getDefaultFormValues());
         setOpen(false);
       }
