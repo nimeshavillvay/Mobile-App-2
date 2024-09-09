@@ -6,8 +6,8 @@ import { useCookies } from "react-cookie";
 import { SEARCH_PARAMS_COOKIE, TOTAL_COOKIE } from "./constants";
 
 type ResultCacherProps = {
-  total?: number;
-  searchParams?: string;
+  readonly total?: number;
+  readonly searchParams?: string;
 };
 
 // TODO Delete this component once the search has been optimized
@@ -34,7 +34,7 @@ const ResultCacher = ({ total, searchParams }: ResultCacherProps) => {
     }
   }, [searchParams, setCookie]);
 
-  return "";
+  return null;
 };
 
 export default ResultCacher;
