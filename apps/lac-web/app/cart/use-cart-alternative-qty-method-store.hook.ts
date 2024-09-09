@@ -4,7 +4,7 @@ type UnSavedAlternativeQuantityState = {
   sku: string[];
   actions: {
     pushSku: (sku: string) => void;
-    popSku: (sku: string[]) => void;
+    popSku: (skus: string[]) => void;
   };
 };
 
@@ -13,9 +13,14 @@ const useUnSavedAlternativeQuantityState =
     sku: [],
     actions: {
       pushSku: (sku) =>
-        set((state) => ({
-          sku: [...state.sku, sku],
-        })),
+        set((state) => {
+          if (!state.sku.includes(sku)) {
+            return {
+              sku: [...state.sku, sku],
+            };
+          }
+          return state;
+        }),
       popSku: (skus) =>
         set((state) => {
           const newSkuArray = state.sku.filter((item) => !skus.includes(item));

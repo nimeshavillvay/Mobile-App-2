@@ -77,6 +77,7 @@ import {
   TAKE_ON_HAND,
   TRUE_STRING,
   WILLCALL_SHIPING_METHOD,
+  WILLCALL_TRANSFER_SHIPING_METHOD,
 } from "../constants";
 import type { ShippingMethod, WillCallAnywhere } from "../types";
 import AvailabilityStatus from "./availability-status";
@@ -295,10 +296,15 @@ const CartItem = ({
     cartConfiguration?.default_shipping,
   );
 
+  const shipToMeAvailability = availableAll ?? takeOnHand ?? backOrderAll;
+
   // User selected shipping method (ship-to-me)
   const [selectedShippingMethod, setSelectedShippingMethod] = useState(
     defaultShippingMethod?.code ??
-      product.configuration.shipping_method_1 !== ""
+      (product.configuration.shipping_method_1 !== "" &&
+        shipToMeAvailability?.plants[0]?.shippingMethods.find(
+          (method) => method.code === product.configuration.shipping_method_1,
+        ))
       ? product.configuration.shipping_method_1
       : DEFAULT_SHIPPING_METHOD,
   );
@@ -667,6 +673,12 @@ const CartItem = ({
     } else {
       // Check if hash matches with the will call hash
       if (
+        product.configuration.will_call_shipping ===
+        WILLCALL_TRANSFER_SHIPING_METHOD
+      ) {
+        setSelectedWillCallTransfer(MAIN_OPTIONS.WILL_CALL_TRANSFER);
+        setSelectedShippingOption(MAIN_OPTIONS.WILL_CALL);
+      } else if (
         willCallAnywhere[0] &&
         isWillCallAnywhere(willCallAnywhere[0], itemConfigHash)
       ) {
@@ -1071,6 +1083,7 @@ const CartItem = ({
               configuration={product.configuration}
               setPreventUpdateCart={setPreventUpdateCart}
               sku={product.sku}
+              setOsrCartItemTotal={setOsrCartItemTotal}
             />
           ))}
 
@@ -1105,6 +1118,7 @@ const CartItem = ({
               configuration={product.configuration}
               setPreventUpdateCart={setPreventUpdateCart}
               sku={product.sku}
+              setOsrCartItemTotal={setOsrCartItemTotal}
             />
           </Suspense>
         )}

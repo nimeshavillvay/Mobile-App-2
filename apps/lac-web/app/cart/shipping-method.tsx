@@ -37,10 +37,12 @@ import {
   AVAILABLE_ALL,
   BACKORDER_DISABLED,
   BACKORDER_ENABLED,
+  BACK_ORDER_ALL,
   DEFAULT_SHIPPING_METHOD,
   EXCLUDED_SHIPPING_METHODS,
   FALSE_STRING,
   TAKE_ON_HAND,
+  TRUE_STRING,
   WILLCALL_SHIPING_METHOD,
   WILLCALL_TRANSFER_SHIPING_METHOD,
 } from "./constants";
@@ -87,6 +89,8 @@ const ShippingMethod = ({ token, plants }: ShippingMethodProps) => {
   const [selectedWillCallPlant, setSelectedWillCallPlant] = useState<string>();
 
   const updateCartItemMutation = useUpdateCartItemMutation();
+
+  const homePlant = willCallPlant.plantCode ?? DEFAULT_PLANT.code;
 
   const gtmProducts = cartQuery.data.cartItems.map((item) => {
     return {
@@ -167,6 +171,7 @@ const ShippingMethod = ({ token, plants }: ShippingMethodProps) => {
   const transformConfiguration = (
     availability: Availability,
     config: CartItemConfiguration,
+    selectedValue: string,
   ) => {
     clearConfigKeys(config, ["avail_", "shipping_method_", "plant_"]);
     config.plant_1 = selectedWillCallPlant ?? DEFAULT_PLANT.code;
@@ -175,6 +180,24 @@ const ShippingMethod = ({ token, plants }: ShippingMethodProps) => {
       : "";
 
     if (
+      availability.willCallAnywhere &&
+      availability.willCallAnywhere[1] &&
+      availability.willCallAnywhere[1].isTransfer &&
+      selectedValue === WILLCALL_TRANSFER_SHIPING_METHOD
+    ) {
+      config.shipping_method_1 =
+        availability?.options?.at(1)?.plants?.at(1)?.shippingMethods?.at(1)
+          ?.code ?? "0";
+      config.avail_1 =
+        availability.willCallAnywhere[1]?.willCallQuantity.toString();
+      config.backorder_date =
+        availability.willCallAnywhere[1]?.backOrderDate_1 ?? "";
+      config.will_call_avail =
+        availability.willCallAnywhere[1]?.willCallQuantity.toString();
+      config.will_call_plant = selectedWillCallPlant ?? DEFAULT_PLANT.code;
+      config.will_call_shipping = WILLCALL_TRANSFER_SHIPING_METHOD;
+      config.will_call_not_in_stock = FALSE_STRING;
+    } else if (
       availability.willCallAnywhere &&
       availability.willCallAnywhere[0] &&
       availability.willCallAnywhere[0].status === IN_STOCK
@@ -256,20 +279,32 @@ const ShippingMethod = ({ token, plants }: ShippingMethodProps) => {
           (option) => option.type === ALTERNATIVE_BRANCHES,
         );
 
+        const backOrderAll = availability.options.find(
+          (option) => option.type === BACK_ORDER_ALL,
+        );
+
         // Get all methods for "Ship to me"
         const options = [
-          alternativeBranchesOption,
           allAvailableOption,
           takeOnHandOption,
-        ];
+          backOrderAll,
+        ].filter((option) => option !== undefined);
 
-        const selectedOption = options.find((option) =>
-          option?.plants.some((plant) =>
-            plant?.shippingMethods.some((method) => method?.code === value),
-          ),
-        );
+        const selectedOption =
+          item.configuration.backorder_all === TRUE_STRING
+            ? backOrderAll
+            : item.configuration.plant_1 !== homePlant ||
+                item.configuration.avail_2 !== ""
+              ? alternativeBranchesOption
+              : options[0];
+
         const shippingMethods =
-          selectedOption?.plants.map((plant) => plant.shippingMethods) ?? [];
+          selectedOption === undefined
+            ? alternativeBranchesOption?.plants.map(
+                (plant) => plant.shippingMethods,
+              ) ?? []
+            : selectedOption?.plants.map((plant) => plant.shippingMethods) ??
+              [];
         return {
           id: item.itemInfo.productId,
           hashvalue: selectedOption?.hash ?? "",
@@ -382,13 +417,13 @@ const ShippingMethod = ({ token, plants }: ShippingMethodProps) => {
     );
   };
 
-  const handleGlobalWillCall = async () => {
+  const handleGlobalWillCall = async (value: string) => {
     const cartItemsAvailability = await Promise.all(
       cartQuery.data.cartItems.map(async (item) => {
         return await checkAvailability(token, {
           productId: item.itemInfo.productId,
           qty: item.quantity,
-          plant: willCallPlant?.plantCode ?? DEFAULT_PLANT.code,
+          plant: selectedWillCallPlant ?? DEFAULT_PLANT.code,
         });
       }),
     );
@@ -400,10 +435,12 @@ const ShippingMethod = ({ token, plants }: ShippingMethodProps) => {
       const availability = cartItemsAvailability.find(
         (willCall) =>
           willCall.productId === item.itemInfo.productId &&
-          willCall.willCallAnywhere[0]?.status !== NOT_AVAILABLE,
+          (willCall.willCallAnywhere[0]?.status !== NOT_AVAILABLE ||
+            willCall.willCallAnywhere[1]?.status !== NOT_AVAILABLE),
       );
+
       const transformedConfig = availability
-        ? transformConfiguration(availability, config)
+        ? transformConfiguration(availability, config, value)
         : config;
       return {
         cartItemId: item.cartItemId,

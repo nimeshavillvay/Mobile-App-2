@@ -2,6 +2,7 @@ import useSuspenseCart from "@/_hooks/cart/use-suspense-cart.hook";
 import useUpdateCartItemMutation from "@/_hooks/cart/use-update-cart-item-mutation.hook";
 import useGtmProducts from "@/_hooks/gtm/use-gtm-item-info.hook";
 import useGtmUser from "@/_hooks/gtm/use-gtm-user.hook";
+import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import {
   DEFAULT_PLANT,
   IN_STOCK,
@@ -49,7 +50,7 @@ import {
 import { toast } from "@repo/web-ui/components/ui/toast";
 import dayjs from "dayjs";
 import type { Dispatch, SetStateAction } from "react";
-import { useId, useRef, useState } from "react";
+import { useDeferredValue, useId, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import type { z } from "zod";
 import { useCartItemQuantityContext } from "../cart-item-quantity-context";
@@ -107,6 +108,7 @@ type CartItemShippingMethodProps = {
   readonly configuration: CartItemConfiguration;
   readonly setPreventUpdateCart: Dispatch<SetStateAction<boolean>>;
   readonly sku: string;
+  readonly setOsrCartItemTotal: Dispatch<SetStateAction<number>>;
 };
 
 const CartItemShippingMethod = ({
@@ -135,6 +137,7 @@ const CartItemShippingMethod = ({
   configuration,
   sku,
   setPreventUpdateCart,
+  setOsrCartItemTotal,
 }: CartItemShippingMethodProps) => {
   const id = useId();
   const shipToMeId = `${MAIN_OPTIONS.SHIP_TO_ME}-${id}`;
@@ -146,6 +149,8 @@ const CartItemShippingMethod = ({
   const { pushSku, popSku } = useUnSavedAlternativeQuantityState(
     (state) => state.actions,
   );
+
+  const [open, setOpen] = useState(false);
 
   const {
     options: availabilityOptions,
@@ -170,14 +175,20 @@ const CartItemShippingMethod = ({
     ALTERNATIVE_BRANCHES,
   );
 
-  const [open, setOpen] = useState(
-    selectedShippingOption === MAIN_OPTIONS.SHIP_TO_ME_ALT,
-  );
-
   const updateCartConfigMutation = useUpdateCartItemMutation();
   const checkAvailabilityMutation = useCheckAvailabilityMutation();
 
   const cartQuery = useSuspenseCart(token);
+
+  const deferredLineQuantity = useDeferredValue(lineQuantity);
+
+  const priceCheckQuery = useSuspensePriceCheck(token, [
+    {
+      productId: availability.productId,
+      qty: Number(deferredLineQuantity),
+      cartId: cartItemId,
+    },
+  ]);
 
   const qtyChangeTimeoutRef = useRef<NodeJS.Timeout>();
 
@@ -311,7 +322,11 @@ const CartItemShippingMethod = ({
     const shipping_method_3 = cartItem[0]?.configuration.shipping_method_3;
     const shipping_method_4 = cartItem[0]?.configuration.shipping_method_4;
     const shipping_method_5 = cartItem[0]?.configuration.shipping_method_5;
+    const backorder_all = cartItem[0]?.configuration.backorder_all;
 
+    if (backorder_all !== TRUE_STRING) {
+      return shipping_method_1;
+    }
     switch (`shipping_method_${index}`) {
       case "shipping_method_1": {
         return shipping_method_1;
@@ -338,11 +353,12 @@ const CartItemShippingMethod = ({
     shippingMethods: ShippingMethod[],
   ) => {
     const shippingMethod = getPlantShippingMethodFromCart(index);
-    return shippingMethod !== ""
+    return shippingMethod !== "" &&
+      shippingMethods.some((method) => method.code === shippingMethod)
       ? shippingMethod
       : shippingMethods.length > 0
         ? shippingMethods[0]?.code
-        : DEFAULT_PLANT.code;
+        : DEFAULT_SHIPPING_METHOD;
   };
 
   const getDefaultFormValues = () => {
@@ -403,8 +419,8 @@ const CartItemShippingMethod = ({
     selectedOption: MainOption;
   }) => {
     if (checked) {
-      form.reset(getDefaultFormValues());
       if (selectedOption !== MAIN_OPTIONS.SHIP_TO_ME_ALT) {
+        form.reset(getDefaultFormValues());
         setOpen(false);
       }
       const isWillCallOptionSelected =
@@ -845,6 +861,13 @@ const CartItemShippingMethod = ({
           onError: () => {
             pushSku(sku);
           },
+          onSettled: () => {
+            setOpen(false);
+            setOsrCartItemTotal(
+              Number(altQtySum) *
+                (priceCheckQuery.data?.productPrices[0]?.price ?? 0),
+            );
+          },
         },
       );
     }, 500);
@@ -1075,7 +1098,9 @@ const CartItemShippingMethod = ({
               </Collapsible>
             </div>
           </div>
-          {open && <ShipToMeBOInfoBanner option={shipAlternativeBranch} />}
+          {selectedShippingOption === MAIN_OPTIONS.SHIP_TO_ME_ALT && (
+            <ShipToMeBOInfoBanner option={shipAlternativeBranch} />
+          )}
         </>
       )}
 

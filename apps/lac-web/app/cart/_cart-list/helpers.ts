@@ -91,7 +91,7 @@ export const getAlternativeBranchesConfig = ({
     [`plant_${plant?.index}`]:
       (plant?.quantity ?? 0) > 0 ? plant?.plant ?? "" : "",
     [`shipping_method_${plant?.index}`]:
-      (plant?.quantity ?? 0) === 0
+      (plant?.quantity ?? 0) === 0 || isNaN(plant?.quantity ?? 0)
         ? ""
         : plant.method
           ? plant.method

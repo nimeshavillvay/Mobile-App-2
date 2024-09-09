@@ -31,6 +31,7 @@ export type WillCallAnywhere = {
   shippingMethods_1?: string[];
   type?: string;
   shippingMethod: string;
+  isTransfer?: boolean;
 };
 
 export type AvailabilityOption = {
