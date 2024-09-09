@@ -50,7 +50,7 @@ import {
 import { toast } from "@repo/web-ui/components/ui/toast";
 import dayjs from "dayjs";
 import type { Dispatch, SetStateAction } from "react";
-import { useDeferredValue, useId, useRef } from "react";
+import { useDeferredValue, useId, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import type { z } from "zod";
 import { useCartItemQuantityContext } from "../cart-item-quantity-context";
@@ -149,6 +149,8 @@ const CartItemShippingMethod = ({
   const { pushSku, popSku } = useUnSavedAlternativeQuantityState(
     (state) => state.actions,
   );
+
+  const [open, setOpen] = useState(false);
 
   const {
     options: availabilityOptions,
@@ -417,7 +419,10 @@ const CartItemShippingMethod = ({
     selectedOption: MainOption;
   }) => {
     if (checked) {
-      form.reset(getDefaultFormValues());
+      if (selectedOption !== MAIN_OPTIONS.SHIP_TO_ME_ALT) {
+        form.reset(getDefaultFormValues());
+        setOpen(false);
+      }
       const isWillCallOptionSelected =
         selectedOption === MAIN_OPTIONS.WILL_CALL;
       const isWillCallAnywhere =
@@ -857,6 +862,7 @@ const CartItemShippingMethod = ({
             pushSku(sku);
           },
           onSettled: () => {
+            setOpen(false);
             setOsrCartItemTotal(
               Number(altQtySum) *
                 (priceCheckQuery.data?.productPrices[0]?.price ?? 0),
@@ -992,6 +998,8 @@ const CartItemShippingMethod = ({
               <Collapsible
                 className="mt-1.5 flex flex-col gap-1"
                 disabled={!backOrderAll}
+                open={open}
+                onOpenChange={setOpen}
               >
                 <CollapsibleTrigger
                   className="group flex h-7 cursor-default flex-row items-center justify-start"
