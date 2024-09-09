@@ -322,8 +322,9 @@ const ShippingMethod = ({ token, plants }: ShippingMethodProps) => {
         const selectedOption =
           item.configuration.backorder_all === TRUE_STRING
             ? backOrderAll
-            : item.configuration.plant_1 !== homePlant ||
-                item.configuration.avail_2 !== ""
+            : (item.configuration.plant_1 !== homePlant ||
+                  item.configuration.plant_1 !== "") &&
+                !!alternativeBranchesOption
               ? alternativeBranchesOption
               : options[0];
 
