@@ -3,9 +3,6 @@ import { withSentryConfig } from "@sentry/nextjs";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {
-    dynamicIO: true,
-  },
   reactStrictMode: true,
   transpilePackages: ["@repo/web-ui"],
   images: {
