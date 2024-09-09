@@ -201,7 +201,10 @@ const ShippingMethod = ({ token, plants }: ShippingMethodProps) => {
         availability.willCallAnywhere[1]?.willCallQuantity.toString();
       config.will_call_plant = selectedPlant;
       config.will_call_shipping = selectedValue;
-      config.will_call_not_in_stock = FALSE_STRING;
+      config.will_call_not_in_stock =
+        selectedValue === WILLCALL_TRANSFER_SHIPING_METHOD
+          ? FALSE_STRING
+          : TRUE_STRING;
     } else if (
       availability.willCallAnywhere &&
       availability.willCallAnywhere[0] &&
