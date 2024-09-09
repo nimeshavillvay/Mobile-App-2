@@ -1,6 +1,7 @@
 "use client";
 
 import useGtmUser from "@/_hooks/gtm/use-gtm-user.hook";
+import useDebouncedState from "@/_hooks/misc/use-debounced-state.hook";
 import { sendGTMEvent } from "@next/third-parties/google";
 import {
   SearchBox,
@@ -17,7 +18,9 @@ import useMultiSearch, { placeholderData } from "./use-multi-search.hook";
 const SearchBar = () => {
   const router = useRouter();
   const [value, setValue] = useState("");
-  const multiSearchQuery = useMultiSearch(value);
+
+  const debouncedValue = useDebouncedState(value);
+  const multiSearchQuery = useMultiSearch(debouncedValue);
 
   const gtmItemUserQuery = useGtmUser();
   const gtmUser = gtmItemUserQuery.data;
