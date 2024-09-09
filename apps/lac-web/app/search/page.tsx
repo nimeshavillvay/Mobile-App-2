@@ -49,8 +49,7 @@ const SearchPage = async ({
   if (
     searchResults.summary.plp &&
     !Array.isArray(searchResults.results) &&
-    searchResults.results.productStatus != "discontinued" &&
-    searchResults.results.categoryName !== ""
+    searchResults.results.productStatus != "discontinued"
   ) {
     return redirect(
       `/product/${searchResults.results.id}/${searchResults.results.slug}`,
@@ -60,8 +59,7 @@ const SearchPage = async ({
   if (
     searchResults.summary.plp &&
     !Array.isArray(searchResults.results) &&
-    searchResults.results.productStatus != "discontinued" &&
-    searchResults.results.categoryName === ""
+    searchResults.results.productStatus != "discontinued"
   ) {
     throw new Error("Product category is not set");
   }
