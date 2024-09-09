@@ -35,6 +35,7 @@ const RegionalExcludedBanner = ({
   if (!productExcludedQuery.data.isExcluded) {
     return null;
   }
+
   return (
     <div className="absolute left-0 right-0 top-0 px-2 pt-2">
       <Alert variant="destructive">

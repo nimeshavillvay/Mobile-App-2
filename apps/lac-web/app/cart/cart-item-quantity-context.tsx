@@ -18,6 +18,7 @@ export const useCartItemQuantityContext = () => {
       "useCartItemQuantityContext should be used within CartItemQuantityProvider",
     );
   }
+
   return context;
 };
 

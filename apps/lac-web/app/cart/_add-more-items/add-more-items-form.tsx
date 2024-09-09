@@ -312,6 +312,7 @@ const AddMoreItemsForm = () => {
 
     if (!isFormValid(values?.cart)) {
       setIsFormInvalid(true);
+
       return;
     }
 

@@ -41,6 +41,7 @@ export const getSaleItems = async () => {
       on_sale: FeatureProduct[];
       quick_ship: unknown[];
     }>();
+
   return response.on_sale.map((data) => ({
     productTitle: data.productTitle,
     productDescription: data.txt_description_name,

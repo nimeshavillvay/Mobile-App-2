@@ -13,6 +13,7 @@ export const useZipCodeFormatter = () => {
 
     if (value || value === "") {
       setZipCode(value);
+
       return value;
     }
   };
