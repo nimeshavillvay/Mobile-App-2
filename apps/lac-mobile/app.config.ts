@@ -30,8 +30,8 @@ const config: ExpoConfig = {
     [
       "@sentry/react-native/expo",
       {
-        organization: "villvay-py",
-        project: "react-native",
+        organization: "villvay-systems-pvt-ltd",
+        project: "wurth-lac-mobile",
       },
     ],
   ],
