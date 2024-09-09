@@ -170,6 +170,7 @@ export const Default: Story = {
       const filteredCategories = items.categories.results.filter((category) =>
         category.title.toLowerCase().includes(lowerCasedValue),
       );
+
       return {
         products: { meta: items.products.summary, results: filteredProducts },
         brands: { meta: items.brands.summary, results: filteredBrands },

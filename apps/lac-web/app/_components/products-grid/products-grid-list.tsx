@@ -8,9 +8,11 @@ import { Suspense, type ComponentProps, type ReactNode } from "react";
 const ProductsGridListContainer = ({
   type,
   children,
+  className,
 }: {
   readonly type: "mobile" | "desktop";
   readonly children: ReactNode;
+  readonly className?: ComponentProps<"div">["className"];
 }) => {
   return (
     <div
@@ -18,6 +20,7 @@ const ProductsGridListContainer = ({
         type === "mobile"
           ? "flex flex-col gap-3 md:hidden"
           : "grid flex-1 gap-5 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5",
+        className,
       )}
     >
       {children}
@@ -27,10 +30,14 @@ const ProductsGridListContainer = ({
 
 export const ProductsGridList = ({
   type,
+  className,
   products,
   token,
 }: {
   readonly type: ComponentProps<typeof ProductsGridListContainer>["type"];
+  readonly className?: ComponentProps<
+    typeof ProductsGridListContainer
+  >["className"];
   readonly products: {
     prop: ComponentProps<typeof ProductCard>["product"];
     info: { groupId: string };
@@ -40,7 +47,7 @@ export const ProductsGridList = ({
   const orientation = type === "mobile" ? "horizontal" : "vertical";
 
   return (
-    <ProductsGridListContainer type={type}>
+    <ProductsGridListContainer type={type} className={className}>
       {products.map(({ prop, info }) => (
         <Suspense
           key={info.groupId}

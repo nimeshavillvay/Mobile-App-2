@@ -22,7 +22,7 @@ const CheckoutPage = async () => {
   }
 
   const [plants, paymentMethods, countries] = await Promise.all([
-    getPlants(),
+    getPlants(sessionCookie?.value),
     getPaymentMethods(),
     getCountries(),
   ]);

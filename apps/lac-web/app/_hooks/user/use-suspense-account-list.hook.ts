@@ -60,18 +60,22 @@ const useSuspenseAccountList = (token: string) => {
   return useSuspenseQuery({
     queryKey: ["user", "account-list", token],
     queryFn: async () => {
-      const response = await api
-        .get("rest/auth/account-list", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          cache: "no-store",
-        })
-        .json();
-
-      return await accountListSchema.parseAsync(response);
+      return await getAccountList(token);
     },
   });
+};
+
+export const getAccountList = async (token: string) => {
+  const response = await api
+    .get("rest/auth/account-list", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      cache: "no-store",
+    })
+    .json();
+
+  return await accountListSchema.parseAsync(response);
 };
 
 export default useSuspenseAccountList;

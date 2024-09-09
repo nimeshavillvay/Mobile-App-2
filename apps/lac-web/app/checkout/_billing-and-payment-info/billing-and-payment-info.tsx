@@ -12,6 +12,16 @@ import { Mastercard } from "@repo/web-ui/components/logos/mastercard";
 import { Visa } from "@repo/web-ui/components/logos/visa";
 import { Button } from "@repo/web-ui/components/ui/button";
 import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@repo/web-ui/components/ui/dialog";
+import {
   Form,
   FormControl,
   FormDescription,
@@ -284,19 +294,45 @@ const BillingAndPaymentInfo = ({
                       </span>
                     </Label>
 
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="absolute right-3 top-3 size-4 p-0"
-                      onClick={() => deleteCreditCard(card.id)}
-                    >
-                      <Close
-                        width={16}
-                        height={16}
-                        data-button-action="Checkout Delete Credit Card"
-                      />
-                      <span className="sr-only">Remove</span>
-                    </Button>
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="absolute right-3 top-3 size-4 p-0"
+                        >
+                          <Close
+                            width={16}
+                            height={16}
+                            data-button-action="Checkout Delete Credit Card"
+                          />
+                          <span className="sr-only">Remove</span>
+                        </Button>
+                      </DialogTrigger>
+
+                      <DialogContent>
+                        <DialogHeader>
+                          <DialogTitle>Confirm action</DialogTitle>
+
+                          <DialogDescription>
+                            Are you sure you want to delete your card?
+                          </DialogDescription>
+                        </DialogHeader>
+
+                        <DialogFooter>
+                          <DialogClose asChild>
+                            <Button variant="outline">Cancel</Button>
+                          </DialogClose>
+
+                          <DialogClose
+                            asChild
+                            onClick={() => deleteCreditCard(card.id)}
+                          >
+                            <Button>Confirm</Button>
+                          </DialogClose>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
                   </li>
                 ))}
 

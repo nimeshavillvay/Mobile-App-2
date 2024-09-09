@@ -138,6 +138,7 @@ const useAddToCartMutation = ({ productId }: { productId: number }) => {
           error: item.error,
         }));
       }
+
       return;
     },
     onMutate: () => {

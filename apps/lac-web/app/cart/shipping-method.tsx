@@ -15,10 +15,14 @@ import {
   NOT_AVAILABLE,
   NOT_IN_STOCK,
 } from "@/_lib/constants";
-import type { CartItemConfiguration } from "@/_lib/types";
+import type { CartItemConfiguration, Plant } from "@/_lib/types";
 import { sendGTMEvent } from "@next/third-parties/google";
 import { Checkbox } from "@repo/web-ui/components/ui/checkbox";
 import { Label } from "@repo/web-ui/components/ui/label";
+import {
+  RadioGroup,
+  RadioGroupItem,
+} from "@repo/web-ui/components/ui/radio-group";
 import {
   Select,
   SelectContent,
@@ -33,11 +37,14 @@ import {
   AVAILABLE_ALL,
   BACKORDER_DISABLED,
   BACKORDER_ENABLED,
+  BACK_ORDER_ALL,
   DEFAULT_SHIPPING_METHOD,
   EXCLUDED_SHIPPING_METHODS,
   FALSE_STRING,
   TAKE_ON_HAND,
+  TRUE_STRING,
   WILLCALL_SHIPING_METHOD,
+  WILLCALL_TRANSFER_SHIPING_METHOD,
 } from "./constants";
 import type { Availability, ShippingMethod } from "./types";
 import useCartPageStore from "./use-cart-page-store.hook";
@@ -46,12 +53,13 @@ const SHIP_TO_ME = "ship-to-me";
 const WILL_CALL = "will-call";
 
 type ShippingMethodProps = {
+  readonly plants: Plant[];
   readonly token: string;
 };
 
 type ConfigKey = keyof CartItemConfiguration;
 
-const ShippingMethod = ({ token }: ShippingMethodProps) => {
+const ShippingMethod = ({ token, plants }: ShippingMethodProps) => {
   const { toast } = useToast();
   const id = useId();
   const shipToMeId = `${SHIP_TO_ME}-${id}`;
@@ -73,11 +81,16 @@ const ShippingMethod = ({ token }: ShippingMethodProps) => {
   const cartQuery = useSuspenseCart(token);
   const willCallPlantQuery = useSuspenseWillCallPlant(token);
   const willCallPlant = willCallPlantQuery.data;
+  const willCallAvailableOption = willCallPlant.willCallMethod;
 
   const [isShipToMeSelected, setIsShipToMeSelected] = useState(false);
   const [isWillCallSelected, setIsWillCallSelected] = useState(false);
 
+  const [selectedWillCallPlant, setSelectedWillCallPlant] = useState<string>();
+
   const updateCartItemMutation = useUpdateCartItemMutation();
+
+  const homePlant = willCallPlant.plantCode ?? DEFAULT_PLANT.code;
 
   const gtmProducts = cartQuery.data.cartItems.map((item) => {
     return {
@@ -158,14 +171,41 @@ const ShippingMethod = ({ token }: ShippingMethodProps) => {
   const transformConfiguration = (
     availability: Availability,
     config: CartItemConfiguration,
+    selectedValue: string,
+    plant: string,
   ) => {
     clearConfigKeys(config, ["avail_", "shipping_method_", "plant_"]);
-    config.plant_1 = willCallPlant?.plantCode ?? DEFAULT_PLANT.code;
+
+    const selectedPlant = plant ?? selectedWillCallPlant ?? DEFAULT_PLANT.code;
+
+    config.plant_1 = selectedPlant;
     config.hashvalue = availability?.willCallAnywhere?.[0]?.hash
       ? availability.willCallAnywhere[0].hash
       : "";
 
     if (
+      availability.willCallAnywhere &&
+      availability.willCallAnywhere[1] &&
+      availability.willCallAnywhere[1].isTransfer &&
+      (selectedValue === WILLCALL_TRANSFER_SHIPING_METHOD ||
+        availability.willCallAnywhere[0]?.status === NOT_AVAILABLE)
+    ) {
+      config.shipping_method_1 =
+        availability?.options?.at(0)?.plants?.at(0)?.shippingMethods?.at(0)
+          ?.code ?? "0";
+      config.avail_1 =
+        availability.willCallAnywhere[1]?.willCallQuantity.toString();
+      config.backorder_date =
+        availability.willCallAnywhere[1]?.backOrderDate_1 ?? "";
+      config.will_call_avail =
+        availability.willCallAnywhere[1]?.willCallQuantity.toString();
+      config.will_call_plant = selectedPlant;
+      config.will_call_shipping = selectedValue;
+      config.will_call_not_in_stock =
+        selectedValue === WILLCALL_TRANSFER_SHIPING_METHOD
+          ? FALSE_STRING
+          : TRUE_STRING;
+    } else if (
       availability.willCallAnywhere &&
       availability.willCallAnywhere[0] &&
       availability.willCallAnywhere[0].status === IN_STOCK
@@ -179,8 +219,8 @@ const ShippingMethod = ({ token }: ShippingMethodProps) => {
         availability.willCallAnywhere[0]?.backOrderDate_1 ?? "";
       config.will_call_avail =
         availability.willCallAnywhere[0]?.willCallQuantity.toString();
-      config.will_call_plant = willCallPlant?.plantCode ?? DEFAULT_PLANT.code;
-      config.will_call_shipping = WILLCALL_SHIPING_METHOD;
+      config.will_call_plant = selectedPlant;
+      config.will_call_shipping = selectedValue;
       config.will_call_not_in_stock = FALSE_STRING;
     } else if (
       availability.willCallAnywhere &&
@@ -196,8 +236,8 @@ const ShippingMethod = ({ token }: ShippingMethodProps) => {
         availability.willCallAnywhere[0]?.willCallBackOrder ?? "";
       config.backorder_quantity =
         availability.willCallAnywhere[0]?.willCallQuantity.toString();
-      config.will_call_plant = willCallPlant?.plantCode ?? DEFAULT_PLANT.code;
-      config.will_call_shipping = WILLCALL_SHIPING_METHOD;
+      config.will_call_plant = selectedPlant;
+      config.will_call_shipping = selectedValue;
       config.will_call_not_in_stock = FALSE_STRING;
     } else if (
       availability.willCallAnywhere &&
@@ -213,13 +253,34 @@ const ShippingMethod = ({ token }: ShippingMethodProps) => {
         availability.willCallAnywhere[0]?.backOrderDate_1 ?? "";
       config.will_call_avail =
         availability.willCallAnywhere[0]?.willCallQuantity.toString();
-      config.will_call_plant = willCallPlant?.plantCode ?? DEFAULT_PLANT.code;
+      config.will_call_plant = selectedPlant;
       config.backorder_all = "F";
       config.backorder_quantity =
         availability.willCallAnywhere[0]?.backOrderQuantity_1?.toString() ?? "";
-      config.will_call_shipping = WILLCALL_SHIPING_METHOD;
+      config.will_call_shipping = selectedValue;
       config.will_call_not_in_stock = FALSE_STRING;
+    } else if (
+      availability.willCallAnywhere &&
+      availability.willCallAnywhere[0] &&
+      availability.willCallAnywhere[0].status === NOT_AVAILABLE
+    ) {
+      config.shipping_method_1 =
+        availability?.options?.at(0)?.plants?.at(0)?.shippingMethods?.at(0)
+          ?.code ?? "0";
+      config.avail_1 =
+        availability.willCallAnywhere[0]?.willCallQuantity.toString();
+      config.backorder_date =
+        availability.willCallAnywhere[0]?.backOrderDate_1 ?? "";
+      config.will_call_avail =
+        availability.willCallAnywhere[0]?.willCallQuantity.toString();
+      config.will_call_plant = selectedPlant;
+      config.backorder_all = "F";
+      config.backorder_quantity =
+        availability.willCallAnywhere[0]?.backOrderQuantity_1?.toString() ?? "";
+      config.will_call_shipping = selectedValue;
+      config.will_call_not_in_stock = TRUE_STRING;
     }
+
     return config;
   };
 
@@ -247,21 +308,33 @@ const ShippingMethod = ({ token }: ShippingMethodProps) => {
           (option) => option.type === ALTERNATIVE_BRANCHES,
         );
 
+        const backOrderAll = availability.options.find(
+          (option) => option.type === BACK_ORDER_ALL,
+        );
+
         // Get all methods for "Ship to me"
         const options = [
           allAvailableOption,
           takeOnHandOption,
-          alternativeBranchesOption,
-        ];
+          backOrderAll,
+        ].filter((option) => option !== undefined);
 
-        const selectedOption = options.find((option) =>
-          option?.plants.some((plant) =>
-            plant?.shippingMethods.some((method) => method?.code === value),
-          ),
-        );
+        const selectedOption =
+          item.configuration.backorder_all === TRUE_STRING
+            ? backOrderAll
+            : item.configuration.plant_1 !== homePlant ||
+                item.configuration.avail_2 !== ""
+              ? alternativeBranchesOption
+              : options[0];
 
         const shippingMethods =
-          selectedOption?.plants.at(0)?.shippingMethods ?? [];
+          selectedOption === undefined
+            ? alternativeBranchesOption?.plants.map(
+                (plant) => plant.shippingMethods,
+              ) ?? []
+            : selectedOption?.plants.map((plant) => plant.shippingMethods) ??
+              [];
+
         return {
           id: item.itemInfo.productId,
           hashvalue: selectedOption?.hash ?? "",
@@ -279,7 +352,6 @@ const ShippingMethod = ({ token }: ShippingMethodProps) => {
           ...item.configuration,
         };
 
-        let newValue: string | undefined = undefined;
         let newHashValue: string | undefined = undefined;
         // Check if the value is available
         const shippingMethod = itemShippingMethods.find(
@@ -287,12 +359,11 @@ const ShippingMethod = ({ token }: ShippingMethodProps) => {
         );
         if (shippingMethod) {
           // Check if the global shipping method selected is available for the item
-          const isValid = !!shippingMethod.shippingMethods.find(
-            (element) => element.code === value,
+          const isValidForAny = !!shippingMethod.shippingMethods.map(
+            (methods) => methods.find((element) => element.code === value),
           );
 
-          if (isValid) {
-            newValue = value;
+          if (isValidForAny) {
             newHashValue = shippingMethod.hashvalue;
           }
         }
@@ -300,12 +371,11 @@ const ShippingMethod = ({ token }: ShippingMethodProps) => {
         const selectedOption = shippingMethod;
         const addedIndexes: number[] = [];
 
-        if (newValue && newHashValue) {
+        if (newHashValue) {
           config.will_call_shipping = "";
           config.will_call_avail = "";
           config.will_call_plant = "";
           config.will_call_not_in_stock = FALSE_STRING;
-          // Set hash value
           config.hashvalue = newHashValue;
           if (selectedOption) {
             config.backorder_all =
@@ -325,7 +395,6 @@ const ShippingMethod = ({ token }: ShippingMethodProps) => {
               selectedOption.plants[i]
             ) {
               const selectedPlant = selectedOption.plants[i];
-
               if (selectedPlant) {
                 const quantity = selectedPlant.quantity ?? "";
                 const index = selectedPlant.index;
@@ -333,11 +402,11 @@ const ShippingMethod = ({ token }: ShippingMethodProps) => {
 
                 const availValue = quantity?.toString() ?? "";
                 const plantValue = selectedPlant.plant ?? "";
-                const shippingMethodValue =
-                  selectedPlant.plant !== willCallPlant?.plantCode
-                    ? DEFAULT_SHIPPING_METHOD
-                    : newValue ?? "";
-
+                const shippingMethodValue = selectedPlant?.shippingMethods.find(
+                  (method) => method.code === value,
+                )
+                  ? value
+                  : DEFAULT_SHIPPING_METHOD;
                 // Set values for the selected plant
                 setConfigValues(
                   config,
@@ -378,13 +447,15 @@ const ShippingMethod = ({ token }: ShippingMethodProps) => {
     );
   };
 
-  const handleGlobalWillCall = async () => {
+  const handleGlobalWillCall = async (value: string, plant?: string) => {
+    const selectedPlant = plant ?? selectedWillCallPlant ?? DEFAULT_PLANT.code;
+
     const cartItemsAvailability = await Promise.all(
       cartQuery.data.cartItems.map(async (item) => {
         return await checkAvailability(token, {
           productId: item.itemInfo.productId,
           qty: item.quantity,
-          plant: willCallPlant?.plantCode ?? DEFAULT_PLANT.code,
+          plant: selectedPlant,
         });
       }),
     );
@@ -396,14 +467,14 @@ const ShippingMethod = ({ token }: ShippingMethodProps) => {
       const availability = cartItemsAvailability.find(
         (willCall) =>
           willCall.productId === item.itemInfo.productId &&
-          willCall.willCallAnywhere[0]?.shippingMethod ===
-            WILLCALL_SHIPING_METHOD &&
-          willCall.willCallAnywhere[0]?.status !== NOT_AVAILABLE,
+          (willCall.willCallAnywhere[0]?.status !== NOT_AVAILABLE ||
+            willCall.willCallAnywhere[1]?.status !== NOT_AVAILABLE),
       );
 
       const transformedConfig = availability
-        ? transformConfiguration(availability, config)
+        ? transformConfiguration(availability, config, value, selectedPlant)
         : config;
+
       return {
         cartItemId: item.cartItemId,
         quantity: item.quantity,
@@ -415,6 +486,7 @@ const ShippingMethod = ({ token }: ShippingMethodProps) => {
       onSuccess: () => {
         toast({ description: "Updated delivery method for all items" });
         setIsWillCallSelected(false);
+        setSelectedWillCallPlant(undefined);
         incrementCartItemKey();
         sendToGTMShippingMethodChanged();
       },
@@ -478,28 +550,106 @@ const ShippingMethod = ({ token }: ShippingMethodProps) => {
           </div>
         </li>
 
-        <li className="flex flex-row items-center gap-3">
-          <Checkbox
-            id={willCallId}
-            className="avail-change-button rounded-full"
-            checked={selectedSection === WILL_CALL && isWillCallSelected}
-            onCheckedChange={(checked) => {
-              if (checked === true) {
-                setIsWillCallSelected(true);
-                setSelectedSection(WILL_CALL);
-                handleGlobalWillCall();
-              } else {
-                setIsWillCallSelected(false);
-                setSelectedSection(undefined);
-              }
-            }}
-            disabled={updateCartItemMutation.isPending}
-          />
+        <li className="flex flex-col items-stretch gap-2">
+          <div className="flex flex-row items-center gap-3">
+            <Checkbox
+              id={willCallId}
+              className="avail-change-button rounded-full"
+              checked={selectedSection === WILL_CALL && isWillCallSelected}
+              onCheckedChange={(checked) => {
+                if (checked === true) {
+                  setIsWillCallSelected(true);
+                  setSelectedSection(WILL_CALL);
+                } else {
+                  setIsWillCallSelected(false);
+                  setSelectedSection(undefined);
+                }
+              }}
+              disabled={updateCartItemMutation.isPending}
+            />
 
-          <Label htmlFor={willCallId}>
-            Store pick up (Will call) at&nbsp;
-            {willCallPlant?.plantName ?? DEFAULT_PLANT.name}
-          </Label>
+            <Label htmlFor={willCallId}>Store pick up (Will call)</Label>
+          </div>
+          <div className="ml-[1.625rem]">
+            <Select
+              disabled={
+                selectedSection !== WILL_CALL ||
+                updateCartItemMutation.isPending ||
+                !isWillCallSelected
+              }
+              key={selectedWillCallPlant}
+              value={selectedWillCallPlant}
+              onValueChange={(plant) => {
+                setSelectedWillCallPlant(plant);
+                handleGlobalWillCall(willCallAvailableOption, plant);
+              }}
+            >
+              <SelectTrigger className="avail-change-button w-full">
+                <SelectValue placeholder="Select a store" />
+              </SelectTrigger>
+
+              <SelectContent>
+                {plants?.length > 0 &&
+                  plants.map((option) => (
+                    <SelectItem key={option.code} value={option.code}>
+                      {option.name}
+                    </SelectItem>
+                  ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {selectedSection === WILL_CALL && selectedWillCallPlant && (
+            <RadioGroup
+              className="ml-[1.625rem] flex flex-col"
+              onValueChange={handleGlobalWillCall}
+              value={willCallAvailableOption}
+            >
+              {plants.find((plant) => plant.code === selectedWillCallPlant)
+                ?.is_willcall && (
+                <div className="flex shrink-0 flex-row items-center gap-0.5 rounded border border-wurth-gray-250 object-contain p-1 text-sm shadow-sm">
+                  <RadioGroupItem
+                    value={WILLCALL_SHIPING_METHOD}
+                    className="h-3.5 w-3.5"
+                    disabled={updateCartItemMutation.isPending}
+                  />
+                  <span className="pl-2">
+                    Pick up at{" "}
+                    {
+                      plants.find(
+                        (plant) => plant.code === selectedWillCallPlant,
+                      )?.name
+                    }
+                  </span>
+                </div>
+              )}
+
+              {plants.find((plant) => plant.code === selectedWillCallPlant)
+                ?.is_transfer && (
+                <div className="flex shrink-0 flex-row items-center gap-0.5 rounded border border-wurth-gray-250 object-contain p-1 text-sm shadow-sm">
+                  <RadioGroupItem
+                    value={WILLCALL_TRANSFER_SHIPING_METHOD}
+                    className="h-3.5 w-3.5"
+                    disabled={updateCartItemMutation.isPending}
+                  />
+                  <span className="pl-2">
+                    Transfer from{" "}
+                    {
+                      plants.find(
+                        (plant) => plant.code === selectedWillCallPlant,
+                      )?.xPlant
+                    }{" "}
+                    to{" "}
+                    {
+                      plants.find(
+                        (plant) => plant.code === selectedWillCallPlant,
+                      )?.name
+                    }
+                  </span>
+                </div>
+              )}
+            </RadioGroup>
+          )}
         </li>
       </ul>
     </div>

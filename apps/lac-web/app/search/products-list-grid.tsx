@@ -1,5 +1,5 @@
 import { ProductsGridList } from "@/_components/products-grid";
-import { getBoolean } from "@/_lib/utils";
+import { cn, getBoolean } from "@/_lib/utils";
 import { type ComponentProps } from "react";
 import { getSearchResults } from "./apis";
 
@@ -47,7 +47,14 @@ const ProductListGrid = async ({
     }));
   }
 
-  return <ProductsGridList products={products} type={type} token={token} />;
+  return (
+    <ProductsGridList
+      products={products}
+      type={type}
+      token={token}
+      className={cn(type === "desktop" && "2xl:grid-cols-6")}
+    />
+  );
 };
 
 export default ProductListGrid;

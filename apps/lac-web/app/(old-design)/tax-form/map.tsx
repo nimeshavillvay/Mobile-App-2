@@ -65,6 +65,7 @@ const Map = ({ taxFormDetails }: { readonly taxFormDetails: TaxFormItems }) => {
   const handleSelect = (stateCode: keyof TaxFormItems | undefined) => {
     if (stateCode == "AZ") {
       setOpen(true);
+
       return;
     }
 

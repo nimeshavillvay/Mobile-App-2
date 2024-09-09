@@ -42,7 +42,7 @@ const MobileView = async ({ orderNo }: MobileViewProps) => {
   const [orderDetails, paymentMethods, plants] = await Promise.all([
     getOrderDetails(sessionToken.value, orderNo),
     getPaymentMethods(),
-    getPlants(),
+    getPlants(sessionToken?.value),
   ]);
 
   return (
@@ -377,7 +377,7 @@ const MobileView = async ({ orderNo }: MobileViewProps) => {
 
       {!!orderDetails.driverNotes && (
         <div className="rounded-lg bg-wurth-gray-50 px-6 py-5 text-sm text-wurth-gray-800">
-          <h3>Driver&apos;s Notes</h3>
+          <h3>Notes for Delivery Driver</h3>
 
           <p className="leading-6">{orderDetails.driverNotes}</p>
         </div>

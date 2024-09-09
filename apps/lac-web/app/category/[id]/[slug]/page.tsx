@@ -7,7 +7,8 @@ import {
   ProductsGridMobileFiltersHeaderSkeleton,
   ProductsGridPaginationSkeleton,
 } from "@/_components/products-grid";
-import { getBreadcrumbs } from "@/_lib/apis/server";
+import { getBreadcrumbs, getCategoriesList } from "@/_lib/apis/server";
+import type { TransformedCategory } from "@/_lib/types";
 import { cn } from "@/_lib/utils";
 import { ChevronLeft } from "@repo/web-ui/components/icons/chevron-left";
 import {
@@ -28,6 +29,30 @@ import { getCategory } from "./apis";
 import CategoryPageGtm from "./category-page-gtm";
 import SubCategoriesList from "./sub-categories-list";
 import type { CategoryPageProps, SubCategory } from "./types";
+
+export const generateStaticParams = async () => {
+  const categories = await getCategoriesList();
+
+  const params: { id: string; slug: string }[] = [];
+  const addCategoryPages = (category: TransformedCategory) => {
+    params.push({
+      id: category.id.toString(),
+      slug: category.slug,
+    });
+
+    if (category.subCategory) {
+      category.subCategory.forEach((subCategory) => {
+        addCategoryPages(subCategory);
+      });
+    }
+  };
+
+  categories.forEach((category) => {
+    addCategoryPages(category);
+  });
+
+  return params;
+};
 
 export const generateMetadata = async ({
   params: { id, slug },

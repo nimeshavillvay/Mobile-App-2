@@ -16,12 +16,12 @@ type SearchableFields = "productTitle" | "brandName" | "categoryName";
 
 const INVALID_SEARCH_VALUES = {
   productStatus: "discontinued",
-  categoryName: "",
 };
 
 const isValidProduct = (result: Result): boolean => {
   return Object.entries(INVALID_SEARCH_VALUES).every(([key, invalidValue]) => {
     const resultValue = result[key as keyof Result];
+
     return resultValue !== invalidValue;
   });
 };
@@ -139,6 +139,7 @@ export const SearchBoxInput = ({
         return result[field] as string;
       }
     }
+
     return "";
   };
 
@@ -366,6 +367,8 @@ export const SearchBoxButton = ({
         className="btnAction size-5"
         data-button-action="Search"
       />
+
+      <span className="sr-only">Search</span>
     </Button>
   );
 };

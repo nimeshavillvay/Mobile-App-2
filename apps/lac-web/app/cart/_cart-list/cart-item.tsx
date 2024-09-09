@@ -29,7 +29,6 @@ import {
   cn,
   formatNumberToPrice,
 } from "@/_lib/utils";
-import { NUMBER_TYPE } from "@/_lib/zod-helper";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { sendGTMEvent } from "@next/third-parties/google";
 import { Alert } from "@repo/web-ui/components/icons/alert";
@@ -61,11 +60,11 @@ import {
   useRef,
   useState,
 } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { GiRadioactive } from "react-icons/gi";
 import Balancer from "react-wrap-balancer";
-import { z } from "zod";
 import { useCartFormIdContext } from "../cart-form-id-context";
+import { useCartItemQuantityContext } from "../cart-item-quantity-context";
 import {
   ALTERNATIVE_BRANCHES,
   AVAILABLE_ALL,
@@ -74,9 +73,11 @@ import {
   EMPTY_STRING,
   FALSE_STRING,
   MAIN_OPTIONS,
+  SHIP_TO_ME,
   TAKE_ON_HAND,
   TRUE_STRING,
   WILLCALL_SHIPING_METHOD,
+  WILLCALL_TRANSFER_SHIPING_METHOD,
 } from "../constants";
 import type { ShippingMethod, WillCallAnywhere } from "../types";
 import AvailabilityStatus from "./availability-status";
@@ -85,7 +86,9 @@ import CartItemShippingMethod from "./cart-item-shipping-method";
 import FavoriteButton from "./favorite-button";
 import FavoriteButtonSkeleton from "./favorite-button-skeleton";
 import HazardousMaterialNotice from "./hazardous-material-notice";
+import type { CartItemSchema } from "./helpers";
 import {
+  cartItemSchema,
   createCartItemConfig,
   findAvailabilityOptionForType,
   getAlternativeBranchesConfig,
@@ -94,11 +97,6 @@ import {
 import RegionalExclusionAndShippingMethods from "./regional-exclusion-and-shipping-methods";
 import type { MainOption, ShipToMeOption, WillCallOption } from "./types";
 import useCheckAvailabilityMutation from "./use-check-availability-mutation.hook";
-
-const cartItemSchema = z.object({
-  quantity: NUMBER_TYPE,
-  po: z.string().optional(),
-});
 
 type CartItemProps = {
   readonly token: Token;
@@ -141,6 +139,10 @@ const CartItem = ({
 
   const [isHazardClick, setIsHazardClick] = useState(false);
 
+  const { lineQuantity, setLineQuantity } = useCartItemQuantityContext();
+
+  const [preventUpdateCart, setPreventUpdateCart] = useState(false);
+
   // This ref is to delay the check availability calls when the quantity or
   // PO Name changes to avoid multiple API calls
   const qtyOrPoChangeTimeoutRef = useRef<NodeJS.Timeout>();
@@ -163,20 +165,16 @@ const CartItem = ({
   const [selectedShippingOption, setSelectedShippingOption] =
     useState<MainOption>();
 
-  const { register, getValues, setValue, watch, control } = useForm<
-    z.infer<typeof cartItemSchema>
-  >({
+  const { register, getValues } = useForm<CartItemSchema>({
     resolver: zodResolver(cartItemSchema),
     defaultValues: {
-      quantity: product.quantity,
       po: product.configuration.poOrJobName ?? "",
     },
   });
 
-  const quantity = watch("quantity");
-  const delayedQuantity = useDebouncedState(quantity);
+  const delayedQuantity = useDebouncedState(Number(lineQuantity));
   const deferredQuantity = useDeferredValue(delayedQuantity);
-  const isQuantityLessThanMin = quantity < product.minAmount;
+  const isQuantityLessThanMin = deferredQuantity < product.minAmount;
 
   const priceCheckQuery = useSuspensePriceCheck(token, [
     {
@@ -189,7 +187,7 @@ const CartItem = ({
   const priceCheckData = priceCheckQuery.data;
 
   const [osrCartItemTotal, setOsrCartItemTotal] = useState(
-    quantity * (priceCheckData?.productPrices[0]?.price ?? 0),
+    Number(lineQuantity) * (priceCheckData?.productPrices[0]?.price ?? 0),
   );
 
   const updateCartConfigMutation = useUpdateCartItemMutation();
@@ -262,20 +260,15 @@ const CartItem = ({
     [BACK_ORDER_ALL]: backOrderAll,
   };
 
-  const [selectedShipToMe, setSelectedShipToMe] = useState<ShipToMeOption>(
-    () => {
-      // State initialization based on availability options
-      if (availableAll) {
-        return AVAILABLE_ALL;
-      } else if (takeOnHand) {
-        return TAKE_ON_HAND;
-      } else if (shipAlternativeBranch) {
-        return ALTERNATIVE_BRANCHES;
-      }
-      // Return a default value here if none of the conditions match
+  const selectedShipToMe: ShipToMeOption = (() => {
+    // State initialization based on availability options
+    if (availableAll || takeOnHand || backOrderAll) {
+      return SHIP_TO_ME;
+    } else {
       return undefined;
-    },
-  );
+    }
+    // Return a default value here if none of the conditions match
+  })();
 
   const [selectedWillCallTransfer, setSelectedWillCallTransfer] =
     useState<WillCallOption>(MAIN_OPTIONS.WILL_CALL);
@@ -285,6 +278,7 @@ const CartItem = ({
     selectedShipToMe,
     AVAILABLE_OPTIONS_MAP,
   );
+
   const backorderShippingMethods = getShippingMethods(
     BACK_ORDER_ALL,
     BACKORDER_OPTIONS_MAP,
@@ -302,18 +296,28 @@ const CartItem = ({
     cartConfiguration?.default_shipping,
   );
 
+  const shipToMeAvailability = availableAll ?? takeOnHand ?? backOrderAll;
+
   // User selected shipping method (ship-to-me)
   const [selectedShippingMethod, setSelectedShippingMethod] = useState(
-    defaultShippingMethod?.code ?? product.configuration.shipping_method_1,
+    defaultShippingMethod?.code ??
+      (product.configuration.shipping_method_1 !== "" &&
+        shipToMeAvailability?.plants[0]?.shippingMethods.find(
+          (method) => method.code === product.configuration.shipping_method_1,
+        ))
+      ? product.configuration.shipping_method_1
+      : DEFAULT_SHIPPING_METHOD,
   );
 
   const [selectedBackorderShippingMethod, setSelectedBackorderShippingMethod] =
     useState(defaultBackOrderShippingMethod?.code ?? DEFAULT_SHIPPING_METHOD);
 
   const handleChangeQtyOrPO = (quantity?: number) => {
-    const newQuantity = quantity ?? Number(deferredQuantity);
+    const newQuantity = quantity ?? Number(lineQuantity);
 
     if (newQuantity > 0) {
+      setPreventUpdateCart(false);
+      setLineQuantity(newQuantity.toString());
       // Clear the existing timeout
       clearTimeout(qtyOrPoChangeTimeoutRef.current);
 
@@ -451,11 +455,11 @@ const CartItem = ({
   const handleSave = (config?: Partial<CartItemConfiguration>) => {
     const data = getValues();
 
-    if (Number(data.quantity) > 0) {
+    if (Number(Number(lineQuantity)) > 0) {
       updateCartConfigMutation.mutate([
         {
           cartItemId: product.cartItemId,
-          quantity: Number(data.quantity),
+          quantity: Number(Number(lineQuantity)),
           config: {
             ...product.configuration,
             ...config,
@@ -464,7 +468,7 @@ const CartItem = ({
         },
       ]);
       setOsrCartItemTotal(
-        data.quantity * (priceCheckData?.productPrices[0]?.price ?? 0),
+        Number(lineQuantity) * (priceCheckData?.productPrices[0]?.price ?? 0),
       );
     }
   };
@@ -472,13 +476,13 @@ const CartItem = ({
   const handlePriceOverride = (newPrice: number) => {
     const data = getValues();
 
-    setOsrCartItemTotal(data.quantity * newPrice);
+    setOsrCartItemTotal(Number(lineQuantity) * newPrice);
 
-    if (Number(data.quantity) > 0) {
+    if (Number(Number(lineQuantity)) > 0) {
       updateCartConfigMutation.mutate([
         {
           cartItemId: product.cartItemId,
-          quantity: Number(data.quantity),
+          quantity: Number(Number(lineQuantity)),
           price: newPrice,
           config: {
             ...product.configuration,
@@ -510,7 +514,7 @@ const CartItem = ({
       checkAvailabilityMutation.mutate(
         {
           productId: product.id,
-          qty: quantity,
+          qty: Number(lineQuantity),
           plant: plant,
         },
         {
@@ -657,21 +661,24 @@ const CartItem = ({
   useEffect(() => {
     // Check if matched availability option exists
     if (matchedAvailabilityOption) {
-      if (matchedAvailabilityOption.type === AVAILABLE_ALL) {
+      if (matchedAvailabilityOption.type === ALTERNATIVE_BRANCHES) {
+        setSelectedShippingOption(MAIN_OPTIONS.SHIP_TO_ME_ALT);
+      } else if (
+        matchedAvailabilityOption.type === AVAILABLE_ALL ||
+        matchedAvailabilityOption.type === TAKE_ON_HAND ||
+        matchedAvailabilityOption.type === BACK_ORDER_ALL
+      ) {
         setSelectedShippingOption(MAIN_OPTIONS.SHIP_TO_ME);
-        setSelectedShipToMe(AVAILABLE_ALL);
-      } else if (matchedAvailabilityOption.type === TAKE_ON_HAND) {
-        setSelectedShippingOption(MAIN_OPTIONS.SHIP_TO_ME);
-        setSelectedShipToMe(TAKE_ON_HAND);
-      } else if (matchedAvailabilityOption.type === ALTERNATIVE_BRANCHES) {
-        setSelectedShippingOption(MAIN_OPTIONS.SHIP_TO_ME);
-        setSelectedShipToMe(ALTERNATIVE_BRANCHES);
-      } else if (matchedAvailabilityOption.type === BACK_ORDER_ALL) {
-        setSelectedShippingOption(MAIN_OPTIONS.BACK_ORDER);
       }
     } else {
       // Check if hash matches with the will call hash
       if (
+        product.configuration.will_call_shipping ===
+        WILLCALL_TRANSFER_SHIPING_METHOD
+      ) {
+        setSelectedWillCallTransfer(MAIN_OPTIONS.WILL_CALL_TRANSFER);
+        setSelectedShippingOption(MAIN_OPTIONS.WILL_CALL);
+      } else if (
         willCallAnywhere[0] &&
         isWillCallAnywhere(willCallAnywhere[0], itemConfigHash)
       ) {
@@ -686,7 +693,9 @@ const CartItem = ({
       } else {
         // Update the cart config with default option based on the priority
         // This is needed so that if the the cart gets expired we update it here
-        setDefaultsForCartConfig();
+        if (!preventUpdateCart) {
+          setDefaultsForCartConfig();
+        }
       }
     }
     // eslint-disable-next-line react-compiler/react-compiler
@@ -701,25 +710,26 @@ const CartItem = ({
 
   const reduceQuantity = () => {
     // Use `Number(quantity)` because `quantity` is a string at runtime
-    setValue(
-      "quantity",
+    setLineQuantity(
       calculateReduceQuantity(
-        Number(quantity),
+        Number(Number(lineQuantity)),
         product.minAmount,
         product.increment,
-      ),
+      ).toString(),
     );
+
+    setPreventUpdateCart(false);
   };
   const increaseQuantity = () => {
     // Use `Number(quantity)` because `quantity` is a string at runtime
-    setValue(
-      "quantity",
+    setLineQuantity(
       calculateIncreaseQuantity(
-        Number(quantity),
+        Number(Number(lineQuantity)),
         product.minAmount,
         product.increment,
-      ),
+      ).toString(),
     );
+    setPreventUpdateCart(false);
   };
 
   const pathnameHistory = usePathnameHistoryState(
@@ -770,6 +780,7 @@ const CartItem = ({
       });
     }
   };
+
   const sendToGTMDeleteProduct = () => {
     if (gtmItemInfo && gtmUser) {
       sendGTMEvent({
@@ -801,9 +812,9 @@ const CartItem = ({
   };
 
   return (
-    <div className="flex flex-col gap-6 md:flex-row">
-      <div className="flex flex-row items-start gap-3 md:flex-1">
-        <div className="flex w-[4.5rem] shrink-0 flex-col gap-2 md:w-[7.5rem]">
+    <div className="flex flex-col gap-6 lg:flex-row">
+      <div className="flex flex-row items-start gap-3 lg:flex-1">
+        <div className="flex w-[4.5rem] shrink-0 flex-col gap-2 lg:w-[7.5rem]">
           <Link
             onClick={sendToGTMViewProduct}
             href={`/product/${product.id}/${product.slug}`}
@@ -816,7 +827,7 @@ const CartItem = ({
                 alt={`A picture of ${product.title}`}
                 width={120}
                 height={120}
-                className="size-[4.5rem] rounded border border-wurth-gray-250 object-contain shadow-sm md:size-[7.5rem]"
+                className="size-[4.5rem] rounded border border-wurth-gray-250 object-contain shadow-sm lg:size-[7.5rem]"
               />
             ) : (
               <WurthLacLogo
@@ -827,7 +838,7 @@ const CartItem = ({
             )}
           </Link>
 
-          <div className="flex flex-col gap-1 md:hidden">
+          <div className="flex flex-col gap-1 lg:hidden">
             <Suspense fallback={<FavoriteButtonSkeleton display="mobile" />}>
               <FavoriteButton
                 display="mobile"
@@ -852,9 +863,9 @@ const CartItem = ({
           </div>
         </div>
 
-        <div className="flex-1 space-y-2 md:space-y-1">
+        <div className="flex-1 space-y-2 @container lg:space-y-1">
           {isOSRLoggedInAsOSR && (
-            <div className="text-lg font-semibold md:hidden">
+            <div className="text-lg font-semibold lg:hidden">
               ${formatNumberToPrice(parseFloat(osrCartItemTotal.toFixed(2)))}
             </div>
           )}
@@ -899,11 +910,12 @@ const CartItem = ({
 
           {product.isHazardous && isHazardClick && <HazardousMaterialNotice />}
 
-          <div className="flex flex-col gap-2 md:flex-row md:items-center">
+          <div className="flex flex-col gap-2 @sm:flex-row @sm:items-center">
             <div className="flex w-44 flex-col rounded-md border border-wurth-gray-250 p-0.5">
               <div className="text-center text-xs font-medium uppercase leading-none text-wurth-gray-400">
                 Qty / {product.uom}
               </div>
+
               <div className="flex flex-row items-center justify-between gap-2 shadow-sm">
                 <Button
                   type="button"
@@ -911,7 +923,11 @@ const CartItem = ({
                   size="icon"
                   className="up-minus up-control h-7 w-7 rounded-sm"
                   onClick={reduceQuantity}
-                  disabled={!quantity || Number(quantity) === product.minAmount}
+                  disabled={
+                    !Number(lineQuantity) ||
+                    Number(Number(lineQuantity)) === product.minAmount ||
+                    selectedShippingOption === MAIN_OPTIONS.SHIP_TO_ME_ALT
+                  }
                 >
                   <Minus
                     className="btnAction size-4"
@@ -920,39 +936,31 @@ const CartItem = ({
                   <span className="sr-only">Reduce quantity</span>
                 </Button>
 
-                <Controller
-                  control={control}
+                <NumberInputField
                   name="quantity"
-                  render={({
-                    field: { onChange, onBlur, value, name, ref },
-                  }) => (
-                    <NumberInputField
-                      onBlur={onBlur}
-                      onChange={(event) => {
-                        if (
-                          Number(event.target.value) >= product.minAmount &&
-                          Number(event.target.value) % product.increment === 0
-                        ) {
-                          handleChangeQtyOrPO(Number(event.target.value));
-                        }
-
-                        onChange(event);
-                      }}
-                      value={value}
-                      ref={ref}
-                      name={name}
-                      className={cn(
-                        "h-fit w-24 rounded border-r-0 px-2.5 py-1 text-base focus:border-none focus:outline-none focus:ring-0 md:w-20",
-                        isQuantityLessThanMin ? "border-red-700" : "",
-                      )}
-                      required
-                      min={product.minAmount}
-                      step={product.increment}
-                      disabled={checkAvailabilityQuery.isPending}
-                      form={cartFormId} // This is to check the validity when clicking "checkout"
-                      label="Quantity"
-                    />
+                  onChange={(event) => {
+                    if (
+                      Number(event.target.value) >= product.minAmount &&
+                      Number(event.target.value) % product.increment === 0
+                    ) {
+                      handleChangeQtyOrPO(Number(event.target.value));
+                    }
+                    setLineQuantity(event.target.value);
+                  }}
+                  value={lineQuantity}
+                  className={cn(
+                    "h-fit w-24 rounded border-r-0 px-2.5 py-1 text-base focus:border-none focus:outline-none focus:ring-0 md:w-20",
+                    isQuantityLessThanMin ? "border-red-700" : "",
                   )}
+                  required
+                  min={product.minAmount}
+                  step={product.increment}
+                  disabled={
+                    checkAvailabilityQuery.isPending ||
+                    selectedShippingOption === MAIN_OPTIONS.SHIP_TO_ME_ALT
+                  }
+                  form={cartFormId} // This is to check the validity when clicking "checkout"
+                  label="Quantity"
                 />
 
                 <Button
@@ -962,8 +970,10 @@ const CartItem = ({
                   className="up-plus up-control h-7 w-7 rounded-sm"
                   onClick={increaseQuantity}
                   disabled={
-                    quantity?.toString().length > 5 ||
-                    Number(quantity) + product.increment >= MAX_QUANTITY
+                    Number(lineQuantity)?.toString().length > 5 ||
+                    Number(Number(lineQuantity)) + product.increment >=
+                      MAX_QUANTITY ||
+                    selectedShippingOption === MAIN_OPTIONS.SHIP_TO_ME_ALT
                   }
                 >
                   <Plus
@@ -1015,7 +1025,7 @@ const CartItem = ({
         </div>
       </div>
 
-      <div className="md:w-80">
+      <div className="lg:w-80">
         {checkLoginQuery.data?.status_code === "NOT_LOGGED_IN" &&
           (product.isExcludedProduct ? (
             <div className="flex flex-row gap-2 rounded-lg bg-red-50 p-4">
@@ -1052,10 +1062,8 @@ const CartItem = ({
               selectedWillCallPlant={selectedWillCallPlant}
               setSelectedShippingOption={setSelectedShippingOption}
               selectedShippingOption={selectedShippingOption}
-              setSelectedShipToMe={setSelectedShipToMe}
               setSelectedWillCallTransfer={setSelectedWillCallTransfer}
               selectedWillCallTransfer={selectedWillCallTransfer}
-              selectedShipToMe={selectedShipToMe}
               setSelectedShippingMethod={setSelectedShippingMethod}
               selectedShippingMethod={selectedShippingMethod}
               setSelectedBackorderShippingMethod={
@@ -1069,6 +1077,13 @@ const CartItem = ({
               handleSelectWillCallPlant={handleSelectWillCallPlant}
               willCallPlant={willCallPlant}
               token={token}
+              increment={product.increment}
+              uom={product.uom}
+              cartItemId={product.cartItemId}
+              configuration={product.configuration}
+              setPreventUpdateCart={setPreventUpdateCart}
+              sku={product.sku}
+              setOsrCartItemTotal={setOsrCartItemTotal}
             />
           ))}
 
@@ -1083,8 +1098,6 @@ const CartItem = ({
               selectedWillCallPlant={selectedWillCallPlant}
               setSelectedShippingOption={setSelectedShippingOption}
               selectedShippingOption={selectedShippingOption}
-              setSelectedShipToMe={setSelectedShipToMe}
-              selectedShipToMe={selectedShipToMe}
               setSelectedWillCallTransfer={setSelectedWillCallTransfer}
               selectedWillCallTransfer={selectedWillCallTransfer}
               setSelectedShippingMethod={setSelectedShippingMethod}
@@ -1099,12 +1112,19 @@ const CartItem = ({
               isDirectlyShippedFromVendor={product.isDirectlyShippedFromVendor}
               handleSelectWillCallPlant={handleSelectWillCallPlant}
               willCallPlant={willCallPlant}
+              increment={product.increment}
+              uom={product.uom}
+              cartItemId={product.cartItemId}
+              configuration={product.configuration}
+              setPreventUpdateCart={setPreventUpdateCart}
+              sku={product.sku}
+              setOsrCartItemTotal={setOsrCartItemTotal}
             />
           </Suspense>
         )}
       </div>
 
-      <div className="hidden space-y-3 md:block md:shrink-0">
+      <div className="hidden space-y-3 lg:block lg:shrink-0">
         {isOSRLoggedInAsOSR && (
           <div className="text-right text-lg font-semibold">
             ${formatNumberToPrice(parseFloat(osrCartItemTotal.toFixed(2)))}

@@ -8,8 +8,10 @@ export const isExpiredCreditCard = (date: string) => {
     const comparedDate = dayjs()
       .set("month", parseInt(month) - 1)
       .set("year", parseInt(year) + 2000);
+
     return comparedDate.isBefore(dayjs(), "month");
   }
+
   return false;
 };
 

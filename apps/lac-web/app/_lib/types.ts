@@ -217,6 +217,9 @@ export type PaymentMethod = {
 export type Plant = {
   code: string;
   name: string;
+  is_willcall: boolean;
+  is_transfer: boolean;
+  xPlant: string;
 };
 
 export type FilterValues = {
@@ -530,6 +533,7 @@ export type ProductItemInfo = {
     attribute_name: string;
     attribute_value: null | string;
   }[];
+  size: string;
 };
 
 export type LaminateItemInfo = ProductItemInfo & {
@@ -573,4 +577,5 @@ export type EdgeBanding = {
   productSummary: string;
   brand: string;
   productCategory: string;
+  size: string;
 };

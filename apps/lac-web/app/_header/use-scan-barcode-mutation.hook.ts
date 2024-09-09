@@ -80,8 +80,7 @@ const useScanBarcodeMutation = ({
 
       const isCategoryMissingProduct =
         !Array.isArray(firstProduct) &&
-        firstProduct.productStatus !== PRODUCT_DISCONTINUED_STATUS &&
-        firstProduct.categoryName === "";
+        firstProduct.productStatus !== PRODUCT_DISCONTINUED_STATUS;
 
       const actionForDiscontinuedProduct = () => {
         setIsDiscontinued(true);

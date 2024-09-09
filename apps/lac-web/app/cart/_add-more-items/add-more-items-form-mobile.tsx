@@ -93,6 +93,7 @@ const AddMoreItemsFormMobile = () => {
 
     if (values.sku == "") {
       setErrorMessage(REQUIRED_ITEM_NUMBER_ERROR_MESSAGE);
+
       return;
     }
 
@@ -119,31 +120,37 @@ const AddMoreItemsFormMobile = () => {
   const addItem = async (values: FormSchema) => {
     if (!isVerified) {
       verify(values);
+
       return;
     }
 
     if (!values.sku) {
       setErrorMessage(REQUIRED_ITEM_NUMBER_ERROR_MESSAGE);
+
       return;
     }
 
     if (!values.quantity) {
       setErrorMessage(REQUIRED_QUANTITY_ERROR_MESSAGE);
+
       return;
     }
 
     if (!product) {
       setErrorMessage(INVALID_ITEM_ERROR_MESSAGE);
+
       return;
     }
 
     if (Number(values.quantity) < Number(product.minimumQuantity)) {
       setErrorMessage(MINIMUM_QUANTITY_ERROR_MESSAGE);
+
       return;
     }
 
     if (Number(values.quantity) % Number(product.quantityMultiplier) !== 0) {
       setErrorMessage(QUANTITY_MULTIPLIER_ERROR_MESSAGE);
+
       return;
     }
 

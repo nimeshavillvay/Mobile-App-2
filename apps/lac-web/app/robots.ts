@@ -1,4 +1,4 @@
-import { BASE_URL } from "@/_lib/constants";
+import { PRODUCTION_URL } from "@/_lib/constants";
 import type { MetadataRoute } from "next";
 
 const robots = (): MetadataRoute.Robots => {
@@ -16,8 +16,8 @@ const robots = (): MetadataRoute.Robots => {
         "/email/subscription-confirmation",
       ],
     },
-    host: BASE_URL,
-    sitemap: `${BASE_URL}/sitemap.xml`,
+    host: PRODUCTION_URL,
+    sitemap: `${PRODUCTION_URL}/sitemap.xml`,
   };
 };
 
