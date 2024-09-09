@@ -16,7 +16,6 @@ type SearchableFields = "productTitle" | "brandName" | "categoryName";
 
 const INVALID_SEARCH_VALUES = {
   productStatus: "discontinued",
-  categoryName: "",
 };
 
 const isValidProduct = (result: Result): boolean => {

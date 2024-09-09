@@ -259,6 +259,26 @@ const ShippingMethod = ({ token, plants }: ShippingMethodProps) => {
         availability.willCallAnywhere[0]?.backOrderQuantity_1?.toString() ?? "";
       config.will_call_shipping = selectedValue;
       config.will_call_not_in_stock = FALSE_STRING;
+    } else if (
+      availability.willCallAnywhere &&
+      availability.willCallAnywhere[0] &&
+      availability.willCallAnywhere[0].status === NOT_AVAILABLE
+    ) {
+      config.shipping_method_1 =
+        availability?.options?.at(0)?.plants?.at(0)?.shippingMethods?.at(0)
+          ?.code ?? "0";
+      config.avail_1 =
+        availability.willCallAnywhere[0]?.willCallQuantity.toString();
+      config.backorder_date =
+        availability.willCallAnywhere[0]?.backOrderDate_1 ?? "";
+      config.will_call_avail =
+        availability.willCallAnywhere[0]?.willCallQuantity.toString();
+      config.will_call_plant = selectedPlant;
+      config.backorder_all = "F";
+      config.backorder_quantity =
+        availability.willCallAnywhere[0]?.backOrderQuantity_1?.toString() ?? "";
+      config.will_call_shipping = selectedValue;
+      config.will_call_not_in_stock = TRUE_STRING;
     }
 
     return config;
