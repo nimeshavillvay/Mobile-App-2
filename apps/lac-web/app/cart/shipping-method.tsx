@@ -260,6 +260,7 @@ const ShippingMethod = ({ token, plants }: ShippingMethodProps) => {
       config.will_call_shipping = selectedValue;
       config.will_call_not_in_stock = FALSE_STRING;
     }
+
     return config;
   };
 
@@ -313,6 +314,7 @@ const ShippingMethod = ({ token, plants }: ShippingMethodProps) => {
               ) ?? []
             : selectedOption?.plants.map((plant) => plant.shippingMethods) ??
               [];
+
         return {
           id: item.itemInfo.productId,
           hashvalue: selectedOption?.hash ?? "",
@@ -452,6 +454,7 @@ const ShippingMethod = ({ token, plants }: ShippingMethodProps) => {
       const transformedConfig = availability
         ? transformConfiguration(availability, config, value, selectedPlant)
         : config;
+
       return {
         cartItemId: item.cartItemId,
         quantity: item.quantity,

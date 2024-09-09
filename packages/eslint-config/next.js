@@ -13,7 +13,12 @@ module.exports = {
     "prettier",
     "eslint-config-turbo",
   ],
-  plugins: ["react-compiler", "prefer-arrow-functions", "import"],
+  plugins: [
+    "react-compiler",
+    "prefer-arrow-functions",
+    "import",
+    "@stylistic/js",
+  ],
   settings: {
     "import/resolver": {
       typescript: {
@@ -49,5 +54,9 @@ module.exports = {
     curly: ["error", "all"],
     "import/newline-after-import": "error",
     "react-hooks/exhaustive-deps": "error",
+    "@stylistic/js/padding-line-between-statements": [
+      "error",
+      { blankLine: "always", prev: "*", next: "return" },
+    ],
   },
 };

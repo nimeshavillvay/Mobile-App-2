@@ -88,6 +88,7 @@ const HomePage = async () => {
   const getRandomImage = () => {
     const randomIndex = Math.floor(Math.random() * images.length);
     const image = images[randomIndex];
+
     return image as StaticImageData;
   };
 

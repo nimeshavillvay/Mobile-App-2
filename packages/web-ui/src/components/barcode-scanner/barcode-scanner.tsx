@@ -35,6 +35,7 @@ export const BarcodeScanner = ({
         }
       },
     );
+
     return () => {
       currentReader.reset();
     };

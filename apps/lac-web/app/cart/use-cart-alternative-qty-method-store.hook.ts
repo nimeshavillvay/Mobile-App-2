@@ -19,11 +19,13 @@ const useUnSavedAlternativeQuantityState =
               sku: [...state.sku, sku],
             };
           }
+
           return state;
         }),
       popSku: (skus) =>
         set((state) => {
           const newSkuArray = state.sku.filter((item) => !skus.includes(item));
+
           return {
             sku: newSkuArray,
           };

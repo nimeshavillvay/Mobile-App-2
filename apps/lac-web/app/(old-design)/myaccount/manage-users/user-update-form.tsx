@@ -92,6 +92,7 @@ const UserUpdateForm = ({
     if (status === "SUSPENDED") {
       return false;
     }
+
     return true;
   };
 

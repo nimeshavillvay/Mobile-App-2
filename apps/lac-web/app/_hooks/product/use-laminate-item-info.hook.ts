@@ -29,6 +29,7 @@ const useLaminateFilter = (productId: number) => {
           },
         })
         .json<GroupFilter>();
+
       return {
         groupFilters: response.group_filters,
         brandName: response.brand_name,

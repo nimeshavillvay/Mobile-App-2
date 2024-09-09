@@ -947,7 +947,7 @@ const CartItem = ({
                     }
                     setLineQuantity(event.target.value);
                   }}
-                  value={Number(lineQuantity)}
+                  value={lineQuantity}
                   className={cn(
                     "h-fit w-24 rounded border-r-0 px-2.5 py-1 text-base focus:border-none focus:outline-none focus:ring-0 md:w-20",
                     isQuantityLessThanMin ? "border-red-700" : "",

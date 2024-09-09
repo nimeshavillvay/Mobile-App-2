@@ -353,6 +353,7 @@ const CartItemShippingMethod = ({
     shippingMethods: ShippingMethod[],
   ) => {
     const shippingMethod = getPlantShippingMethodFromCart(index);
+
     return shippingMethod !== "" &&
       shippingMethods.some((method) => method.code === shippingMethod)
       ? shippingMethod
@@ -1410,6 +1411,7 @@ export const ItemLimitedStockOrBoCountBadge = ({
   if (availableCount === 0) {
     return <span className="text-red-700">Out of stock</span>;
   }
+
   return (
     <>
       Only <span className="text-yellow-700">{availableCount}</span> in stock
