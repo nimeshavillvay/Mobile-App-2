@@ -1,4 +1,3 @@
-import * as Sentry from "@sentry/nextjs";
 import ky from "ky";
 
 export const api = ky.create({
@@ -9,21 +8,16 @@ export const api = ky.create({
     "X-AUTH-TOKEN": process.env.NEXT_PUBLIC_WURTH_LAC_API_KEY,
   },
   hooks: {
-    beforeError: [
-      (error) => {
-        if (error.request.url.includes("/rest/pricecheck")) {
-          Sentry.captureException("Ky HTTP Error", {
-            tags: {
-              url: error.request.url,
-              method: error.request.method,
-              status: error.response.status,
-              headers: error.options.headers?.toString(),
-              body: error.options.body?.toString() ?? "No Body",
-            },
-          });
-        }
+    beforeRequest: [
+      (request, options) => {
+        request.headers.set("Content-Type", "application/json");
 
-        return error;
+        if (options.body) {
+          request.headers.set(
+            "Content-Length",
+            options.body.toString().length.toString(),
+          );
+        }
       },
     ],
   },
