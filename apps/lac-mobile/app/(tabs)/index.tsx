@@ -33,6 +33,8 @@ const HomePage = () => {
           <Link href="/my-account/profile/edit">Edit Profile</Link>
 
           <Link href="/my-account/manage-users">Manage Users</Link>
+
+          <Link href="/my-account/shipping-addresses">Shipping Addresses</Link>
         </YStack>
       </YStack>
     </ScreenLayout>
