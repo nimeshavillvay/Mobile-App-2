@@ -446,17 +446,7 @@ const CartItemShippingMethod = ({
     selectedOption: MainOption;
   }) => {
     if (checked) {
-      const quantities = form.getValues("quantityAlt");
-      const currentTotalOfAltFields =
-        quantities.reduce((sum: number, current) => {
-          return sum + Number(current);
-        }, 0) ?? 0;
-      if (
-        selectedOption !== MAIN_OPTIONS.SHIP_TO_ME_ALT ||
-        currentTotalOfAltFields !== Number(lineQuantity)
-      ) {
-        form.reset(getDefaultFormValues());
-      }
+      form.reset(getDefaultFormValues());
       const isWillCallOptionSelected =
         selectedOption === MAIN_OPTIONS.WILL_CALL;
       const isWillCallAnywhere =
@@ -823,18 +813,30 @@ const CartItemShippingMethod = ({
                   }),
                 );
 
+                const allPlants = [...SelectedPlants];
+
+                if (SelectedPlants.length < 5) {
+                  for (let i = 5; i > SelectedPlants.length; i--) {
+                    allPlants.push({
+                      index: i,
+                      quantity: 0,
+                      method: "",
+                      plant: "",
+                    });
+                  }
+                }
                 setPreventUpdateCart(true);
 
                 const config = {
                   ...getAlternativeBranchesConfig({
-                    plants: SelectedPlants,
+                    plants: allPlants,
                     method: selectedShippingMethod,
                     hash: shipAlternativeBranch.hash,
                     backOrderDate: shipAlternativeBranch.backOrder
                       ? shipAlternativeBranch?.plants?.[0]?.backOrderDate
                       : "",
                     backOrderQuantity: calculateDefaultAltBO(
-                      homePlant,
+                      allPlants[0]?.plant ?? "",
                       Number(formData.quantityAlt[0]),
                     ),
                     homePlant: homePlant,
