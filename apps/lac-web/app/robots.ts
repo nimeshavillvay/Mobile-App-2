@@ -14,6 +14,7 @@ const robots = (): MetadataRoute.Robots => {
         "/confirmation/",
         "/osr/",
         "/email/subscription-confirmation",
+        "/search/",
       ],
     },
     host: PRODUCTION_URL,
