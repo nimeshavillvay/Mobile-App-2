@@ -80,6 +80,7 @@ import {
   WILLCALL_TRANSFER_SHIPING_METHOD,
 } from "../constants";
 import type { ShippingMethod, WillCallAnywhere } from "../types";
+import useUnSavedAlternativeQuantityState from "../use-cart-alternative-qty-method-store.hook";
 import AvailabilityStatus from "./availability-status";
 import CartItemPrice from "./cart-item-price";
 import CartItemShippingMethod from "./cart-item-shipping-method";
@@ -132,6 +133,9 @@ const CartItem = ({
   const id = useId();
   const poId = `po-${id}`;
   const cartFormId = useCartFormIdContext();
+  const { popSku } = useUnSavedAlternativeQuantityState(
+    (state) => state.actions,
+  );
 
   const itemConfigHash = product?.configuration?.hashvalue;
   const itemConfigShippingMethod = product?.configuration?.shipping_method_1;
@@ -494,6 +498,7 @@ const CartItem = ({
   };
 
   const handleDeleteCartItem = () => {
+    popSku([product.sku]);
     deleteCartItemMutation.mutate(
       {
         products: [{ cartid: product.cartItemId }],

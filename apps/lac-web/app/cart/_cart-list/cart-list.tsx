@@ -36,6 +36,7 @@ import dynamic from "next/dynamic";
 import { Suspense, useState } from "react";
 import CartItemFallback from "../cart-item-fallback";
 import { CartItemQuantityProvider } from "../cart-item-quantity-context";
+import useUnSavedAlternativeQuantityState from "../use-cart-alternative-qty-method-store.hook";
 import useCartPageStore from "../use-cart-page-store.hook";
 import useCartStore from "../use-cart-store.hook";
 import CartItem from "./cart-item";
@@ -59,6 +60,11 @@ const CartList = ({ token, plants }: CartListProps) => {
   const willCallPlantQuery = useSuspenseWillCallPlant(token);
   const deleteCartItemMutation = useDeleteCartItemMutation();
   const updateCartConfigMutation = useUpdateCartConfigMutation();
+
+  const skus = useUnSavedAlternativeQuantityState((state) => state.sku);
+  const { popSku } = useUnSavedAlternativeQuantityState(
+    (state) => state.actions,
+  );
 
   const pathnameHistory = usePathnameHistoryState(
     (state) => state.pathnameHistory,
@@ -88,6 +94,7 @@ const CartList = ({ token, plants }: CartListProps) => {
       }));
 
       if (cartItemIds.length > 0) {
+        popSku(skus);
         deleteCartItemMutation.mutate(
           {
             products: cartItemIds,
