@@ -350,7 +350,7 @@ const CartItemShippingMethod = ({
     const shipping_method_5 = cartItem[0]?.configuration.shipping_method_5;
     const backorder_all = cartItem[0]?.configuration.backorder_all;
 
-    if (backorder_all !== TRUE_STRING) {
+    if (backorder_all === TRUE_STRING) {
       return shipping_method_1;
     }
     switch (`shipping_method_${index}`) {
