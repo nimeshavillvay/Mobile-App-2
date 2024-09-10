@@ -92,7 +92,9 @@ const FooterLinksLoggedIn = async ({ token }: { readonly token: string }) => {
         </div>
 
         <div className="flex flex-row flex-wrap items-center justify-center gap-x-10 gap-y-6">
-          {saleRepDetailsAvailable && <SAMNotice />}
+          <div className="hidden md:block">
+            {saleRepDetailsAvailable && <SAMNotice />}
+          </div>
 
           <VikingCloud />
 

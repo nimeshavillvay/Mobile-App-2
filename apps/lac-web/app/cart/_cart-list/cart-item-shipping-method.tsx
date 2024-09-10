@@ -50,7 +50,7 @@ import {
 import { toast } from "@repo/web-ui/components/ui/toast";
 import dayjs from "dayjs";
 import type { Dispatch, SetStateAction } from "react";
-import { useDeferredValue, useId, useRef, useState } from "react";
+import { useDeferredValue, useId, useRef } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import type { z } from "zod";
 import { useCartItemQuantityContext } from "../cart-item-quantity-context";
@@ -149,8 +149,6 @@ const CartItemShippingMethod = ({
   const { pushSku, popSku } = useUnSavedAlternativeQuantityState(
     (state) => state.actions,
   );
-
-  const [open, setOpen] = useState(false);
 
   const {
     options: availabilityOptions,
@@ -292,27 +290,55 @@ const CartItemShippingMethod = ({
     const avail_3 = cartItem[0]?.configuration.avail_3;
     const avail_4 = cartItem[0]?.configuration.avail_4;
     const avail_5 = cartItem[0]?.configuration.avail_5;
-
-    if (plant !== homePlant) {
-      switch (`avail_${index}`) {
-        case "avail_1": {
-          return avail_1 ? Number(avail_1) : Number(quantity);
-        }
-        case "avail_2": {
-          return avail_2 ? Number(avail_2) : Number(quantity);
-        }
-        case "avail_3": {
-          return avail_3 ? Number(avail_3) : Number(quantity);
-        }
-        case "avail_4": {
-          return avail_4 ? Number(avail_4) : Number(quantity);
-        }
-        case "avail_5": {
-          return avail_5 ? Number(avail_5) : Number(quantity);
+    const homePlantQty =
+      Number(avail_1) + Number(cartItem[0]?.configuration.backorder_quantity);
+    if (
+      homePlantQty !== cartItem[0]?.quantity &&
+      cartItem[0]?.configuration.plant_1 === homePlant
+    ) {
+      if (plant === homePlant) {
+        return homePlantQty;
+      } else {
+        switch (`avail_${index}`) {
+          case "avail_1": {
+            return Number(avail_1);
+          }
+          case "avail_2": {
+            return Number(avail_2);
+          }
+          case "avail_3": {
+            return Number(avail_3);
+          }
+          case "avail_4": {
+            return Number(avail_4);
+          }
+          case "avail_5": {
+            return Number(avail_5);
+          }
         }
       }
     } else {
-      return getHomePlantDisplayQuantity();
+      if (plant !== homePlant) {
+        switch (`avail_${index}`) {
+          case "avail_1": {
+            return avail_1 ? Number(avail_1) : Number(quantity);
+          }
+          case "avail_2": {
+            return avail_2 ? Number(avail_2) : Number(quantity);
+          }
+          case "avail_3": {
+            return avail_3 ? Number(avail_3) : Number(quantity);
+          }
+          case "avail_4": {
+            return avail_4 ? Number(avail_4) : Number(quantity);
+          }
+          case "avail_5": {
+            return avail_5 ? Number(avail_5) : Number(quantity);
+          }
+        }
+      } else {
+        return getHomePlantDisplayQuantity();
+      }
     }
   };
 
@@ -324,7 +350,7 @@ const CartItemShippingMethod = ({
     const shipping_method_5 = cartItem[0]?.configuration.shipping_method_5;
     const backorder_all = cartItem[0]?.configuration.backorder_all;
 
-    if (backorder_all !== TRUE_STRING) {
+    if (backorder_all === TRUE_STRING) {
       return shipping_method_1;
     }
     switch (`shipping_method_${index}`) {
@@ -420,18 +446,7 @@ const CartItemShippingMethod = ({
     selectedOption: MainOption;
   }) => {
     if (checked) {
-      const quantities = form.getValues("quantityAlt");
-      const currentTotalOfAltFields =
-        quantities.reduce((sum: number, current) => {
-          return sum + Number(current);
-        }, 0) ?? 0;
-      if (
-        selectedOption !== MAIN_OPTIONS.SHIP_TO_ME_ALT ||
-        currentTotalOfAltFields !== Number(lineQuantity)
-      ) {
-        form.reset(getDefaultFormValues());
-        setOpen(false);
-      }
+      form.reset(getDefaultFormValues());
       const isWillCallOptionSelected =
         selectedOption === MAIN_OPTIONS.WILL_CALL;
       const isWillCallAnywhere =
@@ -798,18 +813,30 @@ const CartItemShippingMethod = ({
                   }),
                 );
 
+                const allPlants = [...SelectedPlants];
+
+                if (SelectedPlants.length < 5) {
+                  for (let i = 5; i > SelectedPlants.length; i--) {
+                    allPlants.push({
+                      index: i,
+                      quantity: 0,
+                      method: "",
+                      plant: "",
+                    });
+                  }
+                }
                 setPreventUpdateCart(true);
 
                 const config = {
                   ...getAlternativeBranchesConfig({
-                    plants: SelectedPlants,
+                    plants: allPlants,
                     method: selectedShippingMethod,
                     hash: shipAlternativeBranch.hash,
                     backOrderDate: shipAlternativeBranch.backOrder
                       ? shipAlternativeBranch?.plants?.[0]?.backOrderDate
                       : "",
                     backOrderQuantity: calculateDefaultAltBO(
-                      homePlant,
+                      allPlants[0]?.plant ?? "",
                       Number(formData.quantityAlt[0]),
                     ),
                     homePlant: homePlant,
@@ -871,7 +898,6 @@ const CartItemShippingMethod = ({
             pushSku(sku);
           },
           onSettled: () => {
-            setOpen(false);
             setOsrCartItemTotal(
               Number(altQtySum) *
                 (priceCheckQuery.data?.productPrices[0]?.price ?? 0),
@@ -1007,8 +1033,7 @@ const CartItemShippingMethod = ({
               <Collapsible
                 className="mt-1.5 flex flex-col gap-1"
                 disabled={!backOrderAll}
-                open={open}
-                onOpenChange={setOpen}
+                open={selectedShippingOption === MAIN_OPTIONS.SHIP_TO_ME_ALT}
               >
                 <CollapsibleTrigger
                   className="group flex h-7 cursor-default flex-row items-center justify-start"

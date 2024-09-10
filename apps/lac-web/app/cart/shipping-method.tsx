@@ -397,17 +397,24 @@ const ShippingMethod = ({ token, plants }: ShippingMethodProps) => {
             ) {
               const selectedPlant = selectedOption.plants[i];
               if (selectedPlant) {
-                const quantity = selectedPlant.quantity ?? "";
+                const isValidQuantity =
+                  selectedPlant.quantity !== undefined &&
+                  selectedPlant.quantity > 0;
+                const quantity = isValidQuantity ? selectedPlant.quantity : "";
                 const index = selectedPlant.index;
                 addedIndexes.push(index);
 
                 const availValue = quantity?.toString() ?? "";
-                const plantValue = selectedPlant.plant ?? "";
-                const shippingMethodValue = selectedPlant?.shippingMethods.find(
-                  (method) => method.code === value,
-                )
-                  ? value
-                  : DEFAULT_SHIPPING_METHOD;
+                const plantValue = !isValidQuantity
+                  ? ""
+                  : selectedPlant.plant ?? "";
+                const shippingMethodValue = !isValidQuantity
+                  ? ""
+                  : selectedPlant?.shippingMethods.find(
+                        (method) => method.code === value,
+                      )
+                    ? value
+                    : DEFAULT_SHIPPING_METHOD;
                 // Set values for the selected plant
                 setConfigValues(
                   config,
