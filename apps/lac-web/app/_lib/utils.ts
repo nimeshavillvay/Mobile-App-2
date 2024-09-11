@@ -15,7 +15,7 @@ export const getFetchHeaders = (token?: string) => {
   const headers: HeadersInit = structuredClone(API_HEADERS);
 
   if (token) {
-    headers["authorization"] = token;
+    headers["authorization"] = `Bearer ${token}`;
   }
 
   return headers;
