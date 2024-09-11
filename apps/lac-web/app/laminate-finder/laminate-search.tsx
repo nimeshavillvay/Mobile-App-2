@@ -37,7 +37,7 @@ const LaminateSearch = ({ token }: { readonly token: string }) => {
   });
 
   const onSubmit = form.handleSubmit(
-    async (values: z.infer<typeof laminateSearchFormSchema>) => {
+    (values: z.infer<typeof laminateSearchFormSchema>) => {
       const newSearchParams = new URLSearchParams(searchParams);
       const isColorPickerAttribute = categoryFiltersQuery.data.filter(
         (filter) => filter.is_colorpicker,
