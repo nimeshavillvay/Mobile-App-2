@@ -47,14 +47,16 @@ const LaminateItems = ({
   const deferredQuantities = useDeferredValue(delayedQuantities);
 
   const priceCheckRequest =
-    laminates.data !== undefined && deferredQuantities !== undefined
+    laminates.data !== undefined &&
+    deferredQuantities !== undefined &&
+    deferredQuantities.length > 0
       ? laminates.data
           .map((laminate, index) => ({
             productId: Number(laminate.productId),
             qty: Number(deferredQuantities[index]),
             sku: laminate.productSku,
           }))
-          .filter((item) => item.qty != 0)
+          .filter((item) => !isNaN(item.qty ?? 0) && item.qty !== 0)
       : [];
 
   const addMultipleToCartMutation = useAddMultipleToCartMutation();

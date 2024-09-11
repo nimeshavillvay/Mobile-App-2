@@ -1,5 +1,5 @@
-import type { ItemsPriceResult, PriceBreakDowns } from "@/_lib/types";
-import { getFetchHeaders, getFetchUrl } from "@/_lib/utils";
+import { api } from "@/_lib/api";
+import type { PriceBreakDowns } from "@/_lib/types";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
 type ItemPriceOld = {
@@ -40,31 +40,26 @@ const useSuspensePriceCheck = (
   token: string | undefined,
   products: Product[],
 ) => {
-  return useSuspenseQuery<ItemsPriceResult, Error>({
+  return useSuspenseQuery({
     queryKey: ["user", "price-check", token, products],
     queryFn: async () => {
-      const headers = getFetchHeaders(token);
+      const response = await api
+        .post("rest/pricecheck", {
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+          json: {
+            products: products.map((product) => ({
+              productid: product.productId,
+              qty: Number(product.qty) <= 0 ? 1 : product.qty,
+              cartid: product.cartId,
+            })),
+          },
+          cache: "no-store",
+        })
+        .json<ItemsPriceResultOld>();
 
-      const response = await fetch(getFetchUrl("/rest/pricecheck"), {
-        method: "POST",
-        headers,
-        body: JSON.stringify({
-          products: products.map((product) => ({
-            productid: product.productId,
-            qty: Number(product.qty) <= 0 ? 1 : product.qty,
-            cartid: product.cartId,
-          })),
-        }),
-        cache: "no-store",
-      });
-
-      if (!response.ok) {
-        throw new Error("Price Check Error");
-      }
-
-      const { items, error } = (await response.json()) as ItemsPriceResultOld;
-
-      const mappedItems = items.map(
+      const mappedItems = response.items.map(
         ({
           productid,
           price,
@@ -88,7 +83,7 @@ const useSuspensePriceCheck = (
         }),
       );
 
-      return { error, productPrices: mappedItems };
+      return { error: response.error, productPrices: mappedItems };
     },
     staleTime: 60000,
   });

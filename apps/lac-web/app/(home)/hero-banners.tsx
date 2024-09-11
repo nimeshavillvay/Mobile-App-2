@@ -38,9 +38,10 @@ const HeroBanners = ({ banners }: HeroBannersProps) => {
                 href={banner.pdfLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={
-                  (cn("btnAction aspect-h-9 aspect-w-[28] block"), banner.class)
-                }
+                className={cn(
+                  "btnAction aspect-h-9 aspect-w-[28] block",
+                  banner.class,
+                )}
                 data-desc={banner.dataDescription}
                 data-btn-action="Banners"
               >
@@ -48,7 +49,7 @@ const HeroBanners = ({ banners }: HeroBannersProps) => {
                   src={banner.image}
                   alt={banner.alt}
                   width={1920}
-                  height={538}
+                  height={618}
                   priority={index === 0}
                   className="banner-promo banner-system slideshow-content slide-top-home block rounded-lg bg-[#362A23] object-cover shadow-lg"
                   id={banner.id}
