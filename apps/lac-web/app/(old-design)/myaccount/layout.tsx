@@ -3,11 +3,19 @@ import Breadcrumbs from "@/old/_components/breadcrumbs";
 import Separator from "@/old/_components/separator";
 import Title from "@/old/_components/title";
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
+import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { Suspense, type ReactNode } from "react";
 import SideMenu from "./_side-menu";
 import Profile from "./profile";
+
+export const metadata: Metadata = {
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 type MyAccountLayoutProps = {
   readonly children: ReactNode;

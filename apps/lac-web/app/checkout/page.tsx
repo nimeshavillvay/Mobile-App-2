@@ -11,6 +11,10 @@ import CartSummary from "./cart-summary";
 
 export const metadata: Metadata = {
   title: "Checkout",
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 const CheckoutPage = async () => {

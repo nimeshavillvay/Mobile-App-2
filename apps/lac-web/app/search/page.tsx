@@ -25,6 +25,10 @@ import ResultCacher from "./result-cacher";
 
 export const metadata: Metadata = {
   title: "Search",
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 const SearchPage = async ({
