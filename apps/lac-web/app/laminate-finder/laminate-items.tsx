@@ -47,7 +47,9 @@ const LaminateItems = ({
   const deferredQuantities = useDeferredValue(delayedQuantities);
 
   const priceCheckRequest =
-    laminates.data !== undefined && deferredQuantities !== undefined
+    laminates.data !== undefined &&
+    deferredQuantities !== undefined &&
+    deferredQuantities.length > 0
       ? laminates.data
           .map((laminate, index) => ({
             productId: Number(laminate.productId),
