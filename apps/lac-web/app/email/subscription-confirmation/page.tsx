@@ -2,6 +2,10 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Subscription Confirmation",
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 const SubscriptionConfirmationPage = () => {

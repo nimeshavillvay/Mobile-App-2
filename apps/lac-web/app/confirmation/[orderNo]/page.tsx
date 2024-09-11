@@ -5,6 +5,10 @@ import MobileView from "./mobile-view";
 
 export const metadata: Metadata = {
   title: "Order Confirmation",
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 type ConfirmationPageProps = {

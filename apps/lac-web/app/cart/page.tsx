@@ -25,6 +25,10 @@ const DynamicAddMoreItemsSection = dynamic(
 
 export const metadata: Metadata = {
   title: "Cart",
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 const CartPage = async () => {
