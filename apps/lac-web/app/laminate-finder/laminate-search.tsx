@@ -16,7 +16,6 @@ import {
 import { Input } from "@repo/web-ui/components/ui/input";
 import { useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
-import type { z } from "zod";
 import {
   laminateSearchFormSchema,
   type LaminateSearchFormSchema,
@@ -36,28 +35,26 @@ const LaminateSearch = ({ token }: { readonly token: string }) => {
     token,
   });
 
-  const onSubmit = form.handleSubmit(
-    (values: z.infer<typeof laminateSearchFormSchema>) => {
-      const newSearchParams = new URLSearchParams(searchParams);
-      const isColorPickerAttribute = categoryFiltersQuery.data.filter(
-        (filter) => filter.is_colorpicker,
-      )[0];
-      const filterId = isColorPickerAttribute?.id ?? "";
-      newSearchParams.delete(filterId);
-      newSearchParams.delete(QUERY_KEYS.PAGE);
+  const onSubmit = form.handleSubmit((values) => {
+    const newSearchParams = new URLSearchParams(searchParams);
+    const isColorPickerAttribute = categoryFiltersQuery.data.filter(
+      (filter) => filter.is_colorpicker,
+    )[0];
+    const filterId = isColorPickerAttribute?.id ?? "";
+    newSearchParams.delete(filterId);
+    newSearchParams.delete(QUERY_KEYS.PAGE);
 
-      changeSearchParams(newSearchParams, [
-        {
-          key: QUERY_KEYS.SEARCH_TEXT,
-          value: values.search,
-        },
-        {
-          key: QUERY_KEYS.PAGE,
-          value: INIT_PAGE_NUMBER,
-        },
-      ]);
-    },
-  );
+    changeSearchParams(newSearchParams, [
+      {
+        key: QUERY_KEYS.SEARCH_TEXT,
+        value: values.search,
+      },
+      {
+        key: QUERY_KEYS.PAGE,
+        value: INIT_PAGE_NUMBER,
+      },
+    ]);
+  });
 
   return (
     <div className="mx-auto mb-6 w-full max-w-2xl">
