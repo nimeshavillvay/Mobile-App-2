@@ -25,7 +25,7 @@ const Register = () => {
         className="container max-w-[41.5rem] space-y-5 pb-14 pt-4 md:mt-6"
         data-testid="register"
       >
-        <h1 className="font-title text-2xl font-medium tracking-[-0.144px] md:text-center md:text-5xl md:leading-[3.5rem] md:tracking-[-0.576px]">
+        <h1 className="text-center font-title text-2xl font-medium tracking-[-0.144px] md:text-5xl md:leading-[3.5rem] md:tracking-[-0.576px]">
           Create an account
         </h1>
         <div className="flex flex-col gap-6">
