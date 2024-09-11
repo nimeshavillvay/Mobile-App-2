@@ -36,31 +36,33 @@ const LaminateSearch = ({ token }: { readonly token: string }) => {
     token,
   });
 
-  const laminateSearch = (values: z.infer<typeof laminateSearchFormSchema>) => {
-    const newSearchParams = new URLSearchParams(searchParams);
-    const isColorPickerAttribute = categoryFiltersQuery.data.filter(
-      (filter) => filter.is_colorpicker,
-    )[0];
-    const filterId = isColorPickerAttribute?.id ?? "";
-    newSearchParams.delete(filterId);
-    newSearchParams.delete(QUERY_KEYS.PAGE);
+  const onSubmit = form.handleSubmit(
+    async (values: z.infer<typeof laminateSearchFormSchema>) => {
+      const newSearchParams = new URLSearchParams(searchParams);
+      const isColorPickerAttribute = categoryFiltersQuery.data.filter(
+        (filter) => filter.is_colorpicker,
+      )[0];
+      const filterId = isColorPickerAttribute?.id ?? "";
+      newSearchParams.delete(filterId);
+      newSearchParams.delete(QUERY_KEYS.PAGE);
 
-    changeSearchParams(newSearchParams, [
-      {
-        key: QUERY_KEYS.SEARCH_TEXT,
-        value: values.search,
-      },
-      {
-        key: QUERY_KEYS.PAGE,
-        value: INIT_PAGE_NUMBER,
-      },
-    ]);
-  };
+      changeSearchParams(newSearchParams, [
+        {
+          key: QUERY_KEYS.SEARCH_TEXT,
+          value: values.search,
+        },
+        {
+          key: QUERY_KEYS.PAGE,
+          value: INIT_PAGE_NUMBER,
+        },
+      ]);
+    },
+  );
 
   return (
     <div className="mx-auto mb-6 w-full max-w-2xl">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(laminateSearch)} className="relative">
+        <form onSubmit={onSubmit} className="relative">
           <FormField
             control={form.control}
             name="search"
