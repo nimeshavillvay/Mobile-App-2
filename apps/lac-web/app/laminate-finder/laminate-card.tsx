@@ -121,7 +121,7 @@ const LaminateCard = ({
             </div>
           )}
 
-          <div className="absolute bottom-0 left-0 right-0 translate-y-full transform bg-black bg-opacity-70 p-3 text-white transition-transform duration-300 group-hover:translate-y-0">
+          <div className="absolute bottom-0 left-0 right-0 translate-y-0 transform bg-black bg-opacity-70 p-3 text-white">
             <h3
               className="mb-1 line-clamp-2 text-sm font-semibold"
               title={product.groupName}
