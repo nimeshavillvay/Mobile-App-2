@@ -56,7 +56,7 @@ const LaminateItems = ({
             qty: Number(deferredQuantities[index]),
             sku: laminate.productSku,
           }))
-          .filter((item) => item.qty != 0)
+          .filter((item) => !isNaN(item.qty ?? 0) && item.qty !== 0)
       : [];
 
   const addMultipleToCartMutation = useAddMultipleToCartMutation();
