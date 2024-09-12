@@ -1,4 +1,4 @@
-import { getFetchHeaders, getFetchUrl } from "@/_lib/utils";
+import { api } from "@/_lib/api";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
 type FavoriteSku = {
@@ -11,39 +11,22 @@ const useSuspenseFavoriteSKUs = (
   token: string | undefined,
   productIds: string[],
 ) => {
-  const productIdsAsString = productIds.join("-");
-
-  return useSuspenseQuery<
-    { productId: number; isFavorite: boolean; favoriteListIds: string[] }[],
-    Error
-  >({
-    queryKey: [
-      "user",
-      "favorite-skus",
-      `sku-${productIdsAsString}`,
-      productIds,
-      token,
-    ],
+  return useSuspenseQuery({
+    queryKey: ["user", "favorite-skus", productIds, token],
     queryFn: async () => {
-      const response = await fetch(
-        getFetchUrl("/rest/my-favourite/favourite-skus"),
-        {
-          method: "POST",
-          headers: getFetchHeaders(token),
-          body: JSON.stringify({
+      const response = await api
+        .post("rest/my-favourite/favourite-skus", {
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+          json: {
             products: productIds,
-          }),
+          },
           cache: "no-cache",
-        },
-      );
+        })
+        .json<FavoriteSku[]>();
 
-      if (!response.ok) {
-        throw new Error("Favourite SKUs Error");
-      }
-
-      const json = (await response.json()) as FavoriteSku[];
-
-      return json.map((data) => ({
+      return response.map((data) => ({
         productId: data.productid,
         isFavorite: !!data.isFavourite,
         favoriteListIds: data.favoriteIds,
