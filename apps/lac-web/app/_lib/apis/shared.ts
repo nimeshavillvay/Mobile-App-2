@@ -1,5 +1,5 @@
 import { SPECIAL_SHIPPING_FLAG } from "@/_lib/constants";
-import { getBoolean, getFetchHeaders, getFetchUrl } from "@/_lib/utils";
+import { getBoolean } from "@/_lib/utils";
 import { api } from "../api";
 import type {
   AvailabilityParameters,
@@ -62,30 +62,27 @@ export const checkAvailability = async (
   token: Token | undefined,
   { productId, qty, plant }: AvailabilityParameters,
 ) => {
-  const response = await fetch(getFetchUrl("/rest/availability-check"), {
-    method: "POST",
-    headers: getFetchHeaders(token),
-    body: JSON.stringify({
-      productid: productId,
-      qty,
-      plant,
-    }),
-    cache: "no-store",
-  });
-
-  if (!response.ok) {
-    throw new Error("Check Availability Error");
-  }
-
-  const json = (await response.json()) as CheckAvailability;
+  const response = await api
+    .post("rest/availability-check", {
+      headers: {
+        authorization: `Bearer ${token}`,
+      },
+      json: {
+        productid: productId,
+        qty,
+        plant,
+      },
+      cache: "no-store",
+    })
+    .json<CheckAvailability>();
 
   return {
-    productId: json.productid,
-    status: json.status,
-    options: json.options,
-    willCallAnywhere: json.willcallanywhere,
-    xplant: json.xplant,
-    availableLocations: json.available_locations,
+    productId: response.productid,
+    status: response.status,
+    options: response.options,
+    willCallAnywhere: response.willcallanywhere,
+    xplant: response.xplant,
+    availableLocations: response.available_locations,
   };
 };
 
