@@ -3,7 +3,7 @@ import type { PriceBreakDowns } from "@/_lib/types";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
 type ItemPriceOld = {
-  productid: number;
+  productid: string;
   price: string;
   price_unit: string;
   extended: string;

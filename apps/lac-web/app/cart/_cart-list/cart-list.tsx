@@ -333,7 +333,10 @@ const CartListItems = ({
             plants={plants}
             cartConfiguration={data.configuration}
             willCallPlant={willCallPlantQuery?.data}
-            priceData={priceData}
+            priceData={{
+              ...priceData,
+              productId: Number(priceData.productId),
+            }}
             gtmItemInfo={gtmItemsInfo?.find(
               (product) =>
                 Number(product?.productid) === item.itemInfo.productId,

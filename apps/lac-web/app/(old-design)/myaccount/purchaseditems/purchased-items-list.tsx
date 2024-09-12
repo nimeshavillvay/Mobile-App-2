@@ -19,8 +19,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/old/_components/ui/table";
+import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import { useSearchParams } from "next/navigation";
-import { useDeferredValue, type ComponentProps } from "react";
+import { Suspense, useDeferredValue, type ComponentProps } from "react";
 import { changeSearchParams } from "./client-helpers";
 import {
   DEFAULT_SORT,
@@ -187,10 +188,16 @@ const PurchasedItemsList = ({ token }: { readonly token: string }) => {
       />
 
       {/* Mobile View for Items List */}
-      <PurchasedItemsListForMobile
-        items={detailedPurchasedItems}
-        token={token}
-      />
+      {detailedPurchasedItems.length > 0 && (
+        <Suspense
+          fallback={<Skeleton className="h-[100rem] w-full py-4 md:hidden" />}
+        >
+          <PurchasedItemsListForMobile
+            items={detailedPurchasedItems}
+            token={token}
+          />
+        </Suspense>
+      )}
 
       {/* Desktop View for Items List */}
       <div className="hidden md:block">
