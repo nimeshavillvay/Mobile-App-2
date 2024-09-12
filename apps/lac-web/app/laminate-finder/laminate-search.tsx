@@ -16,7 +16,6 @@ import {
 import { Input } from "@repo/web-ui/components/ui/input";
 import { useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
-import type { z } from "zod";
 import {
   laminateSearchFormSchema,
   type LaminateSearchFormSchema,
@@ -36,7 +35,7 @@ const LaminateSearch = ({ token }: { readonly token: string }) => {
     token,
   });
 
-  const laminateSearch = (values: z.infer<typeof laminateSearchFormSchema>) => {
+  const onSubmit = form.handleSubmit((values) => {
     const newSearchParams = new URLSearchParams(searchParams);
     const isColorPickerAttribute = categoryFiltersQuery.data.filter(
       (filter) => filter.is_colorpicker,
@@ -55,12 +54,12 @@ const LaminateSearch = ({ token }: { readonly token: string }) => {
         value: INIT_PAGE_NUMBER,
       },
     ]);
-  };
+  });
 
   return (
     <div className="mx-auto mb-6 w-full max-w-2xl">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(laminateSearch)} className="relative">
+        <form onSubmit={onSubmit} className="relative">
           <FormField
             control={form.control}
             name="search"
