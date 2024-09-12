@@ -1079,6 +1079,7 @@ const CartItem = ({
               setPreventUpdateCart={setPreventUpdateCart}
               sku={product.sku}
               setOsrCartItemTotal={setOsrCartItemTotal}
+              price={priceData.price}
             />
           ))}
 
@@ -1114,6 +1115,7 @@ const CartItem = ({
               setPreventUpdateCart={setPreventUpdateCart}
               sku={product.sku}
               setOsrCartItemTotal={setOsrCartItemTotal}
+              price={priceData.price}
             />
           </Suspense>
         )}

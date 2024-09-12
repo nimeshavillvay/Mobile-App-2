@@ -31,6 +31,7 @@ const RegionalExclusionAndShippingMethods = ({
   setPreventUpdateCart,
   sku,
   setOsrCartItemTotal,
+  price,
 }: ComponentProps<typeof CartItemShippingMethod> & {
   readonly token: string;
   readonly productId: number;
@@ -74,6 +75,7 @@ const RegionalExclusionAndShippingMethods = ({
       setPreventUpdateCart={setPreventUpdateCart}
       sku={sku}
       setOsrCartItemTotal={setOsrCartItemTotal}
+      price={price}
     />
   );
 };
