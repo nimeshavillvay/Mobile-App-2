@@ -27,7 +27,7 @@ import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import dayjs from "dayjs";
 import Image from "next/image";
 import Link from "next/link";
-import { Suspense, useId, useState } from "react";
+import { Suspense, useId, useState, type ComponentProps } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import * as z from "zod";
@@ -43,9 +43,15 @@ type PurchasedItemRowProps = {
   readonly token: string;
   readonly item: DetailedPurchasedItem;
   readonly index: number;
+  readonly prices: ComponentProps<typeof ItemPrices>["prices"];
 };
 
-const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
+const PurchasedItemRow = ({
+  token,
+  item,
+  index,
+  prices,
+}: PurchasedItemRowProps) => {
   const [showItemAttributes, setShowItemAttributes] = useState(false);
   const [showMyPrice, setShowMyPrice] = useState(false);
 
@@ -276,30 +282,13 @@ const PurchasedItemRow = ({ token, item, index }: PurchasedItemRowProps) => {
             </CollapsibleTrigger>
 
             <CollapsibleContent>
-              <ErrorBoundary
-                fallback={
-                  <div className="p-4 text-center text-brand-primary">
-                    Failed to Load Prices!!!
-                  </div>
-                }
-              >
-                <Suspense
-                  fallback={
-                    <div className="p-4 text-center text-brand-gray-400">
-                      Prices Loading...
-                    </div>
-                  }
-                >
-                  <ItemPrices
-                    token={token}
-                    productId={item.productId}
-                    quantity={item.minimumOrderQuantity}
-                    uom={item.unitOfMeasure}
-                    listPrice={item.listPrice}
-                    showUnitPrice={true}
-                  />
-                </Suspense>
-              </ErrorBoundary>
+              <ItemPrices
+                quantity={item.minimumOrderQuantity}
+                uom={item.unitOfMeasure}
+                listPrice={item.listPrice}
+                showUnitPrice={true}
+                prices={prices}
+              />
             </CollapsibleContent>
           </Collapsible>
         </TableCell>

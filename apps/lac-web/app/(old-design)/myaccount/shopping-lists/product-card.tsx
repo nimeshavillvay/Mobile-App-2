@@ -5,7 +5,6 @@ import useGtmProducts from "@/_hooks/gtm/use-gtm-item-info.hook";
 import useGtmUser from "@/_hooks/gtm/use-gtm-user.hook";
 import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
 import usePathnameHistoryState from "@/_hooks/misc/use-pathname-history-state.hook";
-import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import { GTM_ITEM_PAGE_TYPES } from "@/_lib/constants";
 import { getGTMPageType } from "@/_lib/gtm-utils";
 import { cn, getBoolean } from "@/_lib/utils";
@@ -27,20 +26,25 @@ import useRemoveShoppingListItemMutation from "./use-remove-shopping-list-item-m
 
 type ProductProps = {
   readonly orientation?: ComponentProps<typeof ProductCardRoot>["orientation"];
-  readonly token: string;
   readonly product: ShoppingListItemsElement;
   readonly listId: string;
   readonly stretchWidth?: boolean;
   readonly isNewItem?: boolean;
   readonly onSale?: boolean;
+  readonly priceData: {
+    listPrice: number;
+    price: number;
+    uomPrice?: number;
+    uomPriceUnit?: string;
+  };
 };
 
 const ProductCard = ({
   orientation,
-  token,
   product,
   listId,
   stretchWidth = false,
+  priceData,
 }: ProductProps) => {
   const id = product.productId;
   const title = product.itemName;
@@ -55,24 +59,10 @@ const ProductCard = ({
     parseInt(id),
   );
 
-  const priceCheckQuery = useSuspensePriceCheck(token, [
-    {
-      productId: parseInt(id),
-      qty: 1,
-    },
-  ]);
-
-  const priceData = priceCheckQuery.data.productPrices[0];
-
-  let listPrice = 0;
-  let currentPrice = 0;
-
-  if (priceData) {
-    listPrice = priceData.listPrice;
-    currentPrice = priceData?.uomPrice ?? priceData?.price;
-    if (priceData?.uomPriceUnit) {
-      uom = priceData?.uomPriceUnit;
-    }
+  const listPrice = priceData.listPrice;
+  const currentPrice = priceData?.uomPrice ?? priceData?.price;
+  if (priceData?.uomPriceUnit) {
+    uom = priceData?.uomPriceUnit;
   }
 
   const discountPercent = Math.round(
