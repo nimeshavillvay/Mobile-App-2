@@ -1,4 +1,4 @@
-import { getGtmProducts } from "@/_hooks/gtm/use-gtm-item-info.hook";
+import { getGtmProducts } from "@/_hooks/gtm/use-gtm-item-info";
 import {
   getOrderDetails,
   getPaymentMethods,
@@ -81,7 +81,7 @@ const DetailedOrderPage = async ({
       getShippingMethods(),
       getPlants(sessionToken?.value),
       getItemInfo(itemList),
-      getGtmProducts(gtmProducts, sessionToken.value),
+      getGtmProducts(gtmProducts, sessionToken?.value),
     ]);
 
   if (orderDetail?.items?.length) {
