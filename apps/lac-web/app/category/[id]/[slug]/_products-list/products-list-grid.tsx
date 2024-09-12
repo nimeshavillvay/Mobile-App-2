@@ -43,6 +43,10 @@ const ProductListGrid = ({ token, categoryId, type }: ProductListGridProps) => {
       },
     }));
 
+  if (!products.length) {
+    return null;
+  }
+
   return <ProductsGridList products={products} type={type} token={token} />;
 };
 

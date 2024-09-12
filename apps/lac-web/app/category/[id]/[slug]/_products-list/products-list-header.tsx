@@ -20,7 +20,10 @@ const ProductsListHeader = ({ token, categoryId }: ProductsListHeaderProps) => {
     categoryFiltersQuery.data,
   );
 
-  const totalPages = Math.ceil(searchQuery.data.pagination.totalCount / 20);
+  const totalPages = Math.max(
+    Math.ceil(searchQuery.data.pagination.totalCount / 20),
+    1,
+  );
 
   return (
     <ProductsGridHeader
