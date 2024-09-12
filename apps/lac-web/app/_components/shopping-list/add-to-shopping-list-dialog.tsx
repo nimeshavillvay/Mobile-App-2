@@ -85,8 +85,7 @@ const AddToShoppingListDialog = ({
   });
 
   const createShoppingListMutation = useCreateShoppingListMutation();
-  const updateShoppingListItemMutation =
-    useUpdateShoppingListItemMutation(productId);
+  const updateShoppingListItemMutation = useUpdateShoppingListItemMutation();
 
   const createShoppingList = async (shoppingListName: string) => {
     const { list_id } = await createShoppingListMutation.mutateAsync(
