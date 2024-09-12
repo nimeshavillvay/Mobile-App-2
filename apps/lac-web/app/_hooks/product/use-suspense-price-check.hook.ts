@@ -41,7 +41,7 @@ const useSuspensePriceCheck = (
   products: Product[],
 ) => {
   return useSuspenseQuery({
-    queryKey: ["user", "price-check", token, products],
+    queryKey: ["user", "price-check", products, token],
     queryFn: async () => {
       const response = await api
         .post("rest/pricecheck", {

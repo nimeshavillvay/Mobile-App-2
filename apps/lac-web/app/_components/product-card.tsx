@@ -4,7 +4,6 @@ import useGtmProducts from "@/_hooks/gtm/use-gtm-item-info.hook";
 import useGtmUser from "@/_hooks/gtm/use-gtm-user.hook";
 import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
 import usePathnameHistoryState from "@/_hooks/misc/use-pathname-history-state.hook";
-import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
 import { getGTMItemListPage, getGTMPageType } from "@/_lib/gtm-utils";
 import type { Product } from "@/_lib/types";
@@ -23,7 +22,12 @@ import {
 } from "@repo/web-ui/components/product-card";
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import { useRouter } from "next/navigation";
-import { Suspense, useState, type ComponentProps } from "react";
+import {
+  Suspense,
+  useDeferredValue,
+  useState,
+  type ComponentProps,
+} from "react";
 import ProductCardActionsForLoggedIn from "./product-card-actions-for-logged-in";
 import ProductCardVariantSelectorForLoggedIn from "./product-card-variant-selector-for-logged-in";
 import ProductCardVariantSelectorSkeleton from "./product-card-variant-selector-skeleton";
@@ -34,6 +38,15 @@ type ProductProps = {
   readonly product: Product;
   readonly token?: string;
   readonly stretchWidth?: boolean;
+  readonly prices: Array<
+    Readonly<{
+      productId: number;
+      listPrice: number;
+      price: number;
+      uomPrice?: number;
+      uomPriceUnit?: string;
+    }>
+  >;
 };
 
 const ProductCard = ({
@@ -41,8 +54,10 @@ const ProductCard = ({
   product,
   token,
   stretchWidth = false,
+  prices,
 }: ProductProps) => {
   const [selectedId, setSelectedId] = useState<string | undefined>();
+  const deferredSelectedId = useDeferredValue(selectedId);
 
   const router = useRouter();
 
@@ -51,7 +66,7 @@ const ProductCard = ({
 
   const defaultVariant = product.variants[0];
   const selectedVariant = product.variants.find(
-    (variant) => variant.id === selectedId,
+    (variant) => variant.id === deferredSelectedId,
   );
 
   // Get Product Details
@@ -102,23 +117,12 @@ const ProductCard = ({
     }
   }
 
-  const priceCheckQuery = useSuspensePriceCheck(token, [
-    {
-      productId: parseInt(id),
-      qty: 1,
-    },
-  ]);
-  const priceData = priceCheckQuery.data.productPrices[0];
+  const priceData = prices.find((price) => price.productId.toString() === id);
 
-  let listPrice = 0;
-  let currentPrice = 0;
-
-  if (priceData) {
-    listPrice = priceData.listPrice;
-    currentPrice = priceData?.uomPrice ?? priceData?.price;
-    if (priceData?.uomPriceUnit) {
-      uom = priceData?.uomPriceUnit;
-    }
+  const listPrice = priceData?.listPrice ?? 0;
+  const currentPrice = priceData?.uomPrice ?? priceData?.price ?? 0;
+  if (priceData?.uomPriceUnit) {
+    uom = priceData?.uomPriceUnit;
   }
 
   const discountPercent = Math.round(
@@ -140,7 +144,9 @@ const ProductCard = ({
   );
 
   const gtmItemInfoQuery = useGtmProducts(
-    selectedId ? [{ productid: Number(selectedId), cartid: 0 }] : [],
+    deferredSelectedId
+      ? [{ productid: Number(deferredSelectedId), cartid: 0 }]
+      : [],
   );
   const gtmItemInfo = gtmItemInfoQuery.data?.[0];
 
@@ -290,7 +296,7 @@ const ProductCard = ({
                 <ProductCardVariantSelectorForLoggedIn
                   productVariantId={id}
                   href={href}
-                  selectedId={selectedId}
+                  selectedId={deferredSelectedId}
                   setSelectedId={onSelectVariantChange}
                   variants={product.variants}
                   addToCart={addToCart}
@@ -300,7 +306,7 @@ const ProductCard = ({
             ) : (
               <ProductCardVariantSelector
                 href={href}
-                value={selectedId}
+                value={deferredSelectedId}
                 onValueChange={onSelectVariantChange}
                 variants={product.variants.map((variant) => ({
                   value: variant.id,

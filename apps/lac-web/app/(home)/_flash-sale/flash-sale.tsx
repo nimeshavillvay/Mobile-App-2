@@ -1,4 +1,3 @@
-import ProductCard from "@/_components/product-card";
 import ProductCardSkeleton from "@/_components/product-card-skeleton";
 import SubHeading from "@/_components/sub-heading";
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
@@ -11,36 +10,15 @@ import {
 import { cookies } from "next/headers";
 import { Suspense } from "react";
 import { getSaleItems } from "./apis";
+import FlashSaleList from "./flash-sale-list";
 
-const FlashSaleList = async () => {
+const FlashSaleListRoot = async () => {
   const cookiesStore = cookies();
   const sessionToken = cookiesStore.get(SESSION_TOKEN_COOKIE);
 
   const saleItems = await getSaleItems();
 
-  return saleItems.map((product) => (
-    <Suspense key={product.productId} fallback={<ProductCardSkeleton />}>
-      <ProductCard
-        orientation="vertical"
-        token={sessionToken?.value}
-        product={{
-          groupName: product.productTitle,
-          groupImage: product.productImage,
-          variants: [
-            {
-              id: product.productId,
-              slug: product.slug,
-              sku: product.productSku,
-              title: product.productTitle,
-              image: product.productImage,
-              uom: product.unitOfMeasure,
-              isNewItem: product.isNewItem,
-            },
-          ],
-        }}
-      />
-    </Suspense>
-  ));
+  return <FlashSaleList token={sessionToken?.value} products={saleItems} />;
 };
 
 const FlashSale = () => {
@@ -73,7 +51,7 @@ const FlashSale = () => {
               <ProductCardSkeleton key={index} />
             ))}
           >
-            <FlashSaleList />
+            <FlashSaleListRoot />
           </Suspense>
         </ScrollableContainer>
 

@@ -7,6 +7,7 @@ import useUpdateCartConfigMutation from "@/_hooks/cart/use-update-cart-config-mu
 import useGtmProducts from "@/_hooks/gtm/use-gtm-item-info.hook";
 import useGtmUser from "@/_hooks/gtm/use-gtm-user.hook";
 import usePathnameHistoryState from "@/_hooks/misc/use-pathname-history-state.hook";
+import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import { getGTMPageType } from "@/_lib/gtm-utils";
 import type { Plant } from "@/_lib/types";
 import { sendGTMEvent } from "@next/third-parties/google";
@@ -33,8 +34,7 @@ import {
 import { Button } from "@repo/web-ui/components/ui/button";
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import dynamic from "next/dynamic";
-import { Suspense, useState } from "react";
-import CartItemFallback from "../cart-item-fallback";
+import { useDeferredValue, useState } from "react";
 import { CartItemQuantityProvider } from "../cart-item-quantity-context";
 import useUnSavedAlternativeQuantityState from "../use-cart-alternative-qty-method-store.hook";
 import useCartPageStore from "../use-cart-page-store.hook";
@@ -57,7 +57,6 @@ const DynamicAddMoreItemsSectionForMobile = dynamic(
 const CartList = ({ token, plants }: CartListProps) => {
   const [deleteConfirmation, setDeleteConfirmation] = useState(false);
   const { data } = useSuspenseCart(token);
-  const willCallPlantQuery = useSuspenseWillCallPlant(token);
   const deleteCartItemMutation = useDeleteCartItemMutation();
   const updateCartConfigMutation = useUpdateCartConfigMutation();
 
@@ -141,9 +140,6 @@ const CartList = ({ token, plants }: CartListProps) => {
     }
   };
 
-  // TODO Delete this hook after refactoring the entire cart item section
-  const cartItemKey = useCartPageStore((state) => state.cartItemKey);
-
   const excludedSkus = useCartStore((state) => state.excludedSkus);
   const discontinuedSkus = useCartStore((state) => state.discontinuedSkus);
   const { setExcludedSkus, setDiscontinuedSkus } = useCartStore(
@@ -217,45 +213,9 @@ const CartList = ({ token, plants }: CartListProps) => {
       )}
 
       <ul className="flex flex-col gap-2.5">
-        {data.cartItems.map((item) => (
-          <li
-            key={`${item.itemInfo.productId}-${item.cartItemId}`}
-            className="border-b border-b-wurth-gray-250 px-4 pb-7 md:px-0 [&:not(:first-child)]:pt-7"
-          >
-            <CartItemQuantityProvider
-              lineQuantity={item.quantity.toString()}
-              minQuantity={item.itemInfo.minimumOrderQuantity}
-            >
-              <Suspense fallback={<CartItemFallback />}>
-                <CartItem
-                  key={cartItemKey.toString()}
-                  token={token}
-                  product={{
-                    id: item.itemInfo.productId,
-                    title: item.itemInfo.productName,
-                    sku: item.itemInfo.productSku,
-                    manufacturerId: item.itemInfo.mfrPartNo,
-                    quantity: item.quantity,
-                    configuration: item.configuration,
-                    minAmount: item.itemInfo.minimumOrderQuantity,
-                    increment: item.itemInfo.quantityByIncrements,
-                    image: item.itemInfo.image,
-                    cartItemId: item.cartItemId,
-                    slug: item.itemInfo.slug,
-                    isExcludedProduct: item.itemInfo.isExcludedProduct,
-                    uom: item.itemInfo.unitOfMeasure,
-                    isHazardous: item.itemInfo.isHazardous,
-                    isDirectlyShippedFromVendor:
-                      item.itemInfo.isDirectlyShippedFromVendor,
-                  }}
-                  plants={plants}
-                  cartConfiguration={data.configuration}
-                  willCallPlant={willCallPlantQuery?.data}
-                />
-              </Suspense>
-            </CartItemQuantityProvider>
-          </li>
-        ))}
+        {data.cartItems.length > 0 && (
+          <CartListItems token={token} plants={plants} />
+        )}
 
         <div className="flex w-full justify-end gap-4 px-4 md:px-0">
           {data.cartItems.length > 0 && (
@@ -303,3 +263,74 @@ const CartList = ({ token, plants }: CartListProps) => {
 };
 
 export default CartList;
+
+const CartListItems = ({
+  token,
+  plants,
+}: {
+  token: string;
+  readonly plants: Plant[];
+}) => {
+  // TODO Delete this hook after refactoring the entire cart item section
+  const cartItemKey = useCartPageStore((state) => state.cartItemKey);
+
+  const { data } = useSuspenseCart(token);
+  const willCallPlantQuery = useSuspenseWillCallPlant(token);
+
+  const products = data.cartItems.map((item) => ({
+    productId: item.itemInfo.productId,
+    qty: item.quantity,
+    cartId: item.cartItemId,
+  }));
+  const deferredProducts = useDeferredValue(products);
+  const priceCheckQuery = useSuspensePriceCheck(token, deferredProducts);
+
+  return data.cartItems.map((item) => {
+    const priceData = priceCheckQuery.data.productPrices.find(
+      (price) => Number(price.productId) === item.itemInfo.productId,
+    );
+
+    if (!priceData) {
+      return null;
+    }
+
+    return (
+      <li
+        key={`${item.itemInfo.productId}-${item.cartItemId}`}
+        className="border-b border-b-wurth-gray-250 px-4 pb-7 md:px-0 [&:not(:first-child)]:pt-7"
+      >
+        <CartItemQuantityProvider
+          lineQuantity={item.quantity.toString()}
+          minQuantity={item.itemInfo.minimumOrderQuantity}
+        >
+          <CartItem
+            key={cartItemKey.toString()}
+            token={token}
+            product={{
+              id: item.itemInfo.productId,
+              title: item.itemInfo.productName,
+              sku: item.itemInfo.productSku,
+              manufacturerId: item.itemInfo.mfrPartNo,
+              quantity: item.quantity,
+              configuration: item.configuration,
+              minAmount: item.itemInfo.minimumOrderQuantity,
+              increment: item.itemInfo.quantityByIncrements,
+              image: item.itemInfo.image,
+              cartItemId: item.cartItemId,
+              slug: item.itemInfo.slug,
+              isExcludedProduct: item.itemInfo.isExcludedProduct,
+              uom: item.itemInfo.unitOfMeasure,
+              isHazardous: item.itemInfo.isHazardous,
+              isDirectlyShippedFromVendor:
+                item.itemInfo.isDirectlyShippedFromVendor,
+            }}
+            plants={plants}
+            cartConfiguration={data.configuration}
+            willCallPlant={willCallPlantQuery?.data}
+            priceData={priceData}
+          />
+        </CartItemQuantityProvider>
+      </li>
+    );
+  });
+};

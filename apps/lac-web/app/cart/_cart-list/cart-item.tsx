@@ -7,7 +7,6 @@ import useGtmUser from "@/_hooks/gtm/use-gtm-user.hook";
 import useDebouncedState from "@/_hooks/misc/use-debounced-state.hook";
 import usePathnameHistoryState from "@/_hooks/misc/use-pathname-history-state.hook";
 import useSuspenseCheckAvailability from "@/_hooks/product/use-suspense-check-availability.hook";
-import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
 import {
   DEFAULT_PLANT,
@@ -20,6 +19,7 @@ import { getGTMPageType } from "@/_lib/gtm-utils";
 import type {
   CartConfiguration,
   CartItemConfiguration,
+  ItemPrice,
   Plant,
   Token,
 } from "@/_lib/types";
@@ -121,6 +121,7 @@ type CartItemProps = {
   readonly plants: Plant[];
   readonly cartConfiguration: CartConfiguration;
   readonly willCallPlant: { plantCode: string; plantName: string };
+  readonly priceData: ItemPrice;
 };
 
 const CartItem = ({
@@ -129,6 +130,7 @@ const CartItem = ({
   plants,
   cartConfiguration,
   willCallPlant,
+  priceData,
 }: CartItemProps) => {
   const id = useId();
   const poId = `po-${id}`;
@@ -180,18 +182,8 @@ const CartItem = ({
   const deferredQuantity = useDeferredValue(delayedQuantity);
   const isQuantityLessThanMin = deferredQuantity < product.minAmount;
 
-  const priceCheckQuery = useSuspensePriceCheck(token, [
-    {
-      productId: product.id,
-      qty: deferredQuantity,
-      cartId: product.cartItemId,
-    },
-  ]);
-
-  const priceCheckData = priceCheckQuery.data;
-
   const [osrCartItemTotal, setOsrCartItemTotal] = useState(
-    Number(lineQuantity) * (priceCheckData?.productPrices[0]?.price ?? 0),
+    Number(lineQuantity) * priceData.price,
   );
 
   const updateCartConfigMutation = useUpdateCartItemMutation();
@@ -471,9 +463,7 @@ const CartItem = ({
           },
         },
       ]);
-      setOsrCartItemTotal(
-        Number(lineQuantity) * (priceCheckData?.productPrices[0]?.price ?? 0),
-      );
+      setOsrCartItemTotal(Number(lineQuantity) * priceData.price);
     }
   };
 
@@ -879,7 +869,7 @@ const CartItem = ({
             <CartItemPrice
               token={token}
               onPriceChange={handlePriceOverride}
-              priceCheckData={priceCheckQuery.data}
+              priceData={priceData}
               type="mobile"
             />
           </Suspense>
@@ -1140,7 +1130,7 @@ const CartItem = ({
           <CartItemPrice
             token={token}
             onPriceChange={handlePriceOverride}
-            priceCheckData={priceCheckQuery.data}
+            priceData={priceData}
             type="desktop"
           />
         </Suspense>

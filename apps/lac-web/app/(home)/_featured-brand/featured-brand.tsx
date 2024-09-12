@@ -1,4 +1,3 @@
-import ProductCard from "@/_components/product-card";
 import ProductCardSkeleton from "@/_components/product-card-skeleton";
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import {
@@ -11,34 +10,15 @@ import { cookies } from "next/headers";
 import Image from "next/image";
 import { Suspense, type CSSProperties } from "react";
 import { getFeaturedBrand } from "./apis";
+import FeaturedBrandList from "./featured-brand-list";
 
-const FeaturedBrandList = async () => {
+const FeaturedBrandListRoot = async () => {
   const cookiesStore = cookies();
   const sessionToken = cookiesStore.get(SESSION_TOKEN_COOKIE);
 
   const { groups } = await getFeaturedBrand();
 
-  return groups.map((product) => (
-    <Suspense key={product.groupId} fallback={<ProductCardSkeleton />}>
-      <ProductCard
-        product={{
-          groupName: product.groupName,
-          groupImage: product.groupImage,
-          variants: product.itemSkuList.map((item) => ({
-            id: item.productId,
-            slug: item.slug,
-            sku: item.productSku,
-            title: item.productName,
-            image: item.image,
-            uom: item.unitOfMeasure,
-            onSale: item.isSaleItem,
-            isNewItem: item.isNewItem,
-          })),
-        }}
-        token={sessionToken?.value}
-      />
-    </Suspense>
-  ));
+  return <FeaturedBrandList token={sessionToken?.value} groups={groups} />;
 };
 
 const FeaturedBrand = async () => {
@@ -95,7 +75,7 @@ const FeaturedBrand = async () => {
               <ProductCardSkeleton key={index} />
             ))}
           >
-            <FeaturedBrandList />
+            <FeaturedBrandListRoot />
           </Suspense>
         </ScrollableContainer>
 
