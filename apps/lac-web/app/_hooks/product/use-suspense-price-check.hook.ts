@@ -3,7 +3,7 @@ import type { PriceBreakDowns } from "@/_lib/types";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
 type ItemPriceOld = {
-  productid: number;
+  productid: string;
   price: string;
   price_unit: string;
   extended: string;
@@ -41,7 +41,7 @@ const useSuspensePriceCheck = (
   products: Product[],
 ) => {
   return useSuspenseQuery({
-    queryKey: ["user", "price-check", token, products],
+    queryKey: ["user", "price-check", products, token],
     queryFn: async () => {
       const response = await api
         .post("rest/pricecheck", {

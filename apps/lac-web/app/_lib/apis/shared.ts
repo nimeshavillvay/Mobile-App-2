@@ -1,5 +1,6 @@
 import { SPECIAL_SHIPPING_FLAG } from "@/_lib/constants";
-import { getBoolean, getFetchHeaders, getFetchUrl } from "@/_lib/utils";
+import { getBoolean } from "@/_lib/utils";
+import { z } from "zod";
 import { api } from "../api";
 import type {
   AvailabilityParameters,
@@ -62,30 +63,27 @@ export const checkAvailability = async (
   token: Token | undefined,
   { productId, qty, plant }: AvailabilityParameters,
 ) => {
-  const response = await fetch(getFetchUrl("/rest/availability-check"), {
-    method: "POST",
-    headers: getFetchHeaders(token),
-    body: JSON.stringify({
-      productid: productId,
-      qty,
-      plant,
-    }),
-    cache: "no-store",
-  });
-
-  if (!response.ok) {
-    throw new Error("Check Availability Error");
-  }
-
-  const json = (await response.json()) as CheckAvailability;
+  const response = await api
+    .post("rest/availability-check", {
+      headers: {
+        authorization: `Bearer ${token}`,
+      },
+      json: {
+        productid: productId,
+        qty,
+        plant,
+      },
+      cache: "no-store",
+    })
+    .json<CheckAvailability>();
 
   return {
-    productId: json.productid,
-    status: json.status,
-    options: json.options,
-    willCallAnywhere: json.willcallanywhere,
-    xplant: json.xplant,
-    availableLocations: json.available_locations,
+    productId: response.productid,
+    status: response.status,
+    options: response.options,
+    willCallAnywhere: response.willcallanywhere,
+    xplant: response.xplant,
+    availableLocations: response.available_locations,
   };
 };
 
@@ -101,4 +99,43 @@ export const shippingMethods = async (token?: string, isForCart?: boolean) => {
       cache: "no-cache",
     })
     .json<ShippingMethod[]>();
+};
+
+const productListSchema = z.array(
+  z.object({
+    productid: z.string(),
+    cartid: z.number(),
+    item_id: z.string(),
+    item_sku: z.string(),
+    item_name: z.string(),
+    price: z.string(),
+    item_brand: z.string(),
+    item_variant: z.string(),
+    item_categoryid: z.string(),
+    coupon: z.string(),
+    coupon_discount: z.string(),
+    item_primarycategory: z.string(),
+    item_category_path: z.array(z.string()),
+  }),
+);
+
+export const getGtmProducts = async (
+  productIdList: {
+    productid: number;
+    cartid: number | null | undefined;
+  }[],
+  token: string,
+) => {
+  const response = await api
+    .post("rest/gtm/products", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      json: {
+        products: productIdList,
+      },
+    })
+    .json();
+
+  return productListSchema.parse(response);
 };

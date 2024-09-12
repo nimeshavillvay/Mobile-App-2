@@ -32,7 +32,9 @@ const ProductsList = ({ query, pageNo, total }: ProductsListProps) => {
         <ProductsListHeader total={total} />
       </Suspense>
 
-      <Suspense fallback={<ProductsGridListSkeleton type="mobile" />}>
+      <Suspense
+        fallback={<ProductsGridListSkeleton type="mobile" numberOfCards={24} />}
+      >
         <ProductsListGrid
           type="mobile"
           token={tokenCookie.value}
@@ -42,7 +44,11 @@ const ProductsList = ({ query, pageNo, total }: ProductsListProps) => {
       </Suspense>
 
       <ProductsGridDesktopContainer>
-        <Suspense fallback={<ProductsGridListSkeleton type="desktop" />}>
+        <Suspense
+          fallback={
+            <ProductsGridListSkeleton type="desktop" numberOfCards={24} />
+          }
+        >
           <ProductsListGrid
             type="desktop"
             token={tokenCookie.value}

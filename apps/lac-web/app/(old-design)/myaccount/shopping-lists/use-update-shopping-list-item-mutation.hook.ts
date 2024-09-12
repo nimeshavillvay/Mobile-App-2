@@ -1,8 +1,8 @@
-import useGtmProducts from "@/_hooks/gtm/use-gtm-item-info.hook";
-import useGtmUser from "@/_hooks/gtm/use-gtm-user.hook";
+import { getGtmUser } from "@/_hooks/gtm/use-gtm-user.hook";
 import usePathnameHistoryState from "@/_hooks/misc/use-pathname-history-state.hook";
 import useCookies from "@/_hooks/storage/use-cookies.hook";
 import { api } from "@/_lib/api";
+import { getGtmProducts } from "@/_lib/apis/shared";
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import { getGTMPageType } from "@/_lib/gtm-utils";
 import { sendGTMEvent } from "@next/third-parties/google";
@@ -18,14 +18,6 @@ const useUpdateShoppingListItemMutation = (productId: number) => {
   const pathnameHistory = usePathnameHistoryState(
     (state) => state.pathnameHistory,
   );
-
-  const gtmItemInfoQuery = useGtmProducts(
-    productId ? [{ productid: productId, cartid: 0 }] : [],
-  );
-  const gtmItemInfo = gtmItemInfoQuery.data?.[0];
-
-  const gtmItemUserQuery = useGtmUser();
-  const gtmUser = gtmItemUserQuery.data;
 
   return useMutation({
     mutationFn: ({
@@ -58,7 +50,14 @@ const useUpdateShoppingListItemMutation = (productId: number) => {
         variant: "destructive",
       });
     },
-    onSettled: (data, error, variables) => {
+    onSettled: async (data, error, variables) => {
+      const gtmItemInfoQuery = await getGtmProducts(
+        productId ? [{ productid: productId, cartid: 0 }] : [],
+        token,
+      );
+      const gtmItemInfo = gtmItemInfoQuery[0];
+
+      const gtmUser = await getGtmUser(token);
       sendGTMEvent({
         event: "add_to_wishlist",
         addToWishlistData: {
@@ -85,8 +84,8 @@ const useUpdateShoppingListItemMutation = (productId: number) => {
           ),
         },
         data: {
-          userid: gtmUser?.userid,
-          account_type: gtmUser?.account_type,
+          userid: gtmUser.userid,
+          account_type: gtmUser.account_type,
           account_industry: gtmUser?.account_industry,
           account_sales_category: gtmUser?.account_sales_category,
         },

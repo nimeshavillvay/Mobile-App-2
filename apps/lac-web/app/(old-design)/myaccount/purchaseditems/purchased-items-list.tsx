@@ -1,6 +1,8 @@
 "use client";
 
+import useGtmProducts from "@/_hooks/gtm/use-gtm-item-info.hook";
 import useItemInfo from "@/_hooks/product/use-item-info.hook";
+import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import useSuspenseFilters from "@/_hooks/search/use-suspense-filters.hook";
 import type { ItemInfo } from "@/_lib/types";
 import {
@@ -17,8 +19,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/old/_components/ui/table";
+import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import { useSearchParams } from "next/navigation";
-import { useDeferredValue } from "react";
+import { Suspense, useDeferredValue, type ComponentProps } from "react";
 import { changeSearchParams } from "./client-helpers";
 import {
   DEFAULT_SORT,
@@ -185,10 +188,16 @@ const PurchasedItemsList = ({ token }: { readonly token: string }) => {
       />
 
       {/* Mobile View for Items List */}
-      <PurchasedItemsListForMobile
-        items={detailedPurchasedItems}
-        token={token}
-      />
+      {detailedPurchasedItems.length > 0 && (
+        <Suspense
+          fallback={<Skeleton className="h-[100rem] w-full py-4 md:hidden" />}
+        >
+          <PurchasedItemsListForMobile
+            items={detailedPurchasedItems}
+            token={token}
+          />
+        </Suspense>
+      )}
 
       {/* Desktop View for Items List */}
       <div className="hidden md:block">
@@ -295,15 +304,12 @@ const PurchasedItemsList = ({ token }: { readonly token: string }) => {
           </TableHeader>
 
           <TableBody>
-            {detailedPurchasedItems.length > 0 &&
-              detailedPurchasedItems.map((item, index) => (
-                <PurchasedItemRow
-                  key={`${item.productId}_${index}`}
-                  token={token}
-                  index={index}
-                  item={item}
-                />
-              ))}
+            {detailedPurchasedItems.length > 0 && (
+              <PurchasedItemRows
+                detailedPurchasedItems={detailedPurchasedItems}
+                token={token}
+              />
+            )}
           </TableBody>
         </Table>
       </div>
@@ -319,3 +325,96 @@ const PurchasedItemsList = ({ token }: { readonly token: string }) => {
 };
 
 export default PurchasedItemsList;
+
+const PurchasedItemRows = ({
+  detailedPurchasedItems,
+  token,
+}: {
+  detailedPurchasedItems: DetailedPurchasedItem[];
+  token: string;
+}) => {
+  const products = detailedPurchasedItems.map((item) => ({
+    productId: item.productId,
+    qty: item.minimumOrderQuantity,
+  }));
+
+  detailedPurchasedItems.forEach((item) => {
+    if (item.minimumOrderQuantity !== 1) {
+      products.push({
+        productId: item.productId,
+        qty: 1,
+      });
+    }
+  });
+
+  const gtmProducts = products.map((product) => {
+    return {
+      productid: product.productId,
+      cartid: 0,
+      quantity: 1,
+    };
+  });
+
+  const gtmItemInfoQuery = useGtmProducts(gtmProducts);
+  const gtmItemInfo = gtmItemInfoQuery.data;
+
+  const initialPriceCheckQuery = useSuspensePriceCheck(
+    token,
+    detailedPurchasedItems.map((item) => ({
+      productId: item.productId,
+      qty: 1,
+    })),
+  );
+  const priceCheckQuery = useSuspensePriceCheck(
+    token,
+    detailedPurchasedItems.map((item) => ({
+      productId: item.productId,
+      qty: item.minimumOrderQuantity,
+    })),
+  );
+
+  return detailedPurchasedItems.map((item, index) => {
+    const prices: ComponentProps<typeof PurchasedItemRow>["prices"] = [];
+
+    const initialPriceCheck = initialPriceCheckQuery.data.productPrices.find(
+      (price) => Number(price.productId) === item.productId,
+    );
+    if (initialPriceCheck) {
+      prices.push({
+        price: initialPriceCheck.price,
+        priceBreakDowns: initialPriceCheck.priceBreakDowns,
+        priceUnit: initialPriceCheck.priceUnit,
+        quantity: 1,
+        uomPrice: initialPriceCheck.uomPrice,
+        uomPriceUnit: initialPriceCheck.uomPriceUnit,
+      });
+    }
+
+    const priceCheck = priceCheckQuery.data.productPrices.find(
+      (price) => Number(price.productId) === item.productId,
+    );
+    if (priceCheck) {
+      prices.push({
+        price: priceCheck.price,
+        priceBreakDowns: priceCheck.priceBreakDowns,
+        priceUnit: priceCheck.priceUnit,
+        quantity: item.minimumOrderQuantity,
+        uomPrice: priceCheck.uomPrice,
+        uomPriceUnit: priceCheck.uomPriceUnit,
+      });
+    }
+
+    return (
+      <PurchasedItemRow
+        key={`${item.productId}_${index}`}
+        token={token}
+        index={index}
+        item={item}
+        prices={prices}
+        gtmItemInfo={gtmItemInfo?.find(
+          (product) => Number(product.productid) === item.productId,
+        )}
+      />
+    );
+  });
+};

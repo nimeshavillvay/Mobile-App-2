@@ -1,5 +1,5 @@
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
-import type { ItemsPriceResult, Token } from "@/_lib/types";
+import type { ItemPrice, Token } from "@/_lib/types";
 import { cn, formatNumberToPrice } from "@/_lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@repo/web-ui/components/ui/input";
@@ -13,7 +13,7 @@ const MIN_STEP = 0.0001;
 
 type CartItemPriceProps = {
   readonly token: Token;
-  readonly priceCheckData: ItemsPriceResult;
+  readonly priceData: ItemPrice;
   readonly onPriceChange?: (newPrice: number) => void;
   readonly type: ViewportTypes;
 };
@@ -29,7 +29,7 @@ const cartItemPriceSchema = z.object({
 
 const CartItemPrice = ({
   token,
-  priceCheckData,
+  priceData,
   onPriceChange,
   type,
 }: CartItemPriceProps) => {
@@ -37,7 +37,6 @@ const CartItemPrice = ({
 
   const loginCheckResponse = useSuspenseCheckLogin(token);
 
-  const priceData = priceCheckData.productPrices[0];
   const extendedPrice = priceData?.extendedPrice;
   const price = priceData?.price;
   const priceUnit = priceData?.priceUnit;

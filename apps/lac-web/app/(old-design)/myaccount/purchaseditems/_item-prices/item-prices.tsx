@@ -1,4 +1,3 @@
-import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import { formatNumberToPrice } from "@/_lib/utils";
 import {
   Table,
@@ -13,44 +12,51 @@ import UnitPriceRow from "./unit-price-row";
 import UnitPriceRowForMobile from "./unit-price-row-for-mobile";
 
 type ItemPricesProps = {
-  readonly token: string;
-  readonly productId: number;
   readonly quantity: number;
   readonly uom: string;
   readonly listPrice: number;
   readonly showUnitPrice?: boolean;
   readonly unitPriceOnly?: boolean;
+  readonly prices: {
+    price: number;
+    priceUnit: string;
+    quantity: number;
+    uomPrice?: number;
+    uomPriceUnit?: string;
+    priceBreakDowns: {
+      quantity: number;
+      price: number;
+    }[];
+  }[];
 };
 
 const ItemPrices = ({
-  token,
-  productId,
   quantity,
   uom,
   listPrice,
   showUnitPrice = false,
   unitPriceOnly = false,
+  prices,
 }: ItemPricesProps) => {
-  const initialPriceCheckQuery = useSuspensePriceCheck(token, [
-    { productId, qty: 1 },
-  ]);
-  const initialPriceData = initialPriceCheckQuery.data.productPrices[0];
+  const initialPriceData = prices.find((price) => price.quantity === 1);
   const initialPrice =
     initialPriceData?.uomPrice ?? initialPriceData?.price ?? 0;
 
-  const itemPricesQuery = useSuspensePriceCheck(token, [
-    { productId: productId, qty: quantity },
-  ]);
-  const prices = itemPricesQuery.data.productPrices[0] ?? null;
-  const priceUnit = prices?.uomPriceUnit ?? prices?.priceUnit ?? "";
-  const priceBreakDownArray = prices?.priceBreakDowns;
+  const minQuantityPriceData = prices.find(
+    (price) => price.quantity === quantity,
+  );
+  const priceUnit =
+    minQuantityPriceData?.uomPriceUnit ?? minQuantityPriceData?.priceUnit ?? "";
+  const priceBreakDownArray = minQuantityPriceData?.priceBreakDowns;
 
-  const displayPrice = prices?.uomPrice ? prices?.uomPrice : prices?.price ?? 0;
+  const displayPrice = minQuantityPriceData?.uomPrice
+    ? minQuantityPriceData?.uomPrice
+    : minQuantityPriceData?.price ?? 0;
 
-  if (unitPriceOnly && prices) {
+  if (unitPriceOnly && minQuantityPriceData) {
     return (
       <UnitPriceRowForMobile
-        listPrice={prices?.uomPrice ?? listPrice}
+        listPrice={minQuantityPriceData?.uomPrice ?? listPrice}
         uom={priceUnit}
         price={displayPrice}
       />
@@ -88,9 +94,9 @@ const ItemPrices = ({
         </Table>
       )}
 
-      {showUnitPrice && prices && (
+      {showUnitPrice && minQuantityPriceData && (
         <UnitPriceRow
-          listPrice={prices?.uomPrice ?? listPrice}
+          listPrice={minQuantityPriceData?.uomPrice ?? listPrice}
           uom={priceUnit}
           price={displayPrice}
         />

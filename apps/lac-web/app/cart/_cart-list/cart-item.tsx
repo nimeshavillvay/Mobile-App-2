@@ -2,12 +2,10 @@ import NumberInputField from "@/_components/number-input-field";
 import WurthLacLogo from "@/_components/wurth-lac-logo";
 import useDeleteCartItemMutation from "@/_hooks/cart/use-delete-cart-item-mutation.hook";
 import useUpdateCartItemMutation from "@/_hooks/cart/use-update-cart-item-mutation.hook";
-import useGtmProducts from "@/_hooks/gtm/use-gtm-item-info.hook";
 import useGtmUser from "@/_hooks/gtm/use-gtm-user.hook";
 import useDebouncedState from "@/_hooks/misc/use-debounced-state.hook";
 import usePathnameHistoryState from "@/_hooks/misc/use-pathname-history-state.hook";
 import useSuspenseCheckAvailability from "@/_hooks/product/use-suspense-check-availability.hook";
-import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
 import {
   DEFAULT_PLANT,
@@ -20,6 +18,8 @@ import { getGTMPageType } from "@/_lib/gtm-utils";
 import type {
   CartConfiguration,
   CartItemConfiguration,
+  GtmProduct,
+  ItemPrice,
   Plant,
   Token,
 } from "@/_lib/types";
@@ -121,6 +121,8 @@ type CartItemProps = {
   readonly plants: Plant[];
   readonly cartConfiguration: CartConfiguration;
   readonly willCallPlant: { plantCode: string; plantName: string };
+  readonly priceData: ItemPrice;
+  readonly gtmItemInfo: GtmProduct | undefined;
 };
 
 const CartItem = ({
@@ -129,6 +131,8 @@ const CartItem = ({
   plants,
   cartConfiguration,
   willCallPlant,
+  priceData,
+  gtmItemInfo,
 }: CartItemProps) => {
   const id = useId();
   const poId = `po-${id}`;
@@ -180,18 +184,8 @@ const CartItem = ({
   const deferredQuantity = useDeferredValue(delayedQuantity);
   const isQuantityLessThanMin = deferredQuantity < product.minAmount;
 
-  const priceCheckQuery = useSuspensePriceCheck(token, [
-    {
-      productId: product.id,
-      qty: deferredQuantity,
-      cartId: product.cartItemId,
-    },
-  ]);
-
-  const priceCheckData = priceCheckQuery.data;
-
   const [osrCartItemTotal, setOsrCartItemTotal] = useState(
-    Number(lineQuantity) * (priceCheckData?.productPrices[0]?.price ?? 0),
+    Number(lineQuantity) * priceData.price,
   );
 
   const updateCartConfigMutation = useUpdateCartItemMutation();
@@ -471,9 +465,7 @@ const CartItem = ({
           },
         },
       ]);
-      setOsrCartItemTotal(
-        Number(lineQuantity) * (priceCheckData?.productPrices[0]?.price ?? 0),
-      );
+      setOsrCartItemTotal(Number(lineQuantity) * priceData.price);
     }
   };
 
@@ -741,16 +733,11 @@ const CartItem = ({
     (state) => state.pathnameHistory,
   );
 
-  const gtmItemInfoQuery = useGtmProducts(
-    product.id ? [{ productid: product.id, cartid: 0 }] : [],
-  );
-  const gtmItemInfo = gtmItemInfoQuery.data?.[0];
-
   const gtmItemUserQuery = useGtmUser();
   const gtmUser = gtmItemUserQuery.data;
 
   const sendToGTMViewProduct = () => {
-    if (gtmItemInfo && gtmUser) {
+    if (gtmItemInfo) {
       sendGTMEvent({
         event: "select_item",
         item_list_name: GTM_ITEM_PAGE_TYPES.CART_PAGE,
@@ -879,7 +866,7 @@ const CartItem = ({
             <CartItemPrice
               token={token}
               onPriceChange={handlePriceOverride}
-              priceCheckData={priceCheckQuery.data}
+              priceData={priceData}
               type="mobile"
             />
           </Suspense>
@@ -1089,6 +1076,7 @@ const CartItem = ({
               setPreventUpdateCart={setPreventUpdateCart}
               sku={product.sku}
               setOsrCartItemTotal={setOsrCartItemTotal}
+              price={priceData.price}
             />
           ))}
 
@@ -1124,6 +1112,7 @@ const CartItem = ({
               setPreventUpdateCart={setPreventUpdateCart}
               sku={product.sku}
               setOsrCartItemTotal={setOsrCartItemTotal}
+              price={priceData.price}
             />
           </Suspense>
         )}
@@ -1140,7 +1129,7 @@ const CartItem = ({
           <CartItemPrice
             token={token}
             onPriceChange={handlePriceOverride}
-            priceCheckData={priceCheckQuery.data}
+            priceData={priceData}
             type="desktop"
           />
         </Suspense>

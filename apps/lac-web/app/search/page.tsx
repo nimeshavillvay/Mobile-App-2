@@ -133,7 +133,10 @@ const SearchPage = async ({
                     <ProductsGridHeaderSkeleton />
                     <ProductsGridListSkeleton type="mobile" />
                     <ProductsGridDesktopContainer>
-                      <ProductsGridListSkeleton type="desktop" />
+                      <ProductsGridListSkeleton
+                        type="desktop"
+                        numberOfCards={24}
+                      />
                     </ProductsGridDesktopContainer>
                   </ProductsGrid>
                 }

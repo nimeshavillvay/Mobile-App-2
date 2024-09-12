@@ -2,7 +2,6 @@ import useSuspenseCart from "@/_hooks/cart/use-suspense-cart.hook";
 import useUpdateCartItemMutation from "@/_hooks/cart/use-update-cart-item-mutation.hook";
 import useGtmProducts from "@/_hooks/gtm/use-gtm-item-info.hook";
 import useGtmUser from "@/_hooks/gtm/use-gtm-user.hook";
-import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import {
   DEFAULT_PLANT,
   IN_STOCK,
@@ -50,7 +49,7 @@ import {
 import { toast } from "@repo/web-ui/components/ui/toast";
 import dayjs from "dayjs";
 import type { Dispatch, SetStateAction } from "react";
-import { useDeferredValue, useId, useRef } from "react";
+import { useId, useRef } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import type { z } from "zod";
 import { useCartItemQuantityContext } from "../cart-item-quantity-context";
@@ -109,6 +108,7 @@ type CartItemShippingMethodProps = {
   readonly setPreventUpdateCart: Dispatch<SetStateAction<boolean>>;
   readonly sku: string;
   readonly setOsrCartItemTotal: Dispatch<SetStateAction<number>>;
+  readonly price: number;
 };
 
 const CartItemShippingMethod = ({
@@ -138,6 +138,7 @@ const CartItemShippingMethod = ({
   sku,
   setPreventUpdateCart,
   setOsrCartItemTotal,
+  price,
 }: CartItemShippingMethodProps) => {
   const id = useId();
   const shipToMeId = `${MAIN_OPTIONS.SHIP_TO_ME}-${id}`;
@@ -177,16 +178,6 @@ const CartItemShippingMethod = ({
   const checkAvailabilityMutation = useCheckAvailabilityMutation();
 
   const cartQuery = useSuspenseCart(token);
-
-  const deferredLineQuantity = useDeferredValue(lineQuantity);
-
-  const priceCheckQuery = useSuspensePriceCheck(token, [
-    {
-      productId: availability.productId,
-      qty: Number(deferredLineQuantity),
-      cartId: cartItemId,
-    },
-  ]);
 
   const qtyChangeTimeoutRef = useRef<NodeJS.Timeout>();
 
@@ -898,10 +889,7 @@ const CartItemShippingMethod = ({
             pushSku(sku);
           },
           onSettled: () => {
-            setOsrCartItemTotal(
-              Number(altQtySum) *
-                (priceCheckQuery.data?.productPrices[0]?.price ?? 0),
-            );
+            setOsrCartItemTotal(Number(altQtySum) * price);
           },
         },
       );

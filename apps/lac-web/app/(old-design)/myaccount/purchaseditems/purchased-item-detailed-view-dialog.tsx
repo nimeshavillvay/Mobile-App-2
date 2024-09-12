@@ -6,7 +6,6 @@ import useSuspenseCheckAvailability from "@/_hooks/product/use-suspense-check-av
 import useSuspenseProductExcluded from "@/_hooks/product/use-suspense-product-excluded.hook";
 import { NOT_AVAILABLE } from "@/_lib/constants";
 import { cn } from "@/_lib/utils";
-import ErrorBoundary from "@/old/_components/error-boundary";
 import AddToCartIcon from "@/old/_components/icons/add-to-cart";
 import Separator from "@/old/_components/separator";
 import { Button } from "@/old/_components/ui/button";
@@ -28,6 +27,7 @@ import {
   Suspense,
   useId,
   useState,
+  type ComponentProps,
   type Dispatch,
   type SetStateAction,
 } from "react";
@@ -52,6 +52,7 @@ type ActionConfirmationDialogProps = {
   readonly onOpenChange: Dispatch<SetStateAction<boolean>>;
   readonly item: DetailedPurchasedItem;
   readonly token: string;
+  readonly prices: ComponentProps<typeof ItemPrices>["prices"];
 };
 
 const PurchasedItemDetailedViewDialog = ({
@@ -59,6 +60,7 @@ const PurchasedItemDetailedViewDialog = ({
   onOpenChange,
   item,
   token,
+  prices,
 }: ActionConfirmationDialogProps) => {
   const [showPriceBreakdown, setShowPriceBreakdown] = useState(false);
   const id = useId();
@@ -214,30 +216,13 @@ const PurchasedItemDetailedViewDialog = ({
               <div className="flex-1">
                 {!isItemNotAdded && (
                   <>
-                    <ErrorBoundary
-                      fallback={
-                        <div className="p-4 text-center text-brand-primary">
-                          Failed to Load Price!!!
-                        </div>
-                      }
-                    >
-                      <Suspense
-                        fallback={
-                          <div className="py-1 text-center text-brand-gray-400">
-                            <Skeleton className="h-5 w-full" />
-                          </div>
-                        }
-                      >
-                        <ItemPrices
-                          token={token}
-                          productId={item.productId}
-                          quantity={item.minimumOrderQuantity}
-                          uom={item.unitOfMeasure}
-                          listPrice={item.listPrice}
-                          unitPriceOnly
-                        />
-                      </Suspense>
-                    </ErrorBoundary>
+                    <ItemPrices
+                      quantity={item.minimumOrderQuantity}
+                      uom={item.unitOfMeasure}
+                      listPrice={item.listPrice}
+                      unitPriceOnly
+                      prices={prices}
+                    />
 
                     <Button
                       variant="ghost"
@@ -304,29 +289,12 @@ const PurchasedItemDetailedViewDialog = ({
                 <MdKeyboardArrowDown className="text-2xl leading-none transition-transform duration-200 ease-out group-data-[state=open]:rotate-180" />
               </CollapsibleTrigger>
               <CollapsibleContent className="flex w-full justify-center">
-                <ErrorBoundary
-                  fallback={
-                    <div className="p-4 text-center text-brand-primary">
-                      Failed to Load Prices!!!
-                    </div>
-                  }
-                >
-                  <Suspense
-                    fallback={
-                      <div className="w-full px-12 py-4">
-                        <Skeleton className="h-20 w-full" />
-                      </div>
-                    }
-                  >
-                    <ItemPrices
-                      token={token}
-                      productId={item.productId}
-                      quantity={item.minimumOrderQuantity}
-                      uom={item.unitOfMeasure}
-                      listPrice={item.listPrice}
-                    />
-                  </Suspense>
-                </ErrorBoundary>
+                <ItemPrices
+                  quantity={item.minimumOrderQuantity}
+                  uom={item.unitOfMeasure}
+                  listPrice={item.listPrice}
+                  prices={prices}
+                />
               </CollapsibleContent>
             </Collapsible>
           </div>

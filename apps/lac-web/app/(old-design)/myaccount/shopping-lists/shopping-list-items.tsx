@@ -1,22 +1,23 @@
 "use client";
 
-import ProductCardSkeleton from "@/_components/product-card-skeleton";
 import {
   ProductsGridDesktopContainer,
   ProductsGridListSkeleton,
   ProductsGridPaginationSkeleton,
 } from "@/_components/products-grid";
+import useGtmProducts from "@/_hooks/gtm/use-gtm-item-info.hook";
+import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import type { ShoppingListElement } from "@/_lib/types";
 import { cn } from "@/_lib/utils";
 import { Button } from "@repo/web-ui/components/ui/button";
-import { Suspense, useState, type ReactNode } from "react";
+import { Suspense, useState, type ComponentProps, type ReactNode } from "react";
 import { MdOutlineDelete } from "react-icons/md";
 import { PiPenNibDuotone } from "react-icons/pi";
 import ActionConfirmationDialog from "./action-confirmation-dialog";
-import { ShoppingListHeaderSkeleton } from "./layouts";
 import ProductCard from "./product-card";
 import ShoppingListDialog from "./shopping-list-dialog";
 import ShoppingListPagination from "./shopping-list-pagination";
+import type { ShoppingListItems, ShoppingListItemsElement } from "./type";
 import useDeleteShoppingListMutation from "./use-delete-shopping-list-mutation.hook";
 import useSuspenseShoppingListItemCount from "./use-suspense-shopping-list-item-count.hook";
 import useSuspenseShoppingListItems from "./use-suspense-shopping-list-item.hook";
@@ -99,58 +100,37 @@ const ShoppingListItems = ({
       </div>
 
       <div className="container md:px-0">
-        <Suspense fallback={<ShoppingListHeaderSkeleton />}>
-          <div className="my-5 flex flex-row items-center justify-between text-sm font-normal">
-            <div className="font-title text-lg font-medium tracking-normal md:text-3xl md:tracking-[-0.01406rem]">
-              {shoppingListItemCount.count} items
-            </div>
-            <div className="text-sm font-normal md:text-base">
-              Page {page} of {totalPages == 0 ? 1 : totalPages}
-            </div>
+        <div className="my-5 flex flex-row items-center justify-between text-sm font-normal">
+          <div className="font-title text-lg font-medium tracking-normal md:text-3xl md:tracking-[-0.01406rem]">
+            {shoppingListItemCount.count} items
           </div>
-        </Suspense>
+          <div className="text-sm font-normal md:text-base">
+            Page {page} of {totalPages == 0 ? 1 : totalPages}
+          </div>
+        </div>
 
         <Suspense fallback={<ProductsGridListSkeleton type="mobile" />}>
-          <ProductsGridListContainer type="mobile">
-            {shoppingListItems.items.map((item) => (
-              <Suspense
-                key={item.productId}
-                fallback={<ProductCardSkeleton orientation="horizontal" />}
-              >
-                <ProductCard
-                  orientation="horizontal"
-                  token={token}
-                  product={item}
-                  listId={shoppingList.listId}
-                />
-              </Suspense>
-            ))}
-          </ProductsGridListContainer>
+          {shoppingListItems.items.length > 0 && (
+            <ProductCardsList
+              type="mobile"
+              shoppingListItems={shoppingListItems.items}
+              token={token}
+              listId={shoppingList.listId}
+            />
+          )}
         </Suspense>
 
         <ProductsGridDesktopContainer>
           <Suspense fallback={<ProductsGridListSkeleton type="desktop" />}>
-            <ProductsGridListContainer type="desktop">
-              {shoppingListItems.items.map((item) => (
-                <Suspense
-                  key={item.productId}
-                  fallback={
-                    <ProductCardSkeleton
-                      orientation="vertical"
-                      stretchWidth={true}
-                    />
-                  }
-                >
-                  <ProductCard
-                    orientation="vertical"
-                    token={token}
-                    product={item}
-                    listId={shoppingList.listId}
-                    stretchWidth={true}
-                  />
-                </Suspense>
-              ))}
-            </ProductsGridListContainer>
+            {shoppingListItems.items.length > 0 && (
+              <ProductCardsList
+                type="desktop"
+                shoppingListItems={shoppingListItems.items}
+                token={token}
+                listId={shoppingList.listId}
+                stretchWidth
+              />
+            )}
           </Suspense>
         </ProductsGridDesktopContainer>
 
@@ -184,6 +164,69 @@ const ShoppingListItems = ({
         okText="Confirm"
       />
     </>
+  );
+};
+
+const ProductCardsList = ({
+  type,
+  shoppingListItems,
+  token,
+  listId,
+  stretchWidth,
+}: {
+  readonly type: ComponentProps<typeof ProductsGridListContainer>["type"];
+  readonly shoppingListItems: ShoppingListItemsElement[];
+  readonly token: string;
+  readonly listId: string;
+  readonly stretchWidth?: ComponentProps<typeof ProductCard>["stretchWidth"];
+}) => {
+  const priceCheckQuery = useSuspensePriceCheck(
+    token,
+    shoppingListItems.map((product) => ({
+      productId: Number(product.productId),
+      qty: 1,
+    })),
+  );
+
+  const gtmProducts = shoppingListItems.map((product) => {
+    return {
+      productid: Number(product.productId),
+      cartid: 0,
+      quantity: 1,
+    };
+  });
+  const gtmItemInfoQuery = useGtmProducts(gtmProducts);
+  const gtmItemInfo = gtmItemInfoQuery.data;
+
+  return (
+    <ProductsGridListContainer type={type}>
+      {shoppingListItems.map((item) => {
+        const priceData = priceCheckQuery.data.productPrices.find(
+          (price) => Number(price.productId) === Number(item.productId),
+        );
+
+        if (!priceData) {
+          return null;
+        }
+
+        return (
+          <ProductCard
+            key={item.productId}
+            orientation={type === "mobile" ? "horizontal" : "vertical"}
+            product={item}
+            listId={listId}
+            stretchWidth={stretchWidth}
+            priceData={{
+              listPrice: priceData.listPrice,
+              price: priceData.price,
+              uomPrice: priceData.uomPrice,
+              uomPriceUnit: priceData.uomPriceUnit,
+            }}
+            gtmItemInfo={gtmItemInfo?.[0]}
+          />
+        );
+      })}
+    </ProductsGridListContainer>
   );
 };
 
