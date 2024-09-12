@@ -1,4 +1,4 @@
-import { getGtmProducts } from "@/_hooks/gtm/use-gtm-item-info.hook";
+import { getGtmProducts } from "@/_hooks/gtm/use-gtm-item-info";
 import { getGtmUser } from "@/_hooks/gtm/use-gtm-user.hook";
 import useCookies from "@/_hooks/storage/use-cookies.hook";
 import { api } from "@/_lib/api";
