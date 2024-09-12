@@ -737,7 +737,7 @@ const CartItem = ({
   const gtmUser = gtmItemUserQuery.data;
 
   const sendToGTMViewProduct = () => {
-    if (gtmItemInfo && gtmUser) {
+    if (gtmItemInfo) {
       sendGTMEvent({
         event: "select_item",
         item_list_name: GTM_ITEM_PAGE_TYPES.CART_PAGE,

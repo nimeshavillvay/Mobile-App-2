@@ -148,11 +148,11 @@ const ProductCard = ({
   const gtmUser = gtmItemUserQuery.data;
 
   const productTitleOrImageOnClick = () => {
-    const gtmItemInfo = product.gtmProduct.find(
+    const gtmItemInfo = product.gtmProduct?.find(
       (item) => Number(item?.productid) === productId,
     );
 
-    if (gtmItemInfo && gtmUser) {
+    if (gtmItemInfo) {
       sendGTMEvent({
         event: "select_item",
         item_list_name: getGTMItemListPage(
@@ -192,7 +192,7 @@ const ProductCard = ({
 
   const onSelectVariantChange = (id: string) => {
     setSelectedId(id);
-    const gtmItemInfo = product.gtmProduct.find(
+    const gtmItemInfo = product.gtmProduct?.find(
       (item) => item?.productid === id,
     );
     if (gtmItemInfo && gtmUser) {

@@ -92,7 +92,7 @@ const ProductCard = ({
   const gtmItemUserQuery = useGtmUser();
   const gtmUser = gtmItemUserQuery.data;
   const productTitleOrImageOnClick = () => {
-    if (gtmItemInfo && gtmUser) {
+    if (gtmItemInfo) {
       sendGTMEvent({
         event: "select_item",
         item_list_name: GTM_ITEM_PAGE_TYPES.SHOPPING_LIST,

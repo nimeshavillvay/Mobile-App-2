@@ -143,7 +143,7 @@ const PurchasedItemRow = ({
   const gtmUser = gtmItemUserQuery.data;
 
   const sendToGTM = () => {
-    if (gtmItemInfo && gtmUser) {
+    if (gtmItemInfo) {
       sendGTMEvent({
         event: "select_item",
         item_list_name: GTM_ITEM_PAGE_TYPES.PURCHASE_HISTORY,
