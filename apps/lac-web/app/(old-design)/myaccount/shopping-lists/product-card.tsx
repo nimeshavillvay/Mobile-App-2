@@ -37,7 +37,7 @@ type ProductProps = {
     uomPrice?: number;
     uomPriceUnit?: string;
   };
-  readonly gtmItemInfo: GtmProduct;
+  readonly gtmItemInfo: GtmProduct | undefined;
 };
 
 const ProductCard = ({

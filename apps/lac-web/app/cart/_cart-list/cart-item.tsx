@@ -122,7 +122,7 @@ type CartItemProps = {
   readonly cartConfiguration: CartConfiguration;
   readonly willCallPlant: { plantCode: string; plantName: string };
   readonly priceData: ItemPrice;
-  readonly gtmItemInfo: GtmProduct;
+  readonly gtmItemInfo: GtmProduct | undefined;
 };
 
 const CartItem = ({

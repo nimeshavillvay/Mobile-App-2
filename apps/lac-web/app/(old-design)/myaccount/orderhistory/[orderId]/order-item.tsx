@@ -53,7 +53,7 @@ type OrderItemProps = {
   readonly isDiscontinued: boolean;
   readonly getShippingMethodName: (shippingCode: string) => string;
   readonly getPlantName: (plantId: string) => string;
-  readonly gtmProductInfo: GtmProduct;
+  readonly gtmProductInfo: GtmProduct | undefined;
 };
 
 const OrderItem = ({

@@ -24,7 +24,7 @@ const OrderItemImageTitle = ({
   readonly productName?: string;
   readonly image?: string;
   readonly slug?: string;
-  readonly gtmItemInfo: GtmProduct;
+  readonly gtmItemInfo: GtmProduct | undefined;
 }) => {
   const pathnameHistory = usePathnameHistoryState(
     (state) => state.pathnameHistory,

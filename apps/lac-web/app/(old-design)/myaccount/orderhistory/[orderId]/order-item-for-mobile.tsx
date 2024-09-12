@@ -35,7 +35,7 @@ type OrderItemForMobileProps = {
   readonly isDiscontinued: boolean;
   readonly shippingMethods: ShippingMethod[];
   readonly plants: Plant[];
-  readonly gtmProductInfo: GtmProduct;
+  readonly gtmProductInfo: GtmProduct | undefined;
 };
 
 const OrderItemForMobile = ({

@@ -44,7 +44,7 @@ type PurchasedItemRowProps = {
   readonly item: DetailedPurchasedItem;
   readonly index: number;
   readonly prices: ComponentProps<typeof ItemPrices>["prices"];
-  readonly gtmItemInfo: GtmProduct;
+  readonly gtmItemInfo: GtmProduct | undefined;
 };
 
 const PurchasedItemRow = ({
