@@ -1,11 +1,10 @@
-import { getGtmProducts } from "@/_lib/apis/gtm-item-info";
 import {
   getOrderDetails,
   getPaymentMethods,
   getPlants,
   getShippingMethods,
 } from "@/_lib/apis/server";
-import { getItemInfo } from "@/_lib/apis/shared";
+import { getGtmProducts, getItemInfo } from "@/_lib/apis/shared";
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import { formatNumberToPrice } from "@/_lib/utils";
 import AlertInline from "@/old/_components/alert-inline";

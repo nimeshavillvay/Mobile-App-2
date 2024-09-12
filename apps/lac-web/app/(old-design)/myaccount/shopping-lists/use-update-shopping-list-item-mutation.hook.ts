@@ -2,7 +2,7 @@ import { getGtmUser } from "@/_hooks/gtm/use-gtm-user.hook";
 import usePathnameHistoryState from "@/_hooks/misc/use-pathname-history-state.hook";
 import useCookies from "@/_hooks/storage/use-cookies.hook";
 import { api } from "@/_lib/api";
-import { getGtmProducts } from "@/_lib/apis/gtm-item-info";
+import { getGtmProducts } from "@/_lib/apis/shared";
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import { getGTMPageType } from "@/_lib/gtm-utils";
 import { sendGTMEvent } from "@next/third-parties/google";

@@ -1,7 +1,7 @@
 import { getGtmUser } from "@/_hooks/gtm/use-gtm-user.hook";
 import useCookies from "@/_hooks/storage/use-cookies.hook";
 import { api } from "@/_lib/api";
-import { getGtmProducts } from "@/_lib/apis/gtm-item-info";
+import { getGtmProducts } from "@/_lib/apis/shared";
 import { GTM_PAGE_TYPE_OTHER, SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import { useToast } from "@/old/_components/ui/use-toast";
 import { sendGTMEvent } from "@next/third-parties/google";

@@ -1,10 +1,11 @@
 import useCookies from "@/_hooks/storage/use-cookies.hook";
-import type { Product } from "@/_lib/apis/gtm-item-info";
-import { getGtmProducts } from "@/_lib/apis/gtm-item-info";
+import { getGtmProducts } from "@/_lib/apis/shared";
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import { useQuery } from "@tanstack/react-query";
 
-const useGtmProducts = (productIdList: Product) => {
+const useGtmProducts = (
+  productIdList: Parameters<typeof getGtmProducts>[0],
+) => {
   const [cookies] = useCookies();
   const token = cookies[SESSION_TOKEN_COOKIE];
 

@@ -1,5 +1,5 @@
 import { ProductsGridList } from "@/_components/products-grid";
-import { getGtmProducts } from "@/_lib/apis/gtm-item-info";
+import { getGtmProducts } from "@/_lib/apis/shared";
 import { cn, getBoolean } from "@/_lib/utils";
 import { type ComponentProps } from "react";
 import { getSearchResults } from "./apis";
