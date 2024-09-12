@@ -387,6 +387,23 @@ export type Product = {
   groupName: string;
   groupImage: string;
   variants: ProductVariant[];
+  gtmProduct: GtmProduct[];
+};
+
+export type GtmProduct = {
+  productid: string;
+  cartid: number;
+  item_id: string;
+  item_sku: string;
+  item_name: string;
+  price: string;
+  item_brand: string;
+  item_variant: string;
+  item_categoryid: string;
+  coupon: string;
+  coupon_discount: string;
+  item_primarycategory: string;
+  item_category_path: string[];
 };
 
 export type Token = string;

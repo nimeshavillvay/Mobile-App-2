@@ -1,6 +1,7 @@
 "use client";
 
 import ProductCard from "@/_components/product-card";
+import useGtmProducts from "@/_hooks/gtm/use-gtm-item-info.hook";
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import type { MappedFeaturedProduct } from "./type";
 
@@ -17,6 +18,16 @@ const FlashSaleList = ({ token, products }: FlashSaleListProps) => {
       qty: 1,
     })),
   );
+
+  const gtmProducts = priceCheckQuery.data.productPrices.map((product) => {
+    return {
+      productid: product.productId,
+      cartid: 0,
+      quantity: 1,
+    };
+  });
+  const gtmItemInfoQuery = useGtmProducts(gtmProducts);
+  const gtmItemInfo = gtmItemInfoQuery.data;
 
   return products.map((product) => {
     const priceData = priceCheckQuery.data.productPrices.find(
@@ -46,6 +57,7 @@ const FlashSaleList = ({ token, products }: FlashSaleListProps) => {
               isNewItem: product.isNewItem,
             },
           ],
+          gtmProduct: gtmItemInfo ?? [],
         }}
         prices={[
           {
