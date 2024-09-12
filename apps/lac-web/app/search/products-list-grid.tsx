@@ -24,9 +24,9 @@ const ProductListGrid = async ({
 
   let products: ComponentProps<typeof ProductsGridList>["products"] = [];
 
-  const productIds = products.flatMap((product) =>
-    product.prop.variants.map((variant) => Number(variant.id)),
-  );
+  const productIds = Array.isArray(searchResults.results)
+    ? searchResults.results.map((result) => Number(result.id))
+    : [];
 
   const gtmProducts = productIds.map((productId) => {
     return {
