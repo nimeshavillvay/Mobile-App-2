@@ -21,13 +21,15 @@ const FeaturedBrandList = ({ token, groups }: FeaturedBrandListProps) => {
       })),
   );
 
-  const gtmProducts = priceCheckQuery.data.productPrices.map((product) => {
-    return {
-      productid: Number(product.productId),
-      cartid: 0,
-      quantity: 1,
-    };
-  });
+  const gtmProducts = groups
+    .flatMap((group) => group.itemSkuList)
+    .map((product) => {
+      return {
+        productid: Number(product.productId),
+        cartid: 0,
+        quantity: 1,
+      };
+    });
   const gtmItemInfoQuery = useGtmProducts(gtmProducts);
   const gtmItemInfo = gtmItemInfoQuery.data;
 

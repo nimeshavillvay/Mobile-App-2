@@ -19,7 +19,7 @@ const FlashSaleList = ({ token, products }: FlashSaleListProps) => {
     })),
   );
 
-  const gtmProducts = priceCheckQuery.data.productPrices.map((product) => {
+  const gtmProducts = products.map((product) => {
     return {
       productid: Number(product.productId),
       cartid: 0,

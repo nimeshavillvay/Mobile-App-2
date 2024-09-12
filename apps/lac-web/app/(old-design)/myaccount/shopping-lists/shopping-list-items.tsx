@@ -188,7 +188,7 @@ const ProductCardsList = ({
     })),
   );
 
-  const gtmProducts = priceCheckQuery.data.productPrices.map((product) => {
+  const gtmProducts = shoppingListItems.map((product) => {
     return {
       productid: Number(product.productId),
       cartid: 0,

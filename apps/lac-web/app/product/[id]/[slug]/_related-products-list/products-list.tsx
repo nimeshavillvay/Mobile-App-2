@@ -20,9 +20,9 @@ const ProductsList = ({ token, products }: ProductsListProps) => {
     })),
   );
 
-  const gtmProducts = priceCheckQuery.data.productPrices.map((product) => {
+  const gtmProducts = products.map((product) => {
     return {
-      productid: Number(product.productId),
+      productid: Number(product.productid),
       cartid: 0,
       quantity: 1,
     };
