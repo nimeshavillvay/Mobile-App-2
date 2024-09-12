@@ -327,7 +327,10 @@ const CartListItems = ({
             plants={plants}
             cartConfiguration={data.configuration}
             willCallPlant={willCallPlantQuery?.data}
-            priceData={priceData}
+            priceData={{
+              ...priceData,
+              productId: Number(priceData.productId),
+            }}
           />
         </CartItemQuantityProvider>
       </li>

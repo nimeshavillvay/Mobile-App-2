@@ -1,9 +1,10 @@
 import { Button } from "@/(old-design)/_components/ui/button";
 import WurthLacLogo from "@/_components/wurth-lac-logo";
+import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import dayjs from "dayjs";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { Suspense, useState, type ComponentProps } from "react";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { generateItemUrl } from "./client-helpers";
 import { DATE_FORMAT } from "./constants";
@@ -22,29 +23,79 @@ const PurchasedItemsListForMobile = ({
   const [selectedItem, setSelectedItem] = useState<DetailedPurchasedItem>();
   const [showDetailedView, setShowDetailedView] = useState(false);
 
+  const initialPriceCheckQuery = useSuspensePriceCheck(
+    token,
+    items.map((item) => ({
+      productId: item.productId,
+      qty: 1,
+    })),
+  );
+  const priceCheckQuery = useSuspensePriceCheck(
+    token,
+    items.map((item) => ({
+      productId: item.productId,
+      qty: item.minimumOrderQuantity,
+    })),
+  );
+
+  const prices: ComponentProps<
+    typeof PurchasedItemDetailedViewDialog
+  >["prices"] = [];
+
+  if (selectedItem) {
+    const initialPrice = initialPriceCheckQuery.data.productPrices.find(
+      (price) => Number(price.productId) === selectedItem.productId,
+    );
+    if (initialPrice) {
+      prices.push({
+        price: initialPrice.price,
+        priceBreakDowns: initialPrice.priceBreakDowns,
+        priceUnit: initialPrice.priceUnit,
+        quantity: 1,
+        uomPrice: initialPrice.uomPrice,
+        uomPriceUnit: initialPrice.uomPriceUnit,
+      });
+    }
+
+    const price = priceCheckQuery.data.productPrices.find(
+      (price) => Number(price.productId) === selectedItem.productId,
+    );
+    if (price) {
+      prices.push({
+        price: price.price,
+        priceBreakDowns: price.priceBreakDowns,
+        priceUnit: price.priceUnit,
+        quantity: selectedItem.minimumOrderQuantity,
+        uomPrice: price.uomPrice,
+        uomPriceUnit: price.uomPriceUnit,
+      });
+    }
+  }
+
   return (
     <>
       <div className="grid grid-cols-1 gap-4 bg-brand-gray-200 py-4 md:hidden">
-        {items &&
-          items.length > 0 &&
-          items.map((item, index) => (
-            <PurchasedItemRowForMobile
-              key={`${item.productId}_${index}`}
-              item={item}
-              onClick={() => {
-                setSelectedItem(item);
-                setShowDetailedView(!showDetailedView);
-              }}
-            />
-          ))}
+        {items.map((item, index) => (
+          <PurchasedItemRowForMobile
+            key={`${item.productId}_${index}`}
+            item={item}
+            onClick={() => {
+              setSelectedItem(item);
+              setShowDetailedView(!showDetailedView);
+            }}
+          />
+        ))}
       </div>
       {selectedItem && (
-        <PurchasedItemDetailedViewDialog
-          open={showDetailedView}
-          onOpenChange={setShowDetailedView}
-          item={selectedItem}
-          token={token}
-        />
+        <Suspense>
+          <PurchasedItemDetailedViewDialog
+            open={showDetailedView}
+            onOpenChange={setShowDetailedView}
+            item={selectedItem}
+            token={token}
+            prices={prices}
+          />
+        </Suspense>
       )}
     </>
   );

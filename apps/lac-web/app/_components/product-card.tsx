@@ -40,7 +40,7 @@ type ProductProps = {
   readonly stretchWidth?: boolean;
   readonly prices: Array<
     Readonly<{
-      productId: number;
+      productId: string;
       listPrice: number;
       price: number;
       uomPrice?: number;
