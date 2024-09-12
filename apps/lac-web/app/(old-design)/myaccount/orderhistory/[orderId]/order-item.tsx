@@ -1,3 +1,4 @@
+import type { GtmProduct } from "@/_lib/types";
 import { cn, formatNumberToPrice } from "@/_lib/utils";
 import AlertInline from "@/old/_components/alert-inline";
 import {
@@ -52,6 +53,7 @@ type OrderItemProps = {
   readonly isDiscontinued: boolean;
   readonly getShippingMethodName: (shippingCode: string) => string;
   readonly getPlantName: (plantId: string) => string;
+  readonly gtmProductInfo: GtmProduct | undefined;
 };
 
 const OrderItem = ({
@@ -60,6 +62,7 @@ const OrderItem = ({
   isDiscontinued,
   getShippingMethodName,
   getPlantName,
+  gtmProductInfo,
 }: OrderItemProps) => {
   const {
     productId,
@@ -94,6 +97,7 @@ const OrderItem = ({
               productName={productName}
               image={image}
               slug={slug}
+              gtmItemInfo={gtmProductInfo}
             />
           </div>
           <div className="flex flex-col">

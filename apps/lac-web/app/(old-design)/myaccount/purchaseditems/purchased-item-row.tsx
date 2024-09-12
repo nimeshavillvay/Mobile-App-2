@@ -2,7 +2,6 @@ import ProductNotAvailable from "@/_components/product-not-available";
 import Warning from "@/_components/warning";
 import WurthLacLogo from "@/_components/wurth-lac-logo";
 import useAddToCartMutation from "@/_hooks/cart/use-add-to-cart-mutation.hook";
-import useGtmProducts from "@/_hooks/gtm/use-gtm-item-info.hook";
 import useGtmUser from "@/_hooks/gtm/use-gtm-user.hook";
 import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
 import usePathnameHistoryState from "@/_hooks/misc/use-pathname-history-state.hook";
@@ -10,6 +9,7 @@ import useItemInfo from "@/_hooks/product/use-item-info.hook";
 import useSuspenseProductExcluded from "@/_hooks/product/use-suspense-product-excluded.hook";
 import { GTM_ITEM_PAGE_TYPES } from "@/_lib/constants";
 import { getGTMPageType } from "@/_lib/gtm-utils";
+import type { GtmProduct } from "@/_lib/types";
 import { cn } from "@/_lib/utils";
 import ErrorBoundary from "@/old/_components/error-boundary";
 import { Button } from "@/old/_components/ui/button";
@@ -44,6 +44,7 @@ type PurchasedItemRowProps = {
   readonly item: DetailedPurchasedItem;
   readonly index: number;
   readonly prices: ComponentProps<typeof ItemPrices>["prices"];
+  readonly gtmItemInfo: GtmProduct | undefined;
 };
 
 const PurchasedItemRow = ({
@@ -51,6 +52,7 @@ const PurchasedItemRow = ({
   item,
   index,
   prices,
+  gtmItemInfo,
 }: PurchasedItemRowProps) => {
   const [showItemAttributes, setShowItemAttributes] = useState(false);
   const [showMyPrice, setShowMyPrice] = useState(false);
@@ -137,16 +139,11 @@ const PurchasedItemRow = ({
     (state) => state.pathnameHistory,
   );
 
-  const gtmItemInfoQuery = useGtmProducts(
-    item.productId ? [{ productid: item.productId, cartid: 0 }] : [],
-  );
-  const gtmItemInfo = gtmItemInfoQuery.data?.[0];
-
   const gtmItemUserQuery = useGtmUser();
   const gtmUser = gtmItemUserQuery.data;
 
   const sendToGTM = () => {
-    if (gtmItemInfo && gtmUser) {
+    if (gtmItemInfo) {
       sendGTMEvent({
         event: "select_item",
         item_list_name: GTM_ITEM_PAGE_TYPES.PURCHASE_HISTORY,

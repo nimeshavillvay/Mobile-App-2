@@ -4,7 +4,7 @@ import {
   getPlants,
   getShippingMethods,
 } from "@/_lib/apis/server";
-import { getItemInfo } from "@/_lib/apis/shared";
+import { getGtmProducts, getItemInfo } from "@/_lib/apis/shared";
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import { formatNumberToPrice } from "@/_lib/utils";
 import AlertInline from "@/old/_components/alert-inline";
@@ -67,12 +67,20 @@ const DetailedOrderPage = async ({
     return <h3>No valid products found</h3>;
   }
 
-  const [paymentMethods, shippingMethods, plants, itemsInfo] =
+  const gtmProducts = itemList.map((productId) => {
+    return {
+      productid: productId,
+      cartid: 0,
+    };
+  });
+
+  const [paymentMethods, shippingMethods, plants, itemsInfo, gtmProductInfo] =
     await Promise.all([
       getPaymentMethods(),
       getShippingMethods(),
       getPlants(sessionToken?.value),
       getItemInfo(itemList),
+      getGtmProducts(gtmProducts, sessionToken?.value),
     ]);
 
   if (orderDetail?.items?.length) {
@@ -310,6 +318,9 @@ const DetailedOrderPage = async ({
                 }
                 getShippingMethodName={getShippingMethodName}
                 getPlantName={getPlantName}
+                gtmProductInfo={gtmProductInfo.find(
+                  (product) => Number(product.productid) === item.productId,
+                )}
               />
             ))}
         </div>
@@ -335,6 +346,9 @@ const DetailedOrderPage = async ({
               }
               shippingMethods={shippingMethods}
               plants={plants}
+              gtmProductInfo={gtmProductInfo.find(
+                (product) => Number(product.productid) === item.productId,
+              )}
             />
           ))}
       </div>

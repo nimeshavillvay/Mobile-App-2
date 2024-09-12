@@ -1,6 +1,7 @@
 "use client";
 
 import ProductCard from "@/_components/product-card";
+import useGtmProducts from "@/_hooks/gtm/use-gtm-item-info.hook";
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import { getBoolean } from "@/_lib/utils";
 import type { RelatedProduct } from "../types";
@@ -18,6 +19,16 @@ const ProductsList = ({ token, products }: ProductsListProps) => {
       qty: 1,
     })),
   );
+
+  const gtmProducts = products.map((product) => {
+    return {
+      productid: Number(product.productid),
+      cartid: 0,
+      quantity: 1,
+    };
+  });
+  const gtmItemInfoQuery = useGtmProducts(gtmProducts);
+  const gtmItemInfo = gtmItemInfoQuery.data;
 
   return products.map((item) => {
     const priceData = priceCheckQuery.data.productPrices.find(
@@ -46,6 +57,7 @@ const ProductsList = ({ token, products }: ProductsListProps) => {
               isNewItem: getBoolean(item.is_new),
             },
           ],
+          gtmProduct: gtmItemInfo ?? [],
         }}
         token={token}
         orientation="horizontal"

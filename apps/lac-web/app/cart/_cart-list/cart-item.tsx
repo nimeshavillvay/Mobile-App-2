@@ -2,7 +2,6 @@ import NumberInputField from "@/_components/number-input-field";
 import WurthLacLogo from "@/_components/wurth-lac-logo";
 import useDeleteCartItemMutation from "@/_hooks/cart/use-delete-cart-item-mutation.hook";
 import useUpdateCartItemMutation from "@/_hooks/cart/use-update-cart-item-mutation.hook";
-import useGtmProducts from "@/_hooks/gtm/use-gtm-item-info.hook";
 import useGtmUser from "@/_hooks/gtm/use-gtm-user.hook";
 import useDebouncedState from "@/_hooks/misc/use-debounced-state.hook";
 import usePathnameHistoryState from "@/_hooks/misc/use-pathname-history-state.hook";
@@ -19,6 +18,7 @@ import { getGTMPageType } from "@/_lib/gtm-utils";
 import type {
   CartConfiguration,
   CartItemConfiguration,
+  GtmProduct,
   ItemPrice,
   Plant,
   Token,
@@ -122,6 +122,7 @@ type CartItemProps = {
   readonly cartConfiguration: CartConfiguration;
   readonly willCallPlant: { plantCode: string; plantName: string };
   readonly priceData: ItemPrice;
+  readonly gtmItemInfo: GtmProduct | undefined;
 };
 
 const CartItem = ({
@@ -131,6 +132,7 @@ const CartItem = ({
   cartConfiguration,
   willCallPlant,
   priceData,
+  gtmItemInfo,
 }: CartItemProps) => {
   const id = useId();
   const poId = `po-${id}`;
@@ -731,16 +733,11 @@ const CartItem = ({
     (state) => state.pathnameHistory,
   );
 
-  const gtmItemInfoQuery = useGtmProducts(
-    product.id ? [{ productid: product.id, cartid: 0 }] : [],
-  );
-  const gtmItemInfo = gtmItemInfoQuery.data?.[0];
-
   const gtmItemUserQuery = useGtmUser();
   const gtmUser = gtmItemUserQuery.data;
 
   const sendToGTMViewProduct = () => {
-    if (gtmItemInfo && gtmUser) {
+    if (gtmItemInfo) {
       sendGTMEvent({
         event: "select_item",
         item_list_name: GTM_ITEM_PAGE_TYPES.CART_PAGE,

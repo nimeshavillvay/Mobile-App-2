@@ -118,7 +118,7 @@ const VerificationDialog = ({ token }: VerificationDialogProps) => {
 
   const sendToGTM = () => {
     setOpen("closed");
-    if (gtmItemInfo && gtmUser) {
+    if (gtmItemInfo) {
       sendGTMEvent({
         event: "select_item",
         item_list_name: getGTMItemListPage(

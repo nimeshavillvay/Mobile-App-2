@@ -2,6 +2,7 @@
 
 import ProductCard from "@/_components/product-card";
 import ProductCardSkeleton from "@/_components/product-card-skeleton";
+import useGtmProducts from "@/_hooks/gtm/use-gtm-item-info.hook";
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import { cn } from "@/_lib/utils";
 import { type ComponentProps, type ReactNode } from "react";
@@ -57,6 +58,18 @@ export const ProductsGridList = ({
       })),
   );
 
+  const gtmProducts = products
+    .flatMap((product) => product.prop.variants)
+    .map((product) => {
+      return {
+        productid: Number(product.id),
+        cartid: 0,
+        quantity: 1,
+      };
+    });
+  const gtmItemInfoQuery = useGtmProducts(gtmProducts);
+  const gtmItemInfo = gtmItemInfoQuery.data;
+
   return (
     <ProductsGridListContainer type={type} className={className}>
       {products.map(({ prop, info }) => {
@@ -66,11 +79,16 @@ export const ProductsGridList = ({
           productIds.includes(price.productId.toString()),
         );
 
+        const productProps = {
+          ...prop,
+          gtmItemInfo,
+        };
+
         return (
           <ProductCard
             key={info.groupId}
             orientation={orientation}
-            product={prop}
+            product={productProps}
             token={token}
             stretchWidth={orientation === "vertical"}
             prices={prices.map((price) => ({

@@ -22,7 +22,7 @@ const ProductPageGtm = ({ productId }: { readonly productId: string }) => {
   const gtmUser = gtmItemUserQuery.data;
 
   useEffect(() => {
-    if (gtmItemInfo !== undefined && gtmUser !== undefined) {
+    if (gtmItemInfo !== undefined) {
       sendGTMEvent({
         event: "view_item",
         viewItemData: {

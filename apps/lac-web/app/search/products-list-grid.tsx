@@ -1,4 +1,5 @@
 import { ProductsGridList } from "@/_components/products-grid";
+import { getGtmProducts } from "@/_lib/apis/shared";
 import { cn, getBoolean } from "@/_lib/utils";
 import { type ComponentProps } from "react";
 import { getSearchResults } from "./apis";
@@ -23,6 +24,20 @@ const ProductListGrid = async ({
 
   let products: ComponentProps<typeof ProductsGridList>["products"] = [];
 
+  const productIds = products.flatMap((product) =>
+    product.prop.variants.map((variant) => Number(variant.id)),
+  );
+
+  const gtmProducts = productIds.map((productId) => {
+    return {
+      productid: productId,
+      cartid: 0,
+      quantity: 1,
+    };
+  });
+
+  const gtmItemInfo = await getGtmProducts(gtmProducts, token);
+
   if (Array.isArray(searchResults.results)) {
     products = searchResults.results.map((product) => ({
       prop: {
@@ -40,6 +55,7 @@ const ProductListGrid = async ({
             isNewItem: getBoolean(product.is_new),
           },
         ],
+        gtmProduct: gtmItemInfo ?? [],
       },
       info: {
         groupId: product.id,

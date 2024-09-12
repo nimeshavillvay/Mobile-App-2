@@ -1,12 +1,12 @@
 "use client";
 
 import SaleBadges from "@/_components/sale-badges";
-import useGtmProducts from "@/_hooks/gtm/use-gtm-item-info.hook";
 import useGtmUser from "@/_hooks/gtm/use-gtm-user.hook";
 import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
 import usePathnameHistoryState from "@/_hooks/misc/use-pathname-history-state.hook";
 import { GTM_ITEM_PAGE_TYPES } from "@/_lib/constants";
 import { getGTMPageType } from "@/_lib/gtm-utils";
+import type { GtmProduct } from "@/_lib/types";
 import { cn, getBoolean } from "@/_lib/utils";
 import { sendGTMEvent } from "@next/third-parties/google";
 import {
@@ -37,6 +37,7 @@ type ProductProps = {
     uomPrice?: number;
     uomPriceUnit?: string;
   };
+  readonly gtmItemInfo: GtmProduct | undefined;
 };
 
 const ProductCard = ({
@@ -45,6 +46,7 @@ const ProductCard = ({
   listId,
   stretchWidth = false,
   priceData,
+  gtmItemInfo,
 }: ProductProps) => {
   const id = product.productId;
   const title = product.itemName;
@@ -87,16 +89,10 @@ const ProductCard = ({
     (state) => state.pathnameHistory,
   );
 
-  const gtmItemInfoQuery = useGtmProducts(
-    id ? [{ productid: Number(id), cartid: 0 }] : [],
-  );
-  const gtmItemInfo = gtmItemInfoQuery.data?.[0];
-
   const gtmItemUserQuery = useGtmUser();
   const gtmUser = gtmItemUserQuery.data;
-
   const productTitleOrImageOnClick = () => {
-    if (gtmItemInfo && gtmUser) {
+    if (gtmItemInfo) {
       sendGTMEvent({
         event: "select_item",
         item_list_name: GTM_ITEM_PAGE_TYPES.SHOPPING_LIST,

@@ -1,6 +1,5 @@
 "use client";
 
-import useGtmProducts from "@/_hooks/gtm/use-gtm-item-info.hook";
 import useGtmUser from "@/_hooks/gtm/use-gtm-user.hook";
 import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
 import usePathnameHistoryState from "@/_hooks/misc/use-pathname-history-state.hook";
@@ -134,6 +133,8 @@ const ProductCard = ({
     (state) => state.actions,
   );
 
+  const productId = useAddToCartDialog((state) => state.productId);
+
   const addToCart = () => {
     setProductId(parseInt(id));
     setOpen("verification");
@@ -143,18 +144,15 @@ const ProductCard = ({
     (state) => state.pathnameHistory,
   );
 
-  const gtmItemInfoQuery = useGtmProducts(
-    deferredSelectedId
-      ? [{ productid: Number(deferredSelectedId), cartid: 0 }]
-      : [],
-  );
-  const gtmItemInfo = gtmItemInfoQuery.data?.[0];
-
   const gtmItemUserQuery = useGtmUser();
   const gtmUser = gtmItemUserQuery.data;
 
   const productTitleOrImageOnClick = () => {
-    if (gtmItemInfo && gtmUser) {
+    const gtmItemInfo = product.gtmProduct?.find(
+      (item) => Number(item?.productid) === productId,
+    );
+
+    if (gtmItemInfo) {
       sendGTMEvent({
         event: "select_item",
         item_list_name: getGTMItemListPage(
@@ -194,6 +192,9 @@ const ProductCard = ({
 
   const onSelectVariantChange = (id: string) => {
     setSelectedId(id);
+    const gtmItemInfo = product.gtmProduct?.find(
+      (item) => item?.productid === id,
+    );
     if (gtmItemInfo && gtmUser) {
       sendGTMEvent({
         event: "view_item_variant",

@@ -131,7 +131,7 @@ const CartSummary = ({ token, plants }: CartSummaryProps) => {
   useEffect(() => {
     const gtmItemsInfo = gtmItemInfoQuery.data;
     const gtmUser = gtmItemUserQuery.data;
-    if (gtmItemsInfo !== undefined && gtmUser !== undefined) {
+    if (gtmItemsInfo !== undefined) {
       gtmItemsInfo?.forEach((gtmItemInfo) => {
         sendGTMEvent({
           event: "begin_checkout",

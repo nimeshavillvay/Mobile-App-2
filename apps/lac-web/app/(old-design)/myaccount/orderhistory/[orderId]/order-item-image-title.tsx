@@ -1,11 +1,11 @@
 "use client";
 
 import WurthLacLogo from "@/_components/wurth-lac-logo";
-import useGtmProducts from "@/_hooks/gtm/use-gtm-item-info.hook";
 import useGtmUser from "@/_hooks/gtm/use-gtm-user.hook";
 import usePathnameHistoryState from "@/_hooks/misc/use-pathname-history-state.hook";
 import { GTM_ITEM_PAGE_TYPES } from "@/_lib/constants";
 import { getGTMPageType } from "@/_lib/gtm-utils";
+import type { GtmProduct } from "@/_lib/types";
 import { cn } from "@/_lib/utils";
 import { sendGTMEvent } from "@next/third-parties/google";
 import Image from "next/image";
@@ -17,27 +17,24 @@ const OrderItemImageTitle = ({
   productName,
   slug,
   image,
+  gtmItemInfo,
 }: {
   readonly productId: number;
   readonly itemDescription: string;
   readonly productName?: string;
   readonly image?: string;
   readonly slug?: string;
+  readonly gtmItemInfo: GtmProduct | undefined;
 }) => {
   const pathnameHistory = usePathnameHistoryState(
     (state) => state.pathnameHistory,
   );
 
-  const gtmItemInfoQuery = useGtmProducts(
-    productId ? [{ productid: productId, cartid: 0 }] : [],
-  );
-  const gtmItemInfo = gtmItemInfoQuery.data?.[0];
-
   const gtmItemUserQuery = useGtmUser();
   const gtmUser = gtmItemUserQuery.data;
 
   const sendToGTM = () => {
-    if (gtmItemInfo && gtmUser) {
+    if (gtmItemInfo) {
       sendGTMEvent({
         event: "select_item",
         item_list_name: GTM_ITEM_PAGE_TYPES.ORDER_HISTORY,

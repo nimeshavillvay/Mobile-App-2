@@ -1,5 +1,6 @@
 import { SPECIAL_SHIPPING_FLAG } from "@/_lib/constants";
 import { getBoolean } from "@/_lib/utils";
+import { z } from "zod";
 import { api } from "../api";
 import type {
   AvailabilityParameters,
@@ -98,4 +99,43 @@ export const shippingMethods = async (token?: string, isForCart?: boolean) => {
       cache: "no-cache",
     })
     .json<ShippingMethod[]>();
+};
+
+const productListSchema = z.array(
+  z.object({
+    productid: z.string(),
+    cartid: z.number(),
+    item_id: z.string(),
+    item_sku: z.string(),
+    item_name: z.string(),
+    price: z.string(),
+    item_brand: z.string(),
+    item_variant: z.string(),
+    item_categoryid: z.string(),
+    coupon: z.string(),
+    coupon_discount: z.string(),
+    item_primarycategory: z.string(),
+    item_category_path: z.array(z.string()),
+  }),
+);
+
+export const getGtmProducts = async (
+  productIdList: {
+    productid: number;
+    cartid: number | null | undefined;
+  }[],
+  token: string,
+) => {
+  const response = await api
+    .post("rest/gtm/products", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      json: {
+        products: productIdList,
+      },
+    })
+    .json();
+
+  return productListSchema.parse(response);
 };

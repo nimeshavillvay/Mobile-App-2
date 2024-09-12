@@ -1,5 +1,6 @@
 "use client";
 
+import useGtmProducts from "@/_hooks/gtm/use-gtm-item-info.hook";
 import useItemInfo from "@/_hooks/product/use-item-info.hook";
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import useSuspenseFilters from "@/_hooks/search/use-suspense-filters.hook";
@@ -346,6 +347,17 @@ const PurchasedItemRows = ({
     }
   });
 
+  const gtmProducts = products.map((product) => {
+    return {
+      productid: product.productId,
+      cartid: 0,
+      quantity: 1,
+    };
+  });
+
+  const gtmItemInfoQuery = useGtmProducts(gtmProducts);
+  const gtmItemInfo = gtmItemInfoQuery.data;
+
   const initialPriceCheckQuery = useSuspensePriceCheck(
     token,
     detailedPurchasedItems.map((item) => ({
@@ -399,6 +411,9 @@ const PurchasedItemRows = ({
         index={index}
         item={item}
         prices={prices}
+        gtmItemInfo={gtmItemInfo?.find(
+          (product) => Number(product.productid) === item.productId,
+        )}
       />
     );
   });

@@ -9,7 +9,7 @@ import useGtmUser from "@/_hooks/gtm/use-gtm-user.hook";
 import usePathnameHistoryState from "@/_hooks/misc/use-pathname-history-state.hook";
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import { getGTMPageType } from "@/_lib/gtm-utils";
-import type { Plant } from "@/_lib/types";
+import type { GtmProduct, Plant } from "@/_lib/types";
 import { sendGTMEvent } from "@next/third-parties/google";
 import { Alert as AlertIcon } from "@repo/web-ui/components/icons/alert";
 import { Close } from "@repo/web-ui/components/icons/close";
@@ -214,7 +214,11 @@ const CartList = ({ token, plants }: CartListProps) => {
 
       <ul className="flex flex-col gap-2.5">
         {data.cartItems.length > 0 && (
-          <CartListItems token={token} plants={plants} />
+          <CartListItems
+            token={token}
+            plants={plants}
+            gtmItemsInfo={gtmItemsInfo}
+          />
         )}
 
         <div className="flex w-full justify-end gap-4 px-4 md:px-0">
@@ -267,9 +271,11 @@ export default CartList;
 const CartListItems = ({
   token,
   plants,
+  gtmItemsInfo,
 }: {
   token: string;
   readonly plants: Plant[];
+  readonly gtmItemsInfo: GtmProduct[] | undefined;
 }) => {
   // TODO Delete this hook after refactoring the entire cart item section
   const cartItemKey = useCartPageStore((state) => state.cartItemKey);
@@ -331,6 +337,10 @@ const CartListItems = ({
               ...priceData,
               productId: Number(priceData.productId),
             }}
+            gtmItemInfo={gtmItemsInfo?.find(
+              (product) =>
+                Number(product?.productid) === item.itemInfo.productId,
+            )}
           />
         </CartItemQuantityProvider>
       </li>
