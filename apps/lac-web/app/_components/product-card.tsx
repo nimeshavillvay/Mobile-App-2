@@ -149,7 +149,7 @@ const ProductCard = ({
 
   const productTitleOrImageOnClick = () => {
     const gtmItemInfo = product.gtmProduct.find(
-      (item) => Number(item.productid) === productId,
+      (item) => Number(item?.productid) === productId,
     );
 
     if (gtmItemInfo && gtmUser) {
@@ -193,7 +193,7 @@ const ProductCard = ({
   const onSelectVariantChange = (id: string) => {
     setSelectedId(id);
     const gtmItemInfo = product.gtmProduct.find(
-      (item) => item.productid === id,
+      (item) => item?.productid === id,
     );
     if (gtmItemInfo && gtmUser) {
       sendGTMEvent({

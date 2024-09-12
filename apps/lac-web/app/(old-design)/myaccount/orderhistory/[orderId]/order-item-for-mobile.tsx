@@ -1,4 +1,4 @@
-import type { Plant, ShippingMethod } from "@/_lib/types";
+import type { GtmProduct, Plant, ShippingMethod } from "@/_lib/types";
 import { formatNumberToPrice } from "@/_lib/utils";
 import MoreItemDetailsForMobile from "./more-item-details-for-mobile";
 import OrderItemImageTitle from "./order-item-image-title";
@@ -35,6 +35,7 @@ type OrderItemForMobileProps = {
   readonly isDiscontinued: boolean;
   readonly shippingMethods: ShippingMethod[];
   readonly plants: Plant[];
+  readonly gtmProductInfo: GtmProduct;
 };
 
 const OrderItemForMobile = ({
@@ -42,6 +43,7 @@ const OrderItemForMobile = ({
   isDiscontinued,
   shippingMethods,
   plants,
+  gtmProductInfo,
 }: OrderItemForMobileProps) => {
   const {
     productId,
@@ -69,6 +71,7 @@ const OrderItemForMobile = ({
               productName={productName}
               image={image}
               slug={slug}
+              gtmItemInfo={gtmProductInfo}
             />
           </div>
 
