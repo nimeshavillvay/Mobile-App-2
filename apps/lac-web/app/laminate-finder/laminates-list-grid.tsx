@@ -1,5 +1,6 @@
 "use client";
 
+import useGtmProducts from "@/_hooks/gtm/use-gtm-item-info.hook";
 import useSuspenseLaminateFilters from "@/_hooks/laminate/use-suspense-laminate-filters.hook";
 import useSuspenseSearchLaminateList from "@/_hooks/laminate/use-suspense-search-laminate-list.hook";
 import { Suspense, type ComponentProps } from "react";
@@ -21,6 +22,20 @@ const LaminateListGrid = ({ token }: LaminateListGridProps) => {
     categoryFiltersQuery.data,
   );
 
+  const productIds = data.groupList.flatMap((group) =>
+    group.productSkuList.map((variant) => Number(variant.productId)),
+  );
+
+  const gtmProducts = productIds.map((productId) => {
+    return {
+      productid: productId,
+      cartid: 0,
+      quantity: 1,
+    };
+  });
+  const gtmItemInfoQuery = useGtmProducts(gtmProducts);
+  const gtmItemInfo = gtmItemInfoQuery.data;
+
   const products: ComponentProps<typeof LaminatesGridList>["products"] =
     data.groupList.map((product) => ({
       prop: {
@@ -37,6 +52,7 @@ const LaminateListGrid = ({ token }: LaminateListGridProps) => {
           isNewItem: variant.isNewItem,
           isExcludedProduct: variant.isExcludedProduct,
         })),
+        gtmProduct: gtmItemInfo ?? [],
       },
       info: {
         groupId: product.groupId,

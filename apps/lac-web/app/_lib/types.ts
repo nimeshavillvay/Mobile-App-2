@@ -387,7 +387,7 @@ export type Product = {
   groupName: string;
   groupImage: string;
   variants: ProductVariant[];
-  gtmProduct: GtmProduct[];
+  gtmProduct?: GtmProduct[];
 };
 
 export type GtmProduct =

@@ -60,7 +60,7 @@ export const ProductsGridList = ({
 
   const gtmProducts = priceCheckQuery.data.productPrices.map((product) => {
     return {
-      productid: product.productId,
+      productid: Number(product.productId),
       cartid: 0,
       quantity: 1,
     };

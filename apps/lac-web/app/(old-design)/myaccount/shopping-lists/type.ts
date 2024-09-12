@@ -1,4 +1,4 @@
-import type { GtmProduct, OldPagination, Pagination } from "@/_lib/types";
+import type { OldPagination, Pagination } from "@/_lib/types";
 
 export type ShoppingListItemsResponse = {
   items: ShoppingListItemsElementResponse[];
@@ -101,7 +101,6 @@ export type ShoppingListItemsElement = {
   categoryName?: string;
   productSummary?: string;
   isDirectlyShippedFromVendor?: boolean;
-  gtmProduct: GtmProduct[];
 };
 
 export type ShoppingListItems = {
