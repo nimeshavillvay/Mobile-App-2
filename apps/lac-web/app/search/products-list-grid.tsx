@@ -1,5 +1,5 @@
 import { ProductsGridList } from "@/_components/products-grid";
-import useGtmProducts from "@/_hooks/gtm/use-gtm-item-info.hook";
+import { getGtmProducts } from "@/_hooks/gtm/use-gtm-item-info";
 import { cn, getBoolean } from "@/_lib/utils";
 import { type ComponentProps } from "react";
 import { getSearchResults } from "./apis";
@@ -35,8 +35,8 @@ const ProductListGrid = async ({
       quantity: 1,
     };
   });
-  const gtmItemInfoQuery = useGtmProducts(gtmProducts);
-  const gtmItemInfo = gtmItemInfoQuery.data;
+
+  const gtmItemInfo = await getGtmProducts(gtmProducts, token);
 
   if (Array.isArray(searchResults.results)) {
     products = searchResults.results.map((product) => ({
