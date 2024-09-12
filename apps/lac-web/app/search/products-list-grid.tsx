@@ -30,7 +30,7 @@ const ProductListGrid = async ({
         groupImage: product.itemImage,
         variants: [
           {
-            id: product.id,
+            id: product.id.toString(),
             slug: product.slug,
             title: product.productTitle,
             image: product.itemImage,
