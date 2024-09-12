@@ -1,4 +1,4 @@
-import { getGtmProducts } from "@/_hooks/gtm/use-gtm-item-info";
+import { getGtmProducts } from "@/_lib/apis/gtm-item-info";
 import {
   getOrderDetails,
   getPaymentMethods,

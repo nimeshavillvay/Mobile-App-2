@@ -1,8 +1,8 @@
 import useCookies from "@/_hooks/storage/use-cookies.hook";
+import type { Product } from "@/_lib/apis/gtm-item-info";
+import { getGtmProducts } from "@/_lib/apis/gtm-item-info";
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import { useQuery } from "@tanstack/react-query";
-import type { Product } from "./use-gtm-item-info";
-import { getGtmProducts } from "./use-gtm-item-info";
 
 const useGtmProducts = (productIdList: Product) => {
   const [cookies] = useCookies();
