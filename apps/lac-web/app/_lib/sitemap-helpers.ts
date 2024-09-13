@@ -4,6 +4,8 @@ import "server-only";
 import { z } from "zod";
 import { xCartSearchApi } from "./api";
 
+const SITEMAP_REVALIDATE = 60 * 60 * 24;
+
 export const getFullUrl = (pathname: string) => {
   return `${PRODUCTION_URL}${pathname}`;
 };
@@ -49,7 +51,9 @@ const categorySitemapSchema = z.array(
 export const getSitemapCategories = async () => {
   const response = await xCartSearchApi
     .get("rest/sitemap/category", {
-      cache: "no-store",
+      next: {
+        revalidate: SITEMAP_REVALIDATE,
+      },
     })
     .json();
 
@@ -78,7 +82,9 @@ export const getSitemapProducts = async (
 ) => {
   const response = await xCartSearchApi
     .get("rest/sitemap/product", {
-      cache: "no-store",
+      next: {
+        revalidate: SITEMAP_REVALIDATE,
+      },
       searchParams: {
         page,
         limit,
@@ -107,7 +113,9 @@ export const getSitemapAssets = async (
 ) => {
   const response = await xCartSearchApi
     .get("rest/sitemap/assets", {
-      cache: "no-store",
+      next: {
+        revalidate: SITEMAP_REVALIDATE,
+      },
       searchParams: {
         page,
         limit,
@@ -137,7 +145,9 @@ export const getSitemapImages = async (
 ) => {
   const response = await xCartSearchApi
     .get("rest/sitemap/image", {
-      cache: "no-store",
+      next: {
+        revalidate: SITEMAP_REVALIDATE,
+      },
       searchParams: {
         page,
         limit,
