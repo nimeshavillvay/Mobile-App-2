@@ -133,8 +133,10 @@ export const config = {
      * and those containing these in the pathname:
      * - sitemap (sitemap files)
      * - opengraph-image (Open Graph images)
+     * - .html (HTML files)
+     * - .php (PHP files)
      */
-    "/((?!api|_next/static|_next/image|favicon.ico|robots.txt|.*sitemap|.*opengraph-image|monitoring|autodiscover/autodiscover.xml).*)",
+    "/((?!api|_next/static|_next/image|favicon.ico|robots.txt|.*sitemap|.*opengraph-image|monitoring|autodiscover/autodiscover.xml|.*html|.*php).*)",
   ],
 };
 
