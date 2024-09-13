@@ -28,17 +28,9 @@ const Header = async () => {
             <WillCallPlant />
             <ShippingDetailsDialog />
 
-            <div className="hidden sm:block">
-              <Suspense fallback={<Skeleton className="h-5 w-60" />}>
-                <OSRDetails />
-              </Suspense>
-            </div>
-
-            <div className="block w-full sm:hidden">
-              <Suspense fallback={<Skeleton className="h-5 w-full" />}>
-                <OSRDetails />
-              </Suspense>
-            </div>
+            <Suspense fallback={<Skeleton className="h-5 w-full sm:w-60" />}>
+              <OSRDetails />
+            </Suspense>
           </div>
 
           <div className="hidden flex-row items-center gap-6 md:flex">

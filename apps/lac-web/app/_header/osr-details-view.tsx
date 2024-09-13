@@ -19,7 +19,7 @@ const OSRDetailsView = ({ token }: { readonly token: string }) => {
 
   return (
     loginCheckData?.isLoggedInAsCustomer && (
-      <div className="grid grid-cols-2 items-center gap-4 break-words pr-6 text-xs xs:text-sm">
+      <div className="grid w-full grid-cols-2 items-center gap-4 break-words pr-6 text-xs xs:text-sm sm:w-auto">
         <div>
           <span>Logged in as&nbsp;</span>
 
