@@ -1,5 +1,6 @@
 import {
   getFullUrl,
+  getNumberOfPages,
   getSitemapAssets,
   getSitemapImages,
   getSitemapProducts,
@@ -8,9 +9,9 @@ import type { MetadataRoute } from "next";
 
 const sitemap = async (): Promise<MetadataRoute.Sitemap> => {
   const [sitemapProducts, sitemapAssets, sitemapImages] = await Promise.all([
-    getSitemapProducts(1),
-    getSitemapAssets(1),
-    getSitemapImages(1),
+    getSitemapProducts(),
+    getSitemapAssets(),
+    getSitemapImages(),
   ]);
 
   const sitemap: MetadataRoute.Sitemap = [
@@ -24,32 +25,29 @@ const sitemap = async (): Promise<MetadataRoute.Sitemap> => {
     },
   ];
 
-  Array.from({ length: sitemapProducts.pagination.totalPages }).forEach(
-    (_, index) => {
-      sitemap.push({
-        url: getFullUrl(`/product/sitemap/${index}.xml`),
-        lastModified: new Date(),
-      });
-    },
-  );
+  const numberOfProductPages = getNumberOfPages(sitemapProducts);
+  Array.from({ length: numberOfProductPages }).forEach((_, index) => {
+    sitemap.push({
+      url: getFullUrl(`/product/sitemap/${index}.xml`),
+      lastModified: new Date(),
+    });
+  });
 
-  Array.from({ length: sitemapAssets.pagination.totalPages }).forEach(
-    (_, index) => {
-      sitemap.push({
-        url: getFullUrl(`/assets/sitemap/${index}.xml`),
-        lastModified: new Date(),
-      });
-    },
-  );
+  const numberOfAssetPages = getNumberOfPages(sitemapAssets);
+  Array.from({ length: numberOfAssetPages }).forEach((_, index) => {
+    sitemap.push({
+      url: getFullUrl(`/assets/sitemap/${index}.xml`),
+      lastModified: new Date(),
+    });
+  });
 
-  Array.from({ length: sitemapImages.pagination.totalPages }).forEach(
-    (_, index) => {
-      sitemap.push({
-        url: getFullUrl(`/images/sitemap/${index}.xml`),
-        lastModified: new Date(),
-      });
-    },
-  );
+  const numberOfImagePages = getNumberOfPages(sitemapImages);
+  Array.from({ length: numberOfImagePages }).forEach((_, index) => {
+    sitemap.push({
+      url: getFullUrl(`/images/sitemap/${index}.xml`),
+      lastModified: new Date(),
+    });
+  });
 
   return sitemap;
 };

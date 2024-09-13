@@ -1,18 +1,18 @@
 import {
   getFullUrl,
+  getNumberOfPages,
   getSitemapProducts,
-  isChangeFrequency,
+  paginate,
 } from "@/_lib/sitemap-helpers";
 import type { MetadataRoute } from "next";
 
 export const generateSitemaps = async () => {
-  const sitemapProducts = await getSitemapProducts(1);
+  const sitemapProducts = await getSitemapProducts();
+  const numberOfProductPages = getNumberOfPages(sitemapProducts);
 
-  return Array.from({ length: sitemapProducts.pagination.totalPages }).map(
-    (_, index) => ({
-      id: index,
-    }),
-  );
+  return Array.from({ length: numberOfProductPages }).map((_, index) => ({
+    id: index,
+  }));
 };
 
 const sitemap = async ({
@@ -20,15 +20,14 @@ const sitemap = async ({
 }: {
   id: number;
 }): Promise<MetadataRoute.Sitemap> => {
-  const sitemapProducts = await getSitemapProducts(id + 1);
+  const sitemapProducts = await getSitemapProducts();
+  const page = paginate(sitemapProducts, id + 1);
 
-  return sitemapProducts.data.map((sitemapProduct) => ({
+  return page.map((sitemapProduct) => ({
     url: getFullUrl(
       `/product/${sitemapProduct.productid}/${sitemapProduct.slug}`,
     ),
-    changeFrequency: isChangeFrequency(sitemapProduct.changefreq)
-      ? sitemapProduct.changefreq
-      : undefined,
+    changeFrequency: sitemapProduct.changefreq,
     priority: Number(sitemapProduct.priority),
     images: [sitemapProduct.image],
     lastModified: new Date(),

@@ -1,15 +1,18 @@
-import { getSitemapAssets, isChangeFrequency } from "@/_lib/sitemap-helpers";
+import {
+  getNumberOfPages,
+  getSitemapAssets,
+  paginate,
+} from "@/_lib/sitemap-helpers";
 import { encode } from "html-entities";
 import type { MetadataRoute } from "next";
 
 export const generateSitemaps = async () => {
-  const sitemapAssets = await getSitemapAssets(1);
+  const sitemapAssets = await getSitemapAssets();
+  const numberOfAssetPages = getNumberOfPages(sitemapAssets);
 
-  return Array.from({ length: sitemapAssets.pagination.totalPages }).map(
-    (_, index) => ({
-      id: index,
-    }),
-  );
+  return Array.from({ length: numberOfAssetPages }).map((_, index) => ({
+    id: index,
+  }));
 };
 
 const sitemap = async ({
@@ -17,13 +20,12 @@ const sitemap = async ({
 }: {
   id: number;
 }): Promise<MetadataRoute.Sitemap> => {
-  const sitemapAssets = await getSitemapAssets(id + 1);
+  const sitemapAssets = await getSitemapAssets();
+  const page = paginate(sitemapAssets, id + 1);
 
-  return sitemapAssets.data.map((sitemapAsset) => ({
+  return page.map((sitemapAsset) => ({
     url: encode(`https://${sitemapAsset.url}`),
-    changeFrequency: isChangeFrequency(sitemapAsset.changefreq)
-      ? sitemapAsset.changefreq
-      : undefined,
+    changeFrequency: sitemapAsset.changefreq,
     priority: Number(sitemapAsset.priority),
     lastModified: new Date(),
   }));

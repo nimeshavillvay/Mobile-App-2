@@ -1,54 +1,52 @@
 import { PRODUCTION_URL, SITEMAP_PAGE_SIZE } from "@/_lib/constants";
-import type { MetadataRoute } from "next";
 import "server-only";
 import { z } from "zod";
-import { xCartSearchApi } from "./api";
+import { api } from "./api";
 
 export const getFullUrl = (pathname: string) => {
   return `${PRODUCTION_URL}${pathname}`;
 };
 
-type ChangeFrequency = MetadataRoute.Sitemap[number]["changeFrequency"];
+const changeFrequencySchema = z.enum([
+  "always",
+  "daily",
+  "hourly",
+  "monthly",
+  "never",
+  "weekly",
+  "yearly",
+]);
 
-export const isChangeFrequency = (
-  changeFreq: unknown,
-): changeFreq is ChangeFrequency => {
-  if (
-    (changeFreq as ChangeFrequency) === "always" ||
-    (changeFreq as ChangeFrequency) === "daily" ||
-    (changeFreq as ChangeFrequency) === "hourly" ||
-    (changeFreq as ChangeFrequency) === "monthly" ||
-    (changeFreq as ChangeFrequency) === "never" ||
-    (changeFreq as ChangeFrequency) === "weekly" ||
-    (changeFreq as ChangeFrequency) === "yearly"
-  ) {
-    return true;
-  }
-
-  return false;
+export const paginate = <T>(
+  list: T[],
+  pageNumber: number,
+  pageSize = SITEMAP_PAGE_SIZE,
+) => {
+  return list.slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
 };
 
-const sitemapPaginationSchema = z.object({
-  totalItems: z.number(),
-  currentPage: z.number(),
-  pageSize: z.number(),
-  totalPages: z.number(),
-});
+export const getNumberOfPages = <T>(
+  list: T[],
+  pageSize = SITEMAP_PAGE_SIZE,
+) => {
+  return Math.ceil(list.length / pageSize);
+};
 
 const categorySitemapSchema = z.array(
   z.object({
     category: z.string(),
     categoryid: z.string(),
     priority: z.string(),
-    changefreq: z.string(),
+    changefreq: changeFrequencySchema,
+    clean_url: z.string(),
     image: z.string(),
     slug: z.string(),
   }),
 );
 
 export const getSitemapCategories = async () => {
-  const response = await xCartSearchApi
-    .get("rest/sitemap/category", {
+  const response = await api
+    .get("assets/sitemap/categories.json", {
       cache: "no-store",
     })
     .json();
@@ -56,92 +54,63 @@ export const getSitemapCategories = async () => {
   return await categorySitemapSchema.parseAsync(response);
 };
 
-const productSitemapSchema = z.object({
-  pagination: sitemapPaginationSchema,
-  data: z.array(
-    z.object({
-      productid: z.string(),
-      product: z.string(),
-      priority: z.string(),
-      changefreq: z.string(),
-      categoryid: z.string(),
-      category: z.string(),
-      image: z.string(),
-      slug: z.string(),
-    }),
-  ),
-});
+const productSitemapSchema = z.array(
+  z.object({
+    productid: z.string(),
+    product: z.string(),
+    priority: z.string(),
+    changefreq: changeFrequencySchema,
+    categoryid: z.string(),
+    category: z.string(),
+    clean_url: z.string(),
+    image: z.string(),
+    slug: z.string(),
+  }),
+);
 
-export const getSitemapProducts = async (
-  page: number,
-  limit = SITEMAP_PAGE_SIZE,
-) => {
-  const response = await xCartSearchApi
-    .get("rest/sitemap/product", {
+export const getSitemapProducts = async () => {
+  const response = await api
+    .get("assets/sitemap/products.json", {
       cache: "no-store",
-      searchParams: {
-        page,
-        limit,
-      },
     })
     .json();
 
   return productSitemapSchema.parse(response);
 };
 
-const assetsSitemapSchema = z.object({
-  pagination: sitemapPaginationSchema,
-  data: z.array(
-    z.object({
-      url: z.string(),
-      type: z.string(),
-      priority: z.string(),
-      changefreq: z.string(),
-    }),
-  ),
-});
+const assetsSitemapSchema = z.array(
+  z.object({
+    url: z.string(),
+    type: z.string(),
+    priority: z.string(),
+    changefreq: changeFrequencySchema,
+  }),
+);
 
-export const getSitemapAssets = async (
-  page: number,
-  limit = SITEMAP_PAGE_SIZE,
-) => {
-  const response = await xCartSearchApi
-    .get("rest/sitemap/assets", {
-      cache: "no-store",
-      searchParams: {
-        page,
-        limit,
-      },
+export const getSitemapAssets = async () => {
+  const response = await api
+    .get("assets/sitemap/assets.json", {
+      cache: "no-cache",
     })
     .json();
 
   return assetsSitemapSchema.parse(response);
 };
 
-const imageSitemapSchema = z.object({
-  pagination: sitemapPaginationSchema,
-  data: z.array(
-    z.object({
-      productid: z.string(),
-      priority: z.string(),
-      changefreq: z.string(),
-      image: z.string(),
-      type: z.string(),
-    }),
-  ),
-});
+const imageSitemapSchema = z.array(
+  z.object({
+    productid: z.string(),
+    type: z.string(),
+    image: z.string(),
+    priority: z.string(),
+    changefreq: changeFrequencySchema,
+  }),
+);
 
-export const getSitemapImages = async (
-  page: number,
-  limit = SITEMAP_PAGE_SIZE,
-) => {
-  const response = await xCartSearchApi
-    .get("rest/sitemap/image", {
-      cache: "no-store",
-      searchParams: {
-        page,
-        limit,
-      },
+export const getSitemapImages = async () => {
+  const response = await api
+    .get("assets/sitemap/images.json", {
+      cache: "no-cache",
     })
     .json();
 

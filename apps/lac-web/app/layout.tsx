@@ -1,6 +1,7 @@
 import { cn } from "@/_lib/utils";
 import { GoogleTagManager } from "@next/third-parties/google";
 import { Toaster } from "@repo/web-ui/components/ui/toast";
+import { Analytics } from "@vercel/analytics/react";
 import { type Metadata } from "next";
 import localFont from "next/font/local";
 import NextTopLoader from "nextjs-toploader";
@@ -72,6 +73,7 @@ const RootLayout = ({ children }: { readonly children: ReactNode }) => {
               gtmId={process.env.NEXT_PUBLIC_WURTH_LAC_GTM_KEY}
             />
           )}
+          <Analytics />
         </Providers>
       </body>
     </html>
