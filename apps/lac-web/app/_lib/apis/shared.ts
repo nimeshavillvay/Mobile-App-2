@@ -126,6 +126,9 @@ export const getGtmProducts = async (
   }[],
   token: string,
 ) => {
+  if (process.env.NEXT_PUBLIC_WURTH_LAC_DISABLE_GTM === "1") {
+    return [];
+  }
   const response = await api
     .post("rest/gtm/products", {
       headers: {
