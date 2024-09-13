@@ -1,14 +1,17 @@
-import { getSitemapImages, isChangeFrequency } from "@/_lib/sitemap-helpers";
+import {
+  getNumberOfPages,
+  getSitemapImages,
+  paginate,
+} from "@/_lib/sitemap-helpers";
 import type { MetadataRoute } from "next";
 
 export const generateSitemaps = async () => {
-  const sitemapImages = await getSitemapImages(1);
+  const sitemapImages = await getSitemapImages();
+  const numberOfImagePages = getNumberOfPages(sitemapImages);
 
-  return Array.from({ length: sitemapImages.pagination.totalPages }).map(
-    (_, index) => ({
-      id: index,
-    }),
-  );
+  return Array.from({ length: numberOfImagePages }).map((_, index) => ({
+    id: index,
+  }));
 };
 
 const sitemap = async ({
@@ -16,13 +19,12 @@ const sitemap = async ({
 }: {
   id: number;
 }): Promise<MetadataRoute.Sitemap> => {
-  const sitemapImages = await getSitemapImages(id + 1);
+  const sitemapImages = await getSitemapImages();
+  const page = paginate(sitemapImages, id + 1);
 
-  return sitemapImages.data.map((sitemapImage) => ({
+  return page.map((sitemapImage) => ({
     url: sitemapImage.image,
-    changeFrequency: isChangeFrequency(sitemapImage.changefreq)
-      ? sitemapImage.changefreq
-      : undefined,
+    changeFrequency: sitemapImage.changefreq,
     priority: Number(sitemapImage.priority),
     images: [sitemapImage.image],
     lastModified: new Date(),

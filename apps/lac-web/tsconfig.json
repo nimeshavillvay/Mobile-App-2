@@ -22,7 +22,7 @@
     ],
     "paths": {
       "@/*": ["./app/*"],
-      "@/old/*": ["./app/(old-design)/*"],
+      "@/old/*": ["./app/(site)/(old-design)/*"],
       "~/*": ["../../packages/web-ui/src/*"]
     },
     "target": "ES2017"

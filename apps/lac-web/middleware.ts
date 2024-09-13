@@ -21,11 +21,6 @@ const PUBLIC_ONLY_ROUTES = [
 ];
 
 export const middleware = async (request: NextRequest) => {
-  // Exclude the following routes from the middleware
-  if (request.nextUrl.pathname.endsWith("opengraph-image")) {
-    return NextResponse.next();
-  }
-
   const sessionToken = request.cookies.get(SESSION_TOKEN_COOKIE);
   const tokenExpire = request.cookies.get(TOKEN_EXPIRE_COOKIE);
 
@@ -132,8 +127,16 @@ export const config = {
      * - _next/static (static files)
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
+     * - robots.txt (robots.txt file)
+     * - monitoring (Sentry monitoring)
+     * - autodiscover/autodiscover.xml (Outlook)
+     * and those containing these in the pathname:
+     * - sitemap (sitemap files)
+     * - opengraph-image (Open Graph images)
+     * - .html (HTML files)
+     * - .php (PHP files)
      */
-    "/((?!api|_next/static|_next/image|favicon.ico|monitoring).*)",
+    "/((?!api|_next/static|_next/image|favicon.ico|robots.txt|.*sitemap|.*opengraph-image|monitoring|autodiscover/autodiscover.xml|.*html|.*php).*)",
   ],
 };
 

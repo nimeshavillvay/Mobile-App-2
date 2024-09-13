@@ -1,9 +1,9 @@
 "use client";
 
-import useCreateShoppingListMutation from "@/(old-design)/myaccount/shopping-lists/use-create-shopping-list-mutation.hook";
-import useUpdateShoppingListItemMutation from "@/(old-design)/myaccount/shopping-lists/use-update-shopping-list-item-mutation.hook";
 import useSuspenseShoppingList from "@/_hooks/shopping-list/use-suspense-shopping-list.hook";
 import { cn } from "@/_lib/utils";
+import useCreateShoppingListMutation from "@/old/myaccount/shopping-lists/use-create-shopping-list-mutation.hook";
+import useUpdateShoppingListItemMutation from "@/old/myaccount/shopping-lists/use-update-shopping-list-item-mutation.hook";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@repo/web-ui/components/ui/button";
 import { Checkbox } from "@repo/web-ui/components/ui/checkbox";
