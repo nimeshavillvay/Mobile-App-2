@@ -1,6 +1,7 @@
 import { cn } from "@/_lib/utils";
 import { GoogleTagManager } from "@next/third-parties/google";
 import { Toaster } from "@repo/web-ui/components/ui/toast";
+import { Analytics } from "@vercel/analytics/react";
 import { type Metadata } from "next";
 import localFont from "next/font/local";
 import NextTopLoader from "nextjs-toploader";
@@ -8,7 +9,6 @@ import { type ReactNode } from "react";
 import AddToCartDialog from "./_add-to-cart-dialog";
 import Footer from "./_footer";
 import Header from "./_header";
-import Analytics from "./analytics";
 import "./global.css";
 import Providers from "./providers";
 import SessionChecker from "./session-checker";
