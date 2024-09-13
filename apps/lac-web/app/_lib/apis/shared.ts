@@ -126,6 +126,17 @@ export const getGtmProducts = async (
   }[],
   token: string,
 ) => {
+  console.log(
+    "process.env.NEXT_PUBLIC_WURTH_LAC_ENABLE_GTM",
+    process.env.NEXT_PUBLIC_WURTH_LAC_ENABLE_GTM,
+  );
+  console.log(
+    "NEXT_PUBLIC_WURTH_LAC_ENABLE_GTM",
+    process.env.NEXT_PUBLIC_WURTH_LAC_ENABLE_GTM === "T",
+  );
+  if (process.env.NEXT_PUBLIC_WURTH_LAC_ENABLE_GTM === "T") {
+    return [];
+  }
   const response = await api
     .post("rest/gtm/products", {
       headers: {
