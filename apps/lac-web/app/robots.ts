@@ -17,6 +17,7 @@ const robots = (): MetadataRoute.Robots => {
           "/email/subscription-confirmation/",
           "/search/",
           "/laminate-finder/",
+          "/no-bot/",
         ],
       },
       {

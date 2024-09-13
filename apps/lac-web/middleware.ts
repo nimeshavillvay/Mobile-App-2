@@ -9,7 +9,7 @@ import {
 import dayjs from "dayjs";
 import isBetween from "dayjs/plugin/isBetween";
 import type { ResponseCookie } from "next/dist/compiled/@edge-runtime/cookies";
-import { NextResponse, type NextRequest } from "next/server";
+import { NextResponse, userAgent, type NextRequest } from "next/server";
 
 dayjs.extend(isBetween);
 
@@ -23,6 +23,22 @@ const PUBLIC_ONLY_ROUTES = [
 export const middleware = async (request: NextRequest) => {
   const sessionToken = request.cookies.get(SESSION_TOKEN_COOKIE);
   const tokenExpire = request.cookies.get(TOKEN_EXPIRE_COOKIE);
+
+  const { isBot } = userAgent(request);
+
+  const isPrivateRoute = !!PRIVATE_ROUTES.find((route) =>
+    request.nextUrl.pathname.startsWith(route),
+  );
+
+  // Don't do any of the session checks for bots
+  if (isBot) {
+    // Redirect the bot to the home page
+    if (isPrivateRoute) {
+      return NextResponse.redirect(new URL("/no-bot", request.url));
+    }
+
+    return NextResponse.next();
+  }
 
   // Get new session token just in case
   const { tokenValue: newTokenValue } = await sessionTokenDetails();
@@ -81,9 +97,6 @@ export const middleware = async (request: NextRequest) => {
   }
 
   // Check for private routes
-  const isPrivateRoute = !!PRIVATE_ROUTES.find((route) =>
-    request.nextUrl.pathname.startsWith(route),
-  );
   if (!isForcePasswordReset && isPrivateRoute && sessionToken) {
     if (loginCheckResponse?.status_code === "NOT_LOGGED_IN") {
       // Redirect to sign in page if user is not logged in
@@ -130,13 +143,15 @@ export const config = {
      * - robots.txt (robots.txt file)
      * - monitoring (Sentry monitoring)
      * - autodiscover/autodiscover.xml (Outlook)
+     * - storefront (Storefront)
+     * - no-bot (the page when bots try to access private routes)
      * and those containing these in the pathname:
      * - sitemap (sitemap files)
      * - opengraph-image (Open Graph images)
      * - .html (HTML files)
      * - .php (PHP files)
      */
-    "/((?!api|_next/static|_next/image|favicon.ico|robots.txt|.*sitemap|.*opengraph-image|monitoring|autodiscover/autodiscover.xml|.*html|.*php).*)",
+    "/((?!api|_next/static|_next/image|favicon.ico|robots.txt|.*sitemap|.*opengraph-image|monitoring|autodiscover/autodiscover.xml|.*html|.*php|storefront|no-bot).*)",
   ],
 };
 
