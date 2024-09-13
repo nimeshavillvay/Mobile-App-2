@@ -16,6 +16,10 @@ import LaminatesList from "./laminates-list";
 
 export const metadata: Metadata = {
   title: "Laminate Finder",
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 const Page = () => {
