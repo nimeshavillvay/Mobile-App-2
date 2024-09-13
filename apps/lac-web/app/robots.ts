@@ -4,24 +4,28 @@ import type { MetadataRoute } from "next";
 const robots = (): MetadataRoute.Robots => {
   return {
     rules: [
+      // {
+      //   userAgent: "*",
+      //   allow: "/",
+      //   disallow: [
+      //     "/api/",
+      //     "/myaccount/",
+      //     "/cart/",
+      //     "/checkout/",
+      //     "/confirmation/",
+      //     "/osr/",
+      //     "/email/subscription-confirmation/",
+      //     "/search/",
+      //     "/laminate-finder/",
+      //     "/no-bot/",
+      //   ],
+      // },
+      // {
+      //   userAgent: "MJ12bot",
+      //   disallow: "/",
+      // },
       {
         userAgent: "*",
-        allow: "/",
-        disallow: [
-          "/api/",
-          "/myaccount/",
-          "/cart/",
-          "/checkout/",
-          "/confirmation/",
-          "/osr/",
-          "/email/subscription-confirmation/",
-          "/search/",
-          "/laminate-finder/",
-          "/no-bot/",
-        ],
-      },
-      {
-        userAgent: "MJ12bot",
         disallow: "/",
       },
     ],
