@@ -1,7 +1,6 @@
 import { cn } from "@/_lib/utils";
 import { GoogleTagManager } from "@next/third-parties/google";
 import { Toaster } from "@repo/web-ui/components/ui/toast";
-import { Analytics } from "@vercel/analytics/react";
 import { type Metadata } from "next";
 import localFont from "next/font/local";
 import NextTopLoader from "nextjs-toploader";
@@ -9,6 +8,7 @@ import { type ReactNode } from "react";
 import AddToCartDialog from "./_add-to-cart-dialog";
 import Footer from "./_footer";
 import Header from "./_header";
+import Analytics from "./analytics";
 import "./global.css";
 import Providers from "./providers";
 import SessionChecker from "./session-checker";
@@ -73,16 +73,7 @@ const RootLayout = ({ children }: { readonly children: ReactNode }) => {
               gtmId={process.env.NEXT_PUBLIC_WURTH_LAC_GTM_KEY}
             />
           )}
-          <Analytics
-            beforeSend={(event) => {
-              // Enable analytics only on the production environment
-              if (process.env.VERCEL_ENV !== "production") {
-                return null;
-              }
-
-              return event;
-            }}
-          />
+          <Analytics />
         </Providers>
       </body>
     </html>
