@@ -83,3 +83,11 @@ export const GTM_ITEM_PAGE_TYPES = {
 } as const;
 
 export const GTM_PAGE_TYPE_OTHER = "other";
+
+// Cart config values
+export const EMPTY_STRING = "" as const;
+export const TRUE_STRING = "T" as const;
+export const FALSE_STRING = "F" as const;
+
+export const BACKORDER_ENABLED = "T";
+export const BACKORDER_DISABLED = "F";

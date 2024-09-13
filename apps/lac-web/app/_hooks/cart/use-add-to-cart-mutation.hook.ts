@@ -2,17 +2,18 @@ import useGtmProducts from "@/_hooks/gtm/use-gtm-item-info.hook";
 import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
 import { api } from "@/_lib/api";
 import { checkAvailability } from "@/_lib/apis/shared";
-import { NOT_AVAILABLE, SESSION_TOKEN_COOKIE } from "@/_lib/constants";
+import {
+  BACKORDER_DISABLED,
+  BACKORDER_ENABLED,
+  FALSE_STRING,
+  NOT_AVAILABLE,
+  SESSION_TOKEN_COOKIE,
+} from "@/_lib/constants";
 import { getGTMPageType } from "@/_lib/gtm-utils";
 import { sendGTMEvent } from "@next/third-parties/google";
 import { useToast } from "@repo/web-ui/components/ui/toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import {
-  BACKORDER_DISABLED,
-  BACKORDER_ENABLED,
-  FALSE_STRING,
-} from "../../cart/constants";
 import useGtmUser from "../gtm/use-gtm-user.hook";
 import usePathnameHistoryState from "../misc/use-pathname-history-state.hook";
 import useCookies from "../storage/use-cookies.hook";
