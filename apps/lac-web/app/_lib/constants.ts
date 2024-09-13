@@ -14,7 +14,7 @@ export const API_HEADERS = {
 export const PRODUCTION_URL = process.env.VERCEL_PROJECT_PRODUCTION_URL
   ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
   : "http://localhost:3000";
-export const SITEMAP_PAGE_SIZE = 3000;
+export const SITEMAP_PAGE_SIZE = 25000;
 
 export const PRIVATE_ROUTES = [
   "/osr",

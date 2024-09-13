@@ -1,8 +1,4 @@
-import {
-  getFullUrl,
-  getSitemapCategories,
-  isChangeFrequency,
-} from "@/_lib/sitemap-helpers";
+import { getFullUrl, getSitemapCategories } from "@/_lib/sitemap-helpers";
 import type { MetadataRoute } from "next";
 
 const sitemap = async (): Promise<MetadataRoute.Sitemap> => {
@@ -12,9 +8,7 @@ const sitemap = async (): Promise<MetadataRoute.Sitemap> => {
     url: getFullUrl(
       `/category/${sitemapCategory.categoryid}/${sitemapCategory.slug}`,
     ),
-    changeFrequency: isChangeFrequency(sitemapCategory.changefreq)
-      ? sitemapCategory.changefreq
-      : undefined,
+    changeFrequency: sitemapCategory.changefreq,
     priority: Number(sitemapCategory.priority),
     images: [sitemapCategory.image],
     lastModified: new Date(),
