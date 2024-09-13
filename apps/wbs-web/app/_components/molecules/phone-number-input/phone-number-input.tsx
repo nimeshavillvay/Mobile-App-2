@@ -1,4 +1,3 @@
-import { toCamelCase } from "@/_lib/utils";
 import { Input } from "@repo/web-ui/components/base/atoms/input";
 import {
   FormControl,
@@ -48,7 +47,7 @@ export const PhoneNumberInput = <
               {...field}
               mask="(___) ___-____"
               replacement={{ _: /\d/ }}
-              data-testid={`input-${toCamelCase(name)}`}
+              data-testid={`input-${name}`}
             />
           </FormControl>
           <FormDescription className="sr-only">{description}</FormDescription>

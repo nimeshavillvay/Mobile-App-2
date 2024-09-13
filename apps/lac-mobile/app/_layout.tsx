@@ -26,7 +26,7 @@ const routingInstrumentation = new Sentry.ReactNavigationInstrumentation();
 const DOMAIN = "https://wurthlac.com";
 
 Sentry.init({
-  dsn: process.env.EXPO_PUBLIC_WURTH_LAC_SENTRY_DNS,
+  dsn: "https://86baa557c3487f200ac62ad41ed5f791@o4507694849589248.ingest.us.sentry.io/4507694864400384",
   debug: true, // If `true`, Sentry will try to print out useful debugging information if something goes wrong with sending the event. Set it to `false` in production
   integrations: [
     new Sentry.ReactNativeTracing({

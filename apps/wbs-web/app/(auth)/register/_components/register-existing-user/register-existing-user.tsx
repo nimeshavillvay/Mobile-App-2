@@ -39,17 +39,11 @@ const RegisterExistingUser = () => {
       confirmPassword: "",
       phoneNumber: "",
     },
+    mode: "onBlur",
   });
 
   const createUserMutation = useRegisterExistingUserMutation();
   const onSubmit = form.handleSubmit(async (data) => {
-    if (form.formState.errors.userName) {
-      form.setError("userName", {
-        message: form.formState.errors.userName.message,
-      });
-
-      return;
-    }
     try {
       await checkRecaptcha();
     } catch {
@@ -137,6 +131,7 @@ const RegisterExistingUser = () => {
           currentStep={step}
           isPending={createUserMutation.isPending}
           formId="form-existing-user"
+          title={"Personal Information"}
         />
       </div>
     </Form>

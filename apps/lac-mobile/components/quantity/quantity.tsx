@@ -30,7 +30,6 @@ export const QuantityInput = ({
   const handleChange = (inputValue: string) => {
     if (!inputValue) {
       onChange(minimumValue);
-
       return;
     }
 
@@ -40,7 +39,6 @@ export const QuantityInput = ({
 
     if (Number(inputValue) < minimumValue) {
       onChange(minimumValue);
-
       return;
     }
 

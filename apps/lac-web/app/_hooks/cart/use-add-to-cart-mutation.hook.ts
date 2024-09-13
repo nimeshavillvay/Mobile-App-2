@@ -116,7 +116,6 @@ const useAddToCartMutation = (
           error: item.error,
         }));
       }
-
       return;
     },
     onMutate: () => {

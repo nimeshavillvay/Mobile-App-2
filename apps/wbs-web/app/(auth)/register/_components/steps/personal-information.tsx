@@ -15,7 +15,6 @@ import {
   FormMessage,
 } from "@repo/web-ui/components/base/molecules/form";
 import { PasswordInput } from "@repo/web-ui/components/base/molecules/password-input";
-import { useState } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import type { Step } from "../register-existing-user/register-existing-user";
 import type { CurrentUserFormData } from "../register-schema";
@@ -27,6 +26,7 @@ type PersonalInformationStepProps = {
   readonly onSubmit: () => void;
   readonly isPending: boolean;
   readonly formId: string;
+  readonly title: string;
 };
 
 export const PersonalInformationStep = ({
@@ -35,19 +35,11 @@ export const PersonalInformationStep = ({
   onSubmit,
   isPending,
   formId,
+  title,
 }: PersonalInformationStepProps) => {
-  const [isUsernameCheckPending, setIsUsernameCheckPending] = useState(false);
-
-  const handleUsernameCheck = (isPending: boolean) => {
-    setIsUsernameCheckPending(isPending);
-  };
-
-  const isSubmitDisabled =
-    isPending || (isUsernameCheckPending && !form.formState.errors.userName);
-
   return (
     <StepContainer
-      title="Personal Information"
+      title={title}
       state={currentStep === "personal" ? "open" : "closed"}
     >
       <StepContainerOpen
@@ -55,7 +47,7 @@ export const PersonalInformationStep = ({
         allFieldsRequired
         submitBtnText="Create account"
         onSubmit={onSubmit}
-        disableSubmit={isSubmitDisabled}
+        disableSubmit={isPending ? true : false}
         className={cn(currentStep !== "personal" && "hidden")}
         id={formId}
       >
@@ -145,7 +137,6 @@ export const PersonalInformationStep = ({
             control={form.control}
             name="userName"
             disabled={isPending}
-            onUsernameCheck={handleUsernameCheck}
           />
 
           <FormField

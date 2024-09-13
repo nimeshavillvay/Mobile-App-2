@@ -89,7 +89,6 @@ const MultiSelect = ({
       ToggleButtonKeyDownSpaceButton,
       ItemClick,
     } = useSelect.stateChangeTypes;
-
     return [
       ToggleButtonKeyDownEnter,
       ToggleButtonKeyDownSpaceButton,
@@ -111,13 +110,11 @@ const MultiSelect = ({
 
   const deselectItem = (selectedItem: Option) => {
     removeSelectedItem(selectedItem);
-
     return selectedItems.filter((item) => item.id !== selectedItem.id);
   };
 
   const selectItem = (selectedItem: Option) => {
     addSelectedItem(selectedItem);
-
     return [...selectedItems, selectedItem];
   };
 

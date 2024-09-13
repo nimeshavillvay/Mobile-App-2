@@ -4,11 +4,13 @@ import { cn } from "~/lib/utils";
 
 const alertVariants = cva({
   base: "[&>svg]:text-bg-slate-950 relative w-full rounded-lg border p-4 [&>svg+div]:translate-y-[-3px] [&>svg]:absolute [&>svg]:left-4 [&>svg]:top-4 [&>svg~*]:pl-7",
+
   variants: {
     variant: {
       default: "text-bg-slate-950 bg-white",
       destructive:
         "border-red-600/50 text-red-600 dark:border-red-600 [&>svg]:text-red-600",
+      warning: "bg-amber-50 text-amber-800 [&>svg]:stroke-amber-800",
     },
   },
   defaultVariants: {

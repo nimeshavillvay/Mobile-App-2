@@ -266,7 +266,6 @@ const CartItem = ({
       } else if (shipAlternativeBranch) {
         return ALTERNATIVE_BRANCHES;
       }
-
       // Return a default value here if none of the conditions match
       return undefined;
     },

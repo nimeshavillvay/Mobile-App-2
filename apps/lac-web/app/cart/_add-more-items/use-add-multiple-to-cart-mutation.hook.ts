@@ -72,7 +72,6 @@ const useAddMultipleToCartMutation = (token: string) => {
         ) {
           discontinuedSkuList.push(product.sku);
         }
-
         return {
           productid: product.productId,
           quantity: product.quantity,
@@ -168,7 +167,6 @@ const useAddMultipleToCartMutation = (token: string) => {
         });
         setExcludedSkus(excludedSkuList);
         setDiscontinuedSkus(discontinuedSkuList);
-
         return uniqueProducts;
       };
 

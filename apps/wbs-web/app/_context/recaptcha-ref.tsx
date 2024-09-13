@@ -22,18 +22,19 @@ export const RecaptchaRefProvider = ({
     <RecaptchaRefContext.Provider value={recaptchaRef}>
       {children}
 
-      {!!process.env.NEXT_PUBLIC_WURTH_LAC_RECAPTCHA_SITE_KEY && (
-        <ReCAPTCHA
-          ref={recaptchaRef}
-          size="invisible"
-          sitekey={process.env.NEXT_PUBLIC_WURTH_LAC_RECAPTCHA_SITE_KEY}
-        />
-      )}
+      {process.env.NODE_ENV === "production" &&
+        !!process.env.NEXT_PUBLIC_WURTH_LAC_RECAPTCHA_SITE_KEY && (
+          <ReCAPTCHA
+            ref={recaptchaRef}
+            size="invisible"
+            sitekey={process.env.NEXT_PUBLIC_WURTH_LAC_RECAPTCHA_SITE_KEY}
+          />
+        )}
     </RecaptchaRefContext.Provider>
   );
 };
 
-export const useRecaptchaRef = () => {
+const useRecaptchaRef = () => {
   const recaptchaRef = useContext(RecaptchaRefContext);
 
   if (!recaptchaRef) {
@@ -49,6 +50,11 @@ export const useCheckRecaptcha = () => {
   const recaptchaRef = useRecaptchaRef();
 
   const checkRecaptcha = async () => {
+    if (process.env.NODE_ENV !== "production") {
+      // Return a dummy token in development
+      return "development-token";
+    }
+
     const token = await recaptchaRef.current?.executeAsync();
 
     if (!token) {

@@ -110,7 +110,6 @@ export const calculateReduceQuantity = (
     quantity % minQty === 0
       ? quantity - increaseQty
       : quantity - (quantity % minQty);
-
   return displayQuantity > minQty ? displayQuantity : minQty;
 };
 export const calculateIncreaseQuantity = (

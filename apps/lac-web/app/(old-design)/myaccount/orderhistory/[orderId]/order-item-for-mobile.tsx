@@ -70,7 +70,6 @@ const OrderItemForMobile = ({
     if (slug !== "") {
       return `/product/${productId}/${slug}`;
     }
-
     return "#";
   };
 

@@ -20,7 +20,6 @@ export const FavoriteButton = ({
       // Implement shopping list logic
     }
   };
-
   return (
     <Button
       variant="outline"

@@ -90,7 +90,6 @@ const OrderItem = ({
     if (slug !== "") {
       return `/product/${productId}/${slug}`;
     }
-
     return "#";
   };
 

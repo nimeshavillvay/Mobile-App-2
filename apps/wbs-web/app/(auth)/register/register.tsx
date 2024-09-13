@@ -1,16 +1,29 @@
 "use client";
-
-import AuthenticationToggle from "@/_components/molecules/auth/auth-toggle";
+import RegisterExistingUser from "@/(auth)/register/_components/register-existing-user/register-existing-user";
+import RegisterNewUser from "@/(auth)/register/_components/register-new-user/register-new-user";
+import type {
+  Country,
+  PasswordPolicies,
+} from "@/(auth)/register/_components/types";
 import RegisterQuestion from "@/_components/molecules/auth/register-question";
 import { RecaptchaRefProvider } from "@/_context/recaptcha-ref";
 import { useState } from "react";
-import RegisterExistingUser from "./_components/register-existing-user/register-existing-user";
-import NewUserFlow from "./new-user-flow";
+import type { Industry } from "./types";
 
 const IS_CURRENT_USER = ["Yes", "No"] as const;
 const NEW_USER_TYPES = ["Homeowner", "Buying for business"] as const;
 
-const Register = () => {
+type RegisterProps = {
+  readonly passwordPolicies: PasswordPolicies;
+  readonly industries: Industry[];
+  readonly countries: Country[];
+};
+
+const Register = ({
+  passwordPolicies,
+  industries,
+  countries,
+}: RegisterProps) => {
   const [isCurrentUser, setIsCurrentUser] = useState<string>();
   const [newUserType, setNewUserType] = useState<string>();
 
@@ -35,9 +48,6 @@ const Register = () => {
             selectedOption={isCurrentUser}
             onOptionSelect={handleIsCurrentUserChange}
           />
-          {newUserType === undefined && (
-            <AuthenticationToggle mode="register" />
-          )}
 
           {isCurrentUser === "Yes" && <RegisterExistingUser />}
 
@@ -47,9 +57,17 @@ const Register = () => {
               options={NEW_USER_TYPES}
               selectedOption={newUserType}
               onOptionSelect={setNewUserType}
+              testIdPrefix="register-user-type"
             />
           )}
-          {newUserType != undefined && <NewUserFlow userType={newUserType} />}
+          {newUserType != undefined && (
+            <RegisterNewUser
+              passwordPolicies={passwordPolicies}
+              industries={industries}
+              countries={countries}
+              userType={newUserType}
+            />
+          )}
         </div>
       </div>
     </RecaptchaRefProvider>

@@ -27,7 +27,6 @@ export const ProductsGridPagination = ({
   const getHref = (page: number) => {
     const newUrlSearchParams = new URLSearchParams(searchParams);
     newUrlSearchParams.set("page", page.toString());
-
     return `${pathname}?${newUrlSearchParams.toString()}`;
   };
 

@@ -23,7 +23,6 @@ export const validateFile = (file: File) => {
 
 export const getExcelData = async (file: File) => {
   const rowData = await readExcelFileAsRows(file);
-
   return formatRows(rowData);
 };
 
@@ -33,7 +32,6 @@ const readExcelFileAsRows = async (file: File) => {
   const firstSheetName = workbook.SheetNames[0] ?? "Sheet1";
   const worksheet = workbook.Sheets[firstSheetName] ?? {};
   const csvData = XLSX.utils.sheet_to_csv(worksheet);
-
   return csvData.split("\n");
 };
 
@@ -41,7 +39,6 @@ const formatRows = (rowData: string[]) =>
   rowData
     .map((row) => {
       const cells = row.split(",").map((cell) => cell.trim());
-
       return cells[0]?.trim()?.length ? cells : null;
     })
     .filter(Boolean);

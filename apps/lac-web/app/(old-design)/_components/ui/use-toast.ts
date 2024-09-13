@@ -28,7 +28,6 @@ let count = 0;
 
 const genId = () => {
   count = (count + 1) % Number.MAX_SAFE_INTEGER;
-
   return count.toString();
 };
 
@@ -122,7 +121,6 @@ export const reducer = (state: State, action: Action): State => {
           toasts: [],
         };
       }
-
       return {
         ...state,
         toasts: state.toasts.filter((t) => t.id !== action.toastId),
@@ -179,7 +177,6 @@ const useToast = () => {
 
   React.useEffect(() => {
     listeners.push(setState);
-
     return () => {
       const index = listeners.indexOf(setState);
       if (index > -1) {

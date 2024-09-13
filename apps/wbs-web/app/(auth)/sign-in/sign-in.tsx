@@ -1,6 +1,6 @@
 "use client";
 
-import { cn, isErrorResponse } from "@/_lib/utils";
+import { cn, isErrorResponse } from "@/_lib/utils/";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PasswordInput } from "@repo/web-ui/components/base/molecules/password-input";
 
@@ -133,7 +133,7 @@ const SignIn = () => {
             >
               Sign in
             </Button>
-            <div className="flex flex-row gap-4">
+            <div className="flex flex-col gap-4 xs:flex-row">
               <Link
                 href={`/forgot-user-id`}
                 className={cn(

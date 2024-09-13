@@ -22,7 +22,6 @@ const INVALID_SEARCH_VALUES = {
 const isValidProduct = (result: Result): boolean => {
   return Object.entries(INVALID_SEARCH_VALUES).every(([key, invalidValue]) => {
     const resultValue = result[key as keyof Result];
-
     return resultValue !== invalidValue;
   });
 };
@@ -134,7 +133,6 @@ export const SearchBoxInput = ({
         return result[field] as string;
       }
     }
-
     return "";
   };
 

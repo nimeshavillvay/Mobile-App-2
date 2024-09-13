@@ -1,9 +1,13 @@
 "use client";
 
+import { Toaster } from "@repo/web-ui/components/base/molecules/toast";
+import { TooltipProvider } from "@repo/web-ui/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { ReactQueryStreamedHydration } from "@tanstack/react-query-next-experimental";
 import { useState, type ReactNode } from "react";
+import { CookiesProvider } from "react-cookie";
+import { Provider as WrapBalancer } from "react-wrap-balancer";
 
 type ProvidersProps = {
   readonly children: ReactNode;
@@ -24,11 +28,18 @@ const Providers = ({ children }: ProvidersProps) => {
   );
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <ReactQueryStreamedHydration>{children}</ReactQueryStreamedHydration>
+    <CookiesProvider>
+      <QueryClientProvider client={queryClient}>
+        <ReactQueryStreamedHydration>
+          <WrapBalancer>
+            <TooltipProvider>{children}</TooltipProvider>
+          </WrapBalancer>
+          <Toaster />
+        </ReactQueryStreamedHydration>
 
-      <ReactQueryDevtools />
-    </QueryClientProvider>
+        <ReactQueryDevtools />
+      </QueryClientProvider>
+    </CookiesProvider>
   );
 };
 

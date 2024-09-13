@@ -169,7 +169,6 @@ const ShippingMethod = ({ token }: ShippingMethodProps) => {
       config.will_call_shipping = WILLCALL_SHIPING_METHOD;
       config.will_call_not_in_stock = FALSE_STRING;
     }
-
     return config;
   };
 
@@ -212,7 +211,6 @@ const ShippingMethod = ({ token }: ShippingMethodProps) => {
 
         const shippingMethods =
           selectedOption?.plants.at(0)?.shippingMethods ?? [];
-
         return {
           id: item.itemInfo.productId,
           hashvalue: selectedOption?.hash ?? "",
@@ -354,7 +352,6 @@ const ShippingMethod = ({ token }: ShippingMethodProps) => {
       const transformedConfig = availability
         ? transformConfiguration(availability, config)
         : config;
-
       return {
         cartItemId: item.cartItemId,
         quantity: item.quantity,

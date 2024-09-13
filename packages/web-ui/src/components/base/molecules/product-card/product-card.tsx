@@ -204,7 +204,6 @@ const ProductCardDetails = ({
   ) : (
     title
   );
-
   return (
     <TooltipProvider>
       <div className="space-y-1 text-sm">

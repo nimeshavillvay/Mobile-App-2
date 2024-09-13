@@ -226,7 +226,6 @@ const SelectorsForMobileDialog = ({
     const selectedFilterList = filter
       .filter((item) => selectedIds.includes(item.id))
       .map((item) => item.value);
-
     return selectedFilterList.length < 3
       ? selectedFilterList.join(", ")
       : `${selectedFilterList[0]}, ${selectedFilterList[1]} (+ ${selectedFilterList.length - 2})`;

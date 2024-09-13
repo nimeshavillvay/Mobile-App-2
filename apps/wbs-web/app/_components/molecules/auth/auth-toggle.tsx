@@ -16,7 +16,7 @@ const AuthenticationToggle = ({ mode }: AuthenticationToggleProps) => {
 
   return (
     <div
-      className="flex items-center justify-between text-left text-sm font-normal sm:text-center"
+      className="flex items-center justify-between text-center text-sm font-normal"
       data-testid="auth-toggle"
     >
       {text}

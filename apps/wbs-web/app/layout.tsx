@@ -1,4 +1,4 @@
-import { cn } from "@/_lib/utils";
+import { cn } from "@/_lib/utils/";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import NextTopLoader from "nextjs-toploader";

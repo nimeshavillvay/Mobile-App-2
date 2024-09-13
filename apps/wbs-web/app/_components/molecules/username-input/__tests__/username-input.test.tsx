@@ -18,34 +18,9 @@ const TestComponent = () => {
       userName: "", // Initialize with an empty string
     },
   });
-
   return (
     <FormProvider {...methods}>
       <UsernameInput control={methods.control} name="userName" />
-    </FormProvider>
-  );
-};
-
-type TestComponentWithUsernameCheckProps = {
-  readonly onUsernameCheck: (isDisabled: boolean) => void;
-};
-
-const TestComponentWithUsernameCheck = ({
-  onUsernameCheck,
-}: TestComponentWithUsernameCheckProps) => {
-  const methods = useForm({
-    defaultValues: {
-      userName: "",
-    },
-  });
-
-  return (
-    <FormProvider {...methods}>
-      <UsernameInput
-        control={methods.control}
-        name="userName"
-        onUsernameCheck={onUsernameCheck}
-      />
     </FormProvider>
   );
 };
@@ -104,24 +79,6 @@ describe("UsernameInput", () => {
 
     await waitFor(() => {
       expect(input).not.toBeDisabled();
-    });
-  });
-
-  it("calls onUsernameCheck with correct values", async () => {
-    const mockOnUsernameCheck = jest.fn();
-    renderWithClient(
-      <TestComponentWithUsernameCheck onUsernameCheck={mockOnUsernameCheck} />,
-    );
-    const input = screen.getByTestId("input-userName");
-
-    fireEvent.change(input, { target: { value: "testuser" } });
-
-    await waitFor(() => {
-      expect(mockOnUsernameCheck).toHaveBeenCalledWith(true);
-    });
-
-    await waitFor(() => {
-      expect(mockOnUsernameCheck).toHaveBeenCalledWith(false);
     });
   });
 });
