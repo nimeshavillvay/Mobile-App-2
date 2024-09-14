@@ -1,9 +1,10 @@
 "use client";
 
 import { Button } from "@repo/web-ui/components/ui/button";
+import { LogLevel, useLogger } from "next-axiom";
 import Link from "next/link";
-// eslint-disable-next-line no-restricted-imports
-import { useEffect, type ReactNode } from "react";
+import { usePathname } from "next/navigation";
+import { type ReactNode } from "react";
 
 type ServerErrorViewerProps = {
   readonly title?: ReactNode;
@@ -26,10 +27,24 @@ const ServerErrorViewer = ({
   error,
   reset,
 }: ServerErrorViewerProps) => {
-  useEffect(() => {
-    // Log the error to an error reporting service
-    console.error(error);
-  }, [error]);
+  const pathname = usePathname();
+  const log = useLogger({ source: "error.tsx" });
+
+  log.logHttpRequest(
+    LogLevel.error,
+    error.message,
+    {
+      host: window.location.href,
+      path: pathname,
+      statusCode: status,
+    },
+    {
+      error: error.name,
+      cause: error.cause,
+      stack: error.stack,
+      digest: error.digest,
+    },
+  );
 
   return (
     <div className="grid size-full place-items-center">
