@@ -153,7 +153,7 @@ const CartItemPrice = ({
         </div>
       </div>
 
-      {listPrice && price && listPrice > price && (
+      {listPrice > 0 && price > 0 && listPrice > price && (
         <div className="ml-1 text-[13px] leading-5 text-wurth-gray-500 line-through">
           ${formatNumberToPrice(listPrice)}/{priceUnit}
         </div>

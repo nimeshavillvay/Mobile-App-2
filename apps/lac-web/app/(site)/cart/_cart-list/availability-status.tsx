@@ -5,18 +5,22 @@ type AvailabilityStatusProps = {
   readonly availabilityStatus: string;
   readonly amount: number;
   readonly branch: string;
+  readonly isHomePlant: boolean;
 };
 
 const AvailabilityStatus = ({
   availabilityStatus,
   amount,
   branch,
+  isHomePlant,
 }: AvailabilityStatusProps) => {
   const isLimitedStock = availabilityStatus === LIMITED_STOCK && amount > 0;
   const isInStock = availabilityStatus === IN_STOCK && amount > 0;
   let statusText = "";
 
-  if (isInStock) {
+  if (!isHomePlant) {
+    statusText = "Not stocked";
+  } else if (isInStock) {
     statusText = `${amount} in stock`;
   } else if (isLimitedStock) {
     statusText = `Only ${amount} in stock`;
