@@ -235,7 +235,7 @@ const ProductCardPrice = ({
       <span
         className={cn(
           "font-bold",
-          !isLaminateItem && actualPrice && price < actualPrice
+          !isLaminateItem && actualPrice && price < actualPrice && showDiscount
             ? "text-green-700"
             : "text-wurth-gray-800",
         )}
