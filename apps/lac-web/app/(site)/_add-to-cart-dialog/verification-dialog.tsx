@@ -336,12 +336,18 @@ const PriceCheck = ({
     priceData?.listPrice &&
     priceData?.price < priceData?.listPrice;
 
+  const loginCheckResponse = useSuspenseCheckLogin(token);
+
+  const showDiscount = loginCheckResponse.data?.status_code === "NOT_LOGGED_IN";
+
   return (
     <div className="flex flex-col gap-1">
       <div className="text-sm leading-none text-wurth-gray-800">
         <span
           className={
-            !isLaminateItem && isDiscounted ? "text-green-700" : "text-inherit"
+            !isLaminateItem && isDiscounted && showDiscount
+              ? "text-green-700"
+              : "text-inherit"
           }
         >
           $
@@ -353,7 +359,7 @@ const PriceCheck = ({
             {formatNumberToPrice(priceData?.uomPrice ?? priceData?.price)}
           </span>
         </span>
-        {!isLaminateItem && isDiscounted && (
+        {!isLaminateItem && isDiscounted && showDiscount && (
           <span className="text-base leading-6 text-wurth-gray-400 line-through">
             {formatNumberToPrice(priceData?.listPrice)}
           </span>
