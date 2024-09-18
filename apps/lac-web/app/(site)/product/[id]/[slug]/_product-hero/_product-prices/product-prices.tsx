@@ -63,7 +63,7 @@ const ProductPrices = ({
           </span>
         </div>
 
-        {!isLaminateItem && discount > 0 && (
+        {!isLaminateItem && discount > 0 && showDiscount && (
           <div className="text-wurth-gray-400 line-through">
             ${formatNumberToPrice(listPrice)}
           </div>
