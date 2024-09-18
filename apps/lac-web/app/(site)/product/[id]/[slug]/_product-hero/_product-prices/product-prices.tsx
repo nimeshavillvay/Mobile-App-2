@@ -2,6 +2,7 @@
 
 import useDebouncedState from "@/_hooks/misc/use-debounced-state.hook";
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
+import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
 import { cn, formatNumberToPrice } from "@/_lib/utils";
 import { useDeferredValue } from "react";
 import useAddToCartForm from "../use-add-to-cart-form.hook";
@@ -48,6 +49,10 @@ const ProductPrices = ({
 
   const isLaminateItem = !!priceData?.uomPrice && !!priceData?.uomPriceUnit;
 
+  const loginCheckResponse = useSuspenseCheckLogin(token);
+
+  const showDiscount = loginCheckResponse.data?.status_code === "NOT_LOGGED_IN";
+
   return (
     <section className={cn("space-y-3 md:space-y-4", className)}>
       <div className="flex flex-row items-end gap-1 text-lg leading-6 text-wurth-gray-800">
@@ -69,7 +74,7 @@ const ProductPrices = ({
           <span className="font-title leading-none">{actualUom}</span>
         </div>
 
-        {!isLaminateItem && discount > 0 && (
+        {!isLaminateItem && discount > 0 && showDiscount && (
           <div className="font-semibold text-green-700">
             You save ${formatNumberToPrice(listPrice - currentPrice)}
           </div>
