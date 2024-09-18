@@ -242,7 +242,7 @@ const ProductCard = ({
     >
       <ProductCardHero>
         <div className="flex flex-row justify-between gap-2 @container/labels">
-          {!isLaminateItem && discountPercent > 0 ? (
+          {!isLaminateItem && discountPercent > 0 && !isLoggedInUser ? (
             <ProductCardDiscount>{discountPercent}</ProductCardDiscount>
           ) : (
             <div className="invisible md:text-lg">0</div>
@@ -289,6 +289,7 @@ const ProductCard = ({
             uom={uom}
             actualPrice={listPrice}
             isLaminateItem={isLaminateItem}
+            showDiscount={!isLoggedInUser}
           />
 
           {product.variants.length > 1 ? (

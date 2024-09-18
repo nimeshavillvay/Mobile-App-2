@@ -4,6 +4,7 @@ import SaleBadges from "@/_components/sale-badges";
 import useGtmUser from "@/_hooks/gtm/use-gtm-user.hook";
 import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
 import usePathnameHistoryState from "@/_hooks/misc/use-pathname-history-state.hook";
+import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
 import { GTM_ITEM_PAGE_TYPES } from "@/_lib/constants";
 import { getGTMPageType } from "@/_lib/gtm-utils";
 import type { GtmProduct } from "@/_lib/types";
@@ -38,6 +39,7 @@ type ProductProps = {
     uomPriceUnit?: string;
   };
   readonly gtmItemInfo: GtmProduct | undefined;
+  readonly token: string;
 };
 
 const ProductCard = ({
@@ -47,6 +49,7 @@ const ProductCard = ({
   stretchWidth = false,
   priceData,
   gtmItemInfo,
+  token,
 }: ProductProps) => {
   const id = product.productId;
   const title = product.itemName;
@@ -60,6 +63,10 @@ const ProductCard = ({
   const removeShoppingListItemMutation = useRemoveShoppingListItemMutation(
     parseInt(id),
   );
+
+  const loginCheckResponse = useSuspenseCheckLogin(token);
+
+  const showDiscount = loginCheckResponse.data?.status_code === "NOT_LOGGED_IN";
 
   const listPrice = priceData.listPrice;
   const currentPrice = priceData?.uomPrice ?? priceData?.price;
@@ -139,7 +146,7 @@ const ProductCard = ({
     >
       <ProductCardHero>
         <div className="flex flex-row justify-between gap-2 @container/labels">
-          {!isLaminateItem && discountPercent > 0 ? (
+          {!isLaminateItem && discountPercent > 0 && showDiscount ? (
             <ProductCardDiscount>{discountPercent}</ProductCardDiscount>
           ) : (
             <div className="invisible md:text-lg">0</div>
@@ -191,6 +198,7 @@ const ProductCard = ({
               uom={uom}
               actualPrice={listPrice}
               isLaminateItem={isLaminateItem}
+              showDiscount={showDiscount}
             />
           )}
 
