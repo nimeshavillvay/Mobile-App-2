@@ -141,7 +141,6 @@ export const config = {
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
      * - robots.txt (robots.txt file)
-     * - monitoring (Sentry monitoring)
      * - autodiscover/autodiscover.xml (Outlook)
      * - storefront (Storefront)
      * - no-bot (the page when bots try to access private routes)
@@ -151,7 +150,7 @@ export const config = {
      * - .html (HTML files)
      * - .php (PHP files)
      */
-    "/((?!api|_next/static|_next/image|favicon.ico|robots.txt|.*sitemap|.*opengraph-image|monitoring|autodiscover/autodiscover.xml|.*html|.*php|storefront|no-bot).*)",
+    "/((?!api|_next/static|_next/image|favicon.ico|robots.txt|.*sitemap|.*opengraph-image|autodiscover/autodiscover.xml|.*html|.*php|storefront|no-bot).*)",
   ],
 };
 
