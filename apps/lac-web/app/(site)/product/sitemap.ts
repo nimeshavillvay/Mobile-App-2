@@ -27,7 +27,7 @@ const sitemap = async ({
     url: getFullUrl(
       `/product/${sitemapProduct.productid}/${sitemapProduct.slug}`,
     ),
-    changeFrequency: sitemapProduct.changefreq,
+    changeFrequency: "weekly",
     priority: Number(sitemapProduct.priority),
     images: [sitemapProduct.image],
   }));
