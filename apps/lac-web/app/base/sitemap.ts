@@ -24,7 +24,6 @@ const BASE_PATHS = [
 const sitemap = (): MetadataRoute.Sitemap => {
   return BASE_PATHS.map((path) => ({
     url: getFullUrl(path),
-    lastModified: new Date(),
     changeFrequency: "daily",
     priority: 1,
   }));

@@ -30,7 +30,6 @@ const sitemap = async ({
     changeFrequency: sitemapProduct.changefreq,
     priority: Number(sitemapProduct.priority),
     images: [sitemapProduct.image],
-    lastModified: new Date(),
   }));
 };
 
