@@ -39,11 +39,13 @@ const AvailabilityStatus = ({
               ? "Limited Stock"
               : "In Stock"}
       </div>
+
       {!isHomeBranch && (
         <div className="text-sm font-medium text-wurth-gray-800">
           at {xPlant}
         </div>
       )}
+
       {isHomeBranch && !isNotInStock && (
         <div className="text-sm font-medium text-wurth-gray-800">
           <span className="stock-available">{amount}</span> in stock at{" "}
