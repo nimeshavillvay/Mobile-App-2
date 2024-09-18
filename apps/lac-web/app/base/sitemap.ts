@@ -19,12 +19,12 @@ const BASE_PATHS = [
   "/tax-form",
   "/Terms-and-Conditions-for-WLACs-Purchase-of-Products-from-Suppliers",
   "/terms-of-sale",
-];
+] as const;
 
 const sitemap = (): MetadataRoute.Sitemap => {
   return BASE_PATHS.map((path) => ({
     url: getFullUrl(path),
-    changeFrequency: "daily",
+    changeFrequency: path === "/" ? "daily" : "monthly",
     priority: 1,
   }));
 };
