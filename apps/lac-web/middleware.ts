@@ -8,14 +8,8 @@ import {
 } from "@/_lib/constants";
 import dayjs from "dayjs";
 import isBetween from "dayjs/plugin/isBetween";
-import { Logger } from "next-axiom";
 import type { ResponseCookie } from "next/dist/compiled/@edge-runtime/cookies";
-import {
-  NextResponse,
-  userAgent,
-  type NextFetchEvent,
-  type NextRequest,
-} from "next/server";
+import { NextResponse, userAgent, type NextRequest } from "next/server";
 
 dayjs.extend(isBetween);
 
@@ -26,15 +20,7 @@ const PUBLIC_ONLY_ROUTES = [
   "/password-reset",
 ];
 
-export const middleware = async (
-  request: NextRequest,
-  event: NextFetchEvent,
-) => {
-  const logger = new Logger({ source: "middleware" }); // traffic, request
-  logger.middleware(request);
-
-  event.waitUntil(logger.flush());
-
+export const middleware = async (request: NextRequest) => {
   const sessionToken = request.cookies.get(SESSION_TOKEN_COOKIE);
   const tokenExpire = request.cookies.get(TOKEN_EXPIRE_COOKIE);
 

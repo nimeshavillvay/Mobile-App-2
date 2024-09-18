@@ -2,7 +2,6 @@ import { cn } from "@/_lib/utils";
 import { GoogleTagManager } from "@next/third-parties/google";
 import { Analytics } from "@vercel/analytics/react";
 import { type Metadata } from "next";
-import { AxiomWebVitals } from "next-axiom";
 import localFont from "next/font/local";
 import NextTopLoader from "nextjs-toploader";
 import { type ReactNode } from "react";
@@ -62,7 +61,6 @@ const RootLayout = ({ children }: { readonly children: ReactNode }) => {
             />
           )}
           <Analytics />
-          <AxiomWebVitals />
         </Providers>
       </body>
     </html>
