@@ -320,7 +320,9 @@ const RegisterNewUser: React.FC<RegisterNewUserProps> = ({
       {
         "country-name": values.billingCountry,
         county: values.billingCounty,
-        locality: values.billingCounty,
+        locality: values.billingCounty
+          ? values.billingCounty
+          : values.billingCity,
         region: values.billingState,
         "street-address": values.billingAddress,
         "postal-code": values.billingPostCode,
@@ -335,7 +337,9 @@ const RegisterNewUser: React.FC<RegisterNewUserProps> = ({
           {
             "country-name": values.shippingCountry,
             county: values.shippingCounty,
-            locality: values.shippingCounty,
+            locality: values.shippingCounty
+              ? values.shippingCounty
+              : values.shippingCity,
             region: values.shippingState,
             "street-address": values.shippingAddress,
             "postal-code": values.shippingPostCode,
