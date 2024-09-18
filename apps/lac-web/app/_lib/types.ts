@@ -453,6 +453,7 @@ export type CheckAvailability = {
     name: string;
     amount: number;
   }[];
+  backorder_location: string;
 };
 
 export type TransformedCategory = {

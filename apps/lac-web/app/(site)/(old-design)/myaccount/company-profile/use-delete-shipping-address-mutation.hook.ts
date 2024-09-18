@@ -25,7 +25,7 @@ const useDeleteShippingAddressMutation = () => {
     },
     onSuccess: () => {
       toast({
-        description: "Shipping address deleted",
+        description: "Delete Request Sent",
       });
     },
     onError: () => {
