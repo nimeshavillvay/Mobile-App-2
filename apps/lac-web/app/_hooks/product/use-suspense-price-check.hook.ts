@@ -85,7 +85,8 @@ const useSuspensePriceCheck = (
 
       return { error: response.error, productPrices: mappedItems };
     },
-    staleTime: 60000,
+    staleTime: 1000 * 60 * 10, // 10 mins
+    gcTime: 1000 * 60 * 30, // 30 mins
   });
 };
 
