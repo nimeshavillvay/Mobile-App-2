@@ -222,18 +222,20 @@ const ProductCardPrice = ({
   uom,
   actualPrice,
   isLaminateItem,
+  showDiscount,
 }: {
   readonly price: number;
   readonly uom: string;
   readonly actualPrice?: number;
   readonly isLaminateItem: boolean;
+  readonly showDiscount: boolean;
 }) => {
   return (
     <div className="text-xs font-normal text-wurth-gray-800 md:text-sm md:leading-none">
       <span
         className={cn(
           "font-bold",
-          !isLaminateItem && actualPrice && price < actualPrice
+          !isLaminateItem && actualPrice && price < actualPrice && showDiscount
             ? "text-green-700"
             : "text-wurth-gray-800",
         )}
@@ -243,11 +245,14 @@ const ProductCardPrice = ({
           {formatNumberToPrice(price)}
         </span>
       </span>
-      {!isLaminateItem && !!actualPrice && price < actualPrice && (
-        <span className="ml-1 text-base font-normal text-wurth-gray-500 line-through md:text-lg">
-          {formatNumberToPrice(actualPrice)}
-        </span>
-      )}
+      {!isLaminateItem &&
+        !!actualPrice &&
+        price < actualPrice &&
+        showDiscount && (
+          <span className="ml-1 text-base font-normal text-wurth-gray-500 line-through md:text-lg">
+            {formatNumberToPrice(actualPrice)}
+          </span>
+        )}
       /{uom}
     </div>
   );

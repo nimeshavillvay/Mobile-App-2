@@ -1,5 +1,4 @@
-import { loginCheck } from "@/_hooks/user/use-suspense-check-login.hook";
-import { api } from "@/_lib/api";
+import { loginCheck } from "@/_lib/apis/shared";
 import {
   PRIVATE_ROUTES,
   SESSION_TOKEN_COOKIE,
@@ -8,14 +7,8 @@ import {
 } from "@/_lib/constants";
 import dayjs from "dayjs";
 import isBetween from "dayjs/plugin/isBetween";
-import { Logger } from "next-axiom";
 import type { ResponseCookie } from "next/dist/compiled/@edge-runtime/cookies";
-import {
-  NextResponse,
-  userAgent,
-  type NextFetchEvent,
-  type NextRequest,
-} from "next/server";
+import { NextResponse, userAgent, type NextRequest } from "next/server";
 
 dayjs.extend(isBetween);
 
@@ -26,15 +19,7 @@ const PUBLIC_ONLY_ROUTES = [
   "/password-reset",
 ];
 
-export const middleware = async (
-  request: NextRequest,
-  event: NextFetchEvent,
-) => {
-  const logger = new Logger({ source: "middleware" }); // traffic, request
-  logger.middleware(request);
-
-  event.waitUntil(logger.flush());
-
+export const middleware = async (request: NextRequest) => {
   const sessionToken = request.cookies.get(SESSION_TOKEN_COOKIE);
   const tokenExpire = request.cookies.get(TOKEN_EXPIRE_COOKIE);
 
@@ -54,19 +39,9 @@ export const middleware = async (
     return NextResponse.next();
   }
 
-  // Get new session token just in case
-  const { tokenValue: newTokenValue } = await sessionTokenDetails();
-
-  const actualTokenValue = sessionToken?.value ?? newTokenValue;
+  const loginCheckResponse = await loginCheck(sessionToken?.value);
   const actualExpireValue =
     tokenExpire?.value ?? dayjs().add(TOKEN_MAX_AGE, "seconds").toISOString();
-
-  // Refresh the token on page navigation and
-  // check if the user is logged in
-  const [{ tokenValue, cookieConfig }, loginCheckResponse] = await Promise.all([
-    sessionTokenDetails(actualTokenValue),
-    loginCheck(actualTokenValue),
-  ]);
 
   const isForcePasswordReset = loginCheckResponse?.change_password;
   if (
@@ -89,6 +64,13 @@ export const middleware = async (
     dayjs(actualExpireValue),
     "seconds",
   );
+
+  // The new token cookie in case it needs to be refreshed
+  const tokenValue = loginCheckResponse?.tokenValue ?? "";
+  const cookieConfig: Partial<ResponseCookie> = {
+    path: "/",
+    maxAge: loginCheckResponse?.maxAge ?? TOKEN_MAX_AGE,
+  };
 
   // Check for public routes
   const isPublicRoute = !!PUBLIC_ONLY_ROUTES.find((route) =>
@@ -155,63 +137,19 @@ export const config = {
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
      * - robots.txt (robots.txt file)
-     * - monitoring (Sentry monitoring)
      * - autodiscover/autodiscover.xml (Outlook)
      * - storefront (Storefront)
      * - no-bot (the page when bots try to access private routes)
-     * - _axiom (Axiom reporting)
      * and those containing these in the pathname:
      * - sitemap (sitemap files)
      * - opengraph-image (Open Graph images)
      * - .html (HTML files)
      * - .php (PHP files)
      */
-    "/((?!api|_next/static|_next/image|favicon.ico|robots.txt|.*sitemap|.*opengraph-image|monitoring|autodiscover/autodiscover.xml|.*html|.*php|storefront|no-bot|_axiom).*)",
+    "/((?!api|_next/static|_next/image|favicon.ico|robots.txt|.*sitemap|.*opengraph-image|autodiscover/autodiscover.xml|.*html|.*php|storefront|no-bot).*)",
   ],
 };
 
-const sessionTokenDetails = async (existingToken?: string) => {
-  const sessionResponse = await api.get("rest/session", {
-    cache: "no-cache",
-    credentials: "include",
-    headers: existingToken
-      ? { Authorization: `Bearer ${existingToken}` }
-      : // Can't give "undefined" here because all existing headers get deleted
-        { "X-AUTH-TOKEN": process.env.NEXT_PUBLIC_WURTH_LAC_API_KEY },
-  });
-
-  let tokenValue = "";
-  const cookieConfig: Partial<ResponseCookie> = {
-    path: "/",
-  };
-
-  // Check for the session token cookie
-  for (const header of sessionResponse.headers.entries()) {
-    if (
-      header[0] === "set-cookie" &&
-      header[1].includes(`${SESSION_TOKEN_COOKIE}=`)
-    ) {
-      const keyValuePairs = header[1].split("; ");
-
-      for (const pair of keyValuePairs) {
-        const [key, value] = pair.split("=");
-
-        if (key && value) {
-          if (key === SESSION_TOKEN_COOKIE) {
-            tokenValue = value;
-          } else if (key === "Max-Age") {
-            cookieConfig.maxAge = parseInt(value);
-          }
-        }
-      }
-    }
-  }
-
-  return {
-    tokenValue,
-    cookieConfig,
-  };
-};
 const setSessionTokenCookie = (
   response: NextResponse,
   {

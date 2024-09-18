@@ -11,7 +11,6 @@ const sitemap = async (): Promise<MetadataRoute.Sitemap> => {
     changeFrequency: sitemapCategory.changefreq,
     priority: Number(sitemapCategory.priority),
     images: [sitemapCategory.image],
-    lastModified: new Date(),
   }));
 };
 

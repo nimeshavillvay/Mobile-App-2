@@ -46,7 +46,7 @@ const useSuspensePriceCheck = (
       const response = await api
         .post("rest/pricecheck", {
           headers: {
-            authorization: `Bearer ${token}`,
+            authorization: token ? `Bearer ${token}` : token,
           },
           json: {
             products: products.map((product) => ({
@@ -85,7 +85,8 @@ const useSuspensePriceCheck = (
 
       return { error: response.error, productPrices: mappedItems };
     },
-    staleTime: 60000,
+    staleTime: 1000 * 60 * 10, // 10 mins
+    gcTime: 1000 * 60 * 30, // 30 mins
   });
 };
 

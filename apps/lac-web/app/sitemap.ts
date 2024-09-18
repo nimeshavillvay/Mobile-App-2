@@ -17,11 +17,11 @@ const sitemap = async (): Promise<MetadataRoute.Sitemap> => {
   const sitemap: MetadataRoute.Sitemap = [
     {
       url: getFullUrl("/base/sitemap.xml"),
-      lastModified: new Date(),
+      changeFrequency: "daily",
     },
     {
       url: getFullUrl("/category/sitemap.xml"),
-      lastModified: new Date(),
+      changeFrequency: "daily",
     },
   ];
 
@@ -29,7 +29,7 @@ const sitemap = async (): Promise<MetadataRoute.Sitemap> => {
   Array.from({ length: numberOfProductPages }).forEach((_, index) => {
     sitemap.push({
       url: getFullUrl(`/product/sitemap/${index}.xml`),
-      lastModified: new Date(),
+      changeFrequency: "daily",
     });
   });
 
@@ -37,7 +37,7 @@ const sitemap = async (): Promise<MetadataRoute.Sitemap> => {
   Array.from({ length: numberOfAssetPages }).forEach((_, index) => {
     sitemap.push({
       url: getFullUrl(`/assets/sitemap/${index}.xml`),
-      lastModified: new Date(),
+      changeFrequency: "daily",
     });
   });
 
@@ -45,7 +45,7 @@ const sitemap = async (): Promise<MetadataRoute.Sitemap> => {
   Array.from({ length: numberOfImagePages }).forEach((_, index) => {
     sitemap.push({
       url: getFullUrl(`/images/sitemap/${index}.xml`),
-      lastModified: new Date(),
+      changeFrequency: "daily",
     });
   });
 

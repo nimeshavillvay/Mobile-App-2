@@ -27,7 +27,6 @@ const sitemap = async ({
     changeFrequency: sitemapImage.changefreq,
     priority: Number(sitemapImage.priority),
     images: [sitemapImage.image],
-    lastModified: new Date(),
   }));
 };
 

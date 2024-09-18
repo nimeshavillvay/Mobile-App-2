@@ -1,4 +1,4 @@
-import { SPECIAL_SHIPPING_FLAG } from "@/_lib/constants";
+import { SESSION_TOKEN_COOKIE, SPECIAL_SHIPPING_FLAG } from "@/_lib/constants";
 import { getBoolean } from "@/_lib/utils";
 import { z } from "zod";
 import { api } from "../api";
@@ -9,6 +9,66 @@ import type {
   ShippingMethod,
   Token,
 } from "../types";
+
+export const loginCheck = async (token?: string) => {
+  const response = await api.get("rest/auth/login-check", {
+    headers: {
+      Authorization: token ? `Bearer ${token}` : undefined,
+    },
+    cache: "no-store",
+    throwHttpErrors: false,
+  });
+
+  let tokenValue = "";
+  let maxAge = 0;
+  // Check for the session token cookie
+  for (const header of response.headers.entries()) {
+    if (
+      header[0] === "set-cookie" &&
+      header[1].includes(`${SESSION_TOKEN_COOKIE}=`)
+    ) {
+      const keyValuePairs = header[1].split("; ");
+
+      for (const pair of keyValuePairs) {
+        const [key, value] = pair.split("=");
+
+        if (key && value) {
+          if (key === SESSION_TOKEN_COOKIE) {
+            tokenValue = value;
+          } else if (key === "Max-Age") {
+            maxAge = parseInt(value);
+          }
+        }
+      }
+    }
+  }
+
+  const data = await response.json<
+    | {
+        isLoggedInAsCustomer: boolean;
+        status_code: "OK";
+        user_id: string;
+        sales_rep_id?: string;
+        change_password: boolean;
+        user: {
+          billto: string;
+          user_id: string;
+          email: string;
+          phone: string;
+          company: string;
+          fullname: string;
+          sales_rep: string;
+        };
+      }
+    | {
+        change_password: false;
+        status_code: "NOT_LOGGED_IN";
+      }
+    | undefined
+  >();
+
+  return data ? { ...data, tokenValue, maxAge } : undefined;
+};
 
 export const getItemInfo = async (productIdList: number[]) => {
   const response = await api

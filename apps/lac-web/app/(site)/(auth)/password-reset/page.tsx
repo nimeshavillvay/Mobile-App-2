@@ -1,5 +1,5 @@
-import { loginCheck } from "@/_hooks/user/use-suspense-check-login.hook";
 import { getPasswordPolicies } from "@/_lib/apis/server";
+import { loginCheck } from "@/_lib/apis/shared";
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import type { Metadata } from "next";
 import { cookies } from "next/headers";

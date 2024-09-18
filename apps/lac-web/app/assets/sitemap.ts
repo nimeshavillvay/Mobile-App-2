@@ -27,7 +27,6 @@ const sitemap = async ({
     url: encode(`https://${sitemapAsset.url}`),
     changeFrequency: sitemapAsset.changefreq,
     priority: Number(sitemapAsset.priority),
-    lastModified: new Date(),
   }));
 };
 

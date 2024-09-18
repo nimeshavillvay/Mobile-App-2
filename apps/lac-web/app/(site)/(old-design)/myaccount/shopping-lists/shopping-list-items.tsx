@@ -223,6 +223,7 @@ const ProductCardsList = ({
               uomPriceUnit: priceData.uomPriceUnit,
             }}
             gtmItemInfo={gtmItemInfo?.[0]}
+            token={token}
           />
         );
       })}

@@ -49,7 +49,7 @@ export const ProductsGridList = ({
   const orientation = type === "mobile" ? "horizontal" : "vertical";
 
   const priceCheckQuery = useSuspensePriceCheck(
-    token,
+    undefined,
     products
       .flatMap((product) => product.prop.variants)
       .map((product) => ({
