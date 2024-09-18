@@ -591,6 +591,7 @@ const LocationStocks = ({
           isLimitedStock={isLimitedStock}
           isNotInStock={isNotInStock}
           location={firstLocation?.name ?? ""}
+          xPlant={willCallPlant.plantName}
         />
       </div>
       {checkLoginQuery.data?.status_code === "OK" &&
