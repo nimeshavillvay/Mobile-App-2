@@ -46,7 +46,7 @@ const useSuspensePriceCheck = (
       const response = await api
         .post("rest/pricecheck", {
           headers: {
-            authorization: `Bearer ${token}`,
+            authorization: token ? `Bearer ${token}` : token,
           },
           json: {
             products: products.map((product) => ({
