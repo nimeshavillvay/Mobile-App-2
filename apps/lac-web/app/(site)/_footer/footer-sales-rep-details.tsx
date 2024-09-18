@@ -1,5 +1,5 @@
 import SalesRepresentative from "@/_components/sales-representative";
-import { loginCheck } from "@/_hooks/user/use-suspense-check-login.hook";
+import { loginCheck } from "@/_lib/apis/shared";
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import { cookies } from "next/headers";

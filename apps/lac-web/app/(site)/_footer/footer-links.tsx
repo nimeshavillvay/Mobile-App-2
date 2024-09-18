@@ -1,4 +1,4 @@
-import { loginCheck } from "@/_hooks/user/use-suspense-check-login.hook";
+import { loginCheck } from "@/_lib/apis/shared";
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import { cookies } from "next/headers";
 import FooterLinksLoggedIn from "./footer-links-logged-in";

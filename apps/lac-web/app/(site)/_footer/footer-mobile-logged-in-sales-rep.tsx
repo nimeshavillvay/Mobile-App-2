@@ -1,5 +1,5 @@
 import { getAccountList } from "@/_hooks/user/use-suspense-account-list.hook";
-import { loginCheck } from "@/_hooks/user/use-suspense-check-login.hook";
+import { loginCheck } from "@/_lib/apis/shared";
 import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import { cn } from "@/_lib/utils";
 import {
