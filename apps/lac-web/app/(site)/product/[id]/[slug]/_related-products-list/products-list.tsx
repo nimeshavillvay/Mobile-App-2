@@ -13,7 +13,7 @@ type ProductsListProps = {
 
 const ProductsList = ({ token, products }: ProductsListProps) => {
   const priceCheckQuery = useSuspensePriceCheck(
-    undefined,
+    token,
     products.map((product) => ({
       productId: Number(product.productid),
       qty: 1,
