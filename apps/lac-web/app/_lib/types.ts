@@ -292,6 +292,7 @@ export type Cart = {
     quantity: number;
     cart_item_id: number;
     configuration: CartItemConfiguration;
+    is_laminate: boolean;
     itemInfo: {
       productid: string;
       is_product_exclude: boolean;

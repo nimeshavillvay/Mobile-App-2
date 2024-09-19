@@ -16,6 +16,7 @@ type CartItemPriceProps = {
   readonly priceData: ItemPrice;
   readonly onPriceChange?: (newPrice: number) => void;
   readonly type: ViewportTypes;
+  readonly isLaminateItem: boolean;
 };
 
 const cartItemPriceSchema = z.object({
@@ -32,6 +33,7 @@ const CartItemPrice = ({
   priceData,
   onPriceChange,
   type,
+  isLaminateItem,
 }: CartItemPriceProps) => {
   const cartFormId = useCartFormIdContext();
 
@@ -110,6 +112,7 @@ const CartItemPrice = ({
                 }
               }
             }}
+            disabled={isLaminateItem}
           />
           <span
             className={cn(
