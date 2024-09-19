@@ -23,7 +23,7 @@ export const PRIVATE_ROUTES = [
   "/myaccount",
 ];
 
-export const DEFAULT_REVALIDATE = 60; // 1 minute
+export const DEFAULT_REVALIDATE = 60 * 10; // 10 minutes
 
 export const SPECIAL_SHIPPING_FLAG = [
   "LONG",
