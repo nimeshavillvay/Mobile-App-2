@@ -63,6 +63,8 @@ import {
   DEFAULT_SHIPPING_METHOD,
   MAIN_OPTIONS,
   TAKE_ON_HAND,
+  WILLCALL_SHIPING_METHOD,
+  WILLCALL_TRANSFER_SHIPING_METHOD,
 } from "../constants";
 import type { Availability, WillCallAnywhere } from "../types";
 import useUnSavedAlternativeQuantityState from "../use-cart-alternative-qty-method-store.hook";
@@ -97,7 +99,12 @@ type CartItemShippingMethodProps = {
   readonly selectedWillCallTransfer: WillCallOption;
   readonly isDirectlyShippedFromVendor: boolean;
   readonly handleSelectWillCallPlant: (plant: string) => void;
-  readonly willCallPlant: { plantCode: string; plantName: string };
+  readonly willCallPlant: {
+    plantCode: string;
+    plantName: string;
+    willCallMethod: string;
+    pickupPlant: string;
+  };
   readonly setSelectedBackorderShippingMethod: (method: string) => void;
   readonly selectedBackorderShippingMethod: string;
   readonly token: string;
@@ -536,8 +543,20 @@ const CartItemShippingMethod = ({
         isWillCallAnywhere &&
         willCallAnywhere[0]
       ) {
-        setSelectedWillCallTransfer(MAIN_OPTIONS.WILL_CALL);
-        processWillCallAnywhereItem(willCallAnywhere[0]);
+        setSelectedWillCallTransfer(
+          willCallPlant.willCallMethod === WILLCALL_SHIPING_METHOD
+            ? MAIN_OPTIONS.WILL_CALL
+            : MAIN_OPTIONS.WILL_CALL_TRANSFER,
+        );
+        const willCallIndex =
+          willCallPlant.willCallMethod === WILLCALL_TRANSFER_SHIPING_METHOD &&
+          willCallAnywhere[1] &&
+          willCallAnywhere[1].isTransfer
+            ? 1
+            : 0;
+        processWillCallAnywhereItem(
+          willCallAnywhere[willCallIndex] ?? willCallAnywhere[0],
+        );
       }
     }
   };
@@ -1156,6 +1175,7 @@ const CartItemShippingMethod = ({
               value={selectedWillCallPlant}
               onValueChange={(plant) => {
                 if (willCallAnywhere && willCallAnywhere[0]) {
+                  //todo
                   handleSelectWillCallPlant(plant);
                 }
                 setSelectedWillCallPlant(plant);
