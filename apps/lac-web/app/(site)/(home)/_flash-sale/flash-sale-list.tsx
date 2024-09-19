@@ -59,15 +59,7 @@ const FlashSaleList = ({ token, products }: FlashSaleListProps) => {
           ],
           gtmProduct: gtmItemInfo ?? [],
         }}
-        prices={[
-          {
-            productId: priceData.productId,
-            listPrice: priceData.listPrice,
-            price: priceData.price,
-            uomPrice: priceData.uomPrice,
-            uomPriceUnit: priceData.uomPriceUnit,
-          },
-        ]}
+        firstVariantPrice={priceData}
       />
     );
   });

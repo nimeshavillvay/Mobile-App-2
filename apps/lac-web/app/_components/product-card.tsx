@@ -3,9 +3,10 @@
 import useGtmUser from "@/_hooks/gtm/use-gtm-user.hook";
 import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
 import usePathnameHistoryState from "@/_hooks/misc/use-pathname-history-state.hook";
+import usePriceCheck from "@/_hooks/product/use-price-check.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
 import { getGTMItemListPage, getGTMPageType } from "@/_lib/gtm-utils";
-import type { Product } from "@/_lib/types";
+import type { GetPricesResult, Product } from "@/_lib/types";
 import { cn } from "@/_lib/utils";
 import { sendGTMEvent } from "@next/third-parties/google";
 import {
@@ -37,15 +38,12 @@ type ProductProps = {
   readonly product: Product;
   readonly token?: string;
   readonly stretchWidth?: boolean;
-  readonly prices: Array<
-    Readonly<{
-      productId: string;
-      listPrice: number;
-      price: number;
-      uomPrice?: number;
-      uomPriceUnit?: string;
-    }>
-  >;
+  /**
+   * This data should be fetched in a parent component using the `useSuspensePriceCheck`
+   * query. The `ProductCard` component itself will fetch the price of any of the other
+   * variants when selected.
+   */
+  readonly firstVariantPrice: GetPricesResult["productPrices"][number];
 };
 
 const ProductCard = ({
@@ -53,7 +51,7 @@ const ProductCard = ({
   product,
   token,
   stretchWidth = false,
-  prices,
+  firstVariantPrice,
 }: ProductProps) => {
   const [selectedId, setSelectedId] = useState<string | undefined>();
   const deferredSelectedId = useDeferredValue(selectedId);
@@ -66,6 +64,33 @@ const ProductCard = ({
   const defaultVariant = product.variants[0];
   const selectedVariant = product.variants.find(
     (variant) => variant.id === deferredSelectedId,
+  );
+  const priceCheckQuery = usePriceCheck(
+    token,
+    selectedVariant
+      ? [
+          {
+            productId: Number(selectedVariant.id),
+            qty: 1,
+          },
+        ]
+      : defaultVariant
+        ? [
+            {
+              productId: Number(defaultVariant.id),
+              qty: 1,
+            },
+          ]
+        : [],
+    {
+      initialData:
+        // Give the price of the 1st variant as the initial data of the query when
+        // - There is not variant selected
+        // - The selected variant is the default(1st) variant
+        !selectedId || !defaultVariant || defaultVariant?.id === selectedId
+          ? { error: null, productPrices: [firstVariantPrice] }
+          : undefined,
+    },
   );
 
   // Get Product Details
@@ -116,7 +141,7 @@ const ProductCard = ({
     }
   }
 
-  const priceData = prices.find((price) => price.productId.toString() === id);
+  const priceData = priceCheckQuery.data?.productPrices[0];
 
   const listPrice = priceData?.listPrice ?? 0;
   const currentPrice = priceData?.uomPrice ?? priceData?.price ?? 0;
