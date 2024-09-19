@@ -23,11 +23,10 @@ import { Label } from "@/old/_components/ui/label";
 import { TableCell, TableRow } from "@/old/_components/ui/table";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { sendGTMEvent } from "@next/third-parties/google";
-import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import dayjs from "dayjs";
 import Image from "next/image";
 import Link from "next/link";
-import { Suspense, useId, useState, type ComponentProps } from "react";
+import { useId, useState, type ComponentProps } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import * as z from "zod";
@@ -45,6 +44,8 @@ type PurchasedItemRowProps = {
   readonly index: number;
   readonly prices: ComponentProps<typeof ItemPrices>["prices"];
   readonly gtmItemInfo: GtmProduct | undefined;
+  readonly isFavorite?: boolean;
+  readonly favoriteListIds?: string[];
 };
 
 const PurchasedItemRow = ({
@@ -53,6 +54,8 @@ const PurchasedItemRow = ({
   index,
   prices,
   gtmItemInfo,
+  isFavorite,
+  favoriteListIds,
 }: PurchasedItemRowProps) => {
   const [showItemAttributes, setShowItemAttributes] = useState(false);
   const [showMyPrice, setShowMyPrice] = useState(false);
@@ -346,9 +349,12 @@ const PurchasedItemRow = ({
                 Add to cart
               </Button>
 
-              <Suspense fallback={<Skeleton className="h-9 w-14" />}>
-                <FavoriteButton productId={item.productId} token={token} />
-              </Suspense>
+              <FavoriteButton
+                productId={item.productId}
+                token={token}
+                isFavorite={isFavorite}
+                favoriteListIds={favoriteListIds}
+              />
             </div>
           )}
 

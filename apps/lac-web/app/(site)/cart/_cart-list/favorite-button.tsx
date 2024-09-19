@@ -1,81 +1,113 @@
 "use client";
 
+import AddToShoppingListDialog from "@/_components/shopping-list/add-to-shopping-list-dialog";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
+import { BookmarkFilled } from "@repo/web-ui/components/icons/bookmark-filled";
 import { BookmarkOutline } from "@repo/web-ui/components/icons/bookmark-outline";
 import { Button } from "@repo/web-ui/components/ui/button";
 import { useRouter } from "next/navigation";
-import { Suspense } from "react";
-import FavoriteButtonForLoggedIn from "./favorite-button-for-logged-in";
-import FavoriteButtonSkeleton from "./favorite-button-skeleton";
+import { useState } from "react";
 
 type FavoriteButtonProps = {
   readonly token: string;
   readonly productId: number;
   readonly display: "mobile" | "desktop";
+  readonly isFavorite?: boolean;
+  readonly favoriteListIds?: string[];
 };
 
-const FavoriteButton = ({ token, productId, display }: FavoriteButtonProps) => {
+const FavoriteButton = ({
+  token,
+  productId,
+  display,
+  isFavorite = false,
+  favoriteListIds = [],
+}: FavoriteButtonProps) => {
   const router = useRouter();
+
+  const [showShoppingListsDialog, setShowShoppingListsDialog] = useState(false);
 
   const checkLoginQuery = useSuspenseCheckLogin(token);
   const isLoggedInUser = checkLoginQuery.data?.status_code === "OK";
 
   return (
     <>
-      {display === "desktop" &&
-        (isLoggedInUser ? (
-          <Suspense fallback={<FavoriteButtonSkeleton display="desktop" />}>
-            <FavoriteButtonForLoggedIn
-              display="desktop"
-              productId={productId}
-              token={token}
-            />
-          </Suspense>
-        ) : (
-          <Button
-            variant="ghost"
-            className="h-fit w-full justify-end px-0 py-0"
-            onClick={() => {
+      {display === "desktop" && (
+        <Button
+          variant="ghost"
+          className="h-fit w-full justify-end px-0 py-0"
+          onClick={() => {
+            if (isLoggedInUser) {
+              setShowShoppingListsDialog(true);
+            } else {
               router.push("/sign-in");
-            }}
+            }
+          }}
+        >
+          <span
+            className="text-[13px] leading-5"
+            data-button-action="Cart Logged Out Open Add to Shopping List Dialog"
           >
-            <span
-              className="text-[13px] leading-5"
-              data-button-action="Cart Logged Out Open Add to Shopping List Dialog"
-            >
-              Add to List
-            </span>
-            <BookmarkOutline
-              className="size-4"
-              data-button-action="Cart Logged Out Open Add to Shopping List Dialog"
-            />
-          </Button>
-        ))}
+            Add to List
+          </span>
 
-      {display === "mobile" &&
-        (isLoggedInUser ? (
-          <Suspense fallback={<FavoriteButtonSkeleton display="mobile" />}>
-            <FavoriteButtonForLoggedIn
-              display="mobile"
-              productId={productId}
-              token={token}
+          {isFavorite ? (
+            <BookmarkFilled
+              className="size-4"
+              data-button-action="Cart Open Add to Shopping List Dialog"
             />
-          </Suspense>
-        ) : (
-          <Button
-            variant="subtle"
-            className="w-full"
-            onClick={() => {
-              router.push("/sign-in");
-            }}
-          >
+          ) : (
             <BookmarkOutline
               className="size-4"
-              data-button-action="Cart Logged Out Mobile Open Add to Shopping List Dialog"
+              data-button-action={
+                isLoggedInUser
+                  ? "Cart Open Add to Shopping List Dialog"
+                  : "Cart Logged Out Open Add to Shopping List Dialog"
+              }
             />
-            <span className="sr-only">Add to list</span>
-          </Button>
-        ))}
+          )}
+        </Button>
+      )}
+
+      {display === "mobile" && (
+        <Button
+          variant="subtle"
+          className="w-full"
+          onClick={() => {
+            if (isLoggedInUser) {
+              setShowShoppingListsDialog(true);
+            } else {
+              router.push("/sign-in");
+            }
+          }}
+        >
+          {isFavorite ? (
+            <BookmarkFilled
+              className="size-4"
+              data-button-action="Cart Mobile Open Add to Shopping List Dialog"
+            />
+          ) : (
+            <BookmarkOutline
+              className="size-4"
+              data-button-action={
+                isLoggedInUser
+                  ? "Cart Mobile Open Add to Shopping List Dialog"
+                  : "Cart Logged Out Mobile Open Add to Shopping List Dialog"
+              }
+            />
+          )}
+
+          <span className="sr-only">Add to list</span>
+        </Button>
+      )}
+
+      <AddToShoppingListDialog
+        open={showShoppingListsDialog}
+        setOpenAddToShoppingListDialog={setShowShoppingListsDialog}
+        productId={productId}
+        favoriteListIds={favoriteListIds}
+        token={token}
+      />
     </>
   );
 };

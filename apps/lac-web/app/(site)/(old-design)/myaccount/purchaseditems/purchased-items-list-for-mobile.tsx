@@ -1,5 +1,6 @@
 import WurthLacLogo from "@/_components/wurth-lac-logo";
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
+import useSuspenseFavoriteSKUs from "@/_hooks/shopping-list/use-suspense-favorite-skus.hook";
 import { Button } from "@/old/_components/ui/button";
 import dayjs from "dayjs";
 import Image from "next/image";
@@ -36,6 +37,15 @@ const PurchasedItemsListForMobile = ({
       productId: item.productId,
       qty: item.minimumOrderQuantity,
     })),
+  );
+
+  const favoriteSkusQuery = useSuspenseFavoriteSKUs(
+    token,
+    items.map((item) => item.productId.toString()),
+  );
+
+  const selectedFavoriteSkuData = favoriteSkusQuery.data.find(
+    (item) => item.productId === selectedItem?.productId,
   );
 
   const prices: ComponentProps<
@@ -94,6 +104,8 @@ const PurchasedItemsListForMobile = ({
             item={selectedItem}
             token={token}
             prices={prices}
+            isFavorite={selectedFavoriteSkuData?.isFavorite}
+            favoriteListIds={selectedFavoriteSkuData?.favoriteListIds}
           />
         </Suspense>
       )}

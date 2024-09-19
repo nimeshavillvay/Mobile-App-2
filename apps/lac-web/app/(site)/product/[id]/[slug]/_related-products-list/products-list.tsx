@@ -3,6 +3,7 @@
 import ProductCard from "@/_components/product-card";
 import useGtmProducts from "@/_hooks/gtm/use-gtm-item-info.hook";
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
+import useSuspenseFavoriteSKUs from "@/_hooks/shopping-list/use-suspense-favorite-skus.hook";
 import { getBoolean } from "@/_lib/utils";
 import type { RelatedProduct } from "../types";
 
@@ -19,6 +20,10 @@ const ProductsList = ({ token, products }: ProductsListProps) => {
       qty: 1,
     })),
   );
+  const favoriteSkusQuery = useSuspenseFavoriteSKUs(
+    token,
+    products.map((product) => product.productid),
+  );
 
   const gtmProducts = products.map((product) => {
     return {
@@ -33,6 +38,9 @@ const ProductsList = ({ token, products }: ProductsListProps) => {
   return products.map((item) => {
     const priceData = priceCheckQuery.data.productPrices.find(
       (price) => Number(price.productId) === Number(item.productid),
+    );
+    const favoriteData = favoriteSkusQuery.data.filter(
+      (favorite) => favorite.productId === Number(item.productid),
     );
 
     if (!priceData) {
@@ -62,6 +70,7 @@ const ProductsList = ({ token, products }: ProductsListProps) => {
         token={token}
         orientation="horizontal"
         firstVariantPrice={priceData}
+        favoriteData={favoriteData}
       />
     );
   });
