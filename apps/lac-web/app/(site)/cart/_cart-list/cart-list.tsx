@@ -330,6 +330,7 @@ const CartListItems = ({
               isDirectlyShippedFromVendor:
                 item.itemInfo.isDirectlyShippedFromVendor,
             }}
+            isLaminate={item.isLaminate}
             plants={plants}
             cartConfiguration={data.configuration}
             willCallPlant={willCallPlantQuery?.data}
