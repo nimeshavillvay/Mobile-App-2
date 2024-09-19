@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import NextTopLoader from "nextjs-toploader";
 import Footer from "./_components/organisms/footer";
+import Header from "./_components/organisms/header";
 import "./globals.css";
 import Providers from "./providers";
 
@@ -50,6 +51,7 @@ const RootLayout = ({
       <body className="flex h-full flex-col justify-between font-body antialiased">
         <Providers>
           <NextTopLoader showSpinner={false} color="#cc0000" />
+          <Header />
           <main className="flex-1">{children}</main>
           <Footer />
         </Providers>
