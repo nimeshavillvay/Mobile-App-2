@@ -133,7 +133,7 @@ const SignIn = () => {
             >
               Sign in
             </Button>
-            <div className="flex flex-col gap-4 xs:flex-row">
+            <div className="flex flex-row gap-4">
               <Link
                 href={`/forgot-user-id`}
                 className={cn(

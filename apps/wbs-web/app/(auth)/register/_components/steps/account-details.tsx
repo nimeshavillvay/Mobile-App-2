@@ -72,7 +72,7 @@ export const AccountDetailsStep = ({
         allFieldsRequired={hasPlacedOrder ? false : true}
         disableSubmit={isPending}
       >
-        <p className="text-sm leading-6 text-wurth-gray-800">
+        <p className="text-sm text-wurth-gray-800">
           To set up your online account with customer pricing,{" "}
           <span className="font-semibold">
             please provide a recent invoice, delivery, or order number (within
