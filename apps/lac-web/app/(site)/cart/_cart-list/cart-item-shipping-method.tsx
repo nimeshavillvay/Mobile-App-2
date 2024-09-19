@@ -563,7 +563,7 @@ const CartItemShippingMethod = ({
 
   const processWillCallAnywhereItem = (item: WillCallAnywhere) => {
     setSelectedShippingOption(MAIN_OPTIONS.WILL_CALL);
-
+    setSelectedWillCallPlant(willCallPlant.pickupPlant);
     const isNotInStock = item && item.status === NOT_IN_STOCK;
     if (item && !isNotInStock) {
       onSave({
@@ -1175,7 +1175,6 @@ const CartItemShippingMethod = ({
               value={selectedWillCallPlant}
               onValueChange={(plant) => {
                 if (willCallAnywhere && willCallAnywhere[0]) {
-                  //todo
                   handleSelectWillCallPlant(plant);
                 }
                 setSelectedWillCallPlant(plant);
