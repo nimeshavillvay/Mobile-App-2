@@ -71,6 +71,7 @@ const LocationStocks = ({ token, productId }: LocationStocksProps) => {
           isLimitedStock={isLimitedStock}
           isNotInStock={isNotInStock}
           location={homeBranch?.name ?? ""}
+          xPlant={willCallPlant.plantName}
         />
 
         {checkLoginQuery.data?.status_code === "OK" &&

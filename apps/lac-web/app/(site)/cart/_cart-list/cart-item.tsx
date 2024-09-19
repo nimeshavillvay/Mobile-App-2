@@ -203,6 +203,7 @@ const CartItem = ({
   const {
     options: availabilityOptions,
     status,
+    backorderLocation,
     availableLocations,
     willCallAnywhere,
   } = checkAvailabilityQuery.data;
@@ -210,6 +211,8 @@ const CartItem = ({
   const homeBranchAvailability = availableLocations?.find(
     ({ location }) => location === willCallPlant?.plantCode,
   );
+
+  const isHomePlant = backorderLocation === willCallPlant?.plantCode;
 
   const availableAll = findAvailabilityOptionForType(
     availabilityOptions,
@@ -982,12 +985,14 @@ const CartItem = ({
                 availabilityStatus={status}
                 amount={homeBranchAvailability?.amount ?? 0}
                 branch={homeBranchAvailability?.name ?? ""}
+                isHomePlant={isHomePlant}
               />
             ) : (
               <AvailabilityStatus
                 availabilityStatus={NOT_IN_STOCK}
                 amount={0}
                 branch={willCallPlant?.plantName ?? DEFAULT_PLANT.name}
+                isHomePlant={isHomePlant}
               />
             )}
           </div>

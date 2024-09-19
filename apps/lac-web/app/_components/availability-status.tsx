@@ -9,6 +9,7 @@ type AvailabilityStatusProps = {
   readonly backOrderDate: string;
   readonly isLimitedStock: boolean;
   readonly isNotInStock: boolean;
+  readonly xPlant: string;
 };
 
 const AvailabilityStatus = ({
@@ -18,6 +19,7 @@ const AvailabilityStatus = ({
   amount,
   location,
   backOrderDate,
+  xPlant,
 }: AvailabilityStatusProps) => {
   return (
     <div className="availability-container flex flex-row flex-wrap items-center gap-2">
@@ -29,12 +31,20 @@ const AvailabilityStatus = ({
             : "bg-green-50 text-green-700",
         )}
       >
-        {isNotInStock || !isHomeBranch
-          ? "Backordered"
-          : isLimitedStock
-            ? "Limited Stock"
-            : "In Stock"}
+        {!isHomeBranch
+          ? "Not Stocked"
+          : isNotInStock
+            ? "Backordered"
+            : isLimitedStock
+              ? "Limited Stock"
+              : "In Stock"}
       </div>
+
+      {!isHomeBranch && (
+        <div className="text-sm font-medium text-wurth-gray-800">
+          at {xPlant}
+        </div>
+      )}
 
       {isHomeBranch && !isNotInStock && (
         <div className="text-sm font-medium text-wurth-gray-800">
@@ -42,7 +52,7 @@ const AvailabilityStatus = ({
           <span className="stock-location">{location}</span>
         </div>
       )}
-      {(isNotInStock || !isHomeBranch) && !!backOrderDate && (
+      {isNotInStock && !!backOrderDate && (
         <div className="stock-message flex-1 text-sm font-medium text-wurth-gray-800">
           Items are expected to ship by{" "}
           {dayjs(backOrderDate).format(UI_DATE_FORMAT)}.
