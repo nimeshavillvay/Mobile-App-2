@@ -120,7 +120,12 @@ type CartItemProps = {
   };
   readonly plants: Plant[];
   readonly cartConfiguration: CartConfiguration;
-  readonly willCallPlant: { plantCode: string; plantName: string };
+  readonly willCallPlant: {
+    plantCode: string;
+    plantName: string;
+    willCallMethod: string;
+    pickupPlant: string;
+  };
   readonly priceData: ItemPrice;
   readonly gtmItemInfo: GtmProduct | undefined;
 };
@@ -161,6 +166,8 @@ const CartItem = ({
   const [selectedWillCallPlant, setSelectedWillCallPlant] = useState(() => {
     if (itemConfigWillCallPlant && itemConfigWillCallPlant !== "") {
       return itemConfigWillCallPlant;
+    } else if (willCallPlant?.pickupPlant) {
+      return willCallPlant.pickupPlant;
     } else if (product.configuration.plant_1) {
       return product.configuration.plant_1;
     } else if (willCallPlant?.plantCode) {
@@ -272,7 +279,11 @@ const CartItem = ({
   })();
 
   const [selectedWillCallTransfer, setSelectedWillCallTransfer] =
-    useState<WillCallOption>(MAIN_OPTIONS.WILL_CALL);
+    useState<WillCallOption>(
+      willCallPlant.willCallMethod === WILLCALL_SHIPING_METHOD
+        ? MAIN_OPTIONS.WILL_CALL
+        : MAIN_OPTIONS.WILL_CALL_TRANSFER,
+    );
 
   // use the new function to determine the available options
   const shippingMethods = getShippingMethods(

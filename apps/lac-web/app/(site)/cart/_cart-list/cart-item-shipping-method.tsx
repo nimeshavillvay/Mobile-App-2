@@ -935,6 +935,8 @@ const CartItemShippingMethod = ({
       </ul>
     );
   }
+  console.log(">>selectedWillCallPlant", selectedWillCallPlant);
+  console.log(">>selectedWillCallTransfer", selectedWillCallTransfer);
 
   return (
     <ul className="flex flex-col gap-3">
