@@ -484,6 +484,21 @@ export type ItemsPriceResult = {
   productPrices: ItemPrice[];
 };
 
+export type GetPricesResult = {
+  error: true | null;
+  productPrices: {
+    productId: string;
+    price: number;
+    priceUnit: number;
+    extendedPrice: number;
+    listPrice: number;
+    couponCode: string | null;
+    priceBreakDowns: { quantity: number; price: number }[];
+    uomPrice: number | undefined;
+    uomPriceUnit: string | undefined;
+  }[];
+};
+
 export type UpdateUser = {
   userId: number;
   firstName?: string;

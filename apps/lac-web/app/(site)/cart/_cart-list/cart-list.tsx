@@ -336,6 +336,7 @@ const CartListItems = ({
             priceData={{
               ...priceData,
               productId: Number(priceData.productId),
+              priceUnit: priceData.priceUnit.toString(),
             }}
             gtmItemInfo={gtmItemsInfo?.find(
               (product) =>

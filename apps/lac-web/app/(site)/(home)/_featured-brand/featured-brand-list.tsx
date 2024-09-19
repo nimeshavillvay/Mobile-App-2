@@ -11,14 +11,16 @@ type FeaturedBrandListProps = {
 };
 
 const FeaturedBrandList = ({ token, groups }: FeaturedBrandListProps) => {
+  const firstVariants = groups
+    .map((group) => group.itemSkuList[0])
+    .filter(Boolean);
+
   const priceCheckQuery = useSuspensePriceCheck(
     token,
-    groups
-      .flatMap((group) => group.itemSkuList)
-      .map((product) => ({
-        productId: Number(product.productId),
-        qty: 1,
-      })),
+    firstVariants.map((product) => ({
+      productId: Number(product.productId),
+      qty: 1,
+    })),
   );
 
   const gtmProducts = groups
@@ -34,11 +36,23 @@ const FeaturedBrandList = ({ token, groups }: FeaturedBrandListProps) => {
   const gtmItemInfo = gtmItemInfoQuery.data;
 
   return groups.map((group) => {
-    const productIds = group.itemSkuList.map((item) => item.productId);
+    const firstVariantProductId = group.itemSkuList[0]?.productId;
 
-    const prices = priceCheckQuery.data.productPrices.filter((price) =>
-      productIds.includes(price.productId.toString()),
+    if (!firstVariantProductId) {
+      // This is to stop TypeScript from complaining about
+      // firstVariantProductId being undefined
+      return null;
+    }
+
+    const price = priceCheckQuery.data.productPrices.find(
+      (price) => price.productId === firstVariantProductId,
     );
+
+    if (!price) {
+      // This is to stop TypeScript from complaining about
+      // price being undefined
+      return null;
+    }
 
     return (
       <ProductCard
@@ -59,13 +73,7 @@ const FeaturedBrandList = ({ token, groups }: FeaturedBrandListProps) => {
           gtmProduct: gtmItemInfo ?? [],
         }}
         token={token}
-        prices={prices.map((price) => ({
-          listPrice: price.listPrice,
-          price: price.price,
-          productId: price.productId,
-          uomPrice: price.uomPrice,
-          uomPriceUnit: price.uomPriceUnit,
-        }))}
+        firstVariantPrice={price}
       />
     );
   });

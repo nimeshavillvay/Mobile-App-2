@@ -50,7 +50,7 @@ const PurchasedItemsListForMobile = ({
       prices.push({
         price: initialPrice.price,
         priceBreakDowns: initialPrice.priceBreakDowns,
-        priceUnit: initialPrice.priceUnit,
+        priceUnit: initialPrice.priceUnit.toString(),
         quantity: 1,
         uomPrice: initialPrice.uomPrice,
         uomPriceUnit: initialPrice.uomPriceUnit,
@@ -64,7 +64,7 @@ const PurchasedItemsListForMobile = ({
       prices.push({
         price: price.price,
         priceBreakDowns: price.priceBreakDowns,
-        priceUnit: price.priceUnit,
+        priceUnit: price.priceUnit.toString(),
         quantity: selectedItem.minimumOrderQuantity,
         uomPrice: price.uomPrice,
         uomPriceUnit: price.uomPriceUnit,

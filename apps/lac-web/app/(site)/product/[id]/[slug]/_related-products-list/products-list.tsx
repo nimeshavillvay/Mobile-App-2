@@ -61,7 +61,7 @@ const ProductsList = ({ token, products }: ProductsListProps) => {
         }}
         token={token}
         orientation="horizontal"
-        prices={[priceData]}
+        firstVariantPrice={priceData}
       />
     );
   });
