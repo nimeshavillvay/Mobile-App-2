@@ -123,6 +123,7 @@ type CartItemProps = {
   readonly willCallPlant: { plantCode: string; plantName: string };
   readonly priceData: ItemPrice;
   readonly gtmItemInfo: GtmProduct | undefined;
+  readonly isLaminate: boolean;
 };
 
 const CartItem = ({
@@ -133,6 +134,7 @@ const CartItem = ({
   willCallPlant,
   priceData,
   gtmItemInfo,
+  isLaminate,
 }: CartItemProps) => {
   const id = useId();
   const poId = `po-${id}`;
@@ -868,6 +870,7 @@ const CartItem = ({
               onPriceChange={handlePriceOverride}
               priceData={priceData}
               type="mobile"
+              isLaminateItem={isLaminate}
             />
           </Suspense>
 
@@ -1131,6 +1134,7 @@ const CartItem = ({
             onPriceChange={handlePriceOverride}
             priceData={priceData}
             type="desktop"
+            isLaminateItem={isLaminate}
           />
         </Suspense>
         <div className="flex flex-col gap-2">
