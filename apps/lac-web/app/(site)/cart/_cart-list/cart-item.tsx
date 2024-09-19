@@ -124,6 +124,7 @@ type CartItemProps = {
   readonly gtmItemInfo: GtmProduct | undefined;
   readonly isFavorite?: boolean;
   readonly favoriteListIds?: string[];
+  readonly isLaminate: boolean;
 };
 
 const CartItem = ({
@@ -136,6 +137,7 @@ const CartItem = ({
   gtmItemInfo,
   isFavorite,
   favoriteListIds,
+  isLaminate,
 }: CartItemProps) => {
   const id = useId();
   const poId = `po-${id}`;
@@ -874,6 +876,7 @@ const CartItem = ({
               onPriceChange={handlePriceOverride}
               priceData={priceData}
               type="mobile"
+              isLaminateItem={isLaminate}
             />
           </Suspense>
 
@@ -1139,6 +1142,7 @@ const CartItem = ({
             onPriceChange={handlePriceOverride}
             priceData={priceData}
             type="desktop"
+            isLaminateItem={isLaminate}
           />
         </Suspense>
         <div className="flex flex-col gap-2">
