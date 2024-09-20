@@ -260,12 +260,12 @@ const ProductCardPrice = ({
 
 const ProductCardActions = ({
   addToCart,
-  isFavorite = false,
+  isFavorite,
   onClickShoppingList,
   disabled = false,
 }: {
   readonly addToCart: () => void;
-  readonly isFavorite?: boolean;
+  readonly isFavorite: boolean;
   readonly onClickShoppingList: () => void;
   readonly disabled?: boolean;
 }) => {
@@ -311,14 +311,14 @@ const ProductCardVariantSelector = ({
   onValueChange,
   addToCart,
   disabled,
-  isFavorite = false,
+  isFavorite,
   onClickShoppingList,
 }: {
   readonly href: string;
   readonly variants: { value: string; title: string }[];
   readonly value?: string;
   readonly onValueChange: (value: string) => void;
-  readonly isFavorite?: boolean;
+  readonly isFavorite: boolean;
   readonly onClickShoppingList: () => void;
 } & ComponentProps<typeof ProductCardActions>) => {
   return (

@@ -18,11 +18,13 @@ import { Dialog, DialogContent } from "@/old/_components/ui/dialog";
 import { Input } from "@/old/_components/ui/input";
 import { Label } from "@/old/_components/ui/label";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import dayjs from "dayjs";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
+  Suspense,
   useId,
   useState,
   type ComponentProps,
@@ -51,8 +53,6 @@ type ActionConfirmationDialogProps = {
   readonly item: DetailedPurchasedItem;
   readonly token: string;
   readonly prices: ComponentProps<typeof ItemPrices>["prices"];
-  readonly isFavorite?: boolean;
-  readonly favoriteListIds?: string[];
 };
 
 const PurchasedItemDetailedViewDialog = ({
@@ -61,8 +61,6 @@ const PurchasedItemDetailedViewDialog = ({
   item,
   token,
   prices,
-  isFavorite,
-  favoriteListIds,
 }: ActionConfirmationDialogProps) => {
   const [showPriceBreakdown, setShowPriceBreakdown] = useState(false);
   const id = useId();
@@ -303,12 +301,9 @@ const PurchasedItemDetailedViewDialog = ({
 
           {/* Action Buttons Section */}
           <div className="flex flex-col gap-4 px-6 pt-6">
-            <MobileFavoriteButton
-              productId={item.productId}
-              token={token}
-              isFavorite={isFavorite}
-              favoriteListIds={favoriteListIds}
-            />
+            <Suspense fallback={<Skeleton className="h-12" />}>
+              <MobileFavoriteButton productId={item.productId} token={token} />
+            </Suspense>
 
             <form
               id={formId}

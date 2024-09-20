@@ -7,12 +7,15 @@ import { BookmarkOutline } from "@repo/web-ui/components/icons/bookmark-outline"
 import { Button } from "@repo/web-ui/components/ui/button";
 import { useState } from "react";
 
-type FavoriteButtonProps = {
-  readonly token: string;
+type FavoriteButtonForLoggedInProps = {
   readonly productId: number;
+  readonly token?: string;
 };
 
-const FavoriteButton = ({ token, productId }: FavoriteButtonProps) => {
+const FavoriteButtonForLoggedIn = ({
+  productId,
+  token,
+}: FavoriteButtonForLoggedInProps) => {
   const [showShoppingListsDialog, setShowShoppingListsDialog] = useState(false);
 
   const { data: favoriteSKUs } = useSuspenseFavoriteSKUs(token, [
@@ -21,37 +24,35 @@ const FavoriteButton = ({ token, productId }: FavoriteButtonProps) => {
 
   const favoriteSKU = favoriteSKUs[0];
   const isFavorite = favoriteSKU?.isFavorite ?? false;
-  const favoriteListIds = favoriteSKU?.favoriteListIds ?? [];
 
   return (
     <>
       <Button
-        type="button"
-        variant="ghost"
-        onClick={() => setShowShoppingListsDialog(true)}
+        variant="outline"
+        size="icon"
+        onClick={() => {
+          setShowShoppingListsDialog(true);
+        }}
+        data-button-action="Open Wishlist"
       >
         {isFavorite ? (
-          <BookmarkFilled
-            className="fill-black text-2xl text-brand-primary"
-            data-button-action="Purchase Items Open Add to Wishlist Dialog"
-          />
+          <BookmarkFilled className="size-4" />
         ) : (
-          <BookmarkOutline
-            className="text-2xl text-brand-gray-500"
-            data-button-action="Purchase Items Open Add to Wishlist Dialog"
-          />
+          <BookmarkOutline className="size-4" />
         )}
+
+        <span className="sr-only">Add to list</span>
       </Button>
 
       <AddToShoppingListDialog
         open={showShoppingListsDialog}
         setOpenAddToShoppingListDialog={setShowShoppingListsDialog}
         productId={productId}
-        favoriteListIds={favoriteListIds}
+        favoriteListIds={favoriteSKU?.favoriteListIds ?? []}
         token={token}
       />
     </>
   );
 };
 
-export default FavoriteButton;
+export default FavoriteButtonForLoggedIn;

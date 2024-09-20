@@ -1,12 +1,12 @@
 "use client";
 
-import AddToShoppingListDialog from "@/_components/shopping-list/add-to-shopping-list-dialog";
-import useSuspenseFavoriteSKUs from "@/_hooks/shopping-list/use-suspense-favorite-skus.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
-import { BookmarkFilled } from "@repo/web-ui/components/icons/bookmark-filled";
 import { BookmarkOutline } from "@repo/web-ui/components/icons/bookmark-outline";
 import { Button } from "@repo/web-ui/components/ui/button";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Suspense } from "react";
+import FavoriteButtonForLoggedIn from "./favorite-button-for-logged-in";
+import FavoriteButtonSkeleton from "./favorite-button-skeleton";
 
 type FavoriteButtonProps = {
   readonly token?: string;
@@ -14,54 +14,30 @@ type FavoriteButtonProps = {
 };
 
 const FavoriteButton = ({ token, productId }: FavoriteButtonProps) => {
+  const router = useRouter();
+
   const checkLoginQuery = useSuspenseCheckLogin(token);
   const isLoggedInUser = checkLoginQuery.data?.status_code === "OK";
 
-  const [showShoppingListsDialog, setShowShoppingListsDialog] = useState(false);
-
-  const { data: favoriteSKUs } = useSuspenseFavoriteSKUs(token, [
-    productId.toString(),
-  ]);
-
-  const favoriteSKU = favoriteSKUs[0];
-  const isFavorite = favoriteSKU?.isFavorite ?? false;
-
-  return (
-    <>
-      <Button
-        variant="outline"
-        size="icon"
-        onClick={() => {
-          setShowShoppingListsDialog(true);
-        }}
-      >
-        {isFavorite ? (
-          <BookmarkFilled
-            className="size-4"
-            data-button-action="Open Wishlist"
-          />
-        ) : (
-          <BookmarkOutline
-            className="size-4"
-            data-button-action={
-              isLoggedInUser
-                ? "Add to Shopping List Logged in"
-                : "Add to Shopping List Logged out"
-            }
-          />
-        )}
-
-        <span className="sr-only">Add to list</span>
-      </Button>
-
-      <AddToShoppingListDialog
-        open={showShoppingListsDialog}
-        setOpenAddToShoppingListDialog={setShowShoppingListsDialog}
-        productId={productId}
-        favoriteListIds={favoriteSKU?.favoriteListIds ?? []}
-        token={token}
+  return isLoggedInUser ? (
+    <Suspense fallback={<FavoriteButtonSkeleton />}>
+      <FavoriteButtonForLoggedIn productId={productId} token={token} />
+    </Suspense>
+  ) : (
+    <Button
+      variant="outline"
+      size="icon"
+      onClick={() => {
+        router.push("/sign-in");
+      }}
+    >
+      <BookmarkOutline
+        className="size-4"
+        data-button-action="Add to Shopping List Logged out"
       />
-    </>
+
+      <span className="sr-only">Add to list</span>
+    </Button>
   );
 };
 

@@ -76,7 +76,7 @@ export const getPrices = async (
     }) => ({
       productId: productid,
       price,
-      priceUnit: price_unit,
+      priceUnit: Number(price_unit),
       extendedPrice: extended,
       listPrice: list_price,
       couponCode: coupon,

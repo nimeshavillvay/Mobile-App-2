@@ -1,14 +1,11 @@
 import { api } from "@/_lib/api";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { z } from "zod";
 
-const favoriteSkuSchema = z.array(
-  z.object({
-    productid: z.number(),
-    isFavourite: z.boolean(),
-    favoriteIds: z.array(z.string()),
-  }),
-);
+type FavoriteSku = {
+  productid: number;
+  isFavourite: boolean;
+  favoriteIds: string[];
+};
 
 const useSuspenseFavoriteSKUs = (
   token: string | undefined,
@@ -27,13 +24,11 @@ const useSuspenseFavoriteSKUs = (
           },
           cache: "no-cache",
         })
-        .json();
+        .json<FavoriteSku[]>();
 
-      const parsedResponse = await favoriteSkuSchema.parseAsync(response);
-
-      return parsedResponse.map((data) => ({
+      return response.map((data) => ({
         productId: data.productid,
-        isFavorite: data.isFavourite,
+        isFavorite: !!data.isFavourite,
         favoriteListIds: data.favoriteIds,
       }));
     },
