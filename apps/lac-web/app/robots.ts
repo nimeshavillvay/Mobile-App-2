@@ -6,10 +6,6 @@ const robots = (): MetadataRoute.Robots => {
     rules: [
       {
         userAgent: "*",
-        disallow: "/",
-      },
-      {
-        userAgent: ["Googlebot", "Bingbot"],
         allow: "/",
         disallow: [
           "/api/",
