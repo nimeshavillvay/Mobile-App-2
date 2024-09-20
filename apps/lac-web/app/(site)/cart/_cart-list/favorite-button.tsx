@@ -1,6 +1,6 @@
 "use client";
 
-import AddToShoppingListDialog from "@/_components/shopping-list/add-to-shopping-list-dialog";
+import AddToShoppingListDialog from "@/_components/add-to-shopping-list-dialog";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
 import { BookmarkFilled } from "@repo/web-ui/components/icons/bookmark-filled";
 import { BookmarkOutline } from "@repo/web-ui/components/icons/bookmark-outline";

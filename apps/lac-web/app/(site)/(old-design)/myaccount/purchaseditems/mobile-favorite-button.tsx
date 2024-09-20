@@ -1,6 +1,6 @@
 "use client";
 
-import AddToShoppingListDialog from "@/_components/shopping-list/add-to-shopping-list-dialog";
+import AddToShoppingListDialog from "@/_components/add-to-shopping-list-dialog";
 import { cn } from "@/_lib/utils";
 import AddToFavoritesIcon from "@/old/_components/icons/add-to-favorites";
 import FavoriteIcon from "@/old/_components/icons/favorite";

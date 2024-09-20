@@ -22,8 +22,8 @@ import {
 } from "@repo/web-ui/components/product-card";
 import { useRouter } from "next/navigation";
 import { useState, type ComponentProps } from "react";
+import AddToShoppingListDialog from "./add-to-shopping-list-dialog";
 import SaleBadges from "./sale-badges";
-import AddToShoppingListDialog from "./shopping-list/add-to-shopping-list-dialog";
 
 type ProductProps = {
   readonly orientation?: ComponentProps<typeof ProductCardRoot>["orientation"];
