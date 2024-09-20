@@ -521,7 +521,11 @@ const CartItem = ({
   const handleSelectWillCallPlant = (plant: string) => {
     if (plant !== "") {
       setSelectedWillCallPlant(plant);
-      setSelectedWillCallTransfer(MAIN_OPTIONS.WILL_CALL);
+      setSelectedWillCallTransfer(
+        willCallPlant.willCallMethod === WILLCALL_SHIPING_METHOD
+          ? MAIN_OPTIONS.WILL_CALL
+          : MAIN_OPTIONS.WILL_CALL_TRANSFER,
+      );
       checkAvailabilityMutation.mutate(
         {
           productId: product.id,
@@ -530,7 +534,29 @@ const CartItem = ({
         },
         {
           onSuccess: ({ willCallAnywhere }) => {
-            if (
+            if (willCallAnywhere[1] && willCallAnywhere[1].isTransfer) {
+              handleSave({
+                ...createCartItemConfig({
+                  method: DEFAULT_SHIPPING_METHOD,
+                  quantity: willCallAnywhere[1]?.willCallQuantity,
+                  plant: willCallAnywhere[1]?.willCallPlant,
+                  hash: willCallAnywhere[1].hash,
+                  backOrderDate: willCallAnywhere[1]?.backOrderDate_1,
+                  backOrderQuantity: willCallAnywhere[1]?.backOrderQuantity_1,
+                  shippingMethod: WILLCALL_TRANSFER_SHIPING_METHOD,
+                }),
+                will_call_avail: (willCallAnywhere[1]?.status === NOT_IN_STOCK
+                  ? 0
+                  : willCallAnywhere[1]?.willCallQuantity ?? 0
+                ).toString(),
+                will_call_plant:
+                  willCallAnywhere[1]?.willCallPlant ?? EMPTY_STRING,
+                will_call_not_in_stock:
+                  willCallAnywhere[1]?.status === NOT_AVAILABLE
+                    ? TRUE_STRING
+                    : FALSE_STRING,
+              });
+            } else if (
               willCallAnywhere[0] &&
               willCallAnywhere[0].status != NOT_IN_STOCK
             ) {
@@ -1103,7 +1129,7 @@ const CartItem = ({
               productId={product.id}
               plants={plants}
               availability={checkAvailabilityQuery.data}
-              setSelectedWillCallPlant={handleSelectWillCallPlant}
+              setSelectedWillCallPlant={setSelectedWillCallPlant}
               selectedWillCallPlant={selectedWillCallPlant}
               setSelectedShippingOption={setSelectedShippingOption}
               selectedShippingOption={selectedShippingOption}

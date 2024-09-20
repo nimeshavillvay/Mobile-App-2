@@ -543,11 +543,11 @@ const CartItemShippingMethod = ({
         isWillCallAnywhere &&
         willCallAnywhere[0]
       ) {
-        setSelectedWillCallTransfer(
+        const willCall =
           willCallPlant.willCallMethod === WILLCALL_SHIPING_METHOD
             ? MAIN_OPTIONS.WILL_CALL
-            : MAIN_OPTIONS.WILL_CALL_TRANSFER,
-        );
+            : MAIN_OPTIONS.WILL_CALL_TRANSFER;
+        setSelectedWillCallTransfer(willCall);
         const willCallIndex =
           willCallPlant.willCallMethod === WILLCALL_TRANSFER_SHIPING_METHOD &&
           willCallAnywhere[1] &&
@@ -954,8 +954,6 @@ const CartItemShippingMethod = ({
       </ul>
     );
   }
-  console.log(">>selectedWillCallPlant", selectedWillCallPlant);
-  console.log(">>selectedWillCallTransfer", selectedWillCallTransfer);
 
   return (
     <ul className="flex flex-col gap-3">
@@ -1178,7 +1176,12 @@ const CartItemShippingMethod = ({
                   handleSelectWillCallPlant(plant);
                 }
                 setSelectedWillCallPlant(plant);
-                setSelectedWillCallTransfer(MAIN_OPTIONS.WILL_CALL);
+                setSelectedWillCallTransfer(
+                  willCallPlant.willCallMethod !== WILLCALL_SHIPING_METHOD &&
+                    willCallAnywhere[1]?.isTransfer
+                    ? MAIN_OPTIONS.WILL_CALL_TRANSFER
+                    : MAIN_OPTIONS.WILL_CALL,
+                );
                 setSelectedShippingOption(MAIN_OPTIONS.WILL_CALL);
               }}
             >

@@ -446,6 +446,7 @@ export type CheckAvailability = {
     shippingMethods_1?: string[];
     shippingMethod: string;
     type?: string;
+    isTransfer?: boolean;
   }[];
   xplant: string;
   available_locations: {
