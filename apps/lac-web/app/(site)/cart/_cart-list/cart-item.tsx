@@ -85,7 +85,6 @@ import AvailabilityStatus from "./availability-status";
 import CartItemPrice from "./cart-item-price";
 import CartItemShippingMethod from "./cart-item-shipping-method";
 import FavoriteButton from "./favorite-button";
-import FavoriteButtonSkeleton from "./favorite-button-skeleton";
 import HazardousMaterialNotice from "./hazardous-material-notice";
 import type { CartItemSchema } from "./helpers";
 import {
@@ -123,6 +122,8 @@ type CartItemProps = {
   readonly willCallPlant: { plantCode: string; plantName: string };
   readonly priceData: ItemPrice;
   readonly gtmItemInfo: GtmProduct | undefined;
+  readonly isFavorite?: boolean;
+  readonly favoriteListIds?: string[];
   readonly isLaminate: boolean;
 };
 
@@ -134,6 +135,8 @@ const CartItem = ({
   willCallPlant,
   priceData,
   gtmItemInfo,
+  isFavorite,
+  favoriteListIds,
   isLaminate,
 }: CartItemProps) => {
   const id = useId();
@@ -836,13 +839,13 @@ const CartItem = ({
           </Link>
 
           <div className="flex flex-col gap-1 lg:hidden">
-            <Suspense fallback={<FavoriteButtonSkeleton display="mobile" />}>
-              <FavoriteButton
-                display="mobile"
-                productId={product.id}
-                token={token}
-              />
-            </Suspense>
+            <FavoriteButton
+              display="mobile"
+              productId={product.id}
+              token={token}
+              isFavorite={isFavorite}
+              favoriteListIds={favoriteListIds}
+            />
 
             <Button
               variant="subtle"
@@ -1166,6 +1169,8 @@ const CartItem = ({
             display="desktop"
             productId={product.id}
             token={token}
+            isFavorite={isFavorite}
+            favoriteListIds={favoriteListIds}
           />
         </div>
       </div>

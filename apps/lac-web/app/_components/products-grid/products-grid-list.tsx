@@ -4,6 +4,7 @@ import ProductCard from "@/_components/product-card";
 import ProductCardSkeleton from "@/_components/product-card-skeleton";
 import useGtmProducts from "@/_hooks/gtm/use-gtm-item-info.hook";
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
+import useSuspenseFavoriteSKUs from "@/_hooks/shopping-list/use-suspense-favorite-skus.hook";
 import { cn } from "@/_lib/utils";
 import { type ComponentProps, type ReactNode } from "react";
 
@@ -59,6 +60,10 @@ export const ProductsGridList = ({
       qty: 1,
     })),
   );
+  const favoriteSkusQuery = useSuspenseFavoriteSKUs(
+    token,
+    firstVariants.map((product) => product.id),
+  );
 
   const gtmProducts = products
     .flatMap((product) => product.prop.variants)
@@ -75,7 +80,8 @@ export const ProductsGridList = ({
   return (
     <ProductsGridListContainer type={type} className={className}>
       {products.map(({ prop, info }) => {
-        const firstVariantProductId = prop.variants[0]?.id;
+        const productIds = prop.variants.map((variant) => variant.id);
+        const firstVariantProductId = productIds[0];
 
         if (!firstVariantProductId) {
           // This is to stop TypeScript from complaining about
@@ -98,6 +104,10 @@ export const ProductsGridList = ({
           gtmItemInfo,
         };
 
+        const favoriteData = favoriteSkusQuery.data.filter((item) =>
+          productIds.includes(item.productId.toString()),
+        );
+
         return (
           <ProductCard
             key={info.groupId}
@@ -106,6 +116,7 @@ export const ProductsGridList = ({
             token={token}
             stretchWidth={orientation === "vertical"}
             firstVariantPrice={price}
+            favoriteData={favoriteData}
           />
         );
       })}

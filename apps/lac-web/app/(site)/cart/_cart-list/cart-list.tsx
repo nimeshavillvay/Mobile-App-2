@@ -9,6 +9,7 @@ import useGtmProducts from "@/_hooks/gtm/use-gtm-item-info.hook";
 import useGtmUser from "@/_hooks/gtm/use-gtm-user.hook";
 import usePathnameHistoryState from "@/_hooks/misc/use-pathname-history-state.hook";
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
+import useSuspenseFavoriteSKUs from "@/_hooks/shopping-list/use-suspense-favorite-skus.hook";
 import { getGTMPageType } from "@/_lib/gtm-utils";
 import type { GtmProduct, Plant } from "@/_lib/types";
 import { sendGTMEvent } from "@next/third-parties/google";
@@ -292,12 +293,20 @@ const CartListItems = ({
   const deferredProducts = useDeferredValue(products);
   const priceCheckQuery = useSuspensePriceCheck(token, deferredProducts);
 
+  const favoriteSkusQuery = useSuspenseFavoriteSKUs(
+    token,
+    data.cartItems.map((item) => item.itemInfo.productId.toString()),
+  );
+
   return data.cartItems.map((item) => {
     const priceData = priceCheckQuery.data.productPrices.find(
       (price) => Number(price.productId) === item.itemInfo.productId,
     );
+    const favoriteSkuData = favoriteSkusQuery.data.find(
+      (skuItem) => skuItem.productId === item.itemInfo.productId,
+    );
 
-    if (!priceData) {
+    if (!priceData || !favoriteSkuData) {
       return null;
     }
 
@@ -345,6 +354,8 @@ const CartListItems = ({
                 (product) =>
                   Number(product?.productid) === item.itemInfo.productId,
               )}
+              isFavorite={favoriteSkuData.isFavorite}
+              favoriteListIds={favoriteSkuData.favoriteListIds}
             />
           </CartItemQuantityProvider>
         </Suspense>

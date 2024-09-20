@@ -3,6 +3,7 @@
 import ProductCard from "@/_components/product-card";
 import useGtmProducts from "@/_hooks/gtm/use-gtm-item-info.hook";
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
+import useSuspenseFavoriteSKUs from "@/_hooks/shopping-list/use-suspense-favorite-skus.hook";
 import type { FeaturedBrandGroup } from "./types";
 
 type FeaturedBrandListProps = {
@@ -22,6 +23,10 @@ const FeaturedBrandList = ({ token, groups }: FeaturedBrandListProps) => {
       qty: 1,
     })),
   );
+  const favoriteSkusQuery = useSuspenseFavoriteSKUs(
+    token,
+    groups.flatMap((group) => group.itemSkuList).map((item) => item.productId),
+  );
 
   const gtmProducts = groups
     .flatMap((group) => group.itemSkuList)
@@ -36,7 +41,12 @@ const FeaturedBrandList = ({ token, groups }: FeaturedBrandListProps) => {
   const gtmItemInfo = gtmItemInfoQuery.data;
 
   return groups.map((group) => {
-    const firstVariantProductId = group.itemSkuList[0]?.productId;
+    const productIds = group.itemSkuList.map((item) => item.productId);
+    const firstVariantProductId = productIds[0];
+
+    const favoriteData = favoriteSkusQuery.data.filter((item) =>
+      productIds.includes(item.productId.toString()),
+    );
 
     if (!firstVariantProductId) {
       // This is to stop TypeScript from complaining about
@@ -74,6 +84,7 @@ const FeaturedBrandList = ({ token, groups }: FeaturedBrandListProps) => {
         }}
         token={token}
         firstVariantPrice={price}
+        favoriteData={favoriteData}
       />
     );
   });

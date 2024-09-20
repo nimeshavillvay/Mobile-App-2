@@ -42,7 +42,7 @@ type AddToShoppingListDialogProps = {
   readonly open: boolean;
   readonly setOpenAddToShoppingListDialog: Dispatch<SetStateAction<boolean>>;
   readonly productId: number;
-  readonly favoriteListIds: string[];
+  readonly favoriteListIds?: string[];
   readonly token?: string;
 };
 
@@ -50,7 +50,7 @@ const AddToShoppingListDialog = ({
   open,
   setOpenAddToShoppingListDialog,
   productId,
-  favoriteListIds,
+  favoriteListIds = [],
   token,
 }: AddToShoppingListDialogProps) => {
   const { toast } = useToast();

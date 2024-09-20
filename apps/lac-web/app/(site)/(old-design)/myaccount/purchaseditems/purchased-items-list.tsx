@@ -4,6 +4,7 @@ import useGtmProducts from "@/_hooks/gtm/use-gtm-item-info.hook";
 import useItemInfo from "@/_hooks/product/use-item-info.hook";
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
 import useSuspenseFilters from "@/_hooks/search/use-suspense-filters.hook";
+import useSuspenseFavoriteSKUs from "@/_hooks/shopping-list/use-suspense-favorite-skus.hook";
 import { INIT_PAGE_NUMBER } from "@/_lib/constants";
 import type { ItemInfo } from "@/_lib/types";
 import {
@@ -373,6 +374,11 @@ const PurchasedItemRows = ({
     })),
   );
 
+  const favoriteSkusQuery = useSuspenseFavoriteSKUs(
+    token,
+    detailedPurchasedItems.map((item) => item.productId.toString()),
+  );
+
   return detailedPurchasedItems.map((item, index) => {
     const prices: ComponentProps<typeof PurchasedItemRow>["prices"] = [];
 
@@ -383,7 +389,7 @@ const PurchasedItemRows = ({
       prices.push({
         price: initialPriceCheck.price,
         priceBreakDowns: initialPriceCheck.priceBreakDowns,
-        priceUnit: initialPriceCheck.priceUnit.toString(),
+        priceUnit: Number(initialPriceCheck.priceUnit).toString(),
         quantity: 1,
         uomPrice: initialPriceCheck.uomPrice,
         uomPriceUnit: initialPriceCheck.uomPriceUnit,
@@ -404,6 +410,10 @@ const PurchasedItemRows = ({
       });
     }
 
+    const favoriteData = favoriteSkusQuery.data.find(
+      (favoriteSku) => favoriteSku.productId === item.productId,
+    );
+
     return (
       <PurchasedItemRow
         key={`${item.productId}_${index}`}
@@ -414,6 +424,8 @@ const PurchasedItemRows = ({
         gtmItemInfo={gtmItemInfo?.find(
           (product) => Number(product.productid) === item.productId,
         )}
+        isFavorite={favoriteData?.isFavorite}
+        favoriteListIds={favoriteData?.favoriteListIds}
       />
     );
   });
