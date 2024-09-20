@@ -500,6 +500,7 @@ const ShippingMethod = ({ token, plants }: ShippingMethodProps) => {
         toast({ description: "Updated delivery method for all items" });
         setIsWillCallSelected(false);
         setSelectedWillCallPlant(willCallPlant.pickupPlant);
+        setSelectedSection(undefined);
         incrementCartItemKey();
         sendToGTMShippingMethodChanged();
       },
@@ -612,7 +613,7 @@ const ShippingMethod = ({ token, plants }: ShippingMethodProps) => {
             </Select>
           </div>
 
-          {selectedSection === WILL_CALL && selectedWillCallPlant && (
+          {selectedSection === WILL_CALL && (
             <>
               <RadioGroup
                 className="ml-[1.625rem] flex flex-col"
@@ -670,6 +671,7 @@ const ShippingMethod = ({ token, plants }: ShippingMethodProps) => {
                   type="button"
                   className="w-auto px-4 py-2"
                   onClick={handleGlobalWillCall}
+                  disabled={updateCartItemMutation.isPending}
                 >
                   Apply
                 </Button>
