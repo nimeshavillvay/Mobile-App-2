@@ -267,15 +267,17 @@ const CartItemShippingMethod = ({
 
   const homePlant = willCallPlant.plantCode ?? DEFAULT_PLANT.code;
 
-  const getHomePlantDisplayQuantity = () => {
+  const boPlant = availability.backorderLocation;
+
+  const getHomePlantDisplayQuantity = (plantAvailableQuantity: number) => {
     const totalAvailableQty =
       shipAlternativeBranch?.plants.reduce((sum, current) => {
         return sum + Number(current.quantity);
       }, 0) ?? 0;
 
     return Number(lineQuantity) > totalAvailableQty
-      ? homeBranchAvailableQuantity + Number(lineQuantity) - totalAvailableQty
-      : homeBranchAvailableQuantity;
+      ? plantAvailableQuantity + Number(lineQuantity) - totalAvailableQty
+      : plantAvailableQuantity;
   };
 
   const cartItem = cartQuery.data.cartItems.filter(
@@ -290,7 +292,10 @@ const CartItemShippingMethod = ({
     const avail_5 = cartItem[0]?.configuration.avail_5;
     const homePlantQty =
       Number(avail_1) + Number(cartItem[0]?.configuration.backorder_quantity);
-    if (
+
+    if (plant === boPlant) {
+      return getHomePlantDisplayQuantity(quantity);
+    } else if (
       homePlantQty !== cartItem[0]?.quantity &&
       cartItem[0]?.configuration.plant_1 === homePlant
     ) {
@@ -335,7 +340,7 @@ const CartItemShippingMethod = ({
           }
         }
       } else {
-        return getHomePlantDisplayQuantity();
+        return getHomePlantDisplayQuantity(homeBranchAvailableQuantity);
       }
     }
   };
@@ -693,7 +698,6 @@ const CartItemShippingMethod = ({
   };
 
   const handleShipToMeFromAlternativeOptions = () => {
-    setSelectedShippingOption(MAIN_OPTIONS.SHIP_TO_ME_ALT);
     if (shipAlternativeBranch) {
       const setShippingMethod =
         shipAlternativeBranch.plants
@@ -1058,7 +1062,6 @@ const CartItemShippingMethod = ({
                   className="group flex h-7 cursor-default flex-row items-center justify-start"
                   id={shipToMeAltId}
                   onClick={() => {
-                    setSelectedShippingOption(MAIN_OPTIONS.SHIP_TO_ME_ALT);
                     handleDeliveryOptionSelect({
                       checked: true,
                       selectedOption: MAIN_OPTIONS.SHIP_TO_ME_ALT,
@@ -1110,16 +1113,21 @@ const CartItemShippingMethod = ({
                                   plants={plants}
                                   quantityFieldIndex={quantityFieldIndex}
                                   key={quantityFieldIndex}
-                                  willCallPlant={willCallPlant}
+                                  boPlant={boPlant}
                                   availability={availability}
                                   availableQuantityInPlant={plant.quantity ?? 0}
                                   increment={increment}
                                   uom={uom}
                                   defaultBoQty={
                                     plant.plant === homePlant
-                                      ? getHomePlantDisplayQuantity() -
-                                        homeBranchAvailableQuantity
-                                      : 0
+                                      ? getHomePlantDisplayQuantity(
+                                          homeBranchAvailableQuantity,
+                                        ) - homeBranchAvailableQuantity
+                                      : plant.plant === boPlant
+                                        ? getHomePlantDisplayQuantity(
+                                            plant.quantity ?? 0,
+                                          ) - (plant.quantity ?? 0)
+                                        : 0
                                   }
                                   sku={sku}
                                   cartItemId={cartItemId}
