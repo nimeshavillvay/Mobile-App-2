@@ -51,7 +51,7 @@ export const useCheckRecaptcha = () => {
 
   const checkRecaptcha = async () => {
     if (process.env.NODE_ENV !== "production") {
-      // Return a dummy token in development
+      // Return a dummy token in development server
       return "development-token";
     }
 
