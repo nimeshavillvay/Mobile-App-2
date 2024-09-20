@@ -993,9 +993,21 @@ const CartItemShippingMethod = ({
                 <>
                   <ItemLimitedStockOrBoCountBadge
                     availableCount={homeBranchAvailableQuantity}
+                    showOutOfStock={
+                      homePlant === availability.backorderLocation
+                    }
                   />
                   <BackOrderItemCountLabel
                     count={Number(lineQuantity) - homeBranchAvailableQuantity}
+                    showOutOfStock={
+                      homePlant === availability.backorderLocation
+                    }
+                    plant={
+                      plants.find(
+                        (plant) =>
+                          plant.code === availability.backorderLocation,
+                      )?.name
+                    }
                   />
                 </>
               )}
@@ -1450,11 +1462,17 @@ export const ItemInStockCountBadge = ({
 
 export const ItemLimitedStockOrBoCountBadge = ({
   availableCount = 0,
+  showOutOfStock = true,
 }: {
   readonly availableCount: number;
+  readonly showOutOfStock: boolean;
 }) => {
   if (availableCount === 0) {
-    return <span className="text-red-700">Out of stock</span>;
+    return (
+      <span className="text-red-700">
+        {showOutOfStock ? "Out of stock" : "Not stocked"}
+      </span>
+    );
   }
 
   return (
@@ -1466,8 +1484,12 @@ export const ItemLimitedStockOrBoCountBadge = ({
 
 export const BackOrderItemCountLabel = ({
   count,
+  showOutOfStock = true,
+  plant,
 }: {
   readonly count: number;
+  readonly showOutOfStock?: boolean;
+  readonly plant?: string;
 }) => {
   return (
     <div className="text-sm font-medium">
@@ -1475,6 +1497,7 @@ export const BackOrderItemCountLabel = ({
         Backorder
       </span>
       &nbsp;{count}&nbsp;{count > 1 ? "items" : "item"}
+      {!showOutOfStock && ` ${plant}`}
     </div>
   );
 };

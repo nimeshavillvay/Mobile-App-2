@@ -15,6 +15,7 @@ export type Availability = {
     name: string;
     amount: number;
   }[];
+  backorderLocation: string;
 };
 export type WillCallAnywhere = {
   hash: string;
