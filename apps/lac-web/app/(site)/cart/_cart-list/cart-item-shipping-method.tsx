@@ -1505,7 +1505,7 @@ export const BackOrderItemCountLabel = ({
         Backorder
       </span>
       &nbsp;{count}&nbsp;{count > 1 ? "items" : "item"}
-      {!showOutOfStock && ` ${plant}`}
+      {!showOutOfStock && ` from ${plant}`}
     </div>
   );
 };
