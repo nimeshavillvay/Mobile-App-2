@@ -22,7 +22,7 @@ const CompanyProfilePage = async () => {
   const cookieStore = cookies();
   const sessionToken = cookieStore.get(SESSION_TOKEN_COOKIE);
 
-  if (!sessionToken) {
+  if (!sessionToken?.value) {
     return redirect("/");
   }
   const apiUrl = process.env.NEXT_PUBLIC_WURTH_LAC_API;
@@ -44,7 +44,9 @@ const CompanyProfilePage = async () => {
 
       <div className="mb-5 grid grid-cols-1 gap-10 md:grid-cols-6">
         <div className="md:col-span-2">
-          <CompanyProfileImage token={sessionToken?.value} />
+          <Suspense fallback={<Skeleton className="mb-5 h-[114px]" />}>
+            <CompanyProfileImage token={sessionToken?.value} />
+          </Suspense>
 
           <BillingAddress token={sessionToken?.value} />
         </div>
