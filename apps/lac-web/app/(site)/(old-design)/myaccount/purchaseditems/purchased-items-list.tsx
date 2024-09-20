@@ -397,7 +397,7 @@ const PurchasedItemRows = ({
       prices.push({
         price: priceCheck.price,
         priceBreakDowns: priceCheck.priceBreakDowns,
-        priceUnit: priceCheck.priceUnit.toString(),
+        priceUnit: priceCheck.priceUnit,
         quantity: item.minimumOrderQuantity,
         uomPrice: priceCheck.uomPrice,
         uomPriceUnit: priceCheck.uomPriceUnit,

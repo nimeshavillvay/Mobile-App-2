@@ -490,7 +490,7 @@ export type GetPricesResult = {
   productPrices: {
     productId: string;
     price: number;
-    priceUnit: number;
+    priceUnit: string;
     extendedPrice: number;
     listPrice: number;
     couponCode: string | null;
