@@ -48,7 +48,7 @@ const FiltersAccordion = ({ filters }: FiltersAccordionProps) => {
   };
 
   return (
-    <Accordion type="single" collapsible className="btn-faceted-nav space-y-1">
+    <Accordion type="single" collapsible className="space-y-1">
       {filters.map((filter) => (
         <AccordionItem key={filter.id} value={filter.id}>
           <AccordionTrigger>{filter.filter}</AccordionTrigger>
@@ -67,8 +67,6 @@ const FiltersAccordion = ({ filters }: FiltersAccordionProps) => {
                       toggleCheck(filter.id, value.id, checked)
                     }
                     disabled={!value.active}
-                    className="btnAction"
-                    data-button-action="Filter Results"
                   />
 
                   <Label htmlFor={getCheckboxId(filter.id, value.id)}>

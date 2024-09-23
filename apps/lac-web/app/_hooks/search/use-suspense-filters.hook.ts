@@ -1,5 +1,4 @@
 import { api } from "@/_lib/api";
-import { QUERY_KEYS } from "@/_lib/constants";
 import type { Filters } from "@/_lib/types";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
@@ -7,13 +6,11 @@ const ORDER_HISTORY = "Order History";
 const PURCHASES = "Purchases";
 const FAVORITES = "Favorites";
 const CATEGORIES = "Categories";
-const LAMINATES = "Laminates";
 const FILTER_TYPES = {
   [ORDER_HISTORY]: "O",
   [PURCHASES]: "P",
   [FAVORITES]: "F",
   [CATEGORIES]: "C",
-  [LAMINATES]: "L",
 } as const;
 
 type Values = {
@@ -21,7 +18,7 @@ type Values = {
 };
 
 const useSuspenseFilters = (
-  token: string | undefined,
+  token: string,
   args:
     | {
         type: typeof ORDER_HISTORY;
@@ -41,10 +38,6 @@ const useSuspenseFilters = (
     | {
         type: typeof CATEGORIES;
         id: string;
-        values: Values;
-      }
-    | {
-        type: typeof LAMINATES;
         values: Values;
       },
 ) => {
@@ -72,25 +65,6 @@ const useSuspenseFilters = (
         }
       }
 
-      if (args.type === "Laminates") {
-        for (const [key, values] of Object.entries(args.values)) {
-          if (values) {
-            for (const value of values) {
-              if (key !== QUERY_KEYS.PER_PAGE) {
-                if (key === QUERY_KEYS.SEARCH_TEXT) {
-                  searchParams.append("substring", value);
-                } else {
-                  rfData[key] = {
-                    ...rfData[key],
-                    [value]: "Y",
-                  };
-                }
-              }
-            }
-          }
-        }
-      }
-
       if (args.type === "Purchases" && args.from && args.to && args.values) {
         searchParams.append("from", args.from);
         searchParams.append("to", args.to);
@@ -113,11 +87,11 @@ const useSuspenseFilters = (
 
       return await api
         .post(
-          `rest/filters/${FILTER_TYPES[args.type]}${args.type !== "Order History" && args.type !== "Purchases" && args.type !== "Laminates" ? `/${args.id}` : ""}`,
+          `rest/filters/${FILTER_TYPES[args.type]}${args.type !== "Order History" && args.type !== "Purchases" ? `/${args.id}` : ""}`,
           {
             searchParams,
             headers: {
-              Authorization: token ? `Bearer ${token}` : undefined,
+              Authorization: `Bearer ${token}`,
             },
             json: {
               rf_data: rfData,

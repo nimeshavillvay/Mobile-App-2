@@ -99,7 +99,6 @@ const useSuspenseCart = (token: string) => {
             isDirectlyShippedFromVendor:
               item.itemInfo.is_directly_shipped_from_vendor,
           },
-          isLaminate: item.is_laminate,
         })),
         configuration: data.configuration,
         mappedConfiguration: {

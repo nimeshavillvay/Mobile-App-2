@@ -58,7 +58,6 @@ const useSuspenseShippingAddressList = (token: string) => {
         .json<AddressResponse[]>(),
     select: (addresses: AddressResponse[]) => {
       const mappedAddresses = addresses.map(transformAddress);
-
       return mappedAddresses;
     },
   });

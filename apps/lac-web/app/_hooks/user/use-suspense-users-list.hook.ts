@@ -46,7 +46,6 @@ const useSuspenseUsersList = (token: string) => {
         .json<ManageContact>(),
     select: (data) => {
       const { your_profile, contact_list } = data.manage_contact;
-
       return {
         manageContact: {
           yourProfile: mapContact(your_profile),

@@ -48,7 +48,6 @@ const RegisterExistingUser = () => {
       form.setError("userName", {
         message: form.formState.errors.userName.message,
       });
-
       return;
     }
     try {

@@ -91,10 +91,8 @@ const createPrefixedSchema = <T extends z.ZodRawShape, P extends string>(
   const entries = Object.entries(schema.shape) as [keyof T, z.ZodTypeAny][];
   const newShape = entries.reduce((acc, [key, value]) => {
     (acc as any)[`${prefix}${key.toString()}`] = value;
-
     return acc;
   }, {} as any);
-
   return z.object(newShape) as z.ZodObject<Prefixer<P, T>>;
 };
 

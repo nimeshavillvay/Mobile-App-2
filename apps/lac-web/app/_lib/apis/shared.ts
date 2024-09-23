@@ -1,74 +1,12 @@
-import { SESSION_TOKEN_COOKIE, SPECIAL_SHIPPING_FLAG } from "@/_lib/constants";
+import { SPECIAL_SHIPPING_FLAG } from "@/_lib/constants";
 import { getBoolean } from "@/_lib/utils";
-import { z } from "zod";
 import { api } from "../api";
 import type {
   AvailabilityParameters,
   CheckAvailability,
-  ProductItemInfo,
   ShippingMethod,
   Token,
 } from "../types";
-
-export const loginCheck = async (token?: string) => {
-  const response = await api.get("rest/auth/login-check", {
-    headers: {
-      Authorization: token ? `Bearer ${token}` : undefined,
-    },
-    cache: "no-store",
-    throwHttpErrors: false,
-  });
-
-  let tokenValue = "";
-  let maxAge = 0;
-  // Check for the session token cookie
-  for (const header of response.headers.entries()) {
-    if (
-      header[0] === "set-cookie" &&
-      header[1].includes(`${SESSION_TOKEN_COOKIE}=`)
-    ) {
-      const keyValuePairs = header[1].split("; ");
-
-      for (const pair of keyValuePairs) {
-        const [key, value] = pair.split("=");
-
-        if (key && value) {
-          if (key === SESSION_TOKEN_COOKIE) {
-            tokenValue = value;
-          } else if (key === "Max-Age") {
-            maxAge = parseInt(value);
-          }
-        }
-      }
-    }
-  }
-
-  const data = await response.json<
-    | {
-        isLoggedInAsCustomer: boolean;
-        status_code: "OK";
-        user_id: string;
-        sales_rep_id?: string;
-        change_password: boolean;
-        user: {
-          billto: string;
-          user_id: string;
-          email: string;
-          phone: string;
-          company: string;
-          fullname: string;
-          sales_rep: string;
-        };
-      }
-    | {
-        change_password: false;
-        status_code: "NOT_LOGGED_IN";
-      }
-    | undefined
-  >();
-
-  return data ? { ...data, tokenValue, maxAge } : undefined;
-};
 
 export const getItemInfo = async (productIdList: number[]) => {
   const response = await api
@@ -76,7 +14,60 @@ export const getItemInfo = async (productIdList: number[]) => {
       searchParams: { productids: productIdList.toString() },
       cache: "no-cache",
     })
-    .json<ProductItemInfo[]>();
+    .json<
+      {
+        productid: string;
+        is_product_exclude: boolean;
+        txt_wurth_lac_item: string;
+        item_name: string;
+        img: string;
+        slug: string;
+        is_comparison: boolean;
+        txt_hazardous: string;
+        txt_special_shipping: string;
+        txt_sap: string;
+        txt_mfn: string;
+        txt_description_name: string;
+        txt_sub_description: string;
+        sel_assigned_brand: string;
+        txt_uom: string;
+        txt_uom_label: string;
+        txt_uom_value: null;
+        txt_rounding: null;
+        txt_box_qt: string;
+        txt_min_order_amount: string;
+        txt_order_qty_increments: string;
+        txt_weight_value: string;
+        txt_wight: string;
+        txt_weight_label: string;
+        date: Date;
+        txt_chemical_carncengen: string;
+        txt_chemical_reproduction: null;
+        txt_contains_wood: null;
+        txt_prop65_message_01: string;
+        txt_prop65_message_02: null;
+        txt_prop65_message_03: null;
+        txt_meta_title: string;
+        txt_upc1: string;
+        txt_seo_meta_description: string;
+        txt_keywords: string;
+        list_price: string;
+        on_sale: string;
+        is_new: string;
+        fclassid: string;
+        brand_name: string;
+        txt_group_code: null;
+        item_status: null;
+        category_name: string;
+        product_summary: string;
+        is_directly_shipped_from_vendor: boolean;
+        class: string;
+        attributes: {
+          attribute_name: string;
+          attribute_value: null | string;
+        }[];
+      }[]
+    >();
 
   const transformedResponse = response.map((item) => ({
     productId: parseInt(item.productid, 10),
@@ -120,13 +111,13 @@ export const getItemInfo = async (productIdList: number[]) => {
 };
 
 export const checkAvailability = async (
-  token: Token | undefined,
+  token: Token,
   { productId, qty, plant }: AvailabilityParameters,
 ) => {
   const response = await api
     .post("rest/availability-check", {
       headers: {
-        authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
       json: {
         productid: productId,
@@ -144,7 +135,6 @@ export const checkAvailability = async (
     willCallAnywhere: response.willcallanywhere,
     xplant: response.xplant,
     availableLocations: response.available_locations,
-    backorderLocation: response.backorder_location,
   };
 };
 
@@ -160,46 +150,4 @@ export const shippingMethods = async (token?: string, isForCart?: boolean) => {
       cache: "no-cache",
     })
     .json<ShippingMethod[]>();
-};
-
-const productListSchema = z.array(
-  z.object({
-    productid: z.string(),
-    cartid: z.number(),
-    item_id: z.string(),
-    item_sku: z.string(),
-    item_name: z.string(),
-    price: z.string(),
-    item_brand: z.string(),
-    item_variant: z.string(),
-    item_categoryid: z.string(),
-    coupon: z.string(),
-    coupon_discount: z.string(),
-    item_primarycategory: z.string(),
-    item_category_path: z.array(z.string()),
-  }),
-);
-
-export const getGtmProducts = async (
-  productIdList: {
-    productid: number;
-    cartid: number | null | undefined;
-  }[],
-  token: string,
-) => {
-  if (process.env.NEXT_PUBLIC_WURTH_LAC_DISABLE_GTM === "1") {
-    return [];
-  }
-  const response = await api
-    .post("rest/gtm/products", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      json: {
-        products: productIdList,
-      },
-    })
-    .json();
-
-  return productListSchema.parse(response);
 };

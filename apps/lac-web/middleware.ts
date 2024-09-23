@@ -1,4 +1,5 @@
-import { loginCheck } from "@/_lib/apis/shared";
+import { loginCheck } from "@/_hooks/user/use-suspense-check-login.hook";
+import { api } from "@/_lib/api";
 import {
   PRIVATE_ROUTES,
   SESSION_TOKEN_COOKIE,
@@ -8,7 +9,7 @@ import {
 import dayjs from "dayjs";
 import isBetween from "dayjs/plugin/isBetween";
 import type { ResponseCookie } from "next/dist/compiled/@edge-runtime/cookies";
-import { NextResponse, userAgent, type NextRequest } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
 
 dayjs.extend(isBetween);
 
@@ -20,37 +21,43 @@ const PUBLIC_ONLY_ROUTES = [
 ];
 
 export const middleware = async (request: NextRequest) => {
-  const sessionToken = request.cookies.get(SESSION_TOKEN_COOKIE);
-  const tokenExpire = request.cookies.get(TOKEN_EXPIRE_COOKIE);
-
-  const { isBot } = userAgent(request);
-
-  const isPrivateRoute = !!PRIVATE_ROUTES.find((route) =>
-    request.nextUrl.pathname.startsWith(route),
-  );
-
-  // Don't do any of the session checks for bots
-  if (isBot) {
-    // Redirect the bot to the home page
-    if (isPrivateRoute) {
-      return NextResponse.redirect(new URL("/no-bot", request.url));
-    }
-
+  // Exclude the following routes from the middleware
+  if (request.nextUrl.pathname.endsWith("opengraph-image")) {
     return NextResponse.next();
   }
 
-  const loginCheckResponse = await loginCheck(sessionToken?.value);
-  const actualExpireValue =
-    tokenExpire?.value ?? dayjs().add(TOKEN_MAX_AGE, "seconds").toISOString();
+  const sessionToken = request.cookies.get(SESSION_TOKEN_COOKIE);
+  const tokenExpire = request.cookies.get(TOKEN_EXPIRE_COOKIE);
 
-  const isForcePasswordReset = loginCheckResponse?.change_password;
+  // Create new session token if it doesn't exist
+  if (!sessionToken || !tokenExpire) {
+    // TODO Find a better solution to this
+    // Currently server components do not have the session token cookie
+    // when opening the site for the first time, so we're using this
+    // workaround to redirect the same page after setting the cookie
+    // https://github.com/vercel/next.js/issues/49442#issuecomment-1538691004
+    const response = NextResponse.redirect(request.url);
+    const { tokenValue, cookieConfig } = await sessionTokenDetails();
+    setSessionTokenCookie(response, { tokenValue, cookieConfig });
+
+    return response;
+  }
+
+  // Refresh the token on page navigation and
+  // check if the user is logged in
+  const [{ tokenValue, cookieConfig }, loginCheckResponse] = await Promise.all([
+    sessionTokenDetails(sessionToken.value),
+    loginCheck(sessionToken?.value),
+  ]);
+
+  const isForcePasswordReset = loginCheckResponse.change_password;
   if (
     isForcePasswordReset &&
     !request.nextUrl.pathname.startsWith("/password-reset")
   ) {
     return NextResponse.redirect(
       new URL(
-        `/password-reset?user=${loginCheckResponse?.user.user_id}`,
+        `/password-reset?user=${loginCheckResponse.user.user_id}`,
         request.url,
       ),
     );
@@ -60,17 +67,10 @@ export const middleware = async (request: NextRequest) => {
   // We shouldn't refresh it on every page navigation, because it makes the TanStack
   // Query cache useless.
   const shouldRefreshToken = dayjs().isBetween(
-    dayjs(actualExpireValue).subtract(TOKEN_MAX_AGE / 4, "seconds"),
-    dayjs(actualExpireValue),
+    dayjs(tokenExpire.value).subtract(TOKEN_MAX_AGE / 4, "seconds"),
+    dayjs(tokenExpire.value),
     "seconds",
   );
-
-  // The new token cookie in case it needs to be refreshed
-  const tokenValue = loginCheckResponse?.tokenValue ?? "";
-  const cookieConfig: Partial<ResponseCookie> = {
-    path: "/",
-    maxAge: loginCheckResponse?.maxAge ?? TOKEN_MAX_AGE,
-  };
 
   // Check for public routes
   const isPublicRoute = !!PUBLIC_ONLY_ROUTES.find((route) =>
@@ -80,7 +80,7 @@ export const middleware = async (request: NextRequest) => {
     !isForcePasswordReset &&
     isPublicRoute &&
     sessionToken &&
-    loginCheckResponse?.status_code === "OK"
+    loginCheckResponse.status_code === "OK"
   ) {
     // Redirect to home page if the user tries to access
     // public only routes while logged in
@@ -93,8 +93,11 @@ export const middleware = async (request: NextRequest) => {
   }
 
   // Check for private routes
+  const isPrivateRoute = !!PRIVATE_ROUTES.find((route) =>
+    request.nextUrl.pathname.startsWith(route),
+  );
   if (!isForcePasswordReset && isPrivateRoute && sessionToken) {
-    if (loginCheckResponse?.status_code === "NOT_LOGGED_IN") {
+    if (loginCheckResponse.status_code === "NOT_LOGGED_IN") {
       // Redirect to sign in page if user is not logged in
       const response = NextResponse.redirect(new URL("/sign-in", request.url));
       if (shouldRefreshToken) {
@@ -108,7 +111,7 @@ export const middleware = async (request: NextRequest) => {
       // OSR Dashboard
       if (
         request.nextUrl.pathname.startsWith("/osr") &&
-        !(loginCheckResponse && "sales_rep_id" in loginCheckResponse)
+        !("sales_rep_id" in loginCheckResponse)
       ) {
         const response = NextResponse.redirect(new URL("/", request.url));
         if (shouldRefreshToken) {
@@ -121,7 +124,7 @@ export const middleware = async (request: NextRequest) => {
   }
 
   const response = NextResponse.next();
-  if (shouldRefreshToken || !sessionToken || !tokenExpire) {
+  if (shouldRefreshToken) {
     setSessionTokenCookie(response, { tokenValue, cookieConfig });
   }
 
@@ -136,20 +139,53 @@ export const config = {
      * - _next/static (static files)
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
-     * - robots.txt (robots.txt file)
-     * - autodiscover/autodiscover.xml (Outlook)
-     * - storefront (Storefront)
-     * - no-bot (the page when bots try to access private routes)
-     * and those containing these in the pathname:
-     * - sitemap (sitemap files)
-     * - opengraph-image (Open Graph images)
-     * - .html (HTML files)
-     * - .php (PHP files)
      */
-    "/((?!api|_next/static|_next/image|favicon.ico|robots.txt|.*sitemap|.*opengraph-image|autodiscover/autodiscover.xml|.*html|.*php|storefront|no-bot).*)",
+    "/((?!api|_next/static|_next/image|favicon.ico).*)",
   ],
 };
 
+const sessionTokenDetails = async (existingToken?: string) => {
+  const sessionResponse = await api.get("rest/session", {
+    cache: "no-cache",
+    credentials: "include",
+    headers: existingToken
+      ? { Authorization: `Bearer ${existingToken}` }
+      : // Can't give "undefined" here because all existing headers get deleted
+        { "X-AUTH-TOKEN": process.env.NEXT_PUBLIC_WURTH_LAC_API_KEY },
+  });
+
+  let tokenValue = "";
+  const cookieConfig: Partial<ResponseCookie> = {
+    path: "/",
+  };
+
+  // Check for the session token cookie
+  for (const header of sessionResponse.headers.entries()) {
+    if (
+      header[0] === "set-cookie" &&
+      header[1].includes(`${SESSION_TOKEN_COOKIE}=`)
+    ) {
+      const keyValuePairs = header[1].split("; ");
+
+      for (const pair of keyValuePairs) {
+        const [key, value] = pair.split("=");
+
+        if (key && value) {
+          if (key === SESSION_TOKEN_COOKIE) {
+            tokenValue = value;
+          } else if (key === "Max-Age") {
+            cookieConfig.maxAge = parseInt(value);
+          }
+        }
+      }
+    }
+  }
+
+  return {
+    tokenValue,
+    cookieConfig,
+  };
+};
 const setSessionTokenCookie = (
   response: NextResponse,
   {

@@ -32,8 +32,6 @@ export const ProductsGridDesktopFiltersHeader = ({
       newParams.delete(selectedValue.id);
     });
     newParams.delete(QUERY_KEYS.page);
-    newParams.delete(QUERY_KEYS.searchText);
-
     window.history.pushState(null, "", `?${newParams.toString()}`);
   };
 
@@ -42,7 +40,7 @@ export const ProductsGridDesktopFiltersHeader = ({
   }
 
   return (
-    <div className="hidden flex-wrap md:flex md:flex-row md:items-center md:gap-2">
+    <div className="hidden md:flex md:flex-row md:items-center md:gap-2">
       {mappedSelectedValues.map((selectedValue) => (
         <AttributePill
           key={selectedValue.id}
@@ -60,7 +58,7 @@ export const ProductsGridDesktopFiltersHeader = ({
       >
         <span className="text-sm font-bold">Clear all</span>
 
-        <Close width={16} height={16} data-button-action="Clear All Filters" />
+        <Close width={16} height={16} />
       </Button>
     </div>
   );
@@ -96,11 +94,7 @@ const AttributePill = ({
                   {value.name}
                 </span>
 
-                <Close
-                  width={12}
-                  height={12}
-                  data-button-action={`Clear Filter ${value.name}`}
-                />
+                <Close width={12} height={12} />
               </Button>
             </li>
           ))
@@ -115,11 +109,7 @@ const AttributePill = ({
                 {values.length} selected
               </span>
 
-              <Close
-                width={12}
-                height={12}
-                data-button-action={`Clear Filter ${name}`}
-              />
+              <Close width={12} height={12} />
             </Button>
           </li>
         )}

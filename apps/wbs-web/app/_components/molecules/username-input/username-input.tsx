@@ -1,5 +1,4 @@
 "use client";
-
 import useDebouncedState from "@/_hooks/misc/use-debounced-state.hook";
 import useCheckUsernameMutation from "@/_hooks/user/use-check-username-mutation.hook";
 import { isErrorResponse } from "@/_lib/utils";
@@ -56,7 +55,6 @@ export const UsernameInput = <
       lastCheckedUsername.current = "";
       clearErrors(name);
       onUsernameCheck?.(false);
-
       return;
     }
     if (value !== lastCheckedUsername.current && !formState.errors[name]) {
@@ -95,7 +93,6 @@ export const UsernameInput = <
   if (delayedUsername !== lastCheckedUsername.current) {
     checkUsername(delayedUsername);
   }
-
   return (
     <FormField
       control={control}

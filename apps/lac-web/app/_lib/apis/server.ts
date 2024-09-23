@@ -194,12 +194,9 @@ export const getPaymentMethods = async (): Promise<PaymentMethod[]> => {
   }));
 };
 
-export const getPlants = async (token: string) => {
+export const getPlants = async () => {
   return await api
     .get("rest/plants", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
       next: {
         revalidate: DEFAULT_REVALIDATE,
       },

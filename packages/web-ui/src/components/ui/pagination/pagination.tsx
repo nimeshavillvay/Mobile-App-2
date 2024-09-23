@@ -58,7 +58,6 @@ const PaginationLink = ({
       className,
     )}
     {...props}
-    data-btn-action="Pagination Link"
   />
 );
 PaginationLink.displayName = "PaginationLink";

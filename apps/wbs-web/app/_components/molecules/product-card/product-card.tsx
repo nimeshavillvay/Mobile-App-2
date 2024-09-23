@@ -1,5 +1,4 @@
 "use client";
-
 import { calculateDiscount, cn } from "@/_lib/utils";
 import type { LiteProduct } from "@repo/shared-logic/models/product";
 import { buttonVariants } from "@repo/web-ui/components/base/atoms/button";

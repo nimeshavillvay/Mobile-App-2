@@ -20,7 +20,6 @@ export function renderWithClient(ui: React.ReactElement) {
   const { rerender, ...result } = render(
     <QueryClientProvider client={testQueryClient}>{ui}</QueryClientProvider>,
   );
-
   return {
     ...result,
     rerender: (rerenderUi: React.ReactElement) =>

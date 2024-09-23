@@ -20,7 +20,6 @@ export const RadioGroupItemWithLabel = (props: {
   readonly label: string;
 }) => {
   const id = `radiogroup-${props.value}`;
-
   return (
     <XStack width={300} alignItems="center" gap={10}>
       <RadioGroup.Item

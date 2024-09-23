@@ -251,10 +251,7 @@ const CarouselPrevious = forwardRef<
       onClick={scrollPrev}
       {...props}
     >
-      <ArrowLeftIcon
-        className="h-4 w-4"
-        data-button-action="Carousel Previous slide"
-      />
+      <ArrowLeftIcon className="h-4 w-4" />
       <span className="sr-only">Previous slide</span>
     </Button>
   );
@@ -283,10 +280,7 @@ const CarouselNext = forwardRef<
       onClick={scrollNext}
       {...props}
     >
-      <ArrowRightIcon
-        className="h-4 w-4"
-        data-button-action="Carousel Next slide"
-      />
+      <ArrowRightIcon className="h-4 w-4" />
       <span className="sr-only">Next slide</span>
     </Button>
   );
@@ -314,11 +308,10 @@ const CarouselDots = ({
           type="button"
           onClick={() => scrollTo(index)}
           className={cn(
-            "btnAction size-2 rounded-full border-[0.1rem] border-black/40 data-[selected]:border-transparent data-[selected]:bg-black/40",
+            "size-2 rounded-full border-[0.1rem] border-black/40 data-[selected]:border-transparent data-[selected]:bg-black/40",
             buttonClassName,
           )}
           data-selected={selectedIndex === index ? true : undefined}
-          data-button-action="Carousel Scroll to Item"
         >
           <span className="sr-only">Item {index + 1}</span>
         </button>

@@ -121,7 +121,6 @@ const ShippingAddressSelector = ({
                         width={20}
                         height={20}
                         className="stroke-wurth-gray-150"
-                        data-button-action="Select Different Shipping Address"
                       />
                     )}
                   </span>
@@ -144,7 +143,6 @@ const ShippingAddressSelector = ({
                   setOpenNewAddressDialog(true);
                 }}
                 disabled={updateShippingAddressMutation.isPending}
-                data-button-action="Open Add New Shipping Address"
               >
                 Add new address
               </Button>
@@ -154,7 +152,6 @@ const ShippingAddressSelector = ({
               className="font-bold"
               onClick={changeDefaultAddress}
               disabled={updateShippingAddressMutation.isPending}
-              data-button-action="Update Shipping Address"
             >
               Confirm
             </Button>

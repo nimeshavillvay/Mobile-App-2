@@ -6,22 +6,20 @@ import type {
 } from "@/_lib/types";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
-export type AvailabilityOptionPlants = {
-  index: number;
-  isSameDayAvail: boolean;
-  plant: string;
-  quantity?: number;
-  backOrderQuantity?: number;
-  backOrderDate?: string;
-  shippingMethods: ShippingMethod[];
-};
-
 export type CheckAvailability = {
   productid: number;
   status: string;
   options: {
     backOrder: boolean;
-    plants: AvailabilityOptionPlants[];
+    plants: {
+      index: number;
+      isSameDayAvail: boolean;
+      plant: string;
+      quantity?: number;
+      backOrderQuantity?: number;
+      backOrderDate?: string;
+      shippingMethods: ShippingMethod[];
+    }[];
     type: string;
     hash: string;
   }[];
@@ -49,7 +47,7 @@ export type CheckAvailability = {
 };
 
 const useSuspenseCheckAvailability = (
-  token: Token | undefined,
+  token: Token,
   { productId, qty, plant }: AvailabilityParameters,
 ) => {
   return useSuspenseQuery({

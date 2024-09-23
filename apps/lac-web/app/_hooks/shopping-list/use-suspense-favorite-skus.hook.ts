@@ -1,23 +1,25 @@
 import { api } from "@/_lib/api";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { z } from "zod";
 
-const favoriteSkuSchema = z.array(
-  z.object({
-    productid: z.number(),
-    isFavourite: z.boolean(),
-    favoriteIds: z.array(z.string()),
-  }),
-);
+type FavoriteSku = {
+  productid: number;
+  isFavourite: boolean;
+  favoriteIds: string[];
+};
 
-const useSuspenseFavoriteSKUs = (
-  token: string | undefined,
-  productIds: string[],
-) => {
+const useSuspenseFavoriteSKUs = (token: string, productIds: string[]) => {
+  const productIdsAsString = productIds.join("-");
+
   return useSuspenseQuery({
-    queryKey: ["user", "favorite-skus", productIds, token],
+    queryKey: [
+      "user",
+      "favorite-skus",
+      `sku-${productIdsAsString}`,
+      productIds,
+      token,
+    ],
     queryFn: async () => {
-      const response = await api
+      return api
         .post("rest/my-favourite/favourite-skus", {
           headers: {
             authorization: `Bearer ${token}`,
@@ -25,15 +27,19 @@ const useSuspenseFavoriteSKUs = (
           json: {
             products: productIds,
           },
-          cache: "no-cache",
         })
-        .json();
-
-      const parsedResponse = await favoriteSkuSchema.parseAsync(response);
-
-      return parsedResponse.map((data) => ({
+        .json<FavoriteSku[]>();
+    },
+    select: (
+      data,
+    ): {
+      productId: number;
+      isFavorite: boolean;
+      favoriteListIds: string[];
+    }[] => {
+      return data.map((data: FavoriteSku) => ({
         productId: data.productid,
-        isFavorite: data.isFavourite,
+        isFavorite: !!data.isFavourite,
         favoriteListIds: data.favoriteIds,
       }));
     },

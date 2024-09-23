@@ -18,7 +18,6 @@ const TestComponent = () => {
       userName: "", // Initialize with an empty string
     },
   });
-
   return (
     <FormProvider {...methods}>
       <UsernameInput control={methods.control} name="userName" />
@@ -38,7 +37,6 @@ const TestComponentWithUsernameCheck = ({
       userName: "",
     },
   });
-
   return (
     <FormProvider {...methods}>
       <UsernameInput

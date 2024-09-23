@@ -20,7 +20,6 @@ export const CompareButton = ({
       // Implement default shopping list logic
     }
   };
-
   return (
     <Button
       variant="outline"

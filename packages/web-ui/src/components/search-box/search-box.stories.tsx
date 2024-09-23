@@ -187,7 +187,6 @@ export const Default: Story = {
       const filteredCategories = items.categories.results.filter((category) =>
         category.title.toLowerCase().includes(lowerCasedValue),
       );
-
       return {
         products: {
           summary: items.products.summary,
