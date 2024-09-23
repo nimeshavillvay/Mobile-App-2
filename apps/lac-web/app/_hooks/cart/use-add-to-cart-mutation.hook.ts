@@ -1,25 +1,47 @@
+import useGtmProducts from "@/_hooks/gtm/use-gtm-item-info.hook";
 import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
 import { api } from "@/_lib/api";
 import { checkAvailability } from "@/_lib/apis/shared";
-import { NOT_AVAILABLE } from "@/_lib/constants";
-import { useToast } from "@repo/web-ui/components/ui/toast";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   BACKORDER_DISABLED,
   BACKORDER_ENABLED,
   FALSE_STRING,
-} from "../../cart/constants";
+  NOT_AVAILABLE,
+  SESSION_TOKEN_COOKIE,
+} from "@/_lib/constants";
+import { getGTMPageType } from "@/_lib/gtm-utils";
+import { sendGTMEvent } from "@next/third-parties/google";
+import { useToast } from "@repo/web-ui/components/ui/toast";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+import useGtmUser from "../gtm/use-gtm-user.hook";
+import usePathnameHistoryState from "../misc/use-pathname-history-state.hook";
+import useCookies from "../storage/use-cookies.hook";
 
-const useAddToCartMutation = (
-  token: string,
-  { productId }: { productId: number },
-) => {
+const useAddToCartMutation = ({ productId }: { productId: number }) => {
   const queryClient = useQueryClient();
   const { toast } = useToast();
+  const [cookies] = useCookies();
+
+  const token = cookies[SESSION_TOKEN_COOKIE];
 
   const { setOpen, setProductId } = useAddToCartDialog(
     (state) => state.actions,
   );
+
+  const pathnameHistory = usePathnameHistoryState(
+    (state) => state.pathnameHistory,
+  );
+
+  const [quantity, setQuantity] = useState(0);
+
+  const gtmItemInfoQuery = useGtmProducts(
+    productId ? [{ productid: productId, cartid: 0 }] : [],
+  );
+  const gtmItemInfo = gtmItemInfoQuery.data?.[0];
+
+  const gtmItemUserQuery = useGtmUser();
+  const gtmUser = gtmItemUserQuery.data;
 
   return useMutation({
     mutationFn: async ({
@@ -29,6 +51,7 @@ const useAddToCartMutation = (
       quantity: number;
       poOrJobName?: string;
     }) => {
+      setQuantity(quantity);
       const configuration: { [key: string]: string } = {
         poOrJobName,
         will_call_avail: "",
@@ -116,6 +139,7 @@ const useAddToCartMutation = (
           error: item.error,
         }));
       }
+
       return;
     },
     onMutate: () => {
@@ -154,6 +178,37 @@ const useAddToCartMutation = (
       } else {
         // Open the dialog
         setOpen("confirmation");
+        sendGTMEvent({
+          event: "add_to_cart",
+          addToCartData: {
+            currency: "USD",
+            value: gtmItemInfo?.price,
+            items: [
+              {
+                item_id: gtmItemInfo?.item_id,
+                item_sku: gtmItemInfo?.item_sku,
+                item_name: gtmItemInfo?.item_name,
+                item_brand: gtmItemInfo?.item_brand,
+                price: gtmItemInfo?.price,
+                quantity: quantity,
+                item_variant: gtmItemInfo?.item_variant,
+                item_categoryid: gtmItemInfo?.item_categoryid,
+                item_primarycategory: gtmItemInfo?.item_primarycategory,
+                item_category: gtmItemInfo?.item_category_path[0],
+                item_category1: gtmItemInfo?.item_category_path[1],
+              },
+            ],
+            data: {
+              userid: gtmUser?.userid,
+              account_type: gtmUser?.account_type,
+              account_industry: gtmUser?.account_industry,
+              account_sales_category: gtmUser?.account_sales_category,
+            },
+            page_type: getGTMPageType(
+              pathnameHistory[pathnameHistory.length - 1] ?? "",
+            ),
+          },
+        });
       }
     },
   });

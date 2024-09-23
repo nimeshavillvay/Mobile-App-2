@@ -3,12 +3,13 @@
   "compilerOptions": {
     "paths": {
       "@/*": ["./app/*"],
+      "@/old/*": ["./app/(site)/(old-design)/*"],
       "~/*": [
         "../../packages/web-ui/src/*",
         "../../packages/shared-logic/src/*"
-      ],
-      "@/old/*": ["./app/(old-design)/*"]
-    }
+      ]
+    },
+    "target": "ES2017"
   },
   "include": [
     "next-env.d.ts",

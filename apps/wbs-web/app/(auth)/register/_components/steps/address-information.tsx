@@ -94,6 +94,7 @@ export const AddressInformation = ({
       form.setValue("same", false, { shouldValidate: true });
       setShowShippingForm(true);
       event.preventDefault();
+
       return;
     }
 
@@ -105,6 +106,7 @@ export const AddressInformation = ({
       form.setValue("same", false, { shouldValidate: true });
       setShowShippingForm(true);
       event.preventDefault();
+
       return;
     }
     setShowPOBoxAlert(false);
@@ -113,6 +115,7 @@ export const AddressInformation = ({
     onSubmit(event);
   };
   const totalSteps = userType === "Homeowner" ? 2 : 3;
+
   return (
     <StepContainer
       state={currentStep === "address" ? "open" : "closed"}

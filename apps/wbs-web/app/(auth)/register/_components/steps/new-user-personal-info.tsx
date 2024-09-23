@@ -43,6 +43,7 @@ export const NewUserPersonalInformation = ({
   setStep,
 }: NewUserPersonalInformationStepProps) => {
   const totalSteps = userType === "Homeowner" ? 2 : 3;
+
   return (
     <StepContainer
       title={title}

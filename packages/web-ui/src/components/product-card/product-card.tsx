@@ -78,20 +78,24 @@ const ProductCardImage = ({
   className,
   href,
   title,
+  productTitleOrImageOnClick,
   ...delegated
 }: ImageProps &
   Pick<LinkProps, "href"> & {
     /**
      * Title to show for screen readers
      */
-    readonly title: string;
+    readonly title?: string;
+    readonly productTitleOrImageOnClick?: () => void;
   }) => {
   const orientation = useOrientation();
 
   return (
     <Link
       href={href}
-      className="btn-view-product flex items-center justify-center"
+      onClick={productTitleOrImageOnClick}
+      className="btn-view-product btnAction btn-product-detail-img flex items-center justify-center"
+      data-btn-action="View Product"
     >
       <Image
         src={src}
@@ -122,7 +126,7 @@ const ProductCardDiscount = ({
   return (
     <div
       className={cn(
-        "flex items-center gap-0.5 bg-green-50 px-1.5 pr-5 text-base text-green-600",
+        "flex items-center gap-0.5 bg-green-50 px-1.5 pr-5 text-base text-green-700",
         orientation === "vertical" && "md:px-2 md:text-lg",
         className,
       )}
@@ -181,10 +185,12 @@ const ProductCardDetails = ({
   title,
   sku,
   href,
+  productTitleOrImageOnClick,
 }: {
   readonly title: string;
   readonly sku: string;
   readonly href: LinkProps["href"];
+  readonly productTitleOrImageOnClick?: () => void;
 }) => {
   return (
     <div className="space-y-1 text-sm">
@@ -194,7 +200,9 @@ const ProductCardDetails = ({
             <Link
               href={href}
               dangerouslySetInnerHTML={{ __html: title }}
-              className="btn-view-product"
+              className="btn-view-product btnAction product-title btn-product-detail"
+              onClick={productTitleOrImageOnClick}
+              data-btn-action="View Product"
             />
           </h3>
         </TooltipTrigger>
@@ -204,7 +212,7 @@ const ProductCardDetails = ({
         </TooltipContent>
       </Tooltip>
 
-      <div className="font-normal leading-none text-wurth-gray-400">{sku}</div>
+      <div className="font-normal leading-none text-wurth-gray-500">{sku}</div>
     </div>
   );
 };
@@ -214,19 +222,21 @@ const ProductCardPrice = ({
   uom,
   actualPrice,
   isLaminateItem,
+  showDiscount,
 }: {
   readonly price: number;
   readonly uom: string;
   readonly actualPrice?: number;
   readonly isLaminateItem: boolean;
+  readonly showDiscount?: boolean;
 }) => {
   return (
     <div className="text-xs font-normal text-wurth-gray-800 md:text-sm md:leading-none">
       <span
         className={cn(
           "font-bold",
-          !isLaminateItem && actualPrice && price < actualPrice
-            ? "text-green-600"
+          !isLaminateItem && actualPrice && price < actualPrice && showDiscount
+            ? "text-green-700"
             : "text-wurth-gray-800",
         )}
       >
@@ -235,11 +245,14 @@ const ProductCardPrice = ({
           {formatNumberToPrice(price)}
         </span>
       </span>
-      {!isLaminateItem && !!actualPrice && price < actualPrice && (
-        <span className="ml-1 text-base font-normal text-wurth-gray-400 line-through md:text-lg">
-          {formatNumberToPrice(actualPrice)}
-        </span>
-      )}
+      {!isLaminateItem &&
+        !!actualPrice &&
+        price < actualPrice &&
+        !!showDiscount && (
+          <span className="ml-1 text-base font-normal text-wurth-gray-500 line-through md:text-lg">
+            {formatNumberToPrice(actualPrice)}
+          </span>
+        )}
       /{uom}
     </div>
   );
@@ -247,12 +260,12 @@ const ProductCardPrice = ({
 
 const ProductCardActions = ({
   addToCart,
-  isFavorite,
+  isFavorite = false,
   onClickShoppingList,
   disabled = false,
 }: {
   readonly addToCart: () => void;
-  readonly isFavorite: boolean;
+  readonly isFavorite?: boolean;
   readonly onClickShoppingList: () => void;
   readonly disabled?: boolean;
 }) => {
@@ -262,6 +275,7 @@ const ProductCardActions = ({
         className="h-10 max-h-full flex-1 px-4 text-[0.875rem] leading-5"
         onClick={addToCart}
         disabled={disabled}
+        data-button-action="Product Card Add to Cart"
       >
         Add to cart
       </Button>
@@ -275,9 +289,15 @@ const ProductCardActions = ({
         onClick={onClickShoppingList}
       >
         {isFavorite ? (
-          <BookmarkFilled className="size-4" />
+          <BookmarkFilled
+            className="size-4"
+            data-button-action="Product Card Add to Wishlist"
+          />
         ) : (
-          <BookmarkOutline className="size-4" />
+          <BookmarkOutline
+            className="size-4"
+            data-button-action="Product Card Add to Wishlist"
+          />
         )}
       </Button>
     </div>
@@ -291,14 +311,14 @@ const ProductCardVariantSelector = ({
   onValueChange,
   addToCart,
   disabled,
-  isFavorite,
+  isFavorite = false,
   onClickShoppingList,
 }: {
   readonly href: string;
   readonly variants: { value: string; title: string }[];
   readonly value?: string;
   readonly onValueChange: (value: string) => void;
-  readonly isFavorite: boolean;
+  readonly isFavorite?: boolean;
   readonly onClickShoppingList: () => void;
 } & ComponentProps<typeof ProductCardActions>) => {
   return (
@@ -308,13 +328,17 @@ const ProductCardVariantSelector = ({
       </h4>
 
       <Select value={value} onValueChange={onValueChange}>
-        <SelectTrigger className="w-full">
+        <SelectTrigger className="w-full" aria-label="Select a variation">
           <SelectValue placeholder="Select a variation" />
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
             {variants.map((variant) => (
-              <SelectItem key={variant.value} value={variant.value}>
+              <SelectItem
+                key={variant.value}
+                value={variant.value}
+                className="product-variant-select"
+              >
                 <span dangerouslySetInnerHTML={{ __html: variant.title }} />
               </SelectItem>
             ))}
@@ -332,7 +356,11 @@ const ProductCardVariantSelector = ({
       ) : (
         <Link
           href={href}
-          className={cn(buttonVariants({ variant: "default" }), "h-10 w-full")}
+          className={cn(
+            buttonVariants({ variant: "default" }),
+            "btnAction h-10 w-full",
+          )}
+          data-button-action="View Item"
         >
           View item
         </Link>

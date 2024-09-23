@@ -109,6 +109,7 @@ const RegisterNewUser: React.FC<RegisterNewUserProps> = ({
       form.setError("userName", {
         message: form.formState.errors.userName.message,
       });
+
       return;
     }
     if (step === "personal") {
@@ -347,6 +348,7 @@ const RegisterNewUser: React.FC<RegisterNewUserProps> = ({
             skip_address_check: false,
           },
         ] as ResponseAddress[]);
+
     return (
       <>
         <AlertDialog

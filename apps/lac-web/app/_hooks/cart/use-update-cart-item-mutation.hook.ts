@@ -1,8 +1,11 @@
 import { api } from "@/_lib/api";
+import { SESSION_TOKEN_COOKIE } from "@/_lib/constants";
 import type { CartItemConfiguration } from "@/_lib/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import useCookies from "../storage/use-cookies.hook";
 
-const useUpdateCartItemMutation = (token: string) => {
+const useUpdateCartItemMutation = () => {
+  const [cookies] = useCookies();
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -17,7 +20,7 @@ const useUpdateCartItemMutation = (token: string) => {
       return await api
         .put("rest/cart", {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${cookies[SESSION_TOKEN_COOKIE]}`,
           },
           json: {
             cartitembatchconfiguration: products.map((product) => ({

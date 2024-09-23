@@ -43,7 +43,7 @@ const ShippingDetailsDialog = ({
 
   if (
     checkLoginQuery?.data?.status_code === "NOT_LOGGED_IN" ||
-    checkLoginQuery.data.change_password
+    checkLoginQuery.data?.change_password
   ) {
     return null;
   }
@@ -87,7 +87,7 @@ const ShippingDetailsDialogButton = ({
       : "";
   };
 
-  if (checkLoginQuery.data.change_password) {
+  if (checkLoginQuery.data?.change_password) {
     return (
       <>
         <Truck width={16} height={16} />
@@ -108,9 +108,15 @@ const ShippingDetailsDialogButton = ({
             size="sm"
             className="h-fit px-0 py-0 text-sm font-medium leading-5"
           >
-            <Truck width={16} height={16} />
+            <Truck
+              width={16}
+              height={16}
+              data-button-action="Open Shipping Details Dialog"
+            />
 
-            <span>{capitalizeFirstChar(defaultAddress?.streetAddress)}</span>
+            <span data-button-action="Open Shipping Details Dialog">
+              {capitalizeFirstChar(defaultAddress?.streetAddress)}
+            </span>
           </Button>
         )}
       </DialogTrigger>
@@ -145,7 +151,11 @@ const ShippingDetailsDialogButton = ({
             </div>
 
             <ShippingAddressSelector token={token} countries={countries}>
-              <Button variant="outline" className="px-3 font-bold shadow">
+              <Button
+                variant="outline"
+                className="px-3 font-bold shadow"
+                data-button-action="Open Change Shipping Address Dialog"
+              >
                 Change
               </Button>
             </ShippingAddressSelector>
@@ -185,7 +195,11 @@ const ShippingDetailsDialogButton = ({
         </div>
 
         <DialogFooter>
-          <Button className="font-bold" onClick={() => setOpen(false)}>
+          <Button
+            className="font-bold"
+            onClick={() => setOpen(false)}
+            data-button-action="Close Shipping Details Dialog"
+          >
             Done
           </Button>
         </DialogFooter>

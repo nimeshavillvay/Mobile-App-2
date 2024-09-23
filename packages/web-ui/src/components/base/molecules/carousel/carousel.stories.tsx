@@ -73,6 +73,7 @@ const renderProductCard = (orientation?: "horizontal" | "vertical") => (
 export const HorizontalCarousel: Story = {
   render: () => {
     OPTIONS = { dragFree: true, axis: "x" };
+
     return (
       <Carousel>
         <CarouselHeader>
@@ -103,6 +104,7 @@ export const VerticalCarousel: Story = {
       dragFree: true,
       axis: "y",
     };
+
     return (
       <Carousel>
         <CarouselHeader>

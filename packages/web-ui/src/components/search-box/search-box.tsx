@@ -16,12 +16,12 @@ type SearchableFields = "productTitle" | "brandName" | "categoryName";
 
 const INVALID_SEARCH_VALUES = {
   productStatus: "discontinued",
-  categoryName: "",
 };
 
 const isValidProduct = (result: Result): boolean => {
   return Object.entries(INVALID_SEARCH_VALUES).every(([key, invalidValue]) => {
     const resultValue = result[key as keyof Result];
+
     return resultValue !== invalidValue;
   });
 };
@@ -61,6 +61,7 @@ export const SearchBoxInput = ({
   value,
   setValue,
   onEnterPressed,
+  onHandleDropDownClick,
   children,
   ...delegated
 }: ComponentProps<"input"> & {
@@ -72,6 +73,11 @@ export const SearchBoxInput = ({
   readonly value: string;
   readonly setValue: (value: string) => void;
   readonly onEnterPressed: () => void;
+  readonly onHandleDropDownClick?: (
+    value: string,
+    linkType: string,
+    linkUrl: string,
+  ) => void;
 }) => {
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
@@ -133,11 +139,17 @@ export const SearchBoxInput = ({
         return result[field] as string;
       }
     }
+
     return "";
   };
 
-  const handleDropDownClick = (value: string) => {
+  const handleDropDownClick = (
+    value: string,
+    linkType: string,
+    linkUrl: string,
+  ) => {
     setValue(value);
+    onHandleDropDownClick?.(value, linkType, linkUrl);
   };
 
   return (
@@ -162,8 +174,8 @@ export const SearchBoxInput = ({
         } absolute left-0 right-0 z-50 mt-4 rounded-b-lg bg-white p-0 pl-4 text-sm shadow-sm`}
         {...getMenuProps()}
       >
-        {isOpen && !!value ? (
-          <>
+        {!!isOpen && !!value && (
+          <div id="instand_search_menu" className="block-did-you-mean">
             {brands.summary.total > 0 && (
               <>
                 <li className="text-black-500 break-all px-3 py-1 font-semibold">
@@ -182,12 +194,17 @@ export const SearchBoxInput = ({
                       <Link
                         href={`/search?query=${brand.slug}`}
                         key={brand.id}
-                        className="m-2 mb-2 mr-2 flex items-center rounded-md border-2 p-2 shadow-sm hover:bg-gray-100"
+                        className="btnAction cs-did-you-mean-link m-2 mb-2 mr-2 flex items-center rounded-md border-2 p-2 shadow-sm hover:bg-gray-100"
                         onClick={() => {
                           if (brand.brandName) {
-                            handleDropDownClick(brand.brandName);
+                            handleDropDownClick(
+                              brand.brandName,
+                              "brand",
+                              `/search?query=${brand.slug}`,
+                            );
                           }
                         }}
+                        data-btn-action="Search Results for Brand Link"
                       >
                         {brand.brandImage && brand.brandName ? (
                           <Image
@@ -210,7 +227,7 @@ export const SearchBoxInput = ({
             )}
 
             {categories.summary.total > 0 && (
-              <ul>
+              <ul className="block-categories">
                 <li className="text-black-500 break-all px-3 py-1 font-semibold">
                   Categories for &quot;{value}&quot;
                 </li>
@@ -224,14 +241,19 @@ export const SearchBoxInput = ({
                     })}
                   >
                     <Link
-                      className="root-category"
+                      className="btnAction root-category cs-category-link"
                       href={`/category/${category.id}/${category.slug}`}
                       key={category.id}
                       onClick={() => {
                         if (category.categoryName) {
-                          handleDropDownClick(category.categoryName);
+                          handleDropDownClick(
+                            category.categoryName,
+                            "category",
+                            `/category/${category.id}/${category.slug}`,
+                          );
                         }
                       }}
+                      data-btn-action="Search Results for Category Link"
                     >
                       <span className="text-[#74767B]">&#8627;</span>{" "}
                       <span className="break-words font-semibold text-[#CC0000]">
@@ -245,7 +267,7 @@ export const SearchBoxInput = ({
             )}
 
             {products.summary.total > 0 && validSearches.length > 0 && (
-              <>
+              <div id="block-products">
                 <li className="text-black-500 whitespace-normal break-all px-3 py-1 font-semibold">
                   Products for &quot;{value}&quot;
                 </li>
@@ -261,45 +283,65 @@ export const SearchBoxInput = ({
                           brands.results.length,
                       })}
                     >
-                      <Link
-                        className="btn-view-product flex items-start justify-start gap-4 px-3 py-2"
-                        href={`/product/${product.id}/${product.slug}`}
+                      <div
+                        className="cs-list-image flex items-start justify-start gap-4 px-3 py-2"
                         key={product.id}
-                        onClick={() => {
-                          if (product.productTitle) {
-                            handleDropDownClick(product.productTitle);
-                          }
-                        }}
                       >
-                        <div className="flex-shrink-0 overflow-hidden rounded-md border border-gray-300">
+                        <Link
+                          className="btn-view-product btnAction cs-product-link-img flex-shrink-0 overflow-hidden rounded-md border border-gray-300"
+                          href={`/product/${product.id}/${product.slug}`}
+                          onClick={() => {
+                            if (product.productTitle) {
+                              handleDropDownClick(
+                                product.productTitle,
+                                "product",
+                                `/product/${product.id}/${product.slug}`,
+                              );
+                            }
+                          }}
+                          data-btn-action="View Product"
+                        >
                           {product.itemImage && product.productTitle ? (
                             <Image
                               src={product.itemImage}
                               alt={product.productTitle}
-                              className="object-cover"
+                              className="cs-list-image object-cover"
                               width={80}
                               height={80}
                             />
                           ) : (
                             <div className="h-20 w-20 rounded-full" />
                           )}
-                        </div>
-                        <div>
-                          <div className="font-normal hover:underline">
+                        </Link>
+                        <Link
+                          className="btn-view-product btnAction cs-product-link"
+                          href={`/product/${product.id}/${product.slug}`}
+                          onClick={() => {
+                            if (product.productTitle) {
+                              handleDropDownClick(
+                                product.productTitle,
+                                "product",
+                                `/product/${product.id}/${product.slug}`,
+                              );
+                            }
+                          }}
+                          data-btn-action="View Product"
+                        >
+                          <div className="productcode font-normal hover:underline">
                             <p className="break-all">{product.productTitle}</p>
                           </div>
                           <div className="break-all text-[#74767B]">
                             Item# {product.materialNumber}
                           </div>
-                        </div>
-                      </Link>
+                        </Link>
+                      </div>
                     </li>
                   ))}
                 </ul>
-              </>
+              </div>
             )}
-          </>
-        ) : null}
+          </div>
+        )}
       </ul>
     </div>
   );
@@ -316,12 +358,17 @@ export const SearchBoxButton = ({
       variant="ghost"
       size="icon"
       className={cn(
-        "btnAction image-button btn-search mx-0.5 rounded-full px-2",
+        "image-button btn-search mx-0.5 rounded-full px-2",
         className,
       )}
       {...delegated}
     >
-      <MagnifyingGlass className="size-5" />
+      <MagnifyingGlass
+        className="btnAction size-5"
+        data-button-action="Search"
+      />
+
+      <span className="sr-only">Search</span>
     </Button>
   );
 };
@@ -339,7 +386,7 @@ export const SearchClearButton = ({
       className={cn("mx-0.5 rounded-full px-2", className)}
       {...delegated}
     >
-      <Close className="size-5" />
+      <Close className="size-5" data-button-action="Clear Search" />
       <span className="sr-only">Clear search</span>
     </Button>
   );

@@ -1,4 +1,5 @@
 "use client";
+
 import RegisterExistingUser from "@/(auth)/register/_components/register-existing-user/register-existing-user";
 import RegisterNewUser from "@/(auth)/register/_components/register-new-user/register-new-user";
 import type {

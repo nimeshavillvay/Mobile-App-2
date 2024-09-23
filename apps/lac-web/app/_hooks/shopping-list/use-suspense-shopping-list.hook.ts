@@ -9,7 +9,7 @@ import type {
 import { useSuspenseQuery } from "@tanstack/react-query";
 
 const useSuspenseShoppingList = (
-  token: string,
+  token: string | undefined,
   { sort, sortDirection }: { sort: string; sortDirection: string },
 ) => {
   return useSuspenseQuery({
@@ -18,7 +18,7 @@ const useSuspenseShoppingList = (
       api
         .get("rest/my-favourite/lists", {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: token ? `Bearer ${token}` : token,
           },
           searchParams: {
             sort: sort,
