@@ -73,6 +73,7 @@ export const QUERY_KEYS = {
   ORDER_STATUS: "orderStatus",
   SORT_TYPE: "sort",
   SORT_DIRECTION: "sort_direction",
+  SEARCH_TEXT: "searchText",
 } as const;
 
 export const SORTING_DIRECTION = {

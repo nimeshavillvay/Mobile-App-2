@@ -13,6 +13,7 @@ const useSuspenseOrderHistorySearch = (
   sortBy: string,
   sortDirection: string,
   filters: Filters[],
+  searchText: string,
 ) => {
   const { selectedValues } = useFilterParams(filters);
 
@@ -53,6 +54,7 @@ const useSuspenseOrderHistorySearch = (
       sortBy,
       sortDirection,
       body,
+      searchText,
     ],
     queryFn: () =>
       api
@@ -67,6 +69,7 @@ const useSuspenseOrderHistorySearch = (
             perpage: pageSize,
             sort: sortBy,
             sort_direction: sortDirection,
+            orderNo: searchText,
           },
           json: {
             rf_data: body,
