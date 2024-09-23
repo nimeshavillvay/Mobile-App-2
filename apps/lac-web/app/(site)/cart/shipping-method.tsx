@@ -508,6 +508,13 @@ const ShippingMethod = ({ token, plants }: ShippingMethodProps) => {
     });
   };
 
+  const handleSelectedWillCallPlant = (selectedPlant: string) => {
+    setSelectedWillCallPlant(selectedPlant);
+    if (!plants.find((plant) => plant.code === selectedPlant)?.is_transfer) {
+      setSelectedWillCallOption(WILLCALL_SHIPING_METHOD);
+    }
+  };
+
   return (
     <div className="space-y-3 rounded-lg border border-wurth-gray-150 px-5 py-4 shadow-md">
       <h3 className="pb-2 text-sm text-black">
@@ -595,7 +602,7 @@ const ShippingMethod = ({ token, plants }: ShippingMethodProps) => {
               key={selectedWillCallPlant}
               value={selectedWillCallPlant}
               onValueChange={(plant) => {
-                setSelectedWillCallPlant(plant);
+                handleSelectedWillCallPlant(plant);
               }}
             >
               <SelectTrigger className="avail-change-button w-full">
