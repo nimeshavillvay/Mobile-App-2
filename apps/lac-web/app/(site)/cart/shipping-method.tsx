@@ -501,6 +501,7 @@ const ShippingMethod = ({ token, plants }: ShippingMethodProps) => {
         setIsWillCallSelected(false);
         setSelectedWillCallPlant(willCallPlant.pickupPlant);
         setSelectedSection(undefined);
+        setSelectedWillCallOption(willCallAvailableOption);
         incrementCartItemKey();
         sendToGTMShippingMethodChanged();
       },
@@ -595,7 +596,6 @@ const ShippingMethod = ({ token, plants }: ShippingMethodProps) => {
               value={selectedWillCallPlant}
               onValueChange={(plant) => {
                 setSelectedWillCallPlant(plant);
-                // handleGlobalWillCall(willCallAvailableOption, plant);
               }}
             >
               <SelectTrigger className="avail-change-button w-full">
