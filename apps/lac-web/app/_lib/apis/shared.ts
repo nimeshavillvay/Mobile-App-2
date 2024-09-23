@@ -145,6 +145,7 @@ export const checkAvailability = async (
     xplant: response.xplant,
     availableLocations: response.available_locations,
     backorderLocation: response.backorder_location,
+    backorderDate: response.backorder_date,
   };
 };
 

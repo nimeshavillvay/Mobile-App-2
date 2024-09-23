@@ -779,7 +779,7 @@ const CartItemShippingMethod = ({
           qty: altQtySum,
         },
         {
-          onSuccess: ({ options }) => {
+          onSuccess: ({ options, backorderDate }) => {
             if (options.length > 0) {
               const shipAlternativeBranch = findAvailabilityOptionForType(
                 options,
@@ -789,7 +789,6 @@ const CartItemShippingMethod = ({
                 options,
                 AVAILABLE_ALL,
               );
-              shipAlternativeBranch?.hash;
 
               if (availableAll) {
                 setLineQuantity(altQtySum.toString());
@@ -846,9 +845,7 @@ const CartItemShippingMethod = ({
                     plants: allPlants,
                     method: selectedShippingMethod,
                     hash: shipAlternativeBranch.hash,
-                    backOrderDate: shipAlternativeBranch.backOrder
-                      ? shipAlternativeBranch?.plants?.[0]?.backOrderDate
-                      : "",
+                    backOrderDate: backorderDate ?? "",
                     backOrderQuantity: calculateDefaultAltBO(
                       allPlants[0]?.plant ?? "",
                       Number(formData.quantityAlt[0]),
