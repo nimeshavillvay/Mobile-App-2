@@ -13,5 +13,6 @@
 export const calculatePriceDetails = (price: number, listPrice: number) => {
   const displayPrice = Math.min(price, listPrice);
   const discount = Math.round(((listPrice - price) / listPrice) * 100);
+
   return { displayPrice, discount };
 };

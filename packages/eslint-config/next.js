@@ -13,7 +13,12 @@ module.exports = {
     "prettier",
     "eslint-config-turbo",
   ],
-  plugins: ["react-compiler", "prefer-arrow-functions", "import"],
+  plugins: [
+    "react-compiler",
+    "prefer-arrow-functions",
+    "import",
+    "@stylistic/js",
+  ],
   settings: {
     "import/parsers": {
       "@typescript-eslint/parser": [".ts", ".tsx"],
@@ -72,6 +77,12 @@ module.exports = {
     ],
     "react/jsx-pascal-case": "error",
     "react/jsx-no-leaked-render": "error",
+    "@stylistic/js/padding-line-between-statements": [
+      "error",
+      { blankLine: "always", prev: "*", next: "return" },
+      { blankLine: "always", prev: "directive", next: "*" },
+      { blankLine: "never", prev: "directive", next: "directive" },
+    ],
   },
   overrides: [
     {

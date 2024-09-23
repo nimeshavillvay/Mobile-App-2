@@ -60,6 +60,7 @@ const LocationStocks = ({ token, productId }: LocationStocksProps) => {
   ) {
     return <ProductNotAvailable />;
   }
+
   return (
     <Collapsible className="flex flex-col gap-1">
       <div className="space-y-2 py-1 md:flex md:flex-row md:items-center md:justify-between md:space-y-0">

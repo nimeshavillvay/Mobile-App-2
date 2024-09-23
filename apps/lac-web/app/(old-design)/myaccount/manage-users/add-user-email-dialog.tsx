@@ -54,6 +54,7 @@ const AddUserEmailDialog = ({
           if (userExists) {
             return false;
           }
+
           return true;
         },
         {

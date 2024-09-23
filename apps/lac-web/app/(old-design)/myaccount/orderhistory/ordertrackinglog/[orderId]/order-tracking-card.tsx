@@ -20,11 +20,13 @@ const OrderTrackingCard = ({
     const shippingMethod = shippingMethods.find(
       (method) => method.code === shippingCode,
     );
+
     return shippingMethod?.name ?? "N/A";
   };
 
   const getPlantName = (plantCode: string) => {
     const plant = plants.find((plant) => plant.code === plantCode);
+
     return plant?.name ?? "N/A";
   };
 

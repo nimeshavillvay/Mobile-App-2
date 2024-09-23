@@ -89,6 +89,7 @@ const OrderSummary = ({ token, children }: OrderSummaryProps) => {
             form.setError("promo", {
               message: "Invalid Promo Code",
             });
+
             return;
           }
           setOpenPromo(false);

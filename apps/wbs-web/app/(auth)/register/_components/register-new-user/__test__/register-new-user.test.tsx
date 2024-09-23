@@ -41,6 +41,7 @@ const setupMockRouter = () => {
     prefetch: jest.fn(),
   };
   (useRouter as jest.Mock).mockReturnValue(mockRouter);
+
   return mockRouter;
 };
 

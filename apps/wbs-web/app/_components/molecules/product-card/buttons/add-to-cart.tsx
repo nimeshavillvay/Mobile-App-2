@@ -18,6 +18,7 @@ export const AddToCartButton = ({
       //implement default add to cart behavior
     }
   };
+
   return (
     <Button
       className="h-10 max-h-full flex-1 px-4 text-[0.875rem] leading-5"

@@ -37,6 +37,7 @@ export const ZipCodeInput = <
   disabled = false,
 }: ZipCodeInputProps<TFieldValues, TName>) => {
   const { trigger } = useFormContext();
+
   return (
     <FormField
       control={control}
