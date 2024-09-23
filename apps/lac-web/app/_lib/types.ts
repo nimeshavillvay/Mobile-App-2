@@ -456,6 +456,7 @@ export type CheckAvailability = {
     amount: number;
   }[];
   backorder_location: string;
+  backorder_date: string;
 };
 
 export type TransformedCategory = {
