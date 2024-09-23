@@ -13,9 +13,7 @@ const TestComponent = ({ disabled = false }) => {
     mode: "onSubmit",
   });
 
-  const onSubmit = methods.handleSubmit((data) => {
-    console.log(data);
-  });
+  const onSubmit = methods.handleSubmit(() => {});
 
   return (
     <FormProvider {...methods}>

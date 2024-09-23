@@ -27,13 +27,9 @@ const meta: Meta<typeof ProductCard> = {
 export default meta;
 type Story = StoryObj<typeof ProductCard>;
 
-const addToCart = () => {
-  console.log("Added to cart");
-};
+const addToCart = () => {};
 
-const onClickShoppingCart = () => {
-  console.log("Added to shopping list");
-};
+const onClickShoppingCart = () => {};
 
 export const WithDiscount: Story = {
   render: () => {

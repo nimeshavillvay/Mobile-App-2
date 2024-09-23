@@ -24,9 +24,8 @@ const SearchBar = ({ className }: SearchBarProps) => {
     resolver: zodResolver(searchSchema),
   });
 
-  const onSubmit = (data: SearchSchema) => {
-    console.log("> data: ", data);
-  };
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const onSubmit = (data: SearchSchema) => {};
 
   return (
     <Form.Root

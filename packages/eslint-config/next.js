@@ -83,6 +83,7 @@ module.exports = {
       { blankLine: "always", prev: "directive", next: "*" },
       { blankLine: "never", prev: "directive", next: "directive" },
     ],
+    "no-console": "error",
   },
   overrides: [
     {

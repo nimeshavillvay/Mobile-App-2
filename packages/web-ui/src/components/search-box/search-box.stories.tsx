@@ -167,9 +167,7 @@ const items = {
 export default meta;
 type Story = StoryObj<typeof SearchBox>;
 
-const onEnterPressed = () => {
-  console.log("Enter was pressed");
-};
+const onEnterPressed = () => {};
 
 export const Default: Story = {
   render: () => {

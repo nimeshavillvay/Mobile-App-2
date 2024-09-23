@@ -155,23 +155,15 @@ const EditUserForm = ({ userId }: { readonly userId: number }) => {
     const permission = data.permission;
 
     if (selectedUser && isPermission(permission)) {
-      updateProfileMutation.mutate(
-        {
-          userId: selectedUser.id,
-          email: data.email,
-          firstName: data.firstName,
-          lastName: data.lastName,
-          jobTitle: data.jobTitle,
-          permission,
-          status: data.status,
-        },
-        {
-          onSettled: (data, error, variables, context) => {
-            console.log("> data: ", data);
-            console.log("> error: ", error);
-          },
-        },
-      );
+      updateProfileMutation.mutate({
+        userId: selectedUser.id,
+        email: data.email,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        jobTitle: data.jobTitle,
+        permission,
+        status: data.status,
+      });
     }
   });
 

@@ -8,6 +8,7 @@ import { cleanup } from "~/lib/test-utils";
 beforeEach(() => {
   jest.spyOn(console, "error");
   // @ts-expect-error jest.spyOn adds this functionality
+  // eslint-disable-next-line no-console
   console.error.mockImplementation(() => null);
 });
 
@@ -16,6 +17,7 @@ beforeEach(() => {
 // https://github.com/expo/expo/issues/28831
 afterEach(() => {
   // @ts-expect-error jest.spyOn adds this functionality
+  // eslint-disable-next-line no-console
   console.error.mockRestore();
 });
 

@@ -25,9 +25,7 @@ const meta: Meta<typeof Carousel> = {
 };
 export default meta;
 
-const addToCart = () => {
-  console.log("Added to cart");
-};
+const addToCart = () => {};
 
 type Story = StoryObj<typeof Carousel>;
 

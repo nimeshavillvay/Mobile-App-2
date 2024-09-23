@@ -6,8 +6,6 @@ jest.mock("expo-camera", () => {
 
   const useCameraPermissions = jest.fn().mockImplementation(() => {
     const requestPermission = () => {
-      console.log("request permission called");
-
       return Promise.resolve({ status: "granted" });
     };
 
