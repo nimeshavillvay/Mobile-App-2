@@ -192,8 +192,7 @@ const ShippingMethod = ({ token, plants }: ShippingMethodProps) => {
       availability.willCallAnywhere &&
       availability.willCallAnywhere[1] &&
       availability.willCallAnywhere[1].isTransfer &&
-      (selectedWillCallOption === WILLCALL_TRANSFER_SHIPING_METHOD ||
-        availability.willCallAnywhere[0]?.status === NOT_AVAILABLE)
+      selectedWillCallOption === WILLCALL_TRANSFER_SHIPING_METHOD
     ) {
       config.shipping_method_1 =
         availability?.options?.at(0)?.plants?.at(0)?.shippingMethods?.at(0)
@@ -207,7 +206,8 @@ const ShippingMethod = ({ token, plants }: ShippingMethodProps) => {
       config.will_call_plant = selectedPlant;
       config.will_call_shipping = selectedWillCallOption;
       config.will_call_not_in_stock =
-        selectedWillCallOption === WILLCALL_TRANSFER_SHIPING_METHOD
+        selectedWillCallOption === WILLCALL_TRANSFER_SHIPING_METHOD &&
+        availability.willCallAnywhere[1].status !== NOT_AVAILABLE
           ? FALSE_STRING
           : TRUE_STRING;
     } else if (
@@ -478,10 +478,7 @@ const ShippingMethod = ({ token, plants }: ShippingMethodProps) => {
         ...item.configuration,
       };
       const availability = cartItemsAvailability.find(
-        (willCall) =>
-          willCall.productId === item.itemInfo.productId &&
-          (willCall.willCallAnywhere[0]?.status !== NOT_AVAILABLE ||
-            willCall.willCallAnywhere[1]?.status !== NOT_AVAILABLE),
+        (willCall) => willCall.productId === item.itemInfo.productId,
       );
 
       const transformedConfig = availability
