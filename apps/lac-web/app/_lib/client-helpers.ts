@@ -1,6 +1,7 @@
 import type { QUERY_KEYS } from "@/_lib/constants";
 import { updateSearchParams } from "@/old/_utils/client-helpers";
 import "client-only";
+import { z } from "zod";
 
 export const changeSearchParams = (
   searchParams: URLSearchParams,
@@ -17,3 +18,9 @@ export const changeSearchParams = (
 
   updateSearchParams(newSearchParams);
 };
+
+export const searchFormSchema = z.object({
+  search: z.string(),
+});
+
+export type SearchFormSchema = z.infer<typeof searchFormSchema>;

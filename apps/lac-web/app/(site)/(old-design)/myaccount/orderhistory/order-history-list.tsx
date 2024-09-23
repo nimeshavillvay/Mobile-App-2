@@ -1,6 +1,11 @@
 "use client";
 
 import useSuspenseFilters from "@/_hooks/search/use-suspense-filters.hook";
+import {
+  changeSearchParams,
+  searchFormSchema,
+  type SearchFormSchema,
+} from "@/_lib/client-helpers";
 import { INIT_PAGE_NUMBER } from "@/_lib/constants";
 import { cn } from "@/_lib/utils";
 import { Button } from "@/old/_components/ui/button";
@@ -11,10 +16,20 @@ import {
   TableHeader,
   TableRow,
 } from "@/old/_components/ui/table";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { CaretDownIcon, CaretUpIcon } from "@radix-ui/react-icons";
+import { MagnifyingGlass } from "@repo/web-ui/components/icons/magnifying-glass";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+} from "@repo/web-ui/components/ui/form";
+import { Input } from "@repo/web-ui/components/ui/input";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useDeferredValue } from "react";
+import { useForm } from "react-hook-form";
 import {
   INIT_FROM_DATE,
   INIT_PAGE_SIZE,
@@ -66,6 +81,30 @@ const OrderHistoryList = ({ token }: { readonly token: string }) => {
   const orderHistoryItems = searchQuery?.data?.orders ?? null;
   const totalItems = searchQuery?.data?.pagination[0]?.db_count ?? 0;
 
+  const form = useForm<SearchFormSchema>({
+    resolver: zodResolver(searchFormSchema),
+    values: {
+      search: searchParams.get(QUERY_KEYS.SEARCH_TEXT) ?? "",
+    },
+  });
+
+  const onSubmit = form.handleSubmit((values) => {
+    const newUrlSearchParams = new URLSearchParams(searchParams);
+
+    newUrlSearchParams.delete(QUERY_KEYS.PAGE);
+
+    changeSearchParams(newUrlSearchParams, [
+      {
+        key: QUERY_KEYS.SEARCH_TEXT,
+        value: values.search,
+      },
+      {
+        key: QUERY_KEYS.PAGE,
+        value: INIT_PAGE_NUMBER,
+      },
+    ]);
+  });
+
   const handleHeaderSort = ({
     sortBy,
     direction,
@@ -89,6 +128,39 @@ const OrderHistoryList = ({ token }: { readonly token: string }) => {
   return (
     <>
       <div className="flex flex-row items-center md:justify-end md:py-4">
+        <div className="mx-auto mb-6 w-full max-w-2xl">
+          <Form {...form}>
+            <form onSubmit={onSubmit} className="relative">
+              <FormField
+                control={form.control}
+                name="search"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input
+                        placeholder="Search by Order Number"
+                        type="text"
+                        {...field}
+                        className="border-wurth-gray-300 focus:border-wurth-blue-500 focus:ring-wurth-blue-200 border-1 h-12 rounded-full pr-12 text-lg focus:ring-1"
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              <Button
+                type="submit"
+                variant="ghost"
+                className="hover:text-wurth-blue-500 absolute right-2 top-1/2 -translate-y-1/2 transform text-wurth-gray-500"
+              >
+                <MagnifyingGlass
+                  className="h-6 w-6"
+                  data-button-action="Order Search"
+                />
+                <span className="sr-only">Order Search</span>
+              </Button>
+            </form>
+          </Form>
+        </div>{" "}
         <Link
           className="btnAction hidden text-nowrap rounded-sm bg-brand-secondary px-4 py-2 text-center font-wurth font-extrabold uppercase text-white hover:bg-[#008fc6] md:block"
           href="https://wurthlac.billtrust.com/"

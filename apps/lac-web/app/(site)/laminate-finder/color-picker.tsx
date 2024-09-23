@@ -3,6 +3,8 @@
 import { useFilterParams } from "@/_components/products-grid";
 import { QUERY_KEYS } from "@/_components/products-grid/constants";
 import useSuspenseLaminateFilters from "@/_hooks/laminate/use-suspense-laminate-filters.hook";
+import type { SearchFormSchema } from "@/_lib/client-helpers";
+import { searchFormSchema } from "@/_lib/client-helpers";
 import { cn } from "@/_lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -11,8 +13,6 @@ import {
   TooltipTrigger,
 } from "@repo/web-ui/components/ui/tooltip";
 import { useForm } from "react-hook-form";
-import type { LaminateSearchFormSchema } from "./helpers";
-import { laminateSearchFormSchema } from "./helpers";
 
 type Color = {
   id: number;
@@ -73,8 +73,8 @@ const ColorOption = ({
 };
 
 const ColorPicker = ({ token }: { readonly token: string }) => {
-  const laminateSearchForm = useForm<LaminateSearchFormSchema>({
-    resolver: zodResolver(laminateSearchFormSchema),
+  const laminateSearchForm = useForm<SearchFormSchema>({
+    resolver: zodResolver(searchFormSchema),
   });
   const laminateFiltersQuery = useSuspenseLaminateFilters({ token });
   const { searchParams } = useFilterParams(laminateFiltersQuery.data);
