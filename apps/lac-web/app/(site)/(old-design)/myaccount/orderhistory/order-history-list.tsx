@@ -1,13 +1,10 @@
 "use client";
 
 import useSuspenseFilters from "@/_hooks/search/use-suspense-filters.hook";
-import {
-  changeSearchParams,
-  searchFormSchema,
-  type SearchFormSchema,
-} from "@/_lib/client-helpers";
+import { changeSearchParams } from "@/_lib/client-helpers";
 import { INIT_PAGE_NUMBER } from "@/_lib/constants";
 import { cn } from "@/_lib/utils";
+import { searchFormSchema, type SearchFormSchema } from "@/_lib/zod-schema";
 import { Button } from "@/old/_components/ui/button";
 import {
   Table,
@@ -131,39 +128,40 @@ const OrderHistoryList = ({ token }: { readonly token: string }) => {
   return (
     <>
       <div className="flex flex-row items-center md:justify-end md:py-4">
-        <div className="left-0 mx-auto ml-0 w-full max-w-2xl">
-          <Form {...form}>
-            <form onSubmit={onSubmit} className="relative">
-              <FormField
-                control={form.control}
-                name="search"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Input
-                        placeholder="Search by Order Number"
-                        type="text"
-                        {...field}
-                        className="border-wurth-gray-300 focus:border-wurth-blue-500 focus:ring-wurth-blue-200 border-1 h-12 rounded-full pr-12 text-lg focus:ring-1"
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
+        <Form {...form}>
+          <form
+            onSubmit={onSubmit}
+            className="relative left-0 mx-auto ml-0 w-full px-4 md:px-0 lg:max-w-xl"
+          >
+            <FormField
+              control={form.control}
+              name="search"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input
+                      placeholder="Search by Order Number"
+                      type="text"
+                      {...field}
+                      className="border-wurth-gray-300 focus:border-wurth-blue-500 focus:ring-wurth-blue-200 border-1 h-12 rounded-full pr-12 text-lg focus:ring-1"
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <Button
+              type="submit"
+              variant="ghost"
+              className="hover:text-wurth-blue-500 absolute right-2 top-1/2 -translate-y-1/2 transform text-wurth-gray-500"
+            >
+              <MagnifyingGlass
+                className="h-6 w-6"
+                data-button-action="Order Search"
               />
-              <Button
-                type="submit"
-                variant="ghost"
-                className="hover:text-wurth-blue-500 absolute right-2 top-1/2 -translate-y-1/2 transform text-wurth-gray-500"
-              >
-                <MagnifyingGlass
-                  className="h-6 w-6"
-                  data-button-action="Order Search"
-                />
-                <span className="sr-only">Order Search</span>
-              </Button>
-            </form>
-          </Form>
-        </div>
+              <span className="sr-only">Order Search</span>
+            </Button>
+          </form>
+        </Form>
 
         <Link
           className="btnAction hidden text-nowrap rounded-sm bg-brand-secondary px-4 py-2 text-center font-wurth font-extrabold uppercase text-white hover:bg-[#008fc6] md:block"

@@ -3,9 +3,8 @@
 import { useFilterParams } from "@/_components/products-grid";
 import { QUERY_KEYS } from "@/_components/products-grid/constants";
 import useSuspenseLaminateFilters from "@/_hooks/laminate/use-suspense-laminate-filters.hook";
-import type { SearchFormSchema } from "@/_lib/client-helpers";
-import { searchFormSchema } from "@/_lib/client-helpers";
 import { cn } from "@/_lib/utils";
+import { searchFormSchema, type SearchFormSchema } from "@/_lib/zod-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Tooltip,
