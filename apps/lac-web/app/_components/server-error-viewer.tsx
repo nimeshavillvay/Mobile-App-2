@@ -2,8 +2,7 @@
 
 import { Button } from "@repo/web-ui/components/ui/button";
 import Link from "next/link";
-// eslint-disable-next-line no-restricted-imports
-import { useEffect, type ReactNode } from "react";
+import { type ReactNode } from "react";
 
 type ServerErrorViewerProps = {
   readonly title?: ReactNode;
@@ -23,14 +22,8 @@ const ServerErrorViewer = ({
       .
     </>
   ),
-  error,
   reset,
 }: ServerErrorViewerProps) => {
-  useEffect(() => {
-    // Log the error to an error reporting service
-    console.error(error);
-  }, [error]);
-
   return (
     <div className="grid size-full place-items-center">
       <div className="mb-32 mt-28 text-center">
