@@ -34,7 +34,6 @@ type BranchRowProps = {
   readonly quantityFieldIndex: number;
   readonly plant: AvailabilityOptionPlants;
   readonly plants: Plant[];
-  readonly willCallPlant: { plantCode: string; plantName: string };
   readonly availability: Availability;
   readonly increment: number;
   readonly uom: string;
@@ -42,13 +41,13 @@ type BranchRowProps = {
   readonly defaultBoQty: number;
   readonly sku: string;
   readonly cartItemId: number;
+  readonly boPlant: string;
 };
 
 const CartItemShipFromAlternativeBranchRow = ({
   quantityFieldIndex,
   plant,
   plants,
-  willCallPlant,
   availability,
   increment,
   uom,
@@ -56,6 +55,7 @@ const CartItemShipFromAlternativeBranchRow = ({
   defaultBoQty,
   sku,
   cartItemId,
+  boPlant,
 }: BranchRowProps) => {
   const schema = shipFromAltQtySchema(increment);
   type ShipFromAltQtySchema = z.infer<typeof schema>;
@@ -88,7 +88,7 @@ const CartItemShipFromAlternativeBranchRow = ({
     );
   };
 
-  const isHomePlant = plant.plant === willCallPlant.plantCode;
+  const isBOPlant = plant.plant === boPlant;
   const availabilityOfPlant =
     availability.availableLocations.find(
       (item) => item.location === plant.plant,
@@ -118,7 +118,7 @@ const CartItemShipFromAlternativeBranchRow = ({
                     );
                     onChange(
                       Number(event.target.value) > availabilityOfPlant &&
-                        !isHomePlant
+                        !isBOPlant
                         ? availabilityOfPlant
                         : event,
                     );
@@ -175,7 +175,7 @@ const CartItemShipFromAlternativeBranchRow = ({
               )}
             />
           )}
-          {isHomePlant && (
+          {isBOPlant && (
             <div className="py-2 text-sm font-medium">
               <span>
                 <ItemCountBadge

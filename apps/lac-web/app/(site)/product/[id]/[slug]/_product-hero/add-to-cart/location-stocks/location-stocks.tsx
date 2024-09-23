@@ -36,7 +36,7 @@ const LocationStocks = ({ token, productId }: LocationStocksProps) => {
 
   const willCallPlant = willCallPlantQuery.data;
   const willCallPlantCode = willCallPlant?.plantCode;
-  const { availableLocations } = checkAvailabilityQuery.data;
+  const { availableLocations, backorderLocation } = checkAvailabilityQuery.data;
 
   const homeBranch = availableLocations?.find(
     (location) => location.location === willCallPlantCode,
@@ -44,7 +44,7 @@ const LocationStocks = ({ token, productId }: LocationStocksProps) => {
   const otherLocations = availableLocations?.filter(
     ({ location }) => location !== willCallPlantCode,
   );
-  const isNotInStock = homeBranch?.amount === 0;
+  const isNotInStock = homeBranch === undefined || homeBranch?.amount === 0;
   const isLimitedStock = (homeBranch?.amount ?? 0) < Number(deferredQuantity);
 
   const backOrderDate =
@@ -72,6 +72,7 @@ const LocationStocks = ({ token, productId }: LocationStocksProps) => {
           isNotInStock={isNotInStock}
           location={homeBranch?.name ?? ""}
           xPlant={willCallPlant.plantName}
+          isNotStocked={backorderLocation !== willCallPlantCode}
         />
 
         {checkLoginQuery.data?.status_code === "OK" &&

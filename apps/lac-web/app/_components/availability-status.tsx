@@ -10,11 +10,13 @@ type AvailabilityStatusProps = {
   readonly isLimitedStock: boolean;
   readonly isNotInStock: boolean;
   readonly xPlant: string;
+  readonly isNotStocked: boolean;
 };
 
 const AvailabilityStatus = ({
   isLimitedStock,
   isNotInStock,
+  isNotStocked,
   isHomeBranch,
   amount,
   location,
@@ -26,12 +28,12 @@ const AvailabilityStatus = ({
       <div
         className={cn(
           "stock-position rounded px-4 py-2 text-sm font-semibold leading-4 md:px-2 md:py-1",
-          isLimitedStock || isNotInStock || !isHomeBranch
+          isLimitedStock || isNotInStock || !isHomeBranch || isNotStocked
             ? "bg-yellow-50 text-yellow-700"
             : "bg-green-50 text-green-700",
         )}
       >
-        {!isHomeBranch
+        {isNotStocked
           ? "Not Stocked"
           : isNotInStock
             ? "Backordered"
@@ -40,19 +42,19 @@ const AvailabilityStatus = ({
               : "In Stock"}
       </div>
 
-      {!isHomeBranch && (
+      {isNotStocked && (
         <div className="text-sm font-medium text-wurth-gray-800">
           at {xPlant}
         </div>
       )}
 
-      {isHomeBranch && !isNotInStock && (
+      {isHomeBranch && !isNotInStock && !isNotStocked && (
         <div className="text-sm font-medium text-wurth-gray-800">
           <span className="stock-available">{amount}</span> in stock at{" "}
           <span className="stock-location">{location}</span>
         </div>
       )}
-      {isNotInStock && !!backOrderDate && (
+      {isNotInStock && !!backOrderDate && !isNotStocked && (
         <div className="stock-message flex-1 text-sm font-medium text-wurth-gray-800">
           Items are expected to ship by{" "}
           {dayjs(backOrderDate).format(UI_DATE_FORMAT)}.
