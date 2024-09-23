@@ -306,7 +306,7 @@ const CartListItems = ({
       (skuItem) => skuItem.productId === item.itemInfo.productId,
     );
 
-    if (!priceData || !favoriteSkuData) {
+    if (!priceData) {
       return null;
     }
 
@@ -354,8 +354,8 @@ const CartListItems = ({
                 (product) =>
                   Number(product?.productid) === item.itemInfo.productId,
               )}
-              isFavorite={favoriteSkuData.isFavorite}
-              favoriteListIds={favoriteSkuData.favoriteListIds}
+              isFavorite={favoriteSkuData?.isFavorite}
+              favoriteListIds={favoriteSkuData?.favoriteListIds}
             />
           </CartItemQuantityProvider>
         </Suspense>

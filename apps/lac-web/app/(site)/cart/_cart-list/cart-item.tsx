@@ -140,8 +140,8 @@ const CartItem = ({
   willCallPlant,
   priceData,
   gtmItemInfo,
-  isFavorite,
-  favoriteListIds,
+  isFavorite = false,
+  favoriteListIds = [],
   isLaminate,
 }: CartItemProps) => {
   const id = useId();
@@ -317,11 +317,11 @@ const CartItem = ({
 
   // User selected shipping method (ship-to-me)
   const [selectedShippingMethod, setSelectedShippingMethod] = useState(
-    defaultShippingMethod?.code ??
+    (defaultShippingMethod?.code ??
       (product.configuration.shipping_method_1 !== "" &&
         shipToMeAvailability?.plants[0]?.shippingMethods.find(
           (method) => method.code === product.configuration.shipping_method_1,
-        ))
+        )))
       ? product.configuration.shipping_method_1
       : DEFAULT_SHIPPING_METHOD,
   );
@@ -552,7 +552,7 @@ const CartItem = ({
                 }),
                 will_call_avail: (willCallAnywhere[1]?.status === NOT_IN_STOCK
                   ? 0
-                  : willCallAnywhere[1]?.willCallQuantity ?? 0
+                  : (willCallAnywhere[1]?.willCallQuantity ?? 0)
                 ).toString(),
                 will_call_plant:
                   willCallAnywhere[1]?.willCallPlant ?? EMPTY_STRING,
@@ -577,7 +577,7 @@ const CartItem = ({
                 }),
                 will_call_avail: (willCallAnywhere[0]?.status === NOT_IN_STOCK
                   ? 0
-                  : willCallAnywhere[0]?.willCallQuantity ?? 0
+                  : (willCallAnywhere[0]?.willCallQuantity ?? 0)
                 ).toString(),
                 will_call_plant:
                   willCallAnywhere[0]?.willCallPlant ?? EMPTY_STRING,
