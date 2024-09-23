@@ -61,6 +61,8 @@ const OrderHistoryList = ({ token }: { readonly token: string }) => {
 
   const deferredPerPage = useDeferredValue(perPage);
 
+  const searchText = searchParams.get(QUERY_KEYS.SEARCH_TEXT) ?? "";
+
   const filtersQuery = useSuspenseFilters(token, {
     type: "Order History",
     from: fromDate,
@@ -76,6 +78,7 @@ const OrderHistoryList = ({ token }: { readonly token: string }) => {
     urlSortBy,
     urlSortDirection,
     filtersQuery.data,
+    searchText,
   );
 
   const orderHistoryItems = searchQuery?.data?.orders ?? null;
@@ -128,7 +131,7 @@ const OrderHistoryList = ({ token }: { readonly token: string }) => {
   return (
     <>
       <div className="flex flex-row items-center md:justify-end md:py-4">
-        <div className="mx-auto mb-6 w-full max-w-2xl">
+        <div className="left-0 mx-auto ml-0 w-full max-w-2xl">
           <Form {...form}>
             <form onSubmit={onSubmit} className="relative">
               <FormField
@@ -160,7 +163,8 @@ const OrderHistoryList = ({ token }: { readonly token: string }) => {
               </Button>
             </form>
           </Form>
-        </div>{" "}
+        </div>
+
         <Link
           className="btnAction hidden text-nowrap rounded-sm bg-brand-secondary px-4 py-2 text-center font-wurth font-extrabold uppercase text-white hover:bg-[#008fc6] md:block"
           href="https://wurthlac.billtrust.com/"
