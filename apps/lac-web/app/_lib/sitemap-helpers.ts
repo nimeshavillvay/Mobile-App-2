@@ -104,6 +104,7 @@ const imageSitemapSchema = z.array(
     image: z.string(),
     priority: z.string(),
     changefreq: changeFrequencySchema,
+    slug: z.string(),
   }),
 );
 
