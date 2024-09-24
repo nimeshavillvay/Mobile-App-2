@@ -203,7 +203,7 @@ export const VenderFreightRouting = () => {
     <a
       target="_blank"
       rel="noopener noreferrer"
-      href="https://my.ratelinx.com/ui/Shipping/Ship/v1?byShipVia=BWAYLTL&estimate=True"
+      href="https://my.ratelinx.com/ui/auth/Login/v1?refsso=aSCSOvkRbtde8%2fNFsp7lM3qw02PlUR1Var73aJvrSwY%3d&ReturnURL=%2fui%2fShipping%2fShip%2fv1%3fbyShipVia%3dBWAYLTL%26estimate%3dTrue"
       className="btnAction"
       data-btn-action="Footer Vender Freight"
     >
