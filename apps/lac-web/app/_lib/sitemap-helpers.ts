@@ -116,3 +116,30 @@ export const getSitemapImages = async () => {
 
   return imageSitemapSchema.parse(response);
 };
+
+export class SitemapIndex {
+  private readonly urls: string[] = [];
+
+  constructor(routes: string[] = []) {
+    this.urls = routes.map((route) => getFullUrl(route));
+  }
+
+  addUrl = (route: string) => {
+    this.urls.push(getFullUrl(route));
+  };
+
+  toString = () => {
+    let xml = '<?xml version="1.0" encoding="UTF-8"?>';
+    xml += '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
+
+    this.urls.forEach((url) => {
+      xml += "<sitemap>";
+      xml += `<loc>${url}</loc>`;
+      xml += "</sitemap>";
+    });
+
+    xml += "</sitemapindex>";
+
+    return xml;
+  };
+}
