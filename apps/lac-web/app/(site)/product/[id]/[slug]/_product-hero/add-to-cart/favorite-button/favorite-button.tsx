@@ -6,6 +6,7 @@ import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
 import { BookmarkFilled } from "@repo/web-ui/components/icons/bookmark-filled";
 import { BookmarkOutline } from "@repo/web-ui/components/icons/bookmark-outline";
 import { Button } from "@repo/web-ui/components/ui/button";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 type FavoriteButtonProps = {
@@ -14,6 +15,8 @@ type FavoriteButtonProps = {
 };
 
 const FavoriteButton = ({ token, productId }: FavoriteButtonProps) => {
+  const router = useRouter();
+
   const checkLoginQuery = useSuspenseCheckLogin(token);
   const isLoggedInUser = checkLoginQuery.data?.status_code === "OK";
 
@@ -32,7 +35,11 @@ const FavoriteButton = ({ token, productId }: FavoriteButtonProps) => {
         variant="outline"
         size="icon"
         onClick={() => {
-          setShowShoppingListsDialog(true);
+          if (isLoggedInUser) {
+            setShowShoppingListsDialog(true);
+          } else {
+            router.push("/sign-in");
+          }
         }}
       >
         {isFavorite ? (
