@@ -102,9 +102,48 @@ const RegisterNewUser: React.FC<RegisterNewUserProps> = ({
   const registerNewUserMutation = useRegisterNewUserMutation();
   const uploadTaxDocumentMutation = useUploadTaxDocumentMutation();
 
+  const [formData, setFormData] = useState<NewUserFormData>(() => {
+    const values = getValues();
+
+    return {
+      firstName: values.firstName || "",
+      lastName: values.lastName || "",
+      email: values.email || "",
+      password: values.password || "",
+      confirmPassword: values.confirmPassword || "",
+      phoneNumber: values.phoneNumber || "",
+      type: values.type || "unselected",
+      companyName: values.companyName || "",
+      userName: values.userName || "",
+      billingAddress: values.billingAddress || "",
+      billingAddressTwo: values.billingAddressTwo || "",
+      billingCity: values.billingCity || "",
+      billingCountry: values.billingCountry || countries[0]?.code || "",
+      billingState: values.billingState || "IL",
+      billingCounty: values.billingCounty || "",
+      billingPostCode: values.billingPostCode || "",
+      billingZipCode: values.billingZipCode || "",
+      same: values.same !== undefined ? values.same : true,
+      shippingAddress: values.shippingAddress || "",
+      shippingAddressTwo: values.shippingAddressTwo || "",
+      shippingCity: values.shippingCity || "",
+      shippingCountry: values.shippingCountry || countries[0]?.code || "",
+      shippingState: values.shippingState || "IL",
+      shippingCounty: values.shippingCounty || "",
+      shippingPostCode: values.shippingPostCode || "",
+      shippingZipCode: values.shippingZipCode || "",
+      federalTaxId: values.federalTaxId || "",
+      industry: values.industry || "",
+      employees: values.employees || 1,
+      isExemptFromTax: values.isExemptFromTax || false,
+      taxDocuments: values.taxDocuments || [],
+    };
+  });
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     let isValid = false;
+    setFormData(getValues());
     if (form.formState.errors.userName) {
       form.setError("userName", {
         message: form.formState.errors.userName.message,
@@ -234,11 +273,16 @@ const RegisterNewUser: React.FC<RegisterNewUserProps> = ({
 
             if (values.isExemptFromTax && "id" in data) {
               const taxDocumentsToUpload =
-                values.taxDocuments?.map((doc) => ({
-                  userId: data.id,
-                  cert1: doc.stateTaxExemptionNumber || "",
-                  cert2: new FormData(), // Handle file upload separately
-                })) || [];
+                values.taxDocuments?.map((doc) => {
+                  const formData = new FormData();
+                  formData.append("File", doc.document);
+
+                  return {
+                    userId: data.id,
+                    cert1: doc.stateTaxExemptionNumber || "",
+                    cert2: formData,
+                  };
+                }) || [];
 
               try {
                 await uploadTaxDocumentMutation.mutateAsync(
@@ -279,6 +323,7 @@ const RegisterNewUser: React.FC<RegisterNewUserProps> = ({
     setBillingSuggestions([]);
     setShippingSuggestions([]);
     setStep("address");
+    form.reset(formData);
     setTimeout(() => {
       window.scrollTo({ top: 500, behavior: "smooth" });
     }, 100);
@@ -315,36 +360,30 @@ const RegisterNewUser: React.FC<RegisterNewUserProps> = ({
   };
 
   if (billingSuggestions.length > 0 || shippingSuggestions.length > 0) {
-    const values = getValues();
-
     const currentBillingAddress = [
       {
-        "country-name": values.billingCountry,
-        county: values.billingCounty,
-        locality: values.billingCounty
-          ? values.billingCounty
-          : values.billingCity,
-        region: values.billingState,
-        "street-address": values.billingAddress,
-        "postal-code": values.billingPostCode,
-        zip4: values.billingZipCode,
+        "country-name": formData.billingCountry,
+        county: formData.billingCounty,
+        locality: formData.billingCity,
+        region: formData.billingState,
+        "street-address": `${formData.billingAddress} ${formData.billingAddressTwo}`,
+        "postal-code": formData.billingPostCode,
+        zip4: formData.billingZipCode,
         skip_address_check: false,
       },
     ] as ResponseAddress[];
 
-    const currentShippingAddress = values.same
+    const currentShippingAddress = formData.same
       ? currentBillingAddress
       : ([
           {
-            "country-name": values.shippingCountry,
-            county: values.shippingCounty,
-            locality: values.shippingCounty
-              ? values.shippingCounty
-              : values.shippingCity,
-            region: values.shippingState,
-            "street-address": values.shippingAddress,
-            "postal-code": values.shippingPostCode,
-            zip4: values.shippingZipCode,
+            "country-name": formData.shippingCountry,
+            county: formData.shippingCounty,
+            locality: formData.shippingCity,
+            region: formData.shippingState,
+            "street-address": `${formData.shippingAddress} ${formData.shippingAddressTwo}`,
+            "postal-code": formData.shippingPostCode,
+            zip4: formData.shippingZipCode,
             skip_address_check: false,
           },
         ] as ResponseAddress[]);
