@@ -22,7 +22,7 @@ export const RecaptchaRefProvider = ({
     <RecaptchaRefContext.Provider value={recaptchaRef}>
       {children}
 
-      {process.env.NODE_ENV === "production" &&
+      {process.env.NEXT_PUBLIC_WURTH_ENABLE_RECAPTCHA === "enabled" &&
         !!process.env.NEXT_PUBLIC_WURTH_LAC_RECAPTCHA_SITE_KEY && (
           <ReCAPTCHA
             ref={recaptchaRef}
@@ -50,7 +50,7 @@ export const useCheckRecaptcha = () => {
   const recaptchaRef = useRecaptchaRef();
 
   const checkRecaptcha = async () => {
-    if (process.env.NODE_ENV !== "production") {
+    if (process.env.NEXT_PUBLIC_WURTH_ENABLE_RECAPTCHA !== "enabled") {
       // Return a dummy token in development server
       return "development-token";
     }
