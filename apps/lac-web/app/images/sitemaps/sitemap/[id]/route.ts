@@ -7,6 +7,15 @@ import {
 import { notFound } from "next/navigation";
 import { NextResponse, type NextRequest } from "next/server";
 
+export const generateStaticParams = async () => {
+  const sitemapImages = await getSitemapImages();
+  const numberOfImagePages = getNumberOfPages(sitemapImages);
+
+  return Array.from({ length: numberOfImagePages }).map((_, index) => ({
+    id: index.toString(),
+  }));
+};
+
 // TODO Switch to native Next.js sitemap generator with Next 15
 export const GET = async (
   request: NextRequest,
