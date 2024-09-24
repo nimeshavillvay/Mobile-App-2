@@ -1,32 +1,32 @@
 import { api } from "@/_lib/api";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import type { CompanyDetails } from "./types";
+import { z } from "zod";
 
-type CompanyDetailsResponse = {
-  company_name: string;
-  image: string;
-};
-
-const transformCompanyDetails = (
-  address: CompanyDetailsResponse,
-): CompanyDetails => ({
-  companyName: address["company_name"],
-  image: address["image"],
+const companyDetailsResponseSchema = z.object({
+  company_name: z.string(),
+  image: z.string(),
 });
 
 const useSuspenseCompanyProfileDetails = (token: string) => {
   return useSuspenseQuery({
     queryKey: ["my-account", "company-profile", token],
-    queryFn: () =>
-      api
+    queryFn: async () => {
+      const response = await api
         .get("rest/osrdetails", {
           headers: {
             authorization: `Bearer ${token}`,
           },
         })
-        .json<CompanyDetailsResponse>(),
-    select: (companyDetails: CompanyDetailsResponse) =>
-      transformCompanyDetails(companyDetails),
+        .json();
+
+      const parsedResponse =
+        await companyDetailsResponseSchema.parseAsync(response);
+
+      return {
+        companyName: parsedResponse["company_name"],
+        image: parsedResponse["image"],
+      };
+    },
   });
 };
 

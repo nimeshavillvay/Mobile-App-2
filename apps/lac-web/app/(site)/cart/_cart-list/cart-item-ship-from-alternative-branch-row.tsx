@@ -34,28 +34,26 @@ type BranchRowProps = {
   readonly quantityFieldIndex: number;
   readonly plant: AvailabilityOptionPlants;
   readonly plants: Plant[];
-  readonly willCallPlant: { plantCode: string; plantName: string };
   readonly availability: Availability;
   readonly increment: number;
   readonly uom: string;
   readonly availableQuantityInPlant: number;
-  readonly defaultBoQty: number;
   readonly sku: string;
   readonly cartItemId: number;
+  readonly boPlant: string;
 };
 
 const CartItemShipFromAlternativeBranchRow = ({
   quantityFieldIndex,
   plant,
   plants,
-  willCallPlant,
   availability,
   increment,
   uom,
   availableQuantityInPlant,
-  defaultBoQty,
   sku,
   cartItemId,
+  boPlant,
 }: BranchRowProps) => {
   const schema = shipFromAltQtySchema(increment);
   type ShipFromAltQtySchema = z.infer<typeof schema>;
@@ -67,7 +65,11 @@ const CartItemShipFromAlternativeBranchRow = ({
 
   const currentEnteredQuantity = Number(deferredQuantity[quantityFieldIndex]);
 
-  const [boQty, setBoQty] = useState(defaultBoQty);
+  const [boQty, setBoQty] = useState(
+    currentEnteredQuantity > availableQuantityInPlant
+      ? currentEnteredQuantity - availableQuantityInPlant
+      : 0,
+  );
   const { pushSku, popSku } = useUnSavedAlternativeQuantityState(
     (state) => state.actions,
   );
@@ -88,7 +90,7 @@ const CartItemShipFromAlternativeBranchRow = ({
     );
   };
 
-  const isHomePlant = plant.plant === willCallPlant.plantCode;
+  const isBOPlant = plant.plant === boPlant;
   const availabilityOfPlant =
     availability.availableLocations.find(
       (item) => item.location === plant.plant,
@@ -118,7 +120,7 @@ const CartItemShipFromAlternativeBranchRow = ({
                     );
                     onChange(
                       Number(event.target.value) > availabilityOfPlant &&
-                        !isHomePlant
+                        !isBOPlant
                         ? availabilityOfPlant
                         : event,
                     );
@@ -175,7 +177,7 @@ const CartItemShipFromAlternativeBranchRow = ({
               )}
             />
           )}
-          {isHomePlant && (
+          {isBOPlant && (
             <div className="py-2 text-sm font-medium">
               <span>
                 <ItemCountBadge

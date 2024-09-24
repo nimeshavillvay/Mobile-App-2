@@ -1,7 +1,6 @@
 "use client";
 
-import AddToShoppingListDialog from "@/_components/shopping-list/add-to-shopping-list-dialog";
-import useSuspenseFavoriteSKUs from "@/_hooks/shopping-list/use-suspense-favorite-skus.hook";
+import AddToShoppingListDialog from "@/_components/add-to-shopping-list-dialog";
 import { cn } from "@/_lib/utils";
 import AddToFavoritesIcon from "@/old/_components/icons/add-to-favorites";
 import FavoriteIcon from "@/old/_components/icons/favorite";
@@ -11,18 +10,17 @@ import { useState } from "react";
 type FavoriteButtonProps = {
   readonly token: string;
   readonly productId: number;
+  readonly isFavorite?: boolean;
+  readonly favoriteListIds?: string[];
 };
 
-const MobileFavoriteButton = ({ token, productId }: FavoriteButtonProps) => {
+const MobileFavoriteButton = ({
+  token,
+  productId,
+  isFavorite = false,
+  favoriteListIds = [],
+}: FavoriteButtonProps) => {
   const [showShoppingListsDialog, setShowShoppingListsDialog] = useState(false);
-
-  const { data: favoriteSKUs } = useSuspenseFavoriteSKUs(token, [
-    productId.toString(),
-  ]);
-
-  const favoriteSKU = favoriteSKUs[0];
-  const isFavorite = favoriteSKU?.isFavorite ?? false;
-  const favoriteListIds = favoriteSKU?.favoriteListIds ?? [];
 
   return (
     <>

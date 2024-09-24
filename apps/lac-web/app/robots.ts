@@ -6,10 +6,6 @@ const robots = (): MetadataRoute.Robots => {
     rules: [
       {
         userAgent: "*",
-        disallow: "/",
-      },
-      {
-        userAgent: ["Googlebot", "Bingbot"],
         allow: "/",
         disallow: [
           "/api/",
@@ -26,7 +22,11 @@ const robots = (): MetadataRoute.Robots => {
       },
     ],
     host: PRODUCTION_URL,
-    sitemap: `${PRODUCTION_URL}/sitemap.xml`,
+    sitemap: [
+      `${PRODUCTION_URL}/sitemap.xml`,
+      `${PRODUCTION_URL}/assets/sitemap.xml`,
+      `${PRODUCTION_URL}/images/sitemap.xml`,
+    ],
   };
 };
 

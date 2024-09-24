@@ -21,6 +21,7 @@ import {
 } from "@/_lib/constants";
 import type { CartItemConfiguration, Plant } from "@/_lib/types";
 import { sendGTMEvent } from "@next/third-parties/google";
+import { Button } from "@repo/web-ui/components/ui/button";
 import { Checkbox } from "@repo/web-ui/components/ui/checkbox";
 import { Label } from "@repo/web-ui/components/ui/label";
 import {
@@ -85,8 +86,13 @@ const ShippingMethod = ({ token, plants }: ShippingMethodProps) => {
 
   const [isShipToMeSelected, setIsShipToMeSelected] = useState(false);
   const [isWillCallSelected, setIsWillCallSelected] = useState(false);
+  const [selectedWillCallOption, setSelectedWillCallOption] = useState(
+    willCallAvailableOption,
+  );
 
-  const [selectedWillCallPlant, setSelectedWillCallPlant] = useState<string>();
+  const [selectedWillCallPlant, setSelectedWillCallPlant] = useState<string>(
+    willCallPlant.pickupPlant,
+  );
 
   const updateCartItemMutation = useUpdateCartItemMutation();
 
@@ -171,7 +177,6 @@ const ShippingMethod = ({ token, plants }: ShippingMethodProps) => {
   const transformConfiguration = (
     availability: Availability,
     config: CartItemConfiguration,
-    selectedValue: string,
     plant: string,
   ) => {
     clearConfigKeys(config, ["avail_", "shipping_method_", "plant_"]);
@@ -187,8 +192,7 @@ const ShippingMethod = ({ token, plants }: ShippingMethodProps) => {
       availability.willCallAnywhere &&
       availability.willCallAnywhere[1] &&
       availability.willCallAnywhere[1].isTransfer &&
-      (selectedValue === WILLCALL_TRANSFER_SHIPING_METHOD ||
-        availability.willCallAnywhere[0]?.status === NOT_AVAILABLE)
+      selectedWillCallOption === WILLCALL_TRANSFER_SHIPING_METHOD
     ) {
       config.shipping_method_1 =
         availability?.options?.at(0)?.plants?.at(0)?.shippingMethods?.at(0)
@@ -200,9 +204,10 @@ const ShippingMethod = ({ token, plants }: ShippingMethodProps) => {
       config.will_call_avail =
         availability.willCallAnywhere[1]?.willCallQuantity.toString();
       config.will_call_plant = selectedPlant;
-      config.will_call_shipping = selectedValue;
+      config.will_call_shipping = selectedWillCallOption;
       config.will_call_not_in_stock =
-        selectedValue === WILLCALL_TRANSFER_SHIPING_METHOD
+        selectedWillCallOption === WILLCALL_TRANSFER_SHIPING_METHOD &&
+        availability.willCallAnywhere[1].status !== NOT_AVAILABLE
           ? FALSE_STRING
           : TRUE_STRING;
     } else if (
@@ -220,7 +225,7 @@ const ShippingMethod = ({ token, plants }: ShippingMethodProps) => {
       config.will_call_avail =
         availability.willCallAnywhere[0]?.willCallQuantity.toString();
       config.will_call_plant = selectedPlant;
-      config.will_call_shipping = selectedValue;
+      config.will_call_shipping = selectedWillCallOption;
       config.will_call_not_in_stock = FALSE_STRING;
     } else if (
       availability.willCallAnywhere &&
@@ -237,7 +242,7 @@ const ShippingMethod = ({ token, plants }: ShippingMethodProps) => {
       config.backorder_quantity =
         availability.willCallAnywhere[0]?.willCallQuantity.toString();
       config.will_call_plant = selectedPlant;
-      config.will_call_shipping = selectedValue;
+      config.will_call_shipping = selectedWillCallOption;
       config.will_call_not_in_stock = FALSE_STRING;
     } else if (
       availability.willCallAnywhere &&
@@ -257,7 +262,7 @@ const ShippingMethod = ({ token, plants }: ShippingMethodProps) => {
       config.backorder_all = "F";
       config.backorder_quantity =
         availability.willCallAnywhere[0]?.backOrderQuantity_1?.toString() ?? "";
-      config.will_call_shipping = selectedValue;
+      config.will_call_shipping = selectedWillCallOption;
       config.will_call_not_in_stock = FALSE_STRING;
     } else if (
       availability.willCallAnywhere &&
@@ -277,7 +282,7 @@ const ShippingMethod = ({ token, plants }: ShippingMethodProps) => {
       config.backorder_all = "F";
       config.backorder_quantity =
         availability.willCallAnywhere[0]?.backOrderQuantity_1?.toString() ?? "";
-      config.will_call_shipping = selectedValue;
+      config.will_call_shipping = selectedWillCallOption;
       config.will_call_not_in_stock = TRUE_STRING;
     }
 
@@ -455,8 +460,8 @@ const ShippingMethod = ({ token, plants }: ShippingMethodProps) => {
     );
   };
 
-  const handleGlobalWillCall = async (value: string, plant?: string) => {
-    const selectedPlant = plant ?? selectedWillCallPlant ?? DEFAULT_PLANT.code;
+  const handleGlobalWillCall = async () => {
+    const selectedPlant = selectedWillCallPlant ?? DEFAULT_PLANT.code;
 
     const cartItemsAvailability = await Promise.all(
       cartQuery.data.cartItems.map(async (item) => {
@@ -473,14 +478,11 @@ const ShippingMethod = ({ token, plants }: ShippingMethodProps) => {
         ...item.configuration,
       };
       const availability = cartItemsAvailability.find(
-        (willCall) =>
-          willCall.productId === item.itemInfo.productId &&
-          (willCall.willCallAnywhere[0]?.status !== NOT_AVAILABLE ||
-            willCall.willCallAnywhere[1]?.status !== NOT_AVAILABLE),
+        (willCall) => willCall.productId === item.itemInfo.productId,
       );
 
       const transformedConfig = availability
-        ? transformConfiguration(availability, config, value, selectedPlant)
+        ? transformConfiguration(availability, config, selectedPlant)
         : config;
 
       return {
@@ -494,11 +496,20 @@ const ShippingMethod = ({ token, plants }: ShippingMethodProps) => {
       onSuccess: () => {
         toast({ description: "Updated delivery method for all items" });
         setIsWillCallSelected(false);
-        setSelectedWillCallPlant(undefined);
+        setSelectedWillCallPlant(willCallPlant.pickupPlant);
+        setSelectedSection(undefined);
+        setSelectedWillCallOption(willCallAvailableOption);
         incrementCartItemKey();
         sendToGTMShippingMethodChanged();
       },
     });
+  };
+
+  const handleSelectedWillCallPlant = (selectedPlant: string) => {
+    setSelectedWillCallPlant(selectedPlant);
+    if (!plants.find((plant) => plant.code === selectedPlant)?.is_transfer) {
+      setSelectedWillCallOption(WILLCALL_SHIPING_METHOD);
+    }
   };
 
   return (
@@ -588,8 +599,7 @@ const ShippingMethod = ({ token, plants }: ShippingMethodProps) => {
               key={selectedWillCallPlant}
               value={selectedWillCallPlant}
               onValueChange={(plant) => {
-                setSelectedWillCallPlant(plant);
-                handleGlobalWillCall(willCallAvailableOption, plant);
+                handleSelectedWillCallPlant(plant);
               }}
             >
               <SelectTrigger className="avail-change-button w-full">
@@ -607,56 +617,70 @@ const ShippingMethod = ({ token, plants }: ShippingMethodProps) => {
             </Select>
           </div>
 
-          {selectedSection === WILL_CALL && selectedWillCallPlant && (
-            <RadioGroup
-              className="ml-[1.625rem] flex flex-col"
-              onValueChange={handleGlobalWillCall}
-              value={willCallAvailableOption}
-            >
-              {plants.find((plant) => plant.code === selectedWillCallPlant)
-                ?.is_willcall && (
-                <div className="flex shrink-0 flex-row items-center gap-0.5 rounded border border-wurth-gray-250 object-contain p-1 text-sm shadow-sm">
-                  <RadioGroupItem
-                    value={WILLCALL_SHIPING_METHOD}
-                    className="h-3.5 w-3.5"
-                    disabled={updateCartItemMutation.isPending}
-                  />
-                  <span className="pl-2">
-                    Pick up at{" "}
-                    {
-                      plants.find(
-                        (plant) => plant.code === selectedWillCallPlant,
-                      )?.name
-                    }
-                  </span>
-                </div>
-              )}
+          {selectedSection === WILL_CALL && (
+            <>
+              <RadioGroup
+                className="ml-[1.625rem] flex flex-col"
+                onValueChange={setSelectedWillCallOption}
+                value={selectedWillCallOption}
+              >
+                {plants.find((plant) => plant.code === selectedWillCallPlant)
+                  ?.is_willcall && (
+                  <div className="flex shrink-0 flex-row items-center gap-0.5 rounded border border-wurth-gray-250 object-contain p-1 text-sm shadow-sm">
+                    <RadioGroupItem
+                      value={WILLCALL_SHIPING_METHOD}
+                      className="h-3.5 w-3.5"
+                      disabled={updateCartItemMutation.isPending}
+                    />
+                    <span className="pl-2">
+                      Pick up at{" "}
+                      {
+                        plants.find(
+                          (plant) => plant.code === selectedWillCallPlant,
+                        )?.name
+                      }
+                    </span>
+                  </div>
+                )}
 
-              {plants.find((plant) => plant.code === selectedWillCallPlant)
-                ?.is_transfer && (
-                <div className="flex shrink-0 flex-row items-center gap-0.5 rounded border border-wurth-gray-250 object-contain p-1 text-sm shadow-sm">
-                  <RadioGroupItem
-                    value={WILLCALL_TRANSFER_SHIPING_METHOD}
-                    className="h-3.5 w-3.5"
-                    disabled={updateCartItemMutation.isPending}
-                  />
-                  <span className="pl-2">
-                    Transfer from{" "}
-                    {
-                      plants.find(
-                        (plant) => plant.code === selectedWillCallPlant,
-                      )?.xPlant
-                    }{" "}
-                    to{" "}
-                    {
-                      plants.find(
-                        (plant) => plant.code === selectedWillCallPlant,
-                      )?.name
-                    }
-                  </span>
-                </div>
-              )}
-            </RadioGroup>
+                {plants.find((plant) => plant.code === selectedWillCallPlant)
+                  ?.is_transfer && (
+                  <div className="flex shrink-0 flex-row items-center gap-0.5 rounded border border-wurth-gray-250 object-contain p-1 text-sm shadow-sm">
+                    <RadioGroupItem
+                      value={WILLCALL_TRANSFER_SHIPING_METHOD}
+                      className="h-3.5 w-3.5"
+                      disabled={updateCartItemMutation.isPending}
+                    />
+                    <span className="pl-2">
+                      Transfer from{" "}
+                      {
+                        plants.find(
+                          (plant) => plant.code === selectedWillCallPlant,
+                        )?.xPlant
+                      }{" "}
+                      to{" "}
+                      {
+                        plants.find(
+                          (plant) => plant.code === selectedWillCallPlant,
+                        )?.name
+                      }
+                    </span>
+                  </div>
+                )}
+              </RadioGroup>
+
+              <div className="flex justify-end">
+                <Button
+                  variant="default"
+                  type="button"
+                  className="w-auto px-4 py-2"
+                  onClick={handleGlobalWillCall}
+                  disabled={updateCartItemMutation.isPending}
+                >
+                  Apply
+                </Button>
+              </div>
+            </>
           )}
         </li>
       </ul>

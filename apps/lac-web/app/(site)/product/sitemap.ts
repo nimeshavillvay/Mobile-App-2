@@ -27,9 +27,8 @@ const sitemap = async ({
     url: getFullUrl(
       `/product/${sitemapProduct.productid}/${sitemapProduct.slug}`,
     ),
-    changeFrequency: "weekly",
+    changeFrequency: sitemapProduct.changefreq,
     priority: Number(sitemapProduct.priority),
-    images: [sitemapProduct.image],
   }));
 };
 

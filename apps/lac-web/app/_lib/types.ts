@@ -447,6 +447,7 @@ export type CheckAvailability = {
     shippingMethods_1?: string[];
     shippingMethod: string;
     type?: string;
+    isTransfer?: boolean;
   }[];
   xplant: string;
   available_locations: {
@@ -454,6 +455,8 @@ export type CheckAvailability = {
     name: string;
     amount: number;
   }[];
+  backorder_location: string;
+  backorder_date: string;
 };
 
 export type TransformedCategory = {
@@ -482,6 +485,21 @@ export type ItemPrice = {
 export type ItemsPriceResult = {
   error: true | null;
   productPrices: ItemPrice[];
+};
+
+export type GetPricesResult = {
+  error: true | null;
+  productPrices: {
+    productId: string;
+    price: number;
+    priceUnit: string;
+    extendedPrice: number;
+    listPrice: number;
+    couponCode: string | null;
+    priceBreakDowns: { quantity: number; price: number }[];
+    uomPrice: number | undefined;
+    uomPriceUnit: string | undefined;
+  }[];
 };
 
 export type UpdateUser = {

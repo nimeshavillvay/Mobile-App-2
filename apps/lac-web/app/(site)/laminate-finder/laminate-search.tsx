@@ -3,6 +3,7 @@
 import useSuspenseLaminateFilters from "@/_hooks/laminate/use-suspense-laminate-filters.hook";
 import { changeSearchParams } from "@/_lib/client-helpers";
 import { INIT_PAGE_NUMBER, QUERY_KEYS } from "@/_lib/constants";
+import { searchFormSchema, type SearchFormSchema } from "@/_lib/zod-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { MagnifyingGlass } from "@repo/web-ui/components/icons/magnifying-glass";
 import { Button } from "@repo/web-ui/components/ui/button";
@@ -15,16 +16,12 @@ import {
 import { Input } from "@repo/web-ui/components/ui/input";
 import { useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
-import {
-  laminateSearchFormSchema,
-  type LaminateSearchFormSchema,
-} from "./helpers";
 
 const LaminateSearch = ({ token }: { readonly token: string }) => {
   const searchParams = useSearchParams();
 
-  const form = useForm<LaminateSearchFormSchema>({
-    resolver: zodResolver(laminateSearchFormSchema),
+  const form = useForm<SearchFormSchema>({
+    resolver: zodResolver(searchFormSchema),
     values: {
       search: searchParams.get(QUERY_KEYS.SEARCH_TEXT) ?? "",
     },

@@ -3,9 +3,10 @@
 import useGtmUser from "@/_hooks/gtm/use-gtm-user.hook";
 import useAddToCartDialog from "@/_hooks/misc/use-add-to-cart-dialog.hook";
 import usePathnameHistoryState from "@/_hooks/misc/use-pathname-history-state.hook";
+import usePriceCheck from "@/_hooks/product/use-price-check.hook";
 import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
 import { getGTMItemListPage, getGTMPageType } from "@/_lib/gtm-utils";
-import type { Product } from "@/_lib/types";
+import type { GetPricesResult, Product } from "@/_lib/types";
 import { cn } from "@/_lib/utils";
 import { sendGTMEvent } from "@next/third-parties/google";
 import {
@@ -19,17 +20,9 @@ import {
   ProductCard as ProductCardRoot,
   ProductCardVariantSelector,
 } from "@repo/web-ui/components/product-card";
-import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import { useRouter } from "next/navigation";
-import {
-  Suspense,
-  useDeferredValue,
-  useState,
-  type ComponentProps,
-} from "react";
-import ProductCardActionsForLoggedIn from "./product-card-actions-for-logged-in";
-import ProductCardVariantSelectorForLoggedIn from "./product-card-variant-selector-for-logged-in";
-import ProductCardVariantSelectorSkeleton from "./product-card-variant-selector-skeleton";
+import { useState, type ComponentProps } from "react";
+import AddToShoppingListDialog from "./add-to-shopping-list-dialog";
 import SaleBadges from "./sale-badges";
 
 type ProductProps = {
@@ -37,15 +30,17 @@ type ProductProps = {
   readonly product: Product;
   readonly token?: string;
   readonly stretchWidth?: boolean;
-  readonly prices: Array<
-    Readonly<{
-      productId: string;
-      listPrice: number;
-      price: number;
-      uomPrice?: number;
-      uomPriceUnit?: string;
-    }>
-  >;
+  /**
+   * This data should be fetched in a parent component using the `useSuspensePriceCheck`
+   * query. The `ProductCard` component itself will fetch the price of any of the other
+   * variants when selected.
+   */
+  readonly firstVariantPrice: GetPricesResult["productPrices"][number];
+  readonly favoriteData?: {
+    productId: number;
+    isFavorite: boolean;
+    favoriteListIds: string[];
+  }[];
 };
 
 const ProductCard = ({
@@ -53,10 +48,11 @@ const ProductCard = ({
   product,
   token,
   stretchWidth = false,
-  prices,
+  firstVariantPrice,
+  favoriteData = [],
 }: ProductProps) => {
+  const [showShoppingListsDialog, setShowShoppingListsDialog] = useState(false);
   const [selectedId, setSelectedId] = useState<string | undefined>();
-  const deferredSelectedId = useDeferredValue(selectedId);
 
   const router = useRouter();
 
@@ -65,7 +61,34 @@ const ProductCard = ({
 
   const defaultVariant = product.variants[0];
   const selectedVariant = product.variants.find(
-    (variant) => variant.id === deferredSelectedId,
+    (variant) => variant.id === selectedId,
+  );
+  const priceCheckQuery = usePriceCheck(
+    token,
+    selectedVariant
+      ? [
+          {
+            productId: Number(selectedVariant.id),
+            qty: 1,
+          },
+        ]
+      : defaultVariant
+        ? [
+            {
+              productId: Number(defaultVariant.id),
+              qty: 1,
+            },
+          ]
+        : [],
+    {
+      initialData:
+        // Give the price of the 1st variant as the initial data of the query when
+        // - There is not variant selected
+        // - The selected variant is the default(1st) variant
+        !selectedId || !defaultVariant || defaultVariant?.id === selectedId
+          ? { error: null, productPrices: [firstVariantPrice] }
+          : undefined,
+    },
   );
 
   // Get Product Details
@@ -103,6 +126,10 @@ const ProductCard = ({
     isNewItem = defaultVariant.isNewItem ?? false;
   }
 
+  const selectedFavoriteData = favoriteData.find(
+    (item) => item.productId.toString() === id,
+  );
+
   // Get Product Title
   let title = "";
   if (product.variants.length === 1 && defaultVariant) {
@@ -116,7 +143,7 @@ const ProductCard = ({
     }
   }
 
-  const priceData = prices.find((price) => price.productId.toString() === id);
+  const priceData = priceCheckQuery.data?.productPrices[0];
 
   const listPrice = priceData?.listPrice ?? 0;
   const currentPrice = priceData?.uomPrice ?? priceData?.price ?? 0;
@@ -232,115 +259,113 @@ const ProductCard = ({
   };
 
   return (
-    <ProductCardRoot
-      orientation={orientation}
-      className={cn(
-        "shrink-0 snap-start",
-        orientation === "horizontal" ? "w-full" : "min-h-[25.75rem]",
-        stretchWidth && "md:w-full",
-      )}
-    >
-      <ProductCardHero>
-        <div className="flex flex-row justify-between gap-2 @container/labels">
-          {!isLaminateItem && discountPercent > 0 && !isLoggedInUser ? (
-            <ProductCardDiscount>{discountPercent}</ProductCardDiscount>
-          ) : (
-            <div className="invisible md:text-lg">0</div>
-          )}
-
-          {orientation === "vertical" && (
-            <SaleBadges
-              onSale={onSale}
-              isNewItem={isNewItem}
-              showFlashDealText={!(discountPercent > 0 && onSale && isNewItem)}
-            />
-          )}
-        </div>
-        <ProductCardImage
-          src={image}
-          alt={title}
-          href={href}
-          title={title}
-          productTitleOrImageOnClick={productTitleOrImageOnClick}
-        />
-      </ProductCardHero>
-
-      <ProductCardContent>
-        {orientation === "horizontal" && (
-          <div className="@container/labels">
-            <SaleBadges
-              onSale={onSale}
-              isNewItem={isNewItem}
-              showFlashDealText={true}
-            />
-          </div>
+    <>
+      <ProductCardRoot
+        orientation={orientation}
+        className={cn(
+          "shrink-0 snap-start",
+          orientation === "horizontal" ? "w-full" : "min-h-[25.75rem]",
+          stretchWidth && "md:w-full",
         )}
+      >
+        <ProductCardHero>
+          <div className="flex flex-row justify-between gap-2 @container/labels">
+            {!isLaminateItem && discountPercent > 0 && !isLoggedInUser ? (
+              <ProductCardDiscount>{discountPercent}</ProductCardDiscount>
+            ) : (
+              <div className="invisible md:text-lg">0</div>
+            )}
 
-        <ProductCardDetails
-          title={title}
-          sku={sku}
-          href={href}
-          productTitleOrImageOnClick={productTitleOrImageOnClick}
-        />
+            {orientation === "vertical" && (
+              <SaleBadges
+                onSale={onSale}
+                isNewItem={isNewItem}
+                showFlashDealText={
+                  !(discountPercent > 0 && onSale && isNewItem)
+                }
+              />
+            )}
+          </div>
+          <ProductCardImage
+            src={image}
+            alt={title}
+            href={href}
+            title={title}
+            productTitleOrImageOnClick={productTitleOrImageOnClick}
+          />
+        </ProductCardHero>
 
-        <div className="flex flex-col gap-2">
-          <ProductCardPrice
-            price={currentPrice}
-            uom={uom}
-            actualPrice={listPrice}
-            isLaminateItem={isLaminateItem}
-            showDiscount={!isLoggedInUser}
+        <ProductCardContent>
+          {orientation === "horizontal" && (
+            <div className="@container/labels">
+              <SaleBadges
+                onSale={onSale}
+                isNewItem={isNewItem}
+                showFlashDealText={true}
+              />
+            </div>
+          )}
+
+          <ProductCardDetails
+            title={title}
+            sku={sku}
+            href={href}
+            productTitleOrImageOnClick={productTitleOrImageOnClick}
           />
 
-          {product.variants.length > 1 ? (
-            isLoggedInUser ? (
-              <Suspense fallback={<ProductCardVariantSelectorSkeleton />}>
-                <ProductCardVariantSelectorForLoggedIn
-                  productVariantId={id}
-                  href={href}
-                  selectedId={deferredSelectedId}
-                  setSelectedId={onSelectVariantChange}
-                  variants={product.variants}
-                  addToCart={addToCart}
-                  token={token}
-                />
-              </Suspense>
-            ) : (
+          <div className="flex flex-col gap-2">
+            <ProductCardPrice
+              price={currentPrice}
+              uom={uom}
+              actualPrice={listPrice}
+              isLaminateItem={isLaminateItem}
+              showDiscount={!isLoggedInUser}
+            />
+
+            {product.variants.length > 1 ? (
               <ProductCardVariantSelector
                 href={href}
-                value={deferredSelectedId}
+                value={selectedId}
                 onValueChange={onSelectVariantChange}
                 variants={product.variants.map((variant) => ({
                   value: variant.id,
                   title: variant.title,
                 }))}
                 addToCart={addToCart}
-                isFavorite={false}
+                isFavorite={selectedFavoriteData?.isFavorite}
                 onClickShoppingList={() => {
-                  router.push("/sign-in");
+                  if (isLoggedInUser) {
+                    setShowShoppingListsDialog(true);
+                  } else {
+                    router.push("/sign-in");
+                  }
                 }}
               />
-            )
-          ) : isLoggedInUser ? (
-            <Suspense fallback={<Skeleton className="h-5 w-full" />}>
-              <ProductCardActionsForLoggedIn
-                token={token}
-                productVariantId={id}
+            ) : (
+              <ProductCardActions
                 addToCart={addToCart}
+                isFavorite={selectedFavoriteData?.isFavorite}
+                onClickShoppingList={() => {
+                  if (isLoggedInUser) {
+                    setShowShoppingListsDialog(true);
+                  } else {
+                    router.push("/sign-in");
+                  }
+                }}
               />
-            </Suspense>
-          ) : (
-            <ProductCardActions
-              addToCart={addToCart}
-              isFavorite={false}
-              onClickShoppingList={() => {
-                router.push("/sign-in");
-              }}
-            />
-          )}
-        </div>
-      </ProductCardContent>
-    </ProductCardRoot>
+            )}
+          </div>
+        </ProductCardContent>
+      </ProductCardRoot>
+
+      <AddToShoppingListDialog
+        open={showShoppingListsDialog}
+        setOpenAddToShoppingListDialog={setShowShoppingListsDialog}
+        productId={parseInt(id)}
+        favoriteListIds={selectedFavoriteData?.favoriteListIds}
+        token={token}
+      />
+    </>
   );
 };
 

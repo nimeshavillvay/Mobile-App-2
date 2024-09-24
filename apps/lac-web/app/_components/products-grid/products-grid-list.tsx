@@ -4,6 +4,7 @@ import ProductCard from "@/_components/product-card";
 import ProductCardSkeleton from "@/_components/product-card-skeleton";
 import useGtmProducts from "@/_hooks/gtm/use-gtm-item-info.hook";
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
+import useSuspenseFavoriteSKUs from "@/_hooks/shopping-list/use-suspense-favorite-skus.hook";
 import { cn } from "@/_lib/utils";
 import { type ComponentProps, type ReactNode } from "react";
 
@@ -48,14 +49,20 @@ export const ProductsGridList = ({
 }) => {
   const orientation = type === "mobile" ? "horizontal" : "vertical";
 
+  const firstVariants = products
+    .map((product) => product.prop.variants[0])
+    .filter(Boolean);
+
   const priceCheckQuery = useSuspensePriceCheck(
-    undefined,
-    products
-      .flatMap((product) => product.prop.variants)
-      .map((product) => ({
-        productId: Number(product.id),
-        qty: 1,
-      })),
+    token,
+    firstVariants.map((product) => ({
+      productId: Number(product.id),
+      qty: 1,
+    })),
+  );
+  const favoriteSkusQuery = useSuspenseFavoriteSKUs(
+    token,
+    firstVariants.map((product) => product.id),
   );
 
   const gtmProducts = products
@@ -73,16 +80,33 @@ export const ProductsGridList = ({
   return (
     <ProductsGridListContainer type={type} className={className}>
       {products.map(({ prop, info }) => {
-        const productIds = prop.variants.map((item) => item.id);
+        const productIds = prop.variants.map((variant) => variant.id);
+        const firstVariantProductId = productIds[0];
 
-        const prices = priceCheckQuery.data.productPrices.filter((price) =>
-          productIds.includes(price.productId.toString()),
+        if (!firstVariantProductId) {
+          // This is to stop TypeScript from complaining about
+          // firstVariantProductId being undefined
+          return null;
+        }
+
+        const price = priceCheckQuery.data.productPrices.find(
+          (price) => price.productId === firstVariantProductId,
         );
+
+        if (!price) {
+          // This is to stop TypeScript from complaining about
+          // price being undefined
+          return null;
+        }
 
         const productProps = {
           ...prop,
           gtmItemInfo,
         };
+
+        const favoriteData = favoriteSkusQuery.data.filter((item) =>
+          productIds.includes(item.productId.toString()),
+        );
 
         return (
           <ProductCard
@@ -91,13 +115,8 @@ export const ProductsGridList = ({
             product={productProps}
             token={token}
             stretchWidth={orientation === "vertical"}
-            prices={prices.map((price) => ({
-              listPrice: price.listPrice,
-              price: price.price,
-              productId: price.productId,
-              uomPrice: price.uomPrice,
-              uomPriceUnit: price.uomPriceUnit,
-            }))}
+            firstVariantPrice={price}
+            favoriteData={favoriteData}
           />
         );
       })}

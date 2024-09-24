@@ -18,8 +18,8 @@ const CompanyProfileImage = ({ token }: { readonly token: string }) => {
 
   return (
     <>
-      <div className="flex flex-row gap-10">
-        <div className="relative mb-5">
+      <div className="mb-5 flex flex-row gap-10">
+        <div className="relative">
           <Image
             src={imageSrc}
             alt="company profile image"

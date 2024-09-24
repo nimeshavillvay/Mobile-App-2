@@ -1,6 +1,7 @@
 "use client";
 
 import useSuspenseShoppingList from "@/_hooks/shopping-list/use-suspense-shopping-list.hook";
+import useSuspenseCheckLogin from "@/_hooks/user/use-suspense-check-login.hook";
 import { cn } from "@/_lib/utils";
 import useCreateShoppingListMutation from "@/old/myaccount/shopping-lists/use-create-shopping-list-mutation.hook";
 import useUpdateShoppingListItemMutation from "@/old/myaccount/shopping-lists/use-update-shopping-list-item-mutation.hook";
@@ -42,7 +43,7 @@ type AddToShoppingListDialogProps = {
   readonly open: boolean;
   readonly setOpenAddToShoppingListDialog: Dispatch<SetStateAction<boolean>>;
   readonly productId: number;
-  readonly favoriteListIds: string[];
+  readonly favoriteListIds?: string[];
   readonly token?: string;
 };
 
@@ -50,7 +51,7 @@ const AddToShoppingListDialog = ({
   open,
   setOpenAddToShoppingListDialog,
   productId,
-  favoriteListIds,
+  favoriteListIds = [],
   token,
 }: AddToShoppingListDialogProps) => {
   const { toast } = useToast();
@@ -273,7 +274,22 @@ const AddToShoppingListDialog = ({
   );
 };
 
-export default AddToShoppingListDialog;
+const AddToShoppingListDialogWrapper = ({
+  token,
+  ...delegated
+}: AddToShoppingListDialogProps) => {
+  // This component conditionally renders AddToShoppingListDialog
+  // if the user has logged in
+  const checkLoginQuery = useSuspenseCheckLogin(token);
+
+  if (checkLoginQuery.data?.status_code !== "OK") {
+    return null;
+  }
+
+  return <AddToShoppingListDialog token={token} {...delegated} />;
+};
+
+export default AddToShoppingListDialogWrapper;
 
 const ShoppingListItem = ({
   index,

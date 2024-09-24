@@ -9,8 +9,3 @@ export type AddressCheckSuggestionsWithUuid = {
   message: string;
   suggestions: AddressWithUuid[];
 };
-
-export type CompanyDetails = {
-  companyName: string;
-  image: string;
-};

@@ -1,5 +1,6 @@
 import WurthLacLogo from "@/_components/wurth-lac-logo";
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
+import useSuspenseFavoriteSKUs from "@/_hooks/shopping-list/use-suspense-favorite-skus.hook";
 import { Button } from "@/old/_components/ui/button";
 import dayjs from "dayjs";
 import Image from "next/image";
@@ -38,6 +39,15 @@ const PurchasedItemsListForMobile = ({
     })),
   );
 
+  const favoriteSkusQuery = useSuspenseFavoriteSKUs(
+    token,
+    items.map((item) => item.productId.toString()),
+  );
+
+  const selectedFavoriteSkuData = favoriteSkusQuery.data.find(
+    (item) => item.productId === selectedItem?.productId,
+  );
+
   const prices: ComponentProps<
     typeof PurchasedItemDetailedViewDialog
   >["prices"] = [];
@@ -50,7 +60,7 @@ const PurchasedItemsListForMobile = ({
       prices.push({
         price: initialPrice.price,
         priceBreakDowns: initialPrice.priceBreakDowns,
-        priceUnit: initialPrice.priceUnit,
+        priceUnit: initialPrice.priceUnit.toString(),
         quantity: 1,
         uomPrice: initialPrice.uomPrice,
         uomPriceUnit: initialPrice.uomPriceUnit,
@@ -64,7 +74,7 @@ const PurchasedItemsListForMobile = ({
       prices.push({
         price: price.price,
         priceBreakDowns: price.priceBreakDowns,
-        priceUnit: price.priceUnit,
+        priceUnit: price.priceUnit.toString(),
         quantity: selectedItem.minimumOrderQuantity,
         uomPrice: price.uomPrice,
         uomPriceUnit: price.uomPriceUnit,
@@ -94,6 +104,8 @@ const PurchasedItemsListForMobile = ({
             item={selectedItem}
             token={token}
             prices={prices}
+            isFavorite={selectedFavoriteSkuData?.isFavorite}
+            favoriteListIds={selectedFavoriteSkuData?.favoriteListIds}
           />
         </Suspense>
       )}

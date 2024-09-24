@@ -144,6 +144,8 @@ export const checkAvailability = async (
     willCallAnywhere: response.willcallanywhere,
     xplant: response.xplant,
     availableLocations: response.available_locations,
+    backorderLocation: response.backorder_location,
+    backorderDate: response.backorder_date,
   };
 };
 

@@ -63,6 +63,8 @@ import {
   DEFAULT_SHIPPING_METHOD,
   MAIN_OPTIONS,
   TAKE_ON_HAND,
+  WILLCALL_SHIPING_METHOD,
+  WILLCALL_TRANSFER_SHIPING_METHOD,
 } from "../constants";
 import type { Availability, WillCallAnywhere } from "../types";
 import useUnSavedAlternativeQuantityState from "../use-cart-alternative-qty-method-store.hook";
@@ -97,7 +99,12 @@ type CartItemShippingMethodProps = {
   readonly selectedWillCallTransfer: WillCallOption;
   readonly isDirectlyShippedFromVendor: boolean;
   readonly handleSelectWillCallPlant: (plant: string) => void;
-  readonly willCallPlant: { plantCode: string; plantName: string };
+  readonly willCallPlant: {
+    plantCode: string;
+    plantName: string;
+    willCallMethod: string;
+    pickupPlant: string;
+  };
   readonly setSelectedBackorderShippingMethod: (method: string) => void;
   readonly selectedBackorderShippingMethod: string;
   readonly token: string;
@@ -260,15 +267,17 @@ const CartItemShippingMethod = ({
 
   const homePlant = willCallPlant.plantCode ?? DEFAULT_PLANT.code;
 
-  const getHomePlantDisplayQuantity = () => {
+  const boPlant = availability.backorderLocation;
+
+  const getHomePlantDisplayQuantity = (plantAvailableQuantity: number) => {
     const totalAvailableQty =
       shipAlternativeBranch?.plants.reduce((sum, current) => {
         return sum + Number(current.quantity);
       }, 0) ?? 0;
 
     return Number(lineQuantity) > totalAvailableQty
-      ? homeBranchAvailableQuantity + Number(lineQuantity) - totalAvailableQty
-      : homeBranchAvailableQuantity;
+      ? plantAvailableQuantity + Number(lineQuantity) - totalAvailableQty
+      : plantAvailableQuantity;
   };
 
   const cartItem = cartQuery.data.cartItems.filter(
@@ -281,9 +290,16 @@ const CartItemShippingMethod = ({
     const avail_3 = cartItem[0]?.configuration.avail_3;
     const avail_4 = cartItem[0]?.configuration.avail_4;
     const avail_5 = cartItem[0]?.configuration.avail_5;
-    const homePlantQty =
-      Number(avail_1) + Number(cartItem[0]?.configuration.backorder_quantity);
-    if (
+
+    const boQuantity = cartItem[0]?.configuration.backorder_quantity;
+    const homePlantQty = Number(avail_1) + Number(boQuantity);
+
+    if (plant === boPlant) {
+      return selectedShippingOption === undefined ||
+        selectedShippingOption === MAIN_OPTIONS.SHIP_TO_ME_ALT
+        ? homePlantQty
+        : getHomePlantDisplayQuantity(quantity);
+    } else if (
       homePlantQty !== cartItem[0]?.quantity &&
       cartItem[0]?.configuration.plant_1 === homePlant
     ) {
@@ -328,7 +344,7 @@ const CartItemShippingMethod = ({
           }
         }
       } else {
-        return getHomePlantDisplayQuantity();
+        return getHomePlantDisplayQuantity(homeBranchAvailableQuantity);
       }
     }
   };
@@ -536,15 +552,27 @@ const CartItemShippingMethod = ({
         isWillCallAnywhere &&
         willCallAnywhere[0]
       ) {
-        setSelectedWillCallTransfer(MAIN_OPTIONS.WILL_CALL);
-        processWillCallAnywhereItem(willCallAnywhere[0]);
+        const willCall =
+          willCallPlant.willCallMethod === WILLCALL_SHIPING_METHOD
+            ? MAIN_OPTIONS.WILL_CALL
+            : MAIN_OPTIONS.WILL_CALL_TRANSFER;
+        setSelectedWillCallTransfer(willCall);
+        const willCallIndex =
+          willCallPlant.willCallMethod === WILLCALL_TRANSFER_SHIPING_METHOD &&
+          willCallAnywhere[1] &&
+          willCallAnywhere[1].isTransfer
+            ? 1
+            : 0;
+        processWillCallAnywhereItem(
+          willCallAnywhere[willCallIndex] ?? willCallAnywhere[0],
+        );
       }
     }
   };
 
   const processWillCallAnywhereItem = (item: WillCallAnywhere) => {
     setSelectedShippingOption(MAIN_OPTIONS.WILL_CALL);
-
+    setSelectedWillCallPlant(willCallPlant.pickupPlant);
     const isNotInStock = item && item.status === NOT_IN_STOCK;
     if (item && !isNotInStock) {
       onSave({
@@ -674,7 +702,6 @@ const CartItemShippingMethod = ({
   };
 
   const handleShipToMeFromAlternativeOptions = () => {
-    setSelectedShippingOption(MAIN_OPTIONS.SHIP_TO_ME_ALT);
     if (shipAlternativeBranch) {
       const setShippingMethod =
         shipAlternativeBranch.plants
@@ -756,7 +783,7 @@ const CartItemShippingMethod = ({
           qty: altQtySum,
         },
         {
-          onSuccess: ({ options }) => {
+          onSuccess: ({ options, backorderDate }) => {
             if (options.length > 0) {
               const shipAlternativeBranch = findAvailabilityOptionForType(
                 options,
@@ -766,7 +793,6 @@ const CartItemShippingMethod = ({
                 options,
                 AVAILABLE_ALL,
               );
-              shipAlternativeBranch?.hash;
 
               if (availableAll) {
                 setLineQuantity(altQtySum.toString());
@@ -823,9 +849,7 @@ const CartItemShippingMethod = ({
                     plants: allPlants,
                     method: selectedShippingMethod,
                     hash: shipAlternativeBranch.hash,
-                    backOrderDate: shipAlternativeBranch.backOrder
-                      ? shipAlternativeBranch?.plants?.[0]?.backOrderDate
-                      : "",
+                    backOrderDate: backorderDate ?? "",
                     backOrderQuantity: calculateDefaultAltBO(
                       allPlants[0]?.plant ?? "",
                       Number(formData.quantityAlt[0]),
@@ -974,9 +998,21 @@ const CartItemShippingMethod = ({
                 <>
                   <ItemLimitedStockOrBoCountBadge
                     availableCount={homeBranchAvailableQuantity}
+                    showOutOfStock={
+                      homePlant === availability.backorderLocation
+                    }
                   />
                   <BackOrderItemCountLabel
                     count={Number(lineQuantity) - homeBranchAvailableQuantity}
+                    showOutOfStock={
+                      homePlant === availability.backorderLocation
+                    }
+                    plant={
+                      plants.find(
+                        (plant) =>
+                          plant.code === availability.backorderLocation,
+                      )?.name
+                    }
                   />
                 </>
               )}
@@ -1027,7 +1063,6 @@ const CartItemShippingMethod = ({
                   className="group flex h-7 cursor-default flex-row items-center justify-start"
                   id={shipToMeAltId}
                   onClick={() => {
-                    setSelectedShippingOption(MAIN_OPTIONS.SHIP_TO_ME_ALT);
                     handleDeliveryOptionSelect({
                       checked: true,
                       selectedOption: MAIN_OPTIONS.SHIP_TO_ME_ALT,
@@ -1079,17 +1114,11 @@ const CartItemShippingMethod = ({
                                   plants={plants}
                                   quantityFieldIndex={quantityFieldIndex}
                                   key={quantityFieldIndex}
-                                  willCallPlant={willCallPlant}
+                                  boPlant={boPlant}
                                   availability={availability}
                                   availableQuantityInPlant={plant.quantity ?? 0}
                                   increment={increment}
                                   uom={uom}
-                                  defaultBoQty={
-                                    plant.plant === homePlant
-                                      ? getHomePlantDisplayQuantity() -
-                                        homeBranchAvailableQuantity
-                                      : 0
-                                  }
                                   sku={sku}
                                   cartItemId={cartItemId}
                                 />
@@ -1157,7 +1186,12 @@ const CartItemShippingMethod = ({
                   handleSelectWillCallPlant(plant);
                 }
                 setSelectedWillCallPlant(plant);
-                setSelectedWillCallTransfer(MAIN_OPTIONS.WILL_CALL);
+                setSelectedWillCallTransfer(
+                  willCallPlant.willCallMethod !== WILLCALL_SHIPING_METHOD &&
+                    willCallAnywhere[1]?.isTransfer
+                    ? MAIN_OPTIONS.WILL_CALL_TRANSFER
+                    : MAIN_OPTIONS.WILL_CALL,
+                );
                 setSelectedShippingOption(MAIN_OPTIONS.WILL_CALL);
               }}
             >
@@ -1426,11 +1460,17 @@ export const ItemInStockCountBadge = ({
 
 export const ItemLimitedStockOrBoCountBadge = ({
   availableCount = 0,
+  showOutOfStock = true,
 }: {
   readonly availableCount: number;
+  readonly showOutOfStock: boolean;
 }) => {
   if (availableCount === 0) {
-    return <span className="text-red-700">Out of stock</span>;
+    return (
+      <span className="text-red-700">
+        {showOutOfStock ? "Out of stock" : "Not stocked"}
+      </span>
+    );
   }
 
   return (
@@ -1442,8 +1482,12 @@ export const ItemLimitedStockOrBoCountBadge = ({
 
 export const BackOrderItemCountLabel = ({
   count,
+  showOutOfStock = true,
+  plant,
 }: {
   readonly count: number;
+  readonly showOutOfStock?: boolean;
+  readonly plant?: string;
 }) => {
   return (
     <div className="text-sm font-medium">
@@ -1451,6 +1495,7 @@ export const BackOrderItemCountLabel = ({
         Backorder
       </span>
       &nbsp;{count}&nbsp;{count > 1 ? "items" : "item"}
+      {!showOutOfStock && ` from ${plant}`}
     </div>
   );
 };

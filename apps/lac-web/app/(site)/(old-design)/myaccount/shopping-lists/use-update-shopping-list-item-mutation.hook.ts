@@ -50,14 +50,23 @@ const useUpdateShoppingListItemMutation = (productId: number) => {
         variant: "destructive",
       });
     },
-    onSettled: async (data, error, variables) => {
-      const gtmItemInfoQuery = await getGtmProducts(
-        productId ? [{ productid: productId, cartid: 0 }] : [],
-        token,
-      );
+    onSettled: async () => {
+      queryClient.invalidateQueries({
+        queryKey: ["user", "favorite-skus"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["my-account", "shopping-list"],
+      });
+
+      const [gtmItemInfoQuery, gtmUser] = await Promise.all([
+        getGtmProducts(
+          productId ? [{ productid: productId, cartid: 0 }] : [],
+          token,
+        ),
+        getGtmUser(token),
+      ]);
       const gtmItemInfo = gtmItemInfoQuery[0];
 
-      const gtmUser = await getGtmUser(token);
       sendGTMEvent({
         event: "add_to_wishlist",
         addToWishlistData: {
@@ -89,16 +98,6 @@ const useUpdateShoppingListItemMutation = (productId: number) => {
           account_industry: gtmUser?.account_industry,
           account_sales_category: gtmUser?.account_sales_category,
         },
-      });
-
-      const productIdsAsString = [variables.productId].join("-");
-
-      queryClient.invalidateQueries({
-        queryKey: ["user", "favorite-skus", `sku-${productIdsAsString}`],
-      });
-
-      queryClient.invalidateQueries({
-        queryKey: ["my-account", "shopping-list"],
       });
     },
   });

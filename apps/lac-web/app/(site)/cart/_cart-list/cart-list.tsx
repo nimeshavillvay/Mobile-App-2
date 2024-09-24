@@ -9,6 +9,7 @@ import useGtmProducts from "@/_hooks/gtm/use-gtm-item-info.hook";
 import useGtmUser from "@/_hooks/gtm/use-gtm-user.hook";
 import usePathnameHistoryState from "@/_hooks/misc/use-pathname-history-state.hook";
 import useSuspensePriceCheck from "@/_hooks/product/use-suspense-price-check.hook";
+import useSuspenseFavoriteSKUs from "@/_hooks/shopping-list/use-suspense-favorite-skus.hook";
 import { getGTMPageType } from "@/_lib/gtm-utils";
 import type { GtmProduct, Plant } from "@/_lib/types";
 import { sendGTMEvent } from "@next/third-parties/google";
@@ -35,7 +36,8 @@ import {
 import { Button } from "@repo/web-ui/components/ui/button";
 import { Skeleton } from "@repo/web-ui/components/ui/skeleton";
 import dynamic from "next/dynamic";
-import { useDeferredValue, useState } from "react";
+import { Suspense, useDeferredValue, useState } from "react";
+import CartItemFallback from "../cart-item-fallback";
 import { CartItemQuantityProvider } from "../cart-item-quantity-context";
 import useUnSavedAlternativeQuantityState from "../use-cart-alternative-qty-method-store.hook";
 import useCartPageStore from "../use-cart-page-store.hook";
@@ -291,9 +293,17 @@ const CartListItems = ({
   const deferredProducts = useDeferredValue(products);
   const priceCheckQuery = useSuspensePriceCheck(token, deferredProducts);
 
+  const favoriteSkusQuery = useSuspenseFavoriteSKUs(
+    token,
+    data.cartItems.map((item) => item.itemInfo.productId.toString()),
+  );
+
   return data.cartItems.map((item) => {
     const priceData = priceCheckQuery.data.productPrices.find(
       (price) => Number(price.productId) === item.itemInfo.productId,
+    );
+    const favoriteSkuData = favoriteSkusQuery.data.find(
+      (skuItem) => skuItem.productId === item.itemInfo.productId,
     );
 
     if (!priceData) {
@@ -305,45 +315,50 @@ const CartListItems = ({
         key={`${item.itemInfo.productId}-${item.cartItemId}`}
         className="border-b border-b-wurth-gray-250 px-4 pb-7 md:px-0 [&:not(:first-child)]:pt-7"
       >
-        <CartItemQuantityProvider
-          lineQuantity={item.quantity.toString()}
-          minQuantity={item.itemInfo.minimumOrderQuantity}
-        >
-          <CartItem
-            key={cartItemKey.toString()}
-            token={token}
-            product={{
-              id: item.itemInfo.productId,
-              title: item.itemInfo.productName,
-              sku: item.itemInfo.productSku,
-              manufacturerId: item.itemInfo.mfrPartNo,
-              quantity: item.quantity,
-              configuration: item.configuration,
-              minAmount: item.itemInfo.minimumOrderQuantity,
-              increment: item.itemInfo.quantityByIncrements,
-              image: item.itemInfo.image,
-              cartItemId: item.cartItemId,
-              slug: item.itemInfo.slug,
-              isExcludedProduct: item.itemInfo.isExcludedProduct,
-              uom: item.itemInfo.unitOfMeasure,
-              isHazardous: item.itemInfo.isHazardous,
-              isDirectlyShippedFromVendor:
-                item.itemInfo.isDirectlyShippedFromVendor,
-            }}
-            isLaminate={item.isLaminate}
-            plants={plants}
-            cartConfiguration={data.configuration}
-            willCallPlant={willCallPlantQuery?.data}
-            priceData={{
-              ...priceData,
-              productId: Number(priceData.productId),
-            }}
-            gtmItemInfo={gtmItemsInfo?.find(
-              (product) =>
-                Number(product?.productid) === item.itemInfo.productId,
-            )}
-          />
-        </CartItemQuantityProvider>
+        <Suspense fallback={<CartItemFallback />}>
+          <CartItemQuantityProvider
+            lineQuantity={item.quantity.toString()}
+            minQuantity={item.itemInfo.minimumOrderQuantity}
+          >
+            <CartItem
+              key={cartItemKey.toString()}
+              token={token}
+              product={{
+                id: item.itemInfo.productId,
+                title: item.itemInfo.productName,
+                sku: item.itemInfo.productSku,
+                manufacturerId: item.itemInfo.mfrPartNo,
+                quantity: item.quantity,
+                configuration: item.configuration,
+                minAmount: item.itemInfo.minimumOrderQuantity,
+                increment: item.itemInfo.quantityByIncrements,
+                image: item.itemInfo.image,
+                cartItemId: item.cartItemId,
+                slug: item.itemInfo.slug,
+                isExcludedProduct: item.itemInfo.isExcludedProduct,
+                uom: item.itemInfo.unitOfMeasure,
+                isHazardous: item.itemInfo.isHazardous,
+                isDirectlyShippedFromVendor:
+                  item.itemInfo.isDirectlyShippedFromVendor,
+              }}
+              isLaminate={item.isLaminate}
+              plants={plants}
+              cartConfiguration={data.configuration}
+              willCallPlant={willCallPlantQuery?.data}
+              priceData={{
+                ...priceData,
+                productId: Number(priceData.productId),
+                priceUnit: priceData.priceUnit,
+              }}
+              gtmItemInfo={gtmItemsInfo?.find(
+                (product) =>
+                  Number(product?.productid) === item.itemInfo.productId,
+              )}
+              isFavorite={favoriteSkuData?.isFavorite}
+              favoriteListIds={favoriteSkuData?.favoriteListIds}
+            />
+          </CartItemQuantityProvider>
+        </Suspense>
       </li>
     );
   });
