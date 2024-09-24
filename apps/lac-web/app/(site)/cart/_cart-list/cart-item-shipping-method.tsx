@@ -290,11 +290,15 @@ const CartItemShippingMethod = ({
     const avail_3 = cartItem[0]?.configuration.avail_3;
     const avail_4 = cartItem[0]?.configuration.avail_4;
     const avail_5 = cartItem[0]?.configuration.avail_5;
-    const homePlantQty =
-      Number(avail_1) + Number(cartItem[0]?.configuration.backorder_quantity);
+
+    const boQuantity = cartItem[0]?.configuration.backorder_quantity;
+    const homePlantQty = Number(avail_1) + Number(boQuantity);
 
     if (plant === boPlant) {
-      return getHomePlantDisplayQuantity(quantity);
+      return selectedShippingOption === undefined ||
+        selectedShippingOption === MAIN_OPTIONS.SHIP_TO_ME_ALT
+        ? homePlantQty
+        : getHomePlantDisplayQuantity(quantity);
     } else if (
       homePlantQty !== cartItem[0]?.quantity &&
       cartItem[0]?.configuration.plant_1 === homePlant
@@ -1115,17 +1119,6 @@ const CartItemShippingMethod = ({
                                   availableQuantityInPlant={plant.quantity ?? 0}
                                   increment={increment}
                                   uom={uom}
-                                  defaultBoQty={
-                                    plant.plant === homePlant
-                                      ? getHomePlantDisplayQuantity(
-                                          homeBranchAvailableQuantity,
-                                        ) - homeBranchAvailableQuantity
-                                      : plant.plant === boPlant
-                                        ? getHomePlantDisplayQuantity(
-                                            plant.quantity ?? 0,
-                                          ) - (plant.quantity ?? 0)
-                                        : 0
-                                  }
                                   sku={sku}
                                   cartItemId={cartItemId}
                                 />

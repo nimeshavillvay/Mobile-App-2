@@ -38,7 +38,6 @@ type BranchRowProps = {
   readonly increment: number;
   readonly uom: string;
   readonly availableQuantityInPlant: number;
-  readonly defaultBoQty: number;
   readonly sku: string;
   readonly cartItemId: number;
   readonly boPlant: string;
@@ -52,7 +51,6 @@ const CartItemShipFromAlternativeBranchRow = ({
   increment,
   uom,
   availableQuantityInPlant,
-  defaultBoQty,
   sku,
   cartItemId,
   boPlant,
@@ -67,7 +65,11 @@ const CartItemShipFromAlternativeBranchRow = ({
 
   const currentEnteredQuantity = Number(deferredQuantity[quantityFieldIndex]);
 
-  const [boQty, setBoQty] = useState(defaultBoQty);
+  const [boQty, setBoQty] = useState(
+    currentEnteredQuantity > availableQuantityInPlant
+      ? currentEnteredQuantity - availableQuantityInPlant
+      : 0,
+  );
   const { pushSku, popSku } = useUnSavedAlternativeQuantityState(
     (state) => state.actions,
   );
