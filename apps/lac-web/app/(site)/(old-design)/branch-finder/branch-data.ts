@@ -113,11 +113,15 @@ export const branchData: BranchType[] = [
   },
   {
     branchName: "Lacey",
-    address: ["9107 Polaris Lane N/E,", "Suite F", "Lacey, WA 98516"],
+    address: [
+      "Sumner",
+      "1801 132nd Avenue E, Suite 200",
+      "Sumner, Washington 98390",
+    ],
     phone: [
       {
-        phoneNo: "(800) 452-2621",
-        link: "tel:8004522621",
+        phoneNo: "(800) 422-4389",
+        link: "tel:8004224389",
       },
     ],
     fax: ["Fax (866) 548-5024"],
