@@ -112,19 +112,15 @@ export const branchData: BranchType[] = [
     fax: ["Fax (208) 524-3897"],
   },
   {
-    branchName: "Lacey",
-    address: [
-      "Sumner",
-      "1801 132nd Avenue E, Suite 200",
-      "Sumner, Washington 98390",
-    ],
+    branchName: "Sumner",
+    address: ["1801 132nd Avenue E, Suite 200", "Sumner, WA 98390"],
     phone: [
       {
         phoneNo: "(800) 422-4389",
         link: "tel:8004224389",
       },
     ],
-    fax: ["Fax (866) 548-5024"],
+    fax: [],
   },
   {
     branchName: "Las Vegas",
