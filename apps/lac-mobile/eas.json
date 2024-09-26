@@ -20,6 +20,13 @@
       "distribution": "internal",
       "env": {
         "ENVIRONMENT": "qa"
+      },
+      "android": {
+        "buildType": "apk",
+        "image": "latest"
+      },
+      "ios": {
+        "image": "latest"
       }
     },
     "qa-ios-simulator": {
