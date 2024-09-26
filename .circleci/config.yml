@@ -80,6 +80,8 @@ jobs:
       # Combined command to set up pnpm and install Expo CLI
       - run:
           name: Set up pnpm and Install Expo CLI
+          environment:
+            SHELL: /bin/bash  # Set the SHELL variable to the appropriate shell
           command: |
             pnpm setup
             pnpm add -g expo-cli
