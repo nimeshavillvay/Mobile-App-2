@@ -80,12 +80,7 @@ jobs:
       # Combined command to set up pnpm and install Expo CLI
       - run:
           name: Set up pnpm and Install Expo CLI
-          environment:
-            SHELL: /bin/bash  # Set the SHELL variable to the appropriate shell
-            PNPM_HOME: /root/.local/share/pnpm  # Ensure PNPM_HOME is set
-            PATH: "/root/.local/share/pnpm:$PATH"  # Prepend PNPM_HOME to PATH
           command: |
-            pnpm setup
             pnpm add -g expo-cli
 
       # Trigger Expo Build and Capture Build URL
