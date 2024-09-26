@@ -80,7 +80,9 @@ jobs:
       # Triggering an Android build
       - run:
           name: Install Expo CLI
-          command: pnpm add -g expo-cli
+          command: 
+          pnpm setup
+          pnpm add -g expo-cli
           environment:
             TURBO_UI: "false"
 
