@@ -80,15 +80,16 @@ jobs:
       # Triggering an Android build
       - run:
           name: Install Expo CLI
-          command: npm install -g expo-cli
+          command: pnpm add -g expo-cli
 
       # Trigger Expo Build and Capture Build URL
       - run:
           name: Trigger Expo Build and Capture Build URL
           command: |
-            expo build:android --no-wait --non-interactive | tee expo_output.txt
-            BUILD_URL=$(grep -o 'https://expo.io/artifacts/[^ ]*' expo_output.txt)
-            echo "export BUILD_URL=$BUILD_URL" >> $BASH_ENV
+            eas build -p android --non-interactive --profile production | tee eas_build_output.txt
+            BUILD_URL=$(grep -o 'https://expo.dev/artifacts/[^ ]*' eas_build_output.txt)
+            echo "Exported BUILD_URL=$BUILD_URL" >> $BASH_ENV
+
 
       # Use the Build URL in Subsequent Steps
       - run:
