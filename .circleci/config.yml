@@ -81,12 +81,14 @@ jobs:
       - run:
           name: Install Expo CLI
           command: pnpm add -g expo-cli
+          environment:
+            TURBO_UI: "false"
 
       # Trigger Expo Build and Capture Build URL
       - run:
           name: Trigger Expo Build and Capture Build URL
           command: |
-            eas build -p android --non-interactive --profile production | tee eas_build_output.txt
+            dotenv -c -- eas build --platform android --profile qa --local | tee eas_build_output.txt
             BUILD_URL=$(grep -o 'https://expo.dev/artifacts/[^ ]*' eas_build_output.txt)
             echo "Exported BUILD_URL=$BUILD_URL" >> $BASH_ENV
 
