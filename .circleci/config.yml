@@ -76,7 +76,25 @@ jobs:
           environment:
             TURBO_UI: "false"
             # Disabling the UI can make the logs cleaner and more readable, also improves performance
+      
+      # Triggering an Android build
+      - run:
+          name: Install Expo CLI
+          command: npm install -g expo-cli
 
+      # Trigger Expo Build and Capture Build URL
+      - run:
+          name: Trigger Expo Build and Capture Build URL
+          command: |
+            expo build:android --no-wait --non-interactive | tee expo_output.txt
+            BUILD_URL=$(grep -o 'https://expo.io/artifacts/[^ ]*' expo_output.txt)
+            echo "export BUILD_URL=$BUILD_URL" >> $BASH_ENV
+
+      # Use the Build URL in Subsequent Steps
+      - run:
+          name: Use the Expo Build URL
+          command: |
+            echo "Expo Build URL: $BUILD_URL"
 workflows:
   version: 2
   test:
