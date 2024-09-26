@@ -77,26 +77,26 @@ jobs:
             TURBO_UI: "false"
             # Disabling the UI can make the logs cleaner and more readable, also improves performance
       
-      # Combined command to set up pnpm and install Expo CLI
-      - run:
-          name: Set up pnpm and Install Expo CLI
-          command: |
-            pnpm add -g expo-cli
+      # # Combined command to set up pnpm and install Expo CLI
+      # - run:
+      #     name: Set up pnpm and Install Expo CLI
+      #     command: |
+      #       pnpm add -g expo-cli
 
-      # Trigger Expo Build and Capture Build URL
-      - run:
-          name: Trigger Expo Build and Capture Build URL
-          command: |
-            dotenv -c -- eas build --platform android --profile qa --local | tee eas_build_output.txt
-            BUILD_URL=$(grep -o 'https://expo.dev/artifacts/[^ ]*' eas_build_output.txt)
-            echo "Exported BUILD_URL=$BUILD_URL" >> $BASH_ENV
+      # # Trigger Expo Build and Capture Build URL
+      # - run:
+      #     name: Trigger Expo Build and Capture Build URL
+      #     command: |
+      #       dotenv -c -- eas build --platform android --profile qa --local | tee eas_build_output.txt
+      #       BUILD_URL=$(grep -o 'https://expo.dev/artifacts/[^ ]*' eas_build_output.txt)
+      #       echo "Exported BUILD_URL=$BUILD_URL" >> $BASH_ENV
 
 
-      # Use the Build URL in Subsequent Steps
-      - run:
-          name: Use the Expo Build URL
-          command: |
-            echo "Expo Build URL: $BUILD_URL"
+      # # Use the Build URL in Subsequent Steps
+      # - run:
+      #     name: Use the Expo Build URL
+      #     command: |
+      #       echo "Expo Build URL: $BUILD_URL"
       #
 workflows:
   version: 2
