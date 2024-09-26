@@ -77,14 +77,12 @@ jobs:
             TURBO_UI: "false"
             # Disabling the UI can make the logs cleaner and more readable, also improves performance
       
-      # Triggering an Android build
+      # Combined command to set up pnpm and install Expo CLI
       - run:
-          name: Install Expo CLI
-          command: 
-          pnpm setup
-          pnpm add -g expo-cli
-          environment:
-            TURBO_UI: "false"
+          name: Set up pnpm and Install Expo CLI
+          command: |
+            pnpm setup
+            pnpm add -g expo-cli
 
       # Trigger Expo Build and Capture Build URL
       - run:
