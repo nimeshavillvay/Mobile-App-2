@@ -1,0 +1,12 @@
+{
+  "expo": {
+    "extra": {
+      "eas": {
+        "projectId": "a0245820-b035-43f9-9f11-d40a461b93d8"
+      }
+    },
+    "android": {
+      "package": "com.nimeshaweerasinghe94.wurthfrontendmonorepo"
+    }
+  }
+}
