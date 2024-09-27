@@ -19,7 +19,8 @@
       "extends": "base",
       "distribution": "internal",
       "env": {
-        "ENVIRONMENT": "qa"
+        "ENVIRONMENT": "qa",
+        "EAS_BUILD_AUTO_INCREMENT": "true"
       },
       "android": {
         "buildType": "apk",
