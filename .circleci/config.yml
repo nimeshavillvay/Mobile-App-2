@@ -76,7 +76,19 @@ jobs:
           environment:
             TURBO_UI: "false"
             # Disabling the UI can make the logs cleaner and more readable, also improves performance
-      
+      # trigger-circleci
+      - run:
+          name: Trigger CircleCI Pipeline
+          command: |
+            curl -X POST https://internal.circleci.com/private/soc/e/51ef6c3a-1228-4a8f-b799-c18626942666?secret=7TpN4nYT7ZCcSlAo9rVeQVIgV1Zo3vR-lRAMFkhkQxo= \
+            -H 'Circle-Token: ${{ secrets.EXPO_TOKEN }}' \
+            -H 'Content-Type: application/json' \
+            -d '{
+                  "branch": "main",
+                  "parameters": {
+                    "build_url": "https://example.com/path/to/build.apk"
+                  }
+                }'
       # # Combined command to set up pnpm and install Expo CLI
       # - run:
       #     name: Set up pnpm and Install Expo CLI
